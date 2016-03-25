@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
@@ -96,7 +96,7 @@ public:
     * @param depth Integer number of data values at each spatial location in
     *              the array.
     */
-   explicit ArrayData(
+   ArrayData(
       const hier::Box& box,
       int depth);
 
@@ -238,6 +238,12 @@ public:
       const hier::Box& box,
       const hier::IntVector& src_shift);
 
+   void
+   copy(
+      const ArrayData<TYPE>& src,
+      const hier::Box& box,
+      const hier::Transformation& transformation);
+
    /*!
     * Copy data from the source array data object to this array data object
     * on the specified index space regions.
@@ -259,6 +265,12 @@ public:
       const ArrayData<TYPE>& src,
       const hier::BoxContainer& boxes,
       const hier::IntVector& src_shift);
+
+   void
+   copy(
+      const ArrayData<TYPE>& src,
+      const hier::BoxContainer& boxes,
+      const hier::Transformation& transformation);
 
    /*!
     * Copy given source depth of source array data object to given destination
@@ -390,6 +402,12 @@ public:
       const hier::Box& dest_box,
       const hier::IntVector& src_shift) const;
 
+   void
+   packStream(
+      tbox::MessageStream& stream,
+      const hier::Box& dest_box,
+      const hier::Transformation& src_shift) const;
+
    /*!
     * Pack data living on the specified index regions into the stream.
     *
@@ -412,6 +430,12 @@ public:
       tbox::MessageStream& stream,
       const hier::BoxContainer& dest_boxes,
       const hier::IntVector& src_shift) const;
+
+   void
+   packStream(
+      tbox::MessageStream& stream,
+      const hier::BoxContainer& dest_boxes,
+      const hier::Transformation& transformation) const;
 
    /*!
     * Unpack data from the stream into the index region specified.
@@ -536,7 +560,7 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * Write out array data object data to database.  This
@@ -548,9 +572,9 @@ public:
     * Assertions:  database must be a non-null pointer.
     */
    void
-   putToDatabase(
-      tbox::Pointer<tbox::Database> database,
-      bool data_only = false);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database,
+      bool data_only = false) const;
 
    /*!
     * Use specialized template method to get the correct behavior
@@ -558,7 +582,7 @@ public:
     */
    void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * Use specialized template method to get the correct behavior
@@ -566,7 +590,7 @@ public:
     */
    void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /**
     * Return the dimension of this object.
@@ -598,9 +622,7 @@ public:
     * associated with an ArrayData object.  This typedef is
     * convenient link to the ArrayDataIterator class.
     */
-   typedef ArrayDataIterator Iterator;
-
-   friend class tbox::Array<ArrayData<TYPE> >;
+   typedef ArrayDataIterator iterator;
 
 private:
    ArrayData(
@@ -650,12 +672,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/ArrayData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/ArrayData.C"
-#endif
 
 #endif

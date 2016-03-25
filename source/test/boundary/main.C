@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Example program to demonstrate boundary utilities.
  *
  ************************************************************************/
@@ -16,22 +16,22 @@ using namespace std;
 // Headers for basic SAMRAI objects used in this code.
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 // Headers for classes specific to this example
 #include "BoundaryDataTester.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -90,7 +90,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -99,8 +100,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -112,7 +113,7 @@ int main(
        * Read "Main" input data.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -133,14 +134,16 @@ int main(
        * state of BoundaryDataTester to log file for checking.
        */
 
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy("PatchHierarchy", grid_geometry));
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry));
 
       BoundaryDataTester* btester =
          new BoundaryDataTester(
@@ -180,41 +183,26 @@ int main(
       }
       hier::BoxContainer patch_boxes(boxes);
 
-#if 0
-      hier::ProcessorMapping mapping(patch_boxes.size());
-
-      for (int ib = 0; ib < patch_boxes.size(); ib++) {
-         mapping.setProcessorAssignment(ib, 0);
-      }
-
-      patch_hierarchy->makeNewPatchLevel(0,
-         hier::IntVector(dim, 1),
-         patch_boxes,
-         mapping);
-
-#else
-
       hier::BoxLevelConnectorUtils edge_utils;
       hier::BoxLevel layer0(hier::IntVector(dim, 1), grid_geometry);
-      hier::BoxContainer::ConstIterator domain_boxes(domain);
-      for (hier::LocalId ib(0); ib < patch_boxes.size(); ib++, domain_boxes++) {
-         layer0.addBox(hier::Box(domain_boxes(), ib, 0));
+      hier::BoxContainer::const_iterator domain_boxes(domain);
+      for (hier::LocalId ib(0); ib < patch_boxes.size(); ib++, ++domain_boxes) {
+         layer0.addBox(hier::Box(*domain_boxes, ib, 0));
       }
       edge_utils.addPeriodicImages(
          layer0,
-         patch_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
+         patch_hierarchy->getGridGeometry()->getDomainSearchTree(),
          hier::IntVector(dim, 2));
 
       patch_hierarchy->makeNewPatchLevel(0, layer0);
 
       // Add Connector required for schedule construction.
-      tbox::Pointer<hier::PatchLevel> level0 = patch_hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level0(
+         patch_hierarchy->getPatchLevel(0));
       level0->getBoxLevel()->getPersistentOverlapConnectors().
       createConnector(
          *level0->getBoxLevel(),
          hier::IntVector(dim, 2));
-
-#endif
 
       /*
        * Allocate data on hierarchy and set variable data on patch interiors
@@ -235,8 +223,8 @@ int main(
       /*
        * At conclusion of test, deallocate objects.
        */
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
       if (btester) delete btester;
 

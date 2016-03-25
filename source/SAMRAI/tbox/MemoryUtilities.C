@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Routines for tracking memory use in SAMRAI.
  *
  ************************************************************************/
@@ -59,7 +59,8 @@ double MemoryUtilities::s_max_memory = 0.;
  *
  *************************************************************************
  */
-void MemoryUtilities::printMemoryInfo(
+void
+MemoryUtilities::printMemoryInfo(
    std::ostream& os)
 {
    NULL_USE(os);
@@ -107,7 +108,8 @@ void MemoryUtilities::printMemoryInfo(
  *************************************************************************
  */
 
-void MemoryUtilities::recordMemoryInfo(
+void
+MemoryUtilities::recordMemoryInfo(
    double time)
 {
    NULL_USE(time);
@@ -157,10 +159,11 @@ void MemoryUtilities::recordMemoryInfo(
  *
  *************************************************************************
  */
-void MemoryUtilities::printMaxMemory(
+void
+MemoryUtilities::printMaxMemory(
    std::ostream& os)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /*
     * Step through all nodes (>0) and send max memory to processor 0,
     * which subsequently writes it out.
@@ -184,7 +187,8 @@ void MemoryUtilities::printMaxMemory(
 
 }
 
-size_t MemoryUtilities::align(
+size_t
+MemoryUtilities::align(
    const size_t bytes)
 {
    size_t aligned = bytes + ArenaAllocationAlignment - 1;

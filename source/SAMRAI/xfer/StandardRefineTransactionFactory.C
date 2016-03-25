@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory to create standard copy and time transactions
  *                for refine schedules.
  *
@@ -16,6 +16,8 @@
 
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace xfer {
@@ -44,30 +46,31 @@ StandardRefineTransactionFactory::~StandardRefineTransactionFactory()
  *************************************************************************
  */
 
-void StandardRefineTransactionFactory::setRefineItems(
+void
+StandardRefineTransactionFactory::setRefineItems(
    const RefineClasses::Data** refine_items,
    int num_refine_items)
 {
-   xfer::RefineCopyTransaction::setRefineItems(refine_items,
-      num_refine_items);
-   xfer::RefineTimeTransaction::setRefineItems(refine_items,
-      num_refine_items);
+   RefineCopyTransaction::setRefineItems(refine_items, num_refine_items);
+   RefineTimeTransaction::setRefineItems(refine_items, num_refine_items);
    d_refine_items = refine_items;
    d_num_refine_items = num_refine_items;
 }
 
-void StandardRefineTransactionFactory::unsetRefineItems()
+void
+StandardRefineTransactionFactory::unsetRefineItems()
 {
-   xfer::RefineCopyTransaction::unsetRefineItems();
-   xfer::RefineTimeTransaction::unsetRefineItems();
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+   RefineCopyTransaction::unsetRefineItems();
+   RefineTimeTransaction::unsetRefineItems();
+   d_refine_items = (const RefineClasses::Data **)NULL;
    d_num_refine_items = 0;
 }
 
-void StandardRefineTransactionFactory::setTransactionTime(
+void
+StandardRefineTransactionFactory::setTransactionTime(
    double fill_time)
 {
-   xfer::RefineTimeTransaction::setTransactionTime(fill_time);
+   RefineTimeTransaction::setTransactionTime(fill_time);
 }
 
 /*
@@ -78,11 +81,11 @@ void StandardRefineTransactionFactory::setTransactionTime(
  *************************************************************************
  */
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 StandardRefineTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    int ritem_id,
@@ -97,26 +100,37 @@ StandardRefineTransactionFactory::allocate(
 
    if (use_time_interpolation) {
 
-      RefineTimeTransaction* transaction =
-         new RefineTimeTransaction(dst_level, src_level,
-            overlap,
-            dst_mapped_box,
-            src_mapped_box,
-            box,
-            ritem_id);
-      return tbox::Pointer<tbox::Transaction>(transaction);
+      return boost::make_shared<RefineTimeTransaction>(
+         dst_level,
+         src_level,
+         overlap,
+         dst_mapped_box,
+         src_mapped_box,
+         box,
+         ritem_id);
 
    } else {
 
-      RefineCopyTransaction* transaction =
-         new RefineCopyTransaction(dst_level, src_level,
-            overlap,
-            dst_mapped_box,
-            src_mapped_box,
-            ritem_id);
-      return tbox::Pointer<tbox::Transaction>(transaction);
+      return boost::make_shared<RefineCopyTransaction>(
+         dst_level,
+         src_level,
+         overlap,
+         dst_mapped_box,
+         src_mapped_box,
+         ritem_id);
 
    }
+}
+
+void
+StandardRefineTransactionFactory::preprocessScratchSpace(
+   const boost::shared_ptr<hier::PatchLevel>& level,
+   double fill_time,
+   const hier::ComponentSelector& preprocess_vector) const
+{
+   NULL_USE(level);
+   NULL_USE(fill_time);
+   NULL_USE(preprocess_vector);
 }
 
 }

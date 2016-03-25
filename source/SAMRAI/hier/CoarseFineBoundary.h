@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
@@ -13,8 +13,9 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Dimension.h"
+#include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
@@ -45,7 +46,7 @@ namespace hier {
  * such objects.
  */
 
-class CoarseFineBoundary:public tbox::DescribedClass
+class CoarseFineBoundary
 {
 public:
    /*!
@@ -79,7 +80,7 @@ public:
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
     */
-   explicit CoarseFineBoundary(
+   CoarseFineBoundary(
       const PatchHierarchy& hierarchy,
       int level_num,
       const IntVector& max_ghost_width);
@@ -104,7 +105,7 @@ public:
     *                            each box will always be one cell wide in the
     *                            direction perpendicular to the patch boundary.
     */
-   explicit CoarseFineBoundary(
+   CoarseFineBoundary(
       const PatchLevel& level,
       const Connector& mapped_box_level_to_domain,
       const Connector& mapped_box_level_to_self,
@@ -116,13 +117,13 @@ public:
    ~CoarseFineBoundary();
 
    /*!
-    * @brief Clear all boundary data or clear boundary data for a given block
-    * for multiblock.
-    *
-    * @param[in] block_number  Optional argument for use in multiblock.
+    * @brief Clear all boundary data.
     */
    void
-   clear();
+   clear()
+   {
+      d_boundary_boxes.clear();
+   }
 
    //@{
    /*!
@@ -138,7 +139,7 @@ public:
     *
     * @param[in] global_id
     * @param[in] boundary_type Codimension of boundaries.
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getBoundaries(
@@ -155,12 +156,15 @@ public:
     * the internal state or it is an error.
     *
     * @param[in] global_id
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getNodeBoundaries(
       const GlobalId& global_id,
-      const BlockId& block_id = BlockId::zero()) const;
+      const BlockId& block_id = BlockId::zero()) const
+   {
+      return getBoundaries(global_id, d_dim.getValue(), block_id);
+   }
 
    /*!
     * @brief Get an array of edge boundary boxes for a specified patch.
@@ -172,12 +176,21 @@ public:
     * the internal state or it is an error.
     *
     * @param[in] global_id
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getEdgeBoundaries(
-      const hier::GlobalId& global_id,
-      const BlockId& block_id = BlockId::zero()) const;
+      const GlobalId& global_id,
+      const BlockId& block_id = BlockId::zero()) const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_dim.getValue() < 2) {
+         TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
+            << "no edge boundaries in " << d_dim << "d.\n");
+      }
+#endif
+      return getBoundaries(global_id, d_dim.getValue() - 1, block_id);
+   }
 
    /*!
     * @brief Get an array of face boundary boxes for a specified patch.
@@ -189,12 +202,21 @@ public:
     * the internal state or it is an error.
     *
     * @param[in] global_id
-    * @param[in] block_num     Defaults to 0 for the single block case
+    * @param[in] block_id     Defaults to 0 for the single block case
     */
    const tbox::Array<BoundaryBox>&
    getFaceBoundaries(
-      const hier::GlobalId& global_id,
-      const BlockId& block_id = BlockId::zero()) const;
+      const GlobalId& global_id,
+      const BlockId& block_id = BlockId::zero()) const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_dim.getValue() < 3) {
+         TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
+            << "no face boundaries in " << d_dim << "d.\n");
+      }
+#endif
+      return getBoundaries(global_id, d_dim.getValue() - 2, block_id);
+   }
 
    //@}
 
@@ -203,7 +225,7 @@ public:
     *
     * @param[in] os Output stream
     */
-   virtual void
+   void
    printClassData(
       std::ostream& os) const;
 
@@ -214,7 +236,12 @@ public:
     */
    CoarseFineBoundary&
    operator = (
-      const CoarseFineBoundary& rhs);
+      const CoarseFineBoundary& rhs)
+   {
+      d_initialized = rhs.d_initialized;
+      d_boundary_boxes = rhs.d_boundary_boxes;
+      return *this;
+   }
 
 private:
    /* Don't allow default ctor */

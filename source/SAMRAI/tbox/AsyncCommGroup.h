@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
@@ -15,6 +15,7 @@
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/TimerManager.h"
 
 #include <vector>
 
@@ -84,8 +85,10 @@ public:
     *
     * @param nchild Number of children per tree node in the group,
     *        i.e., nchild=2 is a binary tree.
+    * @param stage
+    * @param handler
     */
-   explicit AsyncCommGroup(
+   AsyncCommGroup(
       const size_t nchild,
       AsyncCommStage * stage,
       AsyncCommStage::Handler * handler = NULL);
@@ -93,8 +96,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~AsyncCommGroup(
-      void);
+   virtual ~AsyncCommGroup();
 
    /*!
     * @brief Initialize the object.
@@ -185,7 +187,10 @@ public:
     */
    void
    setUseBlockingSendToParent(
-      const bool flag);
+      const bool flag)
+   {
+      d_use_blocking_send_to_parent = flag;
+   }
 
    /*!
     * @brief Set whether sends to children should be blocking.
@@ -196,7 +201,10 @@ public:
     */
    void
    setUseBlockingSendToChildren(
-      const bool flag);
+      const bool flag)
+   {
+      d_use_blocking_send_to_children = flag;
+   }
 
    //@{
 
@@ -297,7 +305,10 @@ public:
     * @return Whether operation is completed.
     */
    bool
-   checkSumReduce();
+   checkSumReduce()
+   {
+      return checkReduce();
+   }
 
    /*!
     * @brief Check the current communication and complete it if all
@@ -326,7 +337,10 @@ public:
    //@}
 
    int
-   getNumberOfChildren() const;
+   getNumberOfChildren() const
+   {
+      return static_cast<int>(d_nchild);
+   }
 
    void
    logCurrentState(
@@ -356,7 +370,12 @@ private:
     * Use MPI collective function call to do communication.
     */
    bool
-   bcastByMpiCollective();
+   bcastByMpiCollective()
+   {
+      d_mpi.Bcast(d_external_buf, d_external_size, MPI_INT, d_root_rank);
+      d_next_task_op = none;
+      return true;
+   }
 
    /*
     * Use MPI collective function call to do communication.
@@ -389,9 +408,7 @@ private:
       int rank;
       //! @brief Number of descendants on each child branch.
       int size;
-      ChildData():rank(-1),
-         size(-1) {
-      }
+      ChildData();
    };
 
    /*!
@@ -443,7 +460,12 @@ private:
       const int group_size);
 
    void
-   resetStatus();
+   resetStatus()
+   {
+      d_mpi_status.MPI_TAG=
+         d_mpi_status.MPI_SOURCE=
+            d_mpi_status.MPI_ERROR= -1;
+   }
 
    //@{
    /*!
@@ -508,7 +530,13 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_reduce_data = TimerManager::getManager()->
+         getTimer("tbox::AsyncCommGroup::reduceData()");
+      t_wait_all = TimerManager::getManager()->
+         getTimer("tbox::AsyncCommGroup::mpi_wait_all");
+   }
 
    /*!
     * @brief Free static timers.
@@ -516,7 +544,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_reduce_data.reset();
+      t_wait_all.reset();
+   }
 
    /*!
     * @brief Number of children per node.
@@ -637,11 +669,10 @@ private:
 
    int d_mpi_err;
 
-   static Pointer<Timer> t_reduce_data;
-   static Pointer<Timer> t_wait_all;
+   static boost::shared_ptr<Timer> t_reduce_data;
+   static boost::shared_ptr<Timer> t_wait_all;
 
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static StartupShutdownManager::Handler s_initialize_finalize_handler;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    /*!
@@ -658,9 +689,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/AsyncCommGroup.I"
-#endif
 
 #endif  // included_tbox_AsyncCommGroup

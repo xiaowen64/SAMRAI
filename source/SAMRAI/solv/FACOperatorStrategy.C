@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to user-defined operations used in FAC solve.
  *
  ************************************************************************/
@@ -16,31 +16,16 @@
 namespace SAMRAI {
 namespace solv {
 
-FACOperatorStrategy::FACOperatorStrategy() {
-}
-
-FACOperatorStrategy::~FACOperatorStrategy() {
-}
-
-void FACOperatorStrategy::postprocessOneCycle(
-   int fac_cycle_num,
-   const SAMRAIVectorReal<double>& current_soln,
-   const SAMRAIVectorReal<double>& residual)
+FACOperatorStrategy::FACOperatorStrategy()
 {
-   NULL_USE(fac_cycle_num);
-   NULL_USE(current_soln);
-   NULL_USE(residual);
 }
 
-void FACOperatorStrategy::initializeOperatorState(
-   const SAMRAIVectorReal<double>& solution,
-   const SAMRAIVectorReal<double>& rhs)
+FACOperatorStrategy::~FACOperatorStrategy()
 {
-   NULL_USE(solution);
-   NULL_USE(rhs);
 }
 
-void FACOperatorStrategy::deallocateOperatorState()
+void
+FACOperatorStrategy::deallocateOperatorState()
 {
 }
 

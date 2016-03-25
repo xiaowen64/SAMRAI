@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -24,12 +24,11 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 
 #include "silo.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -57,6 +56,15 @@ public:
     */
    explicit SiloDatabase(
       const std::string& name);
+
+   /**
+    * Constructor used to create sub-databases.
+    */
+   SiloDatabase(
+      const std::string& name,
+      DBfile* file,
+      const std::string& directory,
+      const bool create_in_file);
 
    /**
     * The database destructor closes the Silo group or data file.
@@ -119,7 +127,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -130,7 +138,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 
@@ -543,15 +551,6 @@ private:
    bool
    IsValid(
       int i);
-
-   /*
-    * Private constructor used internally to create sub-databases.
-    */
-   SiloDatabase(
-      const std::string& name,
-      DBfile* file,
-      const std::string& directory,
-      const bool create_in_file);
 
    /*
     * Silo file and group id, boolean flag indicating whether database

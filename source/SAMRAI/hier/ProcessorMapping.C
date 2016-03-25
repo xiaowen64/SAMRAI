@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   tbox
  *
  ************************************************************************/
@@ -11,10 +11,6 @@
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/ProcessorMapping.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -73,7 +69,12 @@ ProcessorMapping::ProcessorMapping(
    setProcessorMapping(mapping);
 }
 
-void ProcessorMapping::setMappingSize(
+ProcessorMapping::~ProcessorMapping()
+{
+}
+
+void
+ProcessorMapping::setMappingSize(
    const int n)
 {
    d_mapping.resizeArray(n);
@@ -84,7 +85,8 @@ void ProcessorMapping::setMappingSize(
    d_local_id_count = -1;
 }
 
-void ProcessorMapping::setProcessorMapping(
+void
+ProcessorMapping::setProcessorMapping(
    const tbox::Array<int>& mapping)
 {
    d_mapping.resizeArray(mapping.getSize());
@@ -97,19 +99,8 @@ void ProcessorMapping::setProcessorMapping(
    d_local_id_count = -1;
 }
 
-int ProcessorMapping::getNumberOfLocalIndices() const
-{
-   computeLocalIndices();
-   return d_local_id_count;
-}
-
-const tbox::Array<int>& ProcessorMapping::getLocalIndices() const
-{
-   computeLocalIndices();
-   return d_local_indices;
-}
-
-void ProcessorMapping::computeLocalIndices() const
+void
+ProcessorMapping::computeLocalIndices() const
 {
    if (d_local_id_count != -1) {
       return;

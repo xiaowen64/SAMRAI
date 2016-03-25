@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Reference counting class for Array and Pointer
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Description:   Reference counting class for Array
  *
  ************************************************************************/
 
@@ -13,10 +13,6 @@
 
 #include <cstdlib>
 #include <cstdio>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/ReferenceCounter.I"
-#endif
 
 namespace SAMRAI {
 namespace tbox {
@@ -32,7 +28,21 @@ ReferenceCounter::s_handler(
    ReferenceCounter::finalizeCallback,
    StartupShutdownManager::priorityReferenceCounter);
 
-void *ReferenceCounter::operator new (
+ReferenceCounter::ReferenceCounter()
+{
+   d_references = 1;
+   d_next = (ReferenceCounter *)NULL;
+}
+
+ReferenceCounter::~ReferenceCounter()
+{
+   if ((d_next) && (--d_next->d_references == 0)) {
+      delete d_next;
+   }
+}
+
+void*
+ReferenceCounter::operator new (
    size_t bytes)
 {
 #ifdef DEBUG_CHECK_DEV_ASSERTIONS
@@ -45,12 +55,12 @@ void *ReferenceCounter::operator new (
       s_free_list = s_free_list->d_next;
       return node;
    } else {
-      return ::operator new (
-                bytes);
+      return ::operator new (bytes);
    }
 }
 
-void ReferenceCounter::operator delete (
+void
+ReferenceCounter::operator delete (
    void* what)
 {
 #ifdef DEBUG_CHECK_DEV_ASSERTIONS
@@ -63,14 +73,13 @@ void ReferenceCounter::operator delete (
    s_free_list = node;
 }
 
-void ReferenceCounter::finalizeCallback()
+void
+ReferenceCounter::finalizeCallback()
 {
    while (s_free_list) {
       void * byebye = s_free_list;
-      s_free_list = s_free_list->d_next
-      ;
-      ::operator delete (
-         byebye);
+      s_free_list = s_free_list->d_next;
+      ::operator delete (byebye);
    }
 
    s_is_finalized = true;

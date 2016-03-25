@@ -3,8 +3,9 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   MathUtilities routines to set up handlers and get signaling NaNs
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Description:   MathUtilities routines to set up handlers and get
+ *                signaling NaNs
  *
  ************************************************************************/
 
@@ -161,7 +162,6 @@ template<>
 bool MathUtilities<float>::isNaN(
    const float& value)
 {
-
    int i;
    /* This mess should be fixed when the next C++ standard comes out */
 #if defined(HAVE_CMATH_ISNAN)
@@ -171,7 +171,7 @@ bool MathUtilities<float>::isNaN(
 #elif defined(HAVE_ISNAND)
    i = __isnanf(value);
 #elif defined(HAVE_INLINE_ISNAND)
-   i = __SAMRAI_INLINE_KEYWORD_isnanf(value);
+   i = __inline_isnanf(value);
 #else
    i = value != value;
 #endif
@@ -180,7 +180,8 @@ bool MathUtilities<float>::isNaN(
 }
 
 template<>
-bool MathUtilities<double>::isNaN(
+bool
+MathUtilities<double>::isNaN(
    const double& value)
 {
    int i;
@@ -192,7 +193,7 @@ bool MathUtilities<double>::isNaN(
 #elif defined(HAVE_ISNAND)
    i = __isnand(value);
 #elif defined(HAVE_INLINE_ISNAND)
-   i = __SAMRAI_INLINE_KEYWORD_isnand(value);
+   i = __inline_isnand(value);
 #else
    i = value != value;
 #endif
@@ -201,10 +202,10 @@ bool MathUtilities<double>::isNaN(
 }
 
 template<>
-bool MathUtilities<dcomplex>::isNaN(
+bool
+MathUtilities<dcomplex>::isNaN(
    const dcomplex& value)
 {
-
    int i_re;
    int i_im;
 #if defined(HAVE_CMATH_ISNAN)
@@ -217,8 +218,8 @@ bool MathUtilities<dcomplex>::isNaN(
    i_re = __isnand(real(value));
    i_im = __isnand(imag(value));
 #elif defined(HAVE_INLINE_ISNAND)
-   i_re = __SAMRAI_INLINE_KEYWORD_isnand(real(value));
-   i_im = __SAMRAI_INLINE_KEYWORD_isnand(imag(value));
+   i_re = __inline_isnand(real(value));
+   i_im = __inline_isnand(imag(value));
 #else
    i_re = real(value) != real(value);
    i_im = imag(value) != imag(value);
@@ -228,7 +229,8 @@ bool MathUtilities<dcomplex>::isNaN(
 }
 
 template<>
-bool MathUtilities<float>::equalEps(
+bool
+MathUtilities<float>::equalEps(
    const float& a,
    const float& b)
 {
@@ -244,7 +246,8 @@ bool MathUtilities<float>::equalEps(
 }
 
 template<>
-bool MathUtilities<double>::equalEps(
+bool
+MathUtilities<double>::equalEps(
    const double& a,
    const double& b)
 {
@@ -260,7 +263,8 @@ bool MathUtilities<double>::equalEps(
 }
 
 template<>
-bool MathUtilities<dcomplex>::equalEps(
+bool
+MathUtilities<dcomplex>::equalEps(
    const dcomplex& a,
    const dcomplex& b)
 {
@@ -274,7 +278,8 @@ bool MathUtilities<dcomplex>::equalEps(
 }
 
 template<>
-dcomplex MathUtilities<dcomplex>::Min(
+dcomplex
+MathUtilities<dcomplex>::Min(
    dcomplex a,
    dcomplex b)
 {
@@ -282,7 +287,8 @@ dcomplex MathUtilities<dcomplex>::Min(
 }
 
 template<>
-dcomplex MathUtilities<dcomplex>::Max(
+dcomplex
+MathUtilities<dcomplex>::Max(
    dcomplex a,
    dcomplex b)
 {
@@ -290,38 +296,43 @@ dcomplex MathUtilities<dcomplex>::Max(
 }
 
 template<>
-int MathUtilities<int>::Abs(
+int
+MathUtilities<int>::Abs(
    int a)
 {
    return a > 0 ? a : -a;
 }
 
 template<>
-float MathUtilities<float>::Abs(
+float
+MathUtilities<float>::Abs(
    float a)
 {
    return a > 0.0 ? a : -a;
 }
 
 template<>
-double MathUtilities<double>::Abs(
+double
+MathUtilities<double>::Abs(
    double a)
 {
    return a > 0.0 ? a : -a;
 }
 
 template<>
-bool MathUtilities<bool>::Rand(
+bool
+MathUtilities<bool>::Rand(
    const bool& low,
    const bool& width)
 {
-   (void)low;
-   (void)width;
+   NULL_USE(low);
+   NULL_USE(width);
    return mrand48() > 0 ? true : false;
 }
 
 template<>
-char MathUtilities<char>::Rand(
+char
+MathUtilities<char>::Rand(
    const char& low,
    const char& width)
 {
@@ -335,7 +346,8 @@ char MathUtilities<char>::Rand(
 }
 
 template<>
-int MathUtilities<int>::Rand(
+int
+MathUtilities<int>::Rand(
    const int& low,
    const int& width)
 {
@@ -347,7 +359,8 @@ int MathUtilities<int>::Rand(
 }
 
 template<>
-float MathUtilities<float>::Rand(
+float
+MathUtilities<float>::Rand(
    const float& low,
    const float& width)
 {
@@ -359,7 +372,8 @@ float MathUtilities<float>::Rand(
 }
 
 template<>
-double MathUtilities<double>::Rand(
+double
+MathUtilities<double>::Rand(
    const double& low,
    const double& width)
 {
@@ -367,7 +381,8 @@ double MathUtilities<double>::Rand(
 }
 
 template<>
-dcomplex MathUtilities<dcomplex>::Rand(
+dcomplex
+MathUtilities<dcomplex>::Rand(
    const dcomplex& low,
    const dcomplex& width)
 {
@@ -377,7 +392,8 @@ dcomplex MathUtilities<dcomplex>::Rand(
 }
 
 template<class TYPE>
-TYPE round_internal(
+TYPE
+round_internal(
    TYPE x)
 {
    /* algorithm used from Steven G. Kargl */
@@ -395,21 +411,19 @@ TYPE round_internal(
    }
 }
 
-template float round_internal<float
-                              >(
-   float x);
-template double round_internal<double
-                               >(
-   double x);
+template float round_internal<float>(float x);
+template double round_internal<double>(double x);
 
 template<>
-float MathUtilities<float>::round(
+float
+MathUtilities<float>::round(
    float x) {
    return round_internal<float>(x);
 }
 
 template<>
-double MathUtilities<double>::round(
+double
+MathUtilities<double>::round(
    double x) {
    return round_internal<double>(x);
 }

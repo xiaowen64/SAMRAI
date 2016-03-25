@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Sum operation on single array data elements templated on data type
  *
  ************************************************************************/
@@ -18,8 +18,36 @@
 
 #include "SAMRAI/pdat/SumOperation.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SumOperation.I"
-#endif
+namespace SAMRAI {
+namespace pdat {
 
+template<class TYPE>
+SumOperation<TYPE>::SumOperation()
+{
+}
+
+template<class TYPE>
+SumOperation<TYPE>::~SumOperation()
+{
+}
+
+/*
+ * Member functions for SumOperation
+ */
+
+template<class TYPE>
+void
+SumOperation<TYPE>::operator () (
+   TYPE& vdst,
+   const TYPE& vsrc) const
+{
+// Disable Intel warning about conversions
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:810)
+#endif
+   vdst += vsrc;
+}
+
+}
+}
 #endif

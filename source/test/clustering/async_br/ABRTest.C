@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   ABRTest class implementation
  *
  ************************************************************************/
@@ -26,15 +26,15 @@ using namespace SAMRAI;
 ABRTest::ABRTest(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<hier::PatchHierarchy> patch_hierarchy,
-   tbox::Pointer<tbox::Database> database):
+   boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy,
+   boost::shared_ptr<tbox::Database> database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(patch_hierarchy),
    d_tagger(object_name + ":tagger",
             dim,
             database->isDatabase("sine_tagger") ?
-            database->getDatabase("sine_tagger").getPointer() : NULL),
+            database->getDatabase("sine_tagger").get() : NULL),
    d_time(0.5)
 {
    d_tagger.resetHierarchyConfiguration(d_hierarchy, 0, 0);
@@ -79,9 +79,9 @@ void ABRTest::deallocatePatchData(
 
 #ifdef HAVE_HDF5
 int ABRTest::registerVariablesWithPlotter(
-   tbox::Pointer<appu::VisItDataWriter> writer)
+   boost::shared_ptr<appu::VisItDataWriter> writer)
 {
-   if (!writer.isNull())
+   if (writer)
       d_tagger.registerVariablesWithPlotter(*writer);
    return 0;
 }
@@ -94,7 +94,7 @@ bool ABRTest::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)depth_id;
+   NULL_USE(depth_id);
 
    if (variable_name == "Patch level number") {
       double pln = patch.getPatchLevelNumber();

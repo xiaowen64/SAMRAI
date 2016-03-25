@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real node-centered data.
  *
  ************************************************************************/
@@ -16,7 +16,8 @@
 #include "SAMRAI/pdat/NodeData.h"
 #include "SAMRAI/math/ArrayDataNormOpsReal.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -71,7 +72,7 @@ public:
     */
    int
    numberOfEntries(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box) const;
 
    /**
@@ -79,8 +80,8 @@ public:
     */
    double
    sumControlVolumes(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
-      const tbox::Pointer<pdat::NodeData<double> >& cvol,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol,
       const hier::Box& box) const;
 
    /**
@@ -89,8 +90,8 @@ public:
     */
    void
    abs(
-      tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -101,10 +102,10 @@ public:
     */
    double
    L1Norm(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -115,10 +116,10 @@ public:
     */
    double
    L2Norm(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -129,11 +130,11 @@ public:
     */
    double
    weightedL2Norm(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
-      const tbox::Pointer<pdat::NodeData<TYPE> >& weight,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -144,10 +145,10 @@ public:
     */
    double
    RMSNorm(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -158,11 +159,11 @@ public:
     */
    double
    weightedRMSNorm(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
-      const tbox::Pointer<pdat::NodeData<TYPE> >& weight,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -173,10 +174,10 @@ public:
     */
    double
    maxNorm(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -186,11 +187,11 @@ public:
     */
    TYPE
    dot(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data1,
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data2,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the integral of the function represented by the data array.
@@ -198,9 +199,9 @@ public:
     */
    TYPE
    integral(
-      const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+      const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > vol) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& vol) const;
 
 private:
    // The following are not implemented:
@@ -216,8 +217,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/PatchNodeDataNormOpsReal.C"
-#endif
 
 #endif

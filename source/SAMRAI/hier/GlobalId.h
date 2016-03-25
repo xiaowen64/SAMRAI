@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Globally unique identifier that can be locally determined.
  *
  ************************************************************************/
@@ -11,9 +11,10 @@
 #define included_hier_GlobalId
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/hier/LocalId.h"
 
+#include "SAMRAI/hier/LocalId.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
 
@@ -57,7 +58,7 @@ public:
    /*!
     * @brief Initializing constructor.
     */
-   explicit GlobalId(
+   GlobalId(
       const LocalId& local_id,
       const int owner_rank);
 
@@ -72,32 +73,43 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~GlobalId(
-      void);
+   ~GlobalId();
 
    /*!
     * @brief Access the owner rank.
     */
    int&
-   getOwnerRank();
+   getOwnerRank()
+   {
+      return d_owner_rank;
+   }
 
    /*!
     * @brief Access the owner rank.
     */
    const int&
-   getOwnerRank() const;
+   getOwnerRank() const
+   {
+      return d_owner_rank;
+   }
 
    /*!
     * @brief Access the LocalId.
     */
    LocalId&
-   getLocalId();
+   getLocalId()
+   {
+      return d_local_id;
+   }
 
    /*!
     * @brief Access the LocalId.
     */
    const LocalId&
-   getLocalId() const;
+   getLocalId() const
+   {
+      return d_local_id;
+   }
 
    //@{
 
@@ -112,7 +124,12 @@ public:
     */
    bool
    operator == (
-      const GlobalId& r) const;
+      const GlobalId& r) const
+   {
+      bool rval = (d_owner_rank == r.d_owner_rank) &&
+         (d_local_id == r.d_local_id);
+      return rval;
+   }
 
    /*!
     * @brief Inequality operator.
@@ -121,7 +138,12 @@ public:
     */
    bool
    operator != (
-      const GlobalId& r) const;
+      const GlobalId& r) const
+   {
+      bool rval = (d_owner_rank != r.d_owner_rank) ||
+         (d_local_id != r.d_local_id);
+      return rval;
+   }
 
    /*!
     * @brief Less-than operator.
@@ -130,7 +152,11 @@ public:
     */
    bool
    operator < (
-      const GlobalId& r) const;
+      const GlobalId& r) const
+   {
+      return (d_owner_rank < r.d_owner_rank) ||
+             ((d_owner_rank == r.d_owner_rank) && (d_local_id < r.d_local_id));
+   }
 
    /*!
     * @brief Greater-than operator.
@@ -139,7 +165,11 @@ public:
     */
    bool
    operator > (
-      const GlobalId& r) const;
+      const GlobalId& r) const
+   {
+      return (d_owner_rank > r.d_owner_rank) ||
+             ((d_owner_rank == r.d_owner_rank) && (d_local_id > r.d_local_id));
+   }
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -148,7 +178,12 @@ public:
     */
    bool
    operator <= (
-      const GlobalId& r) const;
+      const GlobalId& r) const
+   {
+      return (d_owner_rank < r.d_owner_rank) ||
+             ((d_owner_rank == r.d_owner_rank) &&
+              (d_local_id <= r.d_local_id));
+   }
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -157,7 +192,12 @@ public:
     */
    bool
    operator >= (
-      const GlobalId& r) const;
+      const GlobalId& r) const
+   {
+      return (d_owner_rank > r.d_owner_rank) ||
+             ((d_owner_rank == r.d_owner_rank) &&
+              (d_local_id >= r.d_local_id));
+   }
 
    //@}
 
@@ -184,9 +224,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/GlobalId.I"
-#endif
 
 #endif  // included_hier_GlobalId

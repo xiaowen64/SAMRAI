@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract factory class for creating patch classes
  *
  ************************************************************************/
@@ -16,9 +16,9 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -33,7 +33,7 @@ namespace hier {
  * @see hier::Patch
  */
 
-class PatchFactory:public tbox::DescribedClass
+class PatchFactory
 {
 public:
    /**
@@ -49,10 +49,10 @@ public:
    /**
     * Allocate a patch with the specified domain and patch descriptor.
     */
-   virtual tbox::Pointer<Patch>
+   virtual boost::shared_ptr<Patch>
    allocate(
       const Box& mapped_box_level_mapped_box,
-      tbox::Pointer<PatchDescriptor> descriptor) const;
+      const boost::shared_ptr<PatchDescriptor>& descriptor) const;
 
 private:
    PatchFactory(
@@ -65,7 +65,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchFactory.I"
-#endif
+
 #endif

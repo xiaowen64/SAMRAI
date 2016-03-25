@@ -2,9 +2,8 @@
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2011 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision$
-// Modified:	$LastChangedDate$
 // Description:	Yacc grammar description for the input database
 //
 
@@ -1144,9 +1143,9 @@ static KeyData* lookup_variable(
    result->d_integer    = 0;
 
    Parser *parser = Parser::getParser();
-   Pointer<Database> db = parser->getDatabaseWithKey(key);
+   boost::shared_ptr<Database> db(parser->getDatabaseWithKey(key));
 
-   if (db.isNull()) {
+   if (!db) {
       string tmp("Variable ``");
       tmp += key;
       tmp += "'' not found in database";

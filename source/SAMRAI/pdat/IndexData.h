@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -17,10 +17,9 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 
 namespace SAMRAI {
@@ -30,8 +29,6 @@ template<class TYPE, class BOX_GEOMETRY>
 class IndexDataNode;
 template<class TYPE, class BOX_GEOMETRY>
 class IndexIterator;
-template<class TYPE, class BOX_GEOMETRY>
-class ConstIndexIterator;
 
 /**
  * IndexData is used for storing sparse data.  The iteration over the
@@ -80,9 +77,9 @@ class ConstIndexIterator;
  *             unpackStream(MessageStream\& stream,
  *             const hier::IntVector\& offset)
  *    - \b - Write to restart;
- *             putToDatabase(tbox::Pointer<tbox::Database>\& database)
+ *             putToDatabase(boost::shared_ptr<tbox::Database>\& database)
  *    - \b - Retrieve from restart;
- *             getFromDatabase(tbox::Pointer<tbox::Database>\& database)
+ *             getFromDatabase(boost::shared_ptr<tbox::Database>\& database)
  *
  * The BOX_GEOMETRY template parameter defines the geometry.   BOX_GEOMETRY must
  * have a nested class name Overlap that implements he following methods:
@@ -109,15 +106,14 @@ public:
    /**
     * Define the iterator.
     */
-   typedef IndexIterator<TYPE, BOX_GEOMETRY> Iterator;
-   typedef ConstIndexIterator<TYPE, BOX_GEOMETRY> ConstIterator;
+   typedef IndexIterator<TYPE, BOX_GEOMETRY> iterator;
 
    /**
     * The constructor for an IndexData object.  The box describes the interior
     * of the index space and the ghosts vector describes the ghost nodes in
     * each coordinate direction.
     */
-   explicit IndexData(
+   IndexData(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 
@@ -361,7 +357,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /**
     * Write out the class version number to the database.
@@ -370,11 +366,10 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
-   friend class ConstIndexIterator<TYPE, BOX_GEOMETRY>;
 
    /*
     * Static integer constant describing this class's version number.
@@ -455,7 +450,6 @@ class IndexDataNode
 public:
    friend class IndexData<TYPE, BOX_GEOMETRY>;
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
-   friend class ConstIndexIterator<TYPE, BOX_GEOMETRY>;
 
    IndexDataNode<TYPE, BOX_GEOMETRY>();
 
@@ -481,18 +475,18 @@ private:
  * Class IndexIterator is the iterator associated with the IndexData
  * This class provides methods for stepping through the
  * list that contains the irregular index set.  The user should
- * access this class through the name IndexData<TYPE>::Iterator.
+ * access this class through the name IndexData<TYPE>::iterator.
  *
  * This iterator should be used as follows:
  * \verbatim
  * IndexData<TYPE> data;
  * ...
- * for (IndexData<TYPE>::Iterator iter(data); iter; iter++ {
- *    ... = iter();
+ * IndexData<TYPE>::iterator iterend(data, false);
+ * for (IndexData<TYPE>::iterator iter(data, true); iter != iterend; ++iter) {
+ *    ... = *iter;
  * }
  * \endverbatim
  *
- * @see tbox::List
  * @see pdat::IndexData
  * @see pdat::IndexIterator
  */
@@ -502,17 +496,12 @@ class IndexIterator
 {
 public:
    /**
-    * Default constructor for the index list iterator.  The iterator must
-    * be initialized before it can be used to iterate over an IndexData object.
-    */
-   IndexIterator();
-
-   /**
     * Constructor for the index list iterator.  The iterator will iterate
     * over the irregular index set of the argument data object.
     */
-   IndexIterator(
-      const IndexData<TYPE, BOX_GEOMETRY>& data);
+   explicit IndexIterator(
+      const IndexData<TYPE, BOX_GEOMETRY>& data,
+      bool begin);
 
    /**
     * Copy constructor for the index list iterator.
@@ -533,7 +522,7 @@ public:
    ~IndexIterator<TYPE, BOX_GEOMETRY>();
 
    /**
-    * Return the current item in the irregular index set.
+    * Return a reference to the current item in the irregular index set.
     */
    TYPE&
    operator * ();
@@ -546,23 +535,17 @@ public:
    operator * () const;
 
    /**
-    * Return the current item in the irregular index set.
+    * Return a pointer to the current item in the irregular index set.
     */
-   TYPE&
-   operator () ();
+   TYPE*
+   operator -> ();
 
    /**
-    * Return a const refeferene to the current item in the irregular
+    * Return a const pointer to the current item in the irregular
     * index set.
     */
-   const TYPE&
-   operator () () const;
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   TYPE&
-   getItem();
+   const TYPE*
+   operator -> () const;
 
    /**
     * Return the index of the current item in the irregular index set
@@ -571,37 +554,30 @@ public:
    getIndex() const;
 
    /**
-    * Return true if the iterator points to a valid item in the index set.
+    * Pre-increment the iterator to point to the next item in the index set.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-null if the iterator points to a valid item in the index
-    * set.
-    */
-   operator const void
-   * () const;
-#endif
+   IndexIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid item in the index set.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next item in the index set.
     */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next item in the index set.
-    */
-   void
+   IndexIterator
    operator ++ (
       int);
 
    /**
-    * Decrement the iterator to point to the previous item in the index set.
+    * Pre-decrement the iterator to point to the previous item in the index
+    * set.
     */
-   void
+   IndexIterator&
+   operator -- ();
+
+   /**
+    * Post-decrement the iterator to point to the previous item in the index
+    * set.
+    */
+   IndexIterator
    operator -- (
       int);
 
@@ -619,155 +595,23 @@ public:
    operator != (
       const IndexIterator<TYPE, BOX_GEOMETRY>& iterator) const;
 
-   void
-   rewindIterator();
-
-   void
-   fastforwardIterator();
-
 private:
-   friend class ConstIndexIterator<TYPE, BOX_GEOMETRY>;
    friend class IndexData<TYPE, BOX_GEOMETRY>;
 
    IndexIterator(
       IndexData<TYPE, BOX_GEOMETRY>* index_data,
       IndexDataNode<TYPE, BOX_GEOMETRY>* node);
 
-   IndexDataNode<TYPE, BOX_GEOMETRY>&
-   getNode();
+   IndexDataNode<TYPE, BOX_GEOMETRY>& getNode();
 
    IndexData<TYPE, BOX_GEOMETRY>* d_index_data;
 
    IndexDataNode<TYPE, BOX_GEOMETRY>* d_node;
 };
 
-#if 0
-
-template<class TYPE, class BOX_GEOMETRY>
-class ConstIndexIterator
-{
-public:
-   /**
-    * Default constructor for the index list iterator.  The iterator must
-    * be initialized before it can be used to iterate over an IndexData object.
-    */
-   ConstIndexIterator();
-
-   /**
-    * Constructor for the index list iterator.  The iterator will iterate
-    * over the irregular index set of the argument data object.
-    */
-   ConstIndexIterator(
-      const IndexData<TYPE, BOX_GEOMETRY>& data);
-
-   /**
-    * Copy constructor for the index list iterator.
-    */
-   ConstIndexIterator(
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-   ConstIndexIterator(
-      const IndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-
-   /**
-    * Assignment operator for the index list iterator.
-    */
-   ConstIndexIterator<TYPE, BOX_GEOMETRY>&
-   operator = (
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-   ConstIndexIterator<TYPE, BOX_GEOMETRY>&
-   operator = (
-      const IndexIterator<TYPE, BOX_GEOMETRY>& iterator);
-
-   /**
-    * Destructor for the index list iterator.
-    */
-   ~ConstIndexIterator<TYPE, BOX_GEOMETRY>();
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   const TYPE&
-   operator * ();
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   const TYPE&
-   operator () ();
-
-   /**
-    * Return the current item in the irregular index set.
-    */
-   const TYPE&
-   getItem();
-
-   /**
-    * Return the index of the current item in the irregular index set
-    */
-   const hier::Index&
-   getIndex() const;
-
-   /**
-    * Return true if the iterator points to a valid item in the index set.
-    */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-null if the iterator points to a valid item in the index
-    * set.
-    */
-   operator const void
-   * () const;
-#endif
-
-   /**
-    * Return whether the iterator points to a valid item in the index set.
-    * This operator mimics the !p operation applied to a pointer p.
-    */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next item in the index set.
-    */
-   void
-   operator ++ (
-      int);
-
-   /**
-    * Test two iterators for equality (pointing to the same item).
-    */
-   bool
-   operator == (
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator) const;
-
-   /**
-    * Test two iterators for inequality (pointing to different items).
-    */
-   bool
-   operator != (
-      const ConstIndexIterator<TYPE, BOX_GEOMETRY>& iterator) const;
-
-private:
-   friend class IndexIterator<TYPE, BOX_GEOMETRY>;
-
-   const IndexData<TYPE, BOX_GEOMETRY>* d_index_data;
-
-   IndexDataNode<TYPE, BOX_GEOMETRY>* d_node;
-}
-
-#endif
-
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/IndexData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/IndexData.C"
-#endif
 
 #endif

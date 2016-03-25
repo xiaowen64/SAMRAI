@@ -3,20 +3,59 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Specifications for the scalar Poisson equation
  *
  ************************************************************************/
 #include "SAMRAI/solv/PoissonSpecifications.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/PoissonSpecifications.I"
-#endif
-
 namespace SAMRAI {
 namespace solv {
 
-void PoissonSpecifications::printClassData(
+/*
+ *******************************************************************
+ * Default constructor
+ *******************************************************************
+ */
+
+PoissonSpecifications::PoissonSpecifications(
+   const std::string& object_name):d_object_name(object_name),
+   d_D_id(-1),
+   d_D_constant(1.0),
+   d_C_zero(true),
+   d_C_id(-1),
+   d_C_constant(0.0)
+{
+}
+
+/*
+ *******************************************************************
+ * Copy constructor
+ *******************************************************************
+ */
+
+PoissonSpecifications::PoissonSpecifications(
+   const std::string& object_name,
+   const PoissonSpecifications& r):d_object_name(object_name),
+   d_D_id(r.d_D_id),
+   d_D_constant(r.d_D_constant),
+   d_C_zero(r.d_C_zero),
+   d_C_id(r.d_C_id),
+   d_C_constant(r.d_C_constant)
+{
+}
+
+/*
+ *******************************************************************
+ * Destructor (does nothing).
+ *******************************************************************
+ */
+PoissonSpecifications::~PoissonSpecifications()
+{
+}
+
+void
+PoissonSpecifications::printClassData(
    std::ostream& stream) const
 {
    stream << "PoissonSpecifications " << d_object_name << "\n"

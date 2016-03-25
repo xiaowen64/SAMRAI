@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -15,12 +15,7 @@
 #include "SAMRAI/solv/FACPreconditioner.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/FACPreconditioner.I"
-#endif
 
 #include IOMANIP_HEADER_FILE
 
@@ -40,15 +35,11 @@ namespace solv {
 FACPreconditioner::FACPreconditioner(
    const std::string& name,
    FACOperatorStrategy& user_ops,
-   tbox::Pointer<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_object_name(name),
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
    d_finest_ln(0),
-   d_residual_vector(),
-   d_tmp_residual(),
-   d_error_vector(),
-   d_tmp_error(),
    d_max_iterations(0),
    d_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()),
    d_relative_residual_tolerance(tbox::MathUtilities<double>::getSignalingNaN()),
@@ -93,8 +84,9 @@ FACPreconditioner::~FACPreconditioner()
  ********************************************************************
  */
 
-void FACPreconditioner::getFromInput(
-   tbox::Pointer<tbox::Database> database)
+void
+FACPreconditioner::getFromInput(
+   const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
       if (database->isBool("enable_logging")) {
@@ -132,32 +124,33 @@ void FACPreconditioner::getFromInput(
  *
  *************************************************************************
  */
-void FACPreconditioner::deallocateSolverState()
+void
+FACPreconditioner::deallocateSolverState()
 {
    /*
     * Delete hierarchy-dependent state data.
     */
 
-   if (!d_patch_hierarchy.isNull()) {
+   if (d_patch_hierarchy) {
 
       d_coarsest_ln = d_finest_ln = -1;
-      d_patch_hierarchy.setNull();
+      d_patch_hierarchy.reset();
 
       if (d_error_vector) {
          d_error_vector->freeVectorComponents();
-         d_error_vector.setNull();
+         d_error_vector.reset();
       }
       if (d_tmp_error) {
          d_tmp_error->freeVectorComponents();
-         d_tmp_error.setNull();
+         d_tmp_error.reset();
       }
       if (d_residual_vector) {
          d_residual_vector->freeVectorComponents();
-         d_residual_vector.setNull();
+         d_residual_vector.reset();
       }
       if (d_tmp_residual) {
          d_tmp_residual->freeVectorComponents();
-         d_tmp_residual.setNull();
+         d_tmp_residual.reset();
       }
 
       d_controlled_level_ops.setNull();
@@ -165,7 +158,8 @@ void FACPreconditioner::deallocateSolverState()
    }
 }
 
-void FACPreconditioner::initializeSolverState(
+void
+FACPreconditioner::initializeSolverState(
    const SAMRAIVectorReal<double>& solution,
    const SAMRAIVectorReal<double>& rhs)
 {
@@ -201,9 +195,9 @@ void FACPreconditioner::initializeSolverState(
    int num_components = solution.getNumberOfComponents();
    d_controlled_level_ops.resizeArray(num_components);
    for (int i = 0; i < num_components; ++i) {
-      tbox::Pointer<hier::Variable> variable = solution.getComponentVariable(i);
       d_controlled_level_ops[i] =
-         ops_manager->getOperationsDouble(variable,
+         ops_manager->getOperationsDouble(
+            solution.getComponentVariable(i),
             d_patch_hierarchy,
             true);
       /*
@@ -228,7 +222,7 @@ void FACPreconditioner::initializeSolverState(
    }
 #endif
    for (int ln = d_coarsest_ln; ln <= d_finest_ln; ln++) {
-      if (d_patch_hierarchy->getPatchLevel(ln).isNull()) {
+      if (!d_patch_hierarchy->getPatchLevel(ln)) {
          TBOX_ERROR("FACPreconditioner::FACPreconditioner error ..."
             << "\n   object name = " << d_object_name
             << "\n   hierarchy level " << ln
@@ -238,7 +232,8 @@ void FACPreconditioner::initializeSolverState(
    d_fac_operator.initializeOperatorState(solution, rhs);
 }
 
-bool FACPreconditioner::checkVectorStateCompatibility(
+bool
+FACPreconditioner::checkVectorStateCompatibility(
    const SAMRAIVectorReal<double>& solution,
    const SAMRAIVectorReal<double>& rhs) const
 {
@@ -282,7 +277,8 @@ bool FACPreconditioner::checkVectorStateCompatibility(
  *************************************************************************
  */
 
-bool FACPreconditioner::solveSystem(
+bool
+FACPreconditioner::solveSystem(
    SAMRAIVectorReal<double>& u,
    SAMRAIVectorReal<double>& f)
 {
@@ -294,7 +290,7 @@ bool FACPreconditioner::solveSystem(
     * Set the solution-vector-dependent data if not preset.
     */
    bool clear_hierarchy_configuration_when_done = false;
-   if (d_patch_hierarchy.isNull()) {
+   if (!d_patch_hierarchy) {
       clear_hierarchy_configuration_when_done = true;
       initializeSolverState(u,
          f);
@@ -467,7 +463,8 @@ bool FACPreconditioner::solveSystem(
  *
  *************************************************************************
  */
-void FACPreconditioner::facCycle_Recursive(
+void
+FACPreconditioner::facCycle_Recursive(
    SAMRAIVectorReal<double>& e,
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
@@ -535,7 +532,8 @@ void FACPreconditioner::facCycle_Recursive(
  *************************************************************************
  */
 
-void FACPreconditioner::facCycle_McCormick(
+void
+FACPreconditioner::facCycle_McCormick(
    SAMRAIVectorReal<double>& e,
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
@@ -685,7 +683,8 @@ void FACPreconditioner::facCycle_McCormick(
  *
  *************************************************************************
  */
-void FACPreconditioner::facCycle(
+void
+FACPreconditioner::facCycle(
    SAMRAIVectorReal<double>& e,
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
@@ -777,7 +776,8 @@ void FACPreconditioner::facCycle(
  *************************************************************************
  */
 
-double FACPreconditioner::computeFullCompositeResidual(
+double
+FACPreconditioner::computeFullCompositeResidual(
    SAMRAIVectorReal<double>& r,
    SAMRAIVectorReal<double>& u,
    SAMRAIVectorReal<double>& f)
@@ -825,7 +825,8 @@ double FACPreconditioner::computeFullCompositeResidual(
  *
  *************************************************************************
  */
-void FACPreconditioner::printClassData(
+void
+FACPreconditioner::printClassData(
    std::ostream& os) const {
    os << "printing FACPreconditioner data...\n"
       << "FACPreconditioner: this = " << (FACPreconditioner *)this << "\n"
@@ -843,6 +844,31 @@ void FACPreconditioner::printClassData(
       << "d_rhs_norm = " << d_rhs_norm << "\n"
       << std::endl;
 
+}
+
+void
+FACPreconditioner::setAlgorithmChoice(
+   const std::string& choice)
+{
+   /* This ptr_function helps resolve to the correct tolower method */
+   int (* ptr_function)(
+      int) = std::tolower;
+   std::string lower = choice;
+   std::transform(lower.begin(),
+      lower.end(),
+      lower.begin(),
+      ptr_function);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (lower != "default"               /* Recursive from BTNG */
+       && lower != "mccormick-s4.3"     /* McCormick's section 4.3 */
+       && lower != "pernice"            /* Translation of Pernice's */
+       ) {
+      TBOX_ERROR(
+         d_object_name << ": algorithm should be set to one of\n"
+                       << "'default' (recommended), 'mccormick-s4.3' or 'pernice'\n");
+   }
+#endif
+   d_algorithm_choice = lower;
 }
 
 }

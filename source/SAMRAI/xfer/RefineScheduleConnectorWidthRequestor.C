@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -51,7 +51,8 @@ RefineScheduleConnectorWidthRequestor::RefineScheduleConnectorWidthRequestor(
  **************************************************************************
  **************************************************************************
  */
-void RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
+void
+RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
    int gcw_factor)
 {
    TBOX_ASSERT(gcw_factor >= 0);
@@ -64,7 +65,8 @@ void RefineScheduleConnectorWidthRequestor::setGhostCellWidthFactor(
  * properly on a given hierarchy.
  **************************************************************************
  */
-void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
+void
+RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& self_connector_widths,
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
@@ -138,26 +140,6 @@ void RefineScheduleConnectorWidthRequestor::computeRequiredConnectorWidths(
       }
    }
 
-}
-
-/*
- ***********************************************************************
- * Register the static ConnectorWidthRequestor to be
- * automatically used by PatchHierarchy objects.
- ***********************************************************************
- */
-void RefineScheduleConnectorWidthRequestor::initializeCallback()
-{
-   hier::PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
-      s_auto_registered_connector_width_requestor);
-}
-
-/*
- ***************************************************************************
- ***************************************************************************
- */
-void RefineScheduleConnectorWidthRequestor::finalizeCallback()
-{
 }
 
 }

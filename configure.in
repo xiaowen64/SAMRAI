@@ -1,9 +1,8 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
-dnl Modified:    $LastChangedDate$
 dnl Description: autoconfig configuration file
 dnl
 
@@ -17,8 +16,8 @@ AH_TOP([
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 3
-#define SAMRAI_VERSION_PATCHLEVEL 3
+#define SAMRAI_VERSION_MINOR 4
+#define SAMRAI_VERSION_PATCHLEVEL 1
 ])
 AH_BOTTOM([
 
@@ -37,12 +36,6 @@ AH_BOTTOM([
 
 #ifndef OMPI_SKIP_MPICXX
 #define OMPI_SKIP_MPICXX
-#endif
-
-#ifdef SAMRAI_INLINE
-#define SAMRAI_INLINE_KEYWORD inline
-#else
-#define SAMRAI_INLINE_KEYWORD 
 #endif
 
 /********************************************************************/
@@ -153,13 +146,6 @@ AC_ARG_ENABLE([bgl],
       [Identify this platform as one of the bgl family (default is disable)])],
    [enable_bgl=$enableval],
    [enable_bgl=no]
-   )
-AC_ARG_ENABLE([inline],
-   [AS_HELP_STRING([--enable-inline],
-      [build with SAMRAI methods inlined (default is enabled; is disabled when
-      debugging is enabled)])],
-   [user_specified_inline="yes"],
-   [enable_inline="yes"]
    )
 AC_ARG_WITH([CC],
    [AS_HELP_STRING([--with-CC=ARG],[manually set C compiler to ARG])]
@@ -588,9 +574,6 @@ AC_ARG_ENABLE([opt],
 [case "$enable_opt" in
    no) opt_switches= ;;
    yes)
-      dnl by default we'll set user_specified_inline to yes here
-      dnl since enabling optimization also should enable inlining
-      user_specified_inline="yes"
       case $CXX_ID in
          gnu)   opt_switches="-O2" ;;
          intel) opt_switches="-O3" ;;
@@ -636,9 +619,6 @@ case "$enable_debug" in
    if test "$user_specified_check_dim_assertions" != "yes"; then
       enable_check_dim_assertions="yes"
    fi
-   if test "$user_specified_inline" != "yes"; then
-      enable_inline="no"
-   fi    
    AC_DEFINE([DEBUG_INITIALIZE_UNDEFINED],[1],[Initialize new memory to undefined values in debug mode])
 esac
 
@@ -670,13 +650,6 @@ dnl
 if test "$enable_bgl" = "yes"; then
    AC_DEFINE([__BGL_FAMILY__],[1],[Configure for compiling on BGL family of
    machines])
-fi
-
-dnl
-dnl Check if compiling with SAMRAI methods inlined 
-dnl
-if test "$enable_inline" = "yes"; then
-   AC_DEFINE([SAMRAI_INLINE],[1],[Enable inlining of methods])
 fi
 
 if test -n "$debug_switches" ; then
@@ -1162,7 +1135,8 @@ if test "${boost_PREFIX+set}" = set; then
    INC_PATH="$boost_INCLUDES $INC_PATH"
    AC_DEFINE([HAVE_BOOST_HEADERS],[1],[BOOST headers are available to use])
 else
-   AC_MSG_WARN([SparseData class is not supported without BOOST])
+   AC_MSG_ERROR(
+     [Path to BOOST installation must be specified with --with-boost])
 fi
 CASC_AC_LOG_VAR(
 [boost_INCLUDES INC_PATH boost_LIBS LIB_PATH LIB_NAME])dnl
@@ -1492,19 +1466,14 @@ AC_CONFIG_FILES( config/serpa-run, chmod +x config/serpa-run )
 dnl
 dnl Specify how many processors to use in testing.
 dnl
-AC_ARG_ENABLE([test-nprocs],
-[AS_HELP_STRING([--enable-test-nprocs=LIST],[Specify number of processors to use
-when running tests.  LIST is a comma delimited list of integers, with 0 meaning
-serial run.  Default LIST is '0,2'.])],
-[
-case "$enable_test_nprocs" in
-  yes|no)
-    AC_MSG_ERROR(You must specify a list of processors for testing.)
+case $CONFIGURED_WITH_MPI in
+  with_mpi)
+    TEST_NPROCS='1,2'
   ;;
-  *) TEST_NPROCS=$enable_test_nprocs
+  *)
+    TEST_NPROCS='0'
+  ;;
 esac
-],[TEST_NPROCS='0,2']
-)
 AC_SUBST(TEST_NPROCS)
 
 

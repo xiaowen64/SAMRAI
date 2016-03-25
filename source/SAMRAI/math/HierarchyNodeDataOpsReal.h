@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real node data on multiple levels.
  *
  ************************************************************************/
@@ -18,8 +18,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -72,7 +72,7 @@ public:
     * reset by calling the resetLevels() function.
     */
    explicit HierarchyNodeDataOpsReal(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level = -1,
       const int finest_level = -1);
 
@@ -86,7 +86,7 @@ public:
     */
    void
    setPatchHierarchy(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -100,7 +100,7 @@ public:
    /**
     * Return const pointer to patch hierarchy associated with operations.
     */
-   const tbox::Pointer<hier::PatchHierarchy>
+   const boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -503,7 +503,7 @@ private:
    operator = (
       const HierarchyNodeDataOpsReal<TYPE>&);
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
    tbox::Array<tbox::Array<hier::BoxContainer> > d_nonoverlapping_node_boxes;
@@ -515,8 +515,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/HierarchyNodeDataOpsReal.C"
-#endif
 
 #endif

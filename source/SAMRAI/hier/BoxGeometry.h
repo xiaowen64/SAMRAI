@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Box geometry description for overlap computations
  *
  ************************************************************************/
@@ -16,8 +16,8 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -67,7 +67,7 @@ namespace hier {
  * @see hier::PatchData
  */
 
-class BoxGeometry:public tbox::DescribedClass
+class BoxGeometry
 {
 public:
    /**
@@ -103,14 +103,25 @@ public:
     * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
-   tbox::Pointer<BoxOverlap>
+   boost::shared_ptr<BoxOverlap>
    calculateOverlap(
       const BoxGeometry& src_geometry,
       const Box& src_mask,
       const Box& fill_box,
       const bool overwrite_interior,
       const Transformation& transformation,
-      const BoxContainer& dst_restrict_boxes = BoxContainer()) const;
+      const BoxContainer& dst_restrict_boxes = BoxContainer()) const
+   {
+      return this->calculateOverlap(
+         *this,
+         src_geometry,
+         src_mask,
+         fill_box,
+         overwrite_interior,
+         transformation,
+         true,
+         dst_restrict_boxes);
+   }
 
    /**
     * Calculate the overlap between two box geometry objects given the
@@ -128,7 +139,7 @@ public:
     * is an empty BoxContainer, then it will have no effect on the overlap
     * calculation.
     */
-   virtual tbox::Pointer<BoxOverlap>
+   virtual boost::shared_ptr<BoxOverlap>
    calculateOverlap(
       const BoxGeometry& dst_geometry,
       const BoxGeometry& src_geometry,
@@ -143,10 +154,10 @@ public:
     * Set up a BoxOverlap object that consists simply of the given boxes
     * and the transformation.
     */
-   virtual tbox::Pointer<BoxOverlap>
+   virtual boost::shared_ptr<BoxOverlap>
    setUpOverlap(
-      const hier::BoxContainer& boxes,
-      const hier::Transformation& offset) const = 0;
+      const BoxContainer& boxes,
+      const Transformation& offset) const = 0;
 
 private:
    BoxGeometry(
@@ -159,9 +170,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxGeometry.I"
-#endif
 
 #endif

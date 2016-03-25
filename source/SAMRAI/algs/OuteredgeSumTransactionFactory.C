@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
@@ -15,6 +15,8 @@
 
 #include "SAMRAI/pdat/OuteredgeData.h"
 #include "SAMRAI/algs/OuteredgeSumTransaction.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -43,19 +45,21 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
  *************************************************************************
  */
 
-void OuteredgeSumTransactionFactory::setRefineItems(
+void
+OuteredgeSumTransactionFactory::setRefineItems(
    const xfer::RefineClasses::Data** refine_items,
    int num_refine_items)
 {
-   algs::OuteredgeSumTransaction::setRefineItems(refine_items,
+   OuteredgeSumTransaction::setRefineItems(refine_items,
       num_refine_items);
    d_refine_items = refine_items;
    d_number_refine_items = num_refine_items;
 }
 
-void OuteredgeSumTransactionFactory::unsetRefineItems()
+void
+OuteredgeSumTransactionFactory::unsetRefineItems()
 {
-   algs::OuteredgeSumTransaction::unsetRefineItems();
+   OuteredgeSumTransaction::unsetRefineItems();
    d_refine_items = (const xfer::RefineClasses::Data **)NULL;
    d_number_refine_items = 0;
 }
@@ -68,11 +72,11 @@ void OuteredgeSumTransactionFactory::unsetRefineItems()
  *************************************************************************
  */
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 OuteredgeSumTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int ritem_id,
@@ -84,21 +88,19 @@ OuteredgeSumTransactionFactory::allocate(
 
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
 
-   OuteredgeSumTransaction* transaction =
-      new OuteredgeSumTransaction(dst_level,
-         src_level,
-         overlap,
-         dst_node,
-         src_node,
-         ritem_id);
-   return tbox::Pointer<tbox::Transaction>(transaction);
+   return boost::make_shared<OuteredgeSumTransaction>(dst_level,
+      src_level,
+      overlap,
+      dst_node,
+      src_node,
+      ritem_id);
 }
 
-tbox::Pointer<tbox::Transaction>
+boost::shared_ptr<tbox::Transaction>
 OuteredgeSumTransactionFactory::allocate(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    int ritem_id) const
@@ -123,22 +125,25 @@ OuteredgeSumTransactionFactory::allocate(
  *************************************************************************
  */
 
-void OuteredgeSumTransactionFactory::preprocessScratchSpace(
-   tbox::Pointer<hier::PatchLevel> level,
+void
+OuteredgeSumTransactionFactory::preprocessScratchSpace(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {
    NULL_USE(fill_time);
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
-            tbox::Pointer<pdat::OuteredgeData<double> > oedge_data =
-               patch->getPatchData(n);
+            boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
+               patch->getPatchData(n),
+               boost::detail::dynamic_cast_tag());
             oedge_data->fillAll(0.0);
          }
       }

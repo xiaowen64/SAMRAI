@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Class to record statistics during program execution.
  *
  ************************************************************************/
@@ -15,10 +15,6 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Statistic.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -90,7 +86,8 @@ Statistic::~Statistic()
  *************************************************************************
  */
 
-void Statistic::recordProcStat(
+void
+Statistic::recordProcStat(
    double value,
    int seq_num)
 {
@@ -127,7 +124,8 @@ void Statistic::recordProcStat(
    d_seq_counter++;
 }
 
-void Statistic::recordPatchStat(
+void
+Statistic::recordPatchStat(
    int patch_num,
    double value,
    int seq_num)
@@ -167,13 +165,13 @@ void Statistic::recordPatchStat(
     *   }
     */
    if (seq_num < d_seq_counter) {
-      List<Statistic::PatchStatRecord>& records =
+      std::list<Statistic::PatchStatRecord>& records =
          d_patch_array[seq_num].patch_records;
       bool found_patch_id = false;
-      List<Statistic::PatchStatRecord>::Iterator ir(records);
-      for ( ; ir; ir++) {
-         if (ir().patch_id == patch_num) {
-            ir().value = value;
+      std::list<Statistic::PatchStatRecord>::iterator ir = records.begin();
+      for ( ; ir != records.end(); ir++) {
+         if (ir->patch_id == patch_num) {
+            ir->value = value;
             found_patch_id = true;
          }
       }
@@ -181,7 +179,7 @@ void Statistic::recordPatchStat(
          PatchStatRecord patchitem_record;
          patchitem_record.value = value;
          patchitem_record.patch_id = patch_num;
-         d_patch_array[seq_num].patch_records.appendItem(patchitem_record);
+         d_patch_array[seq_num].patch_records.push_back(patchitem_record);
          d_total_patch_entries++;
       }
 
@@ -191,7 +189,7 @@ void Statistic::recordPatchStat(
       PatchStatRecord patchitem_record;
       patchitem_record.value = value;
       patchitem_record.patch_id = patch_num;
-      d_patch_array[seq_num].patch_records.appendItem(patchitem_record);
+      d_patch_array[seq_num].patch_records.push_back(patchitem_record);
       d_total_patch_entries++;
       d_seq_counter = seq_num + 1;
    }
@@ -218,7 +216,8 @@ void Statistic::recordPatchStat(
  *************************************************************************
  */
 
-int Statistic::getDataStreamSize()
+int
+Statistic::getDataStreamSize()
 {
    int byte_size = MessageStream::getSizeof<int>(4);
    if (d_stat_type == PROC_STAT) {
@@ -231,10 +230,11 @@ int Statistic::getDataStreamSize()
    return byte_size;
 }
 
-void Statistic::packStream(
+void
+Statistic::packStream(
    MessageStream& stream)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       TBOX_ERROR("Statistic::packStream error...\n"
          << "    Processor zero should not pack stat data" << std::endl);
@@ -270,14 +270,14 @@ void Statistic::packStream(
       int isr = 0;
 
       for (is = 0; is < d_seq_counter; is++) {
-         List<Statistic::PatchStatRecord>& lrec =
+         std::list<Statistic::PatchStatRecord>& lrec =
             d_patch_array[is].patch_records;
-         idata[4 + is] = lrec.getNumberOfItems();
+         idata[4 + is] = static_cast<int>(lrec.size());
 
-         List<Statistic::PatchStatRecord>::Iterator ilr(lrec);
-         for ( ; ilr; ilr++) {
-            idata[mark + isr] = ilr().patch_id;
-            ddata[isr] = ilr().value;
+         std::list<Statistic::PatchStatRecord>::iterator ilr = lrec.begin();
+         for ( ; ilr != lrec.end(); ilr++) {
+            idata[mark + isr] = ilr->patch_id;
+            ddata[isr] = ilr->value;
             isr++;
          }
       }
@@ -292,10 +292,11 @@ void Statistic::packStream(
 
 }
 
-void Statistic::unpackStream(
+void
+Statistic::unpackStream(
    MessageStream& stream)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() != 0) {
       TBOX_ERROR("Statistic::unpackStream error...\n"
          << "    Only processor zero should unpack stat data" << std::endl);
@@ -362,11 +363,12 @@ void Statistic::unpackStream(
 
 }
 
-void Statistic::printClassData(
+void
+Statistic::printClassData(
    std::ostream& stream,
    int precision) const
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    TBOX_ASSERT(precision > 0);
 
    stream.precision(precision);
@@ -387,25 +389,28 @@ void Statistic::printClassData(
          stream << "     sequence[" << is
                 << "]" << std::endl;
 
-         List<Statistic::PatchStatRecord>::Iterator ilr(
-            d_patch_array[is].patch_records);
-         for ( ; ilr; ilr++) {
-            stream << "        patch # = " << ilr().patch_id
-                   << " : value = " << ilr().value << std::endl;
+         const std::list<Statistic::PatchStatRecord>& psrl = 
+            d_patch_array[is].patch_records;
+         std::list<Statistic::PatchStatRecord>::const_iterator ilr =
+            psrl.begin();
+         for ( ; ilr != psrl.end(); ilr++) {
+            stream << "        patch # = " << ilr->patch_id
+                   << " : value = " << ilr->value << std::endl;
          }
       }
    }
 
 }
 
-void Statistic::checkArraySizes(
+void
+Statistic::checkArraySizes(
    int seq_num)
 {
    /*
     * Verify that seq_num is less than array size.  If so, drop through.
     * If not, resize and initialize the array.
     */
-   int high_mark = tbox::MathUtilities<int>::Max(seq_num, d_seq_counter);
+   int high_mark = MathUtilities<int>::Max(seq_num, d_seq_counter);
 
    if (d_stat_type == PROC_STAT) {
 
@@ -430,10 +435,11 @@ void Statistic::checkArraySizes(
 
 }
 
-void Statistic::putToDatabase(
-   Pointer<Database> db)
+void
+Statistic::putUnregisteredToDatabase(
+   const boost::shared_ptr<Database>& db) const
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("TBOX_STATISTIC_VERSION",
       TBOX_STATISTIC_VERSION);
@@ -468,13 +474,14 @@ void Statistic::putToDatabase(
       int mark = d_seq_counter;
 
       for (i = 0; i < d_seq_counter; i++) {
-         List<Statistic::PatchStatRecord>& records =
+         const std::list<Statistic::PatchStatRecord>& records =
             d_patch_array[i].patch_records;
-         idata[i] = records.getNumberOfItems();  // # patches at seq num
-         List<Statistic::PatchStatRecord>::Iterator ir(records);
-         for ( ; ir; ir++) {
-            idata[mark + il] = ir().patch_id;
-            ddata[il] = ir().value;
+         idata[i] = static_cast<int>(records.size());  // # patches at seq num
+         std::list<Statistic::PatchStatRecord>::const_iterator ir =
+            records.begin();
+         for ( ; ir != records.end(); ir++) {
+            idata[mark + il] = ir->patch_id;
+            ddata[il] = ir->value;
             il++;
          }
       }
@@ -488,10 +495,11 @@ void Statistic::putToDatabase(
    }
 }
 
-void Statistic::getFromRestart(
-   Pointer<Database> db)
+void
+Statistic::getFromRestart(
+   const boost::shared_ptr<Database>& db)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    int ver = db->getInteger("TBOX_STATISTIC_VERSION");
    if (ver != TBOX_STATISTIC_VERSION) {

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Routines for performing cell-tagging and initializing
  *                a new level.
  *
@@ -17,18 +17,15 @@
 #include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-#include "SAMRAI/tbox/Pointer.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/StandardTagAndInitialize.I"
-#endif
-
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 #include <stdio.h>
 
 /*
@@ -103,7 +100,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
    const tbox::Dimension& dim,
    const std::string& object_name,
    StandardTagAndInitStrategy* tag_strategy,
-   tbox::Pointer<tbox::Database> input_db):
+   const boost::shared_ptr<tbox::Database>& input_db):
    TagAndInitializeStrategy(dim, object_name)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -121,7 +118,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
     * so cell-tagging will not occur.  Print a warning to indicate if
     * this is the case.
     */
-   if (input_db.isNull()) {
+   if (!input_db) {
       TBOX_WARNING(
          getObjectName() << ":constructor \n"
                          << "no input database specified - NO METHOD IS SPECIFIED TO TAG \n"
@@ -137,7 +134,7 @@ StandardTagAndInitialize::StandardTagAndInitialize(
     * registered StandardTagAndInitStrategy must be non-NULL.
     */
    if (d_use_gradient_detector || d_use_richardson_extrapolation) {
-      if (tag_strategy == ((mesh::StandardTagAndInitStrategy *)NULL)) {
+      if (tag_strategy == ((StandardTagAndInitStrategy *)NULL)) {
          TBOX_ERROR(
             getObjectName() << ":constructor "
                             << "\nThe supplied implementation of the "
@@ -162,27 +159,28 @@ StandardTagAndInitialize::~StandardTagAndInitialize()
  *************************************************************************
  */
 
-void StandardTagAndInitialize::initializeLevelData(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+void
+StandardTagAndInitialize::initializeLevelData(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double init_data_time,
    const bool can_be_refined,
    const bool initial_time,
-   const tbox::Pointer<hier::PatchLevel> old_level,
+   const boost::shared_ptr<hier::PatchLevel>& old_level,
    const bool allocate_data)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   if (!(old_level.isNull())) {
+   if (old_level) {
       TBOX_ASSERT(level_number == old_level->getLevelNumber());
    }
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number)).isNull());
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
 #endif
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
-   if (d_tag_strategy != ((mesh::StandardTagAndInitStrategy *)NULL)) {
+   if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
       d_tag_strategy->initializeLevelData(hierarchy,
          level_number,
          init_data_time,
@@ -203,24 +201,25 @@ void StandardTagAndInitialize::initializeLevelData(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::resetHierarchyConfiguration(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+void
+StandardTagAndInitialize::resetHierarchyConfiguration(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
 
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int ln0 = 0; ln0 <= finest_level; ln0++) {
-      TBOX_ASSERT(!(hierarchy->getPatchLevel(ln0)).isNull());
+      TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
-   if (d_tag_strategy != ((mesh::StandardTagAndInitStrategy *)NULL)) {
+   if (d_tag_strategy != ((StandardTagAndInitStrategy *)NULL)) {
       d_tag_strategy->resetHierarchyConfiguration(hierarchy,
          coarsest_level,
          finest_level);
@@ -248,8 +247,9 @@ void StandardTagAndInitialize::resetHierarchyConfiguration(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::tagCellsForRefinement(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+void
+StandardTagAndInitialize::tagCellsForRefinement(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const int tag_index,
@@ -258,10 +258,10 @@ void StandardTagAndInitialize::tagCellsForRefinement(
    const bool can_be_refined,
    const double regrid_start_time)
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(tag_index >= 0);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
@@ -282,9 +282,8 @@ void StandardTagAndInitialize::tagCellsForRefinement(
       NULL_USE(can_be_refined);
       NULL_USE(coarsest_sync_level);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy *)NULL));
-#endif
+      TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
+
       d_tag_strategy->applyGradientDetector(hierarchy,
          level_number,
          regrid_time,
@@ -303,20 +302,21 @@ void StandardTagAndInitialize::tagCellsForRefinement(
       hier::BoxContainer refine_boxes;
       getUserSuppliedRefineBoxes(refine_boxes, level_number, regrid_time);
 
-      tbox::Pointer<hier::PatchLevel> level =
-         hierarchy->getPatchLevel(level_number);
+      boost::shared_ptr<hier::PatchLevel> level(
+         hierarchy->getPatchLevel(level_number));
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> patch = *ip;
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-         tbox::Pointer<pdat::CellData<int> > tag_data =
-            patch->getPatchData(tag_index);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!(tag_data.isNull()));
-#endif
+         boost::shared_ptr<pdat::CellData<int> > tag_data(
+            patch->getPatchData(tag_index),
+            boost::detail::dynamic_cast_tag());
 
-         for (hier::BoxContainer::Iterator ib(refine_boxes); ib != refine_boxes.end();
-              ++ib) {
+         TBOX_ASSERT(tag_data);
+
+         for (hier::BoxContainer::iterator ib(refine_boxes);
+              ib != refine_boxes.end(); ++ib) {
             hier::Box intersection = *ib * tag_data->getBox();
             if (!(intersection.empty())) {
                tag_data->fill(1, intersection);
@@ -389,7 +389,7 @@ void StandardTagAndInitialize::tagCellsForRefinement(
 
 void
 StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const double regrid_start_time,
@@ -400,12 +400,12 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
-   TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy *)NULL));
+   TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
 
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<hier::PatchLevel> patch_level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> patch_level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * Determine the level timestep.  If the error coarsen ratio is 2
@@ -483,8 +483,8 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       start_time = end_time;
    }
 
-   tbox::Pointer<hier::PatchLevel> coarser_level =
-      d_rich_extrap_coarsened_levels[level_number];
+   boost::shared_ptr<hier::PatchLevel> coarser_level(
+      d_rich_extrap_coarsened_levels[level_number]);
 
    /*
     * Coarsen data from hierarchy level to coarser level.
@@ -502,18 +502,20 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * Coarsen tags from level to coarser level.
     */
    hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
-   for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
-      tbox::Pointer<hier::Patch> coarse_patch = *ip;
-      tbox::Pointer<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getBox().getBlockId());
-      tbox::Pointer<pdat::CellData<int> >
-      ftags = fine_patch->getPatchData(tag_index);
-      tbox::Pointer<pdat::CellData<int> >
-      ctags = coarse_patch->getPatchData(tag_index);
+   for (hier::PatchLevel::iterator ip(coarser_level->begin());
+        ip != coarser_level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
+      boost::shared_ptr<hier::Patch> fine_patch(
+         patch_level->getPatch(coarse_patch->getGlobalId()));
+      boost::shared_ptr<pdat::CellData<int> > ftags(
+         fine_patch->getPatchData(tag_index),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<int> > ctags(
+         coarse_patch->getPatchData(tag_index),
+         boost::detail::dynamic_cast_tag());
 
-      TBOX_ASSERT(!ftags.isNull());
-      TBOX_ASSERT(!ctags.isNull());
+      TBOX_ASSERT(ftags);
+      TBOX_ASSERT(ctags);
       TBOX_ASSERT(ctags->getDepth() == ftags->getDepth());
 
       const hier::Index filo = ftags->getGhostBox().lower();
@@ -576,12 +578,12 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
     * Refine tags from coarser level to level.
     */
    pdat::CellIntegerConstantRefine copytags(dim);
-   for (hier::PatchLevel::Iterator ip(coarser_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(coarser_level->begin());
+        ip != coarser_level->end(); ++ip) {
 
-      tbox::Pointer<hier::Patch> coarse_patch = *ip;
-      tbox::Pointer<hier::Patch> fine_patch =
-         patch_level->getPatch(coarse_patch->getGlobalId(),
-            coarse_patch->getBox().getBlockId());
+      const boost::shared_ptr<hier::Patch>& coarse_patch = *ip;
+      boost::shared_ptr<hier::Patch> fine_patch(
+         patch_level->getPatch(coarse_patch->getGlobalId()));
       copytags.refine(*fine_patch, *coarse_patch,
          tag_index, tag_index,
          fine_patch->getBox(), coarsen_ratio);
@@ -596,7 +598,7 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
       bool allocate_data = false;
       initializeLevelData(hierarchy, level_number, regrid_time,
          can_be_refined, initial_time,
-         tbox::Pointer<hier::PatchLevel>(NULL),
+         boost::shared_ptr<hier::PatchLevel>(),
          allocate_data);
    }
 
@@ -614,16 +616,16 @@ StandardTagAndInitialize::tagCellsUsingRichardsonExtrapolation(
 
 void
 StandardTagAndInitialize::preprocessErrorEstimation(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const double regrid_start_time,
    const bool initial_time)
 {
-   TBOX_ASSERT(!(hierarchy.isNull()));
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
 
    if (d_use_richardson_extrapolation) {
@@ -672,21 +674,21 @@ StandardTagAndInitialize::preprocessErrorEstimation(
 
 void
 StandardTagAndInitialize::preprocessRichardsonExtrapolation(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double regrid_time,
    const double regrid_start_time,
    const bool initial_time)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(getDim(), *hierarchy);
    TBOX_ASSERT(regrid_start_time <= regrid_time);
-   TBOX_ASSERT(d_tag_strategy != ((mesh::StandardTagAndInitStrategy *)NULL));
+   TBOX_ASSERT(d_tag_strategy != ((StandardTagAndInitStrategy *)NULL));
 
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<hier::PatchLevel> patch_level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<hier::PatchLevel> patch_level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * Determine the level timestep.  If the error coarsen ratio is 2
@@ -739,7 +741,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
     * so user routines can use this information.
     */
 
-   tbox::Pointer<hier::PatchLevel> coarsened_level(new hier::PatchLevel(dim));
+   boost::shared_ptr<hier::PatchLevel> coarsened_level(
+      boost::make_shared<hier::PatchLevel>(dim));
    hier::IntVector coarsen_ratio(dim, d_error_coarsen_ratio);
    coarsened_level->setCoarsenedPatchLevel(patch_level, coarsen_ratio);
 
@@ -799,8 +802,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
        */
       hier::Connector* coarsened_to_coarser = new hier::Connector;
       hier::Connector* coarser_to_coarsened = new hier::Connector;
-      tbox::Pointer<hier::PatchLevel> coarser_level = hierarchy->getPatchLevel(
-            level_number - 1);
+      boost::shared_ptr<hier::PatchLevel> coarser_level(
+         hierarchy->getPatchLevel(level_number - 1));
       const hier::Connector& level_to_coarser =
          patch_level->getBoxLevel()->getPersistentOverlapConnectors().
          findConnector(
@@ -905,7 +908,8 @@ StandardTagAndInitialize::preprocessRichardsonExtrapolation(
  *************************************************************************
  */
 
-bool StandardTagAndInitialize::coarsestLevelBoxesOK(
+bool
+StandardTagAndInitialize::coarsestLevelBoxesOK(
    const hier::BoxContainer& boxes) const
 {
    TBOX_ASSERT(boxes.size() > 0);
@@ -913,8 +917,9 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
    bool boxes_ok = true;
    if (d_use_richardson_extrapolation) {
 
-      for (hier::BoxContainer::ConstIterator ib(boxes); ib != boxes.end(); ++ib) {
-         hier::IntVector n_cells = ib().numberCells();
+      for (hier::BoxContainer::const_iterator ib(boxes);
+           ib != boxes.end(); ++ib) {
+         hier::IntVector n_cells = ib->numberCells();
          for (int i = 0; i < getDim().getValue(); i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
             if (!((n_cells(i) % error_coarsen_ratio) == 0)) {
@@ -944,7 +949,8 @@ bool StandardTagAndInitialize::coarsestLevelBoxesOK(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::checkCoarsenRatios(
+void
+StandardTagAndInitialize::checkCoarsenRatios(
    const tbox::Array<hier::IntVector>& ratio_to_coarser)
 {
    if (d_use_richardson_extrapolation) {
@@ -972,8 +978,7 @@ void StandardTagAndInitialize::checkCoarsenRatios(
       for (int ln = 1; ln < ratio_to_coarser.getSize(); ln++) {
 
          for (int d = 0; d < getDim().getValue(); d++) {
-            int gcd =
-               SAMRAI::mesh::GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
+            int gcd = GCD(error_coarsen_ratio, ratio_to_coarser[ln](d));
             if ((gcd % error_coarsen_ratio) != 0) {
                gcd = ratio_to_coarser[ln](d);
                TBOX_ERROR(
@@ -1000,6 +1005,31 @@ void StandardTagAndInitialize::checkCoarsenRatios(
 
 }
 
+bool
+StandardTagAndInitialize::usesTimeIntegration() const
+{
+   return d_use_richardson_extrapolation;
+}
+
+int
+StandardTagAndInitialize::getErrorCoarsenRatio() const
+{
+   return d_error_coarsen_ratio;
+}
+
+bool
+StandardTagAndInitialize::refineUserBoxInputOnly() const
+{
+   bool use_only_refine_boxes = false;
+   if (d_use_refine_boxes) {
+      use_only_refine_boxes = true;
+      if (d_use_gradient_detector || d_use_richardson_extrapolation) {
+         use_only_refine_boxes = false;
+      }
+   }
+   return use_only_refine_boxes;
+}
+
 /*
  *************************************************************************
  *
@@ -1008,12 +1038,11 @@ void StandardTagAndInitialize::checkCoarsenRatios(
  *************************************************************************
  */
 
-void StandardTagAndInitialize::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+void
+StandardTagAndInitialize::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
-#endif
+   TBOX_ASSERT(db);
 
    tbox::Array<std::string> tagging_method;
    if (db->keyExists("tagging_method")) {

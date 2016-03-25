@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Basic templated cell-centered patch data operations.
  *
  ************************************************************************/
@@ -45,7 +45,8 @@ PatchCellDataBasicOps<TYPE>::PatchCellDataBasicOps(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::operator = (
+void
+PatchCellDataBasicOps<TYPE>::operator = (
    const PatchCellDataBasicOps<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -60,13 +61,14 @@ void PatchCellDataBasicOps<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::scale(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
+void
+PatchCellDataBasicOps<TYPE>::scale(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.scale(dst->getArrayData(),
@@ -75,13 +77,14 @@ void PatchCellDataBasicOps<TYPE>::scale(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::addScalar(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+void
+PatchCellDataBasicOps<TYPE>::addScalar(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.addScalar(dst->getArrayData(),
@@ -90,13 +93,14 @@ void PatchCellDataBasicOps<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::add(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+void
+PatchCellDataBasicOps<TYPE>::add(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.add(dst->getArrayData(),
@@ -105,13 +109,14 @@ void PatchCellDataBasicOps<TYPE>::add(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::subtract(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+void
+PatchCellDataBasicOps<TYPE>::subtract(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.subtract(dst->getArrayData(),
@@ -120,13 +125,14 @@ void PatchCellDataBasicOps<TYPE>::subtract(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::multiply(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+void
+PatchCellDataBasicOps<TYPE>::multiply(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.multiply(dst->getArrayData(),
@@ -135,13 +141,14 @@ void PatchCellDataBasicOps<TYPE>::multiply(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::divide(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+void
+PatchCellDataBasicOps<TYPE>::divide(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.divide(dst->getArrayData(),
@@ -150,12 +157,13 @@ void PatchCellDataBasicOps<TYPE>::divide(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::reciprocal(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+void
+PatchCellDataBasicOps<TYPE>::reciprocal(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.reciprocal(dst->getArrayData(),
@@ -164,15 +172,16 @@ void PatchCellDataBasicOps<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::linearSum(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
+void
+PatchCellDataBasicOps<TYPE>::linearSum(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
    const TYPE& beta,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.linearSum(dst->getArrayData(),
@@ -182,14 +191,15 @@ void PatchCellDataBasicOps<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::axpy(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
+void
+PatchCellDataBasicOps<TYPE>::axpy(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.axpy(dst->getArrayData(),
@@ -199,14 +209,15 @@ void PatchCellDataBasicOps<TYPE>::axpy(
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::axmy(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
+void
+PatchCellDataBasicOps<TYPE>::axmy(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& alpha,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src2,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src2,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src1.isNull() && !src2.isNull());
+   TBOX_ASSERT(dst && src1 && src2);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
 
    d_array_ops.axmy(dst->getArrayData(),
@@ -216,35 +227,38 @@ void PatchCellDataBasicOps<TYPE>::axmy(
 }
 
 template<class TYPE>
-TYPE PatchCellDataBasicOps<TYPE>::min(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+TYPE
+PatchCellDataBasicOps<TYPE>::min(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    return d_array_ops.min(data->getArrayData(), box);
 }
 
 template<class TYPE>
-TYPE PatchCellDataBasicOps<TYPE>::max(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+TYPE
+PatchCellDataBasicOps<TYPE>::max(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    return d_array_ops.max(data->getArrayData(), box);
 }
 
 template<class TYPE>
-void PatchCellDataBasicOps<TYPE>::setRandomValues(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
+void
+PatchCellDataBasicOps<TYPE>::setRandomValues(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
    const TYPE& width,
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    d_array_ops.setRandomValues(dst->getArrayData(),

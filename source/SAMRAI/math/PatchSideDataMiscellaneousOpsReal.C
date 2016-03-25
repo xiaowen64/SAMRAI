@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real side-centered data.
  *
  ************************************************************************/
@@ -47,7 +47,8 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::PatchSideDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchSideDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -62,22 +63,22 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::SideData<TYPE> >& data1,
-   const tbox::Pointer<pdat::SideData<TYPE> >& data2,
+int
+PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
+   TBOX_ASSERT(data1 && data2);
    TBOX_ASSERT(data1->getDirectionVector() == data2->getDirectionVector());
-#endif
+
    int retval = 1;
-   const tbox::Dimension& dim(data1->getDim());
+   int dimVal = data1->getDim().getValue();
 
    const hier::IntVector& directions = data1->getDirectionVector();
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -89,11 +90,10 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
          }
       }
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-#endif
-      for (int d = 0; d < dim.getValue(); d++) {
+
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -110,22 +110,22 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+void
+PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-#endif
-   const tbox::Dimension& dim(dst->getDim());
+
+   int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             d_array_ops.compareToScalar(dst->getArrayData(d),
@@ -135,11 +135,10 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
          }
       }
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-#endif
-      for (int d = 0; d < dim.getValue(); d++) {
+
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
@@ -153,22 +152,22 @@ void PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+int
+PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::SideData<double> > cvol) const
+   const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-#endif
-   const tbox::Dimension& dim(dst->getDim());
+
+   int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
    int retval = 1;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -180,11 +179,10 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
          }
       }
    } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
-#endif
-      for (int d = 0; d < dim.getValue(); d++) {
+
+      for (int d = 0; d < dimVal; d++) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -201,18 +199,18 @@ int PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::SideData<TYPE> >& numer,
-   const tbox::Pointer<pdat::SideData<TYPE> >& denom,
+TYPE
+PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
-#endif
-   const tbox::Dimension& dim(numer->getDim());
+   TBOX_ASSERT(numer && denom);
+
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box side_box =
          pdat::SideGeometry::toSideBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
@@ -224,18 +222,18 @@ TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::SideData<TYPE> >& numer,
-   const tbox::Pointer<pdat::SideData<TYPE> >& denom,
+TYPE
+PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
-#endif
-   const tbox::Dimension& dim(numer->getDim());
+   TBOX_ASSERT(numer && denom);
+
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),

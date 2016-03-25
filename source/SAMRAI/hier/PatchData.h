@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for patch data objects
  *
  ************************************************************************/
@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -54,7 +54,7 @@ namespace hier {
  * @see hier::PatchDescriptor
  */
 
-class PatchData:public tbox::DescribedClass
+class PatchData
 {
 public:
    /**
@@ -62,7 +62,7 @@ public:
     * manage the interior box over which they are defined and the associated
     * ghost cell width.
     */
-   explicit PatchData(
+   PatchData(
       const Box& domain,
       const IntVector& ghosts);
 
@@ -78,20 +78,29 @@ public:
     * that box in different ways.
     */
    const Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /**
     * Return the ghost cell box.  The ghost cell box is defined to be
     * the interior box grown by the ghost cell width.
     */
    const Box&
-   getGhostBox() const;
+   getGhostBox() const
+   {
+      return d_ghost_box;
+   }
 
    /**
     * Get the ghost cell width associated with this patch data object.
     */
    const IntVector&
-   getGhostCellWidth() const;
+   getGhostCellWidth() const
+   {
+      return d_ghosts;
+   }
 
    /**
     * Set the simulation time stamp for the patch data type.  The simulation
@@ -99,13 +108,19 @@ public:
     */
    void
    setTime(
-      const double timestamp);
+      const double timestamp)
+   {
+      d_timestamp = timestamp;
+   }
 
    /**
     * Get the simulation time stamp for the patch data type.
     */
    double
-   getTime() const;
+   getTime() const
+   {
+      return d_timestamp;
+   }
 
    /**
     * A fast copy between the source and destination.  Data is copied from
@@ -207,7 +222,7 @@ public:
     */
    virtual void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /**
     * Writes out the class version number to the database.  Then,
@@ -216,8 +231,8 @@ public:
     * putSpecializedToDatabase() method is invoked.
     */
    virtual void
-   putToDatabase(
-      tbox::Pointer<tbox::Database> database);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /**
     * This pure abstract method is used by concrete patch data subclasses
@@ -225,7 +240,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database) = 0;
+      const boost::shared_ptr<tbox::Database>& database) = 0;
 
    /**
     * This pure abstract method is used by concrete patch data subclasses
@@ -233,13 +248,16 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database) = 0;
+      const boost::shared_ptr<tbox::Database>& database) const = 0;
 
    /**
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_box.getDim();
+   }
 
 protected:
    /**
@@ -254,7 +272,12 @@ protected:
     */
    void
    setGhostBox(
-      const Box& ghost_box);
+      const Box& ghost_box)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, ghost_box);
+      TBOX_ASSERT((ghost_box * d_box).isSpatiallyEqual(d_box));
+      d_ghost_box = ghost_box;
+   }
 
 private:
    /*
@@ -277,9 +300,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchData.I"
-#endif
 
 #endif

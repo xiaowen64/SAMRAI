@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
@@ -18,10 +18,10 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/LocalId.h"
 #include "SAMRAI/hier/PatchBoundaries.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/List.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -33,13 +33,13 @@ namespace hier {
  * ghost cells and is used in the inter-level transfer operators for refining
  * or coarsening data between two patches associated with different index
  * spaces.  The boundary information for patches is actually computed by
- * the GridGeometry class.
+ * the BaseGridGeometry class.
  *
  * @see hier::BoundaryBox
- * @see hier::GridGeometry
+ * @see hier::BaseGridGeometry
  */
 
-class PatchGeometry:public tbox::DescribedClass
+class PatchGeometry
 {
 public:
    /*!
@@ -53,31 +53,49 @@ public:
       explicit TwoDimBool(
          const tbox::Dimension& dim);
 
-      explicit TwoDimBool(
+      TwoDimBool(
          const tbox::Dimension& dim,
          bool v);
 
       void
       setAll(
-         bool v);
+         bool v)
+      {
+         for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
+            d_data[i] = v;
+         }
+      }
 
       bool&
       operator () (
          int dim,
-         int side);
+         int side)
+      {
+         TBOX_ASSERT(dim >= 0 && dim < d_dim.getValue());
+         TBOX_ASSERT(side == 0 || side == 1);
+         return d_data[2 * dim + side];
+      }
 
       const bool&
       operator () (
          int dim,
-         int side) const;
+         int side) const
+      {
+         TBOX_ASSERT(dim >= 0 && dim < d_dim.getValue());
+         TBOX_ASSERT(side == 0 || side == 1);
+         return d_data[2 * dim + side];
+      }
 
       /**
        * Return the dimension of this object.
        */
       const tbox::Dimension&
-      getDim() const;
+      getDim() const
+      {
+         return d_dim;
+      }
 
-      friend class::std::map<LocalId, SAMRAI::hier::PatchGeometry::TwoDimBool>;
+      friend class::std::map<LocalId, PatchGeometry::TwoDimBool>;
 
 private:
       /*
@@ -92,7 +110,7 @@ private:
    /**
     * The default constructor for the patch geometry base class.
     */
-   explicit PatchGeometry(
+   PatchGeometry(
       const IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
       const TwoDimBool& touches_periodic_bdry);
@@ -106,7 +124,10 @@ private:
     * Return const reference to patch boundary information.
     */
    const tbox::Array<tbox::Array<BoundaryBox> >
-   getPatchBoundaries() const;
+   getPatchBoundaries() const
+   {
+      return d_patch_boundaries.getArrays();
+   }
 
    /*!
     * @brief Set the boundary box arrays for this patch geometry.
@@ -124,7 +145,10 @@ private:
     * Return const reference to ratio to level zero index space.
     */
    const IntVector&
-   getRatio() const;
+   getRatio() const
+   {
+      return d_ratio_to_level_zero;
+   }
 
    /**
     * Return a boolean value indicating whether the patch boundary
@@ -137,7 +161,10 @@ private:
     * from the proper region of the domain interior in the periodic direction.
     */
    bool
-   intersectsPhysicalBoundary() const;
+   intersectsPhysicalBoundary() const
+   {
+      return d_has_regular_boundary;
+   }
 
    /**
     * Return array of boundary box components for patch each of which
@@ -145,7 +172,10 @@ private:
     * between cells in patch and cells in boundary box).
     */
    const tbox::Array<BoundaryBox>&
-   getNodeBoundaries() const;
+   getNodeBoundaries() const
+   {
+      return d_patch_boundaries[d_dim.getValue() - 1];
+   }
 
    /**
     * Return array of boundary box components for patch each of which
@@ -156,7 +186,18 @@ private:
     * when DIM < 2.
     */
    const tbox::Array<BoundaryBox>&
-   getEdgeBoundaries() const;
+   getEdgeBoundaries() const
+   {
+      if (d_dim.getValue() < 2) {
+         TBOX_ERROR("PatchGeometry error in getEdgeBoundary...\n"
+            << "DIM < 2 not supported." << std::endl);
+      }
+
+      // The "funny" indexing prevents a warning when compiling for
+      // DIM < 2.  This code is only reached if DIM >= 2 when
+      // executing.
+      return d_patch_boundaries[d_dim.getValue() < 2 ? 0 : d_dim.getValue() - 2];
+   }
 
    /**
     * Return array of boundary box components for patch each of which
@@ -167,28 +208,43 @@ private:
     * when DIM < 3.
     */
    const tbox::Array<BoundaryBox>&
-   getFaceBoundaries() const;
+   getFaceBoundaries() const
+   {
+      if (d_dim.getValue() < 3) {
+         TBOX_ERROR("PatchGeometry error in getFaceBoundary...\n"
+            << "DIM < 3 not supported." << std::endl);
+      }
+
+      // The "funny" indexing prevents a warning when compiling for
+      // DIM < 3.  This code is only reached if DIM >= 3 when
+      // executing.
+      return d_patch_boundaries[d_dim.getValue() < 3 ? 0 : d_dim.getValue() - 3];
+   }
 
    /**
     * Return array of boundary box components for patch each of which
     * intersects the patch as a (DIM - codim)-dimensional object.
     * That is,
     *
-    * if DIM == 1: (co(dim == tbox::Dimension(1))) => same components as getNodeBoundaries.
+    * if DIM == 1: (codim == 1) => same components as getNodeBoundaries.
     *
-    * if DIM == 2, (co(dim == tbox::Dimension(1))) => same components as getEdgeBoundaries.
-    *              (co(dim == tbox::Dimension(2))) => same components as getNodeBoundaries.
+    * if DIM == 2, (codim == 1) => same components as getEdgeBoundaries.
+    *              (codim == 2) => same components as getNodeBoundaries.
     *
-    * if DIM == 3, (co(dim == tbox::Dimension(1))) => same components as getFaceBoundaries.
-    *              (co(dim == tbox::Dimension(2))) => same components as getEdgeBoundaries.
-    *              (co(dim == tbox::Dimension(3))) => same components as getNodeBoundaries.
+    * if DIM == 3, (codim == 1) => same components as getFaceBoundaries.
+    *              (codim == 2) => same components as getEdgeBoundaries.
+    *              (codim == 3) => same components as getNodeBoundaries.
     *
     * When assertion checking is active, this routine throws an assertion
     * when codim < 0 or codim > DIM.
     */
    const tbox::Array<BoundaryBox>&
    getCodimensionBoundaries(
-      const int codim) const;
+      const int codim) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      return d_patch_boundaries[codim - 1];
+   }
 
    /**
     * Set the array of boundary box components of the given codimension
@@ -223,7 +279,10 @@ private:
     * Returns true if the Patch touches any non-periodic physical boundary
     */
    bool
-   getTouchesRegularBoundary() const;
+   getTouchesRegularBoundary() const
+   {
+      return d_has_regular_boundary;
+   }
 
    /*!
     * @brief Query whether patch touches a regular boundary
@@ -231,7 +290,10 @@ private:
     * Returns true if the Patch touches any periodic boundary
     */
    bool
-   getTouchesPeriodicBoundary() const;
+   getTouchesPeriodicBoundary() const
+   {
+      return d_has_periodic_boundary;
+   }
 
    /*!
     * @brief Query whether patch touches a specific regular boundary
@@ -248,7 +310,12 @@ private:
    bool
    getTouchesRegularBoundary(
       int axis,
-      int upperlower) const;
+      int upperlower) const
+   {
+      TBOX_ASSERT(axis >= 0 && axis < d_dim.getValue());
+      TBOX_ASSERT(upperlower == 0 || upperlower == 1);
+      return d_touches_regular_bdry(axis, upperlower);
+   }
 
    /**
     * Print object data to the specified output stream.
@@ -266,13 +333,9 @@ private:
    PatchBoundaries d_patch_boundaries;
 
    TwoDimBool d_touches_regular_bdry;
-
-   tbox::List<IntVector> d_periodic_shifts;
 };
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchGeometry.I"
-#endif
+
 #endif

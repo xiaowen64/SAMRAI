@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility for cataloging periodic shift directions.
  *
  ************************************************************************/
@@ -14,6 +14,8 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PeriodicId.h"
+#include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <vector>
 
@@ -59,7 +61,12 @@ public:
     */
    const IntVector&
    shiftNumberToShiftDistance(
-      const PeriodicId& shift_number) const;
+      const PeriodicId& shift_number) const
+   {
+      TBOX_ASSERT(shift_number.isValid());
+      TBOX_ASSERT(shift_number.getPeriodicValue() < (int)d_shifts.size());
+      return d_shifts[shift_number.getPeriodicValue()];
+   }
 
    /*!
     * @brief Return the shift number corresponding to the given shift
@@ -72,13 +79,28 @@ public:
     */
    PeriodicId
    shiftDistanceToShiftNumber(
-      const IntVector& shift_distance) const;
+      const IntVector& shift_distance) const
+   {
+      unsigned int s;
+      for (s = 0; s < d_shifts.size(); ++s) {
+         if (d_shifts[s] == shift_distance) {
+            break;
+         }
+      }
+      if (s == d_shifts.size()) {
+         s = tbox::MathUtilities<int>::getMax();
+      }
+      return PeriodicId(s);
+   }
 
    /*!
     * @brief Return the "invalid" shift number.
     */
    int
-   getInvalidShiftNumber() const;
+   getInvalidShiftNumber() const
+   {
+      return tbox::MathUtilities<int>::getMax();
+   }
 
    /*!
     * @brief Return the shift number corresponding to the negative of
@@ -88,25 +110,39 @@ public:
     */
    const PeriodicId&
    getOppositeShiftNumber(
-      const PeriodicId& shift_number) const;
+      const PeriodicId& shift_number) const
+   {
+      TBOX_ASSERT(shift_number.isValid());
+      TBOX_ASSERT(shift_number.getPeriodicValue() < (int)d_shifts.size());
+      return d_opposite_number[shift_number.getPeriodicValue()];
+   }
 
    /*!
     * @brief Determine whether there is any periodicity.
     */
    bool
-   isPeriodic() const;
+   isPeriodic() const
+   {
+      return d_shifts.size() > 1;
+   }
 
    /*!
     * @brief Return the number of possible shifts.
     */
    int
-   getNumberOfShifts() const;
+   getNumberOfShifts() const
+   {
+      return (int)d_shifts.size();
+   }
 
    /*!
     * @brief Return the shift number corresponding to no shift.
     */
    const PeriodicId&
-   getZeroShiftNumber() const;
+   getZeroShiftNumber() const
+   {
+      return PeriodicId::zero();
+   }
 
    /*!
     * @brief Compute all possible shifts for periodicity along the
@@ -127,7 +163,7 @@ public:
     * This method must only be called once for each dimension
     * (indicated by the dimension of @c shift_distances).
     *
-    * @param[in] shift_distances_along_index_directions The periodic
+    * @param[in] shift_distance_along_index_directions The periodic
     * shift distance in each index direction.
     *
     * TODO: possible refactor?  This method should probably be changed
@@ -144,8 +180,10 @@ private:
     * After construction, the object should be populated with periodic
     * shifts using initializeShiftsByIndexDirections().
     */
-   PeriodicShiftCatalog(
+   explicit PeriodicShiftCatalog(
       const tbox::Dimension& dim);
+
+   ~PeriodicShiftCatalog();
 
    /*!
     * @brief Set the shifts.
@@ -164,8 +202,6 @@ private:
    setShifts(
       const tbox::Dimension& dim,
       const std::vector<IntVector>& shifts);
-
-   ~PeriodicShiftCatalog();
 
    /*!
     * @brief Free the singleton object.
@@ -202,7 +238,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PeriodicShiftCatalog.I"
-#endif
 #endif

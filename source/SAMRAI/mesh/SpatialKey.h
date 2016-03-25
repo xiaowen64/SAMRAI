@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   spatial key used for generating space-filling curves.
  *
  ************************************************************************/
@@ -40,7 +40,7 @@ public:
     * Create a spatial key from given index space coordinates and
     * level number.
     */
-   SpatialKey(
+   explicit SpatialKey(
       const unsigned int i,
       const unsigned int j = 0,
       const unsigned int k = 0,
@@ -62,7 +62,13 @@ public:
     */
    SpatialKey&
    operator = (
-      const SpatialKey& spatial_key);
+      const SpatialKey& spatial_key)
+   {
+      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+         d_key[i] = spatial_key.d_key[i];
+      }
+      return *this;
+   }
 
    /**
     * Return true if argument key is equal to this key.  Otherwise,
@@ -70,7 +76,17 @@ public:
     */
    bool
    operator == (
-      const SpatialKey& spatial_key) const;
+      const SpatialKey& spatial_key) const
+   {
+      bool are_equal = true;
+      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+         if (d_key[i] != spatial_key.d_key[i]) {
+            are_equal = false;
+            break;
+         }
+      }
+      return are_equal;
+   }
 
    /**
     * Return true if argument key is not equal to this key.  Otherwise,
@@ -78,7 +94,10 @@ public:
     */
    bool
    operator != (
-      const SpatialKey& spatial_key) const;
+      const SpatialKey& spatial_key) const
+   {
+      return !((*this) == spatial_key);
+   }
 
    /**
     * Return true if this key is less than argument key.  Otherwise,
@@ -94,7 +113,10 @@ public:
     */
    bool
    operator <= (
-      const SpatialKey& spatial_key) const;
+      const SpatialKey& spatial_key) const
+   {
+      return ((*this) < spatial_key) || ((*this) == spatial_key);
+   }
 
    /**
     * Return true if this key is greater than argument key.  Otherwise,
@@ -102,7 +124,10 @@ public:
     */
    bool
    operator > (
-      const SpatialKey& spatial_key) const;
+      const SpatialKey& spatial_key) const
+   {
+      return !((*this) < spatial_key) && ((*this) != spatial_key);
+   }
 
    /**
     * Return true if this key is greater than or equal to argument key.
@@ -110,13 +135,21 @@ public:
     */
    bool
    operator >= (
-      const SpatialKey& spatial_key) const;
+      const SpatialKey& spatial_key) const
+   {
+      return ((*this) > spatial_key) || ((*this) == spatial_key);
+   }
 
    /**
     * Set this key to zero key.
     */
    void
-   setToZero();
+   setToZero()
+   {
+      for (int i = 0; i < NUM_COORDS_MIXED_FOR_SPATIAL_KEY; i++) {
+         d_key[i] = 0;
+      }
+   }
 
    /**
     * Set this key from the index space coordinates and the level number.
@@ -182,7 +215,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/SpatialKey.I"
-#endif
+
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
@@ -61,7 +61,7 @@ public:
     *
     * @see initialize().
     */
-   explicit BalancedDepthFirstTree(
+   BalancedDepthFirstTree(
       unsigned int first_rank,
       unsigned int last_rank,
       unsigned int rank,
@@ -72,8 +72,7 @@ public:
     *
     * Deallocate internal data.
     */
-   virtual ~BalancedDepthFirstTree(
-      void);
+   ~BalancedDepthFirstTree();
 
    /*!
     * @brief Construct the tree.
@@ -92,6 +91,8 @@ public:
     * communication group.
     *
     * @param rank The rank whose parent and children are sought.
+    *
+    * @param do_left_leaf_switch
     */
    void
    initialize(
@@ -103,7 +104,8 @@ public:
    /*!
     * @brief Access the rank used to initialize.
     */
-   unsigned int getRank() const
+   unsigned int
+   getRank() const
    {
       return d_rank;
    }
@@ -111,7 +113,8 @@ public:
    /*!
     * @brief Access the parent rank.
     */
-   unsigned int getParentRank() const
+   unsigned int
+   getParentRank() const
    {
       return d_parent;
    }
@@ -122,13 +125,15 @@ public:
     * Currently, child_number must be 0 or 1 because we only support
     * a binary tree.
     */
-   unsigned int getChildRank(
+   unsigned int
+   getChildRank(
       unsigned int child_number) const
    {
       return d_children[child_number];
    }
 
-   unsigned short int getNumberOfChildren() const
+   unsigned short int
+   getNumberOfChildren() const
    {
       return d_num_children;
    }
@@ -140,7 +145,10 @@ public:
     * the rank.
     */
    unsigned int
-   getInvalidRank() const;
+   getInvalidRank() const
+   {
+      return 1 << (8 * sizeof(unsigned int) - 2);
+   }
 
 private:
    /*!

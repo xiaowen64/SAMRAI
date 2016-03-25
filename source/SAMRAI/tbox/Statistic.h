@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Class to record statistics during program execution.
  *
  ************************************************************************/
@@ -16,10 +16,9 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/List.h"
 
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -45,7 +44,7 @@ class Statistician;
  * An example use of a Statistic to record the number of gridcells on each
  * processor is as follows:
  *
- *    Pointer<Statistic> stat_num_gridcells =
+ *    boost::shared_ptr<Statistic> stat_num_gridcells =
  *        Statistician::getStatistician()->
  *        getStatistic("NumberGridcells", "PROC_STAT");
  *    ...
@@ -75,32 +74,41 @@ class Statistician;
  * @see tbox::Statistician
  */
 
-class Statistic:public DescribedClass
+class Statistic
 {
    friend class Statistician;
 public:
    /**
     * Virtual destructor destroys recorded object data.
     */
-   virtual ~Statistic();
+   ~Statistic();
 
    /**
     * Return string name identifier for statistic object.
     */
    const std::string&
-   getName() const;
+   getName() const
+   {
+      return d_object_name;
+   }
 
    /**
     * Return string statistic type identifier for statistic object.
     */
    std::string
-   getType() const;
+   getType() const
+   {
+      return (d_stat_type == PROC_STAT) ? "PROC_STAT" : "PATCH_STAT";
+   }
 
    /**
     * Return integer instance identifier for statistic object.
     */
    int
-   getInstanceId() const;
+   getInstanceId() const
+   {
+      return d_instance_id;
+   }
 
    /**
     * Return integer length of list of statistic sequence records.
@@ -109,13 +117,20 @@ public:
     * type.
     */
    int
-   getStatSequenceLength() const;
+   getStatSequenceLength() const
+   {
+      return d_seq_counter;
+   }
 
    /**
     * Reset the state of the statistic information.
     */
    void
-   reset();
+   reset()
+   {
+      d_proc_array.clear();
+      d_patch_array.clear();
+   }
 
    /**
     * Record double processor statistic value. The optional sequence number
@@ -152,7 +167,10 @@ public:
     * any details of structure of statistic data.  Otherwise, return false.
     */
    bool
-   canEstimateDataStreamSize();
+   canEstimateDataStreamSize()
+   {
+      return false;
+   }
 
    /**
     * Return integer number of bytes needed to stream the statistic data.
@@ -179,7 +197,7 @@ public:
     * Print statistic data to given output stream.  Floating point precision
     * can be specified (default is 12).
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream,
       int precision = 12) const;
@@ -188,17 +206,17 @@ public:
     * Write statistic data members to database. When assertion checking
     * is on, the database pointer must be non-null.
     */
-   virtual void
-   putToDatabase(
-      Pointer<Database> db);
+   void
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<Database>& db) const;
 
    /**
     * Read restarted times from restart database.  When assertion checking
     * is on, the database pointer must be non-null.
     */
-   virtual void
+   void
    getFromRestart(
-      Pointer<Database> db);
+      const boost::shared_ptr<Database>& db);
 
    /*
     * These structures are used to store statistic data entries.
@@ -214,11 +232,7 @@ public:
    };
 
    struct PatchStat {
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-      List<PatchStatRecord> patch_records; // stat record
-#else
-      List<Statistic::PatchStatRecord> patch_records; // stat record
-#endif
+      std::list<Statistic::PatchStatRecord> patch_records; // stat record
    };
 
 protected:
@@ -234,24 +248,20 @@ protected:
    /**
     * Return const reference to list of processor records.
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   const Array<ProcStat>&
-   getProcStatSeqArray() const;
-#else
    const Array<Statistic::ProcStat>&
-   getProcStatSeqArray() const;
-#endif
+   getProcStatSeqArray() const
+   {
+      return d_proc_array;
+   }
 
    /**
     * Return const reference to list of patch records.
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   const Array<PatchStat>&
-   getPatchStatSeqArray() const;
-#else
    const Array<Statistic::PatchStat>&
-   getPatchStatSeqArray() const;
-#endif
+   getPatchStatSeqArray() const
+   {
+      return d_patch_array;
+   }
 
 private:
    /*
@@ -298,13 +308,8 @@ private:
     * Integer sequence length refers to length of list corresponding
     * to stat type.
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   Array<ProcStat> d_proc_array;
-   Array<PatchStat> d_patch_array;
-#else
    Array<Statistic::ProcStat> d_proc_array;
    Array<Statistic::PatchStat> d_patch_array;
-#endif
 
    /*
     * Sequence and patch counters (NOTE: patch counter use for patch stats
@@ -319,7 +324,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Statistic.I"
-#endif
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   IEEE routines to set up handlers and get signaling NaNs
  *
  ************************************************************************/
@@ -34,10 +34,6 @@
 #include <sunmath.h>
 #endif
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/IEEE.I"
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -58,13 +54,14 @@ static void error_action(
 {
    Utilities::abort(
       "Floating point exception -- program abort! "
-      + tbox::Utilities::intToString(error),
+      + Utilities::intToString(error),
       __FILE__,
       __LINE__);
 }
 #endif
 
-void IEEE::setupFloatingPointExceptionHandlers()
+void
+IEEE::setupFloatingPointExceptionHandlers()
 {
 #if defined(HAVE_EXCEPTION_HANDLING)
    int fpu_flags = _FPU_DEFAULT;
@@ -74,53 +71,6 @@ void IEEE::setupFloatingPointExceptionHandlers()
    _FPU_SETCW(fpu_flags);
    signal(SIGFPE, error_action);
 #endif
-}
-
-/*
- *************************************************************************
- *
- * Routines to initialize arrays to signaling NaNs.
- *
- *************************************************************************
- */
-
-void IEEE::initializeArrayToSignalingNaN(
-   Array<float>& array)
-{
-   MathUtilities<float>::setArrayToSignalingNaN(array);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   Array<double>& array)
-{
-   MathUtilities<double>::setArrayToSignalingNaN(array);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   Array<dcomplex>& array)
-{
-   MathUtilities<dcomplex>::setArrayToSignalingNaN(array);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   float* array,
-   int n)
-{
-   MathUtilities<float>::setArrayToSignalingNaN(array, n);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   double* array,
-   int n)
-{
-   MathUtilities<double>::setArrayToSignalingNaN(array, n);
-}
-
-void IEEE::initializeArrayToSignalingNaN(
-   dcomplex* array,
-   int n)
-{
-   MathUtilities<dcomplex>::setArrayToSignalingNaN(array, n);
 }
 
 }

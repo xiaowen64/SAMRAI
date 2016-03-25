@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -11,8 +11,7 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
@@ -51,7 +50,7 @@ void
 generateBoxesUniform(
    const tbox::Dimension& dim,
    std::vector<hier::Box>& output,
-   const Pointer<Database>& db);
+   const boost::shared_ptr<Database>& db);
 
 int main(
    int argc,
@@ -91,7 +90,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(
+         new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -108,7 +108,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -136,12 +136,12 @@ int main(
 
       tbox::TimerManager * tm(tbox::TimerManager::getManager());
       const std::string dim_str(tbox::Utilities::intToString(dim.getValue()));
-      tbox::Pointer<tbox::Timer> t_build_tree =
-         tm->getTimer("apps::main::build_tree[" + dim_str + "]");
-      tbox::Pointer<tbox::Timer> t_search_tree_for_set =
-         tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]");
-      tbox::Pointer<tbox::Timer> t_search_tree_for_vec =
-         tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]");
+      boost::shared_ptr<tbox::Timer> t_build_tree(
+         tm->getTimer("apps::main::build_tree[" + dim_str + "]"));
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_set(
+         tm->getTimer("apps::main::search_tree_for_set[" + dim_str + "]"));
+      boost::shared_ptr<tbox::Timer> t_search_tree_for_vec(
+         tm->getTimer("apps::main::search_tree_for_vec[" + dim_str + "]"));
 
       /*
        * Generate the boxes.
@@ -247,34 +247,34 @@ int main(
           * Build search tree.
           */
          t_build_tree->start();
-         hier::BoxTree search_tree(dim);
-         search_tree.generateTree(nodes);
+         nodes.makeTree(NULL);
          t_build_tree->stop();
 
          /*
           * Search the tree.
           *
-          * We test outputing in a set and a vector.  Results show that outputing
-          * in a vector is almost twice as fast, probably due to the set having to
-          * sort the output.
+          * We test outputing in an unordered and ordered container.  The
+          * can indicate the difference in performance due to sorting the
+          * output for an ordered container.
           */
-         hier::BoxContainer overlap_set;
+         hier::BoxContainer unordered_overlap;
          t_search_tree_for_set->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();
               ++bi) {
-            overlap_set.clear();
-            search_tree.findOverlapBoxes(overlap_set, *bi);
+            unordered_overlap.clear();
+            nodes.findOverlapBoxes(unordered_overlap, *bi);
          }
          t_search_tree_for_set->stop();
 
-         NodeVec overlap_vec;
+         hier::BoxContainer ordered_overlap;
+         ordered_overlap.order(); 
          t_search_tree_for_vec->start();
          for (BoxVec::iterator bi = grown_boxes.begin();
               bi != grown_boxes.end();
               ++bi) {
-            overlap_vec.clear();
-            search_tree.findOverlapBoxes(overlap_vec, *bi);
+            ordered_overlap.clear();
+            nodes.findOverlapBoxes(ordered_overlap, *bi);
          }
          t_search_tree_for_vec->stop();
 
@@ -312,10 +312,10 @@ int main(
 
       tbox::pout << "\nPASSED:  Tree search" << std::endl;
 
-      input_db.setNull();
-      main_db.setNull();
-      t_search_tree_for_set.setNull();
-      t_search_tree_for_vec.setNull();
+      input_db.reset();
+      main_db.reset();
+      t_search_tree_for_set.reset();
+      t_search_tree_for_vec.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -335,7 +335,7 @@ int main(
    } else {
       tbox::pout << "Process " << std::setw(5) << rank << " aborting."
                  << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 
@@ -349,7 +349,7 @@ int main(
 void generateBoxesUniform(
    const tbox::Dimension& dim,
    std::vector<hier::Box>& output,
-   const Pointer<Database>& db)
+   const boost::shared_ptr<Database>& db)
 {
    output.clear();
 
@@ -369,15 +369,15 @@ void generateBoxesUniform(
    /*
     * Create an array of boxes by repeating the given box.
     */
-   hier::IntVector index(dim, 0);
+   hier::Index index(dim, 0);
    do {
-      hier::IntVector lower(index * boxsize);
-      hier::IntVector upper(lower + boxsize - 1);
+      hier::Index lower(index * boxsize);
+      hier::Index upper(lower + boxsize - 1);
       int& e = index(0);
       for (e = 0; e < boxrepeat(0); ++e) {
          lower(0) = e * boxsize(0);
          upper(0) = lower(0) + boxsize(0) - 1;
-         output.insert(output.end(), hier::Box(lower, upper));
+         output.insert(output.end(), hier::Box(lower, upper, hier::BlockId(0)));
       }
       for (int d = 0; d < dim.getValue(); ++d) {
          if (index(d) == boxrepeat(d) && d < dim.getValue() - 1) {

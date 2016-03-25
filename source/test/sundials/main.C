@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program for testing Sundials/SAMRAI interface.
  *
  ************************************************************************/
@@ -26,7 +26,6 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
@@ -63,6 +62,8 @@ using namespace std;
 #include "cvode/cvode_spgmr.h"
 #endif
 #endif
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -126,7 +127,8 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /**************************************************************************
@@ -136,7 +138,7 @@ int main(
       /*
        * Retreive "Main" section of input db.
        */
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -171,48 +173,47 @@ int main(
       /*
        * Create geometry and hierarchy objects.
        */
-      tbox::Pointer<geom::CartesianGridGeometry> geometry(
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             dim,
             "Geometry",
-            input_db->
-            getDatabase("Geometry")));
+            input_db->getDatabase("Geometry")));
 
-      tbox::Pointer<hier::PatchHierarchy> hierarchy(new hier::PatchHierarchy(
-                                                       "Hierarchy",
-                                                       geometry,
-                                                       input_db->getDatabase("PatchHierarchy")
-                                                       ));
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+         new hier::PatchHierarchy(
+            "Hierarchy",
+            geometry,
+            input_db->getDatabase("PatchHierarchy")));
 
       /*
        * Create gridding algorithm objects that will handle construction of
        * of the patch levels in the hierarchy.
        */
-      tbox::Pointer<CVODEModel> cvode_model(
-         new CVODEModel("CVODEModel",
+      boost::shared_ptr<CVODEModel> cvode_model(
+         new CVODEModel(
+            "CVODEModel",
             dim,
             input_db->getDatabase("CVODEModel"),
             geometry));
 
-      tbox::Pointer<mesh::StandardTagAndInitialize> error_est(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_est(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTagAndInitialize",
-            cvode_model,
+            cvode_model.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
 
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
-            input_db->
-            getDatabase("LoadBalancer")));
+            input_db->getDatabase("LoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm(
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             hierarchy,
             "GriddingAlgorithm",
@@ -246,12 +247,12 @@ int main(
        * Setup timer manager for profiling code.
        */
       tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
-      tbox::Pointer<tbox::Timer> t_cvode_solve =
+      boost::shared_ptr<tbox::Timer> t_cvode_solve(
          tbox::TimerManager::getManager()->
-         getTimer("apps::main::cvode_solver");
-      tbox::Pointer<tbox::Timer> t_log_dump =
+         getTimer("apps::main::cvode_solver"));
+      boost::shared_ptr<tbox::Timer> t_log_dump(
          tbox::TimerManager::getManager()->
-         getTimer("apps::main::Solution log dump");
+         getTimer("apps::main::Solution log dump"));
       /*
        * Setup solution vector.
        */
@@ -269,15 +270,16 @@ int main(
       **************************************************************************/
       solv::CVODESolver* cvode_solver =
          new solv::CVODESolver("cvode_solver",
-            cvode_model,
+            cvode_model.get(),
             uses_preconditioning);
 
       int neq = 0;
-      tbox::Pointer<hier::PatchLevel> level_zero =
-         hierarchy->getPatchLevel(0);
+      boost::shared_ptr<hier::PatchLevel> level_zero(
+         hierarchy->getPatchLevel(0));
       const hier::BoxContainer& level_0_boxes = level_zero->getBoxes();
-      for (hier::BoxContainer::ConstIterator i(level_0_boxes); i != level_0_boxes.end(); ++i) {
-         neq += i().size();
+      for (hier::BoxContainer::const_iterator i(level_0_boxes);
+           i != level_0_boxes.end(); ++i) {
+         neq += i->size();
       }
       cvode_solver->setIterationType(uses_newton ? CV_NEWTON : CV_FUNCTIONAL);
       //cvode_solver->setToleranceType(SV); // this is in craig's code, but
@@ -298,28 +300,29 @@ int main(
       /*
        * Print initial vector (if solution logging is enabled)
        */
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > y_init =
-         solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_init(
+         solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector));
 
       if (solution_logging) {
 
-         tbox::Pointer<hier::PatchHierarchy> init_hierarchy =
-            y_init->getPatchHierarchy();
+         boost::shared_ptr<hier::PatchHierarchy> init_hierarchy(
+            y_init->getPatchHierarchy());
 
          tbox::pout << "Initial solution vector y() at initial time: " << endl;
          int ln;
          tbox::pout << "y(" << init_time << "): " << endl;
          for (ln = 0; ln < init_hierarchy->getNumberOfLevels(); ln++) {
-            tbox::Pointer<hier::PatchLevel> level;
-
-            level = init_hierarchy->getPatchLevel(ln);
+            boost::shared_ptr<hier::PatchLevel> level(
+               init_hierarchy->getPatchLevel(ln));
             tbox::plog << "level = " << ln << endl;
 
-            for (hier::PatchLevel::Iterator p(level); p; p++) {
-               tbox::Pointer<hier::Patch> patch = *p;
+            for (hier::PatchLevel::iterator p(level->begin());
+                 p != level->end(); ++p) {
+               const boost::shared_ptr<hier::Patch>& patch = *p;
 
-               tbox::Pointer<CellData<double> > y_data =
-                  y_init->getComponentPatchData(0, *patch);
+               boost::shared_ptr<CellData<double> > y_data(
+                  y_init->getComponentPatchData(0, *patch),
+                  boost::detail::dynamic_cast_tag());
             }
          }
       }
@@ -366,10 +369,10 @@ int main(
           * Print statistics
           * Format:  time  max norm   l1 norm   l2 norm
           */
-         tbox::Pointer<solv::SAMRAIVectorReal<double> > y_result =
-            solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector);
-         tbox::Pointer<hier::PatchHierarchy> result_hierarchy =
-            y_result->getPatchHierarchy();
+         boost::shared_ptr<solv::SAMRAIVectorReal<double> > y_result(
+            solv::Sundials_SAMRAIVector::getSAMRAIVector(solution_vector));
+         boost::shared_ptr<hier::PatchHierarchy> result_hierarchy(
+            y_result->getPatchHierarchy());
 
          time[interval - 1] = actual_time;
          maxnorm[interval - 1] = y_result->maxNorm();
@@ -388,16 +391,17 @@ int main(
             t_log_dump->start();
             for (int ln = 0; ln < result_hierarchy->getNumberOfLevels();
                  ln++) {
-               tbox::Pointer<hier::PatchLevel> level;
-
-               level = result_hierarchy->getPatchLevel(ln);
+               boost::shared_ptr<hier::PatchLevel> level(
+                  result_hierarchy->getPatchLevel(ln));
                tbox::plog << "level = " << ln << endl;
 
-               for (hier::PatchLevel::Iterator p(level); p; p++) {
-                  tbox::Pointer<hier::Patch> patch = *p;
+               for (hier::PatchLevel::iterator p(level->begin());
+                    p != level->end(); ++p) {
+                  const boost::shared_ptr<hier::Patch>& patch = *p;
 
-                  tbox::Pointer<CellData<double> > y_data =
-                     y_result->getComponentPatchData(0, *patch);
+                  boost::shared_ptr<CellData<double> > y_data(
+                     y_result->getComponentPatchData(0, *patch),
+                     boost::detail::dynamic_cast_tag());
                   y_data->print(y_data->getBox());
                }
             }
@@ -487,13 +491,13 @@ int main(
        */
       if (cvode_solver) delete cvode_solver;
 
-      cvode_model.setNull();
-      gridding_algorithm.setNull();
-      error_est.setNull();
-      load_balancer.setNull();
-      box_generator.setNull();
-      hierarchy.setNull();
-      geometry.setNull();
+      cvode_model.reset();
+      gridding_algorithm.reset();
+      error_est.reset();
+      load_balancer.reset();
+      box_generator.reset();
+      hierarchy.reset();
+      geometry.reset();
 
 #endif // HAVE_SUNDIALS
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -15,6 +15,7 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Index.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace pdat {
@@ -57,7 +58,12 @@ public:
     */
    CellIndex&
    operator = (
-      const CellIndex& rhs);
+      const CellIndex& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator = (rhs);
+      return *this;
+   }
 
    /**
     * The cell index destructor does nothing interesting.
@@ -69,84 +75,144 @@ public:
     */
    CellIndex&
    operator += (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a cell index and an integer vector.
     */
    CellIndex
    operator + (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      CellIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Plus-equals operator for a cell index and an integer.
     */
    CellIndex&
    operator += (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator += (rhs);
+      return *this;
+   }
 
    /**
     * Plus operator for a cell index and an integer.
     */
    CellIndex
    operator + (
-      const int rhs) const;
+      const int rhs) const
+   {
+      CellIndex tmp = *this;
+      tmp += rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a cell index and an integer vector.
     */
    CellIndex&
    operator -= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a cell index and an integer vector.
     */
    CellIndex
    operator - (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      CellIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Minus-equals operator for a cell index and an integer.
     */
    CellIndex&
    operator -= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator -= (rhs);
+      return *this;
+   }
 
    /**
     * Minus operator for a cell index and an integer.
     */
    CellIndex
    operator - (
-      const int rhs) const;
+      const int rhs) const
+   {
+      CellIndex tmp = *this;
+      tmp -= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a cell index and an integer vector.
     */
    CellIndex&
    operator *= (
-      const hier::IntVector& rhs);
+      const hier::IntVector& rhs)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a cell index and an integer vector.
     */
    CellIndex
    operator * (
-      const hier::IntVector& rhs) const;
+      const hier::IntVector& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      CellIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Times-equals operator for a cell index and an integer.
     */
    CellIndex&
    operator *= (
-      const int rhs);
+      const int rhs)
+   {
+      hier::Index::operator *= (rhs);
+      return *this;
+   }
 
    /**
     * Times operator for a cell index and an integer.
     */
    CellIndex
    operator * (
-      const int rhs) const;
+      const int rhs) const
+   {
+      CellIndex tmp = *this;
+      tmp *= rhs;
+      return tmp;
+   }
 
    /**
     * Returns true if two cell index objects are equal.  All components
@@ -154,7 +220,11 @@ public:
     */
    bool
    operator == (
-      const CellIndex& rhs) const;
+      const CellIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator == (rhs);
+   }
 
    /**
     * Returns true if two cell index objects are not equal.  Any of
@@ -162,12 +232,14 @@ public:
     */
    bool
    operator != (
-      const CellIndex& rhs) const;
+      const CellIndex& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      return ((hier::Index *)this)->operator != (rhs);
+   }
 };
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellIndex.I"
-#endif
+
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -21,12 +21,11 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Schedule.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Array.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -68,7 +67,7 @@ namespace xfer {
  * @see xfer::RefineClasses
  */
 
-class RefineSchedule:public tbox::DescribedClass
+class RefineSchedule
 {
 public:
    /*!
@@ -93,31 +92,31 @@ public:
     *
     * @param[in] dst_level_fill_pattern Indicates which parts of the
     *                                   destination level to fill.
-    * @param[in] dst_level       Pointer to destination patch level.
-    * @param[in] src_level       Pointer to source patch level.
-    * @param[in] refine_classes  Pointer to structure containing patch data and
-    *                            operator information.  In general, this is
-    *                            constructed by the calling RefineAlgorithm
-    *                            object.
-    * @param[in] transaction_factory  Pointer to a factory object that will
-    *                                 create data transactions.
-    * @param[in] patch_strategy  Pointer to a refine patch strategy object that
-    *                            provides user-defined physical boundary filling
-    *                            operations.   This pointer may be null, in
-    *                            which case no boundary filling operations will
-    *                            occur.
+    * @param[in] dst_level       boost::shared_ptr to destination patch level.
+    * @param[in] src_level       boost::shared_ptr to source patch level.
+    * @param[in] refine_classes  boost::shared_ptr to structure containing
+    *                            patch data and operator information.  In
+    *                            general, this is constructed by the calling
+    *                            RefineAlgorithm object.
+    * @param[in] transaction_factory  boost::shared_ptr to a factory object
+    *                                 that will create data transactions.
+    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    *                            object that provides user-defined physical
+    *                            boundary filling operations.   This pointer
+    *                            may be null, in which case no boundary filling
+    *                            operations will occur.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
     *                                    Default is no time interpolation.
     */
-   explicit RefineSchedule(
-      tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      const tbox::Pointer<xfer::RefineClasses> refine_classes,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-      xfer::RefinePatchStrategy * patch_strategy,
+   RefineSchedule(
+      const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<RefineClasses>& refine_classes,
+      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
+      RefinePatchStrategy * patch_strategy,
       bool use_time_interpolation = false);
 
    /*!
@@ -142,55 +141,56 @@ public:
     *
     * @param[in] dst_level_fill_pattern  Indicates which parts of the
     *                                    destination level to fill.
-    * @param[in] dst_level   Pointer to destination patch level.  This level may be
-    *                        a level on the hierarchy or a
+    * @param[in] dst_level   boost::shared_ptr to destination patch level.
+    *                        This level may be a level on the hierarchy or a
     *                        coarsened version.
-    * @param[in] src_level   Pointer to source patch level; must be in same
-    *                        index space as destination level.  This pointer
-    *                        may be null, in which case the destination level
-    *                        will be filled only using data interpolated from
-    *                        coarser levels in the AMR hierarchy.
+    * @param[in] src_level   boost::shared_ptr to source patch level; must be
+    *                        in same index space as destination level.  This
+    *                        pointer may be null, in which case the destination
+    *                        level will be filled only using data interpolated
+    *                        from coarser levels in the AMR hierarchy.
     * @param[in] next_coarser_level  Level number of next coarser level in
     *                                AMR patch hierarchy relative to the
     *                                destination level.  Note that when the
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should be
     *                                less than zero.
-    * @param[in] hierarchy   Pointer to patch hierarchy.  This pointer may be
-    *                        null only if the next_coarser_level value is < 0,
-    *                        indicating that there is no level in the hierarchy
-    *                        coarser than the destination level.
-    * @param[in] refine_classes  Pointer to structure containing patch data and
-    *                            operator information.  In general, this is
-    *                            constructed by the calling RefineAlgorithm
-    *                            object.
-    * @param[in] transaction_factory  Pointer to a factory object that will
-    *                                 create data transactions.
-    * @param[in] patch_strategy  Pointer to a refine patch strategy object that
-    *                            provides user-defined physical boundary
-    *                            filling operations.  This pointer may be null,
-    *                            in which case no boundary filling or
-    *                            user-defined refine operations will occur.
-    * @param[in] use_time_interpolation  Boolean flag indicating whether to use
-    *                                    time interpolation when setting data
-    *                                    on the destination level.  Default
-    *                                    is no time interpolation.
+    * @param[in] hierarchy   boost::shared_ptr to patch hierarchy.  This
+    *                        pointer may be null only if the next_coarser_level
+    *                        value is < 0, indicating that there is no level
+    *                        in the hierarchy coarser than the destination
+    *                        level.
+    * @param[in] refine_classes  boost::shared_ptr to structure containing
+    *                            patch data and operator information.  In
+    *                            general, this is constructed by the calling
+    *                            RefineAlgorithm object.
+    * @param[in] transaction_factory  boost::shared_ptr to a factory object
+    *                                 that will create data transactions.
+    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    *                            object that provides user-defined physical
+    *                            boundary filling operations.  This pointer
+    *                            may be null, in which case no boundary filling
+    *                            or user-defined refine operations will occur.
+    * @param[in] use_time_refinement  Boolean flag indicating whether to use
+    *                                 time interpolation when setting data
+    *                                 on the destination level.  Default
+    *                                 is no time interpolation.
     */
-   explicit RefineSchedule(
-      tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
+   RefineSchedule(
+      const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
       int next_coarser_level,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      const tbox::Pointer<xfer::RefineClasses> refine_classes,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-      xfer::RefinePatchStrategy * patch_strategy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<RefineClasses>& refine_classes,
+      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
+      RefinePatchStrategy * patch_strategy,
       bool use_time_refinement = false);
 
    /*!
-    * Virtual destructor for the schedule releases all internal storage.
+    * Destructor for the schedule releases all internal storage.
     */
-   virtual ~RefineSchedule();
+   ~RefineSchedule();
 
    /*!
     * @brief Reset this refine schedule to perform data transfers
@@ -200,14 +200,15 @@ public:
     * first checks that the refine_classes parameter is in a state consistent
     * with the RefineSchedule object.
     *
-    * @param[in] refine_classes  Pointer to structure containing patch data and
-    *                            operator information.  In general, this is
-    *                            constructed by the calling RefineAlgorithm
-    *                            object.  This pointer must be non-null.
+    * @param[in] refine_classes  boost::shared_ptr to structure containing
+    *                            patch data and operator information.  In
+    *                            general, this is constructed by the calling
+    *                            RefineAlgorithm object.  This pointer must be
+    *                            non-null.
     */
    void
    reset(
-      const tbox::Pointer<xfer::RefineClasses> refine_classes);
+      const boost::shared_ptr<RefineClasses>& refine_classes);
 
    /*!
     * @brief Execute the stored communication schedule and perform
@@ -244,7 +245,13 @@ public:
     */
    void
    initializeSourceVector(
-      hier::ComponentSelector& allocate_vector) const;
+      hier::ComponentSelector& allocate_vector) const
+   {
+      allocate_vector.clrAllFlags();
+      for (int iri = 0; iri < d_number_refine_items; iri++) {
+         allocate_vector.setFlag(d_refine_items[iri]->d_src);
+      }
+   }
 
    /*!
     * @brief Allocate destination space on the destination level and store the
@@ -273,7 +280,7 @@ public:
    void
    allocateScratchSpace(
       hier::ComponentSelector& allocate_vector,
-      tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double fill_time) const;
 
    /*!
@@ -286,29 +293,41 @@ public:
     */
    void
    initializeDestinationVector(
-      hier::ComponentSelector& allocate_vector) const;
+      hier::ComponentSelector& allocate_vector) const
+   {
+      allocate_vector.clrAllFlags();
+      for (int iri = 0; iri < d_number_refine_items; iri++) {
+         allocate_vector.setFlag(d_refine_items[iri]->d_dst);
+      }
+   }
 
    /*!
     * @brief Return refine equivalence classes.
     *
     * The equivalence class information is used in schedule classes.
     */
-   const tbox::Pointer<RefineClasses>&
-   getEquivalenceClasses() const;
+   const boost::shared_ptr<RefineClasses>&
+   getEquivalenceClasses() const
+   {
+      return d_refine_classes;
+   }
 
    /*!
     * @brief Return width of ghost cell region to fill which is passed to user
     * supplied physical boundary condition routine.
     */
    const hier::IntVector&
-   getBoundaryFillGhostWidth() const;
+   getBoundaryFillGhostWidth() const
+   {
+      return d_boundary_fill_ghost_width;
+   }
 
    /*!
     * @brief Print the refine schedule data to the specified data stream.
     *
     * @param[out] stream Output data stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 
@@ -347,7 +366,7 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector Connector;
    //! @brief Shorthand typedef.
-   typedef hier::NeighborhoodSet NeighborhoodSet;
+   typedef hier::BoxNeighborhoodCollection BoxNeighborhoodCollection;
    //! @brief Mapping from a (potentially remote) Box to a set of neighbors.
    typedef std::map<hier::Box, hier::BoxContainer, hier::Box::id_less> FullNeighborhoodSet;
 
@@ -369,30 +388,30 @@ private:
     *                                destination level has number zero (i.e.,
     *                                the coarsest level), this value should be
     *                                less than zero.
-    * @param[in] hierarchy   Pointer to patch hierarchy.
+    * @param[in] hierarchy   boost::shared_ptr to patch hierarchy.
     * @param[in] src_growth_to_nest_dst  The minimum amount that src_level has
     *                                    to grow in order to nest dst.
     * @param[in] refine_classes  Holds refine equivalence classes to be used
     *                            by this schedule.
-    * @param[in] transaction_factory  Pointer to a factory object that will
-    *                                 create data transactions.
-    * @param[in] patch_strategy  Pointer to a refine patch strategy object that
-    *                            provides user-defined physical boundary
-    *                            filling operations.  This pointer may be null,
-    *                            in which case no boundary filling or
-    *                            user-defined refine operations will occur.
+    * @param[in] transaction_factory  boost::shared_ptr to a factory object
+    *                                 that will create data transactions.
+    * @param[in] patch_strategy  boost::shared_ptr to a refine patch strategy
+    *                            object that provides user-defined physical
+    *                            boundary filling operations.  This pointer
+    *                            may be null, in which case no boundary filling
+    *                            or user-defined refine operations will occur.
     */
    RefineSchedule(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
       int next_coarser_level,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
       const hier::IntVector& src_growth_to_nest_dst,
-      const tbox::Pointer<xfer::RefineClasses> refine_classes,
-      tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-      xfer::RefinePatchStrategy* patch_strategy);
+      const boost::shared_ptr<RefineClasses>& refine_classes,
+      const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
+      RefinePatchStrategy* patch_strategy);
 
    /*!
     * @brief Finish the schedule construction for the two constructors
@@ -410,18 +429,19 @@ private:
     * @param[in] src_to_dst  Connector between src and dst levels given
     *                        in constructor.
     * @param[in] dst_is_coarse_interp_level  Tells if the destination level
-    *                                       is a temporary coarse interpolation level
-    *                                       used for interpolation.
+    *                                        is a temporary coarse
+    *                                        interpolation level used for
+    *                                        interpolation.
     * @param[in] src_growth_to_nest_dst  The minimum amount that the source
     *                                    level has to grow in order to nest the
     *                                    destination level.
     * @param[in] dst_to_fill  Connector describing the boxes to fill for each
     *                         destination patch.
-    * @param[in] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                   mapped box on the source level to
-    *                                   a BoxContainer that indicates what parts
-    *                                   of the destination fill boxes can be filled
-    *                                   by that source box.
+    * @param[in] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                   each local box on the source level to
+    *                                   a collection of boxes that indicates
+    *                                   what parts of the destination fill
+    *                                   boxes can be filled by that source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
@@ -433,13 +453,13 @@ private:
    void
    finishScheduleConstruction(
       int next_coarser_ln,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const Connector& dst_to_fill,
-      const NeighborhoodSet& src_owner_dst_to_fill,
+      const BoxNeighborhoodCollection& src_owner_dst_to_fill,
       bool use_time_interpolation,
       bool skip_generate_schedule = false);
 
@@ -494,11 +514,11 @@ private:
     */
    void
    refineScratchData(
-      const tbox::Pointer<hier::PatchLevel>& fine_level,
-      const tbox::Pointer<hier::PatchLevel>& coarse_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const Connector& coarse_to_fine,
       const Connector& coarse_to_unfilled,
-      const tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >&
+      const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
       overlaps) const;
 
    /*!
@@ -507,9 +527,9 @@ private:
     */
    void
    computeRefineOverlaps(
-      tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >& overlaps,
-      const tbox::Pointer<hier::PatchLevel>& fine_level,
-      const tbox::Pointer<hier::PatchLevel>& coarse_level,
+      std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& coarse_level,
       const Connector& coarse_to_fine,
       const Connector& coarse_to_unfilled);
 
@@ -541,25 +561,25 @@ private:
     *                        passed into the constructor
     * @param[in] dst_to_fill  Connector between dst_level and a level
     *                         representing the boxes that need to be filled.
-    * @param[in] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                   mapped box on the source level to
-    *                                   a BoxContainer that indicates what parts
-    *                                   of the fill can be filled by that
-    *                                   source box.
+    * @param[in] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                   each local box on the source level to
+    *                                   a collection of boxes that indicates
+    *                                   what parts of the fill can be filled by
+    *                                   that source box.
     * @param[in] use_time_interpolation  Boolean flag indicating whether to
     *                                    use time interpolation when setting
     *                                    data on the destination level.
     */
    void
    generateCommunicationSchedule(
-      tbox::Pointer<BoxLevel>& unfilled_mapped_box_level,
-      tbox::Pointer<Connector>& dst_to_unfilled,
-      tbox::Pointer<BoxLevel>& unfilled_encon_box_level,
-      tbox::Pointer<Connector>& encon_to_unfilled_encon,
+      boost::shared_ptr<BoxLevel>& unfilled_mapped_box_level,
+      boost::shared_ptr<Connector>& dst_to_unfilled,
+      boost::shared_ptr<BoxLevel>& unfilled_encon_box_level,
+      boost::shared_ptr<Connector>& encon_to_unfilled_encon,
       const Connector& dst_to_src,
       const Connector& src_to_dst,
       const Connector& dst_to_fill,
-      const NeighborhoodSet& src_owner_dst_to_fill,
+      const BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const bool use_time_interpolation,
       const bool create_transactions);
 
@@ -580,11 +600,11 @@ private:
     *                                    be filled.
     * @param[out] dst_to_fill  Connector from dst_level to
     *                          fill_mapped_box_level.
-    * @param[out] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                    mapped box on the source level to
-    *                                    a BoxContainer that indicates what parts
-    *                                    of fill_mapped_box_level can be filled
-    *                                    by that source box.
+    * @param[out] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                    each local box on the source level to
+    *                                    a collection of boxes that indicates
+    *                                    what parts of fill_mapped_box_level
+    *                                    can be filled by that source box.
     * @param[in] dst_mapped_box_level  Mapped box representation of the
     *                                  dst_level given to the constructor.
     * @param[in] dst_to_src  Connector from dst_level to src_level.
@@ -595,7 +615,7 @@ private:
    setDefaultFillBoxLevel(
       BoxLevel& fill_mapped_box_level,
       Connector& dst_to_fill,
-      NeighborhoodSet& src_owner_dst_to_fill,
+      BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const hier::BoxLevel& dst_mapped_box_level,
       const hier::Connector* dst_to_src,
       const hier::Connector* src_to_dst,
@@ -650,8 +670,8 @@ private:
     */
    void
    findEnconUnfilledBoxes(
-      tbox::Pointer<hier::BoxLevel>& unfilled_encon_box_level,
-      tbox::Pointer<hier::Connector>& encon_to_unfilled_encon,
+      const boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
+      const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
       hier::LocalId& last_unfilled_local_id,
       const hier::Box& dst_mapped_box,
       const Connector& dst_to_src,
@@ -670,8 +690,8 @@ private:
     */
    void
    createEnconFillSchedule(
-      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
-      const tbox::Pointer<hier::PatchLevel>& hiercoarse_level,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<hier::PatchLevel>& hiercoarse_level,
       const bool dst_is_coarse_interp_level,
       const hier::IntVector& src_growth_to_nest_dst,
       const hier::Connector& encon_to_unfilled_encon);
@@ -680,11 +700,11 @@ private:
     * @brief Communicate dst_to_fill info to the src owners when the owners
     * would otherwise be unable to compute the info.
     *
-    * @param[out] src_owner_dst_to_fill  A NeighborhoodSet that maps each local
-    *                                    mapped box on the source level to
-    *                                    a BoxContainer that indicates what parts
-    *                                    of fill_mapped_box_level can be filled
-    *                                    by that source box.
+    * @param[out] src_owner_dst_to_fill  A BoxNeighborhoodCollection that maps
+    *                                    each local box on the source level to
+    *                                    a collection of boxes that indicates
+    *                                    what parts of fill_mapped_box_level
+    *                                    can be filled by that source box.
     * @param[in] dst_to_fill  Mapping from the dst_level to boxes it needs
     *                         need to have filled.
     * @param[in] dst_to_src  Mapping from the dst_level to src_level
@@ -692,7 +712,7 @@ private:
     */
    void
    communicateFillBoxes(
-      NeighborhoodSet& src_owner_dst_to_fill,
+      BoxNeighborhoodCollection& src_owner_dst_to_fill,
       const Connector& dst_to_fill,
       const Connector& dst_to_src,
       const Connector& src_to_dst);
@@ -709,7 +729,7 @@ private:
    shearUnfilledBoxesOutsideNonperiodicBoundaries(
       hier::BoxLevel& unfilled,
       hier::Connector& dst_to_unfilled,
-      const tbox::Pointer<hier::PatchHierarchy>& hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /*!
     * @brief Set up a coarse interpolation BoxLevel and related data.
@@ -731,7 +751,8 @@ private:
     *
     * @param[in] dst_to_unfilled
     */
-   void setupCoarseInterpBoxLevel(
+   void
+   setupCoarseInterpBoxLevel(
       hier::BoxLevel &coarse_interp_mapped_box_level,
       hier::Connector &dst_to_coarse_interp,
       hier::Connector &coarse_interp_to_dst,
@@ -772,17 +793,17 @@ private:
     */
    void
    createCoarseInterpPatchLevel(
-      tbox::Pointer<hier::PatchLevel>& coarse_interp_level,
+      boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
       hier::BoxLevel& coarse_interp_mapped_box_level,
       hier::Connector &coarse_interp_to_hiercoarse,
       hier::Connector &hiercoarse_to_coarse_interp,
-      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln,
       const hier::Connector &dst_to_src,
       const hier::Connector &src_to_dst,
       const hier::Connector &coarse_interp_to_dst,
       const hier::Connector &dst_to_coarse_interp,
-      const tbox::Pointer<hier::PatchLevel> &dst_level,
+      const boost::shared_ptr<hier::PatchLevel> &dst_level,
       const bool dst_is_coarse_interp_level );
 
    /*!
@@ -795,7 +816,7 @@ private:
    sanityCheckCoarseInterpAndHiercoarseLevels(
       const hier::Connector& coarse_interp_to_hiercoarse,
       const hier::Connector& hiercoarse_to_coarse_interp,
-      const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int next_coarser_ln);
 
    /*!
@@ -832,7 +853,8 @@ private:
     */
    void
    constructScheduleTransactions(
-      const hier::BoxContainer& fill_boxes,
+      const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
+      BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       const bool use_time_interpolation);
@@ -908,7 +930,7 @@ private:
     */
    void
    setRefineItems(
-      const tbox::Pointer<xfer::RefineClasses> refine_classes);
+      const boost::shared_ptr<RefineClasses>& refine_classes);
 
    /*
     * @brief Utility function to clear local copies of refine items.
@@ -933,31 +955,31 @@ private:
    /*!
     * Structures that store refine data items.
     */
-   tbox::Pointer<xfer::RefineClasses> d_refine_classes;
+   boost::shared_ptr<RefineClasses> d_refine_classes;
    int d_number_refine_items;
-   const xfer::RefineClasses::Data** d_refine_items;
+   const RefineClasses::Data** d_refine_items;
 
    /*!
-    * @brief Pointer to the destination patch level.
+    * @brief boost::shared_ptr to the destination patch level.
     */
-   tbox::Pointer<hier::PatchLevel> d_dst_level;
+   boost::shared_ptr<hier::PatchLevel> d_dst_level;
 
    /*!
-    * @brief Pointer to the source patch level.
+    * @brief boost::shared_ptr to the source patch level.
     */
-   tbox::Pointer<hier::PatchLevel> d_src_level;
+   boost::shared_ptr<hier::PatchLevel> d_src_level;
 
    /*!
     * @brief Object supporting interface to user-defined boundary filling and
     * spatial data interpolation operations.
     */
-   xfer::RefinePatchStrategy* d_refine_patch_strategy;
+   RefinePatchStrategy* d_refine_patch_strategy;
 
    /*!
     * @brief Factory object used to create data transactions when schedule is
     * constructed.
     */
-   tbox::Pointer<xfer::RefineTransactionFactory> d_transaction_factory;
+   boost::shared_ptr<RefineTransactionFactory> d_transaction_factory;
 
    /*!
     * @brief  maximum stencil width.
@@ -1017,7 +1039,7 @@ private:
     * d_fine_priority_level_schedule handles the situation where
     * fine data should take precedence.
     */
-   tbox::Pointer<tbox::Schedule> d_coarse_priority_level_schedule;
+   boost::shared_ptr<tbox::Schedule> d_coarse_priority_level_schedule;
 
    /*!
     * @brief Level-to-level communication schedule between the source and
@@ -1030,7 +1052,7 @@ private:
     * d_fine_priority_level_schedule handles the situation where
     * fine data should take precedence.
     */
-   tbox::Pointer<tbox::Schedule> d_fine_priority_level_schedule;
+   boost::shared_ptr<tbox::Schedule> d_fine_priority_level_schedule;
 
    /*!
     * @brief The coarse interpolation level is an internal level created to
@@ -1047,7 +1069,7 @@ private:
     * Note that the coarse interpolation level may not have the same mapping
     * as the destination level.
     */
-   tbox::Pointer<hier::PatchLevel> d_coarse_interp_level;
+   boost::shared_ptr<hier::PatchLevel> d_coarse_interp_level;
 
    /*!
     * @brief The coarse interpolation encon level is an internal level created
@@ -1058,7 +1080,7 @@ private:
     * is filled, the interpolation of data to patches in d_encon_level will
     * be a local operation.
     */
-   tbox::Pointer<hier::PatchLevel> d_coarse_interp_encon_level;
+   boost::shared_ptr<hier::PatchLevel> d_coarse_interp_encon_level;
 
    /*!
     * @brief Schedule to recursively fill the coarse interpolation level using
@@ -1068,7 +1090,7 @@ private:
     * that the coarse data can be interpolated into the fine fill
     * boxes on the destination.
     */
-   tbox::Pointer<xfer::RefineSchedule> d_coarse_interp_schedule;
+   boost::shared_ptr<RefineSchedule> d_coarse_interp_schedule;
 
    /*!
     * @brief Schedule to recursively fill d_coarse_interp_encon_level using
@@ -1078,7 +1100,7 @@ private:
     * interpolate data onto d_encon_level in fill boxes that could not be
     * filled from the source level.
     */
-   tbox::Pointer<xfer::RefineSchedule> d_coarse_interp_encon_schedule;
+   boost::shared_ptr<RefineSchedule> d_coarse_interp_encon_schedule;
 
    /*!
     * @brief Internal level representing ghost regions of destination patches
@@ -1089,33 +1111,33 @@ private:
     * neighbor blocks representing the portion of the destination patch's
     * ghost region that lies in those neighboring blocks.
     */
-   tbox::Pointer<hier::PatchLevel> d_encon_level;
+   boost::shared_ptr<hier::PatchLevel> d_encon_level;
 
    /*!
     * @brief Describes remaining unfilled boxes after attempting to
     * fill from the source level.  These remaining boxes must be
     * filled using a coarse interpolation schedule, d_coarse_interp_schedule.
     */
-   tbox::Pointer<BoxLevel> d_unfilled_mapped_box_level;
+   boost::shared_ptr<BoxLevel> d_unfilled_mapped_box_level;
 
    /*!
     * @brief Describes remaining unfilled boxes of d_encon_level after
     * attempting to fill from the source level.  These remaining boxes must
     * be filled using a coarse interpolation schedule, d_coarse_interp_encon_schedule.
     */
-   tbox::Pointer<BoxLevel> d_unfilled_encon_box_level;
+   boost::shared_ptr<BoxLevel> d_unfilled_encon_box_level;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData()
     */
-   tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
+   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
    d_refine_overlaps;
 
    /*!
     * @brief Stores the BoxOverlaps needed by refineScratchData() for
     * unfilled boxes at enhanced connectivity
     */
-   tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
+   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >
    d_encon_refine_overlaps;
 
    /*!
@@ -1161,7 +1183,7 @@ private:
     *
     * The size of the array is controlled by d_max_fill_boxes.
     */
-   tbox::Array<tbox::Pointer<hier::BoxOverlap> > d_overlaps;
+   tbox::Array<boost::shared_ptr<hier::BoxOverlap> > d_overlaps;
 
    /*!
     * @brief Source mask boxes used in construction of transactions.
@@ -1183,7 +1205,7 @@ private:
     * @brief PatchLevelFillPattern controlling what parts of the destination
     * level can be filled.
     */
-   tbox::Pointer<PatchLevelFillPattern> d_dst_level_fill_pattern;
+   boost::shared_ptr<PatchLevelFillPattern> d_dst_level_fill_pattern;
 
    /*!
     * @brief Tells whether recursive construction of an internal schedule
@@ -1206,29 +1228,29 @@ private:
    /*!
     * @name Timer objects for performance measurement.
     */
-   static tbox::Pointer<tbox::Timer> t_fill_data;
-   static tbox::Pointer<tbox::Timer> t_recursive_fill;
-   static tbox::Pointer<tbox::Timer> t_refine_scratch_data;
-   static tbox::Pointer<tbox::Timer> t_finish_sched_const;
-   static tbox::Pointer<tbox::Timer> t_finish_sched_const_recurse;
-   static tbox::Pointer<tbox::Timer> t_gen_comm_sched;
-   static tbox::Pointer<tbox::Timer> t_bridge_connector;
-   static tbox::Pointer<tbox::Timer> t_modify_connector;
-   static tbox::Pointer<tbox::Timer> t_make_seq_map;
-   static tbox::Pointer<tbox::Timer> t_shear;
-   static tbox::Pointer<tbox::Timer> t_misc1;
-   static tbox::Pointer<tbox::Timer> t_barrier_and_time;
-   static tbox::Pointer<tbox::Timer> t_get_global_mapped_box_count;
-   static tbox::Pointer<tbox::Timer> t_coarse_shear;
-   static tbox::Pointer<tbox::Timer> t_setup_coarse_interp_mapped_box_level;
-   static tbox::Pointer<tbox::Timer> t_misc2;
-   static tbox::Pointer<tbox::Timer> t_bridge_coarse_interp_hiercoarse;
-   static tbox::Pointer<tbox::Timer> t_bridge_dst_hiercoarse;
-   static tbox::Pointer<tbox::Timer> t_make_coarse_interp_level;
-   static tbox::Pointer<tbox::Timer> t_make_coarse_interp_to_unfilled;
-   static tbox::Pointer<tbox::Timer> t_invert_edges;
-   static tbox::Pointer<tbox::Timer> t_construct_send_trans;
-   static tbox::Pointer<tbox::Timer> t_construct_recv_trans;
+   static boost::shared_ptr<tbox::Timer> t_fill_data;
+   static boost::shared_ptr<tbox::Timer> t_recursive_fill;
+   static boost::shared_ptr<tbox::Timer> t_refine_scratch_data;
+   static boost::shared_ptr<tbox::Timer> t_finish_sched_const;
+   static boost::shared_ptr<tbox::Timer> t_finish_sched_const_recurse;
+   static boost::shared_ptr<tbox::Timer> t_gen_comm_sched;
+   static boost::shared_ptr<tbox::Timer> t_bridge_connector;
+   static boost::shared_ptr<tbox::Timer> t_modify_connector;
+   static boost::shared_ptr<tbox::Timer> t_make_seq_map;
+   static boost::shared_ptr<tbox::Timer> t_shear;
+   static boost::shared_ptr<tbox::Timer> t_misc1;
+   static boost::shared_ptr<tbox::Timer> t_barrier_and_time;
+   static boost::shared_ptr<tbox::Timer> t_get_global_mapped_box_count;
+   static boost::shared_ptr<tbox::Timer> t_coarse_shear;
+   static boost::shared_ptr<tbox::Timer> t_setup_coarse_interp_mapped_box_level;
+   static boost::shared_ptr<tbox::Timer> t_misc2;
+   static boost::shared_ptr<tbox::Timer> t_bridge_coarse_interp_hiercoarse;
+   static boost::shared_ptr<tbox::Timer> t_bridge_dst_hiercoarse;
+   static boost::shared_ptr<tbox::Timer> t_make_coarse_interp_level;
+   static boost::shared_ptr<tbox::Timer> t_make_coarse_interp_to_unfilled;
+   static boost::shared_ptr<tbox::Timer> t_invert_edges;
+   static boost::shared_ptr<tbox::Timer> t_construct_send_trans;
+   static boost::shared_ptr<tbox::Timer> t_construct_recv_trans;
 
    //@}
 

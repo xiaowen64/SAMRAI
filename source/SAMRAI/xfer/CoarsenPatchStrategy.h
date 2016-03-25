@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <set>
 
@@ -45,8 +44,7 @@ namespace xfer {
  * @see xfer::CoarsenSchedule
  */
 
-class CoarsenPatchStrategy:
-   public virtual tbox::DescribedClass
+class CoarsenPatchStrategy
 {
 public:
    /*!
@@ -104,11 +102,11 @@ public:
     * are specified in calls to the registerCoarsen() function in the
     * CoarsenAlgorithm class.
     *
-    * @param coarse[out] Coarse patch that will receive coarsened data.
-    * @param fine[in]    Fine patch containing source data.
-    * @param coarse_box[in]  Box region on coarse patch into which data is
+    * @param[out] coarse Coarse patch that will receive coarsened data.
+    * @param[in] fine    Fine patch containing source data.
+    * @param[in] coarse_box  Box region on coarse patch into which data is
     *                        coarsened.
-    * @param ratio[in]   Refinement ratio between coarse and fine patches.
+    * @param[in] ratio   Refinement ratio between coarse and fine patches.
     */
    virtual void
    preprocessCoarsen(
@@ -128,11 +126,11 @@ public:
     * specified in calls to the registerCoarsen() function in the
     * CoarsenAlgorithm class.
     *
-    * @param coarse[out]  Coarse patch that will receive coarsened data.
-    * @param fine[in]     Fine patch containing source data.
-    * @param coarse_box[in]  hier::Box region on coarse patch into which data
+    * @param[out] coarse  Coarse patch that will receive coarsened data.
+    * @param[in] fine     Fine patch containing source data.
+    * @param[in] coarse_box  hier::Box region on coarse patch into which data
     *                        is coarsened.
-    * @param ratio[in]    Refinement ratio between coarse and fine patches.
+    * @param[in] ratio    Refinement ratio between coarse and fine patches.
     */
    virtual void
    postprocessCoarsen(
@@ -145,7 +143,10 @@ public:
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*!
@@ -153,7 +154,11 @@ private:
     * registered.
     */
    static std::set<CoarsenPatchStrategy *>&
-   getCurrentObjects();
+   getCurrentObjects()
+   {
+      static std::set<CoarsenPatchStrategy *> current_objects;
+      return current_objects;
+   }
 
    /*!
     * @brief Dimension of the object.
@@ -165,10 +170,16 @@ private:
     * objects used in an application.
     */
    void
-   registerObject();
+   registerObject()
+   {
+      std::set<CoarsenPatchStrategy *>& current_objects =
+         CoarsenPatchStrategy::getCurrentObjects();
+      current_objects.insert(this);
+   }
 
 };
 
 }
 }
+
 #endif

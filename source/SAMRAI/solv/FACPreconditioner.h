@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -17,8 +17,12 @@
 #include "SAMRAI/solv/FACOperatorStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <algorithm>
+#include <cctype>
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -55,7 +59,7 @@ namespace solv {
  *    if desired.
  */
 
-class FACPreconditioner:public tbox::DescribedClass
+class FACPreconditioner
 {
 public:
    /*!
@@ -68,8 +72,8 @@ public:
    FACPreconditioner(
       const std::string& name,
       FACOperatorStrategy& user_ops,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>(NULL));
+      const boost::shared_ptr<tbox::Database>& database =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * Virtual destructor.
@@ -229,7 +233,10 @@ public:
     */
    void
    setPresmoothingSweeps(
-      int num_pre_sweeps);
+      int num_pre_sweeps)
+   {
+      d_presmoothing_sweeps = num_pre_sweeps;
+   }
 
    /*!
     * @brief Set the number of post-smoothing sweeps during
@@ -242,14 +249,20 @@ public:
     */
    void
    setPostsmoothingSweeps(
-      int num_post_sweeps);
+      int num_post_sweeps)
+   {
+      d_postsmoothing_sweeps = num_post_sweeps;
+   }
 
    /*!
     * @brief Set the max number of iterations (cycles) to use per solve.
     */
    void
    setMaxCycles(
-      int max_cycles);
+      int max_cycles)
+   {
+      d_max_iterations = max_cycles;
+   }
 
    /*!
     * @brief Set the residual tolerance for stopping.
@@ -263,7 +276,11 @@ public:
    void
    setResidualTolerance(
       double residual_tol,
-      double relative_residual_tol = -1.0);
+      double relative_residual_tol = -1.0)
+   {
+      d_residual_tolerance = residual_tol;
+      d_relative_residual_tolerance = relative_residual_tol;
+   }
 
    /*!
     * @brief Set the choice of FAC cycling algorithm to use.
@@ -299,7 +316,10 @@ public:
     */
    void
    enableLogging(
-      bool enabled = true);
+      bool enabled = true)
+   {
+      d_do_log = enabled;
+   }
 
    //@}
 
@@ -311,7 +331,10 @@ public:
     * if there is one) FAC iteration process.
     */
    int
-   getNumberOfIterations() const;
+   getNumberOfIterations() const
+   {
+      return d_number_iterations;
+   }
 
    /*!
     * @brief Get convergance rates of
@@ -328,7 +351,17 @@ public:
    void
    getConvergenceFactors(
       double& avg_factor,
-      double& final_factor) const;
+      double& final_factor) const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      avg_factor = d_avg_convergence_factor;
+      final_factor = d_convergence_factor[d_number_iterations - 1];
+   }
 
    /*!
     * @brief Get the net convergance rate of
@@ -340,7 +373,17 @@ public:
     * so it may not be accurate if the initial residual is very small.
     */
    double
-   getNetConvergenceFactor() const;
+   getNetConvergenceFactor() const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      return d_net_convergence_factor;
+   }
+
    /*!
     * @brief Get the average convergance rates of
     * the last (or current if there is one) FAC solve.
@@ -350,7 +393,17 @@ public:
     * It may not be accurate if the initial residual is very small.
     */
    double
-   getAvgConvergenceFactor() const;
+   getAvgConvergenceFactor() const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      return d_avg_convergence_factor;
+   }
+
    /*!
     * @brief Get the final convergance rate of
     * the last (or current if there is one) FAC solve.
@@ -359,7 +412,16 @@ public:
     * has been reduced by the last FAC cycle.
     */
    double
-   getFinalConvergenceFactor() const;
+   getFinalConvergenceFactor() const
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      if (d_number_iterations <= 0) {
+         TBOX_ERROR(d_object_name << ": Seeking convergence factors before\n"
+                                  << "a solve is invalid.\n");
+      }
+#endif
+      return d_convergence_factor[d_number_iterations - 1];
+   }
 
    /*!
     * @brief Return residual norm from the just-completed FAC iteration.
@@ -371,7 +433,10 @@ public:
     * The latest computed norm is the one returned.
     */
    double
-   getResidualNorm() const;
+   getResidualNorm() const
+   {
+      return d_residual_norm;
+   }
 
    //@}
 
@@ -388,7 +453,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    //@{
@@ -411,7 +479,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Compute composite residual on all levels and
@@ -535,7 +603,7 @@ private:
    /*!
     * @brief Object providing problem-specific routines.
     *
-    * tbox::Pointer is initialized by constructor @em never changes.
+    * Reference is initialized by constructor @em never changes.
     */
    FACOperatorStrategy& d_fac_operator;
 
@@ -548,29 +616,29 @@ private:
     * and used only during the solve process.
     */
 
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
    int d_coarsest_ln;
    int d_finest_ln;
 
    /*!
     * @brief Clone of solution vector to store residual.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_residual_vector;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_residual_vector;
 
    /*!
     * @brief Clone of solution vector to store temporary residual.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_tmp_residual;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_tmp_residual;
 
    /*!
     * @brief Error vector.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_error_vector;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_error_vector;
 
    /*!
     * @brief Error vector for homogeneous boundary condition problem..
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_tmp_error;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_tmp_error;
 
    //@}
 
@@ -625,20 +693,16 @@ private:
     * @brief Objects facilitating operations over a specific range
     * of levels.
     */
-   tbox::Array<tbox::Pointer<math::HierarchyDataOpsReal<double> > >
+   tbox::Array<boost::shared_ptr<math::HierarchyDataOpsReal<double> > >
    d_controlled_level_ops;
 
    /*!
     * Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_solve_system;
+   boost::shared_ptr<tbox::Timer> t_solve_system;
 };
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/FACPreconditioner.I"
-#endif
 
 #endif

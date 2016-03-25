@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Class for managing transformations between index spaces in
  *                an AMR hierarchy.
  *
@@ -12,18 +12,11 @@
 #ifndef included_hier_Transformation_C
 #define included_hier_Transformation_C
 
-#include "SAMRAI/SAMRAI_config.h"
-
 #include "SAMRAI/hier/Transformation.h"
 
-#include "SAMRAI/hier/MultiblockDataTranslator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Transformation.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -38,23 +31,31 @@ namespace hier {
 
 Transformation::Transformation(
    RotationIdentifier rotation,
-   const IntVector& src_offset):
+   const IntVector& src_offset,
+   const BlockId& begin_block,
+   const BlockId& end_block):
    d_rotation(rotation),
-   d_offset(src_offset)
+   d_offset(src_offset),
+   d_begin_block(begin_block),
+   d_end_block(end_block)
 {
 }
 
 Transformation::Transformation(
    const IntVector& src_offset):
    d_rotation(NO_ROTATE),
-   d_offset(src_offset)
+   d_offset(src_offset),
+   d_begin_block(BlockId::invalidId()),
+   d_end_block(BlockId::invalidId())
 {
 }
 
 Transformation::Transformation(
    const Transformation& copy_trans):
    d_rotation(copy_trans.d_rotation),
-   d_offset(copy_trans.d_offset)
+   d_offset(copy_trans.d_offset),
+   d_begin_block(copy_trans.d_begin_block),
+   d_end_block(copy_trans.d_end_block)
 {
 }
 
@@ -80,8 +81,13 @@ Transformation::~Transformation()
 void
 Transformation::transform(Box& box) const
 {
+   TBOX_ASSERT(box.getBlockId() == d_begin_block ||
+               d_begin_block == BlockId::invalidId());
    box.rotate(d_rotation);
    box.shift(d_offset);
+   if (d_begin_block != d_end_block) {
+      box.setBlockId(d_end_block);
+   }
 }
 
 /*
@@ -92,13 +98,19 @@ Transformation::transform(Box& box) const
  * ************************************************************************
  */
 void
-Transformation::inverseTransform(Box& box) const
+Transformation::inverseTransform(
+   Box& box) const
 {
-   hier::IntVector reverse_offset(d_offset.getDim());
+   TBOX_ASSERT(box.getBlockId() == d_end_block ||
+               d_end_block == BlockId::invalidId());
+   IntVector reverse_offset(d_offset.getDim());
    calculateReverseShift(reverse_offset, d_offset, d_rotation);
 
    box.rotate(getReverseRotationIdentifier(d_rotation, d_offset.getDim()));
    box.shift(reverse_offset);
+   if (d_begin_block != d_end_block) {
+      box.setBlockId(d_begin_block);
+   }
 }
 
 /*
@@ -611,70 +623,13 @@ Transformation::calculateReverseShift(
 /*
  *************************************************************************
  *
- * Determines the patch data type and calls the appropriate routine
- *
- *************************************************************************
- */
-
-void Transformation::translateAndCopyData(
-   Patch& dst_patch,
-   const int dst_id,
-   const Patch& src_patch,
-   const int src_id,
-   const IntVector& shift,
-   const RotationIdentifier rotate)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
-
-   tbox::Pointer<PatchDataFactory> dst_pdf =
-      VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(dst_id);
-
-   MultiblockDataTranslator* mb_trans =
-      dst_pdf->getMultiblockDataTranslator();
-
-   mb_trans->translateAndCopyData(dst_patch,
-      dst_id,
-      src_patch,
-      src_id,
-      shift,
-      rotate);
-}
-
-void Transformation::translateAndFillData(
-   Patch& dst_patch,
-   const int dst_id,
-   const Patch& src_patch,
-   const int src_id,
-   const IntVector& shift,
-   const RotationIdentifier rotate)
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst_patch, src_patch, shift);
-
-   tbox::Pointer<PatchDataFactory> dst_pdf =
-      VariableDatabase::getDatabase()->getPatchDescriptor()->
-      getPatchDataFactory(dst_id);
-
-   MultiblockDataTranslator* mb_trans =
-      dst_pdf->getMultiblockDataTranslator();
-
-   mb_trans->translateAndFillData(dst_patch,
-      dst_id,
-      src_patch,
-      src_id,
-      shift,
-      rotate);
-}
-
-/*
- *************************************************************************
- *
  * rotate an index around the origin.
  *
  *************************************************************************
  */
 
-void Transformation::rotateIndex(
+void
+Transformation::rotateIndex(
    int* index,
    const tbox::Dimension& dim,
    const RotationIdentifier rotation)
@@ -764,27 +719,13 @@ void Transformation::rotateIndex(
 /*
  *************************************************************************
  *
- * Rotate an index around the origin.
- *
- *************************************************************************
- */
-
-void Transformation::rotateIndex(
-   Index& index,
-   const RotationIdentifier rotation)
-{
-   rotateIndex(&index[0], index.getDim(), rotation);
-}
-
-/*
- *************************************************************************
- *
  * Private routine to rotate an index about an axis.
  *
  *************************************************************************
  */
 
-void Transformation::rotateAboutAxis(
+void
+Transformation::rotateAboutAxis(
    const tbox::Dimension& dim,
    int* index,
    const int axis,

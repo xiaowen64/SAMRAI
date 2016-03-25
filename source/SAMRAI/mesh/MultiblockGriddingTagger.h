@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -43,7 +43,7 @@ public:
    /*!
     * @brief The constructor does nothing interesting.
     */
-   MultiblockGriddingTagger(
+   explicit MultiblockGriddingTagger(
       const tbox::Dimension& dim);
 
    /*!
@@ -95,6 +95,7 @@ public:
     * @param boundary_box         BoundaryBox object that stores information
     *                             about the type and location of the boundary
     *                             where ghost cells will be filled
+    * @param grid_geometry
     */
    virtual void
    fillSingularityBoundaryConditions(
@@ -104,7 +105,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /*!
     * @brief Return maximum stencil width needed for user-defined
@@ -114,10 +115,7 @@ public:
     * Always returns an IntVector of ones, because that is the maximum
     * stencil needed for the operations in GriddingAlgorithm
     */
-   virtual hier::IntVector getRefineOpStencilWidth() const
-   {
-      return hier::IntVector::getOne(d_dim);
-   }
+   virtual hier::IntVector getRefineOpStencilWidth() const;
 
    /*!
     * Perform user-defined refining operations.  This member function
@@ -139,13 +137,7 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio)
-   {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
-   }
+      const hier::IntVector& ratio);
 
    /*!
     * Perform user-defined refining operations.  This member function

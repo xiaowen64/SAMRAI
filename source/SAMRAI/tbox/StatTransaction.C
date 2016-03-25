@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction structure for statistic data copies
  *
  ************************************************************************/
@@ -22,62 +22,71 @@ namespace SAMRAI {
 namespace tbox {
 
 StatTransaction::StatTransaction(
-   Pointer<Statistic> stat,
+   const boost::shared_ptr<Statistic>& stat,
    int src_proc_id,
-   int dst_proc_id)
+   int dst_proc_id) :
+   d_stat(stat),
+   d_src_id(src_proc_id),
+   d_dst_id(dst_proc_id)
 {
-   d_stat = stat;
-   d_src_id = src_proc_id;
-   d_dst_id = dst_proc_id;
 }
 
 StatTransaction::~StatTransaction()
 {
 }
 
-bool StatTransaction::canEstimateIncomingMessageSize()
+bool
+StatTransaction::canEstimateIncomingMessageSize()
 {
    return d_stat->canEstimateDataStreamSize();
 }
 
-size_t StatTransaction::computeIncomingMessageSize()
+size_t
+StatTransaction::computeIncomingMessageSize()
 {
    return d_stat->getDataStreamSize();
 }
 
-size_t StatTransaction::computeOutgoingMessageSize()
+size_t
+StatTransaction::computeOutgoingMessageSize()
 {
    return d_stat->getDataStreamSize();
 }
 
-int StatTransaction::getSourceProcessor()
+int
+StatTransaction::getSourceProcessor()
 {
    return d_src_id;
 }
 
-int StatTransaction::getDestinationProcessor()
+int
+StatTransaction::getDestinationProcessor()
 {
    return d_dst_id;
 }
 
-void StatTransaction::packStream(
+void
+StatTransaction::packStream(
    MessageStream& stream)
 {
    d_stat->packStream(stream);
 }
 
-void StatTransaction::unpackStream(
+void
+StatTransaction::unpackStream(
    MessageStream& stream)
 {
    d_stat->unpackStream(stream);
 }
 
-void StatTransaction::copyLocalData()
+void
+StatTransaction::copyLocalData()
 {
    // Nothing to do here!
 }
 
-void StatTransaction::printClassData(
+void
+StatTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Stat Transaction" << std::endl;

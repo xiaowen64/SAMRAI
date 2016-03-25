@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Misc array setting functions in FAC solver test.
  *
  ************************************************************************/
@@ -11,6 +11,7 @@
 
 #include "setArrayData.h"
 #include "SAMRAI/pdat/MDA_Access.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include <math.h>
 
 // using namespace std;
@@ -34,9 +35,9 @@ void setArrayDataToConstant(
    const double* h
    ,
    double value) {
-   (void)xlo;
-   (void)xhi;
-   (void)h;
+   NULL_USE(xlo);
+   NULL_USE(xhi);
+   NULL_USE(h);
 
    for (int j = lower[1]; j <= upper[1]; ++j) {
       for (int i = lower[0]; i <= upper[0]; ++i) {
@@ -55,9 +56,9 @@ void setArrayDataToConstant(
    const double* h
    ,
    double value) {
-   (void)xlo;
-   (void)xhi;
-   (void)h;
+   NULL_USE(xlo);
+   NULL_USE(xhi);
+   NULL_USE(h);
 
    for (int k = lower[2]; k <= upper[2]; ++k) {
       for (int j = lower[1]; j <= upper[1]; ++j) {
@@ -103,7 +104,7 @@ void setArrayDataTo(
    const double* h
    ,
    const double* coef) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    const double ucoef[2] = { 1., 1. };
    if (coef == NULL) coef = ucoef;
@@ -127,7 +128,7 @@ void setArrayDataTo(
    const double* h
    ,
    const double* coef) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    const double ucoef[3] = { 1., 1., 1. };
    if (coef == NULL) coef = ucoef;
@@ -156,7 +157,7 @@ void setArrayDataToSinusoidal(
    ,
    const double* npi,
    const double* ppi) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    double nx = npi[0], px = ppi[0];
    double ny = npi[1], py = ppi[1];
@@ -183,7 +184,7 @@ void setArrayDataToSinusoidal(
    ,
    const double* npi,
    const double* ppi) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    double nx = npi[0], px = ppi[0];
    double ny = npi[1], py = ppi[1];
@@ -215,9 +216,8 @@ void setArrayDataToSinusoidalGradient(
    const double* xlo,
    const double* xhi,
    const double* h) {
-   (void)xlo;
-   (void)xhi;
-   (void)h;
+   NULL_USE(xhi);
+   NULL_USE(h);
    if (dim == 2) {
       double* gx_ptr = g_ptr[0];
       MDA_Access<double, 2, MDA_OrderColMajor<2> > gx(gx_ptr, lower, upper);
@@ -274,7 +274,7 @@ void setArrayDataToLinear(
    double ax,
    double ay,
    double axy) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    for (int j = lower[1]; j <= upper[1]; ++j) {
       double y = xlo[1] + h[1] * (j - lower[1] + 0.5);
@@ -299,7 +299,7 @@ void setArrayDataToLinear(
    double axz,
    double ayz,
    double axyz) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    for (int k = lower[2]; k <= upper[2]; ++k) {
       double z = xlo[2] + h[2] * (k - lower[2] + 0.5);
@@ -356,7 +356,7 @@ void setArrayDataToPerniceExact(
    const double* xlo,
    const double* xhi,
    const double* h) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    for (int j = lower[1]; j <= upper[1]; ++j) {
       double y = xlo[1] + h[1] * (j - lower[1] + 0.5);
@@ -376,7 +376,7 @@ void setArrayDataToPerniceExact(
    const double* xlo,
    const double* xhi,
    const double* h) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    for (int k = lower[2]; k <= upper[2]; ++k) {
       double z = xlo[2] + h[2] * (k - lower[2] + 0.5);
@@ -403,7 +403,7 @@ void setArrayDataToPerniceSource(
    const double* xlo,
    const double* xhi,
    const double* h) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    for (int j = lower[1]; j <= upper[1]; ++j) {
       double y = xlo[1] + h[1] * (j - lower[1] + 0.5);
@@ -423,7 +423,7 @@ void setArrayDataToPerniceSource(
    const double* xlo,
    const double* xhi,
    const double* h) {
-   (void)xhi;
+   NULL_USE(xhi);
 
    for (int k = lower[2]; k <= upper[2]; ++k) {
       double z = xlo[2] + h[2] * (k - lower[2] + 0.5);

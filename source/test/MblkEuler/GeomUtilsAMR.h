@@ -9,8 +9,8 @@
 //
 // calculate the volume of a hexahedral element
 //
-SAMRAI_INLINE_KEYWORD
-real8 UpwindVolume(
+real8
+UpwindVolume(
    const real8 x0,
    const real8 x1,
    const real8 x2,
@@ -76,7 +76,7 @@ real8 UpwindVolume(
 //
 // compute the area of a face
 //
-SAMRAI_INLINE_KEYWORD real8
+real8
 UpwindAreaFace(
    const real8 x0,
    const real8 x1,
@@ -108,7 +108,7 @@ UpwindAreaFace(
 //
 // compute a characteristic length
 //
-SAMRAI_INLINE_KEYWORD real8
+real8
 UpwindCharacteristicLength(
    const real8 x[8],
    const real8 y[8],
@@ -155,7 +155,8 @@ UpwindCharacteristicLength(
 ///
 /// the non-uniform grid monotonic slope finder
 ///
-SAMRAI_INLINE_KEYWORD void my_slopes(
+void
+my_slopes(
    double psi,
    double pim,
    double pip,
@@ -279,7 +280,8 @@ SAMRAI_INLINE_KEYWORD void my_slopes(
 ///
 /// the cartesian uniform grid monotonic slope finder
 ///
-SAMRAI_INLINE_KEYWORD void my_slopesCart(
+void
+my_slopesCart(
    double psi,
    double pim,
    double pip,

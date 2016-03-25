@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered float
  *                data on a Cartesian mesh.
  *
@@ -87,20 +87,6 @@ CartesianCellFloatConservativeLinearRefine()
 {
 }
 
-bool CartesianCellFloatConservativeLinearRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<pdat::CellVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int
 CartesianCellFloatConservativeLinearRefine::getOperatorPriority() const
 {
@@ -108,11 +94,13 @@ CartesianCellFloatConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellFloatConservativeLinearRefine::getStencilWidth() const {
+CartesianCellFloatConservativeLinearRefine::getStencilWidth() const
+{
    return hier::IntVector::getOne(getDim());
 }
 
-void CartesianCellFloatConservativeLinearRefine::refine(
+void
+CartesianCellFloatConservativeLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -126,17 +114,18 @@ void CartesianCellFloatConservativeLinearRefine::refine(
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       refine(fine,
          coarse,
          dst_component,
          src_component,
-         b(),
+         *b,
          ratio);
    }
 }
 
-void CartesianCellFloatConservativeLinearRefine::refine(
+void
+CartesianCellFloatConservativeLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -147,13 +136,15 @@ void CartesianCellFloatConservativeLinearRefine::refine(
    const tbox::Dimension dim(getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, fine, coarse, fine_box, ratio);
 
-   tbox::Pointer<pdat::CellData<float> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<pdat::CellData<float> >
-   fdata = fine.getPatchData(dst_component);
+   boost::shared_ptr<pdat::CellData<float> > cdata(
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<float> > fdata(
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
    const hier::Box cgbox(cdata->getGhostBox());
@@ -163,10 +154,12 @@ void CartesianCellFloatConservativeLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

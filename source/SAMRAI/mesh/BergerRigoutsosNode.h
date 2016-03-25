@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Asynchronous Berger-Rigoutsos dendogram
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Description:   Node in asynchronous Berger-Rigoutsos dendogram
  *
  ************************************************************************/
 #ifndef included_mesh_BergerRigoutsosNode
@@ -13,7 +13,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/AsyncCommGroup.h"
-#include "SAMRAI/tbox/vector.h"
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/Connector.h"
@@ -21,6 +20,7 @@
 
 #include <set>
 #include <list>
+#include <vector>
 
 namespace SAMRAI {
 namespace mesh {
@@ -101,17 +101,17 @@ public:
     * The root node is used to run the BR algorithm and
     * obtain outputs.
     */
-   explicit BergerRigoutsosNode(
+   BergerRigoutsosNode(
       const tbox::Dimension& dim,
-      const hier::BlockId& block_id);
+      const hier::BlockId& block_id,
+      const hier::LocalId& first_local_id);
 
    /*!
     * @brief Destructor.
     *
     * Deallocate internal data.
     */
-   ~BergerRigoutsosNode(
-      void);
+   virtual ~BergerRigoutsosNode();
 
    /*!
     * @brief Set parameters for (our slight variation of) the
@@ -120,10 +120,18 @@ public:
     * These parameters are not specific to the asynchronous algorithm
     * or DLBG.
     *
-    * @param max_lap_cut_from_center: Limit the Laplace cut to this
+    * @param[in] tag_data_index
+    * @param[in] tag_val
+    * @param[in] min_box
+    * @param[in] efficiency_tol
+    * @param[in] combine_tol
+    * @param[in] max_box_size
+    * @param[in] max_lap_cut_from_center Limit the Laplace cut to this
     *   fraction of the distance from the center plane to the end.
     *   Zero means cut only at the center plane.  One means unlimited.
     *   Under most situations, one is fine.
+    *
+    * @param[in] laplace_cut_threshold_ar
     */
    void
    setClusteringParameters(
@@ -133,7 +141,8 @@ public:
       const double efficiency_tol,
       const double combine_tol,
       const hier::IntVector& max_box_size,
-      const double max_lap_cut_from_center);
+      const double max_lap_cut_from_center,
+      const double laplace_cut_threshold_ar);
 
    //@{
    //! @name Algorithm mode settings
@@ -244,7 +253,7 @@ public:
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::Box& bound_box,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const tbox::SAMRAI_MPI& mpi_object);
 
    //@{
@@ -257,38 +266,66 @@ public:
 
    //! @brief Global number of tags in clusters.
    int
-   getNumTags() const;
+   getNumTags() const
+   {
+      return d_common->num_tags_in_all_nodes;
+   }
 
    //! @brief Max number of tags owned.
    int
-   getMaxTagsOwned() const;
+   getMaxTagsOwned() const
+   {
+      return d_common->max_tags_owned;
+   }
 
    //! @brief Max number of local nodes for dendogram.
    int
-   getMaxNodes() const;
+   getMaxNodes() const
+   {
+      return d_common->max_nodes_allocated;
+   }
 
    //! @brief max generation count for the local nodes in the dendogram.
    int
-   getMaxGeneration() const;
+   getMaxGeneration() const
+   {
+      return d_common->max_generation;
+   }
 
    //! @brief Max number of locally owned nodes in the dendogram.
    int
-   getMaxOwnership() const;
+   getMaxOwnership() const
+   {
+      return d_common->max_nodes_owned;
+   }
 
    //! @brief Average number of continuations for local nodes in dendogram.
    double
-   getAvgNumberOfCont() const;
+   getAvgNumberOfCont() const
+   {
+      if (d_common->num_nodes_completed > 0) {
+         return (double)d_common->num_conts_to_complete
+                / d_common->num_nodes_completed;
+      }
+      return 0;
+   }
 
    //! @brief Max number of continuations for local nodes in dendogram.
    int
-   getMaxNumberOfCont() const;
+   getMaxNumberOfCont() const
+   {
+      return d_common->max_conts_to_complete;
+   }
 
    /*!
     * @brief Number of boxes generated (but not necessarily owned)
     * on the local process.
     */
    int
-   getNumBoxesGenerated() const;
+   getNumBoxesGenerated() const
+   {
+      return d_common->num_boxes_generated;
+   }
 
    /*!
     * @brief Set whether to log dendogram node action history
@@ -296,7 +333,11 @@ public:
     */
    void
    setLogNodeHistory(
-      bool flag);
+      bool flag)
+   {
+      d_common->log_node_history = flag;
+   }
+
    //@}
 
 private:
@@ -318,16 +359,9 @@ private:
    typedef std::set<int> IntSet;
 
    /*!
-    * @brief Type of vector<int> for internal use.
-    *
-    * Choose either std::vector or tbox::vector.  tbox::vector is a
-    * wrapper for std::vector, adding array bounds checking.
+    * @brief Shorthand for std::vector<int> for internal use.
     */
-#ifdef DEBUG_CHECK_ASSERTIONS
-   typedef tbox::vector<int> VectorOfInts;
-#else
    typedef std::vector<int> VectorOfInts;
-#endif
 
    /*!
     * @brief Parameters shared among all dendogram nodes in
@@ -342,7 +376,7 @@ private:
    class CommonParams
    {
 public:
-      CommonParams(
+      explicit CommonParams(
          const tbox::Dimension& dim);
 
       const tbox::Dimension d_dim;
@@ -370,13 +404,13 @@ public:
       /*!
        * @brief Level where tags live.
        */
-      tbox::Pointer<hier::PatchLevel> tag_level;
+      boost::shared_ptr<hier::PatchLevel> tag_level;
 
       /*!
        * @brief BoxLevel associated with tag_level.
        *
-       * If relationships are computed (see setComputeRelationships()), the relationships
-       * go between the graph nodes on the tagged level and the
+       * If relationships are computed (see setComputeRelationships()), the
+       * relationships go between the graph nodes on the tagged level and the
        * generated graph nodes.
        */
       const hier::BoxLevel* tag_mapped_box_level;
@@ -413,16 +447,22 @@ public:
       hier::Connector* new_to_tag;
 
       /*!
-       * @brief List of processes that will send neighbor data
-       * for locally owned boxes after the BR algorithm completes.
+       * @brief
        */
-      IntSet relationship_senders;
+      double max_lap_cut_from_center;
 
-      /*!
-       * @brief Outgoing messages to be sent to graph node owners
-       * describing new relationships found by local process.
+      /*
+       * @brief Threshold for favoring thicker directions for Laplace
+       * cuts.
+       *
+       * The higher the value, the more we tolerate high aspect
+       * ratios.  Box directions corresponding to aspect ratios lower
+       * than this will not be subject to Laplace cuts (except for the
+       * thickest direction).  Set to 0 to always cut the thickest
+       * direction.  Set to huge value to disregard high aspect
+       * ratios.
        */
-      std::map<int, VectorOfInts> relationship_messages;
+      double laplace_cut_threshold_ar;
 
       /*!
        * @brief If a candidate box does not fit in this limit,
@@ -443,7 +483,6 @@ public:
       hier::IntVector min_box;
       double efficiency_tol;
       double combine_tol;
-      double max_lap_cut_from_center;
       //@}
 
       /*!
@@ -452,6 +491,18 @@ public:
        * See setComputeRelationships().
        */
       int compute_relationships;
+
+      /*!
+       * @brief List of processes that will send neighbor data
+       * for locally owned boxes after the BR algorithm completes.
+       */
+      IntSet relationship_senders;
+
+      /*!
+       * @brief Outgoing messages to be sent to graph node owners
+       * describing new relationships found by local process.
+       */
+      std::map<int, VectorOfInts> relationship_messages;
 
       //! @brief Ammount to grow a box when checking for overlap.
       hier::IntVector max_gcw;
@@ -476,19 +527,19 @@ public:
 
       //@{
       //! @name Performance monitors
-      static tbox::Pointer<tbox::Timer> t_cluster;
-      static tbox::Pointer<tbox::Timer> t_cluster_and_compute_relationships;
-      static tbox::Pointer<tbox::Timer> t_continue_algorithm;
-      static tbox::Pointer<tbox::Timer> t_compute;
-      static tbox::Pointer<tbox::Timer> t_comm_wait;
-      static tbox::Pointer<tbox::Timer> t_MPI_wait;
-      static tbox::Pointer<tbox::Timer> t_compute_new_graph_relationships;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships_send;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships_recv;
-      static tbox::Pointer<tbox::Timer> t_share_new_relationships_unpack;
-      static tbox::Pointer<tbox::Timer> t_local_tasks;
-      static tbox::Pointer<tbox::Timer> t_local_histogram;
+      static boost::shared_ptr<tbox::Timer> t_cluster;
+      static boost::shared_ptr<tbox::Timer> t_cluster_and_compute_relationships;
+      static boost::shared_ptr<tbox::Timer> t_continue_algorithm;
+      static boost::shared_ptr<tbox::Timer> t_compute;
+      static boost::shared_ptr<tbox::Timer> t_comm_wait;
+      static boost::shared_ptr<tbox::Timer> t_MPI_wait;
+      static boost::shared_ptr<tbox::Timer> t_compute_new_graph_relationships;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_send;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_recv;
+      static boost::shared_ptr<tbox::Timer> t_share_new_relationships_unpack;
+      static boost::shared_ptr<tbox::Timer> t_local_tasks;
+      static boost::shared_ptr<tbox::Timer> t_local_histogram;
       /*
        * Multi-stage timers.  These are used in continueAlgorithm()
        * instead of the methods they time, because what they time may
@@ -496,11 +547,11 @@ public:
        * timer t_continue_algorithm.  They provide timing breakdown
        * for the different stages.
        */
-      static tbox::Pointer<tbox::Timer> t_reduce_histogram;
-      static tbox::Pointer<tbox::Timer> t_bcast_acceptability;
-      static tbox::Pointer<tbox::Timer> t_gather_grouping_criteria;
-      static tbox::Pointer<tbox::Timer> t_bcast_child_groups;
-      static tbox::Pointer<tbox::Timer> t_bcast_to_dropouts;
+      static boost::shared_ptr<tbox::Timer> t_reduce_histogram;
+      static boost::shared_ptr<tbox::Timer> t_bcast_acceptability;
+      static boost::shared_ptr<tbox::Timer> t_gather_grouping_criteria;
+      static boost::shared_ptr<tbox::Timer> t_bcast_child_groups;
+      static boost::shared_ptr<tbox::Timer> t_bcast_to_dropouts;
       //@}
 
       //@{
@@ -546,9 +597,10 @@ public:
     */
    BergerRigoutsosNode(
       CommonParams* common_params,
-      mesh::BergerRigoutsosNode* parent,
+      BergerRigoutsosNode* parent,
       const int child_number,
-      const hier::BlockId& block_id);
+      const hier::BlockId& block_id, 
+      const hier::LocalId& first_local_id);
 
    /*
     * @brief Duplicate given MPI communicator for private use
@@ -681,47 +733,78 @@ public:
    //! @name Delegated tasks for various phases of running algorithm.
    void
    makeLocalTagHistogram();
+
    void
    reduceHistogram_start();
+
    bool
    reduceHistogram_check();
+
    void
    computeMinimalBoundingBoxForTags();
+
    void
    acceptOrSplitBox();
+
    void
    broadcastAcceptability_start();
+
    bool
    broadcastAcceptability_check();
+
    void
    countOverlapWithLocalPatches();
+
    void
    gatherGroupingCriteria_start();
+
    bool
-   gatherGroupingCriteria_check();
+   gatherGroupingCriteria_check()
+   {
+      if (d_group.size() == 1) {
+         return true;
+      }
+      d_comm_group->checkGather();
+      /*
+       * Do nothing yet with the overlap data d_recv_msg.
+       * We extract it in formChildGroups().
+       */
+      return d_comm_group->isDone();
+   }
+
    //! @brief Form child groups from gathered overlap counts.
    void
    formChildGroups();
+
    //! @brief Form child groups from local copy of all level boxes.
    void
    broadcastChildGroups_start();
+
    bool
    broadcastChildGroups_check();
+
    void
    runChildren_start();
+
    bool
    runChildren_check();
+
    void
    broadcastToDropouts_start();
+
    bool
    broadcastToDropouts_check();
+
    void
    createBox();
+
    void
    eraseBox();
+
    //! @brief Compute new graph relationships touching local tag nodes.
    void
    computeNewNeighborhoodSets();
+
    //! @brief Participants send new relationship data to graph node owners.
    void
    shareNewNeighborhoodSetsWithOwners();
@@ -734,17 +817,36 @@ public:
    int
    findOwnerInGroup(
       int owner,
-      const VectorOfInts& group) const;
+      const VectorOfInts& group) const
+   {
+      for (unsigned int i = 0; i < group.size(); ++i) {
+         if (group[i] == owner) {
+            return i;
+         }
+      }
+      return -1;
+   }
+
    //! @brief Claim a unique tag from process's available tag pool.
    void
    claimMPITag();
+
    /*!
     * @brief Heuristically determine "best" tree degree for
     * communication group size.
     */
    int
    computeCommunicationTreeDegree(
-      int group_size) const;
+      int group_size) const
+   {
+      int tree_deg = 2;
+      int shifted_size = group_size >> 3;
+      while (shifted_size > 0) {
+         shifted_size >>= 3;
+         ++tree_deg;
+      }
+      return tree_deg;
+   }
 
    bool
    findZeroCutSwath(
@@ -755,25 +857,39 @@ public:
    void
    cutAtLaplacian(
       int& cut_pt,
+      int& diff_laplace,
       const int dim);
 
    int
    getHistogramBufferSize(
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      int size = box.numberCells(0);
+      int dim_val = d_dim.getValue();
+      for (int d = 1; d < dim_val; ++d) {
+         size += box.numberCells(d);
+      }
+      return size;
+   }
+
    int *
    putHistogramToBuffer(
       int* buffer);
+
    int *
    getHistogramFromBuffer(
       int* buffer);
+
    int *
    putBoxToBuffer(
       const hier::Box& box,
       int* buffer) const;
+
    int *
    getBoxFromBuffer(
       hier::Box& box,
       int* buffer) const;
+
    //! @brief Compute list of non-participating processes.
    void
    computeDropoutGroup(
@@ -781,35 +897,63 @@ public:
       const VectorOfInts& sub_group,
       VectorOfInts& dropouts,
       const int add_group) const;
+
    BoxAcceptance
    intToBoxAcceptance(
       int i) const;
-   bool boxAccepted() const {
-      return bool(d_box_acceptance >= 0 &&
-                  d_box_acceptance % 2);
+
+   bool
+   boxAccepted() const
+   {
+      return bool(d_box_acceptance >= 0 && d_box_acceptance % 2);
    }
-   bool boxRejected() const {
-      return bool(d_box_acceptance >= 0 &&
-                  d_box_acceptance % 2 == 0);
+
+   bool
+   boxRejected() const
+   {
+      return bool(d_box_acceptance >= 0 && d_box_acceptance % 2 == 0);
    }
-   bool boxHasNoTag() const {
+
+   bool
+   boxHasNoTag() const
+   {
       return bool(d_box_acceptance == -1);
    }
    //@}
 
    //@{
    //! @name Utilities to help analysis and debugging
-   // tbox::List<BergerRigoutsosNode*>::Iterator
    std::list<BergerRigoutsosNode *>::const_iterator
    inRelaunchQueue(
-      BergerRigoutsosNode* node_ptr) const;
+      BergerRigoutsosNode* node_ptr) const
+   {
+      std::list<BergerRigoutsosNode *>::const_iterator li =
+         std::find(d_common->relaunch_queue.begin(),
+            d_common->relaunch_queue.end(),
+            node_ptr);
+      return li;
+   }
+
    bool
    inGroup(
       VectorOfInts& group,
-      int rank = -1) const;
+      int rank = -1) const
+   {
+      if (rank < 0) {
+         rank = d_common->rank;
+      }
+      for (size_t i = 0; i < group.size(); ++i) {
+         if (rank == group[i]) {
+            return true;
+         }
+      }
+      return false;
+   }
+
    void
    printState(
       std::ostream& co) const;
+
    void
    printDendogramState(
       std::ostream& co,
@@ -832,6 +976,7 @@ public:
    static void
    finalizeCallback();
 
+   // TODO: d_dim is unneeded.  Dimension is already in d_common.
    const tbox::Dimension d_dim;
 
    /*!
@@ -946,7 +1091,7 @@ public:
     * in a container.  On contributors, the graph node is non-local
     * and stands alone.
     */
-   BoxContainer::ConstIterator d_mapped_box_iterator;
+   BoxContainer::const_iterator d_mapped_box_iterator;
 
    /*!
     * @brief Name of wait phase when continueAlgorithm()
@@ -970,6 +1115,7 @@ public:
    //@}
 
    hier::BlockId d_block_id;
+   hier::LocalId d_first_local_id;
 
    //@{
    //! @name Deubgging aid
@@ -998,4 +1144,5 @@ public:
 }
 }
 
-#endif  // included_mesh::BergerRigoutsosNode
+
+#endif  // included_mesh_BergerRigoutsosNode

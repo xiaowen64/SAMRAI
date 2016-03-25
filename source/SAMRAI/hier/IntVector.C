@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
@@ -13,11 +13,6 @@
 
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/IntVector.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -33,7 +28,107 @@ IntVector::s_initialize_finalize_handler(
    IntVector::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-std::istream& operator >> (
+IntVector::IntVector():
+   d_dim(tbox::Dimension::getInvalidDimension())
+{
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
+}
+
+IntVector::IntVector(
+   const tbox::Dimension& dim):
+   d_dim(dim)
+{
+   // an explicit setting Invalid is allowed.
+   TBOX_DIM_ASSERT((!d_dim.isValid()) ||
+      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
+
+}
+
+IntVector::IntVector(
+   const tbox::Dimension& dim,
+   const int value):
+   d_dim(dim)
+{
+   // an explicit setting Invalid is allowed.
+   TBOX_DIM_ASSERT((!d_dim.isValid()) ||
+      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
+
+   if (d_dim.isValid()) {
+      for (int i = 0; i < d_dim.getValue(); i++)
+         d_vector[i] = value;
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+      for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE;
+           i++) {
+         d_vector[i] = tbox::MathUtilities<int>::getMin();
+      }
+#endif
+   } else {
+      for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+         d_vector[i] = tbox::MathUtilities<int>::getMin();
+      }
+   }
+}
+
+IntVector::IntVector(
+   const tbox::Array<int>& a):
+   d_dim(static_cast<unsigned short>(a.getSize()))
+{
+   TBOX_DIM_ASSERT(a.getSize() > 1 &&
+      a.getSize() <= tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
+
+   for (int i = 0; i < d_dim.getValue(); i++)
+      d_vector[i] = a[i];
+
+#ifdef DEBUG_INITIALIZE_UNDEFINED
+   for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
+   }
+#endif
+}
+
+IntVector::IntVector(
+   const IntVector& rhs):
+   d_dim(rhs.getDim())
+{
+   /*
+    * STL needs to be able to copy invalid values.
+    */
+   if (rhs.getDim().isValid()) {
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
+
+      for (int i = 0; i < d_dim.getValue(); i++)
+         d_vector[i] = rhs.d_vector[i];
+   }
+}
+
+IntVector::IntVector(
+   const tbox::Dimension& dim,
+   const int array[]):
+   d_dim(dim)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(dim);
+
+   for (int i = 0; i < d_dim.getValue(); i++)
+      d_vector[i] = array[i];
+}
+
+IntVector::~IntVector()
+{
+}
+
+std::istream&
+operator >> (
    std::istream& s,
    IntVector& rhs)
 {
@@ -66,14 +161,16 @@ std::ostream& operator << (
    return s;
 }
 
-void IntVector::putToDatabase(
+void
+IntVector::putUnregisteredToDatabase(
    tbox::Database& database,
    const std::string& name) const
 {
    database.putIntegerArray(name, d_vector, d_dim.getValue());
 }
 
-void IntVector::getFromDatabase(
+void
+IntVector::getFromDatabase(
    tbox::Database& database,
    const std::string& name)
 {
@@ -82,7 +179,38 @@ void IntVector::getFromDatabase(
    database.getIntegerArray(name, d_vector, d_dim.getValue());
 }
 
-void IntVector::initializeCallback()
+/*
+ *************************************************************************
+ * Sort the sizes of the given IntVector from smallest to largest value.
+ *************************************************************************
+ */
+void
+IntVector::sortIntVector(
+   const IntVector& values)
+{
+   const IntVector num_cells = values;
+
+   for (int d = 0; d < d_dim.getValue(); d++) {
+      d_vector[d] = d;
+   }
+   for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
+      for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
+         if (values(d_vector[d0]) > values(d_vector[d1])) {
+            int tmp_d = d_vector[d0];
+            d_vector[d0] = d_vector[d1];
+            d_vector[d1] = tmp_d;
+         }
+      }
+   }
+#ifdef DEBUG_CHECK_ASSERTIONS
+   for (int d = 0; d < d_dim.getValue() - 1; d++) {
+      TBOX_ASSERT(values(d_vector[d]) <= values(d_vector[d + 1]));
+   }
+#endif
+}
+
+void
+IntVector::initializeCallback()
 {
    for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
@@ -93,7 +221,8 @@ void IntVector::initializeCallback()
    }
 }
 
-void IntVector::finalizeCallback()
+void
+IntVector::finalizeCallback()
 {
    for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       delete s_zeros[d];

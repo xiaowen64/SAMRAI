@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Iterator over real Boxes in a BoxContainer.
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -45,56 +44,63 @@ namespace hier {
  */
 class RealBoxConstIterator
 {
+friend class BoxContainer;
 
 public:
    /*!
-    * @brief Construct the iterator for the given BoxContainer.
-    *
-    * The iterator will iterate through the items in mapped_boxes.
-    *
-    * @param[in] mapped_boxes
-    */
-   explicit RealBoxConstIterator(
-      const BoxContainer& mapped_boxes);
-
-   /*!
     * @brief Destructor.
     */
-   virtual ~RealBoxConstIterator(
-      void);
+   ~RealBoxConstIterator();
 
    /*!
     * @brief Assignment operator.
     */
    RealBoxConstIterator&
    operator = (
-      const RealBoxConstIterator& r);
+      const RealBoxConstIterator& r)
+   {
+      d_mapped_boxes = r.d_mapped_boxes;
+      d_ni = r.d_ni;
+      return *this;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box&
-   operator * () const;
+   operator * () const
+   {
+      return *d_ni;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box *
-   operator -> () const;
+   operator -> () const
+   {
+      return &(*d_ni);
+   }
 
    /*!
     * @brief Equality comparison.
     */
    bool
    operator == (
-      const RealBoxConstIterator& r) const;
+      const RealBoxConstIterator& r) const
+   {
+      return d_mapped_boxes == r.d_mapped_boxes && d_ni == r.d_ni;
+   }
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const RealBoxConstIterator& r) const;
+      const RealBoxConstIterator& r) const
+   {
+      return d_mapped_boxes != r.d_mapped_boxes || d_ni != r.d_ni;
+   }
 
    /*!
     * @brief Pre-increment iterator.
@@ -102,8 +108,7 @@ public:
     * Pre-increment increment the iterator and returns the incremented
     * state.
     */
-   RealBoxConstIterator
-   &
+   RealBoxConstIterator&
    operator ++ ();
 
    /*!
@@ -116,14 +121,19 @@ public:
    operator ++ (
       int);
 
-   /*!
-    * @brief Whether the iterator can be dereferenced.  When the
-    * iterator reaches its end, this returns false.
-    */
-   bool
-   isValid() const;
-
 private:
+   /*!
+    * @brief Construct the iterator for the given BoxContainer.
+    *
+    * The iterator will iterate through the items in mapped_boxes.
+    *
+    * @param[in] mapped_boxes
+    * @param[in] begin
+    */
+   explicit RealBoxConstIterator(
+      const BoxContainer& mapped_boxes,
+      bool begin);
+
    /*!
     * @brief BoxContainer being iterated through.
     */
@@ -132,7 +142,7 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxContainer::ConstIterator d_ni;
+   BoxContainer::const_iterator d_ni;
 
 };
 

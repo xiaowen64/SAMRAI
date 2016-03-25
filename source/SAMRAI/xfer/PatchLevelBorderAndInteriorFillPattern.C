@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -12,14 +12,9 @@
 #define included_xfer_PatchLevelBorderAndInteriorFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {
@@ -80,7 +75,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
     * normally filled by coarser mapped_box_level.)
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::BoxContainer::ConstIterator ni = dst_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = dst_mapped_boxes.begin();
         ni != dst_mapped_boxes.end(); ++ni) {
 
       const hier::BoxId& gid(ni->getId());
@@ -98,7 +93,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.removeIntersections(*na);
             } else {
 
-               tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+               boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                   dst_mapped_box_level.getGridGeometry());
 
                const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
@@ -115,7 +110,8 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
 
                offset *= (dst_mapped_box_level.getRefinementRatio());
 
-               hier::Transformation transformation(rotation, offset);
+               hier::Transformation transformation(rotation, offset,
+                                                   nbr_block_id, dst_block_id);
 
                hier::Box nbr_box(*na);
                transformation.transform(nbr_box);
@@ -132,17 +128,67 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
 
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_fill.makeEmptyLocalNeighborhood(gid);
-         for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
+         for (hier::BoxContainer::iterator li(fill_boxes);
+              li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
-                                      dst_mapped_box.getOwnerRank(),
-                                      dst_mapped_box.getBlockId());
+                                      dst_mapped_box.getOwnerRank());
+            TBOX_ASSERT(fill_mapped_box.getBlockId() ==
+                        dst_mapped_box.getBlockId());
             fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
             dst_to_fill.insertLocalNeighbor(fill_mapped_box, base_box_itr);
          }
       }
    }
    fill_mapped_boxes.finalize();
+}
+
+void
+PatchLevelBorderAndInteriorFillPattern::computeDestinationFillBoxesOnSourceProc(
+   FillSet& dst_fill_boxes_on_src_proc,
+   const hier::BoxLevel& dst_mapped_box_level,
+   const hier::Connector& src_to_dst,
+   const hier::IntVector& fill_ghost_width)
+{
+   NULL_USE(dst_fill_boxes_on_src_proc);
+   NULL_USE(dst_mapped_box_level);
+   NULL_USE(src_to_dst);
+   NULL_USE(fill_ghost_width);
+   if (!needsToCommunicateDestinationFillBoxes()) {
+      TBOX_ERROR(
+         "PatchLevelBorderAndInteriorFillPattern cannot compute destination:\n"
+         << "fill boxes on the source processor.\n");
+   }
+}
+
+bool
+PatchLevelBorderAndInteriorFillPattern::needsToCommunicateDestinationFillBoxes() const
+{
+   return true;
+}
+
+bool
+PatchLevelBorderAndInteriorFillPattern::doesSourceLevelCommunicateToDestination() const
+{
+   return true;
+}
+
+int
+PatchLevelBorderAndInteriorFillPattern::getMaxFillBoxes() const
+{
+   return d_max_fill_boxes;
+}
+
+bool
+PatchLevelBorderAndInteriorFillPattern::fillingCoarseFineGhosts() const
+{
+   return true;
+}
+
+bool
+PatchLevelBorderAndInteriorFillPattern::fillingEnhancedConnectivityOnly() const
+{
+   return false;
 }
 
 }

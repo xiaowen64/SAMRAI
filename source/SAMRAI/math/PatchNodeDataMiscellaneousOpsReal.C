@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real node-centered data.
  *
  ************************************************************************/
@@ -46,7 +46,8 @@ PatchNodeDataMiscellaneousOpsReal<TYPE>::PatchNodeDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchNodeDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchNodeDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchNodeDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -61,18 +62,18 @@ void PatchNodeDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data1,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data2,
+int
+PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
-#endif
+   TBOX_ASSERT(data1 && data2);
+
    int retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.computeConstrProdPos(data1->getArrayData(),
             data2->getArrayData(),
             node_box);
@@ -87,18 +88,18 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+void
+PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
-#endif
+   TBOX_ASSERT(dst && src);
+
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   if (cvol.isNull()) {
+   if (!cvol) {
       d_array_ops.compareToScalar(dst->getArrayData(),
          src->getArrayData(),
          alpha,
@@ -113,18 +114,18 @@ void PatchNodeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+int
+PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::NodeData<double> > cvol) const
+   const boost::shared_ptr<pdat::NodeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
-#endif
+   TBOX_ASSERT(dst && src);
+
    int retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.testReciprocal(dst->getArrayData(),
             src->getArrayData(),
             node_box);
@@ -139,14 +140,14 @@ int PatchNodeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& numer,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& denom,
+TYPE
+PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
-#endif
+   TBOX_ASSERT(numer && denom);
+
    TYPE retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    retval = d_array_ops.maxPointwiseDivide(numer->getArrayData(),
@@ -156,14 +157,14 @@ TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchNodeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& numer,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& denom,
+TYPE
+PatchNodeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
-#endif
+   TBOX_ASSERT(numer && denom);
+
    TYPE retval;
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
    retval = d_array_ops.minPointwiseDivide(numer->getArrayData(),

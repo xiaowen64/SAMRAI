@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   simple test code for the IEEE exception handlers
  *
  ************************************************************************/
@@ -18,10 +18,11 @@
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/IEEE.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 

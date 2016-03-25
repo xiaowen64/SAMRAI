@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -36,7 +36,7 @@ using namespace std;
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellIndex.h"
 #include "SAMRAI/pdat/CellIterator.h"
@@ -104,449 +104,10 @@ using namespace std;
 #define MAX(a, b) (a > b ? a : b)
 #define MIN(a, b) (a < b ? a : b)
 
-/*
- *************************************************************
- *
- * Extra non-class inlined C functions used by class methods
- *
- *************************************************************
- */
 //
-// calculate the flux through a face
+// inline geometry functions
 //
-SAMRAI_INLINE_KEYWORD
-real8 UpwindFlux(
-   const real8 x1,
-   const real8 x2,
-   const real8 x3,
-   const real8 x4,
-   const real8 y1,
-   const real8 y2,
-   const real8 y3,
-   const real8 y4,
-   const real8 z1,
-   const real8 z2,
-   const real8 z3,
-   const real8 z4,
-   real8 u,
-   real8 v,
-   real8 w,
-   real8 psiLo,
-   real8 psiHi)
-{
-   real8 dx31 = x3 - x1;
-   real8 dx42 = x4 - x2;
-
-   real8 dy31 = y3 - y1;
-   real8 dy42 = y4 - y2;
-
-   real8 dz31 = z3 - z1;
-   real8 dz42 = z4 - z2;
-
-   real8 Ax = 0.5 * (dy42 * dz31 - dz42 * dy31);
-   real8 Ay = 0.5 * (dz42 * dx31 - dx42 * dz31);
-   real8 Az = 0.5 * (dx42 * dy31 - dy42 * dx31);
-
-   real8 Audotn = Ax * u + Ay * v + Az * w;
-
-   real8 flux = (Audotn > 0.0 ? psiLo : psiHi) * Audotn;
-
-   return flux;
-}
-
-//
-// calculate the flux through a face, assuming a velocity in the radial direction
-//
-SAMRAI_INLINE_KEYWORD
-real8 UpwindFluxRadial(
-   const real8 x1,
-   const real8 x2,
-   const real8 x3,
-   const real8 x4,
-   const real8 y1,
-   const real8 y2,
-   const real8 y3,
-   const real8 y4,
-   const real8 z1,
-   const real8 z2,
-   const real8 z3,
-   const real8 z4,
-   real8 u0,
-   real8 psiLo,
-   real8 psiHi)
-{
-   // --------- set the velocity
-   real8 xm = 0.25 * (x1 + x2 + x3 + x4);
-   real8 ym = 0.25 * (y1 + y2 + y3 + y4);
-   real8 zm = 0.25 * (z1 + z2 + z3 + z4);
-   real8 xnorm = sqrt(xm * xm + ym * ym + zm * zm);
-
-   real8 u = u0 * xm / xnorm;
-   real8 v = u0 * ym / xnorm;
-   real8 w = u0 * zm / xnorm;
-
-   // --------- set the flux
-   real8 dx31 = x3 - x1;
-   real8 dx42 = x4 - x2;
-
-   real8 dy31 = y3 - y1;
-   real8 dy42 = y4 - y2;
-
-   real8 dz31 = z3 - z1;
-   real8 dz42 = z4 - z2;
-
-   real8 Ax = 0.5 * (dy42 * dz31 - dz42 * dy31);
-   real8 Ay = 0.5 * (dz42 * dx31 - dx42 * dz31);
-   real8 Az = 0.5 * (dx42 * dy31 - dy42 * dx31);
-
-   real8 Audotn = Ax * u + Ay * v + Az * w;
-
-   real8 flux = (Audotn > 0.0 ? psiLo : psiHi) * Audotn;
-
-   return flux;
-}
-
-//
-// calculate the volume of a hexahedral element
-//
-SAMRAI_INLINE_KEYWORD
-real8 UpwindVolume(
-   const real8 x0,
-   const real8 x1,
-   const real8 x2,
-   const real8 x3,
-   const real8 x4,
-   const real8 x5,
-   const real8 x6,
-   const real8 x7,
-   const real8 y0,
-   const real8 y1,
-   const real8 y2,
-   const real8 y3,
-   const real8 y4,
-   const real8 y5,
-   const real8 y6,
-   const real8 y7,
-   const real8 z0,
-   const real8 z1,
-   const real8 z2,
-   const real8 z3,
-   const real8 z4,
-   const real8 z5,
-   const real8 z6,
-   const real8 z7)
-{
-   const real8 twelfth = 1.0 / 12.0;
-   real8 volume, s1234, s5678, s1265, s4378, s2376, s1485;
-
-   s1234 =
-      (x1 + x2) * ((y0 + y1) * (z2 + z3) - (z0 + z1) * (y2 + y3))
-      + (y1 + y2) * ((z0 + z1) * (x2 + x3) - (x0 + x1) * (z2 + z3))
-      + (z1 + z2) * ((x0 + x1) * (y2 + y3) - (y0 + y1) * (x2 + x3));
-
-   s5678 =
-      (x5 + x6) * ((y4 + y5) * (z6 + z7) - (z4 + z5) * (y6 + y7))
-      + (y5 + y6) * ((z4 + z5) * (x6 + x7) - (x4 + x5) * (z6 + z7))
-      + (z5 + z6) * ((x4 + x5) * (y6 + y7) - (y4 + y5) * (x6 + x7));
-
-   s1265 =
-      (x1 + x5) * ((y0 + y1) * (z5 + z4) - (z0 + z1) * (y5 + y4))
-      + (y1 + y5) * ((z0 + z1) * (x5 + x4) - (x0 + x1) * (z5 + z4))
-      + (z1 + z5) * ((x0 + x1) * (y5 + y4) - (y0 + y1) * (x5 + x4));
-
-   s4378 =
-      (x2 + x6) * ((y3 + y2) * (z6 + z7) - (z3 + z2) * (y6 + y7))
-      + (y2 + y6) * ((z3 + z2) * (x6 + x7) - (x3 + x2) * (z6 + z7))
-      + (z2 + z6) * ((x3 + x2) * (y6 + y7) - (y3 + y2) * (x6 + x7));
-
-   s2376 =
-      (x2 + x6) * ((y1 + y2) * (z6 + z5) - (z1 + z2) * (y6 + y5))
-      + (y2 + y6) * ((z1 + z2) * (x6 + x5) - (x1 + x2) * (z6 + z5))
-      + (z2 + z6) * ((x1 + x2) * (y6 + y5) - (y1 + y2) * (x6 + x5));
-
-   s1485 =
-      (x3 + x7) * ((y0 + y3) * (z7 + z4) - (z0 + z3) * (y7 + y4))
-      + (y3 + y7) * ((z0 + z3) * (x7 + x4) - (x0 + x3) * (z7 + z4))
-      + (z3 + z7) * ((x0 + x3) * (y7 + y4) - (y0 + y3) * (x7 + x4));
-
-   volume = (s1234 - s5678 - s1265 + s4378 - s2376 + s1485) * twelfth;
-   return volume;
-}
-
-//
-// compute the area of a face
-//
-SAMRAI_INLINE_KEYWORD real8
-UpwindAreaFace(
-   const real8 x0,
-   const real8 x1,
-   const real8 x2,
-   const real8 x3,
-   const real8 y0,
-   const real8 y1,
-   const real8 y2,
-   const real8 y3,
-   const real8 z0,
-   const real8 z1,
-   const real8 z2,
-   const real8 z3)
-{
-   real8 fx = (x2 - x0) - (x3 - x1);
-   real8 fy = (y2 - y0) - (y3 - y1);
-   real8 fz = (z2 - z0) - (z3 - z1);
-   real8 gx = (x2 - x0) + (x3 - x1);
-   real8 gy = (y2 - y0) + (y3 - y1);
-   real8 gz = (z2 - z0) + (z3 - z1);
-   real8 area =
-      (fx * fx + fy * fy + fz * fz)
-      * (gx * gx + gy * gy + gz * gz)
-      - (fx * gx + fy * gy + fz * gz)
-      * (fx * gx + fy * gy + fz * gz);
-   return area;
-}
-
-//
-// compute a characteristic length
-//
-SAMRAI_INLINE_KEYWORD real8
-UpwindCharacteristicLength(
-   const real8 x[8],
-   const real8 y[8],
-   const real8 z[8],
-   const real8 volume)
-{
-   real8 a, charLength = 0.0;
-
-   a = UpwindAreaFace(x[0], x[1], x[2], x[3],
-         y[0], y[1], y[2], y[3],
-         z[0], z[1], z[2], z[3]);
-   charLength = MAX(a, charLength);
-
-   a = UpwindAreaFace(x[4], x[5], x[6], x[7],
-         y[4], y[5], y[6], y[7],
-         z[4], z[5], z[6], z[7]);
-   charLength = MAX(a, charLength);
-
-   a = UpwindAreaFace(x[0], x[1], x[5], x[4],
-         y[0], y[1], y[5], y[4],
-         z[0], z[1], z[5], z[4]);
-   charLength = MAX(a, charLength);
-
-   a = UpwindAreaFace(x[1], x[2], x[6], x[5],
-         y[1], y[2], y[6], y[5],
-         z[1], z[2], z[6], z[5]);
-   charLength = MAX(a, charLength);
-
-   a = UpwindAreaFace(x[2], x[3], x[7], x[6],
-         y[2], y[3], y[7], y[6],
-         z[2], z[3], z[7], z[6]);
-   charLength = MAX(a, charLength);
-
-   a = UpwindAreaFace(x[3], x[0], x[4], x[7],
-         y[3], y[0], y[4], y[7],
-         z[3], z[0], z[4], z[7]);
-   charLength = MAX(a, charLength);
-
-   charLength = 4.0 * volume / sqrt(charLength);
-
-   return charLength;
-}
-
-///
-/// the cartesian uniform grid monotonic slope finder
-///
-SAMRAI_INLINE_KEYWORD void my_slopesCart(
-   double psi,
-   double pim,
-   double pip,
-   double pjm,
-   double pjp,
-   double pkm,
-   double pkp,
-   double& pxi,
-   double& peta,
-   double& pzeta)
-{
-   real8 del, sfp, sbm, scale;
-   real8 elDenp, elDenC, elDenm;
-   real8 sfact = 0.25;  // due to the fact that xi ranges from -1 to 1
-   elDenC = psi;
-
-   //
-   // xi
-   //
-   elDenp = pip;
-   elDenm = pim;
-
-   del = sfact * (elDenp - elDenm) + 1.e-80;
-   sfp = (elDenp - elDenC) * 2. / del;
-   sbm = (elDenC - elDenm) * 2. / del;
-
-   scale = MIN(sfp, sbm);
-   scale = (scale > 1.0 ? 1.0 : scale);
-   scale = (scale < 0.0 ? 0.0 : scale);
-   scale = (sfp * sbm < 0.0 ? 0.0 : scale);
-
-   pxi = del * scale;  // xi, eta, zeta vary from -1 to 1
-
-   //
-   // eta
-   //
-   elDenp = pjp;
-   elDenm = pjm;
-
-   del = sfact * (elDenp - elDenm) + 1.e-80;
-   sfp = (elDenp - elDenC) * 2. / del;
-   sbm = (elDenC - elDenm) * 2. / del;
-
-   scale = MIN(sfp, sbm);
-   scale = (scale > 1.0 ? 1.0 : scale);
-   scale = (scale < 0.0 ? 0.0 : scale);
-   scale = (sfp * sbm < 0.0 ? 0.0 : scale);
-
-   peta = del * scale;
-
-   //
-   // eta
-   //
-   elDenp = pkp;
-   elDenm = pkm;
-
-   del = sfact * (elDenp - elDenm) + 1.e-80;
-   sfp = (elDenp - elDenC) * 2. / del;
-   sbm = (elDenC - elDenm) * 2. / del;
-
-   scale = MIN(sfp, sbm);
-   scale = (scale > 1.0 ? 1.0 : scale);
-   scale = (scale < 0.0 ? 0.0 : scale);
-   scale = (sfp * sbm < 0.0 ? 0.0 : scale);
-
-   pzeta = del * scale;
-}
-
-///
-/// the non-uniform grid monotonic slope finder
-///
-SAMRAI_INLINE_KEYWORD void my_slopes(
-   double psi,
-   double pim,
-   double pip,
-   double pjm,
-   double pjp,
-   double pkm,
-   double pkp,
-   double w_i,
-   double w_ip,
-   double w_im,
-   double w_jp,
-   double w_jm,
-   double w_kp,
-   double w_km,
-   double& pxi,
-   double& peta,
-   double& pzeta)
-{
-   real8 sumf, sumb;
-   real8 elDenm, elDenp, del, sfp, sbm, scale;
-
-   real8 elDenC = psi;
-   real8 scale_fact = 1.0;
-   real8 slope_fact = 1.0;
-
-   //
-   // compute weight functions
-   //
-   real8 volzrc = w_i;
-
-   real8 volzrxim = w_im;
-   real8 volzrxip = w_ip;
-   real8 volzretam = w_jm;
-   real8 volzretap = w_jp;
-   real8 volzrzetam = w_km;
-   real8 volzrzetap = w_kp;
-
-   sumf = volzrc + volzrxip;
-   sumb = volzrc + volzrxim;
-   real8 wgtxi1 = volzrc / sumf;
-   real8 wgtxi2 = volzrxip / sumf;
-   real8 wgtxi3 = volzrc / sumb;
-   real8 wgtxi4 = volzrxim / sumb;
-
-   sumf = volzrc + volzretap;
-   sumb = volzrc + volzretam;
-   real8 wgteta1 = volzrc / sumf;
-   real8 wgteta2 = volzretap / sumf;
-   real8 wgteta3 = volzrc / sumb;
-   real8 wgteta4 = volzretam / sumb;
-
-   sumf = volzrc + volzrzetap;
-   sumb = volzrc + volzrzetam;
-   real8 wgtzeta1 = volzrc / sumf;
-   real8 wgtzeta2 = volzrzetap / sumf;
-   real8 wgtzeta3 = volzrc / sumb;
-   real8 wgtzeta4 = volzrzetam / sumb;
-
-   elDenm = pim;
-   elDenp = pip;
-
-   del = (wgtxi2 * elDenp + wgtxi1 * elDenC
-          - wgtxi4 * elDenm - wgtxi3 * elDenC) + 1e-80;
-
-   sfp = (elDenp - elDenC) * scale_fact / del;
-   sbm = (elDenC - elDenm) * scale_fact / del;
-
-   scale = MIN(sfp, sbm);
-   if (scale > 1.)
-      scale = 1.0;
-   else if (scale < 0.)
-      scale = 0.;
-
-   if ((sfp * sbm) < 0.0) scale = 0.;
-
-   pxi = slope_fact * del * scale;
-
-   // --------------------------------- eta
-
-   elDenm = pjm;
-   elDenp = pjp;
-
-   del = (wgteta2 * elDenp + wgteta1 * elDenC
-          - wgteta4 * elDenm - wgteta3 * elDenC) + 1e-80;
-
-   sfp = (elDenp - elDenC) * scale_fact / del;
-   sbm = (elDenC - elDenm) * scale_fact / del;
-
-   scale = MIN(sfp, sbm);
-   if (scale > 1.)
-      scale = 1.0;
-   else if (scale < 0.)
-      scale = 0.;
-
-   if ((sfp * sbm) < 0.0) scale = 0.;
-
-   peta = slope_fact * del * scale;
-
-   // --------------------------------- zeta
-
-   elDenm = pkm;
-   elDenp = pkp;
-
-   del = (wgtzeta2 * elDenp + wgtzeta1 * elDenC
-          - wgtzeta4 * elDenm - wgtzeta3 * elDenC) + 1e-80;
-
-   sfp = (elDenp - elDenC) * scale_fact / del;
-   sbm = (elDenC - elDenm) * scale_fact / del;
-
-   scale = MIN(sfp, sbm);
-   if (scale > 1.)
-      scale = 1.0;
-   else if (scale < 0.)
-      scale = 0.;
-
-   if ((sfp * sbm) < 0.0) scale = 0.;
-
-   pzeta = slope_fact * del * scale;
-}
+#include "GeomUtilsAMR.h"
 
 /*
  *************************************************************************
@@ -566,21 +127,34 @@ SAMRAI_INLINE_KEYWORD void my_slopes(
 MblkLinAdv::MblkLinAdv(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<hier::GridGeometry>& grid_geom):
+   boost::shared_ptr<tbox::Database> input_db,
+   boost::shared_ptr<hier::BaseGridGeometry>& grid_geom):
    MblkHyperbolicPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
+   d_grid_geometry(grid_geom),
+   d_use_nonuniform_workload(false),
+   d_uval(new pdat::CellVariable<double>(dim, "uval", DEPTH)),
+   d_vol(new pdat::CellVariable<double>(dim, "vol", 1)),
+   d_flux(new pdat::SideVariable<double>(dim, "flux", 1)),
+   d_xyz(new pdat::NodeVariable<double>(dim, "xyz", dim.getValue())),
+   d_dx_set(false),
+   d_godunov_order(1),
+   d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(hier::IntVector(dim, CELLG)),
    d_fluxghosts(hier::IntVector(dim, FLUXG)),
-   d_nodeghosts(hier::IntVector(dim, NODEG))
+   d_nodeghosts(hier::IntVector(dim, NODEG)),
+   d_data_problem_int(tbox::MathUtilities<int>::getMax()),
+   d_radius(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_uval_inside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_uval_outside(tbox::MathUtilities<double>::getSignalingNaN()),
+   d_number_of_intervals(0),
+   d_amplitude(0.)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
-
-   d_grid_geometry = grid_geom;
 
    /*
     * Setup MblkGeometry object to manage construction of mapped grids
@@ -590,47 +164,15 @@ MblkLinAdv::MblkLinAdv(
          input_db,
          grid_geom->getNumberBlocks());
 
-   d_use_nonuniform_workload = false;
-
-   /*
-    * hier::Variable quantities that define state of linear advection problem.
-    */
-   d_uval = new pdat::CellVariable<double>(dim, "uval", DEPTH);
-   d_vol = new pdat::CellVariable<double>(dim, "vol", 1);
-   d_flux = new pdat::SideVariable<double>(dim, "flux", 1);
-   d_xyz = new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue());
-
-   d_dx_set = false;
-
-   /*
-    * Default parameters for the numerical method.
-    */
-   d_godunov_order = 1;
-   d_corner_transport = "CORNER_TRANSPORT_1";
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
 #endif
 
-   /*
-    * Defaults for problem type and initial data.
-    */
-   d_data_problem_int = tbox::MathUtilities<int>::getMax();
-
-   int k;
-
    // SPHERE problem...
-   d_radius = tbox::MathUtilities<double>::getSignalingNaN();
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
-   d_uval_inside = tbox::MathUtilities<double>::getSignalingNaN();
-   d_uval_outside = tbox::MathUtilities<double>::getSignalingNaN();
-
-   d_number_of_intervals = 0;
-   d_front_position.resizeArray(0);
-   d_interval_uval.resizeArray(0);
 
    // SINE problem
-   d_amplitude = 0.;
-   for (k = 0; k < d_dim.getValue(); k++) d_frequency[k] = 0.;
+   for (int k = 0; k < d_dim.getValue(); k++) d_frequency[k] = 0.;
 
    /*
     * Defaults for boundary conditions. Set to bogus values
@@ -816,20 +358,20 @@ void MblkLinAdv::registerModelVariables(
    TBOX_ASSERT(integrator != (MblkHyperbolicLevelIntegrator *)NULL);
    TBOX_ASSERT(CELLG == FACEG);
 
-   d_cell_cons_linear_refine_op =
-      new SkeletonCellDoubleConservativeLinearRefine(d_dim);
-   d_cell_cons_coarsen_op =
-      new SkeletonCellDoubleWeightedAverage(d_dim);
-   d_cell_time_interp_op =
-      new pdat::CellDoubleLinearTimeInterpolateOp();
-   d_side_cons_coarsen_op =
-      new SkeletonOutersideDoubleWeightedAverage(d_dim);
+   d_cell_cons_linear_refine_op.reset(
+      new SkeletonCellDoubleConservativeLinearRefine(d_dim));
+   d_cell_cons_coarsen_op.reset(
+      new SkeletonCellDoubleWeightedAverage(d_dim));
+   d_cell_time_interp_op.reset(
+      new pdat::CellDoubleLinearTimeInterpolateOp());
+   d_side_cons_coarsen_op.reset(
+      new SkeletonOutersideDoubleWeightedAverage(d_dim));
 
    // Note that the Node linear refine operator is null for this case,
    // which is OK because the only node data is the grid coordinates,
    // which we explicitly set on any new patch
-   tbox::Pointer<hier::RefineOperator> node_linear_refine_op;
-   tbox::Pointer<pdat::NodeDoubleInjection> node_cons_coarsen_op(
+   boost::shared_ptr<hier::RefineOperator> node_linear_refine_op;
+   boost::shared_ptr<pdat::NodeDoubleInjection> node_cons_coarsen_op(
       new pdat::NodeDoubleInjection(d_dim));
 
    integrator->registerVariable(d_uval, d_nghosts,
@@ -848,7 +390,7 @@ void MblkLinAdv::registerModelVariables(
       MblkHyperbolicLevelIntegrator::FLUX,
       d_side_cons_coarsen_op);
 
-   tbox::Pointer<hier::TimeInterpolateOperator> node_time_interp_op(
+   boost::shared_ptr<hier::TimeInterpolateOperator> node_time_interp_op(
       new pdat::NodeDoubleLinearTimeInterpolateOp());
    integrator->registerVariable(d_xyz, d_nodeghosts,
       MblkHyperbolicLevelIntegrator::TIME_DEP,
@@ -859,7 +401,7 @@ void MblkLinAdv::registerModelVariables(
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
 #ifdef HAVE_HDF5
-   if (!(d_visit_writer.isNull())) {
+   if (d_visit_writer) {
       d_visit_writer->
       registerPlotQuantity("U",
          "SCALAR",
@@ -876,7 +418,7 @@ void MblkLinAdv::registerModelVariables(
             d_xyz, integrator->getPlotContext()));
    }
 
-   if (d_visit_writer.isNull()) {
+   if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
                        << "\nVisit data writer was"
@@ -904,7 +446,7 @@ void MblkLinAdv::initializeDataOnPatch(
    const double data_time,
    const bool initial_time)
 {
-   (void)data_time;
+   NULL_USE(data_time);
    /*
     * Build the mapped grid on the patch.
     */
@@ -925,16 +467,19 @@ void MblkLinAdv::initializeDataOnPatch(
 
    if (initial_time) {
 
-      tbox::Pointer<pdat::CellData<double> > uval =
-         patch.getPatchData(d_uval, getDataContext());
-      tbox::Pointer<pdat::CellData<double> > vol =
-         patch.getPatchData(d_vol, getDataContext());
-      tbox::Pointer<pdat::NodeData<double> > xyz =
-         patch.getPatchData(d_xyz, getDataContext());
+      boost::shared_ptr<pdat::CellData<double> > uval(
+         patch.getPatchData(d_uval, getDataContext()),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > vol(
+         patch.getPatchData(d_vol, getDataContext()),
+            boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::NodeData<double> > xyz(
+         patch.getPatchData(d_xyz, getDataContext()),
+         boost::detail::dynamic_cast_tag());
 
-      TBOX_ASSERT(!uval.isNull());
-      TBOX_ASSERT(!vol.isNull());
-      TBOX_ASSERT(!xyz.isNull());
+      TBOX_ASSERT(uval);
+      TBOX_ASSERT(vol);
+      TBOX_ASSERT(xyz);
       TBOX_ASSERT(uval->getGhostCellWidth() == vol->getGhostCellWidth());
 
       hier::IntVector uval_ghosts = uval->getGhostCellWidth();
@@ -1047,8 +592,9 @@ void MblkLinAdv::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data =
-         patch.getPatchData(d_workload_data_id);
+      boost::shared_ptr<pdat::CellData<double> > workload_data(
+         patch.getPatchData(d_workload_data_id),
+         boost::detail::dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -1073,8 +619,8 @@ double MblkLinAdv::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    /*
     * Build the mapped grid on the patch.
@@ -1086,17 +632,20 @@ double MblkLinAdv::computeStableDtOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > vol =
-      patch.getPatchData(d_vol, getDataContext());
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(d_xyz, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > vol(
+      patch.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!vol.isNull());
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(vol);
+   TBOX_ASSERT(xyz);
    TBOX_ASSERT(uval->getGhostCellWidth() == vol->getGhostCellWidth());
 #endif
 
@@ -1240,7 +789,7 @@ void MblkLinAdv::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
+   NULL_USE(time);
 
    //return;
 
@@ -1252,17 +801,21 @@ void MblkLinAdv::computeFluxesOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > vol =
-      patch.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > vol(
+      patch.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::SideData<double> > flux =
-      patch.getPatchData(d_flux, getDataContext());
+   boost::shared_ptr<pdat::SideData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(d_xyz, getDataContext());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    /*
     * Verify that the integrator providing the context correctly
@@ -1270,9 +823,9 @@ void MblkLinAdv::computeFluxesOnPatch(
     * context matches the ghosts defined in this class...
     */
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
-   TBOX_ASSERT(!flux.isNull());
-   TBOX_ASSERT(!vol.isNull());
+   TBOX_ASSERT(uval);
+   TBOX_ASSERT(flux);
+   TBOX_ASSERT(vol);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(vol->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
@@ -1511,10 +1064,10 @@ void MblkLinAdv::conservativeDifferenceOnPatch(
    const double dt,
    bool at_syncronization)
 {
-   (void)patch;
-   (void)time;
-   (void)dt;
-   (void)at_syncronization;
+   NULL_USE(patch);
+   NULL_USE(time);
+   NULL_USE(dt);
+   NULL_USE(at_syncronization);
 }
 
 /*
@@ -1533,13 +1086,14 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   (void)fill_time;
+   NULL_USE(fill_time);
 
-   tbox::Pointer<pdat::CellData<double> > uval =
-      patch.getPatchData(d_uval, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > uval(
+      patch.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!uval.isNull());
+   TBOX_ASSERT(uval);
 #endif
    hier::IntVector uval_ghosts = uval->getGhostCellWidth();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1623,8 +1177,8 @@ void MblkLinAdv::preprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio)
 {
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
@@ -1658,21 +1212,25 @@ void MblkLinAdv::postprocessRefine(
    const hier::IntVector& ratio)
 {
 
-   tbox::Pointer<pdat::CellData<double> > cuval =
-      coarse.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > cvol =
-      coarse.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > cuval(
+      coarse.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > cvol(
+      coarse.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fuval =
-      fine.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > fvol =
-      fine.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > fuval(
+      fine.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fvol(
+      fine.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cuval.isNull());
-   TBOX_ASSERT(!fuval.isNull());
-   TBOX_ASSERT(!cvol.isNull());
-   TBOX_ASSERT(!fvol.isNull());
+   TBOX_ASSERT(cuval);
+   TBOX_ASSERT(fuval);
+   TBOX_ASSERT(cvol);
+   TBOX_ASSERT(fvol);
    TBOX_ASSERT(cuval->getDepth() == fuval->getDepth());
 #endif
 
@@ -1885,8 +1443,8 @@ void MblkLinAdv::preprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio)
 {
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 
    int xyz_id = hier::VariableDatabase::getDatabase()->
       mapVariableAndContextToIndex(d_xyz, getDataContext());
@@ -1923,21 +1481,25 @@ void MblkLinAdv::postprocessCoarsen(
    const hier::IntVector& ratio)
 {
 
-   tbox::Pointer<pdat::CellData<double> > cuval =
-      coarse.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > cvol =
-      coarse.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > cuval(
+      coarse.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > cvol(
+      coarse.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fuval =
-      fine.getPatchData(d_uval, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > fvol =
-      fine.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > fuval(
+      fine.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fvol(
+      fine.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cuval.isNull());
-   TBOX_ASSERT(!cvol.isNull());
-   TBOX_ASSERT(!fuval.isNull());
-   TBOX_ASSERT(!fvol.isNull());
+   TBOX_ASSERT(cuval);
+   TBOX_ASSERT(cvol);
+   TBOX_ASSERT(fuval);
+   TBOX_ASSERT(fvol);
    TBOX_ASSERT(cuval->getDepth() == fuval->getDepth());
 #endif
 
@@ -2104,8 +1666,8 @@ void MblkLinAdv::tagGradientDetectorCells(
    const int tag_indx,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)regrid_time;
-   (void)uses_richardson_extrapolation_too;
+   NULL_USE(regrid_time);
+   NULL_USE(uses_richardson_extrapolation_too);
 
    NULL_USE(initial_error);
 
@@ -2118,8 +1680,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    const int error_level_number = patch.getPatchLevelNumber();
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(d_xyz, getDataContext());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
@@ -2134,15 +1697,17 @@ void MblkLinAdv::tagGradientDetectorCells(
    tbox::plog << "level  = " << level << endl;
    tbox::plog << "box    = " << patch.getBox() << endl;
 
-   tbox::Pointer<pdat::CellData<int> > tags =
-      patch.getPatchData(tag_indx);
-   tbox::Pointer<pdat::CellData<double> > var =
-      patch.getPatchData(d_uval, getDataContext());
+   boost::shared_ptr<pdat::CellData<int> > tags(
+      patch.getPatchData(tag_indx),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > var(
+      patch.getPatchData(d_uval, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    //
    // Create a set of temporary tags and set to untagged value.
    //
-   tbox::Pointer<pdat::CellData<int> > temp_tags(
+   boost::shared_ptr<pdat::CellData<int> > temp_tags(
       new pdat::CellData<int>(pbox, 1, d_nghosts));
    temp_tags->fillAll(FALSE);
 
@@ -2206,7 +1771,7 @@ void MblkLinAdv::tagGradientDetectorCells(
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!var.isNull());
+      TBOX_ASSERT(var);
 #endif
       string ref = d_refinement_criteria[ncrit];
       int size = 0;
@@ -2380,9 +1945,9 @@ void MblkLinAdv::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 block_number,
                 level_number)) {
-            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
-                 ++b) {
-               hier::Box intersect = pbox * b();
+            for (hier::BoxContainer::iterator b(refine_boxes);
+                 b != refine_boxes.end(); ++b) {
+               hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);
                }
@@ -2396,8 +1961,9 @@ void MblkLinAdv::tagGradientDetectorCells(
    //
    // Update tags
    //
-   for (pdat::CellIterator ic(pbox); ic; ic++) {
-      (*tags)(ic(), 0) = (*temp_tags)(ic(), 0);
+   pdat::CellIterator icend(pbox, false);
+   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
    tbox::plog << "--------------------- end tagGradientCells" << endl;
@@ -2418,7 +1984,7 @@ void MblkLinAdv::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
 
    NULL_USE(patch);
@@ -2448,8 +2014,8 @@ void MblkLinAdv::setMappedGridOnPatch(
 #endif
 
    // compute level domain
-   const tbox::Pointer<hier::PatchGeometry>
-   patch_geom = patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -2481,10 +2047,10 @@ void MblkLinAdv::setMappedGridOnPatch(
 
 #ifdef HAVE_HDF5
 void MblkLinAdv::registerVisItDataWriter(
-   tbox::Pointer<appu::VisItDataWriter> viz_writer)
+   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(viz_writer.isNull()));
+   TBOX_ASSERT(viz_writer);
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2508,7 +2074,7 @@ void MblkLinAdv::printClassData(
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
 //   for (j=0; j < d_grid_geometry.getSize(); j++) {
-//      os << (*((tbox::Pointer<geom::BlockGridGeometry >)(d_grid_geometry[j]))) << endl;
+//      os << (*((boost::shared_ptr<geom::GridGeometry >)(d_grid_geometry[j]))) << endl;
 //   }
 
    os << "Parameters for numerical method ..." << endl;
@@ -2673,14 +2239,14 @@ void MblkLinAdv::printClassData(
  *************************************************************************
  */
 void MblkLinAdv::getFromInput(
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
-   tbox::Pointer<tbox::Database> db = input_db->getDatabase("MblkLinAdv");
+   boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkLinAdv"));
 
    /*
     * Note: if we are restarting, then we only allow nonuniform
@@ -2735,8 +2301,8 @@ void MblkLinAdv::getFromInput(
    }
 
    if (db->keyExists("Refinement_data")) {
-      tbox::Pointer<tbox::Database> refine_db = db->getDatabase(
-            "Refinement_data");
+      boost::shared_ptr<tbox::Database> refine_db(
+         db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -2752,11 +2318,11 @@ void MblkLinAdv::getFromInput(
 
       tbox::Array<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
-      tbox::Pointer<tbox::Database> error_db;
+      boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
-         error_db.setNull();
+         error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
 
@@ -2775,7 +2341,7 @@ void MblkLinAdv::getFromInput(
                def_key_cnt++;
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_DEVIATION") {
+            if (error_db && error_key == "UVAL_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
                   d_dev_tol =
@@ -2815,7 +2381,7 @@ void MblkLinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_GRADIENT") {
+            if (error_db && error_key == "UVAL_GRADIENT") {
 
                if (error_db->keyExists("grad_tol")) {
                   d_grad_tol =
@@ -2845,7 +2411,7 @@ void MblkLinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_SHOCK") {
+            if (error_db && error_key == "UVAL_SHOCK") {
 
                if (error_db->keyExists("shock_onset")) {
                   d_shock_onset =
@@ -2885,7 +2451,7 @@ void MblkLinAdv::getFromInput(
 
             }
 
-            if (!error_db.isNull() && error_key == "UVAL_RICHARDSON") {
+            if (error_db && error_key == "UVAL_RICHARDSON") {
 
                if (error_db->keyExists("rich_tol")) {
                   d_rich_tol =
@@ -2932,14 +2498,13 @@ void MblkLinAdv::getFromInput(
                           << endl);
       }
 
-      tbox::Pointer<tbox::Database> init_data_db;
-      if (db->keyExists("Initial_data")) {
-         init_data_db = db->getDatabase("Initial_data");
-      } else {
+      if (!db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
+      boost::shared_ptr<tbox::Database> init_data_db(
+         db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -3032,8 +2597,8 @@ void MblkLinAdv::getFromInput(
 
             if (!(init_data_keys[nkey] == "front_position")) {
 
-               tbox::Pointer<tbox::Database> interval_db =
-                  init_data_db->getDatabase(init_data_keys[nkey]);
+               boost::shared_ptr<tbox::Database> interval_db(
+                  init_data_db->getDatabase(init_data_keys[nkey]));
 
                if (interval_db->keyExists("uval")) {
                   d_interval_uval[i] = interval_db->getDouble("uval");
@@ -3103,7 +2668,8 @@ void MblkLinAdv::getFromInput(
 
    if (db->keyExists("Boundary_data")) {
 
-      tbox::Pointer<tbox::Database> bdry_db = db->getDatabase("Boundary_data");
+      boost::shared_ptr<tbox::Database> bdry_db(
+         db->getDatabase("Boundary_data"));
 
       if (d_dim == tbox::Dimension(2)) {
          SkeletonBoundaryUtilities2::readBoundaryInput(this,
@@ -3138,10 +2704,10 @@ void MblkLinAdv::getFromInput(
  */
 
 void MblkLinAdv::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("MBLKLINADV_VERSION", MBLKLINADV_VERSION);
@@ -3220,16 +2786,14 @@ void MblkLinAdv::putToDatabase(
  */
 void MblkLinAdv::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("MBLKLINADV_VERSION");
    if (ver != MBLKLINADV_VERSION) {
@@ -3332,12 +2896,12 @@ void MblkLinAdv::getFromRestart()
  */
 
 void MblkLinAdv::readDirichletBoundaryDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   const boost::shared_ptr<tbox::Database>& db,
    string& db_name,
    int bdry_location_index)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
 #endif
    if (d_dim == tbox::Dimension(2)) {
@@ -3355,13 +2919,13 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
 }
 
 void MblkLinAdv::readStateDataEntry(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    const string& db_name,
    int array_indx,
    tbox::Array<double>& uval)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(uval.getSize() > array_indx);
@@ -3375,6 +2939,16 @@ void MblkLinAdv::readStateDataEntry(
                                << " input database. " << endl);
    }
 
+}
+
+void MblkLinAdv::readNeumannBoundaryDataEntry(
+   const boost::shared_ptr<tbox::Database>& db,
+   string& db_name,
+   int bdry_location_index)
+{
+   NULL_USE(db);
+   NULL_USE(db_name);
+   NULL_USE(bdry_location_index);
 }
 
 /*
@@ -3403,7 +2977,8 @@ void MblkLinAdv::checkBoundaryData(
    }
 #endif
 
-   const tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -23,7 +23,7 @@ HyperbolicPatchStrategy::HyperbolicPatchStrategy(
    xfer::RefinePatchStrategy(dim),
    xfer::CoarsenPatchStrategy(dim),
    d_dim(dim),
-   d_data_context(0)
+   d_data_context()
 {
 }
 
@@ -39,7 +39,8 @@ HyperbolicPatchStrategy::~HyperbolicPatchStrategy()
  *************************************************************************
  */
 
-void HyperbolicPatchStrategy::tagGradientDetectorCells(
+void
+HyperbolicPatchStrategy::tagGradientDetectorCells(
    hier::Patch& patch,
    const double regrid_time,
    const bool initial_error,
@@ -51,17 +52,17 @@ void HyperbolicPatchStrategy::tagGradientDetectorCells(
    NULL_USE(initial_error);
    NULL_USE(tag_index);
    NULL_USE(uses_richardson_extrapolation_too);
-   TBOX_WARNING("HyperbolicPatchStrategy::tagGradientDetectorCells()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << std::endl);
+   TBOX_ERROR("HyperbolicPatchStrategy::tagGradientDetectorCells()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
-void HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
+void
+HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const tbox::Pointer<hier::VariableContext> coarsened_fine,
-   const tbox::Pointer<hier::VariableContext> advanced_coarse,
+   const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
+   const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,
@@ -79,13 +80,13 @@ void HyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    NULL_USE(initial_error);
    NULL_USE(tag_index);
    NULL_USE(uses_gradient_detector_too);
-   TBOX_WARNING("HyperbolicPatchStrategy::tagRichardsonExtrapolationCells()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << std::endl);
+   TBOX_ERROR("HyperbolicPatchStrategy::tagRichardsonExtrapolationCells()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
-void HyperbolicPatchStrategy::setupLoadBalancer(
+void
+HyperbolicPatchStrategy::setupLoadBalancer(
    HyperbolicLevelIntegrator* integrator,
    mesh::GriddingAlgorithm* gridding_algorithm)
 {
@@ -93,8 +94,9 @@ void HyperbolicPatchStrategy::setupLoadBalancer(
    NULL_USE(gridding_algorithm);
 }
 
-void HyperbolicPatchStrategy::preprocessAdvanceLevelState(
-   const tbox::Pointer<hier::PatchLevel>& level,
+void
+HyperbolicPatchStrategy::preprocessAdvanceLevelState(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double current_time,
    double dt,
    bool first_step,
@@ -109,8 +111,9 @@ void HyperbolicPatchStrategy::preprocessAdvanceLevelState(
    NULL_USE(regrid_advance);
 }
 
-void HyperbolicPatchStrategy::postprocessAdvanceLevelState(
-   const tbox::Pointer<hier::PatchLevel>& level,
+void
+HyperbolicPatchStrategy::postprocessAdvanceLevelState(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double current_time,
    double dt,
    bool first_step,
@@ -125,12 +128,14 @@ void HyperbolicPatchStrategy::postprocessAdvanceLevelState(
    NULL_USE(regrid_advance);
 }
 
-hier::IntVector HyperbolicPatchStrategy::getRefineOpStencilWidth() const
+hier::IntVector
+HyperbolicPatchStrategy::getRefineOpStencilWidth() const
 {
    return hier::IntVector::getZero(d_dim);
 }
 
-void HyperbolicPatchStrategy::preprocessRefine(
+void
+HyperbolicPatchStrategy::preprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::Box& fine_box,
@@ -142,7 +147,8 @@ void HyperbolicPatchStrategy::preprocessRefine(
    NULL_USE(ratio);
 }
 
-void HyperbolicPatchStrategy::postprocessRefine(
+void
+HyperbolicPatchStrategy::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const hier::Box& fine_box,
@@ -154,12 +160,14 @@ void HyperbolicPatchStrategy::postprocessRefine(
    NULL_USE(ratio);
 }
 
-hier::IntVector HyperbolicPatchStrategy::getCoarsenOpStencilWidth() const
+hier::IntVector
+HyperbolicPatchStrategy::getCoarsenOpStencilWidth() const
 {
    return hier::IntVector::getZero(d_dim);
 }
 
-void HyperbolicPatchStrategy::preprocessCoarsen(
+void
+HyperbolicPatchStrategy::preprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const hier::Box& coarse_box,
@@ -171,7 +179,8 @@ void HyperbolicPatchStrategy::preprocessCoarsen(
    NULL_USE(ratio);
 }
 
-void HyperbolicPatchStrategy::postprocessCoarsen(
+void
+HyperbolicPatchStrategy::postprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const hier::Box& coarse_box,
@@ -181,27 +190,6 @@ void HyperbolicPatchStrategy::postprocessCoarsen(
    NULL_USE(fine);
    NULL_USE(coarse_box);
    NULL_USE(ratio);
-}
-
-tbox::Pointer<hier::VariableContext> HyperbolicPatchStrategy::getDataContext()
-const
-{
-   return d_data_context;
-}
-
-void HyperbolicPatchStrategy::setDataContext(
-   tbox::Pointer<hier::VariableContext> context)
-{
-   d_data_context = context;
-}
-
-void HyperbolicPatchStrategy::clearDataContext()
-{
-   d_data_context.setNull();
-}
-
-const tbox::Dimension& HyperbolicPatchStrategy::getDim() const {
-   return d_dim;
 }
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A simple array template class
  *
  ************************************************************************/
@@ -13,12 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/ReferenceCounter.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace tbox {
-
-template<class TYPE>
-class Pointer;
 
 /**
  * Class Array<TYPE> defines a smart pointer to an array of TYPE and
@@ -36,7 +34,6 @@ class Pointer;
  * operator.
  *
  * @see tbox::ReferenceCounter
- * @see tbox::Pointer
  */
 
 template<class TYPE>
@@ -59,8 +56,7 @@ public:
    /*
     * The flag value for use in the Array uninitialized constructor.
     */
-   static const typename SAMRAI::tbox::Array<TYPE>::DoNotInitialize
-   UNINITIALIZED;
+   static const typename Array<TYPE>::DoNotInitialize UNINITIALIZED;
 
    /**
     * Create an array of zero elements.
@@ -93,7 +89,6 @@ public:
     * location to invoke a constructor.  This is shown in the
     * following example:
     *
-    * \Example
     * \code
     * for(int i = 0; i < d_elements; i++) {
     *       void *p = &d_objects[i];
@@ -108,9 +103,11 @@ public:
     * loop over the array elements doing an assiggment to the
     * default_value is avoided.
     *
+    * @param n
+    * @param do_not_initialize_flag
     */
 
-   explicit Array(
+   Array(
       const int n,
       const typename Array::DoNotInitialize& do_not_initialize_flag);
 
@@ -326,12 +323,6 @@ Array<double>::deleteObjects();
  * Default assume Array is not a standard type
  */
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Array.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/Array.C"
-#endif
 
 #endif

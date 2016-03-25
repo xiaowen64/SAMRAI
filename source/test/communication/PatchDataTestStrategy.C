@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
@@ -61,10 +61,10 @@ PatchDataTestStrategy::~PatchDataTestStrategy()
  */
 
 void PatchDataTestStrategy::readVariableInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -80,7 +80,7 @@ void PatchDataTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; i++) {
 
-      tbox::Pointer<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -129,10 +129,10 @@ void PatchDataTestStrategy::readVariableInput(
 }
 
 void PatchDataTestStrategy::readRefinementInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> box_keys = db->getAllKeys();
@@ -159,9 +159,9 @@ void PatchDataTestStrategy::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)patch;
-   (void)time;
-   (void)gcw;
+   NULL_USE(patch);
+   NULL_USE(time);
+   NULL_USE(gcw);
 }
 
 void PatchDataTestStrategy::preprocessRefine(
@@ -170,10 +170,10 @@ void PatchDataTestStrategy::preprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   (void)fine;
-   (void)coarse;
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 }
 
 void PatchDataTestStrategy::postprocessRefine(
@@ -182,10 +182,10 @@ void PatchDataTestStrategy::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   (void)fine;
-   (void)coarse;
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 }
 
 void PatchDataTestStrategy::preprocessCoarsen(
@@ -194,10 +194,10 @@ void PatchDataTestStrategy::preprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   (void)coarse;
-   (void)fine;
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 }
 
 void PatchDataTestStrategy::postprocessCoarsen(
@@ -206,10 +206,10 @@ void PatchDataTestStrategy::postprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   (void)coarse;
-   (void)fine;
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 }
 
 }

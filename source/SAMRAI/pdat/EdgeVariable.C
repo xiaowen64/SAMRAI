@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -14,6 +14,8 @@
 #include "SAMRAI/pdat/EdgeVariable.h"
 #include "SAMRAI/pdat/EdgeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -33,17 +35,11 @@ EdgeVariable<TYPE>::EdgeVariable(
    int depth,
    const bool fine_boundary_represents_var):
    hier::Variable(name,
-                  tbox::Pointer<SAMRAI::hier::PatchDataFactory>(new
-                                                                EdgeDataFactory
-                                                                <TYPE>(depth,
-                                                                       // default zero ghost cells
-                                                                       hier
-                                                                       ::
-                                                                       IntVector
-                                                                       ::
-                                                                       getZero(
-                                                                          dim),
-                                                                       fine_boundary_represents_var))),
+                  boost::make_shared<EdgeDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var)),
    d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
 }
@@ -56,7 +52,7 @@ EdgeVariable<TYPE>::~EdgeVariable()
 template<class TYPE>
 int EdgeVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<EdgeDataFactory<TYPE> > factory = this->getPatchDataFactory();
+   boost::shared_ptr<EdgeDataFactory<TYPE> > factory(getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -74,7 +70,8 @@ int EdgeVariable<TYPE>::getDepth() const
 template<class TYPE>
 EdgeVariable<TYPE>::EdgeVariable(
    const EdgeVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

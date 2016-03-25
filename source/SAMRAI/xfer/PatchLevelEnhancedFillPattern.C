@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -12,14 +12,10 @@
 #define included_xfer_PatchLevelEnhancedFillPattern_C
 
 #include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {
@@ -56,7 +52,8 @@ PatchLevelEnhancedFillPattern::~PatchLevelEnhancedFillPattern()
  *
  *************************************************************************
  */
-void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
+void
+PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxLevel& fill_mapped_boxes,
    hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
@@ -70,21 +67,21 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    NULL_USE(src_to_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(dst_mapped_box_level, fill_ghost_width);
 
-   tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_mapped_box_level.getGridGeometry());
 
    const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
-        ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
+        ni != dst_mapped_boxes.realEnd(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
 
-      const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+      const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
 
       hier::BoxContainer constructed_fill_boxes;
@@ -93,12 +90,13 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          dst_to_fill.findLocal(dst_mapped_box_id);
       bool has_base_box = base_box_itr != dst_to_fill.end();
 
-      for (tbox::List<hier::GridGeometry::Neighbor>::Iterator ni(neighbors);
-           ni; ni++) {
+      for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+           neighbors.begin();
+           ni != neighbors.end(); ni++) {
 
-         if (ni().isSingularity()) {
+         if (ni->isSingularity()) {
 
-            hier::BoxContainer encon_boxes(ni().getTransformedDomain());
+            hier::BoxContainer encon_boxes(ni->getTransformedDomain());
             encon_boxes.refine(dst_mapped_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);
@@ -110,14 +108,16 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
                      dst_mapped_box_id);
                   has_base_box = true;
                }
-               for (hier::BoxContainer::Iterator ei(encon_boxes);
+               for (hier::BoxContainer::iterator ei(encon_boxes);
                     ei != encon_boxes.end(); ei++) {
 
                   hier::Box fill_mapped_box(
                      *ei,
                      ++last_id,
-                     dst_mapped_box.getOwnerRank(),
-                     dst_mapped_box.getBlockId());
+                     dst_mapped_box.getOwnerRank());
+
+                  TBOX_ASSERT(fill_mapped_box.getBlockId() ==
+                              dst_mapped_box.getBlockId());
 
                   fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
 
@@ -136,6 +136,54 @@ void PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
             constructed_fill_boxes.size());
    }
    fill_mapped_boxes.finalize();
+}
+
+void
+PatchLevelEnhancedFillPattern::computeDestinationFillBoxesOnSourceProc(
+   FillSet& dst_fill_boxes_on_src_proc,
+   const hier::BoxLevel& dst_mapped_box_level,
+   const hier::Connector& src_to_dst,
+   const hier::IntVector& fill_ghost_width)
+{
+   NULL_USE(dst_mapped_box_level);
+   NULL_USE(src_to_dst);
+   NULL_USE(fill_ghost_width);
+   NULL_USE(dst_fill_boxes_on_src_proc);
+   if (!needsToCommunicateDestinationFillBoxes()) {
+      TBOX_ERROR(
+         "PatchLevelEnhancedFillPattern cannot compute destination:\n"
+         << "fill boxes on the source processor.\n");
+   }
+}
+
+bool
+PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes() const
+{
+   return true;
+}
+
+bool
+PatchLevelEnhancedFillPattern::doesSourceLevelCommunicateToDestination() const
+{
+   return false;
+}
+
+bool
+PatchLevelEnhancedFillPattern::fillingCoarseFineGhosts() const
+{
+   return true;
+}
+
+bool
+PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly() const
+{
+   return true;
+}
+
+int
+PatchLevelEnhancedFillPattern::getMaxFillBoxes() const
+{
+   return d_max_fill_boxes;
 }
 
 }

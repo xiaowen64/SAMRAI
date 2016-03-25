@@ -3,15 +3,15 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Light weight array class.
  *
  ************************************************************************/
 #ifndef included_ArrayDataAccess_h
 #define included_ArrayDataAccess_h
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/pdat/ArrayData.h"
-
 #include "SAMRAI/pdat/MDA_Access.h"
 
 namespace SAMRAI {
@@ -61,5 +61,7 @@ public:
 
 }
 }
+
+#include "SAMRAI/pdat/ArrayDataAccess.C"
 
 #endif

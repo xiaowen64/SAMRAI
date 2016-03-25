@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real edge-centered data.
  *
  ************************************************************************/
@@ -16,7 +16,8 @@
 #include "SAMRAI/pdat/EdgeData.h"
 #include "SAMRAI/math/ArrayDataMiscellaneousOpsReal.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -71,11 +72,11 @@ public:
     */
    int
    computeConstrProdPos(
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& data1,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& data2,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::EdgeData<double> > cvol =
-         tbox::Pointer<pdat::EdgeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::EdgeData<double> >& cvol =
+         boost::shared_ptr<pdat::EdgeData<double> >()) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1\f$
@@ -84,12 +85,12 @@ public:
     */
    void
    compareToScalar(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const TYPE& alpha,
       const hier::Box& box,
-      const tbox::Pointer<pdat::EdgeData<double> > cvol =
-         tbox::Pointer<pdat::EdgeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::EdgeData<double> >& cvol =
+         boost::shared_ptr<pdat::EdgeData<double> >()) const;
 
    /**
     * Wherever \f$cvol_i > 0\f$ in the index region, set \f$dst_i = 1/src_i\f$ if
@@ -99,11 +100,11 @@ public:
     */
    int
    testReciprocal(
-      tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
       const hier::Box& box,
-      const tbox::Pointer<pdat::EdgeData<double> > cvol =
-         tbox::Pointer<pdat::EdgeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::EdgeData<double> >& cvol =
+         boost::shared_ptr<pdat::EdgeData<double> >()) const;
 
    /*!
     * @brief Compute max of "conditional" quotients of two arrays.
@@ -120,8 +121,8 @@ public:
     */
    TYPE
    maxPointwiseDivide(
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& numer,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& denom,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
       const hier::Box& box) const;
 
    /*!
@@ -140,8 +141,8 @@ public:
     */
    TYPE
    minPointwiseDivide(
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& numer,
-      const tbox::Pointer<pdat::EdgeData<TYPE> >& denom,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
+      const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
       const hier::Box& box) const;
 
 private:
@@ -158,8 +159,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/math/PatchEdgeDataMiscellaneousOpsReal.C"
-#endif
 
 #endif

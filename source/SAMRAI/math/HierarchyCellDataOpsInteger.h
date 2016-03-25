@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer cell data on multiple levels.
  *
  ************************************************************************/
@@ -17,8 +17,8 @@
 #include "SAMRAI/math/PatchCellDataOpsInteger.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -69,7 +69,7 @@ public:
     * reset by calling the resetLevels() function.
     */
    explicit HierarchyCellDataOpsInteger(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level = -1,
       const int finest_level = -1);
 
@@ -83,7 +83,7 @@ public:
     */
    void
    setPatchHierarchy(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -97,7 +97,7 @@ public:
    /**
     * Return const pointer to patch hierarchy associated with operations.
     */
-   const tbox::Pointer<hier::PatchHierarchy>
+   const boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -304,7 +304,7 @@ private:
    operator = (
       const HierarchyCellDataOpsInteger&);
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
    PatchCellDataOpsInteger d_patch_ops;

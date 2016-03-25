@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test program to demonstrate/test the Transformation class
  *
  ************************************************************************/
@@ -48,6 +48,9 @@ int main(
       tbox::Dimension dim2(2);
       tbox::Dimension dim3(3);
 
+      hier::BlockId block_zero(0);
+      hier::BlockId block_one(1);
+
       /*
        * For each test, create an arbitrary Box, do a transform and an
        * inverse transform on the Box, and check to see that it has
@@ -62,7 +65,7 @@ int main(
 
          hier::Index index_lo(3, 5);
          hier::Index index_hi(21, 17);
-         hier::Box ref_box(index_lo, index_hi);
+         hier::Box ref_box(index_lo, index_hi, block_zero);
          hier::Box trans_box(ref_box);
 
          zero_trans.transform(trans_box);
@@ -84,7 +87,7 @@ int main(
 
          hier::Index index_lo(4, 6, 1);
          hier::Index index_hi(15, 38, 12);
-         hier::Box ref_box(index_lo, index_hi);
+         hier::Box ref_box(index_lo, index_hi, block_zero);
          hier::Box trans_box(ref_box);
 
          zero_trans.transform(trans_box);
@@ -105,11 +108,14 @@ int main(
          hier::IntVector offset(dim2);
          offset[0] = 9;
          offset[1] = -7;
-         hier::Transformation shift_trans(offset);
+         hier::Transformation shift_trans(hier::Transformation::NO_ROTATE,
+                                          offset,
+                                          block_zero,
+                                          block_one);
 
          hier::Index index_lo(12, 28);
          hier::Index index_hi(33, 44);
-         hier::Box ref_box(index_lo, index_hi);
+         hier::Box ref_box(index_lo, index_hi, block_zero);
          hier::Box trans_box(ref_box);
 
          shift_trans.transform(trans_box);
@@ -131,11 +137,14 @@ int main(
          offset[0] = 13;
          offset[1] = 28;
          offset[2] = 11;
-         hier::Transformation shift_trans(offset);
+         hier::Transformation shift_trans(hier::Transformation::NO_ROTATE,
+                                          offset,
+                                          block_zero,
+                                          block_one);
 
          hier::Index index_lo(25, 22, 9);
          hier::Index index_hi(35, 37, 34);
-         hier::Box ref_box(index_lo, index_hi);
+         hier::Box ref_box(index_lo, index_hi, block_zero);
          hier::Box trans_box(ref_box);
 
          shift_trans.transform(trans_box);
@@ -162,12 +171,12 @@ int main(
             offset[0] = 14 + i;
             offset[1] = 42 - i;
 
-            hier::Transformation trans(rotate, offset);
+            hier::Transformation trans(rotate, offset, block_zero, block_one);
 
             int i_sqr = i * i;
             hier::Index index_lo(11 - i_sqr, 27 - i_sqr);
             hier::Index index_hi(21 + i_sqr, 38 + i_sqr);
-            hier::Box ref_box(index_lo, index_hi);
+            hier::Box ref_box(index_lo, index_hi, block_zero);
             hier::Box trans_box(ref_box);
 
             trans.transform(trans_box);
@@ -196,11 +205,11 @@ int main(
             offset[1] = 23 + i;
             offset[2] = i - 5;
 
-            hier::Transformation trans(rotate, offset);
+            hier::Transformation trans(rotate, offset, block_zero, block_one);
 
             hier::Index index_lo(24 - 2 * i, -8 - 2 * i, 20 - 2 * i);
             hier::Index index_hi(33 + i, 13 + i, 36 + i);
-            hier::Box ref_box(index_lo, index_hi);
+            hier::Box ref_box(index_lo, index_hi, block_zero);
             hier::Box trans_box(ref_box);
 
             trans.transform(trans_box);
@@ -232,6 +241,8 @@ int testGeometryTransformations(const hier::Transformation& transformation,
 {
    const tbox::Dimension& dim = box.getDim();
    int fail_count = 0;
+   hier::BlockId block_zero(0);
+   hier::BlockId block_one(1);
 
    hier::Transformation::RotationIdentifier reverse_rotation =
       hier::Transformation::getReverseRotationIdentifier(
@@ -243,7 +254,8 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       transformation.getOffset(),
       transformation.getRotation());
 
-   hier::Transformation reverse_trans(reverse_rotation, reverse_shift);
+   hier::Transformation reverse_trans(reverse_rotation, reverse_shift,
+                                      block_one, block_zero);
 
    /*
     * Cell test

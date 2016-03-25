@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -40,8 +40,9 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -100,14 +101,15 @@ public:
    /*!
     * @brief Constructor.
     *
+    * @param dim
     * @param object_name Name of object.
     * @param database tbox::Database for input.
     */
    CellPoissonHypreSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>(NULL));
+      const boost::shared_ptr<tbox::Database>& database =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * The Poisson destructor releases all internally managed data.
@@ -124,7 +126,7 @@ public:
     */
    void
    initializeSolverState(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int ln = 0);
 
    /*!
@@ -161,7 +163,10 @@ public:
     */
    void
    setSolnIdDepth(
-      const int depth);
+      const int depth)
+   {
+      d_soln_depth = depth;
+   }
 
    /*!
     * @brief Set default depth of the rhs data involved in the solve.
@@ -178,7 +183,10 @@ public:
     */
    void
    setRhsIdDepth(
-      const int depth);
+      const int depth)
+   {
+      d_rhs_depth = depth;
+   }
 
    /*!
     * @brief Set the stopping criteria (max iterations and residual
@@ -190,7 +198,13 @@ public:
    void
    setStoppingCriteria(
       const int max_iterations = 10,
-      const double relative_residual_tol = 1.0e-6);
+      const double relative_residual_tol = 1.0e-6)
+   {
+      TBOX_ASSERT(max_iterations >= 0);
+      TBOX_ASSERT(relative_residual_tol >= 0.0);
+      d_max_iterations = max_iterations;
+      d_relative_residual_tol = relative_residual_tol;
+   }
 
    /*!
     * @brief Solve the linear system Au=f.
@@ -237,28 +251,42 @@ public:
     * @return number of iterations taken by the solver to converge
     */
    int
-   getNumberOfIterations() const;
+   getNumberOfIterations() const
+   {
+      return d_number_iterations;
+   }
 
    /*!
     * @brief Set the number of pre-relax steps used by the Hypre solve.
     */
    void
    setNumPreRelaxSteps(
-      const int steps);
+      const int steps)
+   {
+      TBOX_ASSERT(d_hierarchy);
+      d_num_pre_relax_steps = steps;
+   }
 
    /*!
     * @brief Set the number of post-relax steps used by the Hypre solve.
     */
    void
    setNumPostRelaxSteps(
-      const int steps);
+      const int steps)
+   {
+      TBOX_ASSERT(d_hierarchy);
+      d_num_post_relax_steps = steps;
+   }
 
    /*!
     * @brief Return the final residual norm returned by the Hypre solve.
     * @return final residual norm returned by the Hypre solve.
     */
    double
-   getRelativeResidualNorm() const;
+   getRelativeResidualNorm() const
+   {
+      return d_relative_residual_norm;
+   }
 
    /*!
     * @brief Set whether to use Hypre's PFMG algorithm instead of the
@@ -274,7 +302,10 @@ public:
     */
    void
    setUseSMG(
-      bool use_smg);
+      bool use_smg)
+   {
+      d_use_smg = use_smg;
+   }
 
    /*!
     * @brief Specify boundary condition directly, without using
@@ -293,7 +324,15 @@ public:
       const std::string& boundary_type,
       const int fluxes = -1,
       const int flags = -1,
-      int* bdry_types = NULL);
+      int* bdry_types = NULL)
+   {
+      d_physical_bc_simple_case.setBoundaries(boundary_type,
+         fluxes,
+         flags,
+         bdry_types);
+      d_physical_bc_coef_strategy = &d_physical_bc_simple_case;
+      d_physical_bc_variable.reset();
+   }
 
    /*!
     * @brief Specify boundary condition through the use of a
@@ -308,7 +347,7 @@ public:
     * cell centers, use the GhostCellRobinBcCoefs
     * implementation of the RobinBcCoefStrategy strategy.
     *
-    * @param physical_bc_coef_strategy tbox::Pointer a concrete
+    * @param physical_bc_coef_strategy Pointer to a concrete
     *        implementation of the Robin bc strategy.
     * @param variable hier::Variable pointer to be passed
     *        to RobinBcCoefStrategy::setBcCoefs(),
@@ -317,8 +356,12 @@ public:
    void
    setPhysicalBcCoefObject(
       const RobinBcCoefStrategy* physical_bc_coef_strategy,
-      const tbox::Pointer<hier::Variable> variable =
-         tbox::Pointer<hier::Variable>(NULL));
+      const boost::shared_ptr<hier::Variable>& variable =
+         boost::shared_ptr<hier::Variable>())
+   {
+      d_physical_bc_coef_strategy = physical_bc_coef_strategy;
+      d_physical_bc_variable = variable;
+   }
 
    /*!
     * @brief Set the flag for printing solver information.
@@ -341,7 +384,10 @@ public:
     */
    void
    setPrintSolverInfo(
-      const bool print);
+      const bool print)
+   {
+      d_print_solver_info = print;
+   }
 
    /*!
     * @brief Get the name of this object.
@@ -349,7 +395,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*!
@@ -363,7 +412,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    void
    setupHypreSolver();
@@ -470,7 +519,7 @@ private:
    /*!
     * @brief Associated hierarchy.
     */
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Associated level number.
@@ -482,7 +531,7 @@ private:
    /*!
     * @brief Scratch context for this object.
     */
-   tbox::Pointer<hier::VariableContext> d_context;
+   boost::shared_ptr<hier::VariableContext> d_context;
 
    //@{ @name Boundary condition handling
 
@@ -493,7 +542,7 @@ private:
     * state is initialized.  It is used to allow solves on
     * levels that are not the coarsest in the hierarchy.
     */
-   tbox::Pointer<hier::CoarseFineBoundary> d_cf_boundary;
+   boost::shared_ptr<hier::CoarseFineBoundary> d_cf_boundary;
 
    /*!
     * @brief Robin boundary coefficient object for physical
@@ -503,7 +552,7 @@ private:
     * use d_physical_bc_simple_case.
     */
    const RobinBcCoefStrategy* d_physical_bc_coef_strategy;
-   tbox::Pointer<hier::Variable> d_physical_bc_variable;
+   boost::shared_ptr<hier::Variable> d_physical_bc_variable;
 
    /*!
     * @brief Implementation of Robin boundary conefficients
@@ -520,7 +569,7 @@ private:
     * in the coarse-fine boundaries before solving.
     */
    GhostCellRobinBcCoefs d_cf_bc_coef;
-   tbox::Pointer<hier::Variable> d_coarsefine_bc_variable;
+   boost::shared_ptr<hier::Variable> d_coarsefine_bc_variable;
 
    //@}
 
@@ -547,9 +596,8 @@ private:
     */
    int d_Ak0_id;
 
-   static tbox::Pointer<pdat::OutersideVariable<double> > s_Ak0_var[tbox::
-                                                                    Dimension::
-                                                                    MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<pdat::OutersideVariable<double> >
+      s_Ak0_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
 
    /*!
     * @brief Depth of the solution variable.
@@ -606,18 +654,14 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_solve_system;
-   tbox::Pointer<tbox::Timer> t_set_matrix_coefficients;
+   boost::shared_ptr<tbox::Timer> t_solve_system;
+   boost::shared_ptr<tbox::Timer> t_set_matrix_coefficients;
 
    static tbox::StartupShutdownManager::Handler s_finalize_handler;
 };
 
 }
 } // namespace SAMRAI
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonHypreSolver.I"
-#endif
 
 #endif
 

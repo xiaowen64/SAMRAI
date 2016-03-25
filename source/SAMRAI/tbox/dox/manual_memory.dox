@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Generation of SAMRAI Doxygen source code manual 
  *
  ************************************************************************/
@@ -16,11 +16,7 @@ namespace SAMRAI {
   include smart pointers and memory arenas for fast memory allocation
   and deallocation.
   - SAMRAI::tbox::Array
-  - SAMRAI::tbox::ConstPointer
-  - SAMRAI::tbox::ConstPointerBase
   - SAMRAI::tbox::MemoryUtilities
-  - SAMRAI::tbox::Pointer
-  - SAMRAI::tbox::PointerBase
   - SAMRAI::tbox::ReferenceCounter
 */
 

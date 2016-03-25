@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -21,7 +21,7 @@ MblkHyperbolicPatchStrategy::MblkHyperbolicPatchStrategy(
    xfer::CoarsenPatchStrategy(dim),
    d_dim(dim)
 {
-   d_data_context.setNull();
+   d_data_context.reset();
 }
 
 MblkHyperbolicPatchStrategy::~MblkHyperbolicPatchStrategy()
@@ -57,8 +57,8 @@ void MblkHyperbolicPatchStrategy::tagGradientDetectorCells(
 void MblkHyperbolicPatchStrategy::tagRichardsonExtrapolationCells(
    hier::Patch& patch,
    const int error_level_number,
-   const tbox::Pointer<hier::VariableContext> coarsened_fine,
-   const tbox::Pointer<hier::VariableContext> advanced_coarse,
+   const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+   const boost::shared_ptr<hier::VariableContext> advanced_coarse,
    const double regrid_time,
    const double deltat,
    const int error_coarsen_ratio,

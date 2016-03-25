@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -19,7 +19,9 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -51,7 +53,10 @@ public:
     */
    static hier::Box
    toCellBox(
-      const hier::Box& box);
+      const hier::Box& box)
+   {
+      return box;
+   }
 
    /*!
     * @brief Transform a CellIndex.
@@ -64,14 +69,14 @@ public:
     */
    static void
    transform(
-      pdat::CellIndex& index,
+      CellIndex& index,
       const hier::Transformation& transformation);
 
    /*!
     * @brief Construct the cell geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit CellGeometry(
+   CellGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 
@@ -84,7 +89,7 @@ public:
     * @brief Compute the overlap in cell-centered index space between
     * the source box geometry and the destination box geometry.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -114,7 +119,7 @@ public:
     * @brief Set up a CellOverlap object that consists simply of the given
     * boxes and the transformation.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -124,14 +129,20 @@ public:
     * object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this cell centered box
     * geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
 private:
    /**
@@ -139,7 +150,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have cell centered geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const CellGeometry& dst_geometry,
       const CellGeometry& src_geometry,
@@ -147,11 +158,24 @@ private:
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxContainer& dst_restrict_boxes);
+      const hier::BoxContainer& dst_restrict_boxes)
+   {
+      hier::BoxContainer dst_boxes;
+      dst_geometry.computeDestinationBoxes(dst_boxes,
+         src_geometry,
+         src_mask,
+         fill_box,
+         overwrite_interior,
+         transformation,
+         dst_restrict_boxes);
+
+      // Create the cell overlap data object using the boxes and source shift
+      return boost::make_shared<CellOverlap>(dst_boxes, transformation);
+   }
 
    static void
    rotateAboutAxis(
-      pdat::CellIndex& index,
+      CellIndex& index,
       const int axis,
       const int num_rotations);
 
@@ -168,7 +192,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellGeometry.I"
-#endif
+
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Iterator for node centered patch data types
  *
  ************************************************************************/
@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (NodeIterator c(box); c; c++) {
+ * NodeIterator cend(box, false);
+ * for (NodeIterator c(box, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -49,7 +50,8 @@ public:
     * the indices in the argument box.
     */
    explicit NodeIterator(
-      const hier::Box& box);
+      const hier::Box& box,
+      bool begin);
 
    /**
     * Copy constructor for the node iterator
@@ -62,7 +64,12 @@ public:
     */
    NodeIterator&
    operator = (
-      const NodeIterator& iterator);
+      const NodeIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the node iterator.
@@ -73,38 +80,31 @@ public:
     * Extract the node index corresponding to the iterator position in the box.
     */
    const NodeIndex&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
-    * Extract the node index corresponding to the iterator position in the box.
+    * Extract a pointer to the node index corresponding to the iterator
+    * position in the box.
     */
-   const NodeIndex&
-   operator () () const;
+   const NodeIndex*
+   operator -> () const
+   {
+      return &d_index;
+   }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void
-   * () const;
-#endif
+   NodeIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   NodeIterator
    operator ++ (
       int);
 
@@ -113,14 +113,20 @@ public:
     */
    bool
    operator == (
-      const NodeIterator& iterator) const;
+      const NodeIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const NodeIterator& iterator) const;
+      const NodeIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    NodeIndex d_index;
@@ -129,7 +135,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeIterator.I"
-#endif
+
 #endif

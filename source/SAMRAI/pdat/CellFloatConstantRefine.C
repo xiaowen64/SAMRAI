@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for cell-centered float data on
  *                a  mesh.
  *
@@ -73,31 +73,20 @@ CellFloatConstantRefine::~CellFloatConstantRefine()
 {
 }
 
-bool CellFloatConstantRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<CellVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int CellFloatConstantRefine::getOperatorPriority() const
+int
+CellFloatConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CellFloatConstantRefine::getStencilWidth() const {
+CellFloatConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CellFloatConstantRefine::refine(
+void
+CellFloatConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -105,23 +94,24 @@ void CellFloatConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const pdat::CellOverlap* t_overlap =
-      dynamic_cast<const pdat::CellOverlap *>(&fine_overlap);
+   const CellOverlap* t_overlap =
+      dynamic_cast<const CellOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       refine(fine,
          coarse,
          dst_component,
          src_component,
-         b(),
+         *b,
          ratio);
    }
 }
 
-void CellFloatConstantRefine::refine(
+void
+CellFloatConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -129,13 +119,15 @@ void CellFloatConstantRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<CellData<float> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<CellData<float> >
-   fdata = fine.getPatchData(dst_component);
+   boost::shared_ptr<CellData<float> > cdata(
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<CellData<float> > fdata(
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS5(*this, fine, coarse, fine_box, ratio);
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Linear refine operator for cell-centered double data on
  *                a Cartesian mesh.
  *
@@ -18,8 +18,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -30,9 +30,6 @@ namespace geom {
  * interpolation for cell-centered double patch data defined over a Cartesian
  * mesh.  It is derived from the hier::RefineOperator base class.
  * The numerical operations for interpolation use FORTRAN numerical routines.
- *
- * The findRefineOperator() operator function returns true if the input
- * variable is cell-centered double, and the std::string is "LINEAR_REFINE".
  *
  * @see hier::RefineOperator
  */
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CartesianCellDoubleLinearRefine();
-
-   /**
-    * Return true if the variable and name std::string match cell-centered
-    * double linear interpolation; otherwise, return false.
-    */
-   bool
-   findRefineOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of cell-centered double linear interpolation is 0.

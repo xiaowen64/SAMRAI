@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Tests HDF database in SAMRAI
  *
  ************************************************************************/
@@ -17,8 +17,9 @@
 #include "SAMRAI/tbox/HDFDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -39,17 +40,17 @@ public:
    }
 
    void putToDatabase(
-      tbox::Pointer<tbox::Database> db)
+      const boost::shared_ptr<tbox::Database>& db) const
    {
       writeTestData(db);
    }
 
    void getFromDatabase()
    {
-      tbox::Pointer<tbox::Database> root_db =
-         tbox::RestartManager::getManager()->getRootDatabase();
+      boost::shared_ptr<tbox::Database> root_db(
+         tbox::RestartManager::getManager()->getRootDatabase());
 
-      tbox::Pointer<tbox::Database> db;
+      boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
       }
@@ -88,8 +89,8 @@ int main(
 
       setupTestData();
 
-      tbox::Pointer<tbox::HDFDatabase> database(new tbox::HDFDatabase(
-                                                   "SAMRAI Restart"));
+      boost::shared_ptr<tbox::HDFDatabase> database(
+         new tbox::HDFDatabase("SAMRAI Restart"));
       std::string name = "./restart." + tbox::Utilities::processorToString(
             mpi.getRank()) + ".hdf5";
       hid_t file_id = H5Fcreate(name.c_str(), H5F_ACC_TRUNC,
@@ -115,12 +116,11 @@ int main(
 
       database->close();
 
-      restart_manager->setRootDatabase(tbox::Pointer<SAMRAI::tbox::Database>(
-            NULL));
+      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
 
       H5Fclose(file_id);
 
-      database = new tbox::HDFDatabase("SAMRAI Restart");
+      database.reset(new tbox::HDFDatabase("SAMRAI Restart"));
       file_id = H5Fopen(name.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hdf_group = H5Gopen(file_id, "SAMRAIGroup", H5P_DEFAULT);
@@ -135,8 +135,7 @@ int main(
 
       database->close();
 
-      restart_manager->setRootDatabase(tbox::Pointer<SAMRAI::tbox::Database>(
-            NULL));
+      restart_manager->setRootDatabase(boost::shared_ptr<tbox::Database>());
 
       H5Fclose(file_id);
 

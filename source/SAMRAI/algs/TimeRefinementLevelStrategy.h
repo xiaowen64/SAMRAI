@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to level routines for time-refinement integrator.
  *
  ************************************************************************/
@@ -16,10 +16,10 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -38,23 +38,10 @@ namespace algs {
  * a concrete implementation of this base class by passing the concrete
  * object into the to the time refinement integrator constructor.
  *
- * Three functions in this class are defined as virtual rather than
- * pure virtual, and default implementations are provided.  This is
- * done to allow for an implementation of this strategy class that is used
- * by the time refinement integrator only for refined timestepping or only
- * for synchronized timestepping.  If an implementation is only used for
- * refined timestepping, getMaxLevelDt() and one version of
- * standardLevelSynchronization() must be overloaded in the concrete class.
- * If an implementation is only used for synchronized timestepping,
- * the other version of standardLevelSynchronization must be overloaded.
- * If an implementation supports both refined and synchronized timestepping,
- * all three virtual functions must be overloaded.
- *
  * @see algs::TimeRefinementIntegrator
  */
 
-class TimeRefinementLevelStrategy:
-   public virtual tbox::DescribedClass
+class TimeRefinementLevelStrategy
 {
 public:
    /**
@@ -78,7 +65,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_alg) = 0;
+      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg) = 0;
 
    /**
     * Return appropriate time increment for given level in the patch
@@ -98,7 +85,7 @@ public:
     */
    virtual double
    getLevelDt(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const double dt_time,
       const bool initial_time) = 0;
 
@@ -110,24 +97,15 @@ public:
     * size for the next coarser level.  The ratio is the mesh refinement
     * ratio between the two levels.
     *
-    * This is defined as a virtual function, and it is only used by the
-    * time refinement integrator for refined timestepping.  It should be
-    * overloaded in any concrete implementation of this class that is
-    * used for refined timestepping, but need not be overloaded in
-    * an implementation that is used only for synchronized timestepping.
+    * If the concrete implentation of this class only supports synchronized
+    * timestepping, this should return the time increment that is applicable on
+    * all levels of the hierarchy.
     */
    virtual double
    getMaxFinerLevelDt(
       const int finer_level_number,
       const double coarse_dt,
-      const hier::IntVector& ratio) {
-
-      NULL_USE(finer_level_number);
-      NULL_USE(coarse_dt);
-      NULL_USE(ratio);
-
-      return 0.0;
-   }
+      const hier::IntVector& ratio) = 0;
 
    /**
     * Advance data on all patches on specified patch level from current time
@@ -190,8 +168,8 @@ public:
     */
    virtual double
    advanceLevel(
-      const tbox::Pointer<hier::PatchLevel> level,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double current_time,
       const double new_time,
       const bool first_step,
@@ -222,47 +200,18 @@ public:
     * new levels in the hierarchy, either at initialization time or after
     * regridding.
     *
-    * This function must be overloaded in a concrete implementation
-    * that is used by the time refinement integrator for refined
-    * timestepping
+    * In the case of the time refinement integrator using synchronized
+    * timestepping, the old_times argument should be an array containing the
+    * same time value for all levels, since all levels are advanced with the
+    * same timestep.
     */
    virtual void
    standardLevelSynchronization(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
-      const tbox::Array<double>& old_times) {
-
-      NULL_USE(hierarchy);
-      NULL_USE(coarsest_level);
-      NULL_USE(finest_level);
-      NULL_USE(sync_time);
-      NULL_USE(old_times);
-   }
-
-   /**
-    * This version of standardLevelSynchronization must be overloaded
-    * for implementations that support synchronized timestepping.
-    * The interface is the same as the other version of this function,
-    * except for the old_time argument.  In synchronized timestepping
-    * all levels advance the same timestep, so only a single old time
-    * is required, rather than an array.
-    */
-   virtual void
-   standardLevelSynchronization(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      const int coarsest_level,
-      const int finest_level,
-      const double sync_time,
-      const double old_time) {
-
-      NULL_USE(hierarchy);
-      NULL_USE(coarsest_level);
-      NULL_USE(finest_level);
-      NULL_USE(sync_time);
-      NULL_USE(old_time);
-   }
+      const tbox::Array<double>& old_times) = 0;
 
    /**
     * Synchronize specified levels after regridding has occurred or during
@@ -278,7 +227,7 @@ public:
     */
    virtual void
    synchronizeNewLevels(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -292,7 +241,7 @@ public:
     */
    virtual void
    resetTimeDependentData(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const double new_time,
       const bool can_be_refined) = 0;
 
@@ -307,7 +256,7 @@ public:
     */
    virtual void
    resetDataToPreadvanceState(
-      const tbox::Pointer<hier::PatchLevel> level) = 0;
+      const boost::shared_ptr<hier::PatchLevel>& level) = 0;
 
    /**
     * Return true if the implementation of this class is constructed

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -13,10 +13,6 @@
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianPatchGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace geom {
@@ -42,11 +38,9 @@ CartesianPatchGeometry::CartesianPatchGeometry(
                        touches_regular_bdry,
                        touches_periodic_bdry)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(dx == (double *)NULL));
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
-#endif
 
    const tbox::Dimension& dim(ratio_to_level_zero.getDim());
 
@@ -75,7 +69,8 @@ CartesianPatchGeometry::~CartesianPatchGeometry()
  *
  *************************************************************************
  */
-void CartesianPatchGeometry::printClassData(
+void
+CartesianPatchGeometry::printClassData(
    std::ostream& os) const
 {
    const tbox::Dimension& dim(getRatio().getDim());

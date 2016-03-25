@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -54,7 +54,7 @@ public:
     * Note that The ghost cell width for all outerface data is currently
     * fixed at zero; this may be changed in the future if needed.
     */
-   explicit OuterfaceVariable(
+   OuterfaceVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1);
@@ -98,8 +98,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OuterfaceVariable.C"
-#endif
 
 #endif

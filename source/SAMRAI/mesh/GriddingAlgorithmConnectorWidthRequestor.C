@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   GriddingAlgorihtm's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -40,7 +40,8 @@ GriddingAlgorithmConnectorWidthRequestor::GriddingAlgorithmConnectorWidthRequest
  * properly on a given hierarchy.
  **************************************************************************
  */
-void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
+void
+GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& self_connector_widths,
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
@@ -84,7 +85,8 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
       /*
        * Must be big enough for GriddingAlgorithm::computeProperNestingData().
        */
-      self_connector_widths[ln].max(hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
+      self_connector_widths[ln].max(
+         hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
    }
 }
 
@@ -110,7 +112,8 @@ void GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
  *************************************************************************
  */
 
-void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFromFines(
+void
+GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFromFines(
    hier::IntVector& coarse_to_fine_width,
    hier::IntVector& coarse_to_coarse_width,
    const hier::IntVector& fine_to_fine_width,
@@ -121,7 +124,7 @@ void GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidth
 {
    NULL_USE(max_stencil_width_at_coarse);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const tbox::Dimension& dim(fine_to_fine_width.getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS7(dim,
       coarse_to_fine_width,

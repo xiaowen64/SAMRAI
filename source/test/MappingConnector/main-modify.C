@@ -3,20 +3,19 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
-#include "SAMRAI/hier/TransferOperatorRegistry.h"
+#include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -46,7 +45,7 @@ void
 breakUpBoxes(
    hier::BoxLevel& mapped_box_level,
    const hier::BoxLevel& domain_mapped_box_level,
-   const tbox::Pointer<tbox::Database>& database);
+   const boost::shared_ptr<tbox::Database>& database);
 
 void
 alterAndGenerateMapping(
@@ -54,7 +53,7 @@ alterAndGenerateMapping(
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
    const hier::BoxLevel& mapped_box_level_b,
-   const tbox::Pointer<tbox::Database>& database);
+   const boost::shared_ptr<tbox::Database>& database);
 
 /*
  ************************************************************************
@@ -118,7 +117,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -128,7 +127,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -152,19 +151,17 @@ int main(
       input_db->printClassData(plog);
 
       /*
-       * Generate the GridGeometry.
+       * Generate the grid geometry.
        */
-      tbox::ConstPointer<hier::GridGeometry> grid_geometry;
-      if (main_db->keyExists("GridGeometry")) {
-         grid_geometry = new hier::GridGeometry(
-               dim,
-               "GridGeometry",
-               tbox::Pointer<hier::TransferOperatorRegistry>(),
-               main_db->getDatabase("GridGeometry"));
-      } else {
+      if (!main_db->keyExists("GridGeometry")) {
          TBOX_ERROR("Multiblock tree search test: could not find entry GridGeometry"
             << "\nin input.");
       }
+      boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+         new geom::GridGeometry(
+            dim,
+            "GridGeometry",
+            main_db->getDatabase("GridGeometry")));
 
       /*
        * Print input database again to fully show usage.
@@ -190,7 +187,7 @@ int main(
        * using input database BoxLevelA.
        */
       hier::BoxLevel mapped_box_level_a(domain_mapped_box_level);
-      Pointer<Database> a_db = main_db->getDatabase("BoxLevelA");
+      boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
       breakUpBoxes(mapped_box_level_a, domain_mapped_box_level, a_db);
       mapped_box_level_a.cacheGlobalReducedData();
       // tbox::pout << "mapped box level a:\n" << mapped_box_level_a.format("A: ",2) << std::endl;
@@ -200,7 +197,7 @@ int main(
        * using input database BoxLevelB.
        */
       hier::BoxLevel mapped_box_level_b(domain_mapped_box_level);
-      Pointer<Database> b_db = main_db->getDatabase("BoxLevelB");
+      boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
       breakUpBoxes(mapped_box_level_b, domain_mapped_box_level, b_db);
       mapped_box_level_b.cacheGlobalReducedData();
       // tbox::pout << "mapped box level b:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
@@ -248,7 +245,8 @@ int main(
 
       hier::BoxLevel mapped_box_level_c(dim);
       hier::Connector b_to_c, c_to_b;
-      Pointer<Database> alteration_db = main_db->getDatabase("Alteration");
+      boost::shared_ptr<Database> alteration_db(
+         main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
          mapped_box_level_c,
@@ -301,8 +299,8 @@ int main(
          tbox::pout << "\nPASSED:  Connector modify" << std::endl;
       }
 
-      input_db.setNull();
-      main_db.setNull();
+      input_db.reset();
+      main_db.reset();
 
       /*
        * Exit properly by shutting down services in correct order.
@@ -322,7 +320,7 @@ int main(
    } else {
       tbox::pout << "Process " << std::setw(5) << rank << " aborting."
                  << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 
@@ -341,7 +339,7 @@ int main(
 void breakUpBoxes(
    hier::BoxLevel& mapped_box_level,
    const hier::BoxLevel& domain_mapped_box_level,
-   const tbox::Pointer<tbox::Database>& database) {
+   const boost::shared_ptr<tbox::Database>& database) {
 
    const tbox::Dimension& dim(mapped_box_level.getDim());
 
@@ -369,7 +367,6 @@ void breakUpBoxes(
 
    mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
 
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy;
    const int level_number(0);
 
    hier::Connector dummy_connector;
@@ -381,7 +378,7 @@ void breakUpBoxes(
       mapped_box_level,
       dummy_connector,
       dummy_connector,
-      tbox::Pointer<hier::PatchHierarchy>(),
+      boost::shared_ptr<hier::PatchHierarchy>(),
       level_number,
       dummy_connector,
       dummy_connector,
@@ -401,7 +398,7 @@ void alterAndGenerateMapping(
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
    const hier::BoxLevel& mapped_box_level_b,
-   const tbox::Pointer<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& database)
 {
    const tbox::Dimension dim(mapped_box_level_b.getDim());
 
@@ -426,13 +423,12 @@ void alterAndGenerateMapping(
    c_to_b.setBase(mapped_box_level_c);
    c_to_b.setHead(mapped_box_level_b);
    c_to_b.setWidth(hier::IntVector::getZero(dim), true);
-   for (hier::BoxContainer::ConstIterator bi = mapped_boxes_b.begin();
+   for (hier::BoxContainer::const_iterator bi = mapped_boxes_b.begin();
         bi != mapped_boxes_b.end(); ++bi) {
       const hier::Box& mapped_box_b(*bi);
       hier::Box mapped_box_c(mapped_box_b,
                              mapped_box_b.getLocalId() + local_id_increment,
                              mapped_box_b.getOwnerRank(),
-                             mapped_box_b.getBlockId(),
                              mapped_box_b.getPeriodicId());
       mapped_box_level_c.addBoxWithoutUpdate(mapped_box_c);
       b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getId());

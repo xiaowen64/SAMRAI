@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
@@ -13,11 +13,11 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <cstdio>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -77,19 +77,25 @@ public:
    parse(
       const std::string& filename,
       FILE * fstream,
-      Pointer<Database> database);
+      const boost::shared_ptr<Database>& database);
 
    /**
     * Return the total number of errors resulting from the parse.
     */
    int
-   getNumberErrors() const;
+   getNumberErrors() const
+   {
+      return d_errors;
+   }
 
    /**
     * Return the total number of warnings resulting from the parse.
     */
    int
-   getNumberWarnings() const;
+   getNumberWarnings() const
+   {
+      return d_warnings;
+   }
 
    /**
     * Return the parser object.  This mechanism is useful for communicating
@@ -97,14 +103,20 @@ public:
     * parser will be NULL outside of the parse call.
     */
    static Parser *
-   getParser();
+   getParser()
+   {
+      return s_default_parser;
+   }
 
    /**
     * Return the current database scope.  The current scope is modified
     * through the enterScope() and leaveScope() member functions.
     */
-   Pointer<Database>&
-   getScope();
+   boost::shared_ptr<Database>&
+   getScope()
+   {
+      return d_scope_stack.front();
+   }
 
    /**
     * Create a new database scope with the specified name.  This new scope
@@ -112,20 +124,26 @@ public:
     */
    void
    enterScope(
-      const std::string& name);
+      const std::string& name)
+   {
+      d_scope_stack.push_front(d_scope_stack.front()->putDatabase(name));
+   }
 
    /**
     * Leave the current database scope and return to the previous scope.
     * It is an error to leave the outermost scope.
     */
    void
-   leaveScope();
+   leaveScope()
+   {
+      d_scope_stack.pop_front();
+   }
 
    /**
     * Lookup the scope that contains the specified key.  If the scope does
     * not exist, then return a NULL pointer to the database.
     */
-   Pointer<Database>
+   boost::shared_ptr<Database>
    getDatabaseWithKey(
       const std::string& name);
 
@@ -170,7 +188,11 @@ public:
     */
    void
    setLine(
-      const std::string& line);
+      const std::string& line)
+   {
+      Parser::ParseData& pd = d_parse_stack.front();
+      pd.d_linebuffer = line;
+   }
 
    /**
     * Advance the line number by the specified number of lines.  If no
@@ -205,12 +227,12 @@ private:
       const Parser&);           // not implemented
    void
    operator = (
-      const Parser&);                   // not implemented
+      const Parser&);           // not implemented
 
    struct ParseData {
       std::string d_filename;   // filename for description
       FILE* d_fstream;          // input stream to parse
-      std::string d_linebuffer;      // line being parsed
+      std::string d_linebuffer; // line being parsed
       int d_linenumber;         // line number in input stream
       int d_cursor;             // cursor position in line
       int d_nextcursor;         // next cursor position in line
@@ -219,13 +241,9 @@ private:
    int d_errors;                // total number of parse errors
    int d_warnings;              // total number of warnings
 
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   List<ParseData> d_parse_stack;
-#else
-   List<Parser::ParseData> d_parse_stack;
-#endif
+   std::list<Parser::ParseData> d_parse_stack;
 
-   List<Pointer<Database> > d_scope_stack;
+   std::list<boost::shared_ptr<Database> > d_scope_stack;
 
    static Parser* s_default_parser;
 
@@ -237,7 +255,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Parser.I"
-#endif
 #endif

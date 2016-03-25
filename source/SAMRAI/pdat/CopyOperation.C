@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Copy operation on single array data elements templated on data type
  *
  ************************************************************************/
@@ -13,8 +13,32 @@
 
 #include "SAMRAI/pdat/CopyOperation.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CopyOperation.I"
-#endif
+namespace SAMRAI {
+namespace pdat {
 
+template<class TYPE>
+CopyOperation<TYPE>::CopyOperation()
+{
+}
+
+template<class TYPE>
+CopyOperation<TYPE>::~CopyOperation()
+{
+}
+
+/*
+ * Member functions for CopyOperation
+ */
+
+template<class TYPE>
+void
+CopyOperation<TYPE>::operator () (
+   TYPE& vdst,
+   const TYPE& vsrc) const
+{
+   vdst = vsrc;
+}
+
+}
+}
 #endif

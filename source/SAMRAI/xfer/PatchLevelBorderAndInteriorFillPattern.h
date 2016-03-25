@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -82,6 +82,27 @@ public:
    needsToCommunicateDestinationFillBoxes() const;
 
    /*!
+    * @brief Virtual method to compute the destination fill boxes.
+    *
+    * Unimplemented for this class as needsToCommunicateDestinationFillBoxes()
+    * returns true.
+    *
+    * @param[out] dst_fill_boxes_on_src_proc FillSet storing the destination
+    *                                        neighbors of the source mapped
+    *                                        boxes
+    * @param[in] dst_mapped_box_level  destination level
+    * @param[in] src_to_dst                Connector of source to destination
+    * @param[in] fill_ghost_width          Ghost width being filled by refine
+    *                                      schedule
+    */
+   void
+   computeDestinationFillBoxesOnSourceProc(
+      FillSet& dst_fill_boxes_on_src_proc,
+      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::Connector& src_to_dst,
+      const hier::IntVector& fill_ghost_width);
+
+   /*!
     * @brief Tell RefineSchedule to communicate data directly from source
     * level to destination level.
     *
@@ -133,7 +154,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelBorderAndInteriorFillPattern.I"
-#endif
 #endif

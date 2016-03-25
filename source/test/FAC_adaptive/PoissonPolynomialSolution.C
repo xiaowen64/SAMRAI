@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   PoissonPolynomialSolution class implementation
  *
  ************************************************************************/
@@ -41,9 +41,9 @@ PoissonPolynomialSolution::PoissonPolynomialSolution(
    d_exact(dim),
    d_source(dim)
 {
-   (void)object_name;
-   (void)out_stream;
-   (void)log_stream;
+   NULL_USE(object_name);
+   NULL_USE(out_stream);
+   NULL_USE(log_stream);
 
    setFromDatabase(database);
 }
@@ -78,8 +78,8 @@ void PoissonPolynomialSolution::setPoissonSpecifications(
    int C_patch_data_id,
    int D_patch_data_id) const
 {
-   (void)C_patch_data_id;
-   (void)D_patch_data_id;
+   NULL_USE(C_patch_data_id);
+   NULL_USE(D_patch_data_id);
 
    sps.setDConstant(1.0);
    sps.setCZero();
@@ -87,18 +87,9 @@ void PoissonPolynomialSolution::setPoissonSpecifications(
 
 void PoissonPolynomialSolution::setGridData(
    hier::Patch& patch,
-   pdat::SideData<double>& diffcoef_data,
-   pdat::CellData<double>& ccoef_data,
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   (void)diffcoef_data;
-   (void)ccoef_data;
-
-   hier::Box pbox = patch.getBox();
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
-
    /* Set source function and exact solution. */
    setCellDataToQuartic(exact_data,
       patch,
@@ -117,19 +108,20 @@ std::ostream& operator << (
 }
 
 void PoissonPolynomialSolution::setBcCoefs(
-   tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-   const tbox::Pointer<hier::Variable>& variable,
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
 {
-   (void)variable;
-   (void)fill_time;
+   NULL_USE(variable);
+   NULL_USE(fill_time);
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */

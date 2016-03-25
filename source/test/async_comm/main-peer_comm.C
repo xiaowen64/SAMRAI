@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test program for asynchromous peer communication classes
  *
  ************************************************************************/
@@ -47,7 +47,7 @@ public:
       int to,
       int count,
       std::vector<TYPE>& send_data) {
-      (void)to;
+      NULL_USE(to);
       send_data.resize(count);
       for (int i = 0; i < count; ++i) send_data[i] = (TYPE)(fr + count + i);
    }
@@ -59,7 +59,7 @@ public:
       const TYPE* recv_data,
       std::string& size_correct,
       std::string& data_correct) {
-      (void)to;
+      NULL_USE(to);
 
       bool rval = false;
       if (recv_size == count) size_correct = "SIZE OK";
@@ -162,7 +162,6 @@ void TypeIndependentTester<TYPE>::runTest(
            << "] recv fr " << std::setw(3) << peer_rank << std::endl;
    }
 
-   AsyncCommStage::MemberVec completed_members(1);
 
    /*
     * Test loop.  Each process will send and receive from every
@@ -179,19 +178,17 @@ void TypeIndependentTester<TYPE>::runTest(
        * or advanceAny, as controlled by input file.
        */
       if (use_advance_some) {
-         stage.advanceSome(completed_members);
+         stage.advanceSome();
       } else {
-         completed_members.resize(1);
-         completed_members[0] = stage.advanceAny();
-         if (completed_members[0] == NULL) completed_members.clear();
+         stage.advanceAny();
       }
 
       /*
        * Check completed members for correctness.
        */
-      for (size_t i = 0; i < completed_members.size(); ++i) {
+      while ( stage.numberOfCompletedMembers() > 0 ) {
 
-         AsyncCommStage::Member* completed_member = completed_members[i];
+         AsyncCommStage::Member* completed_member = stage.popCompletionQueue();
 
          /*
           * If there has been a completed prop, process it.
@@ -395,7 +392,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -412,7 +409,7 @@ int main(
        * all name strings in this program.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
 
@@ -552,7 +549,7 @@ int main(
       perr << "Process " << std::setw(5) << iproc << " got "
            << total_fail_count
            << " failures.  Aborting." << std::endl;
-      SAMRAI::tbox::Utilities::abort("Aborting due to nonzero fail count",
+      tbox::Utilities::abort("Aborting due to nonzero fail count",
          __FILE__, __LINE__);
    }
 

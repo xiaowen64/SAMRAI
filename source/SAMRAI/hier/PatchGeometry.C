@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
@@ -12,11 +12,8 @@
 #define included_hier_PatchGeometry_C
 
 #include "SAMRAI/hier/PatchGeometry.h"
-#include "SAMRAI/hier/BoundaryLookupTable.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchGeometry.I"
-#endif
+#include "SAMRAI/hier/BoundaryLookupTable.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -39,6 +36,10 @@ PatchGeometry::PatchGeometry(
    d_touches_regular_bdry(ratio_to_level_zero.getDim())
 
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(touches_periodic_bdry);
+#endif
+
    TBOX_DIM_ASSERT_CHECK_ARGS3(ratio_to_level_zero,
       touches_regular_bdry,
       touches_periodic_bdry);
@@ -160,7 +161,7 @@ PatchGeometry::setCodimensionBoundaries(
 #endif
 
    d_patch_boundaries[codim - 1].resizeArray(bdry_boxes.size(),
-      hier::BoundaryBox(d_dim));
+      BoundaryBox(d_dim));
 
    for (int b = 0; b < bdry_boxes.size(); b++) {
       d_patch_boundaries[codim - 1][b] = bdry_boxes[b];
@@ -176,7 +177,8 @@ PatchGeometry::setBoundaryBoxesOnPatch(
    }
 }
 
-void PatchGeometry::printClassData(
+void
+PatchGeometry::printClassData(
    std::ostream& stream) const
 {
    stream << "\nPatchGeometry::printClassData..." << std::endl;
@@ -192,6 +194,29 @@ void PatchGeometry::printClassData(
          stream << "box " << i << " = "
                 << d_patch_boundaries[d][i].getBox() << std::endl;
       }
+   }
+}
+
+PatchGeometry::TwoDimBool::TwoDimBool():
+   d_dim(tbox::Dimension::getInvalidDimension())
+{
+}
+
+PatchGeometry::TwoDimBool::TwoDimBool(
+   const tbox::Dimension& dim):
+   d_dim(dim)
+{
+   TBOX_DIM_ASSERT_CHECK_DIM(dim);
+   setAll(false);
+}
+
+PatchGeometry::TwoDimBool::TwoDimBool(
+   const tbox::Dimension& dim,
+   bool v):
+   d_dim(dim)
+{
+   for (int i = 0; i < 2 * d_dim.getValue(); ++i) {
+      d_data[i] = v;
    }
 }
 

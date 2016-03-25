@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface for factory objects that create transactions for
  *                oarsen schedules.
  *
@@ -14,9 +14,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Transaction.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/CoarsenClasses.h"
 
@@ -45,7 +44,7 @@ namespace xfer {
  * @see tbox::Transaction
  */
 
-class CoarsenTransactionFactory:public tbox::DescribedClass
+class CoarsenTransactionFactory
 {
 public:
    /*!
@@ -84,20 +83,19 @@ public:
     * This routine is called by the coarsen schedule during construction of the
     * schedule.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
-    * @param dst_patch_id   Integer index of destination patch in destination
-    *                       patch level.
-    * @param src_patch_id   Integer index of source patch in source patch level.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param dst_mapped_box Destination Box in destination patch level.
+    * @param src_mapped_box Source Box in source patch level.
     * @param citem_id       Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     */
-   virtual tbox::Pointer<tbox::Transaction>
+   virtual boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int citem_id) const = 0;

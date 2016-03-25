@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -16,13 +16,13 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -56,7 +56,7 @@ namespace hier {
  * @see hier::Patch
  */
 
-class PatchDescriptor:public tbox::DescribedClass
+class PatchDescriptor
 {
 public:
    /*!
@@ -66,10 +66,10 @@ public:
    PatchDescriptor();
 
    /*!
-    * The virtual destructor for a patch descriptor deallocates the
+    * The destructor for a patch descriptor deallocates the
     * internal data structures.
     */
-   virtual ~PatchDescriptor();
+   ~PatchDescriptor();
 
    /*!
     * Add a new patch data factory and name std::string identifier to the patch
@@ -87,7 +87,7 @@ public:
    int
    definePatchDataComponent(
       const std::string& name,
-      tbox::Pointer<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory>& factory);
 
    /*!
     * Deallocate the patch data factory in the patch descriptor identified by the
@@ -112,9 +112,13 @@ public:
     * @param id      int index of factory to return, which must be >= 0 and
     *                < the return value of getMaxNumberRegisteredComponents();
     */
-   tbox::Pointer<PatchDataFactory>
+   boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
-      int id) const;
+      int id) const
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_max_number_registered_components));
+      return d_factories[id];
+   }
 
    /*!
     * Retrieve a patch data factory by name std::string identifier.  Recall that
@@ -126,7 +130,7 @@ public:
     *
     * @param name    std::string name of factory.
     */
-   tbox::Pointer<PatchDataFactory>
+   boost::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
       const std::string& name) const;
 
@@ -144,7 +148,10 @@ public:
     * @return largest index assigned to this point.
     */
    int
-   getMaxNumberRegisteredComponents() const;
+   getMaxNumberRegisteredComponents() const
+   {
+      return d_max_number_registered_components;
+   }
 
    /*!
     * Lookup a factory by std::string name and return its integer index identifier.
@@ -161,7 +168,11 @@ public:
     */
    const std::string&
    mapIndexToName(
-      const int id) const;
+      const int id) const
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_max_number_registered_components));
+      return d_names[id];
+   }
 
    /*!
     * Return the IntVector indicating the maximum ghost cell width of all registered
@@ -191,12 +202,15 @@ public:
     */
    void
    setMinGhostWidth(
-      const IntVector& min_value);
+      const IntVector& min_value)
+   {
+      d_min_gcw[min_value.getDim().getValue() - 1] = min_value;
+   }
 
    /*!
     * Print patch descriptor data to given output stream (plog by default).
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream = tbox::plog) const;
 
@@ -214,8 +228,8 @@ private:
 
    int d_max_number_registered_components;
    tbox::Array<std::string> d_names;
-   tbox::Array<tbox::Pointer<PatchDataFactory> > d_factories;
-   tbox::List<int> d_free_indices;
+   tbox::Array<boost::shared_ptr<PatchDataFactory> > d_factories;
+   std::list<int> d_free_indices;
 
    /*!
     * @brief Value set by setMinGhostWidth().
@@ -226,7 +240,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchDescriptor.I"
-#endif
+
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -30,7 +30,7 @@ using namespace std;
 NodeDataTest::NodeDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -39,7 +39,7 @@ NodeDataTest::NodeDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -62,10 +62,11 @@ NodeDataTest::NodeDataTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   d_cart_grid_geometry = new geom::CartesianGridGeometry(
+   d_cart_grid_geometry.reset(
+      new geom::CartesianGridGeometry(
          dim,
          "CartesianGridGeometry",
-         main_input_db->getDatabase("CartesianGridGeometry"));
+         main_input_db->getDatabase("CartesianGridGeometry")));
 
    setGridGeometry(d_cart_grid_geometry);
 
@@ -78,10 +79,10 @@ NodeDataTest::~NodeDataTest()
 }
 
 void NodeDataTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -132,9 +133,10 @@ void NodeDataTest::registerVariables(
    d_variables.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables[i] = new pdat::NodeVariable<double>(d_dim,
-                                                      d_variable_src_name[i],
-                                                      d_variable_depth[i]);
+      d_variables[i].reset(
+         new pdat::NodeVariable<double>(d_dim,
+                                        d_variable_src_name[i],
+                                        d_variable_depth[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],
@@ -157,15 +159,17 @@ void NodeDataTest::registerVariables(
 }
 
 void NodeDataTest::setLinearData(
-   tbox::Pointer<pdat::NodeData<double> > data,
+   boost::shared_ptr<pdat::NodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -176,24 +180,25 @@ void NodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::NodeIterator ci(sbox); ci; ci++) {
+   pdat::NodeIterator ciend(sbox, false);
+   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
        * set data to linear profile.
        */
 
-      x = lowerx[0] + dx[0] * (ci() (0) - loweri(0));
+      x = lowerx[0] + dx[0] * ((*ci)(0) - loweri(0));
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + dx[1] * (ci() (1) - loweri(1));
+         y = lowerx[1] + dx[1] * ((*ci)(1) - loweri(1));
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + dx[2] * (ci() (2) - loweri(2));
+         z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
       for (int d = 0; d < depth; d++) {
-         (*data)(ci(), d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
+         (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
    }
@@ -201,12 +206,12 @@ void NodeDataTest::setLinearData(
 }
 
 void NodeDataTest::setPeriodicData(
-   tbox::Pointer<pdat::NodeData<double> > data,
+   boost::shared_ptr<pdat::NodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
    NULL_USE(patch);
 
@@ -217,25 +222,27 @@ void NodeDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::NodeIterator ni(sbox); ni; ni++) {
+   pdat::NodeIterator niend(sbox, false);
+   for (pdat::NodeIterator ni(sbox, true); ni != niend; ++ni) {
 
       double val = 1.0;
       for (int d = 0; d < d_dim.getValue(); ++d) {
-         double tmpf = dx[d] * ni() (d) / domain_len[d];
+         double tmpf = dx[d] * (*ni)(d) / domain_len[d];
          tmpf = sin(2 * M_PI * tmpf);
          val *= tmpf;
       }
       val = val + 20.0; // Shift function range to [1,3] to avoid bad floating point compares.
       for (int d = 0; d < depth; d++) {
-         (*data)(ni(), d) = val;
+         (*data)(*ni, d) = val;
       }
 
    }
@@ -244,7 +251,7 @@ void NodeDataTest::setPeriodicData(
 
 void NodeDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -260,8 +267,9 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = node_data->getBox();
 
@@ -277,8 +285,9 @@ void NodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = node_data->getGhostBox();
 
@@ -295,12 +304,12 @@ void NodeDataTest::initializeDataOnPatch(
 }
 
 void NodeDataTest::checkPatchInteriorData(
-   const tbox::Pointer<pdat::NodeData<double> >& data,
+   const boost::shared_ptr<pdat::NodeData<double> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
    const bool is_periodic =
@@ -309,20 +318,22 @@ void NodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   tbox::Pointer<pdat::NodeData<double> > correct_data(
-      new pdat::NodeData<double>(data->getBox(),
-                                 depth,
-                                 data->getGhostCellWidth()));
+   boost::shared_ptr<pdat::NodeData<double> > correct_data(
+      new pdat::NodeData<double>(
+         data->getBox(),
+         depth,
+         data->getGhostCellWidth()));
    if (is_periodic) {
       setPeriodicData(correct_data, correct_data->getGhostBox(), patch);
    } else {
       setLinearData(correct_data, correct_data->getGhostBox(), patch);
    }
 
-   for (pdat::NodeIterator ni(interior); ni; ni++) {
+   pdat::NodeIterator niend(interior, false);
+   for (pdat::NodeIterator ni(interior, true); ni != niend; ++ni) {
       for (int d = 0; d < depth; d++) {
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(ni(), d),
-                  (*correct_data)(ni(), d)))) {
+         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ni, d),
+                  (*correct_data)(*ni, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << endl;
          }
@@ -342,7 +353,9 @@ void NodeDataTest::setPhysicalBoundaryConditions(
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1));
    bool is_periodic = periodic_shift.max() > 0;
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -362,8 +375,9 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
-      tbox::Pointer<pdat::NodeData<double> > node_data =
-         patch.getPatchData(d_variables[i], getDataContext());
+      boost::shared_ptr<pdat::NodeData<double> > node_data(
+         patch.getPatchData(d_variables[i], getDataContext()),
+         boost::detail::dynamic_cast_tag());
 
       hier::Box patch_interior = node_data->getBox();
       checkPatchInteriorData(node_data, patch_interior, patch);
@@ -434,7 +448,7 @@ void NodeDataTest::setPhysicalBoundaryConditions(
  */
 bool NodeDataTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    NULL_USE(hierarchy);
@@ -458,7 +472,7 @@ bool NodeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::NodeData<double> > solution(
+      boost::shared_ptr<pdat::NodeData<double> > solution(
          new pdat::NodeData<double>(pbox, 1, tgcw));
 
       hier::Box gbox(pbox);
@@ -480,18 +494,20 @@ bool NodeDataTest::verifyResults(
 
       for (int i = 0; i < d_variables.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables[i], getDataContext());
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables[i], getDataContext()),
+            boost::detail::dynamic_cast_tag());
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         for (pdat::NodeIterator ci(dbox); ci; ci++) {
-            double correct = (*solution)(ci());
+         pdat::NodeIterator ciend(dbox, false);
+         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+            double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
-               double result = (*node_data)(ci(), d);
+               double result = (*node_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : node index = " << ci()
+                             << " : node index = " << *ci
                              << " of L" << level_number
                              << " P" << patch.getLocalId()
                              << " " << patch.getBox() << endl;
@@ -510,7 +526,7 @@ bool NodeDataTest::verifyResults(
          tbox::plog << "Node test Successful!" << endl;
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting NodeDataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

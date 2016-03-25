@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program to test statistics operations
  *
  ************************************************************************/
@@ -17,12 +17,13 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 using namespace std;
 
@@ -85,8 +86,8 @@ int main(
             mpi.getSize());
       }
 
-      tbox::Pointer<tbox::Database> restart_db =
-         tbox::RestartManager::getManager()->getRootDatabase();
+      boost::shared_ptr<tbox::Database> restart_db(
+         tbox::RestartManager::getManager()->getRootDatabase());
       NULL_USE(restart_db);
 
       /*
@@ -104,20 +105,20 @@ int main(
        * Create statistics.
        */
 
-      tbox::Pointer<tbox::Statistic> procstat1 =
-         statistician->getStatistic("procstat1", "PROC_STAT");
-      tbox::Pointer<tbox::Statistic> procstat2 =
-         statistician->getStatistic("procstat2", "PROC_STAT");
-      tbox::Pointer<tbox::Statistic> procstat3 =
-         statistician->getStatistic("procstat3", "PROC_STAT");
+      boost::shared_ptr<tbox::Statistic> procstat1(
+         statistician->getStatistic("procstat1", "PROC_STAT"));
+      boost::shared_ptr<tbox::Statistic> procstat2(
+         statistician->getStatistic("procstat2", "PROC_STAT"));
+      boost::shared_ptr<tbox::Statistic> procstat3(
+         statistician->getStatistic("procstat3", "PROC_STAT"));
       NULL_USE(procstat3);
 
-      tbox::Pointer<tbox::Statistic> patchstat1 =
-         statistician->getStatistic("patchstat1", "PATCH_STAT");
-      tbox::Pointer<tbox::Statistic> patchstat2 =
-         statistician->getStatistic("patchstat2", "PATCH_STAT");
-      tbox::Pointer<tbox::Statistic> patchstat3 =
-         statistician->getStatistic("patchstat3", "PATCH_STAT");
+      boost::shared_ptr<tbox::Statistic> patchstat1(
+         statistician->getStatistic("patchstat1", "PATCH_STAT"));
+      boost::shared_ptr<tbox::Statistic> patchstat2(
+         statistician->getStatistic("patchstat2", "PATCH_STAT"));
+      boost::shared_ptr<tbox::Statistic> patchstat3(
+         statistician->getStatistic("patchstat3", "PATCH_STAT"));
       NULL_USE(patchstat3);
 
       int myrank = mpi.getRank();
@@ -199,7 +200,7 @@ int main(
       }
 
       // Test #2:
-      tbox::Pointer<tbox::Statistic> tstat;
+      boost::shared_ptr<tbox::Statistic> tstat;
       if (!statistician->checkStatisticExists(tstat, "procstat2")) {
          fail_count++;
          tbox::perr
@@ -245,7 +246,7 @@ int main(
       } else {
          tbox::plog << "Test #2e successful" << endl;
       }
-      tstat.setNull();
+      tstat.reset();
 
       // Test #3:
       if (statistician->getProcStatId(procstat1->getName())

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for all schedule transactions
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/MessageStream.h"
 
 #include <iostream>
@@ -27,7 +26,7 @@ namespace tbox {
  * data transaction in a communication schedule.
  */
 
-class Transaction:public DescribedClass
+class Transaction
 {
 public:
    /**

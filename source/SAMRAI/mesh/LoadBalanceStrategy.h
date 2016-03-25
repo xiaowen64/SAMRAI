@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for box load balancing routines.
  *
  ************************************************************************/
@@ -14,10 +14,10 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RankGroup.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -34,10 +34,9 @@ namespace mesh {
  * new patches are mapped to processors.
  *
  * @see hier::PatchLevel
- * @see hier::ProcessorMapping
  */
 
-class LoadBalanceStrategy:public tbox::DescribedClass
+class LoadBalanceStrategy
 {
 public:
    /*!
@@ -131,7 +130,7 @@ public:
       hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
@@ -141,54 +140,6 @@ public:
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor, // Default v 2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const = 0;
-
-   /*!
-    * @brief Gather workloads in an MPI group and write out a summary
-    * of load balance efficiency.
-    *
-    * To be used for performance evaluation.  Not recommended for general use.
-    *
-    * @param[in] local_workload Workload of the local process
-    *
-    * @param[in] mpi Represents all processes involved in the load balancing.
-    *
-    * @param[in] output_stream
-    *
-    * TODO: This method is a utility that doesn't strictly belong in a
-    * strategy design pattern.  It should be moved elsewhere.
-    */
-   void
-   gatherAndReportLoadBalance(
-      double local_workload,
-      const tbox::SAMRAI_MPI& mpi,
-      std::ostream& output_stream = tbox::plog) const;
-
-   /*!
-    * @brief Gather a sequence of workloads in an MPI group and write
-    * out a summary of load balance efficiency.
-    *
-    * Each value in the sequence of workloads represent a certain load
-    * the local process had over a sequence of load balancings.
-    *
-    * To be used for performance evaluation.  Not recommended for general use.
-    *
-    * @param[in] local_workloads Sequence of workloads of the local
-    * process.  The size of @c local_loads is the number times load
-    * balancing has been used.  It must be the same across all
-    * processors in @c mpi.
-    *
-    * @param[in] mpi Represents all processes involved in the load balancing.
-    *
-    * @param[in] output_stream
-    *
-    * TODO: This method is a utility that doesn't strictly belong in a
-    * strategy design pattern.  It should be moved elsewhere.
-    */
-   void
-   gatherAndReportLoadBalance(
-      const std::vector<double>& local_loads,
-      const tbox::SAMRAI_MPI& mpi,
-      std::ostream& output_stream = tbox::plog) const;
 
 protected:
    /*!
@@ -216,26 +167,6 @@ protected:
       double load,
       int nbox);
 
-   /*!
-    * @brief Write out a short report of how well load is balanced.
-    *
-    * Given the workloads of a number of processes, format and write
-    * out a brief report for assessing how well balanced the workloads
-    * are.
-    *
-    * @param[in] workloads One value for each process.  The number of
-    * processes is taken to be the size of this container.
-    *
-    * @param[in] output_stream
-    *
-    * TODO: This method does not belong in a strategy base class and
-    * should be moved elsewhere.
-    */
-   static void
-   reportLoadBalance(
-      const std::vector<double>& workloads,
-      std::ostream& output_stream);
-
 private:
    // The following are not implemented:
    LoadBalanceStrategy(
@@ -245,22 +176,7 @@ private:
    operator = (
       const LoadBalanceStrategy&);
 
-   struct RankAndLoad {
-      int rank;
-      double load;
-   };
-
    static int s_sequence_number;
-
-   static int
-   qsortRankAndLoadCompareAscending(
-      const void* v,
-      const void* w);
-
-   static int
-   qsortRankAndLoadCompareDescending(
-      const void* v,
-      const void* w);
 
 };
 

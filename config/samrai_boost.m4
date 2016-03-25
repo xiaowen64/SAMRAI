@@ -10,7 +10,6 @@ AC_ARG_WITH(boost,
 
 case "$with_boost" in
   no)
-    AC_MSG_NOTICE([configuring without BOOST support])
     : Do nothing
   ;;
   yes)

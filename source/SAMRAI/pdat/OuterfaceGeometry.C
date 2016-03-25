@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -13,13 +13,11 @@
 
 #include "SAMRAI/pdat/OuterfaceGeometry.h"
 #include "SAMRAI/pdat/FaceGeometry.h"
-#include "SAMRAI/pdat/FaceOverlap.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuterfaceGeometry.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -59,7 +57,8 @@ OuterfaceGeometry::~OuterfaceGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+OuterfaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -76,7 +75,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
    const OuterfaceGeometry* t_src =
       dynamic_cast<const OuterfaceGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -99,7 +98,8 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::calculateOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+OuterfaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const OuterfaceGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -111,7 +111,6 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
    const tbox::Dimension& dim(src_mask.getDim());
 
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
-   const hier::IntVector& src_offset = transformation.getOffset();
 
    // Perform a quick-and-dirty intersection to see if the boxes might overlap
 
@@ -132,7 +131,8 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
 
    if (!quick_check.empty()) {
 
-      const hier::Box mask_shift(hier::Box::shift(src_mask, src_offset));
+      hier::Box mask_shift(src_mask);
+      transformation.transform(mask_shift);
 
       for (int d = 0; d < dim.getValue(); d++) {
 
@@ -177,9 +177,9 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
             hier::BoxContainer face_restrict_boxes;
-            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
-               face_restrict_boxes.pushBack(FaceGeometry::toFaceBox(b(), d));
+               face_restrict_boxes.pushBack(FaceGeometry::toFaceBox(*b, d));
             }
             dst_boxes[d].intersectBoxes(face_restrict_boxes);
          }
@@ -190,8 +190,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
 
    // Create the face overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -201,7 +200,7 @@ tbox::Pointer<hier::BoxOverlap> OuterfaceGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuterfaceGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -209,16 +208,15 @@ OuterfaceGeometry::setUpOverlap(
    const tbox::Dimension& dim(transformation.getOffset().getDim());
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
-         hier::Box face_box(FaceGeometry::toFaceBox(b(), d));
+         hier::Box face_box(FaceGeometry::toFaceBox(*b, d));
          dst_boxes[d].pushBack(face_box);
       }
    }
 
    // Create the face overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
 
 }
 

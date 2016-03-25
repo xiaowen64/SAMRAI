@@ -287,3 +287,6 @@ file_ignore BoxTree.C
 
 # SGS OpenMPI leak?
 #insure++.leaksummaryfilter -!  * opal_class_initialize *
+
+# WJA LIBC bug?
+insure++.suppress FREE_NULL { * vfprintf * }

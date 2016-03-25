@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for cell-centered float patch data.
  *
  ************************************************************************/
@@ -14,8 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -26,10 +26,6 @@ namespace pdat {
  * linear time interpolation for cell-centered float patch data.
  * It is derived from the hier::TimeInterpolateOperator base class.
  * The interpolation uses FORTRAN numerical routines.
- *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is a cell-centered float, and the string is
- * "STD_LINEAR_TIME_INTERPOLATE".
  *
  * @see hier::TimeInterpolateOperator
  */
@@ -47,15 +43,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CellFloatLinearTimeInterpolateOp();
-
-   /**
-    * Return true if the variable and name string match the standard
-    * cell-centered float interpolation; otherwise, return false.
-    */
-   bool
-   findTimeInterpolateOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * Perform time linear interpolation between two cell-centered float

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   $Description
  *
  ************************************************************************/
@@ -15,10 +15,6 @@
 #include "SAMRAI/pdat/IndexVariable.C"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Array.C"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/List.C"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -29,6 +25,9 @@
 #include "SAMRAI/pdat/IndexData.C"
 #include "SAMRAI/pdat/IndexDataFactory.h"
 #include "SAMRAI/pdat/IndexDataFactory.C"
+
+#include <boost/shared_ptr.hpp>
+#include <list>
 
 using namespace SAMRAI;
 using namespace hier;
@@ -82,13 +81,13 @@ public:
       NULL_USE(offset);
    }
 
-   void putToDatabase(
-      tbox::Pointer<tbox::Database> dbase)
+   void putUnregisteredToDatabase(
+      boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
    void getFromDatabase(
-      tbox::Pointer<tbox::Database> dbase)
+      boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
@@ -116,12 +115,9 @@ template class pdat::IndexIterator<Item, pdat::CellGeometry>;
 template class pdat::IndexVariable<Item, pdat::CellGeometry>;
 
 template class tbox::Array<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::List<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::ListIterator<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::ListNode<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
-template class tbox::Pointer<pdat::IndexData<Item, pdat::CellGeometry> >;
-template class tbox::Pointer<pdat::IndexVariable<Item, pdat::CellGeometry> >;
-template class tbox::Pointer<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;
+template class boost::shared_ptr<pdat::IndexData<Item, pdat::CellGeometry> >;
+template class boost::shared_ptr<pdat::IndexVariable<Item, pdat::CellGeometry> >;
+template class boost::shared_ptr<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;
 #endif
 
 int main(
@@ -137,7 +133,7 @@ int main(
 
       Index box_lo = Index(dim, 0);
       Index box_hi = Index(dim, 100);
-      Box box(box_lo, box_hi);
+      Box box(box_lo, box_hi, BlockId(0));
 
       srand(1);
 
@@ -285,10 +281,11 @@ int main(
          v[1] = 5;
          Index hi(v);
 
-         Box box1(lo, hi);
-         for (Box::Iterator bi(box1); bi; bi++) {
+         Box box1(lo, hi, BlockId(0));
+         hier::Box::iterator biend(box1, false);
+         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
 
-            Index idx = bi();
+            Index idx = *bi;
 
             idx_data.addItemPointer(idx, new Item);
 
@@ -312,10 +309,11 @@ int main(
          v[1] = 1;
          Index hi(v);
 
-         Box box1(lo, hi);
-         for (Box::Iterator bi(box1); bi; bi++) {
+         Box box1(lo, hi, BlockId(0));
+         hier::Box::iterator biend(box1, false);
+         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
 
-            Index idx = bi();
+            Index idx = *bi;
 
             idx_data.addItemPointer(idx, new Item);
 
@@ -342,9 +340,10 @@ int main(
          v[1] = 1;
          Index hi(v);
 
-         Box box1(lo, hi);
-         for (Box::Iterator bi(box1); bi; bi++) {
-            src.addItemPointer(bi(), new Item);
+         Box box1(lo, hi, BlockId(0));
+         hier::Box::iterator biend(box1, false);
+         for (Box::iterator bi(box1, true); bi != biend; ++bi) {
+            src.addItemPointer(*bi, new Item);
          }
 
          assert(src.getNumberOfItems() == box1.size());
@@ -368,7 +367,7 @@ int main(
          v[1] = 2;
          Index hi_src(v);
 
-         Box box_src(lo_src, hi_src);
+         Box box_src(lo_src, hi_src, BlockId(0));
          IndexData<Item, pdat::CellGeometry> src(box_src, ghosts);
 
          // Two of these three items should end up in dst
@@ -393,7 +392,7 @@ int main(
          v[0] = 3;
          v[1] = 3;
          Index hi_dst(v);
-         Box box_dst(lo_dst, hi_dst);
+         Box box_dst(lo_dst, hi_dst, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> dst(box_dst, ghosts);
 
@@ -441,7 +440,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi_src(v);
-         Box box_src(lo_src, hi_src);
+         Box box_src(lo_src, hi_src, BlockId(0));
          IndexData<Item, pdat::CellGeometry> src(box_src, ghosts);
 
          // Two of these three items should end up in dst
@@ -467,7 +466,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi_dst(v);
-         Box box_dst(lo_dst, hi_dst);
+         Box box_dst(lo_dst, hi_dst, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> dst(box_dst, ghosts);
 
@@ -503,7 +502,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi_src(v);
-         Box box_src(lo_src, hi_src);
+         Box box_src(lo_src, hi_src, BlockId(0));
          IndexData<Item, pdat::CellGeometry> src(box_src, ghosts);
 
          // Two of these three items should end up in dst
@@ -529,7 +528,7 @@ int main(
          v[0] = 3;
          v[1] = 3;
          Index hi_dst(v);
-         Box box_dst(lo_dst, hi_dst);
+         Box box_dst(lo_dst, hi_dst, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> dst(box_dst, ghosts);
 
@@ -549,7 +548,7 @@ int main(
          v[0] = 2;
          v[1] = 2;
          Index hi(v);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
          IndexData<Item, pdat::CellGeometry> data(data_box, ghosts);
 
          // Add three items
@@ -569,7 +568,9 @@ int main(
          data.addItemPointer(idx_item3, new Item);
 
          int count = 0;
-         for (IndexIterator<Item, pdat::CellGeometry> it(data); it; it++) {
+         IndexIterator<Item, pdat::CellGeometry> itend(data, false);
+         for (IndexIterator<Item, pdat::CellGeometry> it(data, true);
+              it != itend; ++it) {
             count++;
          }
          assert(3 == count);
@@ -577,16 +578,15 @@ int main(
 
       int size = 100;
       {
-         tbox::Pointer<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemSequential", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemSequential", true));
 
          tbox::plog << "Begin Timing" << endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -617,16 +617,15 @@ int main(
       }
 
       {
-         tbox::Pointer<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemPointerSequential", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemPointerSequential", true));
 
          tbox::plog << "Begin Timing" << endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -657,16 +656,15 @@ int main(
       int num_inserts = 100000;
 
       {
-         tbox::Pointer<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemRandom", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemRandom", true));
 
          tbox::plog << "Begin Timing" << endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -698,16 +696,15 @@ int main(
       }
 
       {
-         tbox::Pointer<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataAppendItemPointerRandom", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataAppendItemPointerRandom", true));
 
          tbox::plog << "Begin Timing" << endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 
@@ -738,16 +735,15 @@ int main(
       size = 100;
 
       {
-         tbox::Pointer<tbox::Timer> timer;
-
-         timer = tbox::TimerManager::getManager()->
-            getTimer("IndexDataReplace", true);
+         boost::shared_ptr<tbox::Timer> timer(
+            tbox::TimerManager::getManager()->
+            getTimer("IndexDataReplace", true));
 
          tbox::plog << "Begin Timing" << endl;
 
          Index lo = Index(dim, 0);
          Index hi = Index(dim, size);
-         Box data_box(lo, hi);
+         Box data_box(lo, hi, BlockId(0));
 
          IndexData<Item, pdat::CellGeometry> idx_data(data_box, ghosts);
 

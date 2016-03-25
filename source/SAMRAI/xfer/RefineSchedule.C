@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Refine schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -15,15 +15,12 @@
 #include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
 #include "SAMRAI/xfer/RefineCopyTransaction.h"
-#include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/RefineScheduleConnectorWidthRequestor.h"
 #include "SAMRAI/xfer/RefineTimeTransaction.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/BoxUtilities.h"
-#include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
@@ -38,7 +35,7 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <cassert>
+#include <boost/make_shared.hpp>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -57,29 +54,29 @@ static const std::string errbord("E-> ");
 bool RefineSchedule::s_extra_debug = false;
 bool RefineSchedule::s_barrier_and_time = false;
 
-tbox::Pointer<tbox::Timer> RefineSchedule::t_fill_data;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_recursive_fill;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_refine_scratch_data;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_finish_sched_const;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_gen_comm_sched;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_connector;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_modify_connector;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_make_seq_map;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_shear;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_misc1;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_barrier_and_time;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_get_global_mapped_box_count;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_coarse_shear;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_setup_coarse_interp_mapped_box_level;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_misc2;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_coarse_interp_hiercoarse;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_bridge_dst_hiercoarse;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_make_coarse_interp_level;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_make_coarse_interp_to_unfilled;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_invert_edges;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_construct_send_trans;
-tbox::Pointer<tbox::Timer> RefineSchedule::t_construct_recv_trans;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_fill_data;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_recursive_fill;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_refine_scratch_data;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_finish_sched_const_recurse;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_gen_comm_sched;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_connector;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_modify_connector;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_make_seq_map;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_shear;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_misc1;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_barrier_and_time;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_get_global_mapped_box_count;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_coarse_shear;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_setup_coarse_interp_mapped_box_level;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_misc2;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_coarse_interp_hiercoarse;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_bridge_dst_hiercoarse;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_make_coarse_interp_level;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_make_coarse_interp_to_unfilled;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_invert_edges;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_construct_send_trans;
+boost::shared_ptr<tbox::Timer> RefineSchedule::t_construct_recv_trans;
 
 tbox::StartupShutdownManager::Handler
 RefineSchedule::s_initialize_finalize_handler(
@@ -104,25 +101,35 @@ RefineSchedule::s_initialize_finalize_handler(
  */
 
 RefineSchedule::RefineSchedule(
-   tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
-   const tbox::Pointer<xfer::RefineClasses> refine_classes,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-   xfer::RefinePatchStrategy* patch_strategy,
+   const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<RefineClasses>& refine_classes,
+   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
+   d_number_refine_items(0),
+   d_refine_items((const RefineClasses::Data **)NULL),
+   d_dst_level(dst_level),
+   d_src_level(src_level),
+   d_refine_patch_strategy(patch_strategy),
+   d_transaction_factory(transaction_factory),
    d_max_stencil_width(dst_level->getDim()),
    d_max_scratch_gcw(dst_level->getDim()),
    d_boundary_fill_ghost_width(dst_level->getDim()),
+   d_force_boundary_fill(false),
+   d_num_periodic_directions(0),
    d_periodic_shift(dst_level->getDim()),
-   d_unfilled_mapped_box_level(),
-   d_unfilled_encon_box_level(),
+   d_coarse_priority_level_schedule(boost::make_shared<tbox::Schedule>()),
+   d_fine_priority_level_schedule(boost::make_shared<tbox::Schedule>()),
+   d_encon_level(boost::make_shared<hier::PatchLevel>(dst_level->getDim())),
+   d_max_fill_boxes(0),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
    if (patch_strategy) {
@@ -132,38 +139,14 @@ RefineSchedule::RefineSchedule(
 
    const tbox::Dimension& dim(dst_level->getDim());
 
-   d_transaction_factory = transaction_factory;
-
-   /*
-    * Initial values; some will change in setup operations.
-    */
-
-   d_dst_level = dst_level;
-   d_src_level = src_level;
-
-   d_refine_patch_strategy = patch_strategy;
-
-   d_number_refine_items = 0;
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
-
    setRefineItems(refine_classes);
    initialCheckRefineClassItems();
 
-   d_force_boundary_fill = false;
-
    d_domain_is_one_box.resizeArray(
       dst_level->getGridGeometry()->getNumberBlocks(), false);
-   d_num_periodic_directions = 0;
 
-   d_coarse_priority_level_schedule = new tbox::Schedule();
-   d_fine_priority_level_schedule = new tbox::Schedule();
    d_coarse_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
    d_fine_priority_level_schedule->setTimerPrefix("xfer::RefineSchedule");
-
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
-
-   d_max_fill_boxes = 0;
 
    /*
     * Initialize destination level, ghost cell widths,
@@ -213,7 +196,7 @@ RefineSchedule::RefineSchedule(
 
    BoxLevel fill_mapped_box_level(dim);
    Connector dst_to_fill;
-   NeighborhoodSet dst_to_fill_on_src_proc;
+   BoxNeighborhoodCollection dst_to_fill_on_src_proc;
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
       dst_to_fill,
@@ -232,10 +215,10 @@ RefineSchedule::RefineSchedule(
     * schedules that do not do anything to fill the parts of the
     * destination that can't be filled directly from the source.
     */
-   tbox::Pointer<BoxLevel> unused_unfilled_mapped_box_level;
-   tbox::Pointer<Connector> unused_dst_to_unfilled;
-   tbox::Pointer<BoxLevel> unused_unfilled_encon_box_level;
-   tbox::Pointer<Connector> unused_encon_to_unfilled_encon;
+   boost::shared_ptr<BoxLevel> unused_unfilled_mapped_box_level;
+   boost::shared_ptr<Connector> unused_dst_to_unfilled;
+   boost::shared_ptr<BoxLevel> unused_unfilled_encon_box_level;
+   boost::shared_ptr<Connector> unused_encon_to_unfilled_encon;
    bool create_transactions = true;
    generateCommunicationSchedule(
       unused_unfilled_mapped_box_level,
@@ -249,7 +232,7 @@ RefineSchedule::RefineSchedule(
       use_time_refinement,
       create_transactions);
 
-   if (!d_coarse_interp_level.isNull()) {
+   if (d_coarse_interp_level) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
          d_coarse_interp_level,
@@ -257,7 +240,7 @@ RefineSchedule::RefineSchedule(
          d_coarse_interp_to_unfilled);
    }
 
-   if (!d_coarse_interp_encon_level.isNull()) {
+   if (d_coarse_interp_encon_level) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
          d_coarse_interp_encon_level,
@@ -290,32 +273,40 @@ RefineSchedule::RefineSchedule(
  */
 
 RefineSchedule::RefineSchedule(
-   tbox::Pointer<PatchLevelFillPattern> dst_level_fill_pattern,
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
+   const boost::shared_ptr<PatchLevelFillPattern>& dst_level_fill_pattern,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
    int next_coarser_ln,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   const tbox::Pointer<xfer::RefineClasses> refine_classes,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-   xfer::RefinePatchStrategy* patch_strategy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<RefineClasses>& refine_classes,
+   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
+   RefinePatchStrategy* patch_strategy,
    bool use_time_refinement):
+   d_number_refine_items(0),
+   d_refine_items((const RefineClasses::Data **)NULL),
+   d_dst_level(dst_level),
+   d_src_level(src_level),
+   d_refine_patch_strategy(patch_strategy),
+   d_transaction_factory(transaction_factory),
    d_max_stencil_width(dst_level->getDim()),
    d_max_scratch_gcw(dst_level->getDim()),
    d_boundary_fill_ghost_width(dst_level->getDim()),
+   d_force_boundary_fill(false),
+   d_num_periodic_directions(0),
    d_periodic_shift(dst_level->getDim()),
-   d_unfilled_mapped_box_level(),
-   d_unfilled_encon_box_level(),
+   d_encon_level(boost::make_shared<hier::PatchLevel>(dst_level->getDim())),
+   d_max_fill_boxes(0),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
    d_constructing_internal_schedule(false)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
+   TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!src_level.isNull()) {
+   if (src_level) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
    }
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *hierarchy);
    }
    if (patch_strategy) {
@@ -325,36 +316,11 @@ RefineSchedule::RefineSchedule(
 
    const tbox::Dimension& dim(dst_level->getDim());
 
-   d_transaction_factory = transaction_factory;
-
-   /*
-    * Initial values; some will change in setup operations.
-    */
-
-   d_dst_level = dst_level;
-   d_src_level = src_level;
-
-   d_refine_patch_strategy = patch_strategy;
-
-   d_number_refine_items = 0;
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
-
    setRefineItems(refine_classes);
    initialCheckRefineClassItems();
 
-   d_force_boundary_fill = false;
-
    d_domain_is_one_box.resizeArray(
       dst_level->getGridGeometry()->getNumberBlocks(), false);
-   d_num_periodic_directions = 0;
-
-   d_coarse_priority_level_schedule.setNull();
-   d_fine_priority_level_schedule.setNull();
-
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
-
-   d_max_fill_boxes = 0;
 
    /*
     * Initialize destination level, ghost cell widths,
@@ -369,7 +335,7 @@ RefineSchedule::RefineSchedule(
    const Connector* dst_to_src = &dummy_connector;
    const Connector* src_to_dst = &dummy_connector;
 
-   if (!src_level.isNull()) {
+   if (src_level) {
       hier::IntVector min_connector_width = d_max_scratch_gcw;
       min_connector_width.max(d_boundary_fill_ghost_width);
 
@@ -400,7 +366,7 @@ RefineSchedule::RefineSchedule(
 
    BoxLevel fill_mapped_box_level(dim);
    Connector dst_to_fill;
-   NeighborhoodSet dst_to_fill_on_src_proc;
+   BoxNeighborhoodCollection dst_to_fill_on_src_proc;
 
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
@@ -438,7 +404,7 @@ RefineSchedule::RefineSchedule(
     * Compute the BoxOverlap objects that will be used to refine the
     * data from coarser levels onto the destination.
     */
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
          d_coarse_interp_level,
@@ -446,7 +412,7 @@ RefineSchedule::RefineSchedule(
          d_coarse_interp_to_unfilled);
    }
 
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
          d_coarse_interp_encon_level,
@@ -467,33 +433,43 @@ RefineSchedule::RefineSchedule(
  */
 
 RefineSchedule::RefineSchedule(
-   tbox::Pointer<hier::PatchLevel> dst_level,
-   tbox::Pointer<hier::PatchLevel> src_level,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
    int next_coarser_ln,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const hier::Connector& dst_to_src,
    const hier::Connector& src_to_dst,
    const hier::IntVector& src_growth_to_nest_dst,
-   const tbox::Pointer<xfer::RefineClasses> refine_classes,
-   tbox::Pointer<xfer::RefineTransactionFactory> transaction_factory,
-   xfer::RefinePatchStrategy* patch_strategy):
+   const boost::shared_ptr<RefineClasses>& refine_classes,
+   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory,
+   RefinePatchStrategy* patch_strategy):
+   d_number_refine_items(0),
+   d_refine_items((const RefineClasses::Data **)NULL),
+   d_dst_level(dst_level),
+   d_src_level(src_level),
+   d_refine_patch_strategy(patch_strategy),
+   d_transaction_factory(transaction_factory),
    d_max_stencil_width(dst_level->getDim()),
    d_max_scratch_gcw(dst_level->getDim()),
    d_boundary_fill_ghost_width(dst_level->getDim()),
+   d_force_boundary_fill(false),
+   d_domain_is_one_box(dst_level->getGridGeometry()->getNumberBlocks(), false),
+   d_num_periodic_directions(0),
    d_periodic_shift(dst_level->getDim()),
-   d_unfilled_mapped_box_level(),
-   d_unfilled_encon_box_level(),
+   d_encon_level(boost::make_shared<hier::PatchLevel>(dst_level->getDim())),
+   d_max_fill_boxes(0),
+   d_dst_level_fill_pattern(boost::make_shared<PatchLevelFullFillPattern>()),
    d_constructing_internal_schedule(true)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
+   TBOX_ASSERT(refine_classes);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!src_level.isNull()) {
+   if (src_level) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *src_level);
    }
-   if (!hierarchy.isNull()) {
+   if (hierarchy) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*dst_level, *hierarchy);
    }
    if (patch_strategy) {
@@ -503,8 +479,6 @@ RefineSchedule::RefineSchedule(
 
    const tbox::Dimension& dim(dst_level->getDim());
 
-   d_transaction_factory = transaction_factory;
-
    /*
     * Initial values; some will change in setup operations.
     * Note that we do not check refine items here, since this
@@ -512,31 +486,7 @@ RefineSchedule::RefineSchedule(
     * items have been checked already).
     */
 
-   d_dst_level = dst_level;
-   d_src_level = src_level;
-
-   d_refine_patch_strategy = patch_strategy;
-
-   d_number_refine_items = 0;
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
-
    setRefineItems(refine_classes);
-
-   d_force_boundary_fill = false;
-
-   d_domain_is_one_box.resizeArray(
-      dst_level->getGridGeometry()->getNumberBlocks(), false);
-   d_num_periodic_directions = 0;
-
-   d_coarse_priority_level_schedule.setNull();
-   d_fine_priority_level_schedule.setNull();
-
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
-
-   d_max_fill_boxes = 0;
-
-   d_dst_level_fill_pattern = new PatchLevelFullFillPattern();
 
    /*
     * Initialize destination level, ghost cell widths,
@@ -569,7 +519,7 @@ RefineSchedule::RefineSchedule(
 
    BoxLevel fill_mapped_box_level(dim);
    Connector dst_to_fill;
-   NeighborhoodSet dst_to_fill_on_src_proc;
+   BoxNeighborhoodCollection dst_to_fill_on_src_proc;
    setDefaultFillBoxLevel(
       fill_mapped_box_level,
       dst_to_fill,
@@ -604,7 +554,7 @@ RefineSchedule::RefineSchedule(
     * data from coarser levels onto the destination.
     */
 
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       computeRefineOverlaps(d_refine_overlaps,
          d_dst_level,
          d_coarse_interp_level,
@@ -612,7 +562,7 @@ RefineSchedule::RefineSchedule(
          d_coarse_interp_to_unfilled);
    }
 
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
       computeRefineOverlaps(d_encon_refine_overlaps,
          d_encon_level,
          d_coarse_interp_encon_level,
@@ -634,12 +584,6 @@ RefineSchedule::RefineSchedule(
 RefineSchedule::~RefineSchedule()
 {
    clearRefineItems();
-
-   d_coarse_priority_level_schedule.setNull();
-   d_fine_priority_level_schedule.setNull();
-
-   d_coarse_interp_schedule.setNull();
-   d_coarse_interp_level.setNull();
 }
 
 /*
@@ -650,38 +594,19 @@ RefineSchedule::~RefineSchedule()
  ************************************************************************
  */
 
-void RefineSchedule::reset(
-   const tbox::Pointer<xfer::RefineClasses> refine_classes)
+void
+RefineSchedule::reset(
+   const boost::shared_ptr<RefineClasses>& refine_classes)
 {
-   TBOX_ASSERT(!refine_classes.isNull());
+   TBOX_ASSERT(refine_classes);
 
    setRefineItems(refine_classes);
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       d_coarse_interp_schedule->reset(refine_classes);
    }
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
       d_coarse_interp_encon_schedule->reset(refine_classes);
    }
-}
-
-/*
- **************************************************************************
- *
- * Return const pointer to equivalence classes used in schedule.
- *
- **************************************************************************
- */
-
-const tbox::Pointer<xfer::RefineClasses>&
-RefineSchedule::getEquivalenceClasses() const
-{
-   return d_refine_classes;
-}
-
-const hier::IntVector&
-RefineSchedule::getBoundaryFillGhostWidth() const
-{
-   return d_boundary_fill_ghost_width;
 }
 
 /*
@@ -702,20 +627,21 @@ RefineSchedule::getBoundaryFillGhostWidth() const
  ************************************************************************
  */
 
-void RefineSchedule::finishScheduleConstruction(
+void
+RefineSchedule::finishScheduleConstruction(
    int next_coarser_ln,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const Connector& dst_to_src,
    const Connector& src_to_dst,
    const bool dst_is_coarse_interp_level,
    const hier::IntVector& src_growth_to_nest_dst,
    const Connector& dst_to_fill,
-   const NeighborhoodSet& dst_to_fill_on_src_proc,
+   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    bool use_time_interpolation,
    bool skip_generate_schedule)
 {
    t_finish_sched_const->start();
-   TBOX_ASSERT((next_coarser_ln == -1) || !hierarchy.isNull());
+   TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
 
    // Get data that will be used below.
 
@@ -725,14 +651,14 @@ void RefineSchedule::finishScheduleConstruction(
    hier::OverlapConnectorAlgorithm oca;
 
    const BoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
-   if (!d_src_level.isNull()) {
+   if (d_src_level) {
       // Should never have a source without connection from destination.
       TBOX_ASSERT(dst_to_src.isFinalized());
    }
 
 
-   d_coarse_priority_level_schedule = new tbox::Schedule();
-   d_fine_priority_level_schedule = new tbox::Schedule();
+   d_coarse_priority_level_schedule.reset(new tbox::Schedule());
+   d_fine_priority_level_schedule.reset(new tbox::Schedule());
 
    /*
     * Generate the schedule for filling the boxes in dst_to_fill.
@@ -744,13 +670,13 @@ void RefineSchedule::finishScheduleConstruction(
     * into unfilled boxes.
     */
 
-   tbox::Pointer<Connector> dst_to_unfilled;
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry(
+   boost::shared_ptr<Connector> dst_to_unfilled;
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry(
       d_dst_level->getGridGeometry());
-   tbox::Pointer<Connector> encon_to_unfilled_encon;
+   boost::shared_ptr<Connector> encon_to_unfilled_encon;
 
    bool create_transactions = true;
-   if (d_src_level.isNull() || skip_generate_schedule) {
+   if (!d_src_level || skip_generate_schedule) {
       create_transactions = false;
    }
 
@@ -829,7 +755,7 @@ void RefineSchedule::finishScheduleConstruction(
             << "\n dst_to_src:\n" << dst_to_src.format("DS->", 2)
             << std::endl);
       } else {
-         if (hierarchy.isNull()) {
+         if (!hierarchy) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n In finishScheduleConstruction() -- "
                << "\n Need to fill from coarser hierarchy level and \n"
@@ -842,8 +768,8 @@ void RefineSchedule::finishScheduleConstruction(
        * differentiated from the coarse interpolation (coarse_interp) level, which is at
        * the same resolution and level number but is not on the hierarchy.
        */
-      const tbox::Pointer<hier::PatchLevel> hiercoarse_level =
-         hierarchy->getPatchLevel(next_coarser_ln);
+      const boost::shared_ptr<hier::PatchLevel> hiercoarse_level(
+         hierarchy->getPatchLevel(next_coarser_ln));
 
       const hier::BoxLevel& hiercoarse_mapped_box_level(
          *hiercoarse_level->getBoxLevel());
@@ -947,11 +873,11 @@ void RefineSchedule::finishScheduleConstruction(
        * BoxGeometryVariableFillPattern, so that it fills all needed
        * parts of d_coarse_interp_level
        */
-      tbox::Pointer<BoxGeometryVariableFillPattern> bg_fill_pattern(
-         new BoxGeometryVariableFillPattern());
+      boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern(
+         boost::make_shared<BoxGeometryVariableFillPattern>());
 
-      tbox::Pointer<RefineClasses> coarse_schedule_refine_classes(
-         new RefineClasses());
+      boost::shared_ptr<RefineClasses> coarse_schedule_refine_classes(
+         boost::make_shared<RefineClasses>());
 
       const int num_refine_items =
          d_refine_classes->getNumberOfRefineItems();
@@ -964,7 +890,7 @@ void RefineSchedule::finishScheduleConstruction(
 
       t_finish_sched_const->stop();
 
-      d_coarse_interp_schedule = new RefineSchedule(d_coarse_interp_level,
+      d_coarse_interp_schedule.reset(new RefineSchedule(d_coarse_interp_level,
             hiercoarse_level,
             next_coarser_ln - 1,
             hierarchy,
@@ -973,7 +899,7 @@ void RefineSchedule::finishScheduleConstruction(
             hiercoarse_growth_to_nest_coarse_interp,
             coarse_schedule_refine_classes,
             d_transaction_factory,
-            d_refine_patch_strategy);
+            d_refine_patch_strategy));
 
    } else {
       t_finish_sched_const->stop();
@@ -985,8 +911,8 @@ void RefineSchedule::finishScheduleConstruction(
        * Create schedule to fill unfilled boxes at enhanced connectivity
        */
 
-      const tbox::Pointer<hier::PatchLevel> hiercoarse_level =
-         hierarchy->getPatchLevel(next_coarser_ln);
+      const boost::shared_ptr<hier::PatchLevel> hiercoarse_level(
+         hierarchy->getPatchLevel(next_coarser_ln));
 
       createEnconFillSchedule(
          hierarchy,
@@ -1009,8 +935,8 @@ void RefineSchedule::finishScheduleConstruction(
  */
 void
 RefineSchedule::createEnconFillSchedule(
-   const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
-   const tbox::Pointer<hier::PatchLevel>& hiercoarse_level,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchLevel>& hiercoarse_level,
    const bool dst_is_coarse_interp_level,
    const hier::IntVector& src_growth_to_nest_dst,
    const hier::Connector& encon_to_unfilled_encon)
@@ -1077,11 +1003,11 @@ RefineSchedule::createEnconFillSchedule(
     * BoxGeometryVariableFillPattern, so that it fills all needed parts of
     * d_coarse_interp_encon_level
     */
-   tbox::Pointer<BoxGeometryVariableFillPattern> bg_fill_pattern(
-      new BoxGeometryVariableFillPattern());
+   boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern(
+      boost::make_shared<BoxGeometryVariableFillPattern>());
 
-   tbox::Pointer<RefineClasses> coarse_schedule_refine_classes(
-      new RefineClasses());
+   boost::shared_ptr<RefineClasses> coarse_schedule_refine_classes(
+      boost::make_shared<RefineClasses>());
 
    const int num_refine_items =
       d_refine_classes->getNumberOfRefineItems();
@@ -1095,7 +1021,7 @@ RefineSchedule::createEnconFillSchedule(
    /*
     * Schedule to fill d_coarse_interp_encon_level
     */
-   d_coarse_interp_encon_schedule = new RefineSchedule(
+   d_coarse_interp_encon_schedule.reset(new RefineSchedule(
       d_coarse_interp_encon_level,
       hiercoarse_level,
       next_coarser_ln - 1,
@@ -1105,7 +1031,7 @@ RefineSchedule::createEnconFillSchedule(
       hiercoarse_growth_to_nest_coarse_interp_encon,
       coarse_schedule_refine_classes,
       d_transaction_factory,
-      d_refine_patch_strategy);
+      d_refine_patch_strategy));
 
 }
 
@@ -1122,10 +1048,11 @@ RefineSchedule::createEnconFillSchedule(
  **************************************************************************
  */
 
-void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
+void
+RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    hier::BoxLevel& unfilled,
    hier::Connector& dst_to_unfilled,
-   const tbox::Pointer<hier::PatchHierarchy>& hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    const tbox::Dimension& dim(unfilled.getDim());
 
@@ -1161,7 +1088,7 @@ void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
    hier::MappingConnectorAlgorithm mca;
    mca.modify(dst_to_unfilled,
       unfilled_to_sheared,
-      d_unfilled_mapped_box_level.getPointer());
+      d_unfilled_mapped_box_level.get());
    t_modify_connector->stop();
    dst_to_unfilled.eraseEmptyNeighborSets();
 
@@ -1190,7 +1117,8 @@ void RefineSchedule::shearUnfilledBoxesOutsideNonperiodicBoundaries(
  * coarse interpolation Boxes it generated.
  **************************************************************************
  */
-void RefineSchedule::setupCoarseInterpBoxLevel(
+void
+RefineSchedule::setupCoarseInterpBoxLevel(
    hier::BoxLevel &coarse_interp_mapped_box_level,
    hier::Connector &dst_to_coarse_interp,
    hier::Connector &coarse_interp_to_dst,
@@ -1208,7 +1136,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
 
    const bool fully_periodic = d_num_periodic_directions == dim.getValue();
 
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geometry(
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geometry(
       dst_to_unfilled.getBase().getGridGeometry());
 
    const int nblocks(grid_geometry->getNumberBlocks());
@@ -1291,8 +1219,6 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
 
       const hier::BoxId& dst_mapped_box_mbid = *ei;
 
-      const int dst_blk = dst_mapped_box_mbid.getBlockId().getBlockValue();
-
       hier::Connector::NeighborhoodIterator dst_base_box_itr =
          dst_to_coarse_interp.findLocal(dst_mapped_box_mbid);
       bool has_base_box = dst_base_box_itr != dst_to_coarse_interp.end();
@@ -1307,6 +1233,8 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
           * restrictions.
           */
          const hier::Box& unfilled_mapped_box = *ni;
+         const int dst_blk = unfilled_mapped_box.getBlockId().getBlockValue();
+
          hier::Box coarse_interp_box(unfilled_mapped_box);
          coarse_interp_box.coarsen(dst_hiercoarse_ratio);
 
@@ -1332,7 +1260,7 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
                      dst_mapped_box_mbid);
                has_base_box = true;
             }
-            for (hier::BoxContainer::Iterator b(sheared_coarse_interp_boxes);
+            for (hier::BoxContainer::iterator b(sheared_coarse_interp_boxes);
                  b != sheared_coarse_interp_boxes.end(); ++b) {
                const hier::Box& coarse_interp_mapped_box =
                   *coarse_interp_mapped_box_level.addBox(*b, ni->getBlockId());
@@ -1369,20 +1297,23 @@ void RefineSchedule::setupCoarseInterpBoxLevel(
  * filling the coarse interpolation level.
  **************************************************************************
  */
-void RefineSchedule::createCoarseInterpPatchLevel(
-   tbox::Pointer<hier::PatchLevel>& coarse_interp_level,
+void
+RefineSchedule::createCoarseInterpPatchLevel(
+   boost::shared_ptr<hier::PatchLevel>& coarse_interp_level,
    hier::BoxLevel& coarse_interp_mapped_box_level,
    hier::Connector &coarse_interp_to_hiercoarse,
    hier::Connector &hiercoarse_to_coarse_interp,
-   const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int next_coarser_ln,
    const hier::Connector &dst_to_src,
    const hier::Connector &src_to_dst,
    const hier::Connector &coarse_interp_to_dst,
    const hier::Connector &dst_to_coarse_interp,
-   const tbox::Pointer<hier::PatchLevel> &dst_level, 
+   const boost::shared_ptr<hier::PatchLevel> &dst_level, 
    const bool dst_is_coarse_interp_level )
 {
+   const tbox::Dimension& dim(hierarchy->getDim());
+
    hier::OverlapConnectorAlgorithm oca;
    hier::BoxLevelConnectorUtils edge_utils;
 
@@ -1396,7 +1327,7 @@ void RefineSchedule::createCoarseInterpPatchLevel(
       fine_connector_widths,
       *hierarchy);
 
-   const tbox::Pointer<hier::PatchLevel> hiercoarse_level(
+   const boost::shared_ptr<hier::PatchLevel> hiercoarse_level(
       hierarchy->getPatchLevel(next_coarser_ln));
 
    const hier::BoxLevel& hiercoarse_mapped_box_level(
@@ -1426,13 +1357,15 @@ void RefineSchedule::createCoarseInterpPatchLevel(
 
    if (dst_is_coarse_interp_level) {
 
-      const hier::BoxLevel& src_mapped_box_level =
-         dst_to_src.getHead();
-      if (hierarchy->getBoxLevel(next_coarser_ln + 1).getPointer() !=
-          &src_mapped_box_level) {
+      const hier::BoxLevel& src_box_level =
+         *(d_src_level->getBoxLevel());
+      if (hierarchy->getBoxLevel(next_coarser_ln + 1).get() !=
+          &src_box_level) {
          TBOX_ERROR("Missing dst<==>hiercoarse connector and\n"
             << "src is not from hierarchy.");
       }
+
+      const hier::BoxLevel& dst_box_level = dst_to_src.getBase();
 
       const hier::IntVector& hiercoarse_to_src_width =
          fine_connector_widths[next_coarser_ln];
@@ -1473,21 +1406,66 @@ void RefineSchedule::createCoarseInterpPatchLevel(
             *d_src_level->getBoxLevel(),
             hiercoarse_to_src_width);
 
-      if (s_barrier_and_time) {
-         t_bridge_dst_hiercoarse->barrierAndStart();
-      }
+      const hier::IntVector& src_to_dst_width = src_to_dst.getConnectorWidth();
+      const hier::IntVector& dst_to_src_width = dst_to_src.getConnectorWidth();
+      if (src_to_dst_width > hier::IntVector::getZero(dim) &&
+          dst_to_src_width > hier::IntVector::getZero(dim)) {
 
-      oca.bridge(
-         bridged_dst_to_hiercoarse,
-         bridged_hiercoarse_to_dst,
-         dst_to_src,
-         src_to_hiercoarse,
-         hiercoarse_to_src,
-         src_to_dst,
-         fine_connector_widths[next_coarser_ln]);
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->barrierAndStart();
+         }
 
-      if (s_barrier_and_time) {
-         t_bridge_dst_hiercoarse->stop();
+         oca.bridge(
+            bridged_dst_to_hiercoarse,
+            bridged_hiercoarse_to_dst,
+            dst_to_src,
+            src_to_hiercoarse,
+            hiercoarse_to_src,
+            src_to_dst,
+            fine_connector_widths[next_coarser_ln]);
+
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->stop();
+         }
+      } else {
+         /*
+          * This should be entered when setting up recursive schedules for
+          * enhanced connectivity. 
+          */
+ 
+         hier::IntVector connector_width(src_to_dst_width); 
+         connector_width.max(hier::IntVector::getOne(dim));
+         const hier::Connector& found_src_to_dst =
+            src_box_level.getPersistentOverlapConnectors()
+            .findConnector(
+               dst_box_level,
+               connector_width);
+
+         connector_width = dst_to_src_width;
+         connector_width.max(hier::IntVector::getOne(dim));
+         const hier::Connector& found_dst_to_src =
+            dst_box_level.getPersistentOverlapConnectors()
+            .findConnector(
+               src_box_level,
+               connector_width);
+
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->barrierAndStart();
+         }
+
+         oca.bridge(
+            bridged_dst_to_hiercoarse,
+            bridged_hiercoarse_to_dst,
+            found_dst_to_src,
+            src_to_hiercoarse,
+            hiercoarse_to_src,
+            found_src_to_dst,
+            fine_connector_widths[next_coarser_ln]);
+
+         if (s_barrier_and_time) {
+            t_bridge_dst_hiercoarse->stop();
+         }
+
       }
 
       bridged_dst_to_hiercoarse.removePeriodicRelationships();
@@ -1566,7 +1544,7 @@ void RefineSchedule::createCoarseInterpPatchLevel(
          coarse_interp_mapped_box_level,
          coarse_interp_to_hiercoarse,
          hiercoarse_to_coarse_interp,
-         hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId(0)),
+         hierarchy->getGridGeometry()->getDomainSearchTree(),
          hiercoarse_to_hiercoarse);
 
    }
@@ -1586,10 +1564,10 @@ void RefineSchedule::createCoarseInterpPatchLevel(
     */
 
    t_make_coarse_interp_level->start();
-   coarse_interp_level = new hier::PatchLevel(
+   coarse_interp_level.reset(new hier::PatchLevel(
          coarse_interp_mapped_box_level,
          hiercoarse_level->getGridGeometry(),
-         hiercoarse_level->getPatchDescriptor());
+         hiercoarse_level->getPatchDescriptor()));
    t_make_coarse_interp_level->stop();
    coarse_interp_level->setLevelNumber(next_coarser_ln);
    coarse_interp_level->setNextCoarserHierarchyLevelNumber(next_coarser_ln - 1);
@@ -1608,10 +1586,11 @@ void RefineSchedule::createCoarseInterpPatchLevel(
  * BoxLevel sufficiently nests inside the hiercoarse.
  **************************************************************************
  */
-void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
+void
+RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
    const hier::Connector& coarse_interp_to_hiercoarse,
    const hier::Connector& hiercoarse_to_coarse_interp,
-   const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int next_coarser_ln)
 {
 
@@ -1716,7 +1695,8 @@ void RefineSchedule::sanityCheckCoarseInterpAndHiercoarseLevels(
  **************************************************************************
  */
 
-void RefineSchedule::fillData(
+void
+RefineSchedule::fillData(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
@@ -1798,7 +1778,8 @@ void RefineSchedule::fillData(
  **************************************************************************
  */
 
-void RefineSchedule::recursiveFill(
+void
+RefineSchedule::recursiveFill(
    double fill_time,
    bool do_physical_boundary_fill) const
 {
@@ -1814,7 +1795,7 @@ void RefineSchedule::recursiveFill(
     * need to get data from a coarser grid level.
     */
 
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
 
       /*
        * Allocate data on the coarser level and keep track of the allocated
@@ -1862,7 +1843,7 @@ void RefineSchedule::recursiveFill(
 
    }
 
-   if (!d_coarse_interp_encon_schedule.isNull()) {
+   if (d_coarse_interp_encon_schedule) {
 
       /*
        * Allocate data on the coarser level and keep track of the allocated
@@ -1937,16 +1918,18 @@ void RefineSchedule::recursiveFill(
  **************************************************************************
  */
 
-void RefineSchedule::fillPhysicalBoundaries(
+void
+RefineSchedule::fillPhysicalBoundaries(
    double fill_time) const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
    d_dst_level->setBoundaryBoxes();
 
    if (d_refine_patch_strategy) {
-      for (hier::PatchLevel::Iterator p(d_dst_level); p; p++) {
-         tbox::Pointer<hier::Patch> patch(*p);
+      for (hier::PatchLevel::iterator p(d_dst_level->begin());
+           p != d_dst_level->end(); ++p) {
+         const boost::shared_ptr<hier::Patch>& patch(*p);
          if (patch->getPatchGeometry()->intersectsPhysicalBoundary()) {
             d_refine_patch_strategy->
             setPhysicalBoundaryConditions(*patch,
@@ -1965,12 +1948,13 @@ void RefineSchedule::fillPhysicalBoundaries(
  *
  ********************************************************************
  */
-void RefineSchedule::fillSingularityBoundaries(
+void
+RefineSchedule::fillSingularityBoundaries(
    double fill_time) const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
-   tbox::Pointer<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
    if (grid_geometry->getNumberBlocks() > 1) {
@@ -1989,23 +1973,26 @@ void RefineSchedule::fillSingularityBoundaries(
 
             const hier::BoxContainer& sing_boxes =
                grid_geometry->getSingularityBoxContainer(block_id);
-            for (hier::BoxContainer::ConstIterator sb(sing_boxes);
+            for (hier::BoxContainer::const_iterator sb(sing_boxes);
                  sb != sing_boxes.end(); ++sb) {
 
-               hier::Box singularity(sb());
+               hier::Box singularity(*sb);
                singularity.refine(ratio);
 
+               const hier::BoxContainer& level_boxes(
+                  d_dst_level->getBoxLevel()->getBoxes());
                hier::BoxContainerSingleBlockIterator dst_local_iter(
-                  d_dst_level->getBoxLevel()->getBoxes(), block_id);
+                  level_boxes.begin(block_id));
 
-               for ( ; dst_local_iter.isValid(); dst_local_iter++) {
+               for ( ; dst_local_iter != level_boxes.end(block_id);
+                    ++dst_local_iter) {
 
                   const hier::BoxId& mapped_box_id =
                      dst_local_iter->getId();
 
-                  tbox::Pointer<hier::Patch> patch(
+                  boost::shared_ptr<hier::Patch> patch(
                      d_dst_level->getPatch(mapped_box_id));
-                  tbox::Pointer<hier::PatchGeometry> pgeom(
+                  boost::shared_ptr<hier::PatchGeometry> pgeom(
                      patch->getPatchGeometry());
 
                   tbox::Array<hier::BoundaryBox> nboxes =
@@ -2079,12 +2066,13 @@ void RefineSchedule::fillSingularityBoundaries(
  **************************************************************************
  */
 
-void RefineSchedule::allocateScratchSpace(
+void
+RefineSchedule::allocateScratchSpace(
    hier::ComponentSelector& allocate_vector,
-   tbox::Pointer<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    double fill_time) const
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
    allocate_vector.clrAllFlags();
 
@@ -2100,48 +2088,10 @@ void RefineSchedule::allocateScratchSpace(
 
    level->allocatePatchData(allocate_vector, fill_time);
 
-   if (!d_transaction_factory.isNull()) {
+   if (d_transaction_factory) {
       d_transaction_factory->preprocessScratchSpace(level,
          fill_time,
          preprocess_vector);
-   }
-}
-
-/*
- **************************************************************************
- *
- * Fill the component selector argument with the components needed to
- * allocate source data.
- *
- **************************************************************************
- */
-
-void RefineSchedule::initializeSourceVector(
-   hier::ComponentSelector& allocate_vector) const
-{
-   allocate_vector.clrAllFlags();
-
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
-      allocate_vector.setFlag(d_refine_items[iri]->d_src);
-   }
-}
-
-/*
- * ************************************************************************
- *
- * Fill the component selector argument with the components needed to
- * allocate destination data.
- *
- * ************************************************************************
- */
-
-void RefineSchedule::initializeDestinationVector(
-   hier::ComponentSelector& allocate_vector) const
-{
-   allocate_vector.clrAllFlags();
-
-   for (int iri = 0; iri < d_number_refine_items; iri++) {
-      allocate_vector.setFlag(d_refine_items[iri]->d_dst);
    }
 }
 
@@ -2154,11 +2104,12 @@ void RefineSchedule::initializeDestinationVector(
  **************************************************************************
  */
 
-void RefineSchedule::allocateDestinationSpace(
+void
+RefineSchedule::allocateDestinationSpace(
    hier::ComponentSelector& allocate_vector,
    double fill_time) const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
    allocate_vector.clrAllFlags();
 
@@ -2182,12 +2133,14 @@ void RefineSchedule::allocateDestinationSpace(
  **************************************************************************
  */
 
-void RefineSchedule::copyScratchToDestination() const
+void
+RefineSchedule::copyScratchToDestination() const
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
+   TBOX_ASSERT(d_dst_level);
 
-   for (hier::PatchLevel::Iterator p(d_dst_level); p; p++) {
-      tbox::Pointer<hier::Patch> patch(*p);
+   for (hier::PatchLevel::iterator p(d_dst_level->begin());
+        p != d_dst_level->end(); ++p) {
+      const boost::shared_ptr<hier::Patch>& patch(*p);
 
       for (int iri = 0; iri < d_number_refine_items; iri++) {
          const int src_id = d_refine_items[iri]->d_scratch;
@@ -2213,12 +2166,13 @@ void RefineSchedule::copyScratchToDestination() const
  **************************************************************************
  */
 
-void RefineSchedule::refineScratchData(
-   const tbox::Pointer<hier::PatchLevel>& fine_level,
-   const tbox::Pointer<hier::PatchLevel>& coarse_level,
+void
+RefineSchedule::refineScratchData(
+   const boost::shared_ptr<hier::PatchLevel>& fine_level,
+   const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const Connector& coarse_to_fine,
    const Connector& coarse_to_unfilled,
-   const tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >&
+   const std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >&
    overlaps) const
 {
    t_refine_scratch_data->start();
@@ -2226,16 +2180,16 @@ void RefineSchedule::refineScratchData(
    const hier::IntVector ratio(fine_level->getRatioToLevelZero()
                                / coarse_level->getRatioToLevelZero());
 
-   tbox::ListIterator<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >
-   overlap_iter(overlaps);
+   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >::const_iterator
+   overlap_iter(overlaps.begin());
 
    /*
     * Loop over all the coarse patches and find the corresponding
     * destination patch and destination fill boxes.
     */
 
-   for ( hier::PatchLevel::Iterator crse_itr(*coarse_level);
-         crse_itr; ++crse_itr, overlap_iter++ )
+   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
+         crse_itr != coarse_level->end(); ++crse_itr, ++overlap_iter )
    {
       const hier::Box& crse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator dst_nabrs =
@@ -2255,12 +2209,10 @@ void RefineSchedule::refineScratchData(
          TBOX_ASSERT(na->getGlobalId() == dst_mapped_box.getGlobalId());
       }
 #endif
-      tbox::Pointer<hier::Patch> fine_patch(fine_level->getPatch(
-                                               dst_mapped_box.getGlobalId(),
-                                               crse_mapped_box.getBlockId()));
-      tbox::Pointer<hier::Patch> crse_patch(coarse_level->getPatch(
-                                               crse_mapped_box.getGlobalId(),
-                                               crse_mapped_box.getBlockId()));
+      boost::shared_ptr<hier::Patch> fine_patch(fine_level->getPatch(
+                                                dst_mapped_box.getGlobalId()));
+      boost::shared_ptr<hier::Patch> crse_patch(coarse_level->getPatch(
+                                                crse_mapped_box.getGlobalId()));
 
       TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(
          crse_mapped_box.getId()) == 1);
@@ -2278,11 +2230,11 @@ void RefineSchedule::refineScratchData(
       }
 
       for (int iri = 0; iri < d_number_refine_items; iri++) {
-         const xfer::RefineClasses::Data * const ref_item = d_refine_items[iri];
-         if (!(ref_item->d_oprefine.isNull())) {
+         const RefineClasses::Data * const ref_item = d_refine_items[iri];
+         if (ref_item->d_oprefine) {
 
-            tbox::Pointer<hier::BoxOverlap> refine_overlap(
-               overlap_iter()[ref_item->d_class_index]);
+            boost::shared_ptr<hier::BoxOverlap> refine_overlap(
+               (*overlap_iter)[ref_item->d_class_index]);
 
             const int scratch_id = ref_item->d_scratch;
 
@@ -2313,16 +2265,21 @@ void RefineSchedule::refineScratchData(
  *
  **************************************************************************
  */
-void RefineSchedule::computeRefineOverlaps(
-   tbox::List<tbox::Array<tbox::Pointer<hier::BoxOverlap> > >& overlaps,
-   const tbox::Pointer<hier::PatchLevel>& fine_level,
-   const tbox::Pointer<hier::PatchLevel>& coarse_level,
+void
+RefineSchedule::computeRefineOverlaps(
+   std::list<tbox::Array<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+   const boost::shared_ptr<hier::PatchLevel>& fine_level,
+   const boost::shared_ptr<hier::PatchLevel>& coarse_level,
    const Connector& coarse_to_fine,
    const Connector& coarse_to_unfilled)
 {
+   bool is_encon = (fine_level == d_encon_level);
 
-   tbox::Pointer<hier::PatchDescriptor> fine_patch_descriptor =
-      fine_level->getPatchDescriptor();
+   boost::shared_ptr<BoxGeometryVariableFillPattern> bg_fill_pattern(
+      boost::make_shared<BoxGeometryVariableFillPattern>());
+
+   boost::shared_ptr<hier::PatchDescriptor> fine_patch_descriptor(
+      fine_level->getPatchDescriptor());
 
    const int num_equiv_classes =
       d_refine_classes->getNumberOfEquivalenceClasses();
@@ -2332,8 +2289,8 @@ void RefineSchedule::computeRefineOverlaps(
     * destination patch and destination fill boxes.
     */
 
-   for ( hier::PatchLevel::Iterator crse_itr(*coarse_level);
-         crse_itr; ++crse_itr )
+   for ( hier::PatchLevel::iterator crse_itr(coarse_level->begin());
+         crse_itr != coarse_level->end(); ++crse_itr )
    {
       const hier::Box& coarse_mapped_box = crse_itr->getBox();
       hier::Connector::ConstNeighborhoodIterator fine_nabrs =
@@ -2353,8 +2310,8 @@ void RefineSchedule::computeRefineOverlaps(
          TBOX_ASSERT(na->getGlobalId() == fine_mapped_box.getGlobalId());
       }
 #endif
-      tbox::Pointer<hier::Patch> fine_patch(fine_level->getPatch(
-                                               fine_mapped_box.getId()));
+      boost::shared_ptr<hier::Patch> fine_patch(fine_level->getPatch(
+                                                fine_mapped_box.getId()));
 
       TBOX_ASSERT(coarse_to_unfilled.numLocalNeighbors(
          coarse_mapped_box.getId()) == 1);
@@ -2374,33 +2331,42 @@ void RefineSchedule::computeRefineOverlaps(
        * cell widths since the fill boxes are generated using the
        * maximum ghost cell width.
        */
-      tbox::Array<tbox::Pointer<hier::BoxOverlap> >
-      refine_overlaps(num_equiv_classes);
+      tbox::Array<boost::shared_ptr<hier::BoxOverlap> > refine_overlaps(
+         num_equiv_classes);
       for (int ne = 0; ne < num_equiv_classes; ne++) {
 
-         const xfer::RefineClasses::Data& rep_item =
+         const RefineClasses::Data& rep_item =
             d_refine_classes->getClassRepresentative(ne);
 
-         if (!(rep_item.d_oprefine.isNull())) {
+         if (rep_item.d_oprefine) {
 
             const int scratch_id = rep_item.d_scratch;
-            tbox::Pointer<hier::PatchDataFactory> fine_pdf(
+            boost::shared_ptr<hier::PatchDataFactory> fine_pdf(
                fine_patch_descriptor->getPatchDataFactory(scratch_id));
             const hier::IntVector& fine_scratch_gcw =
                fine_pdf->getGhostCellWidth();
             hier::Box scratch_space(fine_patch->getBox());
             scratch_space.grow(fine_scratch_gcw);
 
-            refine_overlaps[ne] =
-               rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
-                  fill_boxes,
-                  fine_patch->getBox(),
-                  scratch_space,
-                  *fine_pdf);
+            if (!is_encon) {
+               refine_overlaps[ne] =
+                  rep_item.d_var_fill_pattern->computeFillBoxesOverlap(
+                     fill_boxes,
+                     fine_patch->getBox(),
+                     scratch_space,
+                     *fine_pdf);
 
+            } else {
+               refine_overlaps[ne] =
+                  bg_fill_pattern->computeFillBoxesOverlap(
+                     fill_boxes,
+                     fine_patch->getBox(),
+                     scratch_space,
+                     *fine_pdf);
+            }
          }
       }
-      overlaps.appendItem(refine_overlaps);
+      overlaps.push_back(refine_overlaps);
    }
 }
 
@@ -2418,21 +2384,22 @@ void RefineSchedule::computeRefineOverlaps(
  *********************************************************************
  */
 
-void RefineSchedule::generateCommunicationSchedule(
-   tbox::Pointer<BoxLevel>& unfilled_mapped_box_level,
-   tbox::Pointer<Connector>& dst_to_unfilled,
-   tbox::Pointer<BoxLevel>& unfilled_encon_box_level,
-   tbox::Pointer<Connector>& encon_to_unfilled_encon,
+void
+RefineSchedule::generateCommunicationSchedule(
+   boost::shared_ptr<BoxLevel>& unfilled_mapped_box_level,
+   boost::shared_ptr<Connector>& dst_to_unfilled,
+   boost::shared_ptr<BoxLevel>& unfilled_encon_box_level,
+   boost::shared_ptr<Connector>& encon_to_unfilled_encon,
    const Connector& dst_to_src,
    const Connector& src_to_dst,
    const Connector& dst_to_fill,
-   const NeighborhoodSet& dst_to_fill_on_src_proc,
+   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    const bool use_time_interpolation,
    const bool create_transactions)
 {
    t_gen_comm_sched->start();
 
-   tbox::Pointer<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
    if (s_extra_debug) {
@@ -2444,28 +2411,28 @@ void RefineSchedule::generateCommunicationSchedule(
 
    const BoxLevel& dst_mapped_box_level = dst_to_fill.getBase();
 
-   unfilled_mapped_box_level = new BoxLevel(
+   unfilled_mapped_box_level.reset(new BoxLevel(
          dst_mapped_box_level.getRefinementRatio(),
          dst_mapped_box_level.getGridGeometry(),
-         dst_mapped_box_level.getMPI());
+         dst_mapped_box_level.getMPI()));
 
-   dst_to_unfilled = new hier::Connector(
+   dst_to_unfilled.reset(new hier::Connector(
          dst_mapped_box_level,
          *unfilled_mapped_box_level,
          dst_to_fill.getConnectorWidth(),
-         BoxLevel::DISTRIBUTED);
+         BoxLevel::DISTRIBUTED));
 
    if (grid_geometry->hasEnhancedConnectivity()) {
-      unfilled_encon_box_level = new BoxLevel(
+      unfilled_encon_box_level.reset(new BoxLevel(
             dst_mapped_box_level.getRefinementRatio(),
             dst_mapped_box_level.getGridGeometry(),
-            dst_mapped_box_level.getMPI());
+            dst_mapped_box_level.getMPI()));
 
-      encon_to_unfilled_encon = new hier::Connector(
+      encon_to_unfilled_encon.reset(new hier::Connector(
             *(d_encon_level->getBoxLevel()),
             *unfilled_encon_box_level,
             dst_to_fill.getConnectorWidth(),
-            BoxLevel::DISTRIBUTED);
+            BoxLevel::DISTRIBUTED));
    }
 
    if (create_transactions) {
@@ -2498,7 +2465,7 @@ void RefineSchedule::generateCommunicationSchedule(
          const hier::BoxContainer& local_src_mapped_boxes = ei->second;
          TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
 
-         NeighborhoodSet::const_iterator dst_fill_iter =
+         BoxNeighborhoodCollection::ConstIterator dst_fill_iter =
             dst_to_fill_on_src_proc.find(dst_mapped_box.getId());
          if (dst_fill_iter == dst_to_fill_on_src_proc.end()) {
             /*
@@ -2510,9 +2477,7 @@ void RefineSchedule::generateCommunicationSchedule(
             continue;
          }
 
-         const hier::BoxContainer& dst_fill_boxes = dst_fill_iter->second;
-
-         for (hier::BoxContainer::ConstIterator
+         for (hier::BoxContainer::const_iterator
               ni = local_src_mapped_boxes.begin();
               ni != local_src_mapped_boxes.end(); ++ni) {
             const hier::Box& src_mapped_box = *ni;
@@ -2521,7 +2486,8 @@ void RefineSchedule::generateCommunicationSchedule(
                 dst_mapped_box.getOwnerRank()) {
 
                constructScheduleTransactions(
-                  dst_fill_boxes,
+                  dst_to_fill_on_src_proc,
+                  dst_fill_iter,
                   dst_mapped_box,
                   src_mapped_box,
                   use_time_interpolation);
@@ -2544,7 +2510,7 @@ void RefineSchedule::generateCommunicationSchedule(
       const hier::BoxId& dst_mapped_box_id(*cf);
       const hier::Box& dst_mapped_box = *dst_mapped_box_level.getBox(
             dst_mapped_box_id);
-      const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
+      const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
 
       hier::BoxContainer fill_boxes_list;
       for (hier::Connector::ConstNeighborIterator bi = dst_to_fill.begin(cf);
@@ -2634,6 +2600,41 @@ void RefineSchedule::generateCommunicationSchedule(
          }
       }
 
+      if (grid_geometry->hasEnhancedConnectivity() &&
+          unfilled_boxes_for_dst.size()) {
+         hier::BoxContainer fixed_unfilled_boxes(unfilled_boxes_for_dst);
+         hier::BoxContainer dst_block_domain;
+         grid_geometry->computePhysicalDomain(
+            dst_block_domain,
+            d_dst_level->getRatioToLevelZero(),
+            dst_mapped_box.getBlockId());
+         fixed_unfilled_boxes.intersectBoxes(dst_block_domain);
+
+         for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
+              bi != unfilled_boxes_for_dst.end(); ++bi) {
+
+            const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
+               grid_geometry->getNeighbors(dst_mapped_box.getBlockId());
+
+            for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
+                 ni = neighbors.begin(); ni != neighbors.end(); ++ni) {
+
+               hier::BoxContainer transformed_domain(
+                  ni->getTransformedDomain());
+
+               transformed_domain.refine(d_dst_level->getRatioToLevelZero()); 
+
+               transformed_domain.intersectBoxes(*bi);
+
+               if (transformed_domain.size()) {
+                  fixed_unfilled_boxes.spliceBack(transformed_domain);
+               }
+            }
+         }
+         unfilled_boxes_for_dst.clear();
+         unfilled_boxes_for_dst.spliceBack(fixed_unfilled_boxes);
+      }
+
       /*
        * Add mapping information to unfilled boxes and add them to
        * containers for the level.
@@ -2641,13 +2642,13 @@ void RefineSchedule::generateCommunicationSchedule(
       if (unfilled_boxes_for_dst.size() > 0) {
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_unfilled->makeEmptyLocalNeighborhood(dst_mapped_box_id);
-         for (hier::BoxContainer::Iterator bi(unfilled_boxes_for_dst);
+         for (hier::BoxContainer::iterator bi(unfilled_boxes_for_dst);
               bi != unfilled_boxes_for_dst.end(); ++bi) {
 
-            hier::Box unfilled_mapped_box(bi(),
+            hier::Box unfilled_mapped_box(*bi,
                                           ++last_unfilled_local_id,
-                                          dst_mapped_box.getOwnerRank(),
-                                          dst_block_id);
+                                          dst_mapped_box.getOwnerRank());
+            TBOX_ASSERT(unfilled_mapped_box.getBlockId() == dst_block_id);
 
             unfilled_mapped_box_level->addBoxWithoutUpdate(
                unfilled_mapped_box);
@@ -2689,25 +2690,27 @@ void RefineSchedule::generateCommunicationSchedule(
  * connectivity boundary from the destination block.
  ***********************************************************************
  */
-void RefineSchedule::findEnconFillBoxes(
+void
+RefineSchedule::findEnconFillBoxes(
    hier::BoxContainer& encon_fill_boxes,
    const hier::BoxContainer& fill_boxes_list,
    const hier::BlockId& dst_block_id)
 {
    TBOX_ASSERT(encon_fill_boxes.size() == 0);
 
-   tbox::Pointer<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(dst_block_id);
 
    hier::BoxContainer encon_neighbor_list;
-   for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-        ni(neighbors); ni; ni++) {
+   for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+        neighbors.begin();
+        ni != neighbors.end(); ni++) {
 
-      if (ni().isSingularity()) {
-         hier::BoxContainer transformed_domain(ni().getTransformedDomain());  
+      if (ni->isSingularity()) {
+         hier::BoxContainer transformed_domain(ni->getTransformedDomain());  
          encon_fill_boxes.spliceFront(transformed_domain);
       }
 
@@ -2727,19 +2730,20 @@ void RefineSchedule::findEnconFillBoxes(
  * source level and add those unfilled boxes to the appropriate containers.
  ***********************************************************************
  */
-void RefineSchedule::findEnconUnfilledBoxes(
-   tbox::Pointer<hier::BoxLevel>& unfilled_encon_box_level,
-   tbox::Pointer<hier::Connector>& encon_to_unfilled_encon,
+void
+RefineSchedule::findEnconUnfilledBoxes(
+   const boost::shared_ptr<hier::BoxLevel>& unfilled_encon_box_level,
+   const boost::shared_ptr<hier::Connector>& encon_to_unfilled_encon,
    hier::LocalId& last_unfilled_local_id,
    const hier::Box& dst_mapped_box,
    const Connector& dst_to_src,
    const hier::BoxContainer& encon_fill_boxes)
 {
-   tbox::Pointer<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
 
    const hier::BoxId& dst_mapped_box_id = dst_mapped_box.getId();
-   const hier::BlockId& dst_block_id = dst_mapped_box_id.getBlockId();
+   const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
 
    /*
     * map container will hold unfilled boxes for each block that is
@@ -2751,16 +2755,17 @@ void RefineSchedule::findEnconUnfilledBoxes(
     */
    std::map<hier::BlockId, hier::BoxContainer> unfilled_encon_nbr_boxes;
 
-   const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+   const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
       grid_geometry->getNeighbors(dst_block_id);
 
-   for (tbox::List<hier::GridGeometry::Neighbor>::Iterator
-        ni(neighbors); ni; ni++) {
+   for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+        neighbors.begin();
+        ni != neighbors.end(); ni++) {
 
-      if (ni().isSingularity()) {
-         const hier::BlockId nbr_block_id(ni().getBlockId());
+      if (ni->isSingularity()) {
+         const hier::BlockId nbr_block_id(ni->getBlockId());
 
-         hier::BoxContainer neighbor_boxes(ni().getTransformedDomain());
+         hier::BoxContainer neighbor_boxes(ni->getTransformedDomain());
          neighbor_boxes.refine(d_dst_level->getRatioToLevelZero());
          neighbor_boxes.intersectBoxes(encon_fill_boxes);
          unfilled_encon_nbr_boxes[nbr_block_id].spliceFront(neighbor_boxes);
@@ -2821,10 +2826,8 @@ void RefineSchedule::findEnconUnfilledBoxes(
          for (hier::Connector::ConstNeighborIterator de_iter = d_dst_to_encon.begin(find_encon_nabrs);
               de_iter != d_dst_to_encon.end(find_encon_nabrs); ++de_iter) {
 
-            const hier::BoxId& encon_mapped_box_id =
-               de_iter->getId();
-            const hier::BlockId& nbr_block_id =
-               encon_mapped_box_id.getBlockId();
+            const hier::BoxId& encon_mapped_box_id = de_iter->getId();
+            const hier::BlockId& nbr_block_id = de_iter->getBlockId();
 
             const hier::BoxContainer& unfilled_boxes =
                unfilled_encon_nbr_boxes[nbr_block_id];
@@ -2841,10 +2844,10 @@ void RefineSchedule::findEnconUnfilledBoxes(
                hier::Connector::NeighborhoodIterator base_box_itr =
                   encon_to_unfilled_encon->makeEmptyLocalNeighborhood(
                      encon_mapped_box_id);
-               for (hier::BoxContainer::ConstIterator bi(unfilled_boxes);
+               for (hier::BoxContainer::const_iterator bi(unfilled_boxes);
                     bi != unfilled_boxes.end(); ++bi) {
 
-                  hier::Box unfilled_box(bi());
+                  hier::Box unfilled_box(*bi);
                   grid_geometry->transformBox(
                      unfilled_box,
                      d_dst_level->getRatioToLevelZero(),
@@ -2853,9 +2856,9 @@ void RefineSchedule::findEnconUnfilledBoxes(
 
                   hier::Box unfilled_encon_box(unfilled_box,
                                                ++last_unfilled_local_id,
-                                               dst_mapped_box.getOwnerRank(),
-                                               nbr_block_id);
+                                               dst_mapped_box.getOwnerRank());
 
+                  TBOX_ASSERT(unfilled_encon_box.getBlockId() == nbr_block_id); 
                   unfilled_encon_box_level->addBox(unfilled_encon_box);
 
                   encon_to_unfilled_encon->insertLocalNeighbor(
@@ -2884,7 +2887,8 @@ void RefineSchedule::findEnconUnfilledBoxes(
  * shifts to be absorbed in the src Box.
  ***********************************************************************
  */
-void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
+void
+RefineSchedule::reorderNeighborhoodSetsByDstNodes(
    FullNeighborhoodSet& full_inverted_edges,
    const Connector& src_to_dst) const
 {
@@ -2952,10 +2956,11 @@ void RefineSchedule::reorderNeighborhoodSetsByDstNodes(
  ****************************************************************
  */
 
-void RefineSchedule::setDefaultFillBoxLevel(
+void
+RefineSchedule::setDefaultFillBoxLevel(
    BoxLevel& fill_mapped_box_level,
    Connector& dst_to_fill,
-   NeighborhoodSet& dst_to_fill_on_src_proc,
+   BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    const BoxLevel& dst_mapped_box_level,
    const hier::Connector* dst_to_src,
    const hier::Connector* src_to_dst,
@@ -3055,7 +3060,7 @@ void RefineSchedule::setDefaultFillBoxLevel(
          d_max_fill_boxes,
          d_dst_level_fill_pattern->getMaxFillBoxes());
 
-   if (!d_src_level.isNull()) {
+   if (d_src_level) {
       if (d_dst_level_fill_pattern->needsToCommunicateDestinationFillBoxes()) {
 
          /*
@@ -3094,11 +3099,12 @@ void RefineSchedule::setDefaultFillBoxLevel(
  * that touch enhanced connectivity.
  *****************************************************************
  */
-void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
+void
+RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 {
    const tbox::Dimension& dim = fill_gcw.getDim();
 
-   tbox::Pointer<hier::GridGeometry> grid_geometry(
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
       d_dst_level->getGridGeometry());
    const int num_blocks = grid_geometry->getNumberBlocks();
 
@@ -3116,8 +3122,6 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
 
    d_dst_to_encon.clearNeighborhoods();
    d_dst_to_encon.setBase(*(d_dst_level->getBoxLevel()));
-   d_dst_to_encon.setHead(encon_box_level);
-   d_dst_to_encon.setWidth(hier::IntVector::getOne(dim), true);
 
    if (num_blocks > 1) {
       hier::IntVector encon_gcw(
@@ -3137,11 +3141,12 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
           * Test to see if there are any local destination boxes on this
           * block.  Move on to next block if not.
           */
+         const hier::BoxContainer& level_boxes(
+            d_dst_level->getBoxLevel()->getBoxes());
          hier::BoxContainerSingleBlockIterator dst_test_iter(
-            d_dst_level->getBoxLevel()->getBoxes(),
-            block_id);
+            level_boxes.begin(block_id));
 
-         if (!dst_test_iter.isValid()) {
+         if (dst_test_iter == level_boxes.end(block_id)) {
             continue;
          }
 
@@ -3154,19 +3159,19 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
             grid_geometry->getSingularityBoxContainer(block_id);
 
          if (sing_boxes.size() > 0) {
-            const tbox::List<hier::GridGeometry::Neighbor>& neighbors =
+            const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
                grid_geometry->getNeighbors(block_id);
 
             /*
              * Loop over neighboring blocks and find the ones that are
              * singularity neighbors.
              */
-            for (tbox::List<hier::GridGeometry::Neighbor>::
-                 Iterator ni(neighbors); ni; ni++) {
+            for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni = neighbors.begin();
+                 ni != neighbors.end(); ni++) {
 
-               if (ni().isSingularity()) {
+               if (ni->isSingularity()) {
 
-                  const hier::BlockId& nbr_id = ni().getBlockId();
+                  const hier::BlockId& nbr_id = ni->getBlockId();
 
                   /*
                    * Get the transformation from neighbor block to dst
@@ -3174,11 +3179,12 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    * domain in coordinate system of dst block.
                    */
                   hier::Transformation::RotationIdentifier rotation =
-                     ni().getRotationIdentifier();
-                  hier::IntVector offset(ni().getShift());
+                     ni->getRotationIdentifier();
+                  hier::IntVector offset(ni->getShift());
                   offset *= (d_dst_level->getRatioToLevelZero());
 
-                  hier::Transformation transformation(rotation, offset);
+                  hier::Transformation transformation(rotation, offset,
+                                                      nbr_id, block_id);
 
                   hier::BoxContainer trans_neighbor_list;
                   grid_geometry->getTransformedBlock(trans_neighbor_list,
@@ -3193,17 +3199,17 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                    * at enhanced connectivity.
                    */
                   hier::BoxContainerSingleBlockIterator dst_local_iter(
-                     d_dst_level->getBoxLevel()->getBoxes(),
-                     block_id);
+                     level_boxes.begin(block_id));
 
-                  for ( ; dst_local_iter.isValid(); dst_local_iter++) {
+                  for ( ; dst_local_iter != level_boxes.end(block_id);
+                       ++dst_local_iter) {
 
                      const hier::BoxId& mapped_box_id =
                         dst_local_iter->getId();
 
-                     tbox::Pointer<hier::Patch> patch(
+                     boost::shared_ptr<hier::Patch> patch(
                         d_dst_level->getPatch(mapped_box_id));
-                     tbox::Pointer<hier::PatchGeometry> pgeom(
+                     boost::shared_ptr<hier::PatchGeometry> pgeom(
                         patch->getPatchGeometry());
 
                      if (pgeom->getTouchesRegularBoundary()) {
@@ -3234,9 +3240,9 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                            hier::Connector::NeighborhoodIterator base_box_itr =
                               d_dst_to_encon.makeEmptyLocalNeighborhood(
                                  mapped_box_id);
-                           for (hier::BoxContainer::Iterator bi(encon_test_list);
+                           for (hier::BoxContainer::iterator bi(encon_test_list);
                                 bi != encon_test_list.end(); ++bi) {
-                              hier::Box encon_box(bi());
+                              hier::Box encon_box(*bi);
 
                               transformation.inverseTransform(encon_box);
 
@@ -3251,8 +3257,9 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
                                   encon_box, nbr_id, encon_mapped_box)) {
                                  encon_mapped_box = hier::Box(encon_box,
                                           ++encon_local_id,
-                                          mapped_box_id.getOwnerRank(),
-                                          nbr_id);
+                                          mapped_box_id.getOwnerRank());
+                                 TBOX_ASSERT(encon_mapped_box.getBlockId() ==
+                                             nbr_id);
                                  encon_box_level.addBoxWithoutUpdate(
                                     encon_mapped_box);
                               }
@@ -3281,36 +3288,29 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     */
    encon_box_level.finalize();
 
-   d_encon_level = new hier::PatchLevel(encon_box_level,
+   d_encon_level.reset(new hier::PatchLevel(encon_box_level,
          grid_geometry,
          d_dst_level->getPatchDescriptor(),
-         tbox::Pointer<hier::PatchFactory>(NULL),
-         true);
+         boost::shared_ptr<hier::PatchFactory>(),
+         true));
 
    d_encon_level->setLevelNumber(d_dst_level->getLevelNumber());
 
-   if (!d_src_level.isNull()) {
-      d_src_to_encon.clearNeighborhoods();
-      d_src_to_encon.setBase(*(d_src_level->getBoxLevel()));
-      d_src_to_encon.setHead(*(d_encon_level->getBoxLevel()));
-      d_src_to_encon.setWidth(hier::IntVector::getZero(dim), true);
-      d_encon_to_src.clearNeighborhoods();
-      d_encon_to_src.setBase(*(d_encon_level->getBoxLevel()));
-      d_encon_to_src.setHead(*(d_src_level->getBoxLevel()));
-      d_encon_to_src.setWidth(hier::IntVector::getZero(dim), true);
+   d_dst_to_encon.setHead(*(d_encon_level->getBoxLevel()));
+   d_dst_to_encon.setWidth(hier::IntVector::getOne(dim), true);
 
-
+   if (d_src_level) {
       const Connector& dst_to_src =
          d_dst_level->getBoxLevel()->getPersistentOverlapConnectors().
             findConnector(
                *d_src_level->getBoxLevel(),
-               hier::IntVector::getZero(dim));
+               hier::IntVector::getOne(dim));
 
       const Connector& src_to_dst =
          d_src_level->getBoxLevel()->getPersistentOverlapConnectors().
             findConnector(
                *d_dst_level->getBoxLevel(),
-               hier::IntVector::getZero(dim));
+               hier::IntVector::getOne(dim));
 
       Connector encon_to_dst;
       encon_to_dst.initializeToLocalTranspose(d_dst_to_encon);
@@ -3338,8 +3338,9 @@ void RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
  * if the dst mapped_box has no fill boxes.
  **************************************************************************
  */
-void RefineSchedule::communicateFillBoxes(
-   NeighborhoodSet& dst_to_fill_on_src_proc,
+void
+RefineSchedule::communicateFillBoxes(
+   BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
    const Connector& dst_to_fill,
    const Connector& dst_to_src,
    const Connector& src_to_dst)
@@ -3358,7 +3359,6 @@ void RefineSchedule::communicateFillBoxes(
    std::map<int, std::vector<int> > recv_mesgs;
 
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommStage::MemberVec completed;
    tbox::AsyncCommPeer<int>* comms =
       new tbox::AsyncCommPeer<int>[src_owners.size() + dst_owners.size()];
 
@@ -3378,7 +3378,7 @@ void RefineSchedule::communicateFillBoxes(
       comms[mesg_number].setMPITag(0, 1);
       comms[mesg_number].beginRecv();
       if (comms[mesg_number].isDone()) {
-         completed.insert(completed.end(), &comms[mesg_number]);
+         comms[mesg_number].pushToCompletionQueue();
       }
       ++mesg_number;
    }
@@ -3404,7 +3404,7 @@ void RefineSchedule::communicateFillBoxes(
       tmp_mesg.reserve(3 + dst_to_fill.numLocalNeighbors(dst_mapped_box_id) * hier::Box::commBufferSize(dim));
       tmp_mesg.insert(tmp_mesg.end(), 3, 0);
       tmp_mesg[0] = dst_mapped_box_id.getLocalId().getValue();
-      tmp_mesg[1] = dst_mapped_box_id.getBlockId().getBlockValue();
+      tmp_mesg[1] = -1;
       tmp_mesg[2] = static_cast<int>(dst_to_fill.numLocalNeighbors(dst_mapped_box_id));
       tmp_fill_boxes.clear();
       for (hier::Connector::ConstNeighborIterator na = dst_to_fill.begin(ei);
@@ -3424,7 +3424,9 @@ void RefineSchedule::communicateFillBoxes(
               so != tmp_owners.end(); ++so) {
             const int& src_owner = *so;
             if (src_owner == dst_mapped_box_id.getOwnerRank()) {
-               dst_to_fill_on_src_proc[dst_mapped_box_id] = tmp_fill_boxes;
+               dst_to_fill_on_src_proc.insert(
+                  dst_mapped_box_id,
+                  tmp_fill_boxes);
             } else {
                std::vector<int>& send_mesg = send_mesgs[src_owner];
                send_mesg.insert(send_mesg.end(),
@@ -3445,7 +3447,7 @@ void RefineSchedule::communicateFillBoxes(
       comms[mesg_number].beginSend(&send_mesgs[*si][0],
          static_cast<int>(send_mesgs[*si].size()));
       if (comms[mesg_number].isDone()) {
-         completed.insert(completed.end(), &comms[mesg_number]);
+         comms[mesg_number].pushToCompletionQueue();
       }
       ++mesg_number;
    }
@@ -3453,38 +3455,36 @@ void RefineSchedule::communicateFillBoxes(
    /*
     * Complete communication and unpack messages.
     */
-   do {
-      for (size_t i = 0; i < completed.size(); ++i) {
-         tbox::AsyncCommPeer<int>* peer =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(completed[i] != NULL);
-         TBOX_ASSERT(peer != NULL);
-         if (peer < comms + src_owners.size()) {
-            // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)
-            const int* ptr = peer->getRecvData();
-            while (ptr != peer->getRecvData() + peer->getRecvSize()) {
-               const hier::BoxId distributed_id(hier::LocalId(ptr[0]),
-                                                peer->getPeerRank(),
-                                                hier::BlockId(ptr[1]));
-               const unsigned int num_fill_mapped_boxes = ptr[2];
-               ptr += 3;
-               d_max_fill_boxes = tbox::MathUtilities<int>::Max(
-                     d_max_fill_boxes,
-                     num_fill_mapped_boxes);
-               hier::BoxContainer& fill_boxes = dst_to_fill_on_src_proc[distributed_id];
-               for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
-                  hier::Box tmp_dst_mapped_box(dim);
-                  tmp_dst_mapped_box.getFromIntBuffer(ptr);
-                  ptr += hier::Box::commBufferSize(dim);
-                  fill_boxes.insert(fill_boxes.end(), tmp_dst_mapped_box);
-               }
+   while ( comm_stage.numberOfCompletedMembers() > 0 ||
+           comm_stage.advanceSome() ) {
+      tbox::AsyncCommPeer<int>* peer =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
+      TBOX_ASSERT(peer != NULL);
+      if (peer < comms + src_owners.size()) {
+         // This is a receive.  Unpack it.  (Otherwise, ignore send completion.)
+         const int* ptr = peer->getRecvData();
+         while (ptr != peer->getRecvData() + peer->getRecvSize()) {
+            const hier::BoxId distributed_id(hier::LocalId(ptr[0]),
+                                             peer->getPeerRank());
+            const unsigned int num_fill_mapped_boxes = ptr[2];
+            ptr += 3;
+            d_max_fill_boxes = tbox::MathUtilities<int>::Max(
+               d_max_fill_boxes,
+               num_fill_mapped_boxes);
+            BoxNeighborhoodCollection::Iterator fill_boxes_iter =
+               dst_to_fill_on_src_proc.insert(distributed_id).first;
+            for (size_t ii = 0; ii < num_fill_mapped_boxes; ++ii) {
+               hier::Box tmp_dst_mapped_box(dim);
+               tmp_dst_mapped_box.getFromIntBuffer(ptr);
+               ptr += hier::Box::commBufferSize(dim);
+               dst_to_fill_on_src_proc.insert(
+                  fill_boxes_iter,
+                  tmp_dst_mapped_box);
             }
-            TBOX_ASSERT(ptr == peer->getRecvData() + peer->getRecvSize());
          }
+         TBOX_ASSERT(ptr == peer->getRecvData() + peer->getRecvSize());
       }
-      completed.clear();
-      comm_stage.advanceSome(completed);
-   } while (!completed.empty());
+   }
 
    delete[] comms;
 }
@@ -3496,12 +3496,14 @@ void RefineSchedule::communicateFillBoxes(
  **************************************************************************
  */
 
-hier::IntVector RefineSchedule::getMaxDestinationGhosts() const
+hier::IntVector
+RefineSchedule::getMaxDestinationGhosts() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
    hier::IntVector gcw(dim, 0);
-   tbox::Pointer<hier::PatchDescriptor> pd(d_dst_level->getPatchDescriptor());
+   boost::shared_ptr<hier::PatchDescriptor> pd(
+      d_dst_level->getPatchDescriptor());
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       const int dst_id = d_refine_items[iri]->d_dst;
@@ -3520,12 +3522,14 @@ hier::IntVector RefineSchedule::getMaxDestinationGhosts() const
  **************************************************************************
  */
 
-hier::IntVector RefineSchedule::getMaxScratchGhosts() const
+hier::IntVector
+RefineSchedule::getMaxScratchGhosts() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
    hier::IntVector gcw(dim, 0);
-   tbox::Pointer<hier::PatchDescriptor> pd(d_dst_level->getPatchDescriptor());
+   boost::shared_ptr<hier::PatchDescriptor> pd(
+      d_dst_level->getPatchDescriptor());
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
       const int scratch_id = d_refine_items[iri]->d_scratch;
@@ -3543,7 +3547,8 @@ hier::IntVector RefineSchedule::getMaxScratchGhosts() const
  **************************************************************************
  */
 
-hier::IntVector RefineSchedule::getMaxStencilGhosts() const
+hier::IntVector
+RefineSchedule::getMaxStencilGhosts() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
@@ -3553,7 +3558,7 @@ hier::IntVector RefineSchedule::getMaxStencilGhosts() const
    }
 
    for (int iri = 0; iri < d_number_refine_items; iri++) {
-      if (!(d_refine_items[iri]->d_oprefine.isNull())) {
+      if (d_refine_items[iri]->d_oprefine) {
          gcw.max(d_refine_items[iri]->d_oprefine->getStencilWidth());
       }
    }
@@ -3571,39 +3576,26 @@ hier::IntVector RefineSchedule::getMaxStencilGhosts() const
  *************************************************************************
  */
 
-void RefineSchedule::constructScheduleTransactions(
-   const hier::BoxContainer& fill_boxes,
+void
+RefineSchedule::constructScheduleTransactions(
+   const BoxNeighborhoodCollection& dst_to_fill_on_src_proc,
+   BoxNeighborhoodCollection::ConstIterator& dst_to_fill_iter,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    bool use_time_interpolation)
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
-   TBOX_ASSERT(!d_src_level.isNull());
+   TBOX_ASSERT(d_dst_level);
+   TBOX_ASSERT(d_src_level);
    TBOX_ASSERT(!dst_mapped_box.isPeriodicImage()); // src absorbs the shift, if any.
 
    const tbox::Dimension& dim(d_dst_level->getDim());
    const int my_rank = d_dst_level->getBoxLevel()->getMPI().getRank();
 
-   const bool dst_is_local = (dst_mapped_box.getOwnerRank() == my_rank);
-   const bool src_is_local = (src_mapped_box.getOwnerRank() == my_rank);
-
-   tbox::Pointer<hier::Patch> dst_patch;
-   tbox::Pointer<hier::Patch> src_patch;
-
-   if (dst_is_local) {
-      dst_patch = d_dst_level->getPatch(dst_mapped_box.getGlobalId(),
-            dst_mapped_box.getBlockId());
-   }
-   if (src_is_local) {
-      src_patch = d_src_level->getPatch(src_mapped_box.getGlobalId(),
-            src_mapped_box.getBlockId());
-   }
-
    const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
    if (s_extra_debug) {
-      tbox::plog << "constructScheduleTransactions: " << use_time_interpolation
+      tbox::plog << "RefineSchedule::constructScheduleTransactions: " << use_time_interpolation
                  << std::endl;
       tbox::plog << "  src: L" << d_src_level->getLevelNumber()
                  << "R" << d_src_level->getRatioToLevelZero()
@@ -3611,9 +3603,9 @@ void RefineSchedule::constructScheduleTransactions(
       tbox::plog << "  dst: L" << d_dst_level->getLevelNumber()
                  << "R" << d_dst_level->getRatioToLevelZero()
                  << " / " << dst_mapped_box << std::endl;
-      tbox::plog << "  fill_boxes (" << fill_boxes.size() << ")";
-      for (hier::BoxContainer::ConstIterator bi = fill_boxes.begin();
-           bi != fill_boxes.end(); ++bi) {
+      tbox::plog << "  fill_boxes (" << dst_to_fill_on_src_proc.numNeighbors(dst_to_fill_iter) << ")";
+      for (BoxNeighborhoodCollection::ConstNeighborIterator bi = dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
+           bi != dst_to_fill_on_src_proc.end(dst_to_fill_iter); ++bi) {
          tbox::plog << " " << *bi;
       }
       tbox::plog << std::endl;
@@ -3638,9 +3630,9 @@ void RefineSchedule::constructScheduleTransactions(
       d_overlaps.resizeArray(max_overlap_array_size);
    }
 
-   tbox::Pointer<hier::PatchDescriptor> dst_patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
       d_dst_level->getPatchDescriptor());
-   tbox::Pointer<hier::PatchDescriptor> src_patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
       d_src_level->getPatchDescriptor());
 
    const hier::Box& dst_box = dst_mapped_box;
@@ -3723,7 +3715,7 @@ void RefineSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
       const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-      tbox::Pointer<hier::GridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_dst_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
@@ -3737,7 +3729,8 @@ void RefineSchedule::constructScheduleTransactions(
       is_singularity = grid_geometry->areSingularityNeighbors(dst_block_id,
             src_block_id);
 
-      transformation = hier::Transformation(rotation, offset);
+      transformation = hier::Transformation(rotation, offset,
+                                            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
    }
 
@@ -3748,7 +3741,7 @@ void RefineSchedule::constructScheduleTransactions(
     * case, the destination level becomes d_encon_level and the destination
     * box is a member of d_encon_level.
     */
-   tbox::Pointer<hier::PatchLevel> transaction_dst_level;
+   boost::shared_ptr<hier::PatchLevel> transaction_dst_level;
    hier::Box transaction_dst_mapped_box(dim);
    if (is_singularity) {
 
@@ -3808,11 +3801,12 @@ void RefineSchedule::constructScheduleTransactions(
          }
          if (encon_nbr_choices.size() == 0) {
             transaction_dst_mapped_box.setEmpty();
+            transaction_dst_mapped_box.setBlockId(src_mapped_box.getBlockId());
          } else {
             int max_nbr_size = 0;
-            for (hier::BoxContainer::Iterator en(encon_nbr_choices);
+            for (hier::BoxContainer::iterator en(encon_nbr_choices);
                  en != encon_nbr_choices.end(); ++en) {
-               const int box_size = (*en).size();
+               const int box_size = en->size();
                if (box_size > max_nbr_size) {
                   max_nbr_size = box_size;
                   transaction_dst_mapped_box = *en;
@@ -3834,23 +3828,24 @@ void RefineSchedule::constructScheduleTransactions(
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {
 
-      const xfer::RefineClasses::Data& rep_item =
+      const RefineClasses::Data& rep_item =
          d_refine_classes->getClassRepresentative(nc);
 
       const int rep_item_dst_id = rep_item.d_scratch;
       const int rep_item_src_id = rep_item.d_src;
 
-      tbox::Pointer<hier::PatchDataFactory> src_pdf(
+      boost::shared_ptr<hier::PatchDataFactory> src_pdf(
          src_patch_descriptor->getPatchDataFactory(rep_item_src_id));
-      tbox::Pointer<hier::PatchDataFactory> dst_pdf(
+      boost::shared_ptr<hier::PatchDataFactory> dst_pdf(
          dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id));
 
       const hier::IntVector& dst_gcw = dst_pdf->getGhostCellWidth();
 
-      hier::BoxContainer::Iterator box_itr(d_src_masks);
+      hier::BoxContainer::iterator box_itr(d_src_masks);
       int box_num = 0;
-      for (hier::BoxContainer::ConstIterator bi = fill_boxes.begin();
-           bi != fill_boxes.end(); ++bi) {
+      for (BoxNeighborhoodCollection::ConstNeighborIterator bi =
+              dst_to_fill_on_src_proc.begin(dst_to_fill_iter);
+           bi != dst_to_fill_on_src_proc.end(dst_to_fill_iter); ++bi) {
 
          const hier::Box& fill_box = *bi;
 
@@ -3868,7 +3863,7 @@ void RefineSchedule::constructScheduleTransactions(
          dst_fill_box.grow(dst_gcw);
          dst_fill_box = dst_fill_box * fill_box;
 
-         tbox::Pointer<hier::BoxOverlap> overlap;
+         boost::shared_ptr<hier::BoxOverlap> overlap;
          hier::Box src_mask(dim);
          if (!is_singularity) {
 
@@ -3938,7 +3933,7 @@ void RefineSchedule::constructScheduleTransactions(
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (overlap.isNull()) {
+         if (!overlap) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n Overlap is NULL for "
                << "\n src box = " << src_box
@@ -3961,10 +3956,9 @@ void RefineSchedule::constructScheduleTransactions(
       /*
        * Iterate over components in refine description list
        */
-      for (tbox::List<int>::Iterator
-           l(d_refine_classes->getIterator(nc)); l; l++) {
-         const RefineClasses::Data& item =
-            d_refine_classes->getRefineItem(l());
+      for (std::list<int>::iterator l(d_refine_classes->getIterator(nc));
+           l != d_refine_classes->getIteratorEnd(nc); l++) {
+         const RefineClasses::Data& item = d_refine_classes->getRefineItem(*l);
          TBOX_ASSERT(item.d_class_index == nc);
 
          const int dst_id = item.d_scratch;
@@ -3981,7 +3975,7 @@ void RefineSchedule::constructScheduleTransactions(
              * Iterate over the fill boxes and create transactions
              * for each box that has a non-empty overlap.
              */
-            hier::BoxContainer::Iterator itr(d_src_masks);
+            hier::BoxContainer::iterator itr(d_src_masks);
             for (int i = 0; i < box_num; i++, ++itr) {
 
                /*
@@ -4003,9 +3997,9 @@ void RefineSchedule::constructScheduleTransactions(
                 */
                if (!d_overlaps[i]->isOverlapEmpty()) {
 
-                  tbox::Pointer<tbox::Transaction> transaction;
+                  boost::shared_ptr<tbox::Transaction> transaction;
 
-                  if (!d_transaction_factory.isNull()) {
+                  if (d_transaction_factory) {
 
                      transaction =
                         d_transaction_factory->allocate(transaction_dst_level,
@@ -4017,20 +4011,20 @@ void RefineSchedule::constructScheduleTransactions(
                   } else if (use_time_interpolation &&
                              item.d_time_interpolate) {
 
-                     transaction = new xfer::RefineTimeTransaction(
+                     transaction.reset(new RefineTimeTransaction(
                            transaction_dst_level, d_src_level,
                            d_overlaps[i],
                            transaction_dst_mapped_box, src_mapped_box,
                            *itr,
-                           ritem_count);
+                           ritem_count));
 
                   } else {  // no time interpolation
 
-                     transaction = new xfer::RefineCopyTransaction(
+                     transaction.reset(new RefineCopyTransaction(
                            transaction_dst_level, d_src_level,
                            d_overlaps[i],
                            transaction_dst_mapped_box, src_mapped_box,
-                           ritem_count);
+                           ritem_count));
 
                   }  // time interpolation conditional
 
@@ -4073,40 +4067,26 @@ void RefineSchedule::constructScheduleTransactions(
  *************************************************************************
  */
 
-void RefineSchedule::constructScheduleTransactions(
+void
+RefineSchedule::constructScheduleTransactions(
    const hier::Connector& dst_to_fill,
    hier::Connector::ConstNeighborhoodIterator& dst_itr,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    bool use_time_interpolation)
 {
-   TBOX_ASSERT(!d_dst_level.isNull());
-   TBOX_ASSERT(!d_src_level.isNull());
+   TBOX_ASSERT(d_dst_level);
+   TBOX_ASSERT(d_src_level);
    TBOX_ASSERT(!dst_mapped_box.isPeriodicImage()); // src absorbs the shift, if any.
 
    const tbox::Dimension& dim(d_dst_level->getDim());
    const int my_rank = d_dst_level->getBoxLevel()->getMPI().getRank();
 
-   const bool dst_is_local = (dst_mapped_box.getOwnerRank() == my_rank);
-   const bool src_is_local = (src_mapped_box.getOwnerRank() == my_rank);
-
-   tbox::Pointer<hier::Patch> dst_patch;
-   tbox::Pointer<hier::Patch> src_patch;
-
-   if (dst_is_local) {
-      dst_patch = d_dst_level->getPatch(dst_mapped_box.getGlobalId(),
-            dst_mapped_box.getBlockId());
-   }
-   if (src_is_local) {
-      src_patch = d_src_level->getPatch(src_mapped_box.getGlobalId(),
-            src_mapped_box.getBlockId());
-   }
-
    const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
 
    if (s_extra_debug) {
-      tbox::plog << "constructScheduleTransactions: " << use_time_interpolation
+      tbox::plog << "RefineSchedule::constructScheduleTransactions: " << use_time_interpolation
                  << std::endl;
       tbox::plog << "  src: L" << d_src_level->getLevelNumber()
                  << "R" << d_src_level->getRatioToLevelZero()
@@ -4142,9 +4122,9 @@ void RefineSchedule::constructScheduleTransactions(
       d_overlaps.resizeArray(max_overlap_array_size);
    }
 
-   tbox::Pointer<hier::PatchDescriptor> dst_patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor> dst_patch_descriptor(
       d_dst_level->getPatchDescriptor());
-   tbox::Pointer<hier::PatchDescriptor> src_patch_descriptor(
+   boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
       d_src_level->getPatchDescriptor());
 
    const hier::Box& dst_box = dst_mapped_box;
@@ -4227,7 +4207,7 @@ void RefineSchedule::constructScheduleTransactions(
       const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
       const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
 
-      tbox::Pointer<hier::GridGeometry> grid_geometry(
+      boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_dst_level->getGridGeometry());
 
       hier::Transformation::RotationIdentifier rotation =
@@ -4241,7 +4221,8 @@ void RefineSchedule::constructScheduleTransactions(
       is_singularity = grid_geometry->areSingularityNeighbors(dst_block_id,
             src_block_id);
 
-      transformation = hier::Transformation(rotation, offset);
+      transformation = hier::Transformation(rotation, offset,
+                                            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
    }
 
@@ -4252,7 +4233,7 @@ void RefineSchedule::constructScheduleTransactions(
     * case, the destination level becomes d_encon_level and the destination
     * box is a member of d_encon_level.
     */
-   tbox::Pointer<hier::PatchLevel> transaction_dst_level;
+   boost::shared_ptr<hier::PatchLevel> transaction_dst_level;
    hier::Box transaction_dst_mapped_box(dim);
    if (is_singularity) {
 
@@ -4314,9 +4295,9 @@ void RefineSchedule::constructScheduleTransactions(
             transaction_dst_mapped_box.setEmpty();
          } else {
             int max_nbr_size = 0;
-            for (hier::BoxContainer::Iterator en(encon_nbr_choices);
+            for (hier::BoxContainer::iterator en(encon_nbr_choices);
                  en != encon_nbr_choices.end(); ++en) {
-               const int box_size = (*en).size();
+               const int box_size = en->size();
                if (box_size > max_nbr_size) {
                   max_nbr_size = box_size;
                   transaction_dst_mapped_box = *en;
@@ -4338,20 +4319,20 @@ void RefineSchedule::constructScheduleTransactions(
 
    for (int nc = 0; nc < num_equiv_classes; nc++) {
 
-      const xfer::RefineClasses::Data& rep_item =
+      const RefineClasses::Data& rep_item =
          d_refine_classes->getClassRepresentative(nc);
 
       const int rep_item_dst_id = rep_item.d_scratch;
       const int rep_item_src_id = rep_item.d_src;
 
-      tbox::Pointer<hier::PatchDataFactory> src_pdf(
+      boost::shared_ptr<hier::PatchDataFactory> src_pdf(
          src_patch_descriptor->getPatchDataFactory(rep_item_src_id));
-      tbox::Pointer<hier::PatchDataFactory> dst_pdf(
+      boost::shared_ptr<hier::PatchDataFactory> dst_pdf(
          dst_patch_descriptor->getPatchDataFactory(rep_item_dst_id));
 
       const hier::IntVector& dst_gcw = dst_pdf->getGhostCellWidth();
 
-      hier::BoxContainer::Iterator box_itr(d_src_masks);
+      hier::BoxContainer::iterator box_itr(d_src_masks);
       int box_num = 0;
       for (hier::Connector::ConstNeighborIterator bi = dst_to_fill.begin(dst_itr);
            bi != dst_to_fill.end(dst_itr); ++bi) {
@@ -4372,7 +4353,7 @@ void RefineSchedule::constructScheduleTransactions(
          dst_fill_box.grow(dst_gcw);
          dst_fill_box = dst_fill_box * fill_box;
 
-         tbox::Pointer<hier::BoxOverlap> overlap;
+         boost::shared_ptr<hier::BoxOverlap> overlap;
          hier::Box src_mask(dim);
          if (!is_singularity) {
 
@@ -4442,7 +4423,7 @@ void RefineSchedule::constructScheduleTransactions(
          }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         if (overlap.isNull()) {
+         if (!overlap) {
             TBOX_ERROR("Internal RefineSchedule error..."
                << "\n Overlap is NULL for "
                << "\n src box = " << src_box
@@ -4465,10 +4446,9 @@ void RefineSchedule::constructScheduleTransactions(
       /*
        * Iterate over components in refine description list
        */
-      for (tbox::List<int>::Iterator
-           l(d_refine_classes->getIterator(nc)); l; l++) {
-         const RefineClasses::Data& item =
-            d_refine_classes->getRefineItem(l());
+      for (std::list<int>::iterator l(d_refine_classes->getIterator(nc));
+           l != d_refine_classes->getIteratorEnd(nc); l++) {
+         const RefineClasses::Data& item = d_refine_classes->getRefineItem(*l);
          TBOX_ASSERT(item.d_class_index == nc);
 
          const int dst_id = item.d_scratch;
@@ -4485,7 +4465,7 @@ void RefineSchedule::constructScheduleTransactions(
              * Iterate over the fill boxes and create transactions
              * for each box that has a non-empty overlap.
              */
-            hier::BoxContainer::Iterator itr(d_src_masks);
+            hier::BoxContainer::iterator itr(d_src_masks);
             for (int i = 0; i < box_num; i++, ++itr) {
 
                /*
@@ -4507,9 +4487,9 @@ void RefineSchedule::constructScheduleTransactions(
                 */
                if (!d_overlaps[i]->isOverlapEmpty()) {
 
-                  tbox::Pointer<tbox::Transaction> transaction;
+                  boost::shared_ptr<tbox::Transaction> transaction;
 
-                  if (!d_transaction_factory.isNull()) {
+                  if (d_transaction_factory) {
 
                      transaction =
                         d_transaction_factory->allocate(transaction_dst_level,
@@ -4521,20 +4501,20 @@ void RefineSchedule::constructScheduleTransactions(
                   } else if (use_time_interpolation &&
                              item.d_time_interpolate) {
 
-                     transaction = new xfer::RefineTimeTransaction(
+                     transaction.reset(new RefineTimeTransaction(
                            transaction_dst_level, d_src_level,
                            d_overlaps[i],
                            transaction_dst_mapped_box, src_mapped_box,
                            *itr,
-                           ritem_count);
+                           ritem_count));
 
                   } else {  // no time interpolation
 
-                     transaction = new xfer::RefineCopyTransaction(
+                     transaction.reset(new RefineCopyTransaction(
                            transaction_dst_level, d_src_level,
                            d_overlaps[i],
                            transaction_dst_mapped_box, src_mapped_box,
-                           ritem_count);
+                           ritem_count));
 
                   }  // time interpolation conditional
 
@@ -4593,7 +4573,8 @@ RefineSchedule::initializeDomainAndGhostInformation(
       d_force_boundary_fill = false;
    }
 
-   tbox::Pointer<hier::GridGeometry> grid_geom(d_dst_level->getGridGeometry());
+   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+      d_dst_level->getGridGeometry());
    const hier::IntVector& ratio_to_level_zero =
       d_dst_level->getRatioToLevelZero();
 
@@ -4620,8 +4601,9 @@ RefineSchedule::initializeDomainAndGhostInformation(
  *************************************************************************
  */
 
-void RefineSchedule::setRefineItems(
-   const tbox::Pointer<xfer::RefineClasses> refine_classes)
+void
+RefineSchedule::setRefineItems(
+   const boost::shared_ptr<RefineClasses>& refine_classes)
 {
 
    clearRefineItems();
@@ -4630,8 +4612,7 @@ void RefineSchedule::setRefineItems(
 
    d_number_refine_items = d_refine_classes->getNumberOfRefineItems();
 
-   d_refine_items =
-      new const xfer::RefineClasses::Data *[d_number_refine_items];
+   d_refine_items = new const RefineClasses::Data *[d_number_refine_items];
 
    int ircount = 0;
    for (int nd = 0; nd < d_number_refine_items; nd++) {
@@ -4655,13 +4636,16 @@ void RefineSchedule::setRefineItems(
  *************************************************************************
  */
 
-void RefineSchedule::initialCheckRefineClassItems() const
+void
+RefineSchedule::initialCheckRefineClassItems() const
 {
    const tbox::Dimension& dim(d_dst_level->getDim());
 
-   const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
+   const hier::IntVector& constant_zero_intvector(
+      hier::IntVector::getZero(dim));
 
-   tbox::Pointer<hier::PatchDescriptor> pd(d_dst_level->getPatchDescriptor());
+   boost::shared_ptr<hier::PatchDescriptor> pd(
+      d_dst_level->getPatchDescriptor());
 
    hier::IntVector user_gcw(constant_zero_intvector);
    if (d_refine_patch_strategy) {
@@ -4672,7 +4656,7 @@ void RefineSchedule::initialCheckRefineClassItems() const
 
       for (int iri = 0; iri < d_number_refine_items; iri++) {
 
-         const xfer::RefineClasses::Data * const ref_item = d_refine_items[iri];
+         const RefineClasses::Data * const ref_item = d_refine_items[iri];
 
 #ifdef DEBUG_CHECK_ASSERTIONS
          if (d_refine_classes->itemIsValid(*ref_item, pd)) {
@@ -4709,14 +4693,15 @@ void RefineSchedule::initialCheckRefineClassItems() const
  **************************************************************************
  */
 
-void RefineSchedule::clearRefineItems()
+void
+RefineSchedule::clearRefineItems()
 {
    if (d_refine_items) {
       for (int iri = 0; iri < d_number_refine_items; iri++) {
-         d_refine_items[iri] = (xfer::RefineClasses::Data *)NULL;
+         d_refine_items[iri] = (RefineClasses::Data *)NULL;
       }
       delete[] d_refine_items;
-      d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+      d_refine_items = (const RefineClasses::Data **)NULL;
       d_number_refine_items = 0;
    }
 }
@@ -4729,7 +4714,8 @@ void RefineSchedule::clearRefineItems()
  **************************************************************************
  */
 
-void RefineSchedule::printClassData(
+void
+RefineSchedule::printClassData(
    std::ostream& stream) const
 {
    stream << "RefineSchedule::printClassData()\n";
@@ -4743,22 +4729,26 @@ void RefineSchedule::printClassData(
    stream << "Printing fine priority refine schedule...\n";
    d_fine_priority_level_schedule->printClassData(stream);
 
-   if (!d_coarse_interp_schedule.isNull()) {
+   if (d_coarse_interp_schedule) {
       stream << "Printing coarse interpolation refine schedule...\n";
       d_coarse_interp_schedule->printClassData(stream);
    }
 }
+
+
 /*
  **************************************************************************
  **************************************************************************
  */
 
-void RefineSchedule::initializeCallback()
+void
+RefineSchedule::initializeCallback()
 {
-   tbox::Pointer<tbox::Database> idb(tbox::InputManager::getInputDatabase());
+   boost::shared_ptr<tbox::Database> idb(
+      tbox::InputManager::getInputDatabase());
    if (idb && idb->isDatabase("RefineSchedule")) {
-      tbox::Pointer<tbox::Database> rsdb(idb->getDatabase(
-                                            "RefineSchedule"));
+      boost::shared_ptr<tbox::Database> rsdb(
+         idb->getDatabase("RefineSchedule"));
       s_extra_debug =
          rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
       s_barrier_and_time =
@@ -4821,31 +4811,32 @@ void RefineSchedule::initializeCallback()
  * memory for timers does not leak.
  ***************************************************************************
  */
-void RefineSchedule::finalizeCallback()
+void
+RefineSchedule::finalizeCallback()
 {
-   t_fill_data.setNull();
-   t_recursive_fill.setNull();
-   t_refine_scratch_data.setNull();
-   t_finish_sched_const.setNull();
-   t_finish_sched_const_recurse.setNull();
-   t_gen_comm_sched.setNull();
-   t_bridge_connector.setNull();
-   t_modify_connector.setNull();
-   t_make_seq_map.setNull();
-   t_shear.setNull();
-   t_misc1.setNull();
-   t_barrier_and_time.setNull();
-   t_get_global_mapped_box_count.setNull();
-   t_coarse_shear.setNull();
-   t_setup_coarse_interp_mapped_box_level.setNull();
-   t_misc2.setNull();
-   t_bridge_coarse_interp_hiercoarse.setNull();
-   t_bridge_dst_hiercoarse.setNull();
-   t_make_coarse_interp_level.setNull();
-   t_make_coarse_interp_to_unfilled.setNull();
-   t_invert_edges.setNull();
-   t_construct_send_trans.setNull();
-   t_construct_recv_trans.setNull();
+   t_fill_data.reset();
+   t_recursive_fill.reset();
+   t_refine_scratch_data.reset();
+   t_finish_sched_const.reset();
+   t_finish_sched_const_recurse.reset();
+   t_gen_comm_sched.reset();
+   t_bridge_connector.reset();
+   t_modify_connector.reset();
+   t_make_seq_map.reset();
+   t_shear.reset();
+   t_misc1.reset();
+   t_barrier_and_time.reset();
+   t_get_global_mapped_box_count.reset();
+   t_coarse_shear.reset();
+   t_setup_coarse_interp_mapped_box_level.reset();
+   t_misc2.reset();
+   t_bridge_coarse_interp_hiercoarse.reset();
+   t_bridge_dst_hiercoarse.reset();
+   t_make_coarse_interp_level.reset();
+   t_make_coarse_interp_to_unfilled.reset();
+   t_invert_edges.reset();
+   t_construct_send_trans.reset();
+   t_construct_recv_trans.reset();
 }
 
 }

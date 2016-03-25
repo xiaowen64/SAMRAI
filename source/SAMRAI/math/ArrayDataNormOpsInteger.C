@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for integer data arrays.
  *
  ************************************************************************/
@@ -36,7 +36,8 @@ ArrayDataNormOpsInteger::~ArrayDataNormOpsInteger()
  *************************************************************************
  */
 
-void ArrayDataNormOpsInteger::abs(
+void
+ArrayDataNormOpsInteger::abs(
    pdat::ArrayData<int>& dst,
    const pdat::ArrayData<int>& src,
    const hier::Box& box) const
@@ -44,7 +45,7 @@ void ArrayDataNormOpsInteger::abs(
    TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
-   const tbox::Dimension& dim(dst.getDim());
+   int dimVal = dst.getDim().getValue();
 
    const hier::Box dst_box = dst.getBox();
    const hier::Box src_box = src.getBox();
@@ -56,7 +57,7 @@ void ArrayDataNormOpsInteger::abs(
       int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
       int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
          src_w[i] = src_box.numberCells(i);
@@ -82,7 +83,7 @@ void ArrayDataNormOpsInteger::abs(
 
          int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
          int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         for (int nd = 0; nd < dim.getValue(); nd++) {
+         for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
          }
@@ -96,7 +97,7 @@ void ArrayDataNormOpsInteger::abs(
 
             int dim_jump = 0;
 
-            for (int j = 1; j < dim.getValue(); j++) {
+            for (int j = 1; j < dimVal; j++) {
                if (dim_counter[j] < box_w[j] - 1) {
                   ++dim_counter[j];
                   dim_jump = j;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A simple call sequence tracking class
  *
  ************************************************************************/
@@ -66,7 +66,10 @@ public:
     */
    static void
    setTraceStream(
-      std::ostream* stream);
+      std::ostream* stream)
+   {
+      s_stream = stream;
+   }
 
 private:
    std::string d_message;
@@ -76,7 +79,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Tracer.I"
-#endif
 #endif

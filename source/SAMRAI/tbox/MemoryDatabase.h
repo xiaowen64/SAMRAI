@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A memory database structure that stores (key,value) pairs in memory
  *
  ************************************************************************/
@@ -14,7 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/List.h"
+
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -152,7 +153,7 @@ public:
     * exists in the database, then the old key record is deleted and the new
     * one is silently created in its place.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -161,7 +162,7 @@ public:
     * key does not exist in the database or it is not a database, then
     * an error message is printed and the program exits.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 
@@ -847,10 +848,8 @@ public:
    /**
     * @brief Returns the name of this database.
     *
-    * The name for the root of the database is the name supplied when creating it.
-    * Names for nested databases are the keyname of the database.
-    *
-    * @param os Output stream.
+    * The name for the root of the database is the name supplied when creating
+    * it.  Names for nested databases are the keyname of the database.
     */
    virtual std::string
    getName();
@@ -862,7 +861,11 @@ public:
     */
    bool
    keyAccessed(
-      const std::string& key);
+      const std::string& key)
+   {
+      KeyData* keydata = findKeyData(key);
+      return keydata ? keydata->d_accessed : false;
+   }
 
    /**
     * Print the current database to the specified output stream.  After
@@ -884,7 +887,10 @@ public:
     */
    void
    printUnusedKeys(
-      std::ostream& os = pout) const;
+      std::ostream& os = pout) const
+   {
+      printDatabase(os, 0, PRINT_UNUSED);
+   }
 
    /**
     * Print the database keys that were set via default calls to the specified
@@ -892,7 +898,10 @@ public:
     */
    void
    printDefaultKeys(
-      std::ostream& os = pout) const;
+      std::ostream& os = pout) const
+   {
+      printDatabase(os, 0, PRINT_DEFAULT);
+   }
 
 private:
    MemoryDatabase(
@@ -912,7 +921,7 @@ private:
       int d_array_size;                                 // size of array data
       bool d_accessed;                                  // whether accessed
       bool d_from_default;                              // from default key
-      Pointer<Database> d_database;             // sub-database
+      boost::shared_ptr<Database> d_database;           // sub-database
       Array<bool> d_boolean;                    // boolean array value
       Array<DatabaseBox> d_box;                 // box array value
       Array<char> d_char;                       // char array value
@@ -938,7 +947,12 @@ private:
    static void
    indentStream(
       std::ostream& os,
-      const long indent);
+      const long indent)
+   {
+      for (int i = 0; i < indent; i++) {
+         os << " ";
+      }
+   }
    void
    printDatabase(
       std::ostream& os,
@@ -949,7 +963,7 @@ private:
     * Private data members - name and a list of (key,value) pairs
     */
    std::string d_database_name;
-   List<KeyData> d_keyvalues;
+   std::list<KeyData> d_keyvalues;
 
    static const int PRINT_DEFAULT;
    static const int PRINT_INPUT;
@@ -960,7 +974,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MemoryDatabase.I"
-#endif
 #endif

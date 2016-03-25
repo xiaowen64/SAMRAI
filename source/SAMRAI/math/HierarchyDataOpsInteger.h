@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to operations for integer data on hierarchy.
  *
  ************************************************************************/
@@ -14,8 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -43,7 +43,7 @@ namespace math {
  * respectively.
  */
 
-class HierarchyDataOpsInteger:public tbox::DescribedClass
+class HierarchyDataOpsInteger
 {
 public:
    /**
@@ -62,7 +62,7 @@ public:
    virtual
    void
    setPatchHierarchy(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy) = 0;
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) = 0;
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -77,7 +77,7 @@ public:
     * Return const pointer to patch hierarchy associated with operations.
     */
    virtual
-   const tbox::Pointer<hier::PatchHierarchy>
+   const boost::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const = 0;
 
    /**

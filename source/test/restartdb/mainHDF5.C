@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Tests HDF database in SAMRAI
  *
  ************************************************************************/
@@ -17,8 +17,9 @@
 #include "SAMRAI/tbox/HDFDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
+
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -39,17 +40,17 @@ public:
    }
 
    void putToDatabase(
-      tbox::Pointer<tbox::Database> db)
+      const boost::shared_ptr<tbox::Database>& db) const
    {
       writeTestData(db);
    }
 
    void getFromDatabase()
    {
-      tbox::Pointer<tbox::Database> root_db =
-         tbox::RestartManager::getManager()->getRootDatabase();
+      boost::shared_ptr<tbox::Database> root_db(
+         tbox::RestartManager::getManager()->getRootDatabase());
 
-      tbox::Pointer<tbox::Database> db;
+      boost::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
       }

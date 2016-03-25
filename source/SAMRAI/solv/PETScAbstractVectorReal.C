@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to C++ vector implementation for PETSc package.
  *
  ************************************************************************/
@@ -178,15 +178,14 @@ PETScAbstractVectorReal<TYPE>::~PETScAbstractVectorReal()
 }
 
 template<class TYPE>
-PetscErrorCode PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
+PetscErrorCode
+PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
    Vec v_in,
    int n,
    Vec** varr_new)
 {
-   int ierr = 0;
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(v_in == (Vec)NULL));
-#endif
+   int ierr = 0;
    ierr = PetscMalloc(n * sizeof(Vec *), varr_new);
    PETSC_SAMRAI_ERROR(ierr);
 
@@ -197,7 +196,8 @@ PetscErrorCode PETScAbstractVectorReal<TYPE>::vecDuplicateVecs(
 }
 
 template<class TYPE>
-PetscErrorCode PETScAbstractVectorReal<TYPE>::vecDestroyVecs(
+PetscErrorCode
+PETScAbstractVectorReal<TYPE>::vecDestroyVecs(
    Vec* v_arr,
    PetscInt n)
 {
@@ -244,9 +244,7 @@ PETScAbstractVectorReal<TYPE>::vecDuplicate(
    Vec v,
    Vec* newv)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(v == (Vec)NULL));
-#endif
 
    PETScAbstractVectorReal<TYPE>* new_pav = PABSVEC_CAST(v)->makeNewVector();
    *newv = new_pav->getPETScVector();
@@ -263,10 +261,8 @@ PETScAbstractVectorReal<TYPE>::vecDot(
    Vec y,
    TYPE* val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(x != static_cast<Vec>(NULL));
    TBOX_ASSERT(y != static_cast<Vec>(NULL));
-#endif
 
    *val = PABSVEC_CAST(x)->dotWith(PABSVEC_CAST(y));
 
@@ -305,9 +301,7 @@ PETScAbstractVectorReal<TYPE>::vecNorm(
    NormType type,
    TYPE* val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(x != static_cast<Vec>(NULL));
-#endif
    if (type == NORM_1) {
       *val = PABSVEC_CAST(x)->L1Norm();
    } else if (type == NORM_2) {
@@ -336,10 +330,8 @@ PETScAbstractVectorReal<TYPE>::vecTDot(
    Vec y,
    TYPE* val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(x != static_cast<Vec>(NULL));
    TBOX_ASSERT(y != static_cast<Vec>(NULL));
-#endif
    *val = PABSVEC_CAST(x)->TdotWith(PABSVEC_CAST(y));
 
    PetscFunctionReturn(0);

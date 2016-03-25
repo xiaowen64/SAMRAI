@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for edge-centered double data on
  *                a  mesh.
  *
@@ -103,31 +103,20 @@ EdgeDoubleConstantRefine::~EdgeDoubleConstantRefine()
 {
 }
 
-bool EdgeDoubleConstantRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<EdgeVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int EdgeDoubleConstantRefine::getOperatorPriority() const
+int
+EdgeDoubleConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-EdgeDoubleConstantRefine::getStencilWidth() const {
+EdgeDoubleConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void EdgeDoubleConstantRefine::refine(
+void
+EdgeDoubleConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -137,18 +126,20 @@ void EdgeDoubleConstantRefine::refine(
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<EdgeData<double> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<EdgeData<double> >
-   fdata = fine.getPatchData(dst_component);
+   boost::shared_ptr<EdgeData<double> > cdata(
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<EdgeData<double> > fdata(
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   const pdat::EdgeOverlap* t_overlap =
-      dynamic_cast<const pdat::EdgeOverlap *>(&fine_overlap);
+   const EdgeOverlap* t_overlap =
+      dynamic_cast<const EdgeOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*this, fine, coarse, ratio);
 
@@ -162,9 +153,10 @@ void EdgeDoubleConstantRefine::refine(
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      for (hier::BoxContainer::const_iterator b(boxes);
+           b != boxes.end(); ++b) {
 
-         hier::Box fine_box(b());
+         hier::Box fine_box(*b);
          TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, fine_box);
 
          for (int i = 0; i < dim.getValue(); i++) {

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -12,18 +12,20 @@
 #define included_mesh_TreeLoadBalancer
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/mesh/BalanceUtilities.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
 #include "SAMRAI/tbox/BalancedDepthFirstTree.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RankGroup.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <vector>
 #include <set>
@@ -52,6 +54,12 @@ namespace mesh {
  * No special inputs are required for this class.
  *
  * @verbatim
+ * min_load_fraction_per_box = 0.03
+ *                           // Additional restriction on box size.
+ *                           // Will not generate a box that has less
+ *                           // than this fraction of the global average
+ *                           // work load in order to move work load.
+ *                           // Set to negative to disable.
  * report_load_balance = TRUE // Write out load balance report in log
  * n_root_cycles = -1         // Number of steps over which to smoothly spread
  *                            // out work load.  This helps scalability when
@@ -88,8 +96,8 @@ public:
    TreeLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name = std::string("TreeLoadBalancer"),
-      tbox::Pointer<tbox::Database> input_db =
-         tbox::Pointer<tbox::Database>(NULL));
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.
@@ -167,7 +175,10 @@ public:
     */
    void
    setUniformWorkload(
-      int level_number = -1);
+      int level_number = -1)
+   {
+      d_workload_data_id[level_number] = -1;
+   }
 
    /*!
     * @brief Return true if load balancing procedure for given level
@@ -187,19 +198,19 @@ public:
     */
    void
    loadBalanceBoxLevel(
-      hier::BoxLevel& balance_box_level,
+      hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_box_level,
+      const hier::BoxLevel& domain_mapped_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
-      const tbox::RankGroup& = tbox::RankGroup()) const;
+      const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
 
    /*!
     * @brief Print out all members of the class instance to given
@@ -219,11 +230,18 @@ public:
     */
    void
    printStatistics(
-      std::ostream& output_stream = tbox::plog) const;
+      std::ostream& output_stream = tbox::plog) const
+   {
+      BalanceUtilities::gatherAndReportLoadBalance(d_load_stat,
+         tbox::SAMRAI_MPI::getSAMRAIWorld(),
+         output_stream);
+   }
 
 
 
 private:
+
+   typedef int LoadType;
 
    /*!
     * @brief Data to save for each Box that gets passed along the tree
@@ -232,8 +250,7 @@ private:
     * The purpose of the BoxInTransit is to associate extra data with
     * a Box as it is broken up and passed from process to process.  A
     * BoxInTransit is a Box going through these changes.  It has a
-    * current work load, an orginating Box and a history of the
-    * processes it passed through.
+    * current work load and an orginating Box.
     */
    struct BoxInTransit {
 
@@ -250,19 +267,6 @@ private:
        * @param[in] other
        */
       BoxInTransit(const hier::Box& origin);
-
-      /*!
-       * @brief Construct new object using integer data packed by
-       * putToIntBuffer().
-       *
-       * @param[i/o] ptr Pointer to integer data in buffer.  On return,
-       * @c ptr will be advanced past the data used by this object.
-       *
-       * @param[i] dim
-       */
-      BoxInTransit(
-         const int *&ptr,
-         const tbox::Dimension &dim );
 
       /*!
        * @brief Construct new object having the history an existing
@@ -287,65 +291,60 @@ private:
        *
        * @param[in] other
        */
-      const BoxInTransit& operator = (const BoxInTransit& other);
+      const BoxInTransit&
+      operator = (const BoxInTransit& other)
+      {
+         d_box = other.d_box;
+         d_orig_box = other.d_orig_box;
+         d_boxload = other.d_boxload;
+         return *this;
+      }
 
       //! @brief Return the owner rank.
-      int getOwnerRank() const;
+      int
+      getOwnerRank() const
+      {
+         return d_box.getOwnerRank();
+      }
 
       //! @brief Return the LocalId.
-      hier::LocalId getLocalId() const;
+      hier::LocalId
+      getLocalId() const
+      {
+         return d_box.getLocalId();
+      }
 
       //! @brief Return the Box.
-      hier::Box& getBox();
+      hier::Box&
+      getBox()
+      {
+         return d_box;
+      }
 
       //! @brief Return the Box.
-      const hier::Box& getBox() const;
+      const hier::Box&
+      getBox() const
+      {
+         return d_box;
+      }
 
       /*!
-       * @brief Return number of ints required for putting a putting the
-       * object in message passing buffer.
+       * @brief Put self into a MessageStream.
+       *
+       * This is the opposite of getFromMessageStream().
        */
-      int commBufferSize() const;
+      void
+      putToMessageStream(
+         tbox::MessageStream &msg) const;
 
       /*!
-       * @brief Put self into a int buffer.
+       * @brief Set attributes according to data in a MessageStream.
        *
-       * This is the opposite of getFromIntBuffer().  Number of ints
-       * written is given by commBufferSize(), except when
-       * skip_last_owner is true.  If skip_last_owner is true, and the
-       * last owner in proc_hist will be skipped (proc_hist must be
-       * non-empty) and the number of integers put in the buffer would be
-       * commBufferSize()-1.
-       *
-       * @return The next unwritten position in the buffer.
+       * This is the opposite of putToMessageStream().
        */
-      int *putToIntBuffer(
-         int* buffer,
-         bool skip_last_owner=false) const;
-
-      /*!
-       * @brief Set attributes according to data in int buffer.
-       *
-       * This is the opposite of putToIntBuffer().  Number of ints read
-       * is given by what commBufferSize() AFTER this method is called.
-       *
-       * @return The next unread position in the buffer.
-       */
-      const int *getFromIntBuffer(
-         const int* buffer);
-
-      /*!
-       * @brief Stuff into an outgoing message destined for the previous
-       * owner.
-       *
-       * prev_owner must not be empty.
-       *
-       * @param outgoing_messages Map of outgoing messages, indexed by
-       * recipient rank.  On return, the message corresponding to the
-       * previous owner will be grown by commBufferSize()-1.
-       */
-      void packForPreviousOwner(
-         std::map<int,std::vector<int> > &outgoing_messages ) const;
+      void
+      getFromMessageStream(
+         tbox::MessageStream &msg);
 
       //! @brief The Box.
       hier::Box d_box;
@@ -353,15 +352,8 @@ private:
       //! @brief Originating Box.
       hier::Box d_orig_box;
 
-      //! @brief Work load.
-      int d_load;
-
-      /*!
-       * @brief History of processors passed in transit.  Each time a
-       * process receives a Box, it should append its rank to the
-       * proc_hist.
-       */
-      std::vector<int> d_proc_hist;
+      //! @brief Work load in this box.
+      LoadType d_boxload;
    };
 
 
@@ -383,9 +375,16 @@ private:
        * @brief Compares two BoxInTransit for sorting them from more load
        * to less load.
        */
-      bool operator () (
+      bool
+      operator () (
          const BoxInTransit& a,
-         const BoxInTransit& b) const;
+         const BoxInTransit& b) const
+      {
+         if (a.getBox().size() != b.getBox().size()) {
+            return a.d_boxload > b.d_boxload;
+         }
+         return a.d_box.getId() < b.d_box.getId();
+      }
    };
 
 
@@ -426,12 +425,7 @@ private:
     */
    struct SubtreeLoadData {
       // @brief Constructor.
-      SubtreeLoadData():
-         d_num_procs(0),
-         d_total_work(0),
-         d_load_exported(0),
-         d_load_imported(0) {
-      }
+      SubtreeLoadData();
 
       /*!
        * @brief Number of processes in subtree
@@ -441,7 +435,7 @@ private:
       /*!
        * @brief Current total work amount in the subtree
        */
-      int d_total_work;
+      LoadType d_total_work;
 
       /*!
        * @brief Load exported (or to be exported) to nonlocal process.
@@ -449,7 +443,7 @@ private:
        * If the object is for the local process, load_exported means
        * the load exported to the process's *parent*.
        */
-      int d_load_exported;
+      LoadType d_load_exported;
 
       /*!
        * @brief Load imported from nonlocal process.
@@ -457,12 +451,12 @@ private:
        * If the object is for the local process, load_imported means
        * the load imported from the process's *parent*.
        */
-      int d_load_imported;
+      LoadType d_load_imported;
 
       /*!
        * @brief Ideal work amount for the subtree
        */
-      int d_ideal_work;
+      LoadType d_ideal_work;
 
       /*!
        * @brief Work to export.
@@ -485,7 +479,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Move Boxes in balance_box_level from ranks outside of
@@ -512,12 +506,12 @@ private:
     * src to dst (if negative, from dst to src).
     *
     */
-   int
+   LoadType
    reassignLoads(
       TransitSet& src,
       TransitSet& dst,
       hier::LocalId& next_available_index,
-      int ideal_transfer ) const;
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Shift load from src to dst by swapping BoxInTransit
@@ -533,11 +527,11 @@ private:
     * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
-   int
+   LoadType
    shiftLoadsBySwapping(
       TransitSet& src,
       TransitSet& dst,
-      int ideal_transfer ) const;
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Shift load from src to dst by various box breaking strategies.
@@ -556,12 +550,12 @@ private:
     * @return Amount of load transfered.  If positive, load went
     * from src to dst (if negative, from dst to src).
     */
-   int
+   LoadType
    shiftLoadsByBreaking(
       TransitSet& src,
       TransitSet& dst,
       hier::LocalId& next_available_index,
-      int ideal_transfer ) const;
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Find a BoxInTransit in each of the source and destination
@@ -572,8 +566,8 @@ private:
    swapLoadPair(
       TransitSet& src,
       TransitSet& dst,
-      int& actual_transfer,
-      int ideal_transfer ) const;
+      LoadType& actual_transfer,
+      LoadType ideal_transfer ) const;
 
    /*!
     * @brief Pack load/boxes for sending.
@@ -595,20 +589,22 @@ private:
       int received_data_length ) const;
 
    /*!
-    * @brief Unpack and route neighborhood sets in
-    * unbalanced--->balanced Connector.
-    *
-    * Neighborhood sets for local boxes are directly stored in the
-    * Connector.  Other neighborhood sets are packed into an outgoing
-    * message depending according to where they should be rerouted
-    * to get to their eventual owners.
+    * @brief Pack load/boxes for sending.
     */
    void
-   unpackAndRouteNeighborhoodSets(
-      std::map<int,std::vector<int> > &outgoing_messages,
-      hier::Connector& unbalanced_to_balanced,
-      const int* received_data,
-      int received_data_length ) const;
+   packSubtreeLoadData(
+      tbox::MessageStream &msg,
+      const SubtreeLoadData& load_data) const;
+
+   /*!
+    * @brief Unpack load/boxes received.
+    */
+   void
+   unpackSubtreeLoadData(
+      SubtreeLoadData& proc_data,
+      TransitSet& receiving_bin,
+      hier::LocalId& next_available_index,
+      tbox::MessageStream &msg ) const;
 
    /*!
     * @brief Construct semilocal relationships in
@@ -622,18 +618,11 @@ private:
     * @param [o] unbalanced_to_balanced Connector to store
     * relationships in.
     *
-    * @param [i] exported_to Ranks of processes that the local process
-    * exported work to.
-    *
-    * @param [i] imported_from Ranks of processes that the local
-    * process imported work from.
-    *
     * @param [i] kept_imports Work that was imported and locally kept.
     */
-   void constructSemilocalUnbalancedToBalanced(
+   void
+   constructSemilocalUnbalancedToBalanced(
       hier::Connector &unbalanced_to_balanced,
-      const std::vector<int> &exported_to,
-      const std::vector<int> &imported_from,
       const TreeLoadBalancer::TransitSet &kept_imports ) const;
 
    /*!
@@ -675,31 +664,56 @@ private:
    combinedBreakingPenalty(
       double balance_penalty,
       double surface_penalty,
-      double slender_penalty) const;
+      double slender_penalty) const
+   {
+      double combined_penalty =
+         d_balance_penalty_wt * balance_penalty * balance_penalty
+         + d_surface_penalty_wt * surface_penalty * surface_penalty
+         + d_slender_penalty_wt * slender_penalty * slender_penalty;
+      return combined_penalty;
+   }
 
    double
    computeBalancePenalty(
       const std::vector<hier::Box>& a,
       const std::vector<hier::Box>& b,
-      double off_balance) const;
+      double imbalance) const
+   {
+      NULL_USE(a);
+      NULL_USE(b);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
    double
    computeBalancePenalty(
       const TransitSet& a,
       const TransitSet& b,
-      double off_balance) const;
+      double imbalance) const
+   {
+      NULL_USE(a);
+      NULL_USE(b);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
+
    double
    computeBalancePenalty(
       const hier::Box& a,
-      double off_balance) const;
+      double imbalance) const
+   {
+      NULL_USE(a);
+      return tbox::MathUtilities<double>::Abs(imbalance);
+   }
 
    double
    computeSurfacePenalty(
       const std::vector<hier::Box>& a,
       const std::vector<hier::Box>& b) const;
+
    double
    computeSurfacePenalty(
       const TransitSet& a,
       const TransitSet& b) const;
+
    double
    computeSurfacePenalty(
       const hier::Box& a) const;
@@ -708,10 +722,12 @@ private:
    computeSlenderPenalty(
       const std::vector<hier::Box>& a,
       const std::vector<hier::Box>& b) const;
+
    double
    computeSlenderPenalty(
       const TransitSet& a,
       const TransitSet& b) const;
+
    double
    computeSlenderPenalty(
       const hier::Box& a) const;
@@ -745,14 +761,29 @@ private:
     */
    int
    getWorkloadDataId(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_workload_data_id.getSize() ?
+         d_workload_data_id[level_number] :
+         d_master_workload_data_id);
+   }
 
    /*!
     * @brief Compute the load for a Box.
     */
    double
    computeLoad(
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      /*
+       * Currently only for uniform loads, where the load is equal
+       * to the number of cells.  For non-uniform loads, this method
+       * needs the patch data index for the load.  It would summ up
+       * the individual cell loads in the cell.
+       */
+      return double(box.size());
+   }
 
    /*!
     * @brief Compute the load for the Box, restricted to where it
@@ -761,7 +792,16 @@ private:
    double
    computeLoad(
       const hier::Box& box,
-      const hier::Box& restriction) const;
+      const hier::Box& restriction) const
+   {
+      /*
+       * Currently only for uniform loads, where the load is equal
+       * to the number of cells.  For non-uniform loads, this method
+       * needs the patch data index for the load.  It would summ up
+       * the individual cell loads in the overlap region.
+       */
+      return double((box * restriction).size());
+   }
 
    /*
     * Count the local workload.
@@ -787,7 +827,8 @@ private:
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
     */
-   void constrainMaxBoxSizes(
+   void
+   constrainMaxBoxSizes(
       hier::BoxLevel& box_level,
       hier::Connector &anchor_to_level,
       hier::Connector &level_to_anchor ) const;
@@ -806,7 +847,8 @@ private:
     * @param [i] cycle_number
     * @param [i] number_of_cycles
     */
-   void createBalanceRankGroupBasedOnCycles(
+   void
+   createBalanceRankGroupBasedOnCycles(
       tbox::RankGroup &rank_group,
       int &num_groups,
       int &group_num,
@@ -828,11 +870,12 @@ private:
     * @param [i] rank_group
     * @param [i] bdfs
     */
-   void setupAsyncCommObjects(
+   void
+   setupAsyncCommObjects(
       tbox::AsyncCommStage& child_stage,
-      tbox::AsyncCommPeer<int> *& child_comms,
+      tbox::AsyncCommPeer<char> *& child_comms,
       tbox::AsyncCommStage& parent_stage,
-      tbox::AsyncCommPeer<int> *& parent_comm,
+      tbox::AsyncCommPeer<char> *& parent_comm,
       const tbox::RankGroup &rank_group,
       const tbox::BalancedDepthFirstTree &bdfs ) const;
 
@@ -841,8 +884,25 @@ private:
     */
    void
    destroyAsyncCommObjects(
-      tbox::AsyncCommPeer<int> *& child_comms,
-      tbox::AsyncCommPeer<int> *& parent_comm) const;
+      tbox::AsyncCommPeer<char> *& child_comms,
+      tbox::AsyncCommPeer<char> *& parent_comm) const;
+
+   /*!
+    * @brief Sum up the work in a sequence of boxes.
+    *
+    * @return Sum of work in [first,last)
+    */
+   LoadType
+   sumWorkInBoxes(
+      const TransitSet::const_iterator &first,
+      const TransitSet::const_iterator &last ) const
+   {
+      LoadType sum = 0;
+      for ( TransitSet::const_iterator itr=first; itr!=last; ++itr ) {
+         sum += itr->d_boxload;
+      }
+      return sum;
+   }
 
    /*!
     * @brief Set up timers for the object.
@@ -878,6 +938,13 @@ private:
    tbox::Array<int> d_workload_data_id;
 
    int d_master_workload_data_id;
+
+   /*!
+    * @brief Additional minimum box size restriction.
+    *
+    * See input parameter "min_load_fraction_per_box".
+    */
+   double d_min_load_fraction_per_box;
 
    /*!
     * @brief Weighting factor for penalizing imbalance.
@@ -932,6 +999,11 @@ private:
     */
    bool d_report_load_balance;
 
+   /*!
+    * @brief See "summarize_map" input parameter.
+    */
+   char d_summarize_map;
+
    //@{
    //! @name Used for evaluating peformance.
    bool d_barrier_before;
@@ -943,49 +1015,49 @@ private:
    /*
     * Performance timers.
     */
-   tbox::Pointer<tbox::Timer> t_load_balance_box_level;
-   tbox::Pointer<tbox::Timer> t_get_map;
-   tbox::Pointer<tbox::Timer> t_use_map;
-   tbox::Pointer<tbox::Timer> t_constrain_size;
-   tbox::Pointer<tbox::Timer> t_map_big_boxes;
-   tbox::Pointer<tbox::Timer> t_compute_local_load;
-   tbox::Pointer<tbox::Timer> t_compute_global_load;
-   tbox::Pointer<tbox::Timer> t_compute_tree_load;
-   std::vector<tbox::Pointer<tbox::Timer> > t_compute_tree_load_for_cycle;
-   tbox::Pointer<tbox::Timer> t_reassign_loads;
-   tbox::Pointer<tbox::Timer> t_shift_loads_by_swapping;
-   tbox::Pointer<tbox::Timer> t_shift_loads_by_breaking;
-   tbox::Pointer<tbox::Timer> t_find_swap_pair;
-   tbox::Pointer<tbox::Timer> t_break_off_load;
-   tbox::Pointer<tbox::Timer> t_find_bad_cuts;
-   tbox::Pointer<tbox::Timer> t_send_load_to_children;
-   tbox::Pointer<tbox::Timer> t_send_load_to_parent;
-   tbox::Pointer<tbox::Timer> t_get_load_from_children;
-   tbox::Pointer<tbox::Timer> t_get_load_from_parent;
-   tbox::Pointer<tbox::Timer> t_send_edge_to_children;
-   tbox::Pointer<tbox::Timer> t_send_edge_to_parent;
-   tbox::Pointer<tbox::Timer> t_get_edge_from_children;
-   tbox::Pointer<tbox::Timer> t_get_edge_from_parent;
-   tbox::Pointer<tbox::Timer> t_report_loads;
-   tbox::Pointer<tbox::Timer> t_local_balancing;
-   tbox::Pointer<tbox::Timer> t_local_edges;
-   tbox::Pointer<tbox::Timer> t_finish_comms;
-   tbox::Pointer<tbox::Timer> t_misc1;
-   tbox::Pointer<tbox::Timer> t_misc2;
-   tbox::Pointer<tbox::Timer> t_misc3;
-   tbox::Pointer<tbox::Timer> t_pack_load;
-   tbox::Pointer<tbox::Timer> t_unpack_load;
-   tbox::Pointer<tbox::Timer> t_unpack_edge;
-   tbox::Pointer<tbox::Timer> t_children_load_comm;
-   tbox::Pointer<tbox::Timer> t_parent_load_comm;
-   tbox::Pointer<tbox::Timer> t_children_edge_comm;
-   tbox::Pointer<tbox::Timer> t_parent_edge_comm;
-   tbox::Pointer<tbox::Timer> t_barrier_before;
-   tbox::Pointer<tbox::Timer> t_barrier_after;
-   tbox::Pointer<tbox::Timer> t_child_send_wait;
-   tbox::Pointer<tbox::Timer> t_child_recv_wait;
-   tbox::Pointer<tbox::Timer> t_parent_send_wait;
-   tbox::Pointer<tbox::Timer> t_parent_recv_wait;
+   boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   boost::shared_ptr<tbox::Timer> t_get_map;
+   boost::shared_ptr<tbox::Timer> t_use_map;
+   boost::shared_ptr<tbox::Timer> t_constrain_size;
+   boost::shared_ptr<tbox::Timer> t_map_big_boxes;
+   boost::shared_ptr<tbox::Timer> t_load_distribution;
+   boost::shared_ptr<tbox::Timer> t_compute_local_load;
+   boost::shared_ptr<tbox::Timer> t_compute_global_load;
+   boost::shared_ptr<tbox::Timer> t_compute_tree_load;
+   std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
+   boost::shared_ptr<tbox::Timer> t_reassign_loads;
+   boost::shared_ptr<tbox::Timer> t_shift_loads_by_swapping;
+   boost::shared_ptr<tbox::Timer> t_shift_loads_by_breaking;
+   boost::shared_ptr<tbox::Timer> t_find_swap_pair;
+   boost::shared_ptr<tbox::Timer> t_break_off_load;
+   boost::shared_ptr<tbox::Timer> t_find_bad_cuts;
+   boost::shared_ptr<tbox::Timer> t_send_load_to_children;
+   boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
+   boost::shared_ptr<tbox::Timer> t_get_load_from_children;
+   boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
+   boost::shared_ptr<tbox::Timer> t_construct_semilocal;
+   boost::shared_ptr<tbox::Timer> t_construct_semilocal_comm_wait;
+   boost::shared_ptr<tbox::Timer> t_send_edge_to_children;
+   boost::shared_ptr<tbox::Timer> t_send_edge_to_parent;
+   boost::shared_ptr<tbox::Timer> t_get_edge_from_children;
+   boost::shared_ptr<tbox::Timer> t_get_edge_from_parent;
+   boost::shared_ptr<tbox::Timer> t_report_loads;
+   boost::shared_ptr<tbox::Timer> t_local_balancing;
+   boost::shared_ptr<tbox::Timer> t_finish_sends;
+   boost::shared_ptr<tbox::Timer> t_pack_load;
+   boost::shared_ptr<tbox::Timer> t_unpack_load;
+   boost::shared_ptr<tbox::Timer> t_pack_edge;
+   boost::shared_ptr<tbox::Timer> t_unpack_edge;
+   boost::shared_ptr<tbox::Timer> t_children_load_comm;
+   boost::shared_ptr<tbox::Timer> t_parent_load_comm;
+   boost::shared_ptr<tbox::Timer> t_children_edge_comm;
+   boost::shared_ptr<tbox::Timer> t_parent_edge_comm;
+   boost::shared_ptr<tbox::Timer> t_barrier_before;
+   boost::shared_ptr<tbox::Timer> t_barrier_after;
+   boost::shared_ptr<tbox::Timer> t_child_send_wait;
+   boost::shared_ptr<tbox::Timer> t_child_recv_wait;
+   boost::shared_ptr<tbox::Timer> t_parent_send_wait;
+   boost::shared_ptr<tbox::Timer> t_parent_recv_wait;
 
    /*
     * Statistics on number of cells and patches generated.
@@ -1005,7 +1077,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/TreeLoadBalancer.I"
-#endif
+
 #endif

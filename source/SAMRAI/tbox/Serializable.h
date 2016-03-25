@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for objects to be serialized
  *
  ************************************************************************/
@@ -13,8 +13,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace tbox {
@@ -24,7 +24,7 @@ namespace tbox {
  * database serialization for objects.
  *
  * Objects needing to serialize their data to a database implement the
- * function putToDatabase(tbox::Pointer<tbox::Database>) specifying
+ * function putToDatabase(boost::shared_ptr<tbox::Database>) specifying
  * how to put its data members into the database instance.
  *
  * @note The interface asymmetric in that is no corresponding
@@ -34,29 +34,20 @@ namespace tbox {
  * implementing Serializable not by an additional method.  The
  * database used to restore state from is obtained via a
  * getRootDatabase() call to the RestartManager.
- *
- * @note The derivation from DescribedClass is virtual.  The reason
- * for this is to avoid dynamic casting problems for smart pointers.
- * For some objects in SAMRAI, inheritance from Serializable
- * introduces a class hierarchy that is distinct from the class
- * hierarchy used to implement the class.  Pointers to base objects
- * need to be dynamically cast to derived objects in either hierarchy.
  */
 
-class Serializable:public virtual DescribedClass
+class Serializable
 {
 public:
    /*!
     * Default constructor.
     */
-   SAMRAI_INLINE_KEYWORD Serializable() {
-   }
+   Serializable();
 
    /*!
     * Virtual destructor
     */
-   virtual ~Serializable() {
-   }
+   virtual ~Serializable();
 
    /*!
     * @brief Serializes the object by writing necessary state to the
@@ -65,7 +56,7 @@ public:
     */
    virtual void
    putToDatabase(
-      Pointer<Database> database) = 0;
+      const boost::shared_ptr<Database>& database) const = 0;
 
 };
 

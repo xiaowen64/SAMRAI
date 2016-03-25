@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for spatial refinement operators.
  *
  ************************************************************************/
@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 #include <string>
 #include <map>
@@ -49,12 +48,11 @@ namespace hier {
  * or for a new time refinement routine on an existing type), define
  * the operator by inheriting from this abstract base class.  The operator
  * subclass must implement the refinement operation in the refine()
- * fnction, and provide a response to a general operator request in the
- * findRefineOperator() function.  The stencil width and operator priority
- * must be returned from the getStencilWidth() and getOperatorPriority()
- * functions, respectively.  Then, the new operator must be added to the
+ * fnction.  The stencil width and operator priority must be returned
+ * from the getStencilWidth() and getOperatorPriority() functions,
+ * respectively.  Then, the new operator must be added to the
  * operator list for the appropriate transfer geometry object using the
- * GridGeometry::addRefineOperator() function.
+ * BaseGridGeometry::addRefineOperator() function.
  *
  * Since spatial refinement operators usually depend on patch data centering
  * and data type as well as the mesh coordinate system, they are defined
@@ -63,7 +61,7 @@ namespace hier {
  * @see hier::TransferOperatorRegistry
  */
 
-class RefineOperator:public tbox::DescribedClass
+class RefineOperator
 {
 public:
    /*!
@@ -75,7 +73,7 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   explicit RefineOperator(
+   RefineOperator(
       const tbox::Dimension& dim,
       const std::string& name);
 
@@ -86,19 +84,13 @@ public:
    virtual ~RefineOperator();
 
    /**
-    * Return true if the refinement operation matches the variable and
-    * name std::string identifier request; false, otherwise.
-    */
-   virtual bool
-   findRefineOperator(
-      const tbox::Pointer<Variable>& var,
-      const std::string& op_name) const = 0;
-
-   /**
     * Return name std::string identifier of the refinement operation.
     */
    const std::string&
-   getOperatorName() const;
+   getOperatorName() const
+   {
+      return d_name;
+   }
 
    /**
     * Return the priority of this operator relative to other refinement
@@ -148,7 +140,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    RefineOperator(
@@ -170,7 +165,11 @@ private:
     */
    void
    registerInLookupTable(
-      const std::string& name);
+      const std::string& name)
+   {
+      s_lookup_table.insert(
+         std::pair<std::string, RefineOperator *>(name, this));
+   }
 
    /*!
     * @brief Remove the operator with the given name.
@@ -184,7 +183,10 @@ private:
     * @brief Method registered with ShutdownManager to cleanup statics.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      s_lookup_table.clear();
+   }
 
    const std::string d_name;
 
@@ -200,7 +202,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/RefineOperator.I"
-#endif
 #endif

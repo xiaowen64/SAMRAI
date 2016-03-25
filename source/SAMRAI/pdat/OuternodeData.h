@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -133,7 +133,7 @@ public:
     * @param depth gives the number of data values for each
     *              spatial location in the array.
     */
-   explicit OuternodeData(
+   OuternodeData(
       const hier::Box& box,
       int depth);
 
@@ -548,7 +548,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Write out the class version number and other data members to
@@ -558,7 +558,7 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
 private:
    /*
@@ -610,12 +610,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OuternodeData.C"
-#endif
 
 #endif

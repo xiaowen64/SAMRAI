@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Linear refine operator for node-centered double data on
  *                a Cartesian mesh.
  *
@@ -80,31 +80,20 @@ CartesianNodeDoubleLinearRefine::~CartesianNodeDoubleLinearRefine()
 {
 }
 
-bool CartesianNodeDoubleLinearRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<pdat::NodeVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int CartesianNodeDoubleLinearRefine::getOperatorPriority() const
+int
+CartesianNodeDoubleLinearRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CartesianNodeDoubleLinearRefine::getStencilWidth() const {
+CartesianNodeDoubleLinearRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CartesianNodeDoubleLinearRefine::refine(
+void
+CartesianNodeDoubleLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -118,8 +107,8 @@ void CartesianNodeDoubleLinearRefine::refine(
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      hier::Box fine_box(b());
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      hier::Box fine_box(*b);
       fine_box.growUpper(hier::IntVector(ratio.getDim(), -1));
       refine(fine,
          coarse,
@@ -130,7 +119,8 @@ void CartesianNodeDoubleLinearRefine::refine(
    }
 }
 
-void CartesianNodeDoubleLinearRefine::refine(
+void
+CartesianNodeDoubleLinearRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -141,15 +131,15 @@ void CartesianNodeDoubleLinearRefine::refine(
    const tbox::Dimension& dim(getDim());
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, fine, coarse, fine_box, ratio);
 
-   tbox::Pointer<pdat::NodeData<double> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<pdat::NodeData<double> >
-   fdata = fine.getPatchData(dst_component);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   boost::shared_ptr<pdat::NodeData<double> > cdata(
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<double> > fdata(
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-#endif
 
    const hier::Box cgbox(cdata->getGhostBox());
 
@@ -158,10 +148,12 @@ void CartesianNodeDoubleLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

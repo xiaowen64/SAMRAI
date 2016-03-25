@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition problem-dependent interfaces
  *
  ************************************************************************/
@@ -16,7 +16,9 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -73,13 +75,12 @@ public:
    LocationIndexRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Destructor.
     */
-   virtual ~LocationIndexRobinBcCoefs(
-      void);
+   virtual ~LocationIndexRobinBcCoefs();
 
    /*!
     * @brief Function to fill arrays of Robin boundary
@@ -110,10 +111,10 @@ public:
     */
    void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       double fill_time = 0.0) const;
@@ -134,7 +135,16 @@ public:
    void
    setBoundaryValue(
       int location_index,
-      double value);
+      double value)
+   {
+      if (location_index < 0 || location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+      }
+      d_a_map[location_index] = 1.0;
+      d_b_map[location_index] = 0.0;
+      d_g_map[location_index] = value;
+   }
 
    /*!
     * @brief Set the boundary slope at a given location index.
@@ -145,7 +155,16 @@ public:
    void
    setBoundarySlope(
       int location_index,
-      double slope);
+      double slope)
+   {
+      if (location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+      }
+      d_a_map[location_index] = 0.0;
+      d_b_map[location_index] = 1.0;
+      d_g_map[location_index] = slope;
+   }
 
    /*!
     * @brief Set the values of coefficients a and g at a
@@ -168,7 +187,16 @@ public:
       int location_index,
       double a,
       double b,
-      double g);
+      double g)
+   {
+      if (location_index >= 2 * d_dim.getValue()) {
+         TBOX_ERROR("Location index in " << d_dim.getValue() << "D must be\n"
+                    << "in [0," << 2 * d_dim.getValue() - 1 << "].\n");
+      }
+      d_a_map[location_index] = a;
+      d_b_map[location_index] = b;
+      d_g_map[location_index] = g;
+   }
 
    /*!
     * @brief Access coefficients.
@@ -178,7 +206,12 @@ public:
       int location_index,
       double& a,
       double& b,
-      double& g) const;
+      double& g) const
+   {
+      a = d_a_map[location_index];
+      b = d_b_map[location_index];
+      g = d_g_map[location_index];
+   }
 
    /**
     * @brief Get the name of this object.
@@ -186,7 +219,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
    /*!
     * @brief Assignment operator.
@@ -207,7 +243,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*
     * @brief Object dimension
@@ -238,7 +274,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/LocationIndexRobinBcCoefs.I"
-#endif
 #endif

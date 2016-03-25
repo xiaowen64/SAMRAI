@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A box structure representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -66,7 +66,7 @@ public:
     * two, or three.
     */
    DatabaseBox(
-      const tbox::Dimension& dim,
+      const Dimension& dim,
       const int * lower,
       const int * upper);
 
@@ -99,40 +99,66 @@ public:
    /**
     * Return the dimension of this object.
     */
-   const tbox::Dimension&
-   getDim() const;
+   const Dimension&
+   getDim() const
+   {
+      return d_dim;
+   }
 
    void
    setDim(
-      const tbox::Dimension& dim);
+      const Dimension& dim)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(dim);
+      TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
+      d_dim = Dimension(dim);
+      d_data.d_dimension = d_dim.getValue();
+   }
 
    /**
     * Return the specified component (non-const) of the lower index of the box.
     */
    int&
    lower(
-      const int i);
+      const int i)
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_lo[i];
+   }
 
    /**
     * Return the specified component (non-const) of the upper index of the box.
     */
    int&
    upper(
-      const int i);
+      const int i)
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_hi[i];
+   }
 
    /**
     * Return the specified component (const) of the lower index of the box.
     */
    int
    lower(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_lo[i];
+   }
 
    /**
     * Return the specified component (const) of the upper index of the box.
     */
    int
    upper(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      return d_data.d_hi[i];
+   }
+
 
    /**
     * Check whether two boxes represent the same portion of index space.
@@ -154,13 +180,10 @@ public:
     */
    DatabaseBox_POD d_data;
 
-   tbox::Dimension d_dim;
+   Dimension d_dim;
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/DatabaseBox.I"
-#endif
 #endif

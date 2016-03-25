@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
@@ -12,11 +12,12 @@
 #define included_algs_OuteredgeSumTransactionFactory
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -59,12 +60,11 @@ public:
    /*!
     * @brief Allocate an OuteredgeSumTransaction object.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
-    * @param dst_patch_id   Integer index of destination patch in destination
-    *                       patch level.
-    * @param src_patch_id   Integer index of source patch in source patch level.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param dst_node       Destination Box in destination patch level.
+    * @param src_node       Source Box in source patch level.
     * @param ritem_id       Integer index of xfer::RefineClass<DIM>::Data item
     *                       associated with transaction.
     * @param box            Optional const reference to box defining region of
@@ -73,11 +73,11 @@ public:
     *                       refine transaction involves time interpolation.
     *                       Default is false.
     */
-   tbox::Pointer<tbox::Transaction>
+   boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       int ritem_id,
@@ -90,11 +90,11 @@ public:
     * Same as previous allocate routine but with default empty box and no
     * timer interpolation.
     */
-   tbox::Pointer<tbox::Transaction>
+   boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
       int ritem_id) const;
@@ -103,7 +103,7 @@ public:
     * @brief Function to initialize scratch space data for the sum transactions
     * (patch data components indicated by the component selector) to zero.
     *
-    * @param level        tbox::Pointer to patch level holding scratch data.
+    * @param level        boost::shared_ptr to patch level holding scratch data.
     * @param fill_time    Double value of simulation time at which preprocess
     *                     operation is called.
     * @param preprocess_vector Const reference to hier::ComponentSelector indicating
@@ -112,7 +112,7 @@ public:
     */
    void
    preprocessScratchSpace(
-      tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double fill_time,
       const hier::ComponentSelector& preprocess_vector) const;
 

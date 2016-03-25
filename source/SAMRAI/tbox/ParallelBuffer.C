@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Parallel I/O class buffer to manage parallel ostreams output
  *
  ************************************************************************/
@@ -60,7 +60,9 @@ ParallelBuffer::ParallelBuffer()
 
 ParallelBuffer::~ParallelBuffer()
 {
-   if (d_buffer) delete[] d_buffer;
+   if (d_buffer) {
+      delete[] d_buffer;
+   }
 }
 
 /*
@@ -72,7 +74,8 @@ ParallelBuffer::~ParallelBuffer()
  *************************************************************************
  */
 
-void ParallelBuffer::setActive(
+void
+ParallelBuffer::setActive(
    bool active)
 {
    if (!active && d_buffer) {
@@ -87,63 +90,6 @@ void ParallelBuffer::setActive(
 /*
  *************************************************************************
  *
- * Set the prefix that begins every new output line.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::setPrefixString(
-   const std::string& text)
-{
-   d_prefix = text;
-}
-
-/*
- *************************************************************************
- *
- * Set the primary output stream.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::setOutputStream1(
-   std::ostream* stream)
-{
-   d_ostream1 = stream;
-}
-
-/*
- *************************************************************************
- *
- * Set the secondary output stream.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::setOutputStream2(
-   std::ostream* stream)
-{
-   d_ostream2 = stream;
-}
-
-/*
- *************************************************************************
- *
- * Output a string to the output stream by invoking the
- * outputString(string,length) method.
- *
- *************************************************************************
- */
-
-void ParallelBuffer::outputString(
-   const std::string& text)
-{
-   outputString(text, static_cast<int>(text.length()));
-}
-
-/*
- *************************************************************************
- *
  * Write a text string of the specified length to the output stream.
  * Note that the string data is accumulated into the internal output
  * buffer until an end-of-line is detected.
@@ -151,7 +97,8 @@ void ParallelBuffer::outputString(
  *************************************************************************
  */
 
-void ParallelBuffer::outputString(
+void
+ParallelBuffer::outputString(
    const std::string& text,
    const int length)
 {
@@ -215,7 +162,8 @@ void ParallelBuffer::outputString(
  *************************************************************************
  */
 
-void ParallelBuffer::copyToBuffer(
+void
+ParallelBuffer::copyToBuffer(
    const std::string& text,
    const int length)
 {
@@ -225,7 +173,7 @@ void ParallelBuffer::copyToBuffer(
 
    if (d_buffer_ptr + length > d_buffer_size) {
       const int new_size =
-         tbox::MathUtilities<int>::Max(d_buffer_ptr + length, 2 * d_buffer_size);
+         MathUtilities<int>::Max(d_buffer_ptr + length, 2 * d_buffer_size);
       char* new_buffer = new char[new_size];
 
       if (d_buffer_ptr > 0) {
@@ -256,7 +204,8 @@ void ParallelBuffer::copyToBuffer(
  *************************************************************************
  */
 
-void ParallelBuffer::outputBuffer()
+void
+ParallelBuffer::outputBuffer()
 {
    if (d_buffer_ptr > 0) {
       if (d_ostream1) {
@@ -280,10 +229,13 @@ void ParallelBuffer::outputBuffer()
  *************************************************************************
  */
 
-int ParallelBuffer::sync()
+int
+ParallelBuffer::sync()
 {
    const int n = static_cast<int>(pptr() - pbase());
-   if (n > 0) outputString(pbase(), n);
+   if (n > 0) {
+      outputString(pbase(), n);
+   }
    return 0;
 }
 
@@ -301,7 +253,8 @@ int ParallelBuffer::sync()
  */
 
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
-std::streamsize ParallelBuffer::xsputn(
+std::streamsize
+ParallelBuffer::xsputn(
    const std::string& text,
    std::streamsize n)
 {
@@ -320,7 +273,8 @@ std::streamsize ParallelBuffer::xsputn(
  *************************************************************************
  */
 
-int ParallelBuffer::overflow(
+int
+ParallelBuffer::overflow(
    int ch)
 {
    const int n = static_cast<int>(pptr() - pbase());
@@ -336,14 +290,6 @@ int ParallelBuffer::overflow(
    pbump(-n);
    return 0;
 }
-
-#ifdef _MSC_VER
-// Should never read from here
-int ParallelBuffer::underflow()
-{
-   return EOF;
-}
-#endif
 
 }
 }

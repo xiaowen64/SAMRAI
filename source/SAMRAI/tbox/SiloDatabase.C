@@ -3,21 +3,20 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
 
-#include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/SiloDatabase.h"
 
 #ifdef HAVE_SILO
-
-#include "SAMRAI/tbox/SiloDatabase.h"
 
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <boost/make_shared.hpp>
 #include <vector>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -52,13 +51,15 @@ const std::string SiloDatabase::COMPLEX_ARRAY_NAME = "/__complex_array__";
 
 const std::string SiloDatabase::mangleID = "__U";
 
-bool SiloDatabase::IsValid(
+bool
+SiloDatabase::IsValid(
    int i)
 {
    return isalnum(i) || i == '_' || i == '/';
 }
 
-std::string SiloDatabase::nameMangle(
+std::string
+SiloDatabase::nameMangle(
    std::string name) {
    std::stringstream mangled_name;
 
@@ -73,7 +74,8 @@ std::string SiloDatabase::nameMangle(
    return mangled_name.str();
 }
 
-std::string SiloDatabase::nameDemangle(
+std::string
+SiloDatabase::nameDemangle(
    std::string name) {
 
    std::stringstream unmangled_name;
@@ -162,7 +164,8 @@ SiloDatabase::~SiloDatabase()
  *************************************************************************
  */
 
-bool SiloDatabase::create(
+bool
+SiloDatabase::create(
    const std::string& name)
 {
    TBOX_ASSERT(!name.empty());
@@ -198,7 +201,8 @@ bool SiloDatabase::create(
  *************************************************************************
  */
 
-bool SiloDatabase::open(
+bool
+SiloDatabase::open(
    const std::string& name,
    const bool read_write_mode)
 {
@@ -237,7 +241,8 @@ bool SiloDatabase::open(
  *************************************************************************
  */
 
-bool SiloDatabase::close()
+bool
+SiloDatabase::close()
 {
    int err = 0;
    if (d_is_file) {
@@ -261,7 +266,8 @@ bool SiloDatabase::close()
  * Attach to an already created Silo file.
  *************************************************************************
  */
-bool SiloDatabase::attachToFile(
+bool
+SiloDatabase::attachToFile(
    DBfile* file,
    const std::string& directory)
 {
@@ -299,7 +305,8 @@ bool SiloDatabase::attachToFile(
  *************************************************************************
  */
 
-bool SiloDatabase::keyExists(
+bool
+SiloDatabase::keyExists(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -324,7 +331,8 @@ bool SiloDatabase::keyExists(
  *************************************************************************
  */
 
-Array<std::string> SiloDatabase::getAllKeys()
+Array<std::string>
+SiloDatabase::getAllKeys()
 {
    TBOX_ASSERT(!d_directory.empty());
 
@@ -367,7 +375,8 @@ Array<std::string> SiloDatabase::getAllKeys()
  *
  *************************************************************************
  */
-enum Database::DataType SiloDatabase::getArrayType(
+enum Database::DataType
+SiloDatabase::getArrayType(
    const std::string& key) {
    TBOX_ASSERT(!key.empty());
 
@@ -444,7 +453,8 @@ enum Database::DataType SiloDatabase::getArrayType(
  *************************************************************************
  */
 
-int SiloDatabase::getArraySize(
+int
+SiloDatabase::getArraySize(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -502,7 +512,8 @@ int SiloDatabase::getArraySize(
  *************************************************************************
  */
 
-bool SiloDatabase::isDatabase(
+bool
+SiloDatabase::isDatabase(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -518,18 +529,21 @@ bool SiloDatabase::isDatabase(
  *************************************************************************
  */
 
-Pointer<Database>
+boost::shared_ptr<Database>
 SiloDatabase::putDatabase(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
 
-   Pointer<Database> new_database(new SiloDatabase(key,
-                                     d_file,
-                                     d_directory + "/" + key,
-                                     true));
+   std::string path = d_directory + "/" + key;
+   boost::shared_ptr<Database> new_database(
+      boost::make_shared<SiloDatabase>(
+         key,
+         d_file,
+         path,
+         true));
 
-   TBOX_ASSERT(!new_database.isNull());
+   TBOX_ASSERT(new_database);
 
    return new_database;
 }
@@ -542,7 +556,7 @@ SiloDatabase::putDatabase(
  ************************************************************************
  */
 
-Pointer<Database>
+boost::shared_ptr<Database>
 SiloDatabase::getDatabase(
    const std::string& key)
 {
@@ -554,10 +568,12 @@ SiloDatabase::getDatabase(
          << "\n    Key = " << key << " is not a database." << std::endl);
    }
 
-   Pointer<Database> new_database(new SiloDatabase(key,
-                                     d_file,
-                                     d_directory + "/" + key,
-                                     false));
+   boost::shared_ptr<Database> new_database(
+      boost::make_shared<SiloDatabase>(
+         key,
+         d_file,
+         d_directory + "/" + key,
+         false));
 
    return new_database;
 }
@@ -572,7 +588,8 @@ SiloDatabase::getDatabase(
  *************************************************************************
  */
 
-bool SiloDatabase::isBool(
+bool
+SiloDatabase::isBool(
    const std::string& key)
 {
    return isSiloSimpleType(key, DB_SHORT);
@@ -587,7 +604,8 @@ bool SiloDatabase::isBool(
  *************************************************************************
  */
 
-void SiloDatabase::putBoolArray(
+void
+SiloDatabase::putBoolArray(
    const std::string& key,
    const bool * const data,
    const int nelements)
@@ -615,7 +633,8 @@ void SiloDatabase::putBoolArray(
  ************************************************************************
  */
 
-Array<bool> SiloDatabase::getBoolArray(
+Array<bool>
+SiloDatabase::getBoolArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -649,7 +668,8 @@ Array<bool> SiloDatabase::getBoolArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isDatabaseBox(
+bool
+SiloDatabase::isDatabaseBox(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -685,7 +705,8 @@ bool SiloDatabase::isDatabaseBox(
  *
  *************************************************************************
  */
-void SiloDatabase::putDatabaseBoxArray(
+void
+SiloDatabase::putDatabaseBoxArray(
    const std::string& key,
    const DatabaseBox * const data,
    const int nelements)
@@ -755,7 +776,8 @@ void SiloDatabase::putDatabaseBoxArray(
  ************************************************************************
  */
 
-Array<DatabaseBox> SiloDatabase::getDatabaseBoxArray(
+Array<DatabaseBox>
+SiloDatabase::getDatabaseBoxArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -775,7 +797,7 @@ Array<DatabaseBox> SiloDatabase::getDatabaseBoxArray(
        * This preserves old behavior where boxes can be different dims but is
        * likely not supported anywhere else in the library.
        */
-      boxArray[i].setDim(tbox::Dimension((unsigned short)values[i]));
+      boxArray[i].setDim(Dimension((unsigned short)values[i]));
       for (int d = 0; d < boxArray[i].d_data.d_dimension; d++) {
          boxArray[i].d_data.d_lo[d] = values[offset];
          boxArray[i].d_data.d_hi[d] = values[offset + ca->elemlengths[1]];
@@ -798,7 +820,8 @@ Array<DatabaseBox> SiloDatabase::getDatabaseBoxArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isChar(
+bool
+SiloDatabase::isChar(
    const std::string& key)
 {
    return isSiloSimpleType(key, DB_CHAR);
@@ -813,7 +836,8 @@ bool SiloDatabase::isChar(
  *************************************************************************
  */
 
-void SiloDatabase::putCharArray(
+void
+SiloDatabase::putCharArray(
    const std::string& key,
    const char * const data,
    const int nelements)
@@ -835,7 +859,8 @@ void SiloDatabase::putCharArray(
  ************************************************************************
  */
 
-Array<char> SiloDatabase::getCharArray(
+Array<char>
+SiloDatabase::getCharArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -863,7 +888,8 @@ Array<char> SiloDatabase::getCharArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isComplex(
+bool
+SiloDatabase::isComplex(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -901,7 +927,8 @@ bool SiloDatabase::isComplex(
  *************************************************************************
  */
 
-void SiloDatabase::putComplexArray(
+void
+SiloDatabase::putComplexArray(
    const std::string& key,
    const dcomplex * const data,
    const int nelements)
@@ -957,7 +984,8 @@ void SiloDatabase::putComplexArray(
  ************************************************************************
  */
 
-Array<dcomplex> SiloDatabase::getComplexArray(
+Array<dcomplex>
+SiloDatabase::getComplexArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -995,7 +1023,8 @@ Array<dcomplex> SiloDatabase::getComplexArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isDouble(
+bool
+SiloDatabase::isDouble(
    const std::string& key)
 {
    return isSiloSimpleType(key, DB_DOUBLE);
@@ -1010,7 +1039,8 @@ bool SiloDatabase::isDouble(
  *************************************************************************
  */
 
-void SiloDatabase::putDoubleArray(
+void
+SiloDatabase::putDoubleArray(
    const std::string& key,
    const double * const data,
    const int nelements)
@@ -1032,7 +1062,8 @@ void SiloDatabase::putDoubleArray(
  ************************************************************************
  */
 
-Array<double> SiloDatabase::getDoubleArray(
+Array<double>
+SiloDatabase::getDoubleArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1060,7 +1091,8 @@ Array<double> SiloDatabase::getDoubleArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isFloat(
+bool
+SiloDatabase::isFloat(
    const std::string& key)
 {
    return isSiloSimpleType(key, DB_FLOAT);
@@ -1075,7 +1107,8 @@ bool SiloDatabase::isFloat(
  *************************************************************************
  */
 
-void SiloDatabase::putFloatArray(
+void
+SiloDatabase::putFloatArray(
    const std::string& key,
    const float * const data,
    const int nelements)
@@ -1097,7 +1130,8 @@ void SiloDatabase::putFloatArray(
  ************************************************************************
  */
 
-Array<float> SiloDatabase::getFloatArray(
+Array<float>
+SiloDatabase::getFloatArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1126,7 +1160,8 @@ Array<float> SiloDatabase::getFloatArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isInteger(
+bool
+SiloDatabase::isInteger(
    const std::string& key)
 {
    return isSiloSimpleType(key, DB_INT);
@@ -1141,7 +1176,8 @@ bool SiloDatabase::isInteger(
  *************************************************************************
  */
 
-void SiloDatabase::putIntegerArray(
+void
+SiloDatabase::putIntegerArray(
    const std::string& key,
    const int * const data,
    const int nelements)
@@ -1163,7 +1199,8 @@ void SiloDatabase::putIntegerArray(
  ************************************************************************
  */
 
-Array<int> SiloDatabase::getIntegerArray(
+Array<int>
+SiloDatabase::getIntegerArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1191,7 +1228,8 @@ Array<int> SiloDatabase::getIntegerArray(
  *************************************************************************
  */
 
-bool SiloDatabase::isString(
+bool
+SiloDatabase::isString(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1229,7 +1267,8 @@ bool SiloDatabase::isString(
  *************************************************************************
  */
 
-void SiloDatabase::putStringArray(
+void
+SiloDatabase::putStringArray(
    const std::string& key,
    const std::string * const data,
    const int nelements)
@@ -1286,7 +1325,8 @@ void SiloDatabase::putStringArray(
  ************************************************************************
  */
 
-Array<std::string> SiloDatabase::getStringArray(
+Array<std::string>
+SiloDatabase::getStringArray(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1327,7 +1367,8 @@ Array<std::string> SiloDatabase::getStringArray(
  *************************************************************************
  */
 
-void SiloDatabase::printClassData(
+void
+SiloDatabase::printClassData(
    std::ostream& os)
 {
 
@@ -1405,7 +1446,8 @@ void SiloDatabase::printClassData(
 
 }
 
-bool SiloDatabase::isSiloType(
+bool
+SiloDatabase::isSiloType(
    const std::string& key,
    DBObjectType type)
 {
@@ -1424,7 +1466,8 @@ bool SiloDatabase::isSiloType(
    return is_type;
 }
 
-bool SiloDatabase::isSiloSimpleType(
+bool
+SiloDatabase::isSiloSimpleType(
    const std::string& key,
    const int simple_type)
 {
@@ -1446,7 +1489,8 @@ bool SiloDatabase::isSiloSimpleType(
    return is_type;
 }
 
-bool SiloDatabase::putSiloSimpleType(
+bool
+SiloDatabase::putSiloSimpleType(
    const std::string& key,
    const void* data,
    const int nelements,
@@ -1472,7 +1516,8 @@ bool SiloDatabase::putSiloSimpleType(
    return err < 0;
 }
 
-bool SiloDatabase::getSiloSimpleType(
+bool
+SiloDatabase::getSiloSimpleType(
    const std::string& key,
    void* data)
 {
@@ -1492,7 +1537,8 @@ bool SiloDatabase::getSiloSimpleType(
    return err < 0;
 }
 
-int SiloDatabase::getSiloSimpleTypeLength(
+int
+SiloDatabase::getSiloSimpleTypeLength(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1503,7 +1549,8 @@ int SiloDatabase::getSiloSimpleTypeLength(
    return DBGetVarLength(d_file, path.c_str());
 }
 
-std::string SiloDatabase::getName(
+std::string
+SiloDatabase::getName(
    void)
 {
    return d_database_name;

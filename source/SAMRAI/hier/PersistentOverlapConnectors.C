@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Registry of PersistentOverlapConnectorss incident from a common BoxLevel.
  *
  ************************************************************************/
@@ -34,9 +34,11 @@ PersistentOverlapConnectors::PersistentOverlapConnectors(
    d_my_mapped_box_level(my_mapped_box_level)
 {
    if (s_check_created_connectors == '\0') {
-      tbox::Pointer<tbox::Database> idb(tbox::InputManager::getInputDatabase());
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
       if (idb && idb->isDatabase("PersistentOverlapConnectors")) {
-         tbox::Pointer<tbox::Database> rsdb(idb->getDatabase("PersistentOverlapConnectors"));
+         boost::shared_ptr<tbox::Database> rsdb(
+            idb->getDatabase("PersistentOverlapConnectors"));
 
          const bool check_created_connectors(
             rsdb->getBoolWithDefault("check_created_connectors", false));
@@ -69,7 +71,8 @@ PersistentOverlapConnectors::~PersistentOverlapConnectors()
  * Create Connector using global search for edges.
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::createConnector(
+const Connector&
+PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
    const IntVector& connector_width)
 {
@@ -104,7 +107,8 @@ const Connector& PersistentOverlapConnectors::createConnector(
  * Create Connector with user-provided for edges.
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::createConnector(
+const Connector&
+PersistentOverlapConnectors::createConnector(
    const BoxLevel& head,
    const IntVector& connector_width,
    const Connector& relationships)
@@ -116,10 +120,8 @@ const Connector& PersistentOverlapConnectors::createConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -139,7 +141,6 @@ const Connector& PersistentOverlapConnectors::createConnector(
    new_connector->setHead(head);
    new_connector->setWidth(connector_width, true);
    if (s_check_created_connectors == 'y') {
-      // Check correctness.
       OverlapConnectorAlgorithm oca;
       TBOX_ASSERT(oca.checkOverlapCorrectness(*new_connector) == 0);
    }
@@ -157,7 +158,8 @@ const Connector& PersistentOverlapConnectors::createConnector(
  * Cache the user-provided Connector.
  ************************************************************************
  */
-void PersistentOverlapConnectors::cacheConnector(
+void
+PersistentOverlapConnectors::cacheConnector(
    const BoxLevel& head,
    Connector* connector)
 {
@@ -167,10 +169,8 @@ void PersistentOverlapConnectors::cacheConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -187,11 +187,13 @@ void PersistentOverlapConnectors::cacheConnector(
 
    connector->setBase(d_my_mapped_box_level);
    connector->setHead(head, true);
-      
+
    if (s_check_created_connectors == 'y') {
-      // Check correctness.
       OverlapConnectorAlgorithm oca;
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*connector) == 0);
+      if (oca.checkOverlapCorrectness(*connector) != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::cacheConnector errror:\n"
+                    <<"Bad overlap Connector found.");
+      }
    }
 
    d_cons_from_me.push_back(connector);
@@ -205,7 +207,8 @@ void PersistentOverlapConnectors::cacheConnector(
  *
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::findConnector(
+const Connector&
+PersistentOverlapConnectors::findConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
@@ -222,10 +225,8 @@ const Connector& PersistentOverlapConnectors::findConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -302,8 +303,10 @@ const Connector& PersistentOverlapConnectors::findConnector(
    }
 
    if (s_check_accessed_connectors == 'y') {
-      // Check correctness.
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
+      if (oca.checkOverlapCorrectness(*found) != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::findConnector errror:\n"
+                    <<"Bad overlap Connector found.");
+      }
    }
 
    return *found;
@@ -314,7 +317,8 @@ const Connector& PersistentOverlapConnectors::findConnector(
  *
  ************************************************************************
  */
-const Connector& PersistentOverlapConnectors::findOrCreateConnector(
+const Connector&
+PersistentOverlapConnectors::findOrCreateConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only)
@@ -327,10 +331,8 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
       TBOX_ASSERT(d_cons_from_me[i]->getHead().isInitialized());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getBase().getBoxLevelHandle().isNull());
-      TBOX_ASSERT(
-         !d_cons_from_me[i]->getHead().getBoxLevelHandle().isNull());
+      TBOX_ASSERT(d_cons_from_me[i]->getBase().getBoxLevelHandle());
+      TBOX_ASSERT(d_cons_from_me[i]->getHead().getBoxLevelHandle());
       TBOX_ASSERT(&d_cons_from_me[i]->getBase() ==
          &d_cons_from_me[i]->getBase().getBoxLevelHandle()->
          getBoxLevel());
@@ -409,8 +411,10 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
    }
 
    if (s_check_accessed_connectors == 'y') {
-      // Check correctness.
-      TBOX_ASSERT(oca.checkOverlapCorrectness(*found) == 0);
+      if (oca.checkOverlapCorrectness(*found) != 0) {
+         TBOX_ERROR("PersistentOverlapConnectors::findOrCreateConnector errror:\n"
+                    <<"Bad overlap Connector found.");
+      }
    }
 
    return *found;
@@ -421,7 +425,8 @@ const Connector& PersistentOverlapConnectors::findOrCreateConnector(
  *
  ************************************************************************
  */
-bool PersistentOverlapConnectors::hasConnector(
+bool
+PersistentOverlapConnectors::hasConnector(
    const BoxLevel& head,
    const IntVector& min_connector_width,
    bool exact_width_only) const
@@ -449,7 +454,8 @@ bool PersistentOverlapConnectors::hasConnector(
  *
  ************************************************************************
  */
-void PersistentOverlapConnectors::clear()
+void
+PersistentOverlapConnectors::clear()
 {
    if (d_cons_from_me.empty() && d_cons_to_me.empty()) {
       return;

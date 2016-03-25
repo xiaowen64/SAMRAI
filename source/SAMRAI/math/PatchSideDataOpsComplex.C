@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex side-centered patch data.
  *
  ************************************************************************/
@@ -13,9 +13,6 @@
 
 #include "SAMRAI/math/PatchSideDataOpsComplex.h"
 #include "SAMRAI/pdat/SideGeometry.h"
-#ifdef DEBUG_CHECK_ASSERTIONS
-#include "SAMRAI/tbox/Utilities.h"
-#endif
 
 namespace SAMRAI {
 namespace math {
@@ -36,32 +33,38 @@ PatchSideDataOpsComplex::~PatchSideDataOpsComplex()
  *************************************************************************
  */
 
-void PatchSideDataOpsComplex::swapData(
-   tbox::Pointer<hier::Patch> patch,
+void
+PatchSideDataOpsComplex::swapData(
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::SideData<dcomplex> > d1 = patch->getPatchData(data1_id);
-   tbox::Pointer<pdat::SideData<dcomplex> > d2 = patch->getPatchData(data2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   boost::shared_ptr<pdat::SideData<dcomplex> > d1(
+      patch->getPatchData(data1_id),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::SideData<dcomplex> > d2(
+      patch->getPatchData(data2_id),
+      boost::detail::dynamic_cast_tag());
+
+   TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getDirectionVector() == d2->getDirectionVector());
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
-#endif
+
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
 }
 
-void PatchSideDataOpsComplex::printData(
-   const tbox::Pointer<pdat::SideData<dcomplex> >& data,
+void
+PatchSideDataOpsComplex::printData(
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    s << "Data box = " << box << std::endl;
@@ -69,35 +72,24 @@ void PatchSideDataOpsComplex::printData(
    s << "\n";
 }
 
-void PatchSideDataOpsComplex::copyData(
-   tbox::Pointer<pdat::SideData<dcomplex> >& dst,
-   const tbox::Pointer<pdat::SideData<dcomplex> >& src,
+void
+PatchSideDataOpsComplex::copyData(
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& dst,
+   const boost::shared_ptr<pdat::SideData<dcomplex> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(box.getDim());
-
+   int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       if (directions(d)) {
-         const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
-         (dst->getArrayData(d)).copy(src->getArrayData(d), side_box);
+         dst->getArrayData(d).copy(src->getArrayData(d),
+            pdat::SideGeometry::toSideBox(box, d));
       }
    }
-}
-
-void PatchSideDataOpsComplex::setToScalar(
-   tbox::Pointer<pdat::SideData<dcomplex> >& dst,
-   const dcomplex& alpha,
-   const hier::Box& box) const
-{
-   TBOX_ASSERT(!dst.isNull());
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
-
-   dst->fillAll(alpha, box);
 }
 
 }

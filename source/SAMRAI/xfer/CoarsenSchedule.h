@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Schedule.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/xfer/CoarsenClasses.h"
@@ -26,6 +25,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -65,7 +65,7 @@ namespace xfer {
  * @see xfer::CoarsenClasses
  */
 
-class CoarsenSchedule:public tbox::DescribedClass
+class CoarsenSchedule
 {
 public:
    /*!
@@ -88,36 +88,37 @@ public:
     * if either patch level pointer, the refine classes pointer, or the
     * transaction factory pointer, is null.
     *
-    * @param[in] crse_level      Pointer to coarse (destination) patch level.
-    * @param[in] fine_level      Pointer to fine (source) patch level.
-    * @param[in] coarsen_classes Pointer to structure containing patch data and
-    *                            operator information.  In general, this is
-    *                            constructed by the calling CoarsenAlgorithm
-    *                            object.
-    * @param[in] transaction_factory  Pointer to a factory object that will
-    *                                 create data transactions.
-    * @param[in] patch_strategy  Pointer to a coarsen patch strategy object
-    *                            that provides user-defined coarsen operations.
-    *                            This pointer may be null, in which case no
-    *                            user-defined coarsen operations will be
-    *                            performed.
+    * @param[in] crse_level      boost::shared_ptr to coarse (destination)
+    *                            patch level.
+    * @param[in] fine_level      boost::shared_ptr to fine (source) patch level.
+    * @param[in] coarsen_classes boost::shared_ptr to structure containing
+    *                            patch data and operator information.  In
+    *                            general, this is constructed by the calling
+    *                            CoarsenAlgorithm object.
+    * @param[in] transaction_factory  boost::shared_ptr to a factory object
+    *                                 that will create data transactions.
+    * @param[in] patch_strategy  boost::shared_ptr to a coarsen patch strategy
+    *                            object that provides user-defined coarsen
+    *                            operations.  This pointer may be null, in
+    *                            which case no user-defined coarsen operations
+    *                            will be performed.
     * @param[in] fill_coarse_data  Boolean indicating whether coarse data
     *                              should be filled before coarsening
     *                              operations are done.
     */
-   explicit CoarsenSchedule(
-      tbox::Pointer<hier::PatchLevel> crse_level,
-      tbox::Pointer<hier::PatchLevel> fine_level,
-      const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes,
-      tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory,
-      xfer::CoarsenPatchStrategy * patch_strategy,
+   CoarsenSchedule(
+      const boost::shared_ptr<hier::PatchLevel>& crse_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const boost::shared_ptr<CoarsenClasses>& coarsen_classes,
+      const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
+      CoarsenPatchStrategy * patch_strategy,
       bool fill_coarse_data);
 
    /*!
-    * @brief The virtual destructor for the schedule releases all internal
+    * @brief The destructor for the schedule releases all internal
     * storage.
     */
-   virtual ~CoarsenSchedule();
+   ~CoarsenSchedule();
 
    /*!
     * @brief Reset this coarsen schedule to perform data transfers asssociated
@@ -127,14 +128,15 @@ public:
     * coarsen_classes argument rather than the data it has previously been
     * set to operate on.
     *
-    * @param[in] coarsen_classes  Pointer to structure containing patch data and
-    *                             operator information.  In general, this is
-    *                             constructed by the calling CoarsenAlgorithm
-    *                             object.  This pointer must be non-null.
+    * @param[in] coarsen_classes  boost::shared_ptr to structure containing
+    *                             patch data and operator information.  In
+    *                             general, this is constructed by the calling
+    *                             CoarsenAlgorithm object.  This pointer must
+    *                             be non-null.
     */
    void
    reset(
-      const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes);
+      const boost::shared_ptr<CoarsenClasses>& coarsen_classes);
 
    /*!
     * @brief Execute the stored communication schedule and perform the data
@@ -146,8 +148,11 @@ public:
    /*!
     * @brief Return the coarsen equivalence classes used in the schedule.
     */
-   const tbox::Pointer<xfer::CoarsenClasses>&
-   getEquivalenceClasses() const;
+   const boost::shared_ptr<CoarsenClasses>&
+   getEquivalenceClasses() const
+   {
+      return d_coarsen_classes;
+   }
 
    /*!
     * @brief Static function to set box intersection algorithm to use during
@@ -170,7 +175,7 @@ public:
     *
     * @param[out] stream Output data stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 
@@ -288,7 +293,7 @@ private:
     */
    void
    coarsenSourceData(
-      xfer::CoarsenPatchStrategy* patch_strategy) const;
+      CoarsenPatchStrategy* patch_strategy) const;
 
    /*!
     * @brief Calculate the maximum ghost cell width to grow boxes to check
@@ -309,9 +314,9 @@ private:
     */
    void
    constructScheduleTransactions(
-      tbox::Pointer<hier::PatchLevel> dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const hier::Box& dst_mapped_box,
-      tbox::Pointer<hier::PatchLevel> src_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
       const hier::Box& src_mapped_box);
 
    /*!
@@ -348,7 +353,7 @@ private:
     */
    void
    setCoarsenItems(
-      const tbox::Pointer<xfer::CoarsenClasses> coarsen_classes);
+      const boost::shared_ptr<CoarsenClasses>& coarsen_classes);
 
    /*!
     * @brief Utility function to clear local copies of coarsen items.
@@ -374,27 +379,20 @@ private:
    void
    initialCheckCoarsenClassItems() const;
 
-   /*
-    * @brief Similar to getOverlapConnector() but requires that the
-    * Connector is found.
-    *
-    * @deprecated  Private method doesn't appear to be used.
-    */
-   const hier::Connector *
-   getOverlapConnector_strict(
-      const hier::BoxLevel& base,
-      const hier::BoxLevel& head,
-      const hier::IntVector& min_gcw) const;
-
    /*!
     * @brief Selects algorithm used to generate communication schedule.
     */
    static std::string s_schedule_generation_method;
 
    /*!
+    * @brief Shared debug checking flag.
+    */
+   static bool s_extra_debug;
+
+   /*!
     * @brief Structures that store coarsen data items.
     */
-   tbox::Pointer<xfer::CoarsenClasses> d_coarsen_classes;
+   boost::shared_ptr<CoarsenClasses> d_coarsen_classes;
 
    /*!
     * @brief number of coarsen data items
@@ -404,14 +402,14 @@ private:
    /*!
     * @brief used as array to store copy of coarsen data items.
     */
-   const xfer::CoarsenClasses::Data** d_coarsen_items;
+   const CoarsenClasses::Data** d_coarsen_items;
 
    /*!
     * @brief Cached pointers to the coarse, fine, and temporary patch levels.
     */
-   tbox::Pointer<hier::PatchLevel> d_crse_level;
-   tbox::Pointer<hier::PatchLevel> d_fine_level;
-   tbox::Pointer<hier::PatchLevel> d_temp_crse_level;
+   boost::shared_ptr<hier::PatchLevel> d_crse_level;
+   boost::shared_ptr<hier::PatchLevel> d_fine_level;
+   boost::shared_ptr<hier::PatchLevel> d_temp_crse_level;
 
    /*!
     * @brief Connector from temporary (coarsened fine) mapped_box_level
@@ -436,7 +434,7 @@ private:
     * @brief Factory object used to create data transactions when schedule is
     * constructed.
     */
-   tbox::Pointer<CoarsenTransactionFactory> d_transaction_factory;
+   boost::shared_ptr<CoarsenTransactionFactory> d_transaction_factory;
 
    /*!
     * @brief Cached ratio between source (fine) level and destination (coarse)
@@ -453,7 +451,7 @@ private:
     * @brief Level-to-level communication schedule between the temporary coarse
     * level and (actual) destination level.
     */
-   tbox::Pointer<tbox::Schedule> d_schedule;
+   boost::shared_ptr<tbox::Schedule> d_schedule;
 
    /*!
     * @brief Boolean indicating whether source data on the coarse temporary
@@ -466,24 +464,24 @@ private:
     * @brief Algorithm used to set up schedule to fill temporary level if
     * d_fill_coarse_data is true.
     */
-   tbox::Pointer<RefineAlgorithm> d_precoarsen_refine_algorithm;
+   boost::shared_ptr<RefineAlgorithm> d_precoarsen_refine_algorithm;
 
    /*!
     * @brief Schedule used to fill temporary level if d_fill_coarse_data is
     * true.
     */
-   tbox::Pointer<RefineSchedule> d_precoarsen_refine_schedule;
+   boost::shared_ptr<RefineSchedule> d_precoarsen_refine_schedule;
 
    //@{
 
    /*!
     * @name Timer objects for performance measurement.
     */
-   static tbox::Pointer<tbox::Timer> t_coarsen_data;
-   static tbox::Pointer<tbox::Timer> t_gen_sched_n_squared;
-   static tbox::Pointer<tbox::Timer> t_gen_sched_dlbg;
-   static tbox::Pointer<tbox::Timer> t_invert_edges;
-   static tbox::Pointer<tbox::Timer> t_coarse_data_fill;
+   static boost::shared_ptr<tbox::Timer> t_coarsen_data;
+   static boost::shared_ptr<tbox::Timer> t_gen_sched_n_squared;
+   static boost::shared_ptr<tbox::Timer> t_gen_sched_dlbg;
+   static boost::shared_ptr<tbox::Timer> t_invert_edges;
+   static boost::shared_ptr<tbox::Timer> t_coarse_data_fill;
 
    //*}
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Common Box operations for Box containers.
  *
  ************************************************************************/
@@ -44,7 +44,7 @@ public:
     *
     * @param[in] output_stream
     *
-    * @param[in] left_border
+    * @param[in] border
     *
     * @param[in] detail_depth
     */
@@ -65,9 +65,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerUtils.I"
-#endif
 
 #endif  // included_hier_BoxContainerUtils

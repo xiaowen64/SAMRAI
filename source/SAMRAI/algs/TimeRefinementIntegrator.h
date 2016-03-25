@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -18,11 +18,11 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
 
@@ -141,8 +141,7 @@ namespace algs {
  * @see mesh::GriddingAlgorithmStrategy
  */
 
-class TimeRefinementIntegrator:
-   public virtual tbox::DescribedClass,
+class TimeRefinementIntegrator :
    public tbox::Serializable
 {
 public:
@@ -154,8 +153,8 @@ public:
     * corresponding to the specified object_name.  Consult top of
     * this header file for further details.  The constructor also
     * registers this object for restart using the specified object name
-    * when the boolean argument is true.  Whether object will write its state to
-    * restart files during program execution is determined by this argument.
+    * when the boolean argument is true.  Whether object will write its state
+    * to restart files during program execution is determined by this argument.
     * Note that it has a default state of true.
     *
     * Note that this object also invokes the variable creation and
@@ -169,17 +168,17 @@ public:
     */
    TimeRefinementIntegrator(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      tbox::Pointer<TimeRefinementLevelStrategy> level_integrator,
-      tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
+      const boost::shared_ptr<tbox::Database>& input_db,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
+      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm,
       bool register_for_restart = true);
 
    /**
     * The destructor for TimeRefinementIntegrator unregisters
     * the integrator object with the restart manager when so registered.
     */
-   ~TimeRefinementIntegrator();
+   virtual ~TimeRefinementIntegrator();
 
    /*!
     * Set AMR patch hierarchy configuration and data at start of simulation.
@@ -256,33 +255,48 @@ public:
     * Return current integration time for coarsest hierarchy level.
     */
    double
-   getIntegratorTime() const;
+   getIntegratorTime() const
+   {
+      return d_integrator_time;
+   }
 
    /**
     * Return initial integration time.
     */
    double
-   getStartTime() const;
+   getStartTime() const
+   {
+      return d_start_time;
+   }
 
    /**
     * Return final integration time.
     */
    double
-   getEndTime() const;
+   getEndTime() const
+   {
+      return d_end_time;
+   }
 
    /**
     * Return integration step count for entire hierarchy
     * (i.e., number of steps taken by the coarsest level).
     */
    int
-   getIntegratorStep() const;
+   getIntegratorStep() const
+   {
+      return d_integrator_step;
+   }
 
    /**
     * Return maximum number of integration steps allowed for entire
     * hierarchy (i.e., steps allowed on coarsest level).
     */
    int
-   getMaxIntegratorSteps() const;
+   getMaxIntegratorSteps() const
+   {
+      return d_max_integrator_steps;
+   }
 
    /**
     * Return true if any steps remain in current step sequence on level
@@ -291,41 +305,69 @@ public:
     */
    bool
    stepsRemaining(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number] < d_max_steps_level[level_number];
+   }
 
    /**
     * Return true if any integration steps remain, false otherwise.
     */
    bool
-   stepsRemaining() const;
+   stepsRemaining() const
+   {
+      return d_integrator_step < d_max_integrator_steps;
+   }
 
    /**
     * Return current time increment used to advance level.
     */
    double
    getLevelDtActual(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_dt_actual_level[level_number];
+   }
 
    /**
     * Return maximum time increment currently allowed on level.
     */
    double
    getLevelDtMax(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_dt_max_level[level_number];
+   }
 
    /**
     * Return current simulation time for level.
     */
    double
    getLevelSimTime(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_level_sim_time[level_number];
+   }
 
    /**
     * Return step count for current integration sequence on level.
     */
    int
    getLevelStep(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number];
+   }
 
    /**
     * Return maximum number of time steps allowed on level in
@@ -333,25 +375,39 @@ public:
     */
    int
    getLevelMaxSteps(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_max_steps_level[level_number];
+   }
 
    /**
     * Return const pointer to patch hierarchy managed by integrator.
     */
-   const tbox::Pointer<hier::PatchHierarchy>
-   getPatchHierarchy() const;
+   const boost::shared_ptr<hier::PatchHierarchy>
+   getPatchHierarchy() const
+   {
+      return d_patch_hierarchy;
+   }
 
    /**
     * Return pointer to level integrator.
     */
-   tbox::Pointer<TimeRefinementLevelStrategy>
-   getLevelIntegrator() const;
+   boost::shared_ptr<TimeRefinementLevelStrategy>
+   getLevelIntegrator() const
+   {
+      return d_refine_level_integrator;
+   }
 
    /**
     * Return pointer to gridding algorithm object.
     */
-   tbox::Pointer<mesh::GriddingAlgorithmStrategy>
-   getGriddingAlgorithm() const;
+   boost::shared_ptr<mesh::GriddingAlgorithmStrategy>
+   getGriddingAlgorithm() const
+   {
+      return d_gridding_algorithm;
+   }
 
    /**
     * Return true if current step on level is first in current step
@@ -359,7 +415,12 @@ public:
     */
    bool
    firstLevelStep(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number] <= 0;
+   }
 
    /**
     * Return true if current step on level is last in current step
@@ -367,7 +428,12 @@ public:
     */
    bool
    lastLevelStep(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT((level_number >= 0) &&
+         (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
+      return d_step_level[level_number] >= d_max_steps_level[level_number];
+   }
 
    /**
     * set the regrid interval to a new value.  This may only be used
@@ -375,7 +441,13 @@ public:
     */
    void
    setRegridInterval(
-      const int regrid_interval);
+      const int regrid_interval)
+   {
+      TBOX_ASSERT(!d_use_refined_timestepping);
+      for (int i = 0; i < d_regrid_interval.getSize(); i++) {
+         d_regrid_interval[i] = regrid_interval;
+      }
+   }
 
    /**
     * Print data representation of this object to given output stream.
@@ -399,13 +471,16 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -486,7 +561,7 @@ private:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*
@@ -521,9 +596,9 @@ private:
     * individual levels in the AMR patch hierarchy.  The gridding algorithm
     * provides grid generation and regridding routines for the AMR hierarchy.
     */
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
-   tbox::Pointer<TimeRefinementLevelStrategy> d_refine_level_integrator;
-   tbox::Pointer<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<TimeRefinementLevelStrategy> d_refine_level_integrator;
+   boost::shared_ptr<mesh::GriddingAlgorithmStrategy> d_gridding_algorithm;
 
    /*
     */
@@ -591,9 +666,9 @@ private:
    /*
     * tbox::Timer objects for performance measurement.
     */
-   static tbox::Pointer<tbox::Timer> t_initialize_hier;
-   static tbox::Pointer<tbox::Timer> t_advance_hier;
-   static tbox::Pointer<tbox::Timer> t_advance_level;
+   static boost::shared_ptr<tbox::Timer> t_initialize_hier;
+   static boost::shared_ptr<tbox::Timer> t_advance_hier;
+   static boost::shared_ptr<tbox::Timer> t_advance_level;
 
    // The following are not implemented:
    TimeRefinementIntegrator(
@@ -629,7 +704,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/TimeRefinementIntegrator.I"
-#endif
+
 #endif

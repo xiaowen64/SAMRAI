@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -49,7 +48,10 @@ public:
     */
    void
    setSanityCheckMethodPreconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_precond = do_check;
+   }
 
    /*!
     * @brief Set whether to run expensive sanity checks on output parameters.
@@ -60,7 +62,10 @@ public:
     */
    void
    setSanityCheckMethodPostconditions(
-      bool do_check);
+      bool do_check)
+   {
+      d_sanity_check_postcond = do_check;
+   }
 
    //@{
 
@@ -111,7 +116,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_nesting_margin,
-      const MultiblockBoxTree* domain = NULL) const;
+      const BoxContainer* domain = NULL) const;
 
    /*!
     * @brief Given base and head BoxLevels, determine the extent
@@ -143,7 +148,7 @@ public:
     * @param[in] head_swell the amount that the head is grown by, given in the
     * head index space and non-negative
     *
-    * @param[in] head_nesting_margin given in the head index space.
+    * @param[in] head_margin given in the head index space.
     *
     * @param[in] domain Domain description, in reference index space,
     * in search tree format.
@@ -158,7 +163,7 @@ public:
       const IntVector& base_swell,
       const IntVector& head_swell,
       const IntVector& head_margin,
-      const MultiblockBoxTree* domain = NULL) const;
+      const BoxContainer* domain = NULL) const;
 
    /*!
     * @brief Compute the parts of one BoxLevel that are external
@@ -181,9 +186,9 @@ public:
     *
     * This method does not require any communication.
     *
-    * @param[out] external.  The existing state will be discarded.
+    * @param[out] external  The existing state will be discarded.
     *
-    * @param[out] input_to_external.  The existing state will be
+    * @param[out] input_to_external  The existing state will be
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
@@ -208,7 +213,18 @@ public:
       Connector& input_to_external,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
+      const BoxContainer& domain = BoxContainer()) const
+   {
+      t_compute_external_parts->start();
+      computeInternalOrExternalParts(
+         external,
+         input_to_external,
+         'e',
+         input_to_reference,
+         nesting_width,
+         domain);
+      t_compute_external_parts->stop();
+   }
 
    /*!
     * @brief Compute the parts of one BoxLevel that are internal
@@ -231,9 +247,9 @@ public:
     *
     * This method does not require any communication.
     *
-    * @param[out] internal.  The existing state will be discarded.
+    * @param[out] internal  The existing state will be discarded.
     *
-    * @param[out] input_to_internal.  The existing state will be
+    * @param[out] input_to_internal  The existing state will be
     * discarded.
     *
     * @param[in] input_to_reference Overlap Connector from input to
@@ -258,7 +274,18 @@ public:
       Connector& input_to_internal,
       const Connector& input_to_reference,
       const IntVector& nesting_width,
-      const MultiblockBoxTree& domain = MultiblockBoxTree()) const;
+      const BoxContainer& domain = BoxContainer()) const
+   {
+      t_compute_internal_parts->start();
+      computeInternalOrExternalParts(
+         internal,
+         input_to_internal,
+         'i',
+         input_to_reference,
+         nesting_width,
+         domain);
+      t_compute_internal_parts->stop();
+   }
 
    //@}
 
@@ -266,14 +293,12 @@ public:
     * @brief Given a set of Boxes, compute its boundary as a set
     * of boxes located just outside it.
     *
-    * @param boundary_boxes[o] Boundary boxes, sorted into BoxContainers
+    * @param[out] boundary Boundary boxes, sorted into BoxContainers
     * according to the BlockId.
     *
-    * @param mapped_boxes[i] Boxes to find the boundary for.
+    * @param[in] refinement_ratio Refinement ratio of mapped_boxes.
     *
-    * @param refinement_ratio[i] Refinement ratio of mapped_boxes.
-    *
-    * @param grid_geometry[i]
+    * @param[in] grid_geometry
     *
     * @param simplify_boundary_boxes Whether to simplify the boundary
     * boxes after computing them.
@@ -282,7 +307,7 @@ public:
    computeBoxesAroundBoundary(
       BoxContainer& boundary,
       const IntVector& refinement_ratio,
-      const tbox::ConstPointer<GridGeometry>& grid_geometry,
+      const boost::shared_ptr<const BaseGridGeometry>& grid_geometry,
       const bool simplify_boundary_boxes = true) const;
 
    //@{
@@ -390,7 +415,7 @@ public:
    void
    addPeriodicImages(
       BoxLevel& mapped_box_level,
-      const BoxTree& domain_search_tree,
+      const BoxContainer& domain_search_tree,
       const IntVector& threshold_distance) const;
 
    /*!
@@ -437,7 +462,7 @@ public:
       BoxLevel& mapped_box_level,
       Connector& mapped_box_level_to_anchor,
       Connector& anchor_to_mapped_box_level,
-      const BoxTree& domain_search_tree,
+      const BoxContainer& domain_search_tree,
       const Connector& anchor_to_anchor) const;
 
    //@}
@@ -449,12 +474,12 @@ private:
     */
    void
    computeInternalOrExternalParts(
-      hier::BoxLevel& parts,
-      hier::Connector& input_to_parts,
+      BoxLevel& parts,
+      Connector& input_to_parts,
       char internal_or_external,
-      const hier::Connector& input_to_reference,
-      const hier::IntVector& nesting_width,
-      const hier::MultiblockBoxTree& domain) const;
+      const Connector& input_to_reference,
+      const IntVector& nesting_width,
+      const BoxContainer& domain) const;
 
    /*!
     * @brief Call-back function to sort boxes.
@@ -470,7 +495,21 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_make_sorting_map = tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::makeSortingMap()");
+      t_compute_external_parts = tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeExternalParts()");
+      t_compute_external_parts_intersection =
+         tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeExternalParts()_intersection");
+      t_compute_internal_parts = tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeInternalParts()");
+      t_compute_internal_parts_intersection =
+         tbox::TimerManager::getManager()->
+         getTimer("BoxLevelConnectorUtils::computeInternalParts()_intersection");
+   }
 
    /*!
     * @brief Delete statics.
@@ -478,13 +517,20 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_make_sorting_map.reset();
+      t_compute_external_parts.reset();
+      t_compute_external_parts_intersection.reset();
+      t_compute_internal_parts.reset();
+      t_compute_internal_parts_intersection.reset();
+   }
 
-   static tbox::Pointer<tbox::Timer> t_make_sorting_map;
-   static tbox::Pointer<tbox::Timer> t_compute_external_parts;
-   static tbox::Pointer<tbox::Timer> t_compute_external_parts_intersection;
-   static tbox::Pointer<tbox::Timer> t_compute_internal_parts;
-   static tbox::Pointer<tbox::Timer> t_compute_internal_parts_intersection;
+   static boost::shared_ptr<tbox::Timer> t_make_sorting_map;
+   static boost::shared_ptr<tbox::Timer> t_compute_external_parts;
+   static boost::shared_ptr<tbox::Timer> t_compute_external_parts_intersection;
+   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts;
+   static boost::shared_ptr<tbox::Timer> t_compute_internal_parts_intersection;
 
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
@@ -496,9 +542,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxLevelConnectorUtils.I"
-#endif
 
 #endif  // included_hier_BoxLevelConnectorUtils

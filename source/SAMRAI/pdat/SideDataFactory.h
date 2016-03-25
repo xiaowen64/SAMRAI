@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating side data objects
  *
  ************************************************************************/
@@ -13,13 +13,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/pdat/MultiblockSideDataTranslator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -55,7 +55,7 @@ public:
     * Otherwise, data will be created for that direction.  See the
     * SideVariable<DIM> class header file for more information.
     */
-   explicit SideDataFactory(
+   SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var);
@@ -63,7 +63,7 @@ public:
    /**
     * Same as previous constructor but with directions vector of 1's
     */
-   explicit SideDataFactory(
+   SideDataFactory(
       int depth,
       const hier::IntVector& ghosts,
       bool fine_boundary_represents_var,
@@ -84,7 +84,7 @@ public:
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual tbox::Pointer<hier::PatchDataFactory>
+   virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -93,7 +93,7 @@ public:
     * The default information about the object (e.g., ghost cell width)
     * is taken from the factory.
     */
-   virtual tbox::Pointer<hier::PatchData>
+   virtual boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -102,7 +102,7 @@ public:
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
     */
-   virtual tbox::Pointer<hier::BoxGeometry>
+   virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -133,21 +133,20 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean value indicating how data for the side quantity will be treated
-    * on coarse-fine interfaces.  This value is passed into the constructor.  See
-    * the FaceVariable<DIM> class header file for more information.
+    * Return a boolean value indicating how data for the side quantity will be
+    * treated on coarse-fine interfaces.  This value is passed into the
+    * constructor.  See the FaceVariable<DIM> class header file for more
+    * information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return d_fine_boundary_represents_var;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
-    * Return true since the side data index space extends beyond the interior of
-    * patches.  That is, side data lives on patch borders.
+    * Return true since the side data index space extends beyond the interior
+    * of patches.  That is, side data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return true;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this SideDataFactory to the
@@ -156,31 +155,18 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const;
-
-   /**
-    * Return pointer to a multiblock data translator
-    */
-   hier::MultiblockDataTranslator *
-   getMultiblockDataTranslator();
+      const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
 private:
    int d_depth;
    bool d_fine_boundary_represents_var;
    hier::IntVector d_directions;
 
-   MultiblockSideDataTranslator<TYPE>* d_mb_trans;
-
 };
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SideDataFactory.C"
-#endif
 
 #endif

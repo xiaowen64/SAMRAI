@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Parallel I/O classes pout, perr, and plog and control class
  *
  ************************************************************************/
@@ -40,16 +40,17 @@ std::ostream plog(&plog_buffer);
 /*
  *************************************************************************
  *
- * Initialie the parallel I/O streams.  This routine must be called
+ * Initialize the parallel I/O streams.  This routine must be called
  * before pout, perr, and plog are used for output but after SAMRAI_MPI
  * has been initialized.  By default, logging is disabled.
  *
  *************************************************************************
  */
 
-void PIO::initialize()
+void
+PIO::initialize()
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    mpi.Comm_rank(&s_rank);
    s_filestream = NULL;
 
@@ -66,7 +67,7 @@ void PIO::initialize()
     * Initialize the error parallel output stream
     */
 
-   std::string buffer = "P=" + tbox::Utilities::processorToString(s_rank) + ":";
+   std::string buffer = "P=" + Utilities::processorToString(s_rank) + ":";
 
    perr_buffer.setActive(true);
    perr_buffer.setPrefixString(buffer);
@@ -92,7 +93,8 @@ void PIO::initialize()
  *************************************************************************
  */
 
-void PIO::finalize()
+void
+PIO::finalize()
 {
    std::cout.flush();
    std::cerr.flush();
@@ -108,7 +110,8 @@ void PIO::finalize()
  *************************************************************************
  */
 
-void PIO::shutdownFilestream()
+void
+PIO::shutdownFilestream()
 {
    if (s_filestream) {
       s_filestream->flush();
@@ -134,7 +137,8 @@ void PIO::shutdownFilestream()
  *************************************************************************
  */
 
-void PIO::logOnlyNodeZero(
+void
+PIO::logOnlyNodeZero(
    const std::string& filename)
 {
    /*
@@ -173,7 +177,8 @@ void PIO::logOnlyNodeZero(
  *************************************************************************
  */
 
-void PIO::logAllNodes(
+void
+PIO::logAllNodes(
    const std::string& filename)
 {
    /*
@@ -187,7 +192,7 @@ void PIO::logAllNodes(
     */
 
    std::string full_filename = filename + "."
-      + tbox::Utilities::processorToString(s_rank);
+      + Utilities::processorToString(s_rank);
    s_filestream = new std::ofstream(full_filename.c_str());
 
    if (!(*s_filestream)) {
@@ -210,8 +215,8 @@ void PIO::logAllNodes(
  *
  *************************************************************************
  */
-
-void PIO::suspendLogging()
+void
+PIO::suspendLogging()
 {
    pout_buffer.setOutputStream2(NULL);
    perr_buffer.setOutputStream2(NULL);
@@ -227,8 +232,8 @@ void PIO::suspendLogging()
  *
  *************************************************************************
  */
-
-void PIO::resumeLogging()
+void
+PIO::resumeLogging()
 {
    if (s_filestream) {
       pout_buffer.setOutputStream2(s_filestream);

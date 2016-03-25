@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Singleton registry for all tranfer operators.
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Description:   Singleton registry for all transfer operators.
  *
  ************************************************************************/
 
@@ -18,19 +18,26 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Variable.h"
+#include "SAMRAI/tbox/Boost.h"
 #include "SAMRAI/tbox/Dimension.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
+
+BEGIN_BOOST_WARNING_SUPPRESSION
+#include <boost/unordered_map.hpp>
+END_BOOST_WARNING_SUPPRESSION
 
 namespace SAMRAI {
 namespace hier {
 
+class BaseGridGeometry;
+
 /*!
  * @brief Class TransferOperatorRegistry is intended to serve as the registry
  * for SAMRAI transfer operators.  It will be a singleton object held by class
- * hier::GridGeometry.
+ * hier::BaseGridGeometry.
  *
  * This hier::TransferOperatorRegistry class provides a lookup mechanism to
  * search for time interpolation and spatial coarsening/refining operators.
@@ -44,9 +51,6 @@ namespace hier {
  *
  * @note
  * <ol>
- *   <li> Operators are added to the heads of the operator lists, so the most
- *        recently added operator will be returned if more than one operator
- *        satisfies a given request.
  *   <li> Additional operators may be added to a transfer geometry object at
  *        any time during program execution. However, each operator must be
  *        added BEFORE it is requested or an unrecoverable assertion will be
@@ -58,7 +62,7 @@ namespace hier {
  * either new patch data types or new operators for pre-existing patch data
  * types.
  *
- * @see hier::GridGeometry
+ * @see hier::BaseGridGeometry
  * @see hier::RefineOperator
  * @see hier::CoarsenOperator
  * @see hier::TimeInterpolateOperator
@@ -71,7 +75,7 @@ public:
     *
     * @param[in]  dim
     */
-   TransferOperatorRegistry(
+   explicit TransferOperatorRegistry(
       const tbox::Dimension& dim);
 
    /*!
@@ -82,83 +86,101 @@ public:
    /*!
     * @brief Add a concrete spatial coarsening operator.
     *
+    * @param[in]  var_type_name The type name of the variable with which
+    *             coarsen_op is associated
     * @param[in]  coarsen_op The concrete coarsening operator to add to the
-    *             lookup list.
+    *             lookup hash map.
     */
    void
    addCoarsenOperator(
-      tbox::Pointer<CoarsenOperator> coarsen_op);
+      const char* var_type_name,
+      const boost::shared_ptr<CoarsenOperator>& coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
     *
+    * @param[in]  var_type_name The type name of the variable with which
+    *             refine_op is associated
     * @param[in]  refine_op The concrete refinement operator to add to the
-    *             lookup list.
+    *             lookup hash map.
     */
    void
    addRefineOperator(
-      tbox::Pointer<RefineOperator> refine_op);
+      const char* var_type_name,
+      const boost::shared_ptr<RefineOperator>& refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
     *
+    * @param[in]  var_type_name The type name of the variable with which
+    *             time_op is associated
     * @param[in]  time_op The concrete time interpolation operator to add
-    *             to the lookup list.
+    *             to the lookup hash map.
     */
    void
    addTimeInterpolateOperator(
-      tbox::Pointer<TimeInterpolateOperator> time_op);
+      const char* var_type_name,
+      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.
     *
-    * Search list for the spatial coarsening operator matching the
-    * request for the given variable.  If the operator is found, a
-    * pointer to it will be returned.  Otherwise, an unrecoverable
-    * error will result and the program will abort.
+    * Extract the spatial coarsening operator matching the request for
+    * the given variable from the hash map.  If the operator is found, a
+    * pointer to it will be returned.  Otherwise, an unrecoverable error
+    * will result and the program will abort.
     *
-    * @param[in]     var The Variable for which the corresponding coarsening
-    *                operator should match.
-    * @param[in]     op_name The string identifier of the coarsening operator.
+    * @param[in]  grid_geometry The grid geometry with which the operator
+    *                           being looked up is associated.
+    * @param[in]  var The Variable for which the corresponding coarsening
+    *                 operator should match.
+    * @param[in]  op_name The string identifier of the coarsening operator.
     */
-   tbox::Pointer<CoarsenOperator>
+   boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      const tbox::Pointer<Variable>& var,
+      BaseGridGeometry& grid_geometry,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
     * @brief Lookup function for refinement operator.
     *
-    * Search list for the spatial refinement operator matching the
-    * request for the given variable.  If the operator is found, a
+    * Extract the spatial refinement operator matching the request for
+    * the given variable from the hash map.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
     * error will result and the program will abort.
     *
-    * @param[in]     var The Variable for which the corresponding refinement
-    *                operator should match.
-    * @param[in]     op_name The string identifier of the refinement operator.
+    * @param[in]  grid_geometry The grid geometry with which the operator
+    *                           being looked up is associated.
+    * @param[in]  var The Variable for which the corresponding refinement
+    *                 operator should match.
+    * @param[in]  op_name The string identifier of the refinement operator.
     */
-   tbox::Pointer<RefineOperator>
+   boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      const tbox::Pointer<Variable>& var,
+      BaseGridGeometry& grid_geometry,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
     * @brief Lookup function for time interpolation operator.
     *
-    * Search list for the time interpolation operator matching the
-    * request for the given variable.  If the operator is found, a
+    * Extract the time interpolation operator matching the request for
+    * the given variable from the hash map.  If the operator is found, a
     * pointer to it will be returned.  Otherwise, an unrecoverable
     * error will result and the program will abort.
     *
-    * @param[in]     var The Variable for which the corresponding time
-    *                interpolation operator should match.
-    * @param[in]     op_name The string identifier of the time interpolation
-    *                operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
+    * @param[in]  grid_geometry The grid geometry with which the operator
+    *                           being looked up is associated.
+    * @param[in]  var The Variable for which the corresponding time
+    *                 interpolation operator should match.
+    * @param[in]  op_name The string identifier of the time interpolation
+    *                     operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
     */
-   tbox::Pointer<TimeInterpolateOperator>
+   boost::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
+      BaseGridGeometry& grid_geometry,
+      const boost::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE");
 
@@ -172,7 +194,7 @@ public:
     * @return The max stencil width computed from all registered
     * operators.
     *
-    * @see hier::GridGeometry::getMaxTransferOpStencilWidth().
+    * @see hier::BaseGridGeometry::getMaxTransferOpStencilWidth().
     * @see hier::RefineOperator::getMaxRefineOpStencilWidth().
     * @see hier::CoarsenOperator::getMaxCoarsenOpStencilWidth().
     */
@@ -193,15 +215,23 @@ public:
     */
    void
    setMinTransferOpStencilWidth(
-      const IntVector& min_value);
+      const IntVector& min_value)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, min_value);
+      d_min_stencil_width = min_value;
+   }
 
    /*!
-    * @brief Get the dimension of the hier::GridGeometry holding this object.
+    * @brief Get the dimension of the hier::BaseGridGeometry holding this
+    * object.
     *
-    * @return The dimension of the hier::GridGeometry holding this object.
+    * @return The dimension of the hier::BaseGridGeometry holding this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * @brief Print class data representation.
@@ -212,77 +242,39 @@ public:
    printClassData(
       std::ostream& os) const;
 
-protected:
-   /*!
-    * @brief Builds the SAMRAI CoarsenOperator with name op_name associated
-    * with the centering of variable var.  Can be specialized by applications
-    * which introduce their own CoarsenOperators.  Specialized class will add
-    * knowledge of how to build application's operators and will call
-    * SAMRAITransferOperatorRegistry::buildCoarsenOperator to build a SAMRAI
-    * libaray CoarsenOperator.
-    */
-   virtual tbox::Pointer<CoarsenOperator>
-   buildCoarsenOperator(
-      const tbox::Pointer<Variable>& var,
-      const std::string& op_name) = 0;
-
-   /*!
-    * @brief Builds the SAMRAI RefineOperator with name op_name associated
-    * with the centering of variable var.  Can be specialized by applications
-    * which introduce their own RefineOperators.  Specialized class will add
-    * knowledge of how to build application's operators and will call
-    * SAMRAITransferOperatorRegistry::buildRefineOperator to build a SAMRAI
-    * libaray RefineOperator.
-    */
-   virtual tbox::Pointer<RefineOperator>
-   buildRefineOperator(
-      const tbox::Pointer<Variable>& var,
-      const std::string& op_name) = 0;
-
-   /*!
-    * @brief Builds the SAMRAI TimeInterpolateOperator with name op_name
-    * associated with the centering of variable var.  Can be specialized by
-    * applications which introduce their own TimeInterpolateOperators.
-    * Specialized class will add knowledge of how to build application's
-    * operators and will call
-    * SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator to build a
-    * SAMRAI libaray TimeInterpolateOperator.
-    */
-   virtual tbox::Pointer<TimeInterpolateOperator>
-   buildTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
-      const std::string& op_name) = 0;
-
 private:
    /*
-    * The list of spatial coarsening operators is maintained to lookup
+    * The hash maps of spatial coarsening operators is maintained to lookup
     * operators for specific variables as requested by algorithms and/or
-    * applications using the hier::GridGeometry holding this object.
+    * applications using the hier::BaseGridGeometry holding this object.
     * Standard concrete coarsening operators can be found in the patchdata
-    * package.  Additional operators may be added to this list at any time
+    * package.  Additional operators may be added to this hash map at any time
     * (see addCoarsenOperator() function).
     */
-   tbox::List<tbox::Pointer<CoarsenOperator> > d_coarsen_operators;
+   boost::unordered_map<std::string, boost::unordered_map<std::string,
+      boost::shared_ptr<CoarsenOperator> > > d_coarsen_operators;
 
    /*
-    * The list of spatial refinement operators is maintained to lookup
+    * The hash map of spatial refinement operators is maintained to lookup
     * operators for specific variables as requested by algorithms and/or
-    * applications using the hier::GridGeometry holding this object.
+    * applications using the hier::BaseGridGeometry holding this object.
     * Standard concrete refinement operators can be found in the patchdata
-    * package.  Additional operators may be added to this list at any time
+    * package.  Additional operators may be added to this hash map at any time
     * (see addRefineOperator() function).
     */
-   tbox::List<tbox::Pointer<RefineOperator> > d_refine_operators;
+   boost::unordered_map<std::string, boost::unordered_map<std::string,
+      boost::shared_ptr<RefineOperator> > > d_refine_operators;
 
    /*
-    * The list of time interpolation operators is maintained to lookup
+    * The hash map of time interpolation operators is maintained to lookup
     * operators for specific variables as requested by algorithms and/or
-    * applications using the hier::GridGeometry holding this object.
+    * applications using the hier::BaseGridGeometry holding this object.
     * Standard concrete time interpolation operators can be found in the
-    * patchdata package.  Additional operators may be added to this list at
+    * patchdata package.  Additional operators may be added to this hash map at
     * any time (see addTimeInterpolateOperator() function).
     */
-   tbox::List<tbox::Pointer<TimeInterpolateOperator> > d_time_operators;
+   boost::unordered_map<std::string, boost::unordered_map<std::string,
+      boost::shared_ptr<TimeInterpolateOperator> > > d_time_operators;
 
    /*!
     * @brief Value set by setMinTransferOpStencilWidth().
@@ -290,7 +282,7 @@ private:
    IntVector d_min_stencil_width;
 
    /*!
-    * @brief The dimension of the GridGeometry holding this object.
+    * @brief The dimension of the grid geometry holding this object.
     */
    tbox::Dimension d_dim;
 
@@ -303,4 +295,5 @@ private:
 
 }
 }
+
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,13 +12,11 @@
 #define included_pdat_FaceGeometry_C
 
 #include "SAMRAI/pdat/FaceGeometry.h"
-#include "SAMRAI/pdat/FaceOverlap.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceGeometry.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -58,7 +56,8 @@ FaceGeometry::~FaceGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> FaceGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+FaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -75,7 +74,7 @@ tbox::Pointer<hier::BoxOverlap> FaceGeometry::calculateOverlap(
    const FaceGeometry* t_src =
       dynamic_cast<const FaceGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -117,6 +116,7 @@ FaceGeometry::toFaceBox(
          face_box.lower(i) = box.lower(y);
          face_box.upper(i) = box.upper(y);
       }
+      face_box.setBlockId(box.getBlockId());
    }
 
    return face_box;
@@ -136,7 +136,8 @@ FaceGeometry::toFaceBox(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> FaceGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+FaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const FaceGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -184,9 +185,9 @@ tbox::Pointer<hier::BoxOverlap> FaceGeometry::doOverlap(
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
             hier::BoxContainer face_restrict_boxes;
-            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
-               face_restrict_boxes.pushBack(toFaceBox(b(), d));
+               face_restrict_boxes.pushBack(toFaceBox(*b, d));
             }
             dst_boxes[d].intersectBoxes(face_restrict_boxes);
          }
@@ -195,8 +196,7 @@ tbox::Pointer<hier::BoxOverlap> FaceGeometry::doOverlap(
 
    // Create the face overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -206,7 +206,7 @@ tbox::Pointer<hier::BoxOverlap> FaceGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 FaceGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -214,16 +214,15 @@ FaceGeometry::setUpOverlap(
    const tbox::Dimension& dim(transformation.getOffset().getDim());
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
-         hier::Box face_box(FaceGeometry::toFaceBox(b(), d));
+         hier::Box face_box(FaceGeometry::toFaceBox(*b, d));
          dst_boxes[d].pushBack(face_box);
       }
    }
 
    // Create the face overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new FaceOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
 
 }
 
@@ -259,6 +258,7 @@ FaceGeometry::transform(
          cell_box.upper() (cell_dim) = box.upper() (d);
       }
       cell_box.upper() (normal_direction) -= 1;
+      cell_box.setBlockId(box.getBlockId());
       transformation.transform(cell_box);
       if (dim.getValue() == 2) {
          const int rotation_num = static_cast<int>(rotation);
@@ -378,6 +378,7 @@ FaceGeometry::transform(
       }
 
       box.upper() (0) += 1;
+      box.setBlockId(cell_box.getBlockId());
    }
 }
 
@@ -572,7 +573,7 @@ FaceGeometry::transform(
 }
 
 void
-FaceGeometry::rotateAboutAxis(pdat::FaceIndex& index,
+FaceGeometry::rotateAboutAxis(FaceIndex& index,
                               const int axis,
                               const int num_rotations)
 {
@@ -580,7 +581,7 @@ FaceGeometry::rotateAboutAxis(pdat::FaceIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   pdat::FaceIndex tmp_index(dim);
+   FaceIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; j++) {
       tmp_index = index;
       index(a) = tmp_index(b);

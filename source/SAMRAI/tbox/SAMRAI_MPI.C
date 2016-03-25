@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
@@ -26,10 +26,6 @@ using namespace std;
 
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/SAMRAI_MPI.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -57,13 +53,37 @@ namespace tbox {
 SAMRAI_MPI::Comm SAMRAI_MPI::commWorld = MPI_COMM_NULL;
 SAMRAI_MPI::Comm SAMRAI_MPI::commNull = MPI_COMM_NULL;
 
-bool tbox::SAMRAI_MPI::s_mpi_is_initialized = false;
-bool tbox::SAMRAI_MPI::s_we_started_mpi(false);
-tbox::SAMRAI_MPI tbox::SAMRAI_MPI::s_samrai_world(tbox::SAMRAI_MPI::commNull);
+bool SAMRAI_MPI::s_mpi_is_initialized = false;
+bool SAMRAI_MPI::s_we_started_mpi(false);
+SAMRAI_MPI SAMRAI_MPI::s_samrai_world(SAMRAI_MPI::commNull);
 
 bool SAMRAI_MPI::s_call_abort_in_serial_instead_of_exit = false;
 bool SAMRAI_MPI::s_call_abort_in_parallel_instead_of_mpiabort = false;
 int SAMRAI_MPI::s_invalid_rank = -1;
+
+/*
+ **************************************************************************
+ * Constructor.
+ **************************************************************************
+ */
+SAMRAI_MPI::SAMRAI_MPI(
+   const Comm& comm):
+   d_comm(comm),
+   d_rank(-1),
+   d_size(-1)
+{
+   if (comm != MPI_COMM_NULL) {
+#ifdef HAVE_MPI
+      if (s_mpi_is_initialized) {
+         MPI_Comm_rank(d_comm, &d_rank);
+         MPI_Comm_size(d_comm, &d_size);
+      }
+#else
+      d_rank = 0;
+      d_size = 1;
+#endif
+   }
+}
 
 /*
  **************************************************************************
@@ -73,23 +93,12 @@ int SAMRAI_MPI::s_invalid_rank = -1;
  **************************************************************************
  */
 
-void SAMRAI_MPI::setCallAbortInSerialInsteadOfExit(
-   bool flag)
-{
-   s_call_abort_in_serial_instead_of_exit = flag;
-}
-
-void SAMRAI_MPI::setCallAbortInParallelInsteadOfMPIAbort(
-   bool flag)
-{
-   s_call_abort_in_parallel_instead_of_mpiabort = flag;
-}
-
-void SAMRAI_MPI::abort()
+void
+SAMRAI_MPI::abort()
 {
 
 #ifdef HAVE_MPI
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getSize() > 1) {
       if (s_call_abort_in_parallel_instead_of_mpiabort) {
          ::abort();
@@ -115,23 +124,13 @@ void SAMRAI_MPI::abort()
 
 /*
  **************************************************************************
- * Whether SAMRAI is using MPI.
- **************************************************************************
- */
-
-bool SAMRAI_MPI::usingMPI()
-{
-   return s_mpi_is_initialized == true;
-}
-
-/*
- **************************************************************************
  *
  * Wrapper for MPI_Init().
  *
  **************************************************************************
  */
-void SAMRAI_MPI::init(
+void
+SAMRAI_MPI::init(
    int* argc,
    char** argv[])
 {
@@ -146,8 +145,8 @@ void SAMRAI_MPI::init(
    MPI_Comm_size(s_samrai_world.d_comm, &s_samrai_world.d_size);
 
 #else
-   (void)argc;
-   (void)argv;
+   NULL_USE(argc);
+   NULL_USE(argv);
 #endif
 
    commWorld = MPI_COMM_WORLD;
@@ -166,7 +165,8 @@ void SAMRAI_MPI::init(
  *
  **************************************************************************
  */
-void SAMRAI_MPI::init(
+void
+SAMRAI_MPI::init(
    Comm comm)
 {
    if (comm == MPI_COMM_NULL) {
@@ -197,7 +197,8 @@ void SAMRAI_MPI::init(
  * Initialize SAMRAI_MPI with MPI disabled.
  **************************************************************************
  */
-void SAMRAI_MPI::initMPIDisabled()
+void
+SAMRAI_MPI::initMPIDisabled()
 {
    s_mpi_is_initialized = false;
    s_we_started_mpi = false;
@@ -222,7 +223,8 @@ void SAMRAI_MPI::initMPIDisabled()
  *
  **************************************************************************
  */
-void SAMRAI_MPI::finalize()
+void
+SAMRAI_MPI::finalize()
 {
 #ifdef HAVE_MPI
    // check if mpi is initialized before calling Comm_free
@@ -254,7 +256,8 @@ void SAMRAI_MPI::finalize()
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Comm_compare(
+int
+SAMRAI_MPI::Comm_compare(
    Comm comm1,
    Comm comm2,
    int* result)
@@ -280,7 +283,8 @@ int SAMRAI_MPI::Comm_compare(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Comm_free(
+int
+SAMRAI_MPI::Comm_free(
    Comm* comm)
 {
 #ifndef HAVE_MPI
@@ -302,7 +306,8 @@ int SAMRAI_MPI::Comm_free(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Finalized(
+int
+SAMRAI_MPI::Finalized(
    int* flag)
 {
 #ifndef HAVE_MPI
@@ -324,7 +329,8 @@ int SAMRAI_MPI::Finalized(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Get_count(
+int
+SAMRAI_MPI::Get_count(
    Status* status,
    Datatype datatype,
    int* count)
@@ -350,7 +356,8 @@ int SAMRAI_MPI::Get_count(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Test(
+int
+SAMRAI_MPI::Test(
    Request* request,
    int* flag,
    Status* status)
@@ -376,7 +383,8 @@ int SAMRAI_MPI::Test(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Test_cancelled(
+int
+SAMRAI_MPI::Test_cancelled(
    Status* status,
    int* flag)
 {
@@ -400,7 +408,8 @@ int SAMRAI_MPI::Test_cancelled(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Wait(
+int
+SAMRAI_MPI::Wait(
    Request* request,
    Status* status)
 {
@@ -424,7 +433,8 @@ int SAMRAI_MPI::Wait(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Waitall(
+int
+SAMRAI_MPI::Waitall(
    int count,
    Request* reqs,
    Status* stats)
@@ -450,7 +460,8 @@ int SAMRAI_MPI::Waitall(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Waitany(
+int
+SAMRAI_MPI::Waitany(
    int count,
    Request* array_of_requests,
    int* index,
@@ -478,7 +489,8 @@ int SAMRAI_MPI::Waitany(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Waitsome(
+int
+SAMRAI_MPI::Waitsome(
    int incount,
    Request* array_of_requests,
    int* outcount,
@@ -511,7 +523,8 @@ int SAMRAI_MPI::Waitsome(
  * Else, return 0.
  *****************************************************************************
  */
-double SAMRAI_MPI::Wtime()
+double
+SAMRAI_MPI::Wtime()
 {
    double rval = 0.0;
    if (!s_mpi_is_initialized) {
@@ -543,7 +556,8 @@ double SAMRAI_MPI::Wtime()
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Allgather(
+int
+SAMRAI_MPI::Allgather(
    void* sendbuf,
    int sendcount,
    Datatype sendtype,
@@ -575,7 +589,8 @@ int SAMRAI_MPI::Allgather(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Allgatherv(
+int
+SAMRAI_MPI::Allgatherv(
    void* sendbuf,
    int sendcounts,
    Datatype sendtype,
@@ -616,7 +631,8 @@ int SAMRAI_MPI::Allgatherv(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Allreduce(
+int
+SAMRAI_MPI::Allreduce(
    void* sendbuf,
    void* recvbuf,
    int count,
@@ -646,7 +662,8 @@ int SAMRAI_MPI::Allreduce(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Attr_get(
+int
+SAMRAI_MPI::Attr_get(
    int keyval,
    void* attribute_val,
    int* flag) const
@@ -672,7 +689,8 @@ int SAMRAI_MPI::Attr_get(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Barrier() const
+int
+SAMRAI_MPI::Barrier() const
 {
    int rval = MPI_SUCCESS;
    if (!s_mpi_is_initialized) {
@@ -690,7 +708,8 @@ int SAMRAI_MPI::Barrier() const
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Bcast(
+int
+SAMRAI_MPI::Bcast(
    void* buffer,
    int count,
    Datatype datatype,
@@ -718,7 +737,8 @@ int SAMRAI_MPI::Bcast(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Comm_dup(
+int
+SAMRAI_MPI::Comm_dup(
    Comm* newcomm) const
 {
 #ifndef HAVE_MPI
@@ -741,7 +761,8 @@ int SAMRAI_MPI::Comm_dup(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Comm_rank(
+int
+SAMRAI_MPI::Comm_rank(
    int* rank) const
 {
 #ifndef HAVE_MPI
@@ -763,7 +784,8 @@ int SAMRAI_MPI::Comm_rank(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Comm_size(
+int
+SAMRAI_MPI::Comm_size(
    int* size) const
 {
 #ifndef HAVE_MPI
@@ -785,7 +807,8 @@ int SAMRAI_MPI::Comm_size(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Gather(
+int
+SAMRAI_MPI::Gather(
    void* sendbuf,
    int sendcount,
    Datatype sendtype,
@@ -819,7 +842,8 @@ int SAMRAI_MPI::Gather(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Gatherv(
+int
+SAMRAI_MPI::Gatherv(
    void* sendbuf,
    int sendcount,
    Datatype sendtype,
@@ -863,7 +887,8 @@ int SAMRAI_MPI::Gatherv(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Iprobe(
+int
+SAMRAI_MPI::Iprobe(
    int source,
    int tag,
    int* flag,
@@ -891,7 +916,8 @@ int SAMRAI_MPI::Iprobe(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Isend(
+int
+SAMRAI_MPI::Isend(
    void* buf,
    int count,
    Datatype datatype,
@@ -923,7 +949,8 @@ int SAMRAI_MPI::Isend(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Irecv(
+int
+SAMRAI_MPI::Irecv(
    void* buf,
    int count,
    Datatype datatype,
@@ -955,7 +982,8 @@ int SAMRAI_MPI::Irecv(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Probe(
+int
+SAMRAI_MPI::Probe(
    int source,
    int tag,
    Status* status) const
@@ -981,7 +1009,8 @@ int SAMRAI_MPI::Probe(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Recv(
+int
+SAMRAI_MPI::Recv(
    void* buf,
    int count,
    Datatype datatype,
@@ -1013,7 +1042,8 @@ int SAMRAI_MPI::Recv(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Reduce(
+int
+SAMRAI_MPI::Reduce(
    void* sendbuf,
    void* recvbuf,
    int count,
@@ -1045,7 +1075,8 @@ int SAMRAI_MPI::Reduce(
  *****************************************************************************
  *****************************************************************************
  */
-int SAMRAI_MPI::Send(
+int
+SAMRAI_MPI::Send(
    void* buf,
    int count,
    Datatype datatype,
@@ -1090,7 +1121,8 @@ int SAMRAI_MPI::Send(
  * Specialized Allreduce for integers.
  **************************************************************************
  */
-int SAMRAI_MPI::AllReduce(
+int
+SAMRAI_MPI::AllReduce(
    int* x,
    int count,
    Op op,
@@ -1158,7 +1190,8 @@ int SAMRAI_MPI::AllReduce(
  * Specialized Allreduce for doubles.
  **************************************************************************
  */
-int SAMRAI_MPI::AllReduce(
+int
+SAMRAI_MPI::AllReduce(
    double* x,
    int count,
    Op op,
@@ -1226,7 +1259,8 @@ int SAMRAI_MPI::AllReduce(
  * Specialized Allreduce for doubles.
  **************************************************************************
  */
-int SAMRAI_MPI::AllReduce(
+int
+SAMRAI_MPI::AllReduce(
    float* x,
    int count,
    Op op,
@@ -1288,6 +1322,157 @@ int SAMRAI_MPI::AllReduce(
 
    return rval;
 }
+
+/*
+ **************************************************************************
+ * Parallel prefix sum for ints.
+ *
+ * This method implements the parallel prefix sum algorithm.
+ * The distance loop is expected to execute (ln d_size) times,
+ * doing up to 1 send and 1 receive each time.
+ *
+ * Note: I'm not sure we have to use all non-blocking calls to get
+ * good performance, but it probably can't hurt.  --BTNG
+ **************************************************************************
+ */
+int
+SAMRAI_MPI::parallelPrefixSum(
+   int* x,
+   int count,
+   int tag) const
+{
+#ifndef HAVE_MPI
+   NULL_USE(x);
+   NULL_USE(count);
+   NULL_USE(tag);
+#endif
+
+   // Scratch data.
+   std::vector<int> send_scr(count), recv_scr(count);
+
+   Request send_req, recv_req;
+   Status send_stat, recv_stat;
+   int mpi_err = MPI_SUCCESS;
+
+   for ( int distance=1; distance < d_size; distance *= 2 ) {
+
+      const int recv_from = d_rank - distance;
+      const int send_to = d_rank + distance;
+
+      if ( recv_from >= 0 ) {
+         mpi_err = Irecv( &recv_scr[0], count, MPI_INT, recv_from, tag, &recv_req );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+      }
+
+      if (send_to < d_size ) {
+         send_scr.clear();
+         send_scr.insert( send_scr.end(), x, x+count );
+         mpi_err = Isend( &send_scr[0], count, MPI_INT, send_to, tag, &send_req );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+      }
+
+      if ( recv_from >= 0 ) {
+         mpi_err = Wait( &recv_req, &recv_stat );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+         for ( int i=0; i<count; ++i ) {
+            x[i] += recv_scr[i];
+         }
+      }
+
+      if ( send_to < d_size ) {
+         mpi_err = Wait( &send_req, &send_stat );
+         if ( mpi_err != MPI_SUCCESS ) {
+            return mpi_err;
+         }
+      }
+
+   }
+
+   return MPI_SUCCESS;
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+SAMRAI_MPI::dupCommunicator(
+   const SAMRAI_MPI& r)
+{
+#ifdef HAVE_MPI
+   int rval = r.Comm_dup(&d_comm);
+   if (rval != MPI_SUCCESS) {
+      TBOX_ERROR("SAMRAI_MPI::dupCommunicator: Error duplicating\n"
+         << "communicator.");
+   }
+   MPI_Comm_rank(d_comm, &d_rank);
+   MPI_Comm_size(d_comm, &d_size);
+   TBOX_ASSERT(d_rank == r.d_rank);
+   TBOX_ASSERT(d_size == r.d_size);
+#else
+   NULL_USE(r);
+#endif
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+SAMRAI_MPI::freeCommunicator()
+{
+#ifdef HAVE_MPI
+   if (d_comm != MPI_COMM_NULL) {
+      TBOX_ASSERT(SAMRAI_MPI::usingMPI());
+      Comm_free(&d_comm);
+      // d_comm is now set to MPI_COMM_NULL;
+   }
+#else
+   d_comm = MPI_COMM_NULL;
+#endif
+   d_rank = 0;
+   d_size = 1;
+}
+
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+void
+SAMRAI_MPI::setCommunicator(
+   const Comm& comm)
+{
+   d_comm = comm;
+   d_rank = 0;
+   d_size = 1;
+#ifdef HAVE_MPI
+   if (s_mpi_is_initialized) {
+      if (d_comm != MPI_COMM_NULL) {
+         MPI_Comm_rank(d_comm, &d_rank);
+         MPI_Comm_size(d_comm, &d_size);
+      }
+   }
+#endif
+}
+
+#ifndef HAVE_MPI
+/*
+ **************************************************************************
+ **************************************************************************
+ */
+SAMRAI_MPI::Status::Status():
+   MPI_SOURCE(-1),
+   MPI_TAG(-1),
+   MPI_ERROR(-1)
+{
+}
+#endif
 
 }
 }

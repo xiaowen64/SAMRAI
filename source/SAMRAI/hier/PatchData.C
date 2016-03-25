@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for patch data objects
  *
  ************************************************************************/
@@ -12,12 +12,6 @@
 #define included_hier_PatchData_C
 
 #include "SAMRAI/hier/PatchData.h"
-
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchData.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -52,10 +46,11 @@ PatchData::~PatchData()
  *************************************************************************
  */
 
-void PatchData::getFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+PatchData::getFromDatabase(
+   const boost::shared_ptr<tbox::Database>& database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("HIER_PATCH_DATA_VERSION");
    if (ver != HIER_PATCH_DATA_VERSION) {
@@ -81,10 +76,11 @@ void PatchData::getFromDatabase(
  *************************************************************************
  */
 
-void PatchData::putToDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+PatchData::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("HIER_PATCH_DATA_VERSION", HIER_PATCH_DATA_VERSION);
    database->putDatabaseBox("d_box", d_box);

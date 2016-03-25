@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utilities class to access common POSIX constants and math ops
  *
  ************************************************************************/
@@ -399,12 +399,6 @@ MathUtilities<double>::round(
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MathUtilities.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/MathUtilities.C"
-#endif
 
 #endif

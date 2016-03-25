@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for spatial refinement operators.
  *
  ************************************************************************/
@@ -14,9 +14,6 @@
 #include "SAMRAI/hier/RefineOperator.h"
 
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/RefineOperator.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -45,18 +42,8 @@ RefineOperator::~RefineOperator()
    removeFromLookupTable(d_name);
 }
 
-/*
- *************************************************************************
- * Register this in the static look-up table.
- *************************************************************************
- */
-void RefineOperator::registerInLookupTable(
-   const std::string& name)
-{
-   s_lookup_table.insert(std::pair<std::string, RefineOperator *>(name, this));
-}
-
-void RefineOperator::removeFromLookupTable(
+void
+RefineOperator::removeFromLookupTable(
    const std::string& name)
 {
    /*
@@ -100,20 +87,6 @@ RefineOperator::getMaxRefineOpStencilWidth(
    }
 
    return max_width;
-}
-
-const tbox::Dimension& RefineOperator::getDim() const
-{
-   return d_dim;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void RefineOperator::finalizeCallback()
-{
-   s_lookup_table.clear();
 }
 
 }

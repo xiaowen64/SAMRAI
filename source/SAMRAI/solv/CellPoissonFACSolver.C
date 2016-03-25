@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
@@ -13,14 +13,9 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/solv/CellPoissonFACSolver.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include IOMANIP_HEADER_FILE
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/CellPoissonFACSolver.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -34,9 +29,9 @@ namespace solv {
  */
 
 bool CellPoissonFACSolver::s_initialized = 0;
-int CellPoissonFACSolver::s_weight_id[SAMRAI::tbox::Dimension::
+int CellPoissonFACSolver::s_weight_id[tbox::Dimension::
                                       MAXIMUM_DIMENSION_VALUE];
-int CellPoissonFACSolver::s_instance_counter[SAMRAI::tbox::Dimension::
+int CellPoissonFACSolver::s_instance_counter[tbox::Dimension::
                                              MAXIMUM_DIMENSION_VALUE];
 
 /*
@@ -57,7 +52,7 @@ int CellPoissonFACSolver::s_instance_counter[SAMRAI::tbox::Dimension::
 CellPoissonFACSolver::CellPoissonFACSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_dim(dim),
    d_object_name(object_name),
    d_poisson_spec(object_name + "::poisson_spec"),
@@ -65,13 +60,10 @@ CellPoissonFACSolver::CellPoissonFACSolver(
    d_fac_precond(object_name + "::fac_precond", d_fac_ops),
    d_bc_object(NULL),
    d_simple_bc(d_dim, object_name + "::bc"),
-   d_hierarchy(NULL),
    d_ln_min(-1),
    d_ln_max(-1),
-   d_context(hier::VariableDatabase::getDatabase()
-             ->getContext(object_name + "::CONTEXT")),
-   d_uv(NULL),
-   d_fv(NULL),
+   d_context(hier::VariableDatabase::getDatabase()->getContext(
+                object_name + "::CONTEXT")),
    d_solver_is_initialized(false),
    d_enable_logging(false)
 {
@@ -108,10 +100,12 @@ CellPoissonFACSolver::CellPoissonFACSolver(
 
    static std::string weight_variable_name("CellPoissonFACSolver_weight");
 
-   tbox::Pointer<pdat::CellVariable<double> > weight = var_db->getVariable(
-         weight_variable_name);
-   if (weight.isNull()) {
-      weight = new pdat::CellVariable<double>(d_dim, weight_variable_name, 1);
+   boost::shared_ptr<pdat::CellVariable<double> > weight(
+      var_db->getVariable(weight_variable_name),
+      boost::detail::dynamic_cast_tag());
+   if (!weight) {
+      weight.reset(
+         new pdat::CellVariable<double>(d_dim, weight_variable_name, 1));
    }
 
    if (s_weight_id[d_dim.getValue() - 1] < 0) {
@@ -175,8 +169,9 @@ CellPoissonFACSolver::~CellPoissonFACSolver()
  ********************************************************************
  */
 
-void CellPoissonFACSolver::getFromInput(
-   tbox::Pointer<tbox::Database> database)
+void
+CellPoissonFACSolver::getFromInput(
+   const boost::shared_ptr<tbox::Database>& database)
 {
    if (database) {
       if (database->isBool("enable_logging")) {
@@ -241,14 +236,15 @@ void CellPoissonFACSolver::getFromInput(
  *************************************************************************
  */
 
-void CellPoissonFACSolver::initializeSolverState(
+void
+CellPoissonFACSolver::initializeSolverState(
    const int solution,
    const int rhs,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarse_level,
    const int fine_level)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
 
    if (d_bc_object == NULL) {
@@ -290,7 +286,8 @@ void CellPoissonFACSolver::initializeSolverState(
 
    int ln;
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-      d_hierarchy->getPatchLevel(ln)->allocatePatchData(s_weight_id[d_dim.getValue() - 1]);
+      d_hierarchy->getPatchLevel(ln)->allocatePatchData(
+         s_weight_id[d_dim.getValue() - 1]);
    }
 
    d_fac_ops.computeVectorWeights(d_hierarchy,
@@ -318,7 +315,8 @@ void CellPoissonFACSolver::initializeSolverState(
    d_solver_is_initialized = true;
 }
 
-void CellPoissonFACSolver::deallocateSolverState()
+void
+CellPoissonFACSolver::deallocateSolverState()
 {
    if (d_hierarchy) {
 
@@ -329,11 +327,11 @@ void CellPoissonFACSolver::deallocateSolverState()
        */
       int ln;
       for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
-         d_hierarchy->getPatchLevel(ln)->deallocatePatchData(s_weight_id[d_dim.getValue()
-                                                                         - 1]);
+         d_hierarchy->getPatchLevel(ln)->deallocatePatchData(
+            s_weight_id[d_dim.getValue() - 1]);
       }
 
-      d_hierarchy.setNull();
+      d_hierarchy.reset();
       d_ln_min = -1;
       d_ln_max = -1;
       d_solver_is_initialized = false;
@@ -343,21 +341,8 @@ void CellPoissonFACSolver::deallocateSolverState()
    }
 }
 
-/*
- *************************************************************************
- * Enable logging and propagate logging flag to major components.
- *************************************************************************
- */
-
-void CellPoissonFACSolver::enableLogging(
-   bool logging)
-{
-   d_enable_logging = logging;
-   d_fac_precond.enableLogging(d_enable_logging);
-   d_fac_ops.enableLogging(d_enable_logging);
-}
-
-void CellPoissonFACSolver::setBoundaries(
+void
+CellPoissonFACSolver::setBoundaries(
    const std::string& boundary_type,
    const int fluxes,
    const int flags,
@@ -378,19 +363,6 @@ void CellPoissonFACSolver::setBoundaries(
    d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
 }
 
-void CellPoissonFACSolver::setBcObject(
-   const RobinBcCoefStrategy* bc_object)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (!bc_object) {
-      TBOX_ERROR(d_object_name << ": NULL pointer for boundary condition\n"
-                               << "object.\n");
-   }
-#endif
-   d_bc_object = bc_object;
-   d_fac_ops.setPhysicalBcCoefObject(d_bc_object);
-}
-
 /*
  *************************************************************************
  *
@@ -404,7 +376,8 @@ void CellPoissonFACSolver::setBcObject(
  *************************************************************************
  */
 
-bool CellPoissonFACSolver::solveSystem(
+bool
+CellPoissonFACSolver::solveSystem(
    const int u,
    const int f)
 {
@@ -461,14 +434,15 @@ bool CellPoissonFACSolver::solveSystem(
  *************************************************************************
  */
 
-bool CellPoissonFACSolver::solveSystem(
+bool
+CellPoissonFACSolver::solveSystem(
    const int u,
    const int f,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarse_ln,
    int fine_ln)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
 
    if (d_enable_logging) {
@@ -499,26 +473,28 @@ bool CellPoissonFACSolver::solveSystem(
    return solver_rval;
 }
 
-void CellPoissonFACSolver::createVectorWrappers(
+void
+CellPoissonFACSolver::createVectorWrappers(
    int u,
-   int f) {
-
+   int f)
+{
    hier::VariableDatabase& vdb(*hier::VariableDatabase::getDatabase());
-   tbox::Pointer<hier::Variable> variable;
+   boost::shared_ptr<hier::Variable> variable;
 
    if (!d_uv || d_uv->getComponentDescriptorIndex(0) != u) {
-      d_uv.setNull();
-      d_uv = new SAMRAIVectorReal<double>(d_object_name + "::uv",
-                                          d_hierarchy,
-                                          d_ln_min,
-                                          d_ln_max);
+     d_uv.reset(new SAMRAIVectorReal<double>(d_object_name + "::uv",
+                                             d_hierarchy,
+                                             d_ln_min,
+                                             d_ln_max));
       vdb.mapIndexToVariable(u, variable);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!variable) {
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << u << "\n");
       }
-      tbox::Pointer<pdat::CellVariable<double> > cell_variable = variable;
+      boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
+         variable,
+         boost::detail::dynamic_cast_tag());
       if (!cell_variable) {
          TBOX_ERROR(d_object_name << ": hier::Patch data index " << u
                                   << " is not a cell-double variable.\n");
@@ -528,18 +504,19 @@ void CellPoissonFACSolver::createVectorWrappers(
    }
 
    if (!d_fv || d_fv->getComponentDescriptorIndex(0) != f) {
-      d_fv.setNull();
-      d_fv = new SAMRAIVectorReal<double>(d_object_name + "::fv",
-                                          d_hierarchy,
-                                          d_ln_min,
-                                          d_ln_max);
+      d_fv.reset(new SAMRAIVectorReal<double>(d_object_name + "::fv",
+                                              d_hierarchy,
+                                              d_ln_min,
+                                              d_ln_max));
       vdb.mapIndexToVariable(f, variable);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!variable) {
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << f << "\n");
       }
-      tbox::Pointer<pdat::CellVariable<double> > cell_variable = variable;
+      boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
+         variable,
+         boost::detail::dynamic_cast_tag());
       if (!cell_variable) {
          TBOX_ERROR(d_object_name << ": hier::Patch data index " << f
                                   << " is not a cell-double variable.\n");
@@ -549,20 +526,10 @@ void CellPoissonFACSolver::createVectorWrappers(
    }
 }
 
-/*
- ***********************************************************************
- * Delete the vector wrappers.  Do not freeVectorComponents because
- * we do not control their data allocation.  The user does that.
- ***********************************************************************
- */
-void CellPoissonFACSolver::destroyVectorWrappers() {
-   d_uv.setNull();
-   d_fv.setNull();
-}
-
-void CellPoissonFACSolver::initializeStatics() {
-
-   for (int d = 0; d < SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+void
+CellPoissonFACSolver::initializeStatics()
+{
+   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
       s_weight_id[d] = -1;
       s_instance_counter[d] = -1;
    }

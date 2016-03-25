@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -29,10 +29,11 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -76,14 +77,15 @@ int main(
       fine_domain.appendItem(fine0);
       fine_domain.appendItem(fine1);
 
-      tbox::Pointer<geom::CartesianGridGeometry> geometry =
-         new geom::CartesianGridGeometry("CartesianGeometry",
+      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+         new geom::CartesianGridGeometry(
+            "CartesianGeometry",
             lo,
             hi,
-            coarse_domain);
+            coarse_domain));
 
-      tbox::Pointer<hier::PatchHierarchy> hierarchy =
-         new hier::PatchHierarchy("PatchHierarchy", geometry);
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+         new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       // Note: For these simple tests we allow at most 2 processors.
       tbox::SAMRAI_MPI mpi(SAMRAIManager::getSAMRAICommWorld());
@@ -121,14 +123,14 @@ int main(
        * the variable database.
        */
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      tbox::Pointer<hier::VariableContext> cxt = variable_db->getContext(
-            "dummy");
+      boost::shared_ptr<hier::VariableContext> cxt(
+         variable_db->getContext("dummy"));
       const hier::IntVector<NDIM> no_ghosts(0);
 
-      tbox::Pointer<pdat::IndexVariable<NDIM, SampleIndexData,
-                                        pdat::CellGeometry> > data =
+      boost::shared_ptr<pdat::IndexVariable<NDIM, SampleIndexData,
+                                            pdat::CellGeometry> > data(
          new pdat::IndexVariable<NDIM, SampleIndexData, pdat::CellGeometry>(
-            "sample");
+            "sample"));
       int data_id = variable_db->registerVariableAndContext(
             data, cxt, no_ghosts);
 
@@ -146,28 +148,32 @@ int main(
       int counter = 0;
       std::ostream& os = tbox::plog;
       for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
-         tbox::Pointer<hier::PatchLevel> level = hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            hierarchy->getPatchLevel(ln));
 
          // allocate "sample" data
          level->allocatePatchData(data_id);
          os << "\nLevel: " << level->getLevelNumber() << " ";
 
          // loop over patches on level
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<hier::Patch> patch = level->getPatch(ip());
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
+            boost::shared_ptr<hier::Patch> patch(level->getPatch(ip()));
             os << "Patch: " << patch->getLocalId() << std::endl;
 
             // access sample data from patch
-            tbox::Pointer<pdat::IndexData<NDIM, SampleIndexData,
-                                          pdat::CellGeometry> > sample =
-               patch->getPatchData(data_id);
+            boost::shared_ptr<pdat::IndexData<NDIM, SampleIndexData,
+                              pdat::CellGeometry> > sample(
+               patch->getPatchData(data_id));
 
             // iterate over cells of patch and invoke one "SampleIndexData"
             // instance on each cell (its possible to do more).
-            for (pdat::CellIterator ic(patch->getBox()); ic; ic++) {
-               SampleIndexData sd(ic());
+            pdat::CellIterator icend(patch->getBox(), false);
+            for (pdat::CellIterator ic(patch->getBox(), true);
+                 ic != icend; ++ic) {
+               SampleIndexData sd(*ic);
                sd.setInt(counter);
-               sample->appendItem(ic(), sd);
+               sample->appendItem(*ic, sd);
                counter++;
             }
 
@@ -185,8 +191,8 @@ int main(
          }
       }
 
-      geometry.setNull();
-      hierarchy.setNull();
+      geometry.reset();
+      hierarchy.reset();
    }
 
    tbox::SAMRAIManager::shutdown();

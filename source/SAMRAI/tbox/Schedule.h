@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -14,14 +14,14 @@
 
 #include "SAMRAI/tbox/AsyncCommPeer.h"
 #include "SAMRAI/tbox/AsyncCommStage.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Transaction.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 #include <map>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -49,10 +49,9 @@ namespace tbox {
  * executed in the order in which they appear in the list.
  *
  * @see tbox::Transaction
- * @see tbox::List
  */
 
-class Schedule:public DescribedClass
+class Schedule
 {
 public:
    /*!
@@ -66,10 +65,10 @@ public:
     * Note that the schedule can not be deleted during a communication
     * phase; this will result in an assertion being thrown.
     */
-   virtual ~Schedule();
+   ~Schedule();
 
    /*!
-    * @beief Add a data transaction to the head of the list of transactions
+    * @brief Add a data transaction to the head of the list of transactions
     * in the schedule.
     *
     * The transaction must involve the local processor as either a
@@ -77,11 +76,12 @@ public:
     * include the local processor, then the transaction is not placed
     * on the schedule.
     *
-    * @param transaction  Pointer to transaction added to the schedule.
+    * @param transaction  boost::shared_ptr to transaction added to the
+    * schedule.
     */
    void
    addTransaction(
-      const Pointer<Transaction>& transaction);
+      const boost::shared_ptr<Transaction>& transaction);
 
    /*!
     * @brief Append a data transaction to the tail of the list of
@@ -92,11 +92,12 @@ public:
     * include the local processor, then the transaction will not be
     * not placed on the schedule.
     *
-    * @param transaction  Pointer to transaction appended to the schedule.
+    * @param transaction  boost::shared_ptr to transaction appended to the
+    * schedule.
     */
    void
    appendTransaction(
-      const Pointer<Transaction>& transaction);
+      const boost::shared_ptr<Transaction>& transaction);
 
    /*!
     * @brief Return number of send transactions in the schedule.
@@ -117,7 +118,10 @@ public:
     * in the schedule.
     */
    int
-   getNumLocalTransactions() const;
+   getNumLocalTransactions() const
+   {
+      return static_cast<int>(d_local_set.size());
+   }
 
    /*!
     * @brief Set the MPI communicator used for communication.
@@ -129,7 +133,10 @@ public:
     */
    void
    setMPI(
-      const SAMRAI_MPI& mpi);
+      const SAMRAI_MPI& mpi)
+   {
+      d_mpi = mpi;
+   }
 
    /*!
     * @brief Specify MPI tag values to use in communication.
@@ -142,7 +149,13 @@ public:
    void
    setMPITag(
       const int first_tag,
-      const int second_tag);
+      const int second_tag)
+   {
+      TBOX_ASSERT(first_tag >= 0);
+      TBOX_ASSERT(second_tag >= 0);
+      d_first_tag = first_tag;
+      d_second_tag = second_tag;
+   }
 
    /*!
     * @brief Specify the message length (in bytes) used in the first
@@ -178,7 +191,11 @@ public:
     */
    void
    setFirstMessageLength(
-      int first_message_length);
+      int first_message_length)
+   {
+      TBOX_ASSERT(first_message_length > 0);
+      d_first_message_length = first_message_length;
+   }
 
    /*!
     * @brief Perform the communication described by the schedule.
@@ -234,7 +251,11 @@ private:
    void
    allocateCommunicationObjects();
    void
-   deallocateCommunicationObjects();
+   deallocateCommunicationObjects()
+   {
+      delete[] d_coms;
+      d_coms = NULL;
+   }
 
    void
    postReceives();
@@ -259,7 +280,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
+      getAllTimers(s_default_timer_prefix, timers);
+   }
 
    /*!
     * Free static timers.
@@ -267,7 +292,10 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      s_static_timers.clear();
+   }
 
    /*
     * @brief Transactions in this schedule.
@@ -275,7 +303,7 @@ private:
     * Three containers of transactions are maintained based on
     * source and destination.
     */
-   typedef std::map<int, List<Pointer<Transaction> > > TransactionSets;
+   typedef std::map<int, std::list<boost::shared_ptr<Transaction> > > TransactionSets;
    TransactionSets d_send_sets;
    TransactionSets d_recv_sets;
 
@@ -283,7 +311,7 @@ private:
     * @brief Transactions where the source and destination are the
     * local process.
     */
-   List<Pointer<Transaction> > d_local_set;
+   std::list<boost::shared_ptr<Transaction> > d_local_set;
 
    //@{ @name High-level asynchronous messages passing objects
 
@@ -300,10 +328,6 @@ private:
     * completion.
     */
    AsyncCommStage d_com_stage;
-   /*!
-    * @brief Container of completed communication operations.
-    */
-   AsyncCommStage::MemberVec d_completed_coms;
 
    //@}
 
@@ -349,16 +373,16 @@ private:
     * corresponding to a prefix.
     */
    struct TimerStruct {
-      tbox::Pointer<tbox::Timer> t_communicate;
-      tbox::Pointer<tbox::Timer> t_begin_communication;
-      tbox::Pointer<tbox::Timer> t_finalize_communication;
-      tbox::Pointer<tbox::Timer> t_post_receives;
-      tbox::Pointer<tbox::Timer> t_post_sends;
-      tbox::Pointer<tbox::Timer> t_process_incoming_messages;
-      tbox::Pointer<tbox::Timer> t_MPI_wait;
-      tbox::Pointer<tbox::Timer> t_pack_stream;
-      tbox::Pointer<tbox::Timer> t_unpack_stream;
-      tbox::Pointer<tbox::Timer> t_local_copies;
+      boost::shared_ptr<Timer> t_communicate;
+      boost::shared_ptr<Timer> t_begin_communication;
+      boost::shared_ptr<Timer> t_finalize_communication;
+      boost::shared_ptr<Timer> t_post_receives;
+      boost::shared_ptr<Timer> t_post_sends;
+      boost::shared_ptr<Timer> t_process_incoming_messages;
+      boost::shared_ptr<Timer> t_MPI_wait;
+      boost::shared_ptr<Timer> t_pack_stream;
+      boost::shared_ptr<Timer> t_unpack_stream;
+      boost::shared_ptr<Timer> t_local_copies;
    };
 
    //! @brief Default prefix for Timers.
@@ -386,7 +410,7 @@ private:
 
    //@}
 
-   static tbox::StartupShutdownManager::Handler
+   static StartupShutdownManager::Handler
       s_initialize_finalize_handler;
 
 };

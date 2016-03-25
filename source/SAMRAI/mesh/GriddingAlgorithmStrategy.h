@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -14,8 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -37,14 +38,12 @@ public:
    /*!
     * @brief Constructor
     */
-   GriddingAlgorithmStrategy() {
-   }
+   GriddingAlgorithmStrategy();
 
    /*!
     * @brief Virtual destructor for GriddingAlgorithmStrategy.
     */
-   virtual ~GriddingAlgorithmStrategy() {
-   }
+   virtual ~GriddingAlgorithmStrategy();
 
    /*!
     * @brief Construct the coarsest level in the hierarchy (i.e., level 0).
@@ -144,7 +143,7 @@ public:
     * @brief Return pointer to level gridding strategy data member.
     */
    virtual
-   tbox::Pointer<TagAndInitializeStrategy>
+   boost::shared_ptr<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const = 0;
 
 };

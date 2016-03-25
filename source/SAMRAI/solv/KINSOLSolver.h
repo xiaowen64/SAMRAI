@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Wrapper class for KINSOL solver function calls and data
  *
  ************************************************************************/
@@ -23,11 +23,15 @@
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/KINSOLAbstractFunctions.h"
 #include "SAMRAI/tbox/IOStream.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 extern "C" {
 #include "kinsol/kinsol.h"
 #include "kinsol/kinsol_spgmr.h"
 }
+
+#include <kinsol/kinsol_impl.h>
+#include <kinsol/kinsol_spils.h>
 
 #include <string>
 
@@ -36,7 +40,7 @@ extern "C" {
    do {                                          \
       if (ierr != KIN_SUCCESS) {                                                                \
          std::ostringstream tboxos;                                                     \
-         SAMRAI::tbox::Utilities::abort( \
+         tbox::Utilities::abort( \
             tboxos.str().c_str(), __FILE__, __LINE__);      \
       }                                                                         \
    } while (0)
@@ -45,10 +49,15 @@ extern "C" {
    do {                                          \
       if (ierr != KIN_SUCCESS) {                                                                \
          std::ostrstream tboxos;                                                        \
-         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);              \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);              \
       }                                                                         \
    } while (0)
 #endif
+
+#define SABSVEC_CAST(v) \
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 namespace SAMRAI {
 namespace solv {
@@ -200,23 +209,41 @@ public:
    setKINSOLFunctions(
       KINSOLAbstractFunctions* my_functions,
       const int uses_preconditioner,
-      const int uses_jac_times_vector);
+      const int uses_jac_times_vector)
+   {
+      TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));
+      d_KINSOL_functions = my_functions;
+      d_uses_preconditioner = uses_preconditioner;
+      d_uses_jac_times_vector = uses_jac_times_vector;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setPreconditioner(
-      const int uses_preconditioner);
+      const int uses_preconditioner)
+   {
+      d_uses_preconditioner = uses_preconditioner;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setJacobianTimesVector(
-      const int uses_jac_times_vector);
+      const int uses_jac_times_vector)
+   {
+      d_uses_jac_times_vector = uses_jac_times_vector;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Return pointer to object that provides user-defined functions for KINSOL.
     */
    KINSOLAbstractFunctions *
-   getKINSOLFunctions() const;
+   getKINSOLFunctions() const
+   {
+      return d_KINSOL_functions;
+   }
 
    /**
     * Set constraints on nonlinear solution.  By default the constraint
@@ -237,7 +264,10 @@ public:
     */
    void
    setConstraintVector(
-      SundialsAbstractVector* constraints);
+      SundialsAbstractVector* constraints)
+   {
+      d_constraints = constraints;
+   }
 
    /**
     * Accessory functions for setting nonlinear solver parameters.
@@ -272,37 +302,72 @@ public:
     */
    void
    setResidualStoppingTolerance(
-      const double tol);
+      const double tol)
+   {
+      TBOX_ASSERT(tol >= 0.0);
+      d_residual_tol = tol;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setMaxIterations(
-      const int maxits);
+      const int maxits)
+   {
+      TBOX_ASSERT(maxits >= 0);
+      d_max_iter = maxits;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setMaxKrylovDimension(
-      const int kdim);
+      const int kdim)
+   {
+      TBOX_ASSERT(kdim >= 0);
+      d_krylov_dimension = kdim;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setGlobalStrategy(
-      const int global);
+      const int global)
+   {
+      TBOX_ASSERT(global == KIN_NONE || global == KIN_LINESEARCH);
+      d_global_strategy = global;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setMaxNewtonStep(
-      const double maxstep);
+      const double maxstep)
+   {
+      TBOX_ASSERT(maxstep > 0.0);
+      d_max_newton_step = maxstep;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setNonlinearStepTolerance(
-      const double tol);
+      const double tol)
+   {
+      TBOX_ASSERT(tol >= 0.0);
+      d_step_tol = tol;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setRelativeFunctionError(
-      const double reserr);
+      const double reserr)
+   {
+      TBOX_ASSERT(reserr > 0.0);
+      d_relative_function_error = reserr;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Accessory functions for setting convergence tests for inner linear
@@ -331,28 +396,58 @@ public:
     */
    void
    setLinearSolverConvergenceTest(
-      const int conv);
+      const int conv)
+   {
+      TBOX_ASSERT(conv == KIN_ETACONSTANT || conv == KIN_ETACHOICE1 ||
+         conv == KIN_ETACHOICE2);
+      d_eta_choice = conv;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setLinearSolverConstantTolerance(
-      const double tol);
+      const double tol)
+   {
+      TBOX_ASSERT(tol >= 0.0);
+      //
+      d_eta_constant = tol;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setEisenstatWalkerParameters(
       const double alpha,
-      const double gamma);
+      const double gamma)
+   {
+      TBOX_ASSERT(alpha >= 0.0);
+      TBOX_ASSERT(gamma >= 0.0);
+      // sgs
+      d_eta_alpha = alpha;
+      d_eta_gamma = gamma;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setMaxStepsWithNoPrecondSetup(
-      const int maxsolv);
+      const int maxsolv)
+   {
+      TBOX_ASSERT(maxsolv > 0);
+      d_max_solves_no_set = maxsolv;
+      d_KINSOL_needs_initialization = true;
+   }
 
    ///
    void
    setMaxLinearSolveRestarts(
-      const int restarts);
+      const int restarts)
+   {
+      TBOX_ASSERT(restarts >= 0);
+      d_max_restarts = restarts;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * The number of nonlinear iterations between checks by the
@@ -362,7 +457,12 @@ public:
     */
    void
    setMaxSubSetupCalls(
-      const int maxsub);
+      const int maxsub)
+   {
+      TBOX_ASSERT(maxsub >= 0);
+      d_maxsub = maxsub;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Set values of omega_min and omega_max scalars used by nonlinear
@@ -373,7 +473,15 @@ public:
    void
    setResidualMonitoringParams(
       const double omega_min,
-      const double omega_max);
+      const double omega_max)
+   {
+      TBOX_ASSERT(omega_min >= 0);
+      TBOX_ASSERT(omega_max >= 0);
+      TBOX_ASSERT(omega_max >= omega_min);
+      d_omega_min = omega_min;
+      d_omega_max = omega_max;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Set constant value used by residual monitoring algorithm. If
@@ -384,7 +492,12 @@ public:
     */
    void
    setResidualMonitoringConstant(
-      const double omega);
+      const double omega)
+   {
+      TBOX_ASSERT(omega >= 0);
+      d_omega = omega;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Set flag controlling whether or not the value * of eps is
@@ -399,7 +512,15 @@ public:
     */
    void
    setNoMinEps(
-      const bool flag);
+      const bool flag)
+   {
+      if (flag) {
+         d_no_min_eps = 1;
+      } else {
+         d_no_min_eps = 0;
+      }
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Set maximum number of beta condition failures in the line search algorithm.
@@ -408,7 +529,12 @@ public:
     */
    void
    setMaxBetaFails(
-      const int max_beta_fails);
+      const int max_beta_fails)
+   {
+      TBOX_ASSERT(max_beta_fails >= 0);
+      d_max_beta_fails = max_beta_fails;
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Flag controlling whether or not the KINSol routine makes an
@@ -417,7 +543,15 @@ public:
     */
    void
    setNoInitialSetup(
-      const bool flag);
+      const bool flag)
+   {
+      if (flag) {
+         d_no_initial_setup = 1;
+      } else {
+         d_no_initial_setup = 0;
+      }
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Flag controlling whether or not the nonlinear residual
@@ -426,7 +560,15 @@ public:
     */
    void
    setNoResidualMonitoring(
-      const bool flag);
+      const bool flag)
+   {
+      if (flag) {
+         d_no_residual_monitoring = 1;
+      } else {
+         d_no_residual_monitoring = 0;
+      }
+      d_KINSOL_needs_initialization = true;
+   }
 
    /**
     * Accessory functions to retrieve information fom KINSOL.
@@ -434,27 +576,63 @@ public:
     * See KINSOL documentation for more information.
     */
    int
-   getTotalNumberOfNonlinearIterations() const;
+   getTotalNumberOfNonlinearIterations() const
+   {
+      long int num;
+      int ierr = KINGetNumNonlinSolvIters(d_kin_mem, &num);
+      KINSOL_SAMRAI_ERROR(ierr);
+      return static_cast<int>(num);
+   }
 
    ///
    int
-   getTotalNumberOfFunctionCalls() const;
+   getTotalNumberOfFunctionCalls() const
+   {
+      long int num;
+      int ierr = KINGetNumFuncEvals(d_kin_mem, &num);
+      KINSOL_SAMRAI_ERROR(ierr);
+      return static_cast<int>(num);
+   }
 
    ///
    int
-   getTotalNumberOfBetaConditionFailures() const;
+   getTotalNumberOfBetaConditionFailures() const
+   {
+      long int num;
+      int ierr = KINGetNumBetaCondFails(d_kin_mem, &num);
+      KINSOL_SAMRAI_ERROR(ierr);
+      return static_cast<int>(num);
+   }
 
    ///
    int
-   getTotalNumberOfBacktracks() const;
+   getTotalNumberOfBacktracks() const
+   {
+      long int num;
+      int ierr = KINGetNumBacktrackOps(d_kin_mem, &num);
+      KINSOL_SAMRAI_ERROR(ierr);
+      return static_cast<int>(num);
+   }
 
    ///
    double
-   getScaledResidualNorm() const;
+   getScaledResidualNorm() const
+   {
+      realtype norm;
+      int ierr = KINGetFuncNorm(d_kin_mem, &norm);
+      KINSOL_SAMRAI_ERROR(ierr);
+      return norm;
+   }
 
    ///
    double
-   getNewtonStepLength() const;
+   getNewtonStepLength() const
+   {
+      realtype step_length;
+      int ierr = KINGetStepLength(d_kin_mem, &step_length);
+      KINSOL_SAMRAI_ERROR(ierr);
+      return step_length;
+   }
 
    /**
     * Print out all data members for this object.
@@ -477,15 +655,17 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
     * Free internally allocated vectors.
     */
    void
-   freeInternalVectors(
-      void);
+   freeInternalVectors();
 
    /*
     * Static member functions for linkage with KINSOL routines.
@@ -495,7 +675,14 @@ private:
    KINSOLFuncEval(
       N_Vector soln,
       N_Vector fval,
-      void* my_solver);
+      void* my_solver)
+   {
+      int success = 0;
+      // SGS why no error condition?
+      ((KINSOLSolver *)my_solver)->getKINSOLFunctions()->
+         evaluateNonlinearFunction(SABSVEC_CAST(soln), SABSVEC_CAST(fval));
+      return success;
+   }
 
    static int
    KINSOLPrecondSet(
@@ -505,7 +692,20 @@ private:
       N_Vector fscale,
       void* my_solver,
       N_Vector vtemp1,
-      N_Vector vtemp2);
+      N_Vector vtemp2)
+   {
+      ((KINSOLSolver *)my_solver)->initializeKINSOL();
+      int num_feval = 0;
+      int success = ((KINSOLSolver *)my_solver)->getKINSOLFunctions()->
+         precondSetup(SABSVEC_CAST(uu),
+            SABSVEC_CAST(uscale),
+            SABSVEC_CAST(fval),
+            SABSVEC_CAST(fscale),
+            SABSVEC_CAST(vtemp1),
+            SABSVEC_CAST(vtemp2),
+            num_feval);
+      return success;
+   }
 
    static int
    KINSOLPrecondSolve(
@@ -515,7 +715,20 @@ private:
       N_Vector fscale,
       N_Vector vv,
       void* my_solver,
-      N_Vector vtemp);
+      N_Vector vtemp)
+
+   {
+      int num_feval = 0;
+      int success = ((KINSOLSolver *)my_solver)->getKINSOLFunctions()->
+         precondSolve(SABSVEC_CAST(uu),
+            SABSVEC_CAST(uscale),
+            SABSVEC_CAST(fval),
+            SABSVEC_CAST(fscale),
+            SABSVEC_CAST(vv),
+            SABSVEC_CAST(vtemp),
+            num_feval);
+      return success;
+   }
 
    static int
    KINSOLJacobianTimesVector(
@@ -523,7 +736,19 @@ private:
       N_Vector Jv,
       N_Vector uu,
       int* new_uu,
-      void* my_solver);
+      void* my_solver)
+   {
+      bool soln_changed = true;
+      if (*new_uu == 0) {
+         soln_changed = false;
+      }
+      int success = ((KINSOLSolver *)my_solver)->
+         getKINSOLFunctions()->jacobianTimesVector(SABSVEC_CAST(v),
+            SABSVEC_CAST(Jv),
+            soln_changed,
+            SABSVEC_CAST(uu));
+      return success;
+   }
 
    std::string d_object_name;
 
@@ -635,8 +860,6 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/KINSOLSolver.I"
-#endif
+
 #endif
 #endif

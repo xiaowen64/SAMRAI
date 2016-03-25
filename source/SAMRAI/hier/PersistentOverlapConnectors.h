@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Manager of Connectors incident from a common BoxLevel.
  *
  ************************************************************************/
@@ -226,7 +226,7 @@ private:
     * @param my_mapped_box_level The BoxLevel served by this
     * object.
     */
-   PersistentOverlapConnectors(
+   explicit PersistentOverlapConnectors(
       const BoxLevel& my_mapped_box_level);
 
    //@}

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition problem-dependent interfaces
  *
  ************************************************************************/
@@ -15,7 +15,8 @@
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -44,8 +45,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~RobinBcCoefStrategy(
-      void);
+   virtual ~RobinBcCoefStrategy();
 
    //@{
 
@@ -136,10 +136,10 @@ public:
     */
    virtual void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       const double fill_time = 0.0) const = 0;

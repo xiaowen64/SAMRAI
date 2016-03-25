@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   SparseDataVariable
  *
  ************************************************************************/
@@ -50,7 +50,7 @@ public:
     * @param [in] dim
     * @param [in] name
     */
-   explicit SparseDataVariable(
+   SparseDataVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       const std::vector<std::string>& dbl_attributes,
@@ -96,9 +96,7 @@ private:
 } // end namespace pdat.
 } // end namespace SAMRAI
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SparseDataVariable.C"
-#endif
 
 #endif
 #endif

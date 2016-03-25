@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating cell data objects
  *
  ************************************************************************/
@@ -13,14 +13,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/pdat/MultiblockCellDataTranslator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/MultiblockDataTranslator.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -45,7 +44,7 @@ public:
     * cell width and depth (number of components) arguments give the defaults
     * for all cell data objects created with this factory.
     */
-   explicit CellDataFactory(
+   CellDataFactory(
       int depth,
       const hier::IntVector& ghosts);
 
@@ -64,7 +63,7 @@ public:
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual tbox::Pointer<hier::PatchDataFactory>
+   virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -73,7 +72,7 @@ public:
     * The default information about the object (e.g., ghost cell width)
     * is taken from the factory.
     */
-   virtual tbox::Pointer<hier::PatchData>
+   virtual boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -83,7 +82,7 @@ public:
     * and data dependencies between objects.
     */
 
-   virtual tbox::Pointer<hier::BoxGeometry>
+   virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -103,21 +102,21 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean true value indicating that the cell data quantities will always
-    * be treated as though fine values represent them on coarse-fine interfaces.
+    * Return a boolean true value indicating that the cell data quantities will
+    * always be treated as though fine values represent them on coarse-fine
+    * interfaces.
     * See the CellVariable<DIM> class header file for more information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
     * Return false since the cell data index space matches the cell-centered
-    * index space for AMR patches.  Thus, cell data does not live on patch borders.
+    * index space for AMR patches.  Thus, cell data does not live on patch
+    * borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return false;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this CellDataFactory to the
@@ -126,28 +125,16 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const;
-
-   /**
-    * Return pointer to a multiblock data translator
-    */
-   hier::MultiblockDataTranslator *
-   getMultiblockDataTranslator();
+      const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
 private:
    int d_depth;
 
-   MultiblockCellDataTranslator<TYPE>* d_mb_trans;
 };
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/CellDataFactory.C"
-#endif
 
 #endif

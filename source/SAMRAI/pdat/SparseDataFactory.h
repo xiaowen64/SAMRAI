@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   SparseDataFactory
  *
  ************************************************************************/
@@ -25,7 +25,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -51,7 +52,7 @@ public:
     * @param [in] numDblAttributes The number of double (value) attributes
     * @param [in] numIntAttributes The number of integer (value) attributes
     */
-   explicit SparseDataFactory(
+   SparseDataFactory(
       const hier::IntVector& ghosts,
       const std::vector<std::string>& dbl_attributes,
       const std::vector<std::string>& int_attributes);
@@ -68,7 +69,7 @@ public:
     * then be changed without modifying the original.
     * @param [in] ghosts
     */
-   tbox::Pointer<hier::PatchDataFactory>
+   boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -80,7 +81,7 @@ public:
     *
     * @param [in] patch
     */
-   tbox::Pointer<hier::PatchData>
+   boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -92,7 +93,7 @@ public:
     *
     * @param [in] box
     */
-   tbox::Pointer<hier::BoxGeometry>
+   boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -139,7 +140,7 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<PatchDataFactory>& dst_pdf) const;
+      const boost::shared_ptr<PatchDataFactory>& dst_pdf) const;
 
 private:
    /*
@@ -160,9 +161,7 @@ private:
 } // end namespace pdat
 } // end namespace SAMRAI
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SparseDataFactory.C"
-#endif
 
 #endif
 #endif

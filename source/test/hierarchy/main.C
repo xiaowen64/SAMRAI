@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program for hierachy coarsen/refine tests.
  *
  ************************************************************************/
@@ -15,13 +15,14 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 #include <string>
 // using namespace std;
 #include "SAMRAI/hier/VariableDatabase.h"
 
 #include "HierarchyTester.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -62,7 +63,7 @@ int main(
       tbox::plog << "\n Starting hierarchy refine/coarsen test..." << std::endl;
       tbox::plog << "Specified input file is: " << input_filename << std::endl;
 
-      Pointer<Database> input_db(new InputDatabase("input_db"));
+      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -71,8 +72,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -80,7 +81,7 @@ int main(
          }
       }
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -98,8 +99,9 @@ int main(
          PIO::logOnlyNodeZero(log_file_name);
       }
 
-      Pointer<HierarchyTester> hierarchy_tester(
-         new HierarchyTester("HierarchyTester",
+      boost::shared_ptr<HierarchyTester> hierarchy_tester(
+         new HierarchyTester(
+            "HierarchyTester",
             dim,
             input_db->getDatabase("HierarchyTest")));
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for face-centered complex data on
  *                a  mesh.
  *
@@ -18,8 +18,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -30,9 +30,6 @@ namespace pdat {
  * interpolation for face-centered complex patch data defined over a
  * mesh.  It is derived from the hier::RefineOperator base class.
  * The numerical operations for interpolation use FORTRAN numerical routines.
- *
- * The findRefineOperator() operator function returns true if the input
- * variable is face-centered complex, and the string is "CONSTANT_REFINE".
  *
  * @see hier::RefineOperator
  */
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~FaceComplexConstantRefine();
-
-   /**
-    * Return true if the variable and name string match face-centered
-    * complex constant interpolation; otherwise, return false.
-    */
-   bool
-   findRefineOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of face-centered complex constant interpolation is 0.

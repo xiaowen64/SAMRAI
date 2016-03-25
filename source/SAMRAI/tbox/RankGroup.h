@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A class to manage a group of processor ranks
  *
  ************************************************************************/
@@ -53,7 +53,7 @@ public:
     * This constructor constructs a RankGroup representing the full
     * set of available ranks in the given communicator.
     */
-   RankGroup(
+   explicit RankGroup(
       const SAMRAI_MPI& d_samrai_mpi);
 
    /*!
@@ -77,22 +77,25 @@ public:
     *
     * An assertion failure will result if the array is empty.
     */
-   RankGroup(
-      const tbox::Array<int>& rank_group,
+   explicit RankGroup(
+      const Array<int>& rank_group,
       const SAMRAI_MPI& samrai_mpi =
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));
 
    /*!
-    * Virtual destructor
+    * Destructor
     */
-   virtual ~RankGroup();
+   ~RankGroup();
 
    /*!
     * Returns true if the RankGroup contains ranks for all available
     * processors.
     */
    bool
-   containsAllRanks() const;
+   containsAllRanks() const
+   {
+      return d_storage == USING_ALL;
+   }
 
    /*!
     * Set the minimum and maximum ranks for the RankGroup.  All previous
@@ -103,7 +106,19 @@ public:
    void
    setMinMax(
       const int min,
-      const int max);
+      const int max)
+   {
+#ifdef DEBUG_CHECK_ASSERTIONS
+      int nodes = 1;
+      d_samrai_mpi.Comm_size(&nodes);
+#endif
+      TBOX_ASSERT(min >= 0);
+      TBOX_ASSERT(min <= max);
+      d_storage = USING_MIN_MAX;
+      d_ranks.resizeArray(0);
+      d_min = min;
+      d_max = max;
+   }
 
    /*!
     * Return true if the given rank is contained in the RankGroup.
@@ -146,7 +161,7 @@ private:
    int d_min;
    int d_max;
 
-   tbox::Array<int> d_ranks;
+   Array<int> d_ranks;
 
    StorageType d_storage;
 
@@ -156,7 +171,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/RankGroup.I"
-#endif
 #endif

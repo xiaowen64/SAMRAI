@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test driver for the SAMRAI input database
  *
  ************************************************************************/
@@ -22,8 +22,9 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 using namespace std;
@@ -45,8 +46,8 @@ int main(
    {
       std::string input_filename = argv[1];
 
-      tbox::Pointer<tbox::InputDatabase> input_db(new tbox::InputDatabase(
-                                                     "input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -55,8 +56,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -68,8 +69,8 @@ int main(
       * Test primitive types - int, float, double, bool, dcomplex,
       *                        std::string, box
       *******************************************************************/
-      tbox::Pointer<tbox::Database> prim_type_db = input_db->getDatabase(
-            "PrimitiveTypes");
+      boost::shared_ptr<tbox::Database> prim_type_db(
+         input_db->getDatabase("PrimitiveTypes"));
 
       int i0_correct = 1;
       float f0_correct = 1.0;
@@ -131,8 +132,8 @@ int main(
       /*
        * "Smart" arrays
        */
-      tbox::Pointer<tbox::Database> smart_array_db =
-         input_db->getDatabase("SmartArrays");
+      boost::shared_ptr<tbox::Database> smart_array_db(
+         input_db->getDatabase("SmartArrays"));
 
       tbox::Array<int> i1_correct(5);
       tbox::Array<float> f1_correct(5);
@@ -195,8 +196,8 @@ int main(
       /*
        * Basic arrays (i.e. do not use the "smart" array construct)
        */
-      tbox::Pointer<tbox::Database> basic_array_db =
-         input_db->getDatabase("BasicArrays");
+      boost::shared_ptr<tbox::Database> basic_array_db(
+         input_db->getDatabase("BasicArrays"));
 
       int i2_correct[nsize];
       float f2_correct[nsize];
@@ -264,8 +265,8 @@ int main(
       /*******************************************************************
        * Test "getWithDefault()" methods
        ******************************************************************/
-      tbox::Pointer<tbox::Database> with_default_db =
-         input_db->getDatabase("WithDefaultTypes");
+      boost::shared_ptr<tbox::Database> with_default_db(
+         input_db->getDatabase("WithDefaultTypes"));
 
       int i3 = with_default_db->getIntegerWithDefault("i3", i0_correct);
       float f3 = with_default_db->getFloatWithDefault("f3", f0_correct);
@@ -309,8 +310,8 @@ int main(
       /*******************************************************************
        * Test replacing values in the database
        ******************************************************************/
-      tbox::Pointer<tbox::Database> prim_type_db_new =
-         input_db->getDatabase("PrimitiveTypes");
+      boost::shared_ptr<tbox::Database> prim_type_db_new(
+         input_db->getDatabase("PrimitiveTypes"));
 
       prim_type_db_new->putInteger("i0", i0_correct);
       prim_type_db_new->putFloat("f0", f0_correct);
@@ -332,7 +333,7 @@ int main(
       tbox::plog << "\n\nDefault keys in the input database..." << std::endl;
       input_db->printDefaultKeys(tbox::plog);
 
-      input_db = NULL;
+      input_db.reset();
    }
 
    if (fail_count == 0) {

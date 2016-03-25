@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerside double data on
  *                a Skeleton mesh.
  *
@@ -96,18 +96,6 @@ SkeletonOutersideDoubleWeightedAverage::~SkeletonOutersideDoubleWeightedAverage(
 {
 }
 
-bool SkeletonOutersideDoubleWeightedAverage::findCoarsenOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const string& op_name) const
-{
-   const tbox::Pointer<pdat::OutersideVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int SkeletonOutersideDoubleWeightedAverage::getOperatorPriority() const
 {
    return 0;
@@ -126,13 +114,15 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<pdat::OutersideData<double> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<pdat::OutersideData<double> >
-   cdata = coarse.getPatchData(dst_component);
+   boost::shared_ptr<pdat::OutersideData<double> > fdata(
+      fine.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::OutersideData<double> > cdata(
+      coarse.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 #endif
 
@@ -141,10 +131,12 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const tbox::Pointer<hier::PatchGeometry> fgeom =
-      fine.getPatchGeometry();
-   const tbox::Pointer<hier::PatchGeometry> cgeom =
-      coarse.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<hier::PatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();

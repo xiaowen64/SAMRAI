@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outerside data objects
  *
  ************************************************************************/
@@ -19,9 +19,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/SideDataFactory.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideDataFactory.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -58,14 +57,15 @@ OutersideDataFactory<TYPE>::~OutersideDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 OutersideDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new OutersideDataFactory<TYPE>(
-                                                   ghosts.getDim(), d_depth));
+   return boost::make_shared<OutersideDataFactory<TYPE> >(
+      ghosts.getDim(),
+      d_depth);
 }
 
 /*
@@ -77,15 +77,13 @@ OutersideDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 OutersideDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new OutersideData<TYPE>(patch.getBox(), d_depth);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::make_shared<OutersideData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -97,7 +95,7 @@ OutersideDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 OutersideDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -105,8 +103,14 @@ OutersideDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
-   hier::BoxGeometry* boxgeometry = new OutersideGeometry(box, zero_vector);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<OutersideGeometry>(box, zero_vector);
+}
+
+template<class TYPE>
+int
+OutersideDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
 }
 
 /*
@@ -118,7 +122,8 @@ OutersideDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OutersideDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OutersideDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -138,8 +143,9 @@ size_t OutersideDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OutersideDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+OutersideDataFactory<TYPE>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -149,20 +155,55 @@ bool OutersideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      tbox::Pointer<SideDataFactory<TYPE> > sdf = dst_pdf;
-      if (!sdf.isNull()) {
+      boost::shared_ptr<SideDataFactory<TYPE> > sdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (sdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OutersideDataFactory<TYPE> > osdf = dst_pdf;
-      if (!osdf.isNull()) {
+      boost::shared_ptr<OutersideDataFactory<TYPE> > osdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (osdf) {
          valid_copy = true;
       }
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that fine data for the outerside
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OutersideVariable<DIM> class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OutersideDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outerside data index space extends beyond the
+ * interior of patches.  That is, outerside data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OutersideDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
 }
 
 }

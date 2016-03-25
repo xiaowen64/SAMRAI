@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   TreeLoadBalancer test.
  *
  ************************************************************************/
@@ -28,10 +28,9 @@ bool DerivedVisOwnerData::packDerivedDataIntoDoubleBuffer(
    const std::string& variable_name,
    int depth_id) const
 {
-   (void)patch;
-   (void)region;
-   (void)variable_name;
-   (void)depth_id;
+   NULL_USE(patch);
+   NULL_USE(depth_id);
+
    if (variable_name == "Owner") {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       double owner = mpi.getRank();

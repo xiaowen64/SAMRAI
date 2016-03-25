@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface for writing user-defined data to either
  *                VisIt or Vizamrai file
  *
@@ -164,6 +164,7 @@ public:
     *
     * @param buffer Double precision array into which derived data is
     *  packed.
+    * @param mixbuffer
     * @param patch hier::Patch on which to calculate and pack derived data.
     * @param region hier::Box region over which to pack data.
     * @param variable_name Name identifier for the derived variable as

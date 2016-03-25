@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Misc printing functions in FAC solver test.
  *
  ************************************************************************/
@@ -14,12 +14,13 @@
 #include "SAMRAI/pdat/MDA_Access.h"
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/ArrayData.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -32,7 +33,7 @@ int printObject(
    const std::string& border,
    unsigned short depth)
 {
-   (void)depth;
+   NULL_USE(depth);
    const tbox::Dimension& dim = box.getDim();
    if ((dim == tbox::Dimension(1))) {
       os << border << "( " << box.lower(0)
@@ -65,7 +66,7 @@ int printObject(
    const std::string& border,
    unsigned short depth)
 {
-   (void)depth;
+   NULL_USE(depth);
    const hier::Box& rbox = pdat.getBox();
    const hier::Box& gbox = pdat.getBox();
    os << border

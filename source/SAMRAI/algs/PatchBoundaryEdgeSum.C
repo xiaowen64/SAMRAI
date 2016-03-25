@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing edge data at patch boundaries
  *
  ************************************************************************/
@@ -21,11 +21,8 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
-#include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/PatchBoundaryEdgeSum.I"
-#endif
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -50,36 +47,6 @@ PatchBoundaryEdgeSum::s_oedge_dst_id_array =
 /*
  *************************************************************************
  *
- * Static functions to determine number of patch data slots needed
- * for PatchBoundaryEdgeSum objects.
- *
- *************************************************************************
- */
-
-int
-PatchBoundaryEdgeSum::getNumSharedPatchDataSlots(
-   int max_variables_to_register)
-{
-   // edge boundary sum requires two internal outeredge variables
-   // (source and destination) for each registered variable.
-
-   return 2 * max_variables_to_register;
-}
-
-int
-PatchBoundaryEdgeSum::getNumUniquePatchDataSlots(
-   int max_variables_to_register)
-{
-   NULL_USE(max_variables_to_register);
-   // all patch data slots used by edge boundary sum are static
-   // and shared among all objects.
-
-   return 0;
-}
-
-/*
- *************************************************************************
- *
  * Constructor patch boundary edge sum objects initializes data members
  * to default (undefined) states.
  *
@@ -87,18 +54,14 @@ PatchBoundaryEdgeSum::getNumUniquePatchDataSlots(
  */
 
 PatchBoundaryEdgeSum::PatchBoundaryEdgeSum(
-   const std::string& object_name)
+   const std::string& object_name) :
+   d_setup_called(false),
+   d_num_reg_sum(0),
+   d_sum_transaction_factory(boost::make_shared<OuteredgeSumTransactionFactory>())
 {
    TBOX_ASSERT(!object_name.empty());
 
    d_object_name = object_name;
-   d_setup_called = false;
-
-   d_num_reg_sum = 0;
-
-   d_level.setNull();
-
-   d_sum_transaction_factory = new OuteredgeSumTransactionFactory();
 
    s_instance_counter++;
 }
@@ -154,7 +117,8 @@ PatchBoundaryEdgeSum::~PatchBoundaryEdgeSum()
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::registerSum(
+void
+PatchBoundaryEdgeSum::registerSum(
    int edge_data_id)
 {
    if (d_setup_called) {
@@ -175,10 +139,11 @@ void PatchBoundaryEdgeSum::registerSum(
 
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
-   tbox::Pointer<pdat::EdgeDataFactory<double> > edge_factory =
-      var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id);
+   boost::shared_ptr<pdat::EdgeDataFactory<double> > edge_factory(
+      var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id),
+      boost::detail::dynamic_cast_tag());
 
-   if (edge_factory.isNull()) {
+   if (!edge_factory) {
 
       TBOX_ERROR("PatchBoundaryEdgeSum register error..."
          << "\nobject named " << d_object_name
@@ -249,22 +214,22 @@ void PatchBoundaryEdgeSum::registerSum(
          + var_suffix;
       d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(
             toedge_src_var_name);
-      if (d_tmp_oedge_src_variable[reg_sum_id].isNull()) {
-         d_tmp_oedge_src_variable[reg_sum_id] =
+      if (!d_tmp_oedge_src_variable[reg_sum_id]) {
+         d_tmp_oedge_src_variable[reg_sum_id].reset(
             new pdat::OuteredgeVariable<double>(dim,
                                                 toedge_src_var_name,
-                                                data_depth);
+                                                data_depth));
       }
 
       std::string toedge_dst_var_name = tmp_oedge_dst_variable_name
          + var_suffix;
       d_tmp_oedge_dst_variable[reg_sum_id] = var_db->getVariable(
             toedge_dst_var_name);
-      if (d_tmp_oedge_dst_variable[reg_sum_id].isNull()) {
-         d_tmp_oedge_dst_variable[reg_sum_id] =
+      if (!d_tmp_oedge_dst_variable[reg_sum_id]) {
+         d_tmp_oedge_dst_variable[reg_sum_id].reset(
             new pdat::OuteredgeVariable<double>(dim,
                                                 toedge_dst_var_name,
-                                                data_depth);
+                                                data_depth));
       }
 
       if (s_oedge_src_id_array[data_depth][data_depth_id] < 0) {
@@ -306,10 +271,11 @@ void PatchBoundaryEdgeSum::registerSum(
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::setupSum(
-   tbox::Pointer<hier::PatchLevel> level)
+void
+PatchBoundaryEdgeSum::setupSum(
+   const boost::shared_ptr<hier::PatchLevel>& level)
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
    const tbox::Dimension& dim(level->getDim());
 
@@ -324,7 +290,7 @@ void PatchBoundaryEdgeSum::setupSum(
       single_level_sum_algorithm.registerRefine(d_oedge_dst_id[i],  // dst data
          d_oedge_src_id[i],                                         // src data
          d_oedge_dst_id[i],                                         // scratch data
-         tbox::Pointer<SAMRAI::hier::RefineOperator>(NULL));
+         boost::shared_ptr<hier::RefineOperator>());
    }
 
    d_single_level_sum_schedule =
@@ -344,7 +310,8 @@ void PatchBoundaryEdgeSum::setupSum(
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::computeSum() const
+void
+PatchBoundaryEdgeSum::computeSum() const
 {
    d_level->allocatePatchData(d_oedge_src_data_set);
    d_level->allocatePatchData(d_oedge_dst_data_set);
@@ -368,19 +335,23 @@ void PatchBoundaryEdgeSum::computeSum() const
  *************************************************************************
  */
 
-void PatchBoundaryEdgeSum::doLevelSum(
-   tbox::Pointer<hier::PatchLevel> level) const
+void
+PatchBoundaryEdgeSum::doLevelSum(
+   const boost::shared_ptr<hier::PatchLevel>& level) const
 {
-   TBOX_ASSERT(!level.isNull());
+   TBOX_ASSERT(level);
 
-   for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+   for (hier::PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
-         tbox::Pointer<pdat::EdgeData<double> > edge_data =
-            patch->getPatchData(d_user_edge_data_id[i]);
-         tbox::Pointer<pdat::OuteredgeData<double> > oedge_data =
-            patch->getPatchData(d_oedge_src_id[i]);
+         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
+            patch->getPatchData(d_user_edge_data_id[i]),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
+            patch->getPatchData(d_oedge_src_id[i]),
+            boost::detail::dynamic_cast_tag());
 
          oedge_data->copy(*edge_data);
 
@@ -389,14 +360,17 @@ void PatchBoundaryEdgeSum::doLevelSum(
 
    d_single_level_sum_schedule->fillData(0.0, false);
 
-   for (hier::PatchLevel::Iterator ip2(level); ip2; ip2++) {
-      tbox::Pointer<hier::Patch> patch = *ip2;
+   for (hier::PatchLevel::iterator ip2(level->begin());
+        ip2 != level->end(); ++ip2) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
-         tbox::Pointer<pdat::EdgeData<double> > edge_data =
-            patch->getPatchData(d_user_edge_data_id[i]);
-         tbox::Pointer<pdat::OuteredgeData<double> > oedge_data =
-            patch->getPatchData(d_oedge_dst_id[i]);
+         boost::shared_ptr<pdat::EdgeData<double> > edge_data(
+            patch->getPatchData(d_user_edge_data_id[i]),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
+            patch->getPatchData(d_oedge_dst_id[i]),
+            boost::detail::dynamic_cast_tag());
 
          oedge_data->copy2(*edge_data);
 

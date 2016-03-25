@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   PoissonSineSolution class implementation
  *
  ************************************************************************/
@@ -42,9 +42,9 @@ PoissonSineSolution::PoissonSineSolution(
    d_linear_coef(0.0),
    d_exact(dim)
 {
-   (void)object_name;
-   (void)out_stream;
-   (void)log_stream;
+   NULL_USE(object_name);
+   NULL_USE(out_stream);
+   NULL_USE(log_stream);
 
    int i;
    for (i = 0; i < 2 * d_dim.getValue(); ++i) {
@@ -93,8 +93,8 @@ void PoissonSineSolution::setPoissonSpecifications(
    int C_patch_data_id,
    int D_patch_data_id) const
 {
-   (void)C_patch_data_id;
-   (void)D_patch_data_id;
+   NULL_USE(C_patch_data_id);
+   NULL_USE(D_patch_data_id);
 
    sps.setDConstant(1.0);
    sps.setCConstant(d_linear_coef);
@@ -102,24 +102,9 @@ void PoissonSineSolution::setPoissonSpecifications(
 
 void PoissonSineSolution::setGridData(
    hier::Patch& patch,
-   pdat::SideData<double>& diffcoef_data,
-   pdat::CellData<double>& ccoef_data,
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   (void)diffcoef_data;
-   (void)ccoef_data;
-
-   hier::Box pbox = patch.getBox();
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
-
-   /* Set linear source coefficients */
-   // ccoef_data.getArrayData().fill(d_linear_coef);
-
-   /* Set diffusion coefficients. */
-   // diffcoef_data.fillAll(1.0);
-
    /* Set source function and exact solution. */
    /*
     * For the forcing function
@@ -156,16 +141,16 @@ std::ostream& operator << (
 }
 
 void PoissonSineSolution::setBcCoefs(
-   tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-   const tbox::Pointer<hier::Variable>& variable,
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
 {
-   (void)variable;
-   (void)fill_time;
+   NULL_USE(variable);
+   NULL_USE(fill_time);
 
    if (bdry_box.getBoundaryType() != 1) {
       // Must be a face boundary.
@@ -176,9 +161,9 @@ void PoissonSineSolution::setBcCoefs(
    const int location_index = bdry_box.getLocationIndex();
 
    // a is either 0 (Neumann) or 1 (Dirichlet).
-   if (!acoef_data.isNull())
+   if (acoef_data)
       acoef_data->fill(d_neumann_location[location_index] ? 0.0 : 1.0, 0);
-   if (!bcoef_data.isNull())
+   if (bcoef_data)
       bcoef_data->fill(d_neumann_location[location_index] ? 1.0 : 0.0, 0);
 
    /*
@@ -186,8 +171,9 @@ void PoissonSineSolution::setBcCoefs(
     * of side centers.
     */
    hier::Box patch_box(patch.getBox());
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();
    const double* dx = patch_geom->getDx();
@@ -197,7 +183,8 @@ void PoissonSineSolution::setBcCoefs(
 
    if (gcoef_data) {
       if (d_dim == tbox::Dimension(2)) {
-         hier::BoxIterator boxit(gcoef_data->getBox());
+         hier::Box::iterator boxit(gcoef_data->getBox(), true);
+         hier::Box::iterator boxitend(gcoef_data->getBox(), false);
          int i, j;
          double x, y;
          switch (location_index) {
@@ -206,17 +193,21 @@ void PoissonSineSolution::setBcCoefs(
                x = xlo[0];
                if (d_neumann_location[location_index]) {
                   SinusoidFcn slope = d_exact.differentiate(1, 0);
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         j = (*boxit)[1];
                         y = xlo[1] + dx[1] * (j - patch_box.lower()[1] + 0.5);
                         (*gcoef_data)(*boxit, 0) = -slope(x, y);
                      }
+                  }
                } else {
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         j = (*boxit)[1];
                         y = xlo[1] + dx[1] * (j - patch_box.lower()[1] + 0.5);
                         (*gcoef_data)(*boxit, 0) = d_exact(x, y);
                      }
+                  }
                }
                break;
             case 1:
@@ -224,17 +215,21 @@ void PoissonSineSolution::setBcCoefs(
                x = xup[0];
                if (d_neumann_location[location_index]) {
                   SinusoidFcn slope = d_exact.differentiate(1, 0);
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         j = (*boxit)[1];
                         y = xlo[1] + dx[1] * (j - patch_box.lower()[1] + 0.5);
                         (*gcoef_data)(*boxit, 0) = slope(x, y);
                      }
+                  }
                } else {
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         j = (*boxit)[1];
                         y = xlo[1] + dx[1] * (j - patch_box.lower()[1] + 0.5);
                         (*gcoef_data)(*boxit, 0) = d_exact(x, y);
                      }
+                  }
                }
                break;
             case 2:
@@ -242,17 +237,23 @@ void PoissonSineSolution::setBcCoefs(
                y = xlo[1];
                if (d_neumann_location[location_index]) {
                   SinusoidFcn slope = d_exact.differentiate(0, 1);
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         i = (*boxit)[0];
                         x = xlo[0] + dx[0] * (i - patch_box.lower()[0] + 0.5);
-                        if (gcoef_data) (*gcoef_data)(*boxit, 0) = -slope(x, y);
+                        if (gcoef_data) {
+                           (*gcoef_data)(*boxit, 0) = -slope(x, y);
+                        }
                      }
+                  }
                } else {
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         i = (*boxit)[0];
                         x = xlo[0] + dx[0] * (i - patch_box.lower()[0] + 0.5);
                         (*gcoef_data)(*boxit, 0) = d_exact(x, y);
                      }
+                  }
                }
                break;
             case 3:
@@ -260,17 +261,21 @@ void PoissonSineSolution::setBcCoefs(
                y = xup[1];
                if (d_neumann_location[location_index]) {
                   SinusoidFcn slope = d_exact.differentiate(0, 1);
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         i = (*boxit)[0];
                         x = xlo[0] + dx[0] * (i - patch_box.lower()[0] + 0.5);
                         (*gcoef_data)(*boxit, 0) = slope(x, y);
                      }
+                  }
                } else {
-                  if (gcoef_data) for ( ; boxit; boxit++) {
+                  if (gcoef_data) {
+                     for ( ; boxit != boxitend; ++boxit) {
                         i = (*boxit)[0];
                         x = xlo[0] + dx[0] * (i - patch_box.lower()[0] + 0.5);
                         (*gcoef_data)(*boxit, 0) = d_exact(x, y);
                      }
+                  }
                }
                break;
             default:
@@ -281,8 +286,9 @@ void PoissonSineSolution::setBcCoefs(
 
       if (d_dim == tbox::Dimension(3)) {
          MDA_Access<double, 3, MDA_OrderColMajor<3> > g_array;
-         if (gcoef_data) g_array = pdat::ArrayDataAccess::access<3, double>(
-                  *gcoef_data);
+         if (gcoef_data) {
+            g_array = pdat::ArrayDataAccess::access<3, double>(*gcoef_data);
+         }
          int i, j, k, ibeg, iend, jbeg, jend, kbeg, kend;
          double x, y, z;
          switch (bdry_box.getLocationIndex()) {

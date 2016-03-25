@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class that describes intersections between AMR boxes
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Transformation.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -42,7 +41,7 @@ namespace hier {
  * @see hier::BoxGeometry
  */
 
-class BoxOverlap:public tbox::DescribedClass
+class BoxOverlap
 {
 public:
    /*!
@@ -111,9 +110,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxOverlap.I"
-#endif
 
 #endif

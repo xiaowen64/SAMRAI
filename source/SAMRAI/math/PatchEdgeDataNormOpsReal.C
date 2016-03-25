@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real edge-centered patch data.
  *
  ************************************************************************/
@@ -48,7 +48,8 @@ PatchEdgeDataNormOpsReal<TYPE>::PatchEdgeDataNormOpsReal(
 }
 
 template<class TYPE>
-void PatchEdgeDataNormOpsReal<TYPE>::operator = (
+void
+PatchEdgeDataNormOpsReal<TYPE>::operator = (
    const PatchEdgeDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -63,18 +64,19 @@ void PatchEdgeDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+int
+PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box dbox = pdat::EdgeGeometry::toEdgeBox(ibox, d);
       retval += (dbox.size() * data->getDepth());
    }
@@ -90,18 +92,18 @@ int PatchEdgeDataNormOpsReal<TYPE>::numberOfEntries(
  */
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
-   const tbox::Pointer<pdat::EdgeData<double> >& cvol,
+double
+PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
-#endif
-   const tbox::Dimension& dim(data->getDim());
+   TBOX_ASSERT(data && cvol);
+
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
             cvol->getArrayData(d),
@@ -111,17 +113,18 @@ double PatchEdgeDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-void PatchEdgeDataNormOpsReal<TYPE>::abs(
-   tbox::Pointer<pdat::EdgeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& src,
+void
+PatchEdgeDataNormOpsReal<TYPE>::abs(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
@@ -130,26 +133,27 @@ void PatchEdgeDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+double
+PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), edge_box);
       }
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
                cvol->getArrayData(d),
@@ -160,19 +164,20 @@ double PatchEdgeDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+double
+PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), edge_box);
          retval += aval * aval;
@@ -180,7 +185,7 @@ double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.L2NormWithControlVolume(
                data->getArrayData(d),
@@ -193,20 +198,21 @@ double PatchEdgeDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& weight,
+double
+PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
 
-   const tbox::Dimension& dim(data->getDim());
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
                weight->getArrayData(d),
@@ -216,7 +222,7 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          double aval = d_array_ops.weightedL2NormWithControlVolume(
                data->getArrayData(d),
@@ -230,16 +236,16 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+double
+PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-#endif
+   TBOX_ASSERT(data);
+
    double retval = L2Norm(data, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -248,17 +254,17 @@ double PatchEdgeDataNormOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& weight,
+double
+PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
-#endif
+   TBOX_ASSERT(data && weight);
+
    double retval = weightedL2Norm(data, weight, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -267,26 +273,26 @@ double PatchEdgeDataNormOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+double
+PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-#endif
-   const tbox::Dimension& dim(data->getDim());
+   TBOX_ASSERT(data);
+
+   int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
                d_array_ops.maxNorm(data->getArrayData(d), edge_box));
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box =
             pdat::EdgeGeometry::toEdgeBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
@@ -300,27 +306,27 @@ double PatchEdgeDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data1,
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data2,
+TYPE
+PatchEdgeDataNormOpsReal<TYPE>::dot(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > cvol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
-#endif
-   const tbox::Dimension& dim(data1->getDim());
+   TBOX_ASSERT(data1 && data2);
+
+   int dimVal = data1->getDim().getValue();
 
    TYPE retval = 0.0;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
                data2->getArrayData(d),
                edge_box);
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
          retval += d_array_ops.dotWithControlVolume(
                data1->getArrayData(d),
@@ -333,19 +339,19 @@ TYPE PatchEdgeDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE PatchEdgeDataNormOpsReal<TYPE>::integral(
-   const tbox::Pointer<pdat::EdgeData<TYPE> >& data,
+TYPE
+PatchEdgeDataNormOpsReal<TYPE>::integral(
+   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::EdgeData<double> > vol) const
+   const boost::shared_ptr<pdat::EdgeData<double> >& vol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-#endif
-   const tbox::Dimension& dim(data->getDim());
+   TBOX_ASSERT(data);
+
+   int dimVal = data->getDim().getValue();
 
    TYPE retval = 0.0;
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box side_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       retval += d_array_ops.integral(
             data->getArrayData(d),

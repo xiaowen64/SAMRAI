@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Default fill pattern class
  *
  ************************************************************************/
@@ -62,9 +62,10 @@ public:
     * @param[in] transformation  the transformation from source to
     *                            destination index space.
     *
-    * @return                    Pointer to the calculated overlap object
+    * @return                    boost::shared_ptr to the calculated overlap
+    *                            object
     */
-   tbox::Pointer<hier::BoxOverlap>
+   boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -72,7 +73,15 @@ public:
       const hier::Box& src_mask,
       const hier::Box& fill_box,
       const bool overwrite_interior,
-      const hier::Transformation& transformation) const;
+      const hier::Transformation& transformation) const
+   {
+#ifndef DEBUG_CHECK_DIM_ASSERTIONS
+      NULL_USE(dst_patch_box);
+#endif
+      TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
+      return dst_geometry.calculateOverlap(src_geometry, src_mask, fill_box,
+         overwrite_interior, transformation);
+   }
 
    /*!
     * Computes a BoxOverlap object which defines the space to be filled by
@@ -87,13 +96,13 @@ public:
     *                        refine operator (cell-centered representation)
     * @param[in] patch_box   box representing the patch where a refine operator
     *                        will fill data.  (cell-centered representation)
-    * @param[in] data box    box representing the full extent of the region
+    * @param[in] data_box    box representing the full extent of the region
     *                        covered by a patch data object, including all
     *                        ghosts (cell-centered representation)
     * @param[in] pdf         patch data factory for the data that is to be
     *                        filled
     */
-   tbox::Pointer<hier::BoxOverlap>
+   boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
       const hier::Box& patch_box,
@@ -116,7 +125,10 @@ public:
     * @brief Returns a string name identifier "BOX_GEOMETRY_FILL_PATTERN".
     */
    const std::string&
-   getPatternName() const;
+   getPatternName() const
+   {
+      return s_name_id;
+   }
 
 private:
    BoxGeometryVariableFillPattern(
@@ -133,4 +145,5 @@ private:
 
 }
 }
+
 #endif

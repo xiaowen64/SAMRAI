@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A simple array template class
  *
  ************************************************************************/
@@ -12,14 +12,9 @@
 #define included_tbox_Array_C
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 
 #include <new>
 #include <cstdlib>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Array.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -33,14 +28,34 @@ namespace SAMRAI {
 namespace tbox {
 
 template<class TYPE>
-const typename SAMRAI::tbox::Array<TYPE>::DoNotInitialize SAMRAI::tbox::Array<
-   TYPE>::UNINITIALIZED;
+const typename Array<TYPE>::DoNotInitialize Array<TYPE>::UNINITIALIZED;
 
 /*
  * Note that this class is specialized for the built-in types to avoid
  * invoking the default ctor for TYPE.   A simple assignment is
  * used for the built-in types.
  */
+
+template<class TYPE>
+Array<TYPE>::Array() :
+   d_objects(0),
+   d_counter(0),
+   d_elements(0)
+{
+}
+
+template<class TYPE>
+Array<TYPE>::Array(
+   const Array<TYPE>& rhs) :
+   d_objects(rhs.d_objects),
+   d_counter(rhs.d_counter),
+   d_elements(rhs.d_elements)
+{
+   if (d_counter) {
+      d_counter->addReference();
+   }
+}
+
 template<class TYPE>
 Array<TYPE>::Array(
    const int n,
@@ -68,7 +83,7 @@ Array<TYPE>::Array(
    const int n,
    const typename Array::DoNotInitialize& do_not_initialize_flag)
 {
-   (void)do_not_initialize_flag;
+   NULL_USE(do_not_initialize_flag);
 
    if (n > 0) {
       d_objects = reinterpret_cast<TYPE *>(malloc(sizeof(TYPE) * n));
@@ -82,21 +97,35 @@ Array<TYPE>::Array(
 }
 
 template<class TYPE>
-Array<TYPE>& Array<TYPE>::operator = (
+Array<TYPE>::~Array()
+{
+   if (d_counter && d_counter->deleteReference()) {
+      deleteObjects();
+   }
+}
+
+template<class TYPE>
+Array<TYPE>&
+Array<TYPE>::operator = (
    const Array<TYPE>& rhs)
 {
    if (this != &rhs) {
-      if (d_counter && d_counter->deleteReference()) deleteObjects();
+      if (d_counter && d_counter->deleteReference()) {
+         deleteObjects();
+      }
       d_objects = rhs.d_objects;
       d_counter = rhs.d_counter;
       d_elements = rhs.d_elements;
-      if (d_counter) d_counter->addReference();
+      if (d_counter) {
+         d_counter->addReference();
+      }
    }
    return *this;
 }
 
 template<class TYPE>
-void Array<TYPE>::resizeArray(
+void
+Array<TYPE>::resizeArray(
    const int n,
    const TYPE& default_value)
 {
@@ -107,31 +136,13 @@ void Array<TYPE>::resizeArray(
          array.d_objects[i] = d_objects[i];
       }
 
-      this->
-      operator = (
-         array);
+      this->operator = (array);
    }
 }
 
 template<class TYPE>
-void Array<TYPE>::push_back(
-   const TYPE& value)
-{
-   int i = d_elements;
-   resizeArray(i + 1);
-   d_objects[i] = value;
-}
-
-template<class TYPE>
-const TYPE& Array<TYPE>::back()
-{
-   TBOX_ASSERT(d_elements > 0);
-
-   return d_objects[d_elements - 1];
-}
-
-template<class TYPE>
-void Array<TYPE>::erase(
+void
+Array<TYPE>::erase(
    const int position)
 {
    TBOX_ASSERT(position >= 0 && position < d_elements);
@@ -175,7 +186,8 @@ void Array<TYPE>::erase(
 }
 
 template<class TYPE>
-void Array<TYPE>::deleteObjects()
+void
+Array<TYPE>::deleteObjects()
 {
    if (d_objects) {
       for (int i = 0; i < d_elements; i++) {
@@ -188,6 +200,127 @@ void Array<TYPE>::deleteObjects()
    d_objects = (TYPE *)NULL;
    d_counter = (ReferenceCounter *)NULL;
    d_elements = 0;
+}
+
+template<class TYPE>
+TYPE&
+Array<TYPE>::operator [] (
+   const int i)
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return d_objects[i];
+}
+
+template<class TYPE>
+const TYPE&
+Array<TYPE>::operator [] (
+   const int i) const
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return d_objects[i];
+}
+
+template<class TYPE>
+void
+Array<TYPE>::setNull()
+{
+   if (d_counter && d_counter->deleteReference()) {
+      deleteObjects();
+   }
+   d_objects = (TYPE *)NULL;
+   d_counter = (ReferenceCounter *)NULL;
+   d_elements = 0;
+}
+
+template<class TYPE>
+void
+Array<TYPE>::clear()
+{
+   if (d_counter && d_counter->deleteReference()) {
+      deleteObjects();
+   }
+   d_objects = (TYPE *)NULL;
+   d_counter = (ReferenceCounter *)NULL;
+   d_elements = 0;
+}
+
+template<class TYPE>
+bool
+Array<TYPE>::isNull() const
+{
+   return !d_objects;
+}
+
+template<class TYPE>
+bool
+Array<TYPE>::empty() const
+{
+   return !d_objects;
+}
+
+template<class TYPE>
+TYPE*
+Array<TYPE>::getPointer(
+   const int i)
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return &d_objects[i];
+}
+
+template<class TYPE>
+const TYPE*
+Array<TYPE>::getPointer(
+   const int i) const
+{
+   TBOX_ASSERT((i >= 0) && (i < d_elements));
+
+   return &d_objects[i];
+}
+
+template<class TYPE>
+int
+Array<TYPE>::getSize() const
+{
+   return d_elements;
+}
+
+template<class TYPE>
+int
+Array<TYPE>::size() const
+{
+   return d_elements;
+}
+
+template<class TYPE>
+size_t
+Array<TYPE>::align(
+   const size_t bytes)
+{
+   size_t aligned = bytes + ALLOCATION_ALIGNMENT - 1;
+   aligned -= aligned % ALLOCATION_ALIGNMENT;
+   return aligned;
+}
+
+template<class TYPE>
+void
+Array<TYPE>::push_back(
+   const TYPE& value)
+{
+   int i = d_elements;
+   resizeArray(i + 1);
+   d_objects[i] = value;
+}
+
+template<class TYPE>
+const TYPE&
+Array<TYPE>::back()
+{
+   TBOX_ASSERT(d_elements > 0);
+
+   return d_objects[d_elements - 1];
 }
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for cell-centered double data on
  *                a Skeleton mesh.
  *
@@ -16,12 +16,13 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
 #include "SAMRAI/hier/CoarsenOperator.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 using namespace SAMRAI;
@@ -31,9 +32,6 @@ using namespace SAMRAI;
  * cell-weighted averaging for cell-centered double patch data defined over a
  * Skeleton mesh.  It is derived from the hier::CoarsenOperator base class.
  * The numerical operations for the averaging use FORTRAN numerical routines.
- *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is cell-centered double, and the string is "CONSERVATIVE_COARSEN".
  *
  * @see hier::CoarsenOperator
  */
@@ -52,15 +50,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~SkeletonCellDoubleWeightedAverage();
-
-   /**
-    * Return true if the variable and name string match cell-centered
-    * double weighted averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const string& op_name) const;
 
    /**
     * The priority of cell-centered double weighted averaging is 0.

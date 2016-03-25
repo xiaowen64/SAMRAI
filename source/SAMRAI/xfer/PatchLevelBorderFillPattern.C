@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -13,14 +13,10 @@
 
 #include "SAMRAI/xfer/PatchLevelBorderFillPattern.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelBorderFillPattern.I"
-#endif
 
 namespace SAMRAI {
 namespace xfer {
@@ -57,7 +53,8 @@ PatchLevelBorderFillPattern::~PatchLevelBorderFillPattern()
  *
  *************************************************************************
  */
-void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
+void
+PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxLevel& fill_mapped_boxes,
    hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
@@ -78,8 +75,8 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
     * the level from it.
     */
    hier::LocalId last_id = dst_mapped_box_level.getLastLocalId();
-   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
-        ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
+        ni != dst_mapped_boxes.realEnd(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_mapped_box, fill_ghost_width));
@@ -90,7 +87,7 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
          if (dst_mapped_box.getBlockId() == na->getBlockId()) {
             fill_boxes.removeIntersections(*na);
          } else {
-            tbox::ConstPointer<hier::GridGeometry> grid_geometry(
+            boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                dst_mapped_box_level.getGridGeometry());
 
             const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
@@ -107,7 +104,8 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
 
             offset *= (dst_mapped_box_level.getRefinementRatio());
 
-            hier::Transformation transformation(rotation, offset);
+            hier::Transformation transformation(rotation, offset,
+                                                nbr_block_id, dst_block_id);
 
             hier::Box nbr_box(*na);
             transformation.transform(nbr_box);
@@ -121,17 +119,67 @@ void PatchLevelBorderFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.size());
          hier::Connector::NeighborhoodIterator base_box_itr =
             dst_to_fill.makeEmptyLocalNeighborhood(dst_mapped_box.getId());
-         for (hier::BoxContainer::Iterator li(fill_boxes); li != fill_boxes.end(); ++li) {
+         for (hier::BoxContainer::iterator li(fill_boxes);
+              li != fill_boxes.end(); ++li) {
             hier::Box fill_mapped_box(*li,
                                       ++last_id,
-                                      dst_mapped_box.getOwnerRank(),
-                                      dst_mapped_box.getBlockId());
+                                      dst_mapped_box.getOwnerRank());
+            TBOX_ASSERT(fill_mapped_box.getBlockId() ==
+                        dst_mapped_box.getBlockId());
             fill_mapped_boxes.addBoxWithoutUpdate(fill_mapped_box);
             dst_to_fill.insertLocalNeighbor(fill_mapped_box, base_box_itr);
          }
       }
    }
    fill_mapped_boxes.finalize();
+}
+
+void
+PatchLevelBorderFillPattern::computeDestinationFillBoxesOnSourceProc(
+   FillSet& dst_fill_boxes_on_src_proc,
+   const hier::BoxLevel& dst_mapped_box_level,
+   const hier::Connector& src_to_dst,
+   const hier::IntVector& fill_ghost_width)
+{
+   NULL_USE(dst_mapped_box_level);
+   NULL_USE(src_to_dst);
+   NULL_USE(fill_ghost_width);
+   NULL_USE(dst_fill_boxes_on_src_proc);
+   if (!needsToCommunicateDestinationFillBoxes()) {
+      TBOX_ERROR(
+         "PatchLevelBorderFillPattern cannot compute destination:\n"
+         << "fill boxes on the source processor.\n");
+   }
+}
+
+bool
+PatchLevelBorderFillPattern::needsToCommunicateDestinationFillBoxes() const
+{
+   return true;
+}
+
+bool
+PatchLevelBorderFillPattern::doesSourceLevelCommunicateToDestination() const
+{
+   return false;
+}
+
+bool
+PatchLevelBorderFillPattern::fillingCoarseFineGhosts() const
+{
+   return true;
+}
+
+bool
+PatchLevelBorderFillPattern::fillingEnhancedConnectivityOnly() const
+{
+   return false;
+}
+
+int
+PatchLevelBorderFillPattern::getMaxFillBoxes() const
+{
+   return d_max_fill_boxes;
 }
 
 }

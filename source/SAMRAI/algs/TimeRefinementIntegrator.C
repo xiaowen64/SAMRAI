@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -19,17 +19,12 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Timer.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <cstdlib>
 #include <fstream>
 
 // #define DEBUG_TIMES
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/TimeRefinementIntegrator.I"
-#endif
 
 namespace SAMRAI {
 namespace algs {
@@ -47,9 +42,9 @@ TimeRefinementIntegrator::s_initialize_handler(
 /*
  * tbox::Timer objects for performance measurement.
  */
-tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_initialize_hier;
-tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_hier;
-tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
+boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_initialize_hier;
+boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_hier;
+boost::shared_ptr<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
 
 /*
  *************************************************************************
@@ -66,17 +61,17 @@ tbox::Pointer<tbox::Timer> TimeRefinementIntegrator::t_advance_level;
 
 TimeRefinementIntegrator::TimeRefinementIntegrator(
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
-   tbox::Pointer<TimeRefinementLevelStrategy> level_integrator,
-   tbox::Pointer<mesh::GriddingAlgorithmStrategy> gridding_algorithm,
+   const boost::shared_ptr<tbox::Database>& input_db,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<TimeRefinementLevelStrategy>& level_integrator,
+   const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_algorithm,
    bool register_for_restart):
    d_barrier_and_time(false)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!hierarchy.isNull());
-   TBOX_ASSERT(level_integrator != ((TimeRefinementLevelStrategy *)NULL));
-   TBOX_ASSERT(!gridding_algorithm.isNull());
+   TBOX_ASSERT(hierarchy);
+   TBOX_ASSERT(level_integrator);
+   TBOX_ASSERT(gridding_algorithm);
 
    d_object_name = object_name;
    d_registered_for_restart = register_for_restart;
@@ -226,7 +221,8 @@ TimeRefinementIntegrator::~TimeRefinementIntegrator()
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::initializeHierarchy()
+double
+TimeRefinementIntegrator::initializeHierarchy()
 {
 
    TBOX_DIM_ASSERT_CHECK_ARGS1(*d_patch_hierarchy);
@@ -297,13 +293,12 @@ double TimeRefinementIntegrator::initializeHierarchy()
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::advanceHierarchy(
+double
+TimeRefinementIntegrator::advanceHierarchy(
    const double dt,
    const bool rebalance_coarsest)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(dt >= 0.0);
-#endif
 
    if (d_barrier_and_time) {
       t_advance_hier->barrierAndStart();
@@ -362,13 +357,11 @@ void
 TimeRefinementIntegrator::initializeRefinedTimesteppingLevelData(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
-   const tbox::Pointer<hier::PatchLevel>
-   patch_level = d_patch_hierarchy->getPatchLevel(level_number);
+   const boost::shared_ptr<hier::PatchLevel> patch_level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
     * Initialize step count and start time for current level.
@@ -495,13 +488,11 @@ void
 TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
-   const tbox::Pointer<hier::PatchLevel>
-   patch_level = d_patch_hierarchy->getPatchLevel(level_number);
+   const boost::shared_ptr<hier::PatchLevel> patch_level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
     * Initialize step count and start time for current level.
@@ -661,18 +652,17 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
+void
+TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
    const int level_number,
    const double end_time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(end_time >= d_integrator_time);
-#endif
 
-   const tbox::Pointer<hier::PatchLevel>
-   patch_level = d_patch_hierarchy->getPatchLevel(level_number);
+   const boost::shared_ptr<hier::PatchLevel> patch_level(
+      d_patch_hierarchy->getPatchLevel(level_number));
 
    /*
     * Initialize step count, start time for current level.
@@ -1033,12 +1023,11 @@ void TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
  *************************************************************************
  */
 
-double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
+double
+TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    const double end_time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(end_time >= d_integrator_time);
-#endif
 
    double dt = end_time - d_integrator_time;
 
@@ -1048,8 +1037,8 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    int level_num;
    for (level_num = 0; level_num <= finest_level_number; level_num++) {
 
-      tbox::Pointer<hier::PatchLevel> patch_level =
-         d_patch_hierarchy->getPatchLevel(level_num);
+      boost::shared_ptr<hier::PatchLevel> patch_level(
+         d_patch_hierarchy->getPatchLevel(level_num));
 
       d_step_level[level_num] = 1;
       d_max_steps_level[level_num] = 1;
@@ -1102,13 +1091,15 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
                  << " to " << finest_level_number << std::endl;
 #endif
+      tbox::Array<double> old_times(finest_level_number+1,
+                                    d_integrator_time-dt);
 
       d_refine_level_integrator->standardLevelSynchronization(
          d_patch_hierarchy,
          0,
          finest_level_number,
          d_integrator_time,
-         d_integrator_time - dt);
+         old_times);
    }
 
    /*
@@ -1278,17 +1269,16 @@ double TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
  *************************************************************************
  */
 
-bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
+bool
+TimeRefinementIntegrator::findNextDtAndStepsRemaining(
    const int level_number,
    const double time_remaining,
    const double dt_bound)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(time_remaining >= 0.0);
    TBOX_ASSERT(dt_bound >= 0.0);
-#endif
 
    /*
     * Grow time increment from previous if possible, but time step size
@@ -1387,13 +1377,12 @@ bool TimeRefinementIntegrator::findNextDtAndStepsRemaining(
  *************************************************************************
  */
 
-bool TimeRefinementIntegrator::atRegridPoint(
+bool
+TimeRefinementIntegrator::atRegridPoint(
    const int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    int step_number = ((level_number == 0) ? d_integrator_step
                       : d_step_level[level_number]);
@@ -1412,13 +1401,12 @@ bool TimeRefinementIntegrator::atRegridPoint(
  *************************************************************************
  */
 
-bool TimeRefinementIntegrator::coarserLevelRegridsToo(
+bool
+TimeRefinementIntegrator::coarserLevelRegridsToo(
    const int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
    return (level_number > 0) ? atRegridPoint(level_number - 1) : false;
 }
 
@@ -1430,7 +1418,8 @@ bool TimeRefinementIntegrator::coarserLevelRegridsToo(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::printClassData(
+void
+TimeRefinementIntegrator::printClassData(
    std::ostream& os) const
 {
    os << "\nTimeRefinementIntegrator::printClassData..." << std::endl;
@@ -1445,11 +1434,11 @@ void TimeRefinementIntegrator::printClassData(
       << "d_grow_dt = " << d_grow_dt << std::endl;
    os << "d_just_regridded = " << d_just_regridded << std::endl;
    os << "d_last_finest_level = " << d_last_finest_level << std::endl;
-   os << "d_patch_hierarchy = " << d_patch_hierarchy.getPointer() << std::endl;
+   os << "d_patch_hierarchy = " << d_patch_hierarchy.get() << std::endl;
    os << "d_refine_level_integrator = "
-      << (TimeRefinementLevelStrategy *)d_refine_level_integrator << std::endl;
+      << d_refine_level_integrator.get() << std::endl;
    os << "d_gridding_algorithm = "
-      << (mesh::GriddingAlgorithmStrategy *)d_gridding_algorithm << std::endl;
+      << d_gridding_algorithm.get() << std::endl;
 
    const int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
    for (int level_number = 0; level_number < max_levels; level_number++) {
@@ -1465,14 +1454,13 @@ void TimeRefinementIntegrator::printClassData(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::printDataForLevel(
+void
+TimeRefinementIntegrator::printDataForLevel(
    std::ostream& os,
    const int level_number) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0) &&
       (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
    os << "\nTimeRefinementIntegrator::printDataForLevel..." << std::endl;
    os << "\nd_level_sim_time[" << level_number << "] = "
       << d_level_sim_time[level_number] << std::endl;
@@ -1498,12 +1486,11 @@ void TimeRefinementIntegrator::printDataForLevel(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+void
+TimeRefinementIntegrator::putToDatabase(
+   const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
-#endif
+   TBOX_ASSERT(db);
 
    db->putInteger("ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION",
       ALGS_TIME_REFINEMENT_INTEGRATOR_VERSION);
@@ -1531,16 +1518,15 @@ void TimeRefinementIntegrator::putToDatabase(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+void
+TimeRefinementIntegrator::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(is_from_restart || !db.isNull());
-#endif
+   TBOX_ASSERT(is_from_restart || db);
 
    if (is_from_restart) {
-      if (!db.isNull()) {
+      if (db) {
          if (!d_use_refined_timestepping) {
             int regrid_interval =
                db->getIntegerWithDefault("regrid_interval", 1);
@@ -1665,13 +1651,14 @@ void TimeRefinementIntegrator::getFromInput(
  *************************************************************************
  */
 
-void TimeRefinementIntegrator::getFromRestart()
+void
+TimeRefinementIntegrator::getFromRestart()
 {
 
-   tbox::Pointer<tbox::Database> restart_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> restart_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
+   boost::shared_ptr<tbox::Database> db;
    if (restart_db->isDatabase(d_object_name)) {
       db = restart_db->getDatabase(d_object_name);
    } else {
@@ -1703,7 +1690,8 @@ void TimeRefinementIntegrator::getFromRestart()
  *************************************************************************
  *************************************************************************
  */
-void TimeRefinementIntegrator::initializeCallback()
+void
+TimeRefinementIntegrator::initializeCallback()
 {
    t_initialize_hier = tbox::TimerManager::getManager()->
       getTimer("algs::TimeRefinementIntegrator::initializeHierarchy()");
@@ -1717,11 +1705,12 @@ void TimeRefinementIntegrator::initializeCallback()
  *************************************************************************
  *************************************************************************
  */
-void TimeRefinementIntegrator::finalizeCallback()
+void
+TimeRefinementIntegrator::finalizeCallback()
 {
-   t_initialize_hier.setNull();
-   t_advance_hier.setNull();
-   t_advance_level.setNull();
+   t_initialize_hier.reset();
+   t_advance_hier.reset();
+   t_advance_level.reset();
 }
 
 }

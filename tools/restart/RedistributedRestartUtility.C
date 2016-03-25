@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   $Description
  *
  ************************************************************************/
@@ -13,11 +13,11 @@
 #ifdef HAVE_HDF5
 
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/tbox/List.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <cassert>
+#include <list>
 
 #define NAME_BUF_SIZE (32)
 
@@ -61,7 +61,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the output files on an array of output databases
-      tbox::Array<tbox::Pointer<tbox::Database> >
+      tbox::Array<boost::shared_ptr<tbox::Database> >
       output_dbs(num_files_to_write);
 
       string proc_buf;
@@ -72,7 +72,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
          string output_filename = restart_dirname + proc_buf;
 
-         output_dbs[j] = new tbox::HDFDatabase(output_filename);
+         output_dbs[j].reset(new tbox::HDFDatabase(output_filename));
 
          int open_success = output_dbs[j]->create(output_filename);
 
@@ -86,7 +86,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the input files on an array of input databases.
-      tbox::Array<tbox::Pointer<tbox::Database> >
+      tbox::Array<boost::shared_ptr<tbox::Database> >
       input_dbs(num_files_to_read);
 
       nodes_buf = "/nodes." + tbox::Utilities::nodeToString(total_input_files);
@@ -111,7 +111,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
          string restart_filename = input_dirname + restore_buf + nodes_buf
             + proc_buf;
 
-         input_dbs[i] = new tbox::HDFDatabase(restart_filename);
+         input_dbs[i].reset(new tbox::HDFDatabase(restart_filename));
 
          int open_success = input_dbs[i]->open(restart_filename);
 
@@ -167,8 +167,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
  */
 
 void RedistributedRestartUtility::readAndWriteRestartData(
-   tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
-   const tbox::Array<tbox::Pointer<tbox::Database> >& input_dbs,
+   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const tbox::Array<boost::shared_ptr<tbox::Database> >& input_dbs,
    const string& key,
    const tbox::Array<tbox::Array<int> >* file_mapping,  // = NULL
    const int num_files_written, // = -1,
@@ -193,7 +193,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
    //The Database case is handled separately.
 
    if (input_dbs[0]->isDatabase(key)) {
-      tbox::Pointer<tbox::Database> db = input_dbs[0]->getDatabase(key);
+      boost::shared_ptr<tbox::Database> db = input_dbs[0]->getDatabase(key);
 
       if (db->keyExists("d_is_patch_level") &&
           db->getBool("d_is_patch_level")) {
@@ -201,7 +201,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //Here we are handling the input database(s) for a PatchLevel.
 
          //Create array of level input databases.
-         tbox::Array<tbox::Pointer<tbox::Database> > level_in_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > level_in_dbs;
          level_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
@@ -230,7 +230,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
                  db->getBool("d_is_mapped_box_level")) {
 
          //Create array of level input databases.
-         tbox::Array<tbox::Pointer<tbox::Database> > level_in_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > level_in_dbs;
          level_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
@@ -267,14 +267,14 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //for input_dbs and output_dbs, and then call readAndWriteRestartData
          //recursively.
 
-         tbox::Array<tbox::Pointer<tbox::Database> > child_in_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > child_in_dbs;
          child_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
             child_in_dbs[i] = input_dbs[i]->getDatabase(key);
          }
 
-         tbox::Array<tbox::Pointer<tbox::Database> > child_out_dbs;
+         tbox::Array<boost::shared_ptr<tbox::Database> > child_out_dbs;
          child_out_dbs.resizeArray(output_dbs.size());
 
          for (int i = 0; i < output_dbs.size(); i++) {
@@ -396,8 +396,8 @@ void RedistributedRestartUtility::readAndWriteRestartData(
  */
 
 void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
-   tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
-   const tbox::Array<tbox::Pointer<tbox::Database> >& level_in_dbs,
+   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const tbox::Array<boost::shared_ptr<tbox::Database> >& level_in_dbs,
    const string& key,
    const int num_files_written,
    const tbox::Array<int>& input_proc_nums,
@@ -410,7 +410,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 #endif
 
    //Create an array of level output databases
-   tbox::Array<tbox::Pointer<tbox::Database> > level_out_dbs;
+   tbox::Array<boost::shared_ptr<tbox::Database> > level_out_dbs;
    level_out_dbs.resizeArray(output_dbs.size());
 
    for (int i = 0; i < output_dbs.size(); i++) {
@@ -469,22 +469,22 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 
    }
 
-   tbox::Array<tbox::Pointer<tbox::Database> >
+   tbox::Array<boost::shared_ptr<tbox::Database> >
    mapped_box_level_dbs_in(input_proc_nums.size());
 
-   tbox::List<int> local_indices_used;
+   std::list<int> local_indices_used;
    int max_index_used = 0;
 
    //Each iteration of this loop processes the patches from one input
    //database.
    for (int i = 0; i < input_proc_nums.size(); i++) {
 
-      tbox::Pointer<tbox::Database> mbl_database =
+      boost::shared_ptr<tbox::Database> mbl_database =
          level_in_dbs[i]->getDatabase("mapped_box_level");
 
       mapped_box_level_dbs_in[i] = mbl_database;
 
-      tbox::Pointer<tbox::Database> mapped_boxes_db =
+      boost::shared_ptr<tbox::Database> mapped_boxes_db =
          mbl_database->getDatabase("mapped_boxes");
 
       tbox::Array<int> local_indices(0);
@@ -499,43 +499,44 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       //This list will contain all of the patch numbers that came from a
       //single processor.
       int mbs_size = local_indices.size();
-      tbox::List<int> input_local_patch_nums;
-      tbox::List<int> input_local_block_ids;
-      tbox::List<int> output_local_patch_nums;
-      tbox::List<int> output_local_block_ids;
+      std::list<int> input_local_patch_nums;
+      std::list<int> input_local_block_ids;
+      std::list<int> output_local_patch_nums;
+      std::list<int> output_local_block_ids;
       int max_local_indices = 0;
       int min_local_indices = tbox::MathUtilities<int>::getMax();
 
       for (int j = 0; j < mbs_size; j++) {
          bool new_patch_num = true;
-         for (tbox::List<int>::Iterator p(input_local_patch_nums); p; p++) {
-            if (p() == local_indices[j]) {
+         for (std::list<int>::iterator p(input_local_patch_nums.begin());
+              p != input_local_patch_nums.end(); p++) {
+            if (*p == local_indices[j]) {
                new_patch_num = false;
                break;
             }
          }
          if (new_patch_num) {
-            input_local_patch_nums.addItem(local_indices[j]);
-            input_local_block_ids.addItem(block_ids[j]);
+            input_local_patch_nums.push_front(local_indices[j]);
+            input_local_block_ids.push_front(block_ids[j]);
          }
       }
 
       if (out_size == 1) {
          bool recompute_local_patch_nums = false;
          if (local_indices_used.size() == 0) {
-            for (tbox::List<int>::Iterator ni(input_local_patch_nums); ni;
-                 ni++) {
-               local_indices_used.addItem(ni());
+            for (std::list<int>::iterator ni(input_local_patch_nums.begin());
+                ni != input_local_patch_nums.end(); ni++) {
+               local_indices_used.push_front(*ni);
                max_index_used =
-                  tbox::MathUtilities<int>::Max(max_index_used, ni());
+                  tbox::MathUtilities<int>::Max(max_index_used, *ni);
             }
          } else {
-            for (tbox::List<int>::Iterator ni(input_local_patch_nums); ni;
-                 ni++) {
+            for (std::list<int>::iterator ni(input_local_patch_nums.begin());
+                 ni != input_local_patch_nums.end(); ni++) {
                bool repeat_found = false;
-               for (tbox::List<int>::Iterator li(local_indices_used); li;
-                    li++) {
-                  if (ni() == li()) {
+               for (std::list<int>::iterator li(local_indices_used.begin());
+                    li != local_indices_used.end(); li++) {
+                  if (*ni == *li) {
                      repeat_found = true;
                      break;
                   }
@@ -544,16 +545,16 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
                   recompute_local_patch_nums = true;
                   int new_value = max_index_used + 1;
                   for (int a = 0; a < mbs_size; a++) {
-                     if (local_indices[a] == ni()) {
+                     if (local_indices[a] == *ni) {
                         local_indices[a] = new_value;
                      }
                   }
-                  local_indices_used.addItem(new_value);
+                  local_indices_used.push_front(new_value);
                   max_index_used = new_value;
                } else {
-                  local_indices_used.addItem(ni());
+                  local_indices_used.push_front(*ni);
                   max_index_used =
-                     tbox::MathUtilities<int>::Max(max_index_used, ni());
+                     tbox::MathUtilities<int>::Max(max_index_used, *ni);
                }
             }
          }
@@ -561,17 +562,17 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          if (recompute_local_patch_nums) {
             for (int j = 0; j < mbs_size; j++) {
                bool new_patch_num = true;
-               for (tbox::List<int>::Iterator p(output_local_patch_nums);
-                    p;
+               for (std::list<int>::iterator p(output_local_patch_nums.begin());
+                    p != output_local_patch_nums.end();
                     p++) {
-                  if (p() == local_indices[j]) {
+                  if (*p == local_indices[j]) {
                      new_patch_num = false;
                      break;
                   }
                }
                if (new_patch_num) {
-                  output_local_patch_nums.addItem(local_indices[j]);
-                  output_local_block_ids.addItem(block_ids[j]);
+                  output_local_patch_nums.push_front(local_indices[j]);
+                  output_local_block_ids.push_front(block_ids[j]);
                }
             }
          } else {
@@ -607,13 +608,14 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
       //For every patch number, get the patch database from input,
       //create a database for output, and call routine to read and
       //write patch database data.
-      tbox::List<int>::Iterator olp(output_local_patch_nums);
-      tbox::List<int>::Iterator ilb(input_local_block_ids);
-      tbox::List<int>::Iterator olb(output_local_block_ids);
-      for (tbox::List<int>::Iterator ilp(input_local_patch_nums); ilp; ) {
+      std::list<int>::iterator olp(output_local_patch_nums.begin());
+      std::list<int>::iterator ilb(input_local_block_ids.begin());
+      std::list<int>::iterator olb(output_local_block_ids.begin());
+      for (std::list<int>::iterator ilp(input_local_patch_nums.begin());
+           ilp != input_local_patch_nums.end(); ) {
          int output_id = 0;
          for (int a = 1; a < out_size; a++) {
-            if (olp() > output_dist_cutoff[a]) {
+            if (*olp > output_dist_cutoff[a]) {
                output_id = a;
             }
          }
@@ -621,17 +623,17 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          string in_patch_name;
          string out_patch_name;
          in_patch_name = "level_" + tbox::Utilities::levelToString(level_number)
-            + "-patch_" + tbox::Utilities::patchToString(ilp())
-            + "-block_" + tbox::Utilities::blockToString(ilb());
+            + "-patch_" + tbox::Utilities::patchToString(*ilp)
+            + "-block_" + tbox::Utilities::blockToString(*ilb);
          out_patch_name = "level_" + tbox::Utilities::levelToString(
                level_number)
-            + "-patch_" + tbox::Utilities::patchToString(olp())
-            + "-block_" + tbox::Utilities::blockToString(olb());
+            + "-patch_" + tbox::Utilities::patchToString(*olp)
+            + "-block_" + tbox::Utilities::blockToString(*olb);
 
-         tbox::Pointer<tbox::Database> patch_in_db =
+         boost::shared_ptr<tbox::Database> patch_in_db =
             level_in_dbs[i]->getDatabase(in_patch_name);
 
-         tbox::Pointer<tbox::Database> patch_out_db =
+         boost::shared_ptr<tbox::Database> patch_out_db =
             level_out_dbs[output_id]->putDatabase(out_patch_name);
 
          int output_proc = num_files_written + output_id;
@@ -658,16 +660,16 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
  */
 
 void RedistributedRestartUtility::readAndWritePatchRestartData(
-   tbox::Pointer<tbox::Database>& patch_out_db,
-   const tbox::Pointer<tbox::Database>& patch_in_db,
+   boost::shared_ptr<tbox::Database>& patch_out_db,
+   const boost::shared_ptr<tbox::Database>& patch_in_db,
    const int output_proc)
 {
    //Get the keys in the patch input database.
    tbox::Array<string> keys = patch_in_db->getAllKeys();
 
    //Place the database on arrays of length 1.
-   tbox::Array<tbox::Pointer<tbox::Database> > in_db_array(1);
-   tbox::Array<tbox::Pointer<tbox::Database> > out_db_array(1);
+   tbox::Array<boost::shared_ptr<tbox::Database> > in_db_array(1);
+   tbox::Array<boost::shared_ptr<tbox::Database> > out_db_array(1);
 
    in_db_array[0] = patch_in_db;
    out_db_array[0] = patch_out_db;
@@ -690,8 +692,8 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
  */
 
 void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
-   tbox::Array<tbox::Pointer<tbox::Database> >& output_dbs,
-   const tbox::Array<tbox::Pointer<tbox::Database> >& level_in_dbs,
+   tbox::Array<boost::shared_ptr<tbox::Database> >& output_dbs,
+   const tbox::Array<boost::shared_ptr<tbox::Database> >& level_in_dbs,
    const string& key,
    const int num_files_written,
    const tbox::Array<int>& input_proc_nums,
@@ -706,7 +708,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    const int out_size = output_dbs.size();
 
    //Create an array of level output databases
-   tbox::Array<tbox::Pointer<tbox::Database> > level_out_dbs;
+   tbox::Array<boost::shared_ptr<tbox::Database> > level_out_dbs;
    level_out_dbs.resizeArray(out_size);
 
    for (int i = 0; i < out_size; i++) {
@@ -732,6 +734,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    std::vector<int>* out_ranks = new std::vector<int>[out_size];
    std::vector<int>* out_periodic_ids =
       new std::vector<int>[out_size];
+   std::vector<int>* out_block_ids = new std::vector<int>[out_size];
 
    tbox::Array<tbox::DatabaseBox>* out_box_array =
       new tbox::Array<tbox::DatabaseBox>[out_size];
@@ -739,14 +742,14 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    int out_vec_size = 0;
    tbox::Array<int> out_mbs_size(out_size, 0);
 
-   tbox::List<int> local_indices_used;
+   std::list<int> local_indices_used;
    int max_index_used = 0;
 
    //Each iteration of this loop processes the patches from one input
    //database.
    for (int i = 0; i < input_proc_nums.size(); i++) {
 
-      tbox::Pointer<tbox::Database> mapped_boxes_in_db =
+      boost::shared_ptr<tbox::Database> mapped_boxes_in_db =
          level_in_dbs[i]->getDatabase("mapped_boxes");
 
       int mbs_size = mapped_boxes_in_db->getInteger("mapped_box_set_size");
@@ -754,6 +757,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       tbox::Array<int> local_indices;
       tbox::Array<int> ranks;
       tbox::Array<int> periodic_ids;
+      tbox::Array<int> block_ids;
       tbox::Array<tbox::DatabaseBox> boxes;
 
       if (mapped_boxes_in_db->keyExists("local_indices")) {
@@ -766,36 +770,43 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
          periodic_ids =
             mapped_boxes_in_db->getIntegerArray("periodic_ids");
       }
+      if (mapped_boxes_in_db->keyExists("block_ids")) {
+         block_ids = mapped_boxes_in_db->getIntegerArray("block_ids");
+      }
       if (mapped_boxes_in_db->keyExists("boxes")) {
          boxes = mapped_boxes_in_db->getDatabaseBoxArray("boxes");
       }
 
       if (out_size == 1) {
-         tbox::List<int> new_indices;
+         std::list<int> new_indices;
          for (int k = 0; k < mbs_size; k++) {
             bool is_new_index = true;
-            for (tbox::List<int>::Iterator ni(new_indices); ni; ni++) {
-               if (local_indices[k] == ni()) {
+            for (std::list<int>::iterator ni(new_indices.begin());
+                 ni != new_indices.end(); ni++) {
+               if (local_indices[k] == *ni) {
                   is_new_index = false;
                   break;
                }
             }
             if (is_new_index) {
-               new_indices.addItem(local_indices[k]);
+               new_indices.push_front(local_indices[k]);
             }
          }
          if (local_indices_used.size() == 0) {
-            for (tbox::List<int>::Iterator ni(new_indices); ni; ni++) {
-               local_indices_used.addItem(ni());
+            for (std::list<int>::iterator ni(new_indices.begin());
+                 ni != new_indices.end(); ni++) {
+               local_indices_used.push_front(*ni);
                max_index_used =
-                  tbox::MathUtilities<int>::Max(max_index_used, ni());
+                  tbox::MathUtilities<int>::Max(max_index_used, *ni);
             }
          } else {
-            for (tbox::List<int>::Iterator ni(new_indices); ni; ni++) {
+            for (std::list<int>::iterator ni(new_indices.begin());
+                 ni != new_indices.end(); ni++) {
                bool repeat_found = false;
-               for (tbox::List<int>::Iterator li(local_indices_used); li;
+               for (std::list<int>::iterator li(local_indices_used.begin());
+                    li != local_indices_used.end();
                     li++) {
-                  if (ni() == li()) {
+                  if (*ni == *li) {
                      repeat_found = true;
                      break;
                   }
@@ -803,16 +814,16 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
                if (repeat_found) {
                   int new_value = max_index_used + 1;
                   for (int a = 0; a < mbs_size; a++) {
-                     if (local_indices[a] == ni()) {
+                     if (local_indices[a] == *ni) {
                         local_indices[a] = new_value;
                      }
                   }
-                  local_indices_used.addItem(new_value);
+                  local_indices_used.push_front(new_value);
                   max_index_used = new_value;
                } else {
-                  local_indices_used.addItem(ni());
+                  local_indices_used.push_front(*ni);
                   max_index_used =
-                     tbox::MathUtilities<int>::Max(max_index_used, ni());
+                     tbox::MathUtilities<int>::Max(max_index_used, *ni);
                }
             }
          }
@@ -853,6 +864,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
             out_local_indices[j].reserve(out_vec_size);
             out_ranks[j].reserve(out_vec_size);
             out_periodic_ids[j].reserve(out_vec_size);
+            out_block_ids[j].reserve(out_vec_size);
 
             out_box_array[j].resizeArray(out_vec_size);
             for (int k = 0; k < mbs_size; k++) {
@@ -860,8 +872,8 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
                   int output_rank = num_files_written + output_ids[k];
                   out_local_indices[j].push_back(local_indices[k]);
                   out_ranks[j].push_back(output_rank);
-                  out_periodic_ids[j].push_back(
-                     periodic_ids[k]);
+                  out_periodic_ids[j].push_back(periodic_ids[k]);
+                  out_block_ids[j].push_back(block_ids[k]);
                   out_box_array[j][out_mbs_size[j]++] = boxes[k];
                }
             }
@@ -870,7 +882,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    }
 
    for (int j = 0; j < out_size; j++) {
-      tbox::Pointer<tbox::Database> mapped_boxes_out_db =
+      boost::shared_ptr<tbox::Database> mapped_boxes_out_db =
          level_out_dbs[j]->putDatabase("mapped_boxes");
 
       mapped_boxes_out_db->
@@ -879,18 +891,21 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
       putInteger("mapped_box_set_size", out_mbs_size[j]);
 
       if (out_mbs_size[j]) {
-         mapped_boxes_out_db->
-         putIntegerArray("local_indices",
+         mapped_boxes_out_db->putIntegerArray("local_indices",
             &out_local_indices[j][0],
             out_mbs_size[j]);
-         mapped_boxes_out_db->
-         putIntegerArray("periodic_ids",
+         mapped_boxes_out_db->putIntegerArray("periodic_ids",
             &out_periodic_ids[j][0],
             out_mbs_size[j]);
-         mapped_boxes_out_db->
-         putIntegerArray("ranks", &out_ranks[j][0], out_mbs_size[j]);
-         mapped_boxes_out_db->
-         putDatabaseBoxArray("boxes", &out_box_array[j][0], out_mbs_size[j]);
+         mapped_boxes_out_db->putIntegerArray("block_ids",
+            &out_block_ids[j][0],
+            out_mbs_size[j]);
+         mapped_boxes_out_db->putIntegerArray("ranks",
+            &out_ranks[j][0],
+            out_mbs_size[j]);
+         mapped_boxes_out_db->putDatabaseBoxArray("boxes",
+            &out_box_array[j][0],
+            out_mbs_size[j]);
 
       }
    }
@@ -898,6 +913,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
    delete[] out_local_indices;
    delete[] out_ranks;
    delete[] out_periodic_ids;
+   delete[] out_block_ids;
    delete[] out_box_array;
 /*
  *    for (int j = 0; j < out_size; j++) {
@@ -927,7 +943,7 @@ void RedistributedRestartUtility::readAndWriteBoxLevelRestartData(
  *          }
  *       }
  *
- *       tbox::Pointer<tbox::Database> mapped_boxes_out_db =
+ *       boost::shared_ptr<tbox::Database> mapped_boxes_out_db =
  *          level_out_dbs[j]->putDatabase("mapped_boxes");
  *
  *       mapped_boxes_out_db->

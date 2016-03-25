@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction structure for statistic data copies
  *
  ************************************************************************/
@@ -13,10 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Transaction.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -50,8 +50,8 @@ public:
     * if the source and destination processors are the same.  Also, note
     * that the copyLocalData() routine has an empty implementation.
     */
-   explicit StatTransaction(
-      Pointer<Statistic> stat,
+   StatTransaction(
+      const boost::shared_ptr<Statistic>& stat,
       int src_proc_id,
       int dst_proc_id);
 
@@ -131,7 +131,7 @@ private:
    operator = (
       const StatTransaction&);                  // not implemented
 
-   Pointer<Statistic> d_stat;
+   boost::shared_ptr<Statistic> d_stat;
    int d_src_id;
    int d_dst_id;
 

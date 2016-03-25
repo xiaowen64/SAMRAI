@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for face-centered double data on
  *                a  mesh.
  *
@@ -103,31 +103,20 @@ FaceDoubleConstantRefine::~FaceDoubleConstantRefine()
 {
 }
 
-bool FaceDoubleConstantRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<FaceVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int FaceDoubleConstantRefine::getOperatorPriority() const
+int
+FaceDoubleConstantRefine::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-FaceDoubleConstantRefine::getStencilWidth() const {
+FaceDoubleConstantRefine::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void FaceDoubleConstantRefine::refine(
+void
+FaceDoubleConstantRefine::refine(
    hier::Patch& fine,
    const hier::Patch& coarse,
    const int dst_component,
@@ -137,18 +126,20 @@ void FaceDoubleConstantRefine::refine(
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<FaceData<double> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<FaceData<double> >
-   fdata = fine.getPatchData(dst_component);
+   boost::shared_ptr<FaceData<double> > cdata(
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<FaceData<double> > fdata(
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   const pdat::FaceOverlap* t_overlap =
-      dynamic_cast<const pdat::FaceOverlap *>(&fine_overlap);
+   const FaceOverlap* t_overlap =
+      dynamic_cast<const FaceOverlap *>(&fine_overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS4(*this, fine, coarse, ratio);
 
@@ -162,9 +153,10 @@ void FaceDoubleConstantRefine::refine(
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
-      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      for (hier::BoxContainer::const_iterator b(boxes);
+           b != boxes.end(); ++b) {
 
-         const hier::Box& face_box = b();
+         const hier::Box& face_box = *b;
          TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, face_box);
 
          hier::Box fine_box(dim);

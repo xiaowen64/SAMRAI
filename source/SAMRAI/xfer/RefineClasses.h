@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
@@ -14,13 +14,13 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace xfer {
@@ -38,7 +38,7 @@ namespace xfer {
  * of equivalence.
  */
 
-class RefineClasses:public tbox::DescribedClass
+class RefineClasses
 {
 public:
    /*!
@@ -69,7 +69,7 @@ public:
       int d_src_tnew;
 
       /*!
-       * @breif Scratch patch data component
+       * @brief Scratch patch data component
        */
       int d_scratch;
 
@@ -89,12 +89,12 @@ public:
       /*!
        * @brief Refinement operator
        */
-      tbox::Pointer<hier::RefineOperator> d_oprefine;
+      boost::shared_ptr<hier::RefineOperator> d_oprefine;
 
       /*!
        * @brief Time interpolation operator
        */
-      tbox::Pointer<hier::TimeInterpolateOperator> d_optime;
+      boost::shared_ptr<hier::TimeInterpolateOperator> d_optime;
 
       /*!
        * @brief Index of equivalence class where this item belongs.  All
@@ -112,7 +112,7 @@ public:
        * @brief VariableFillPattern that can restrict the stencil of the data
        * filled by the RefineSchedule.
        */
-      tbox::Pointer<VariableFillPattern> d_var_fill_pattern;
+      boost::shared_ptr<VariableFillPattern> d_var_fill_pattern;
    };
 
    /*!
@@ -121,23 +121,29 @@ public:
    RefineClasses();
 
    /*!
-    * @brief The virtual destructor destroys the refinement data items owned
+    * @brief The destructor destroys the refinement data items owned
     * by this object.
     */
-   virtual ~RefineClasses();
+   ~RefineClasses();
 
    /*!
     * @brief Return number of equivalence classes maintained by this object.
     */
    int
-   getNumberOfEquivalenceClasses() const;
+   getNumberOfEquivalenceClasses() const
+   {
+      return d_equivalence_class_indices.size();
+   }
 
    /*!
     * @brief Return total number of refine items that have been registered and
     * stored in the RefineClasses object
     */
    int
-   getNumberOfRefineItems() const;
+   getNumberOfRefineItems() const
+   {
+      return d_num_refine_items;
+   }
 
    /*!
     * @brief Get representative item for a given equivalence class index.
@@ -151,7 +157,13 @@ public:
     */
    const RefineClasses::Data&
    getClassRepresentative(
-      int equiv_class_index) const;
+      int equiv_class_index) const
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_refine_classes_data_items[
+         d_equivalence_class_indices[equiv_class_index].front()];
+   }
 
    /*!
     * @brief Get a refine item from the array of all refine items held by
@@ -168,7 +180,10 @@ public:
     */
    RefineClasses::Data&
    getRefineItem(
-      const int refine_item_array_id);
+      const int refine_item_array_id)
+   {
+      return d_refine_classes_data_items[refine_item_array_id];
+   }
 
    /*!
     * @brief Return an iterator for the list of array ids corresponding to the
@@ -188,9 +203,41 @@ public:
     *
     * @param[in] equiv_class_index
     */
-   tbox::List<int>::Iterator
+   std::list<int>::iterator
    getIterator(
-      int equiv_class_index);
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_equivalence_class_indices[equiv_class_index].begin();
+   }
+
+   /*!
+    * @brief Return an iterator for the list of array ids corresponding to the
+    * equivalence class with the given integer index.
+    *
+    * The number of quivalence classes can be determined via the
+    * getNumberOfEquivalenceClasses() member function.  Valid integer
+    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.  When
+    * assertion checking is active, the id will be checked for validity.
+    *
+    * @note The list should not be modified through this iterator.
+    *
+    * @return The iterator iterates over a list of integers which are array
+    * ids that can be passed into getRefineItem().  The array ids in a
+    * single list all correspond to refine items in a single equivalence
+    * class.
+    *
+    * @param[in] equiv_class_index
+    */
+   std::list<int>::iterator
+   getIteratorEnd(
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_equivalence_class_indices[equiv_class_index].end();
+   }
 
    /*!
     * @brief Given a RefineClasses::Data object, insert it into the proper
@@ -208,14 +255,14 @@ public:
     * descriptor associated with the variable database Singleton object will be
     * used.
     *
-    * @param[in,out] data
+    * @param[in,out] data_item
     * @param[in] descriptor
     */
    void
    insertEquivalenceClassItem(
       RefineClasses::Data& data_item,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL));
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>());
 
    /*!
     * @brief Check refine data item for validity.
@@ -242,8 +289,8 @@ public:
    bool
    itemIsValid(
       const RefineClasses::Data& data_item,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare RefineClasses object with another RefineClasses object;
@@ -268,9 +315,9 @@ public:
     */
    bool
    classesMatch(
-      tbox::Pointer<RefineClasses> test_classes,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<RefineClasses>& test_classes,
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare RefineClasses::Data objects for equivalence;
@@ -310,8 +357,8 @@ public:
    itemsAreEquivalent(
       const RefineClasses::Data& data1,
       const RefineClasses::Data& data2,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing refine
@@ -323,7 +370,10 @@ public:
     * necessary or when increaseRefineItemArraySize() is called.
     */
    int
-   getRefineItemArraySize() const;
+   getRefineItemArraySize() const
+   {
+      return d_refine_classes_data_items.size();
+   }
 
    /*!
     * @brief Increase the allocated size of the array storing refine items.
@@ -337,14 +387,19 @@ public:
     */
    void
    increaseRefineItemArraySize(
-      const int size);
+      const int size)
+   {
+      if (size > d_refine_classes_data_items.size()) {
+         d_refine_classes_data_items.resizeArray(size);
+      }
+   }
 
    /*!
     * @brief Print data for all refine items to the specified output stream.
     *
     * @param[out] stream
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 
@@ -383,7 +438,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      tbox::Pointer<hier::PatchDescriptor> pd) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given RefineClasses::Data
@@ -402,7 +457,7 @@ private:
    int
    getEquivalenceClassIndex(
       const RefineClasses::Data& data,
-      tbox::Pointer<hier::PatchDescriptor> descriptor) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const;
 
    /*!
     * The default length of the refine item array.
@@ -420,7 +475,7 @@ private:
     * which items are part of an equivalence class.  The integers index into
     * the array d_refine_classes_data_items.
     */
-   tbox::Array<tbox::List<int> > d_equivalence_class_indices;
+   tbox::Array<std::list<int> > d_equivalence_class_indices;
 
    /*!
     * The number of refine items that have been registered.
@@ -431,9 +486,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/RefineClasses.I"
-#endif
 
 #endif

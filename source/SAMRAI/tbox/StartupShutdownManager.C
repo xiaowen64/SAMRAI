@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Registry of shutdown routines to be called at program exit
  *
  ************************************************************************/
@@ -35,7 +35,8 @@ StartupShutdownManager::ListElement *
 StartupShutdownManager::s_manager_list_last[s_number_of_priorities];
 int StartupShutdownManager::s_num_manager_items[s_number_of_priorities];
 
-void StartupShutdownManager::registerHandler(
+void
+StartupShutdownManager::registerHandler(
    AbstractHandler* handler)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -73,7 +74,8 @@ void StartupShutdownManager::registerHandler(
    s_num_manager_items[priority]++;
 }
 
-void StartupShutdownManager::initialize()
+void
+StartupShutdownManager::initialize()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    assert(!s_initialized);
@@ -101,7 +103,8 @@ void StartupShutdownManager::initialize()
    }
 }
 
-void StartupShutdownManager::startup()
+void
+StartupShutdownManager::startup()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    // If this is thrown you need to make sure SAMRAIManger::initialize
@@ -134,7 +137,8 @@ void StartupShutdownManager::startup()
    s_shutdowned = false;
 }
 
-void StartupShutdownManager::shutdown()
+void
+StartupShutdownManager::shutdown()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    assert(s_initialized);
@@ -166,7 +170,8 @@ void StartupShutdownManager::shutdown()
 
 }
 
-void StartupShutdownManager::setupSingleton()
+void
+StartupShutdownManager::setupSingleton()
 {
    for (int priority = s_number_of_priorities - 1; priority > -1; priority--) {
       s_manager_list[priority] = (ListElement *)NULL;
@@ -177,7 +182,8 @@ void StartupShutdownManager::setupSingleton()
    s_singleton_initialized = true;
 }
 
-void StartupShutdownManager::finalize()
+void
+StartupShutdownManager::finalize()
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -219,6 +225,101 @@ void StartupShutdownManager::finalize()
    }
 
    s_initialized = false;
+}
+
+StartupShutdownManager::AbstractHandler::~AbstractHandler()
+{
+}
+
+StartupShutdownManager::Handler::Handler()
+{
+}
+
+StartupShutdownManager::Handler::Handler(
+   void(*initialize)(),
+   void(*startup)(),
+   void(*shutdown)(),
+   void(*finalize)(),
+   unsigned char priority):
+   d_initialize(initialize),
+   d_startup(startup),
+   d_shutdown(shutdown),
+   d_finalize(finalize),
+   d_priority(priority)
+{
+   StartupShutdownManager::registerHandler(this);
+}
+
+StartupShutdownManager::Handler::~Handler()
+{
+}
+
+void
+StartupShutdownManager::Handler::initialize()
+{
+   if (d_initialize) {
+      (*d_initialize)();
+   }
+}
+
+void
+StartupShutdownManager::Handler::startup()
+{
+   if (d_startup) {
+      (*d_startup)();
+   }
+}
+
+void
+StartupShutdownManager::Handler::shutdown()
+{
+   if (d_shutdown) {
+      (*d_shutdown)();
+   }
+}
+
+void
+StartupShutdownManager::Handler::finalize()
+{
+   if (d_finalize) {
+      (*d_finalize)();
+   }
+}
+
+unsigned char
+StartupShutdownManager::Handler::getPriority()
+{
+   return d_priority;
+}
+
+bool
+StartupShutdownManager::Handler::hasInitialize()
+{
+   return d_initialize != 0;
+}
+
+bool
+StartupShutdownManager::Handler::hasStartup()
+{
+   return d_startup != 0;
+}
+
+bool
+StartupShutdownManager::Handler::hasShutdown()
+{
+   return d_shutdown != 0;
+}
+
+bool
+StartupShutdownManager::Handler::hasFinalize()
+{
+   return d_finalize != 0;
+}
+
+StartupShutdownManager::ListElement::ListElement():
+   handler(0),
+   next(0)
+{
 }
 
 }

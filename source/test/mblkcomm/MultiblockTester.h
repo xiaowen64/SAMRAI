@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -14,18 +14,16 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
-#include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
@@ -34,6 +32,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
+#include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
@@ -41,6 +40,8 @@
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 using namespace SAMRAI;
@@ -76,8 +77,8 @@ public:
    MultiblockTester(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database>& main_input_db,
-      tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+      boost::shared_ptr<tbox::Database>& main_input_db,
+      boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       PatchMultiblockTestStrategy* strategy,
       bool do_refine = true,
       bool do_coarsen = false,
@@ -91,7 +92,7 @@ public:
    /**
     * Return pointer to patch hierarchy on which communication is tested.
     */
-   tbox::Pointer<hier::PatchHierarchy> getPatchHierarchy()
+   boost::shared_ptr<hier::PatchHierarchy> getPatchHierarchy()
    const
    {
       return d_patch_hierarchy;
@@ -104,11 +105,11 @@ public:
     */
    void
    registerVariable(
-      const tbox::Pointer<hier::Variable> src_variable,
-      const tbox::Pointer<hier::Variable> dst_variable,
+      const boost::shared_ptr<hier::Variable> src_variable,
+      const boost::shared_ptr<hier::Variable> dst_variable,
       const hier::IntVector& src_ghosts,
       const hier::IntVector& dst_ghosts,
-      const tbox::Pointer<hier::GridGeometry> xfer_geom,
+      const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
       const string& operator_name);
 
    /**
@@ -118,11 +119,11 @@ public:
     */
    void
    registerVariableForReset(
-      const tbox::Pointer<hier::Variable> src_variable,
-      const tbox::Pointer<hier::Variable> dst_variable,
+      const boost::shared_ptr<hier::Variable> src_variable,
+      const boost::shared_ptr<hier::Variable> dst_variable,
       const hier::IntVector& src_ghosts,
       const hier::IntVector& dst_ghosts,
-      const tbox::Pointer<hier::GridGeometry> xfer_geom,
+      const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
       const string& operator_name);
 
    /**
@@ -173,24 +174,24 @@ public:
     */
    void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>(NULL),
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    void
    resetHierarchyConfiguration(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
    void
    applyGradientDetector(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -219,7 +220,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    hier::IntVector
    getRefineOpStencilWidth() const;
@@ -256,13 +257,13 @@ public:
       const hier::IntVector& ratio);
 
    double getLevelDt(
-      const tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const double dt_time,
       const bool initial_time)
    {
-      (void)level;
-      (void)dt_time;
-      (void)initial_time;
+      NULL_USE(level);
+      NULL_USE(dt_time);
+      NULL_USE(initial_time);
       return 0.0;
    }
 
@@ -271,8 +272,8 @@ public:
     */
    void
    setupHierarchy(
-      tbox::Pointer<tbox::Database> main_input_db,
-      tbox::Pointer<mesh::StandardTagAndInitialize> cell_tagger);
+      boost::shared_ptr<tbox::Database> main_input_db,
+      boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger);
 
 private:
    /*
@@ -303,7 +304,7 @@ private:
    /*
     * Patch hierarchy on which tests occur.
     */
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
 
    /*
     * Dummy time stamp for all data operations.
@@ -318,13 +319,13 @@ private:
     * The "refine_scratch" context is used for managing scratch
     * space during refine operations.
     */
-   tbox::Pointer<hier::VariableContext> d_source;
-   tbox::Pointer<hier::VariableContext> d_destination;
-   tbox::Pointer<hier::VariableContext> d_refine_scratch;
+   boost::shared_ptr<hier::VariableContext> d_source;
+   boost::shared_ptr<hier::VariableContext> d_destination;
+   boost::shared_ptr<hier::VariableContext> d_refine_scratch;
 
-   tbox::Pointer<hier::VariableContext> d_reset_source;
-   tbox::Pointer<hier::VariableContext> d_reset_destination;
-   tbox::Pointer<hier::VariableContext> d_reset_refine_scratch;
+   boost::shared_ptr<hier::VariableContext> d_reset_source;
+   boost::shared_ptr<hier::VariableContext> d_reset_destination;
+   boost::shared_ptr<hier::VariableContext> d_reset_refine_scratch;
 
    /*
     * Component selector for allocation/deallocation of variable data.
@@ -332,24 +333,21 @@ private:
    hier::ComponentSelector d_patch_data_components;
 
    /*
-    * Refine/Coarsen algorithm and schedules for testing communication
+    * Coarsen algorithm and schedules for testing communication
     * among levels in the patch hierarchy.
     */
 
-   tbox::Pointer<xfer::RefineAlgorithm> d_refine_algorithm;
-   tbox::Pointer<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
+   boost::shared_ptr<xfer::CoarsenAlgorithm> d_coarsen_algorithm;
 
    xfer::RefineAlgorithm d_reset_refine_algorithm;
    xfer::CoarsenAlgorithm d_reset_coarsen_algorithm;
 
-   tbox::Pointer<xfer::RefineAlgorithm> d_mblk_refine_alg;
+   boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_refine_alg;
 
    bool d_is_reset;
 
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
-   d_refine_schedule;
-   tbox::Array<tbox::Pointer<xfer::CoarsenSchedule> >
-   d_coarsen_schedule;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> > d_refine_schedule;
+   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> > d_coarsen_schedule;
 
 };
 

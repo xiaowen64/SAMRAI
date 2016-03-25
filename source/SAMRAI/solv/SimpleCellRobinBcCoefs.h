@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition problem-dependent interfaces
  *
  ************************************************************************/
@@ -17,8 +17,8 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <map>
 
 namespace SAMRAI {
@@ -51,15 +51,14 @@ public:
    /*!
     * @brief Constructor
     */
-   SimpleCellRobinBcCoefs(
+   explicit SimpleCellRobinBcCoefs(
       const tbox::Dimension& dim,
       const std::string& object_name = std::string());
 
    /*!
     * @brief Destructor.
     */
-   virtual ~SimpleCellRobinBcCoefs(
-      void);
+   virtual ~SimpleCellRobinBcCoefs();
 
    //@{ @name Inherited from RobinBcCoefStrategy
 
@@ -92,10 +91,10 @@ public:
     */
    void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       double fill_time = 0.0) const;
@@ -117,7 +116,7 @@ public:
     */
    void
    setHierarchy(
-      tbox::Pointer<hier::PatchHierarchy>,
+      const boost::shared_ptr<hier::PatchHierarchy>&,
       const int ln_min = -1,
       const int ln_max = -1);
 
@@ -216,7 +215,11 @@ public:
     */
    void
    setDiffusionCoefId(
-      int diffusion_coef_id);
+      int diffusion_coef_id)
+   {
+      d_diffusion_coef_id = diffusion_coef_id;
+      d_diffusion_coef_constant = 0.0;
+   }
 
    /*!
     * @brief Set the value of the diffusion coefficient
@@ -229,7 +232,11 @@ public:
     */
    void
    setDiffusionCoefConstant(
-      double diffusion_coef_value);
+      double diffusion_coef_value)
+   {
+      d_diffusion_coef_constant = diffusion_coef_value;
+      d_diffusion_coef_id = -1;
+   }
 
    /*!
     * @brief Get the name of this object.
@@ -237,7 +244,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    enum Bdry_Type {
@@ -278,7 +288,7 @@ private:
     */
    std::string d_object_name;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    int d_ln_min;
    int d_ln_max;
@@ -314,7 +324,7 @@ private:
     * array.  For the position of a particular box, see
     * d_dirichlet_data_position.
     */
-   tbox::Array<tbox::Pointer<pdat::ArrayData<double> > > d_dirichlet_data;
+   tbox::Array<boost::shared_ptr<pdat::ArrayData<double> > > d_dirichlet_data;
    /*!
     * @brief Position of cached boundary boxes of ghost cell data.
     *
@@ -326,14 +336,11 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_set_bc_coefs;
+   boost::shared_ptr<tbox::Timer> t_set_bc_coefs;
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/SimpleCellRobinBcCoefs.I"
-#endif
 #endif  // included_solv_SimpleCellRobinBcCoefs

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -14,6 +14,8 @@
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/pdat/FaceDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -33,17 +35,11 @@ FaceVariable<TYPE>::FaceVariable(
    int depth,
    const bool fine_boundary_represents_var):
    hier::Variable(name,
-                  tbox::Pointer<SAMRAI::hier::PatchDataFactory>(new
-                                                                FaceDataFactory
-                                                                <TYPE>(depth,
-                                                                       // default zero ghost cells
-                                                                       hier
-                                                                       ::
-                                                                       IntVector
-                                                                       ::
-                                                                       getZero(
-                                                                          dim),
-                                                                       fine_boundary_represents_var))),
+                  boost::make_shared<FaceDataFactory<TYPE> >(
+                     depth,
+                     // default zero ghost cells
+                     hier::IntVector::getZero(dim),
+                     fine_boundary_represents_var)),
    d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
 }
@@ -56,7 +52,7 @@ FaceVariable<TYPE>::~FaceVariable()
 template<class TYPE>
 int FaceVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<FaceDataFactory<TYPE> > factory = this->getPatchDataFactory();
+   boost::shared_ptr<FaceDataFactory<TYPE> > factory(getPatchDataFactory());
    TBOX_ASSERT(factory);
    return factory->getDepth();
 }
@@ -74,7 +70,8 @@ int FaceVariable<TYPE>::getDepth() const
 template<class TYPE>
 FaceVariable<TYPE>::FaceVariable(
    const FaceVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing edge data at patch boundaries
  *
  ************************************************************************/
@@ -16,10 +16,11 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/EdgeVariable.h"
 #include "SAMRAI/pdat/OuteredgeVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -28,10 +29,10 @@ namespace algs {
 /*!
  *  @brief Class PatchBoundaryEdgeSum provides operations summing edge data
  *  values at edges that are shared by multiple patches on a single level.
- *  Note that this utility only works on a SINGLE patch level, not on a multiple
- *  levels in an AMR patch hierarchy like the PatchBoundaryNodeSum class.   Unlike
- *  node data, edge data at coarse-fine boundaries are not co-located, so the sum
- *  operation is not clearly defined.
+ *  Note that this utility only works on a SINGLE patch level, not on a
+ *  multiple levels in an AMR patch hierarchy like the PatchBoundaryNodeSum
+ *  class.   Unlike node data, edge data at coarse-fine boundaries are not
+ *  co-located, so the sum operation is not clearly defined.
  *
  *  Usage of a patch boundry edge sum involves the following sequence of steps:
  *
@@ -54,9 +55,9 @@ namespace algs {
  *         my_edge_sum.computeSum()
  *     \endverbatim
  *
- *  The result of these operations is that each edge patch data value associated
- *  with the registered ids at patch boundaries on the level is replaced by the
- *  sum of all data values at the edge.
+ *  The result of these operations is that each edge patch data value
+ *  associated with the registered ids at patch boundaries on the level is
+ *  replaced by the sum of all data values at the edge.
  */
 
 class PatchBoundaryEdgeSum
@@ -76,7 +77,12 @@ public:
     */
    static int
    getNumSharedPatchDataSlots(
-      int max_variables_to_register);
+      int max_variables_to_register)
+   {
+      // edge boundary sum requires two internal outeredge variables
+      // (source and destination) for each registered variable.
+      return 2 * max_variables_to_register;
+   }
 
    /*!
     *  @brief Static function used to predetermine number of patch data
@@ -93,7 +99,13 @@ public:
     */
    static int
    getNumUniquePatchDataSlots(
-      int max_variables_to_register);
+      int max_variables_to_register)
+   {
+      NULL_USE(max_variables_to_register);
+      // all patch data slots used by edge boundary sum are static
+      // and shared among all objects.
+      return 0;
+   }
 
    /*!
     *  @brief Constructor initializes object to default (mostly undefined)
@@ -103,7 +115,7 @@ public:
     *  in error reporting.  When assertion checking is on, the string
     *  cannot be empty.
     */
-   PatchBoundaryEdgeSum(
+   explicit PatchBoundaryEdgeSum(
       const std::string& object_name);
 
    /*!
@@ -133,7 +145,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Compute sum of edge values at each shared edge and replace
@@ -151,7 +163,10 @@ public:
     * @return The object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -160,7 +175,7 @@ private:
     */
    void
    doLevelSum(
-      tbox::Pointer<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Static members for managing shared temporary data among multiple
@@ -186,34 +201,33 @@ private:
    tbox::Array<int> d_num_registered_data_by_depth;
 
    /*
-    * Edge-centered variables and patch data indices used as internal work quantities.
+    * Edge-centered variables and patch data indices used as internal work
+    * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_oedge_src_variable;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_oedge_dst_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_src_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_oedge_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<int> d_oedge_src_id;
    tbox::Array<int> d_oedge_dst_id;
 
    /*
-    * Sets of indices for temporary variables to expedite allocation/deallocation.
+    * Sets of indices for temporary variables to expedite allocation and
+    * deallocation.
     */
    hier::ComponentSelector d_oedge_src_data_set;
    hier::ComponentSelector d_oedge_dst_data_set;
 
-   tbox::Pointer<hier::PatchLevel> d_level;
+   boost::shared_ptr<hier::PatchLevel> d_level;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Pointer<xfer::RefineSchedule> d_single_level_sum_schedule;
+   boost::shared_ptr<xfer::RefineSchedule> d_single_level_sum_schedule;
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/PatchBoundaryEdgeSum.I"
-#endif
 #endif

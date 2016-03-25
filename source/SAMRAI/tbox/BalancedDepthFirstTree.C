@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
@@ -43,18 +43,17 @@ BalancedDepthFirstTree::~BalancedDepthFirstTree()
 {
 }
 
-void BalancedDepthFirstTree::initialize(
+void
+BalancedDepthFirstTree::initialize(
    unsigned int first_rank,
    unsigned int last_rank,
    unsigned int rank,
    bool do_left_leaf_switch)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(first_rank <= rank);
    TBOX_ASSERT(rank <= last_rank);
-#endif
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-   tbox::plog
+   plog
    << "BalancedDepthFirstTree::initialize with first_rank,last_rank,x="
    << first_rank << " " << last_rank << " " << rank << std::endl;
 #endif
@@ -96,34 +95,30 @@ void BalancedDepthFirstTree::initialize(
       if (nr > 0) cr = cl + static_cast<int>(nl);         // right child
 
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-      tbox::plog << "There are" << " " << nrem << " "
-                 << "remaining nodes.  nl,nr=" << " " << nl << " " << nr
-                 << std::endl;
-      tbox::plog << "cl=" << " " << cl << " " << "cr=" << " " << cr
-                 << std::endl;
+      plog << "There are" << " " << nrem << " "
+           << "remaining nodes.  nl,nr=" << " " << nl << " " << nr
+           << std::endl;
+      plog << "cl=" << " " << cl << " " << "cr=" << " " << cr
+           << std::endl;
 #endif
 
       if (node == rank) break;
       else {
-#ifdef DEBUG_CHECK_ASSERTIONS
          TBOX_ASSERT(nl > 0);
          TBOX_ASSERT(cl != getInvalidRank());
-#endif
          upp = up;
          up = node;
          if (nr < 1 || rank < cr) {
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-            tbox::plog << "Going left to" << " " << cl << std::endl;
+            plog << "Going left to" << " " << cl << std::endl;
 #endif
             rbeg = cl;
             rend = cl + static_cast<int>(nl) - 1;
          } else {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(nr > 0);
             TBOX_ASSERT(cr != getInvalidRank());
-#endif
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-            tbox::plog << "Going right to" << " " << cr << std::endl;
+            plog << "Going right to" << " " << cr << std::endl;
 #endif
             rbeg = cr;
             rend = cr + static_cast<int>(nr) - 1;
@@ -138,11 +133,11 @@ void BalancedDepthFirstTree::initialize(
    d_children[1] = cr;
    d_num_children = 0;
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-   tbox::plog << "  " << d_parent << std::endl;
-   tbox::plog << "   |" << std::endl;
-   tbox::plog << "  " << d_rank << std::endl;
-   tbox::plog << "  /  \\ " << std::endl;
-   tbox::plog << d_children[0] << "   " << d_children[1] << std::endl;
+   plog << "  " << d_parent << std::endl;
+   plog << "   |" << std::endl;
+   plog << "  " << d_rank << std::endl;
+   plog << "  /  \\ " << std::endl;
+   plog << d_children[0] << "   " << d_children[1] << std::endl;
 #endif
 
    if (do_left_leaf_switch) {
@@ -199,17 +194,12 @@ void BalancedDepthFirstTree::initialize(
    }
 
 #if defined(BalancedDepthFirstTree_ExtraDebug)
-   tbox::plog << "  " << d_parent << std::endl;
-   tbox::plog << "   |" << std::endl;
-   tbox::plog << "  " << d_rank << std::endl;
-   tbox::plog << "  /  \\ " << std::endl;
-   tbox::plog << d_children[0] << "   " << d_children[1] << std::endl;
+   plog << "  " << d_parent << std::endl;
+   plog << "   |" << std::endl;
+   plog << "  " << d_rank << std::endl;
+   plog << "  /  \\ " << std::endl;
+   plog << d_children[0] << "   " << d_children[1] << std::endl;
 #endif
-}
-
-unsigned int BalancedDepthFirstTree::getInvalidRank() const
-{
-   return 1 << (8 * sizeof(unsigned int) - 2);
 }
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program for testing BoxContainer iterators
  *
  ************************************************************************/
@@ -55,9 +55,10 @@ int main(
          int owner(i % num_owners);
          hier::BlockId bid(i / num_blocks);
          hier::LocalId lid(i);
-         hier::BoxId mbid(lid, owner, bid);
+         hier::BoxId mbid(lid, owner);
 
          hier::Box mb(dim, mbid);
+         mb.setBlockId(bid);
          mboxes.insert(mb);
 
       }
@@ -68,8 +69,8 @@ int main(
 
          const hier::BlockId bid(b);
 
-         for (hier::BoxContainerSingleBlockIterator bi(mboxes, hier::BlockId(b));
-              bi.isValid(); ++bi) {
+         for (hier::BoxContainerSingleBlockIterator bi(mboxes.begin(hier::BlockId(b)));
+              bi != mboxes.end(hier::BlockId(b)); ++bi) {
 
             if (bi->getBlockId() != bid) {
                tbox::perr << "FAILED: - Test #1: box id " << bi->getBlockId()
@@ -84,8 +85,8 @@ int main(
 
       for (int owner_rank = 0; owner_rank < num_owners; ++owner_rank) {
 
-         for (hier::BoxContainerSingleOwnerIterator bi(mboxes, owner_rank);
-              bi.isValid(); ++bi) {
+         for (hier::BoxContainerSingleOwnerIterator bi(mboxes.begin(owner_rank));
+              bi != mboxes.end(owner_rank); ++bi) {
 
             if (bi->getOwnerRank() != owner_rank) {
                tbox::perr << "FAILED: - Test #2: box id " << bi->getBlockId()

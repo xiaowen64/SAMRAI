@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
@@ -25,36 +25,6 @@ CoarsenPatchStrategy::CoarsenPatchStrategy(
 
 CoarsenPatchStrategy::~CoarsenPatchStrategy()
 {
-}
-
-/*
- *************************************************************************
- * Register this in the static registry.
- *************************************************************************
- */
-
-void CoarsenPatchStrategy::registerObject()
-{
-   std::set<CoarsenPatchStrategy *>& current_objects =
-      CoarsenPatchStrategy::getCurrentObjects();
-   current_objects.insert(this);
-}
-
-/*
- *************************************************************************
- * Return the static registry.
- *************************************************************************
- */
-
-std::set<CoarsenPatchStrategy *>& CoarsenPatchStrategy::getCurrentObjects()
-{
-   static std::set<CoarsenPatchStrategy *> current_objects;
-   return current_objects;
-}
-
-const tbox::Dimension& CoarsenPatchStrategy::getDim() const
-{
-   return d_dim;
 }
 
 /*

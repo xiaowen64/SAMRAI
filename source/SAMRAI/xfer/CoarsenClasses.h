@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
@@ -14,12 +14,13 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace xfer {
@@ -37,7 +38,7 @@ namespace xfer {
  * of equivalence.
  */
 
-class CoarsenClasses:public tbox::DescribedClass
+class CoarsenClasses
 {
 public:
    /*!
@@ -76,7 +77,7 @@ public:
       /*!
        * @brief Coarsening operator.
        */
-      tbox::Pointer<hier::CoarsenOperator> d_opcoarsen;
+      boost::shared_ptr<hier::CoarsenOperator> d_opcoarsen;
 
       /*!
        * @brief Index of equivalence class where this item belongs.  All
@@ -94,7 +95,7 @@ public:
        * @brief VariableFillPattern that can restrict the stencil of the data
        * coarsened by the CoarsenSchedule.
        */
-      tbox::Pointer<VariableFillPattern> d_var_fill_pattern;
+      boost::shared_ptr<VariableFillPattern> d_var_fill_pattern;
 
       /*!
        * @brief Constructor.
@@ -102,9 +103,7 @@ public:
        * @param[in] dim Dimension.
        */
       explicit Data(
-         tbox::Dimension dim):
-         d_gcw_to_coarsen(dim) {
-      }
+         tbox::Dimension dim);
 
 private:
       Data();  //not implemented
@@ -119,23 +118,29 @@ private:
       bool fill_coarse_data);
 
    /*!
-    * @brief The virtual destructor destroys the coarsen data items owned
+    * @brief The destructor destroys the coarsen data items owned
     * by this object.
     */
-   virtual ~CoarsenClasses();
+   ~CoarsenClasses();
 
    /*!
     * Return number of equivalence classes maintained by this object.
     */
    int
-   getNumberOfEquivalenceClasses() const;
+   getNumberOfEquivalenceClasses() const
+   {
+      return d_equivalence_class_indices.size();
+   }
 
    /*!
     * @brief Return total number of coarsen items that have been registered
     * and stored in the CoarsenClasses object
     */
    int
-   getNumberOfCoarsenItems() const;
+   getNumberOfCoarsenItems() const
+   {
+      return d_num_coarsen_items;
+   }
 
    /*!
     * @brief Get representative item for a given equivalence class index.
@@ -145,11 +150,17 @@ private:
     * @return Given an index of an existing equivalence class, one item
     * from that class is returned.
     *
-    * @param[in] equiv_class_id
+    * @param[in] equiv_class_index
     */
    const CoarsenClasses::Data&
    getClassRepresentative(
-      int equiv_class_index) const;
+      int equiv_class_index) const
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_coarsen_classes_data_items[
+         d_equivalence_class_indices[equiv_class_index].front()];
+   }
 
    /*!
     * @brief Get a coarsen item from the array of all coarsen items held by
@@ -166,7 +177,10 @@ private:
     */
    CoarsenClasses::Data&
    getCoarsenItem(
-      const int coarsen_item_array_id);
+      const int coarsen_item_array_id)
+   {
+      return d_coarsen_classes_data_items[coarsen_item_array_id];
+   }
 
    /*!
     * @brief Return an iterator for the list of array ids corresponding to the
@@ -186,9 +200,41 @@ private:
     *
     * @param[in] equiv_class_index
     */
-   tbox::List<int>::Iterator
+   std::list<int>::iterator
    getIterator(
-      int equiv_class_index);
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_equivalence_class_indices[equiv_class_index].begin();
+   }
+
+   /*!
+    * @brief Return an iterator for the list of array ids corresponding to the
+    * equivalence class with the given integer index.
+    *
+    * The number of quivalence classes can be determined via the
+    * getNumberOfEquivalenceClasses() member function.  Valid integer
+    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.  When
+    * assertion checking is active, the id will be checked for validity.
+    *
+    * @note The list should not be modified through this iterator.
+    *
+    * @return The iterator iterates over a list of integers which are array
+    * ids that can be passed into getCoarsenItem().  The array ids in a
+    * single list all correspond to coarsen items in a single equivalence
+    * class.
+    *
+    * @param[in] equiv_class_index
+    */
+   std::list<int>::iterator
+   getIteratorEnd(
+      int equiv_class_index)
+   {
+      TBOX_ASSERT((equiv_class_index >= 0) &&
+         (equiv_class_index < getNumberOfEquivalenceClasses()));
+      return d_equivalence_class_indices[equiv_class_index].end();
+   }
 
    /*!
     * @brief Given a CoarsenClasses::Data object, insert it into the proper
@@ -212,8 +258,8 @@ private:
    void
    insertEquivalenceClassItem(
       CoarsenClasses::Data& data,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL));
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>());
 
    /*!
     * @brief Check coarsen data item for validity.
@@ -237,8 +283,8 @@ private:
    bool
    itemIsValid(
       const CoarsenClasses::Data& data_item,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare CoarsenClasses object with another CoarsenClasses object;
@@ -263,9 +309,9 @@ private:
     */
    bool
    classesMatch(
-      tbox::Pointer<CoarsenClasses> test_classes,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<CoarsenClasses>& test_classes,
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare CoarsenClasses::Data objects for equivalence;
@@ -299,8 +345,8 @@ private:
    itemsAreEquivalent(
       const CoarsenClasses::Data& data1,
       const CoarsenClasses::Data& data2,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing coarsen
@@ -312,7 +358,10 @@ private:
     * necessary or when increaseCoarsenItemArraySize() is called.
     */
    int
-   getCoarsenItemArraySize() const;
+   getCoarsenItemArraySize() const
+   {
+      return d_coarsen_classes_data_items.size();
+   }
 
    /*!
     * @brief Increase the allocated size of the array storing coarsen items.
@@ -323,18 +372,24 @@ private:
     * allocated size of the array, then the size of the array is not changed.
     *
     * @param[in] size
+    * @param[in] dim
     */
    void
    increaseCoarsenItemArraySize(
       const int size,
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+      if (size > d_coarsen_classes_data_items.size()) {
+         d_coarsen_classes_data_items.resizeArray(size, Data(dim));
+      }
+   }
 
    /*!
     * @brief Print data for all coarsen items to the specified output stream.
     *
     * @param[out] stream
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 
@@ -373,7 +428,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      tbox::Pointer<hier::PatchDescriptor> pd) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given
@@ -392,8 +447,8 @@ private:
    int
    getEquivalenceClassIndex(
       const CoarsenClasses::Data& data,
-      tbox::Pointer<hier::PatchDescriptor> descriptor =
-         tbox::Pointer<hier::PatchDescriptor>(NULL)) const;
+      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
+         boost::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * The default length of the coarsen item array.
@@ -416,7 +471,7 @@ private:
     * which items are part of an equivalence class.  The integers index into
     * the array d_coarsen_classes_data_items.
     */
-   tbox::Array<tbox::List<int> > d_equivalence_class_indices;
+   tbox::Array<std::list<int> > d_equivalence_class_indices;
 
    /*!
     * The number of coarsen items that have been registered.
@@ -427,9 +482,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenClasses.I"
-#endif
 
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Algorithms to work with maping Connectors.
  *
  ************************************************************************/
@@ -26,7 +26,7 @@ protected:
    /*!
     * @brief Constructor
     */
-   explicit BaseConnectorAlgorithm();
+   BaseConnectorAlgorithm();
 
    /*!
     * @brief Destructor.
@@ -40,11 +40,10 @@ protected:
    setupCommunication(
       tbox::AsyncCommPeer<int> *& all_comms,
       tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
       const tbox::SAMRAI_MPI& mpi,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
-      tbox::Pointer<tbox::Timer>& mpi_wait_timer,
+      const boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
       int& operation_mpi_tag) const;
 
    //! @brief Send discovery to one processor during privateBridge/Modify.
@@ -67,8 +66,7 @@ protected:
       std::set<int>& incoming_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
       tbox::AsyncCommStage& comm_stage,
-      tbox::AsyncCommStage::MemberVec& completed,
-      tbox::Pointer<tbox::Timer>& receive_and_unpack_timer) const;
+      const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const;
 
    //! @brief Unpack message sent by sendDiscoverytoOneProcess().
    void

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
@@ -12,10 +12,6 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/PIO.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Parser.I"
-#endif
 
 #ifdef __INTEL_COMPILER
 // Ignore Intel warnings about external declarations
@@ -83,10 +79,11 @@ Parser::~Parser()
  *************************************************************************
  */
 
-int Parser::parse(
+int
+Parser::parse(
    const std::string& filename,
    FILE* fstream,
-   Pointer<Database> database)
+   const boost::shared_ptr<Database>& database)
 {
    d_errors = 0;
    d_warnings = 0;
@@ -105,11 +102,11 @@ int Parser::parse(
    pd.d_linenumber = 1;
    pd.d_cursor = 1;
    pd.d_nextcursor = 1;
-   d_parse_stack.clearItems();
-   d_parse_stack.addItem(pd);
+   d_parse_stack.clear();
+   d_parse_stack.push_front(pd);
 
-   d_scope_stack.clearItems();
-   d_scope_stack.addItem(database);
+   d_scope_stack.clear();
+   d_scope_stack.push_front(database);
 
    s_default_parser = this;
    yyrestart(NULL);
@@ -118,8 +115,8 @@ int Parser::parse(
    }
    s_default_parser = NULL;
 
-   d_parse_stack.clearItems();
-   d_scope_stack.clearItems();
+   d_parse_stack.clear();
+   d_scope_stack.clear();
 
    return d_errors;
 }
@@ -132,10 +129,11 @@ int Parser::parse(
  *************************************************************************
  */
 
-void Parser::advanceLine(
+void
+Parser::advanceLine(
    const int nline)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
    pd.d_linenumber += nline;
    pd.d_cursor = 1;
    pd.d_nextcursor = 1;
@@ -150,10 +148,11 @@ void Parser::advanceLine(
  *************************************************************************
  */
 
-void Parser::advanceCursor(
+void
+Parser::advanceCursor(
    const std::string& token)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
    pd.d_cursor = pd.d_nextcursor;
    for (std::string::const_iterator i = token.begin(); i != token.end(); i++) {
       if (*i == '\t') {
@@ -172,10 +171,11 @@ void Parser::advanceCursor(
  *************************************************************************
  */
 
-void Parser::error(
+void
+Parser::error(
    const std::string& message)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
 
    pout << "Error in " << pd.d_filename << " at line " << pd.d_linenumber
         << " column " << pd.d_cursor
@@ -198,10 +198,11 @@ void Parser::error(
  *************************************************************************
  */
 
-void Parser::warning(
+void
+Parser::warning(
    const std::string& message)
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
 
    pout << "Warning in " << pd.d_filename << " at line " << pd.d_linenumber
         << " column " << pd.d_cursor
@@ -219,35 +220,23 @@ void Parser::warning(
 /*
  *************************************************************************
  *
- * Set the input line which is currently being parsed.
- *
- *************************************************************************
- */
-
-void Parser::setLine(
-   const std::string& line)
-{
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
-   pd.d_linebuffer = line;
-}
-
-/*
- *************************************************************************
- *
  * Iterate through the database scopes, looking for the first match on
  * the key value.
  *
  *************************************************************************
  */
 
-Pointer<Database> Parser::getDatabaseWithKey(
+boost::shared_ptr<Database>
+Parser::getDatabaseWithKey(
    const std::string& key)
 {
-   List<Pointer<Database> >::Iterator i(d_scope_stack);
-   for ( ; i; i++) {
-      if (i()->keyExists(key)) return i();
+   std::list<boost::shared_ptr<Database> >::iterator i = d_scope_stack.begin();
+   for ( ; i != d_scope_stack.end(); i++) {
+      if ((*i)->keyExists(key)) {
+         return *i;
+      }
    }
-   return Pointer<Database>(NULL);
+   return boost::shared_ptr<Database>();
 }
 
 /*
@@ -259,11 +248,12 @@ Pointer<Database> Parser::getDatabaseWithKey(
  *************************************************************************
  */
 
-bool Parser::pushIncludeFile(
+bool
+Parser::pushIncludeFile(
    const std::string& filename)
 {
    FILE* fstream = NULL;
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    std::string filename_with_path;
 
@@ -295,7 +285,7 @@ bool Parser::pushIncludeFile(
       pd.d_linenumber = 1;
       pd.d_cursor = 1;
       pd.d_nextcursor = 1;
-      d_parse_stack.addItem(pd);
+      d_parse_stack.push_front(pd);
    }
 
    return worked ? true : false;
@@ -309,11 +299,14 @@ bool Parser::pushIncludeFile(
  *************************************************************************
  */
 
-void Parser::popIncludeFile()
+void
+Parser::popIncludeFile()
 {
-   Parser::ParseData& pd = d_parse_stack.getFirstItem();
-   if (pd.d_fstream) fclose(pd.d_fstream);
-   d_parse_stack.removeFirstItem();
+   Parser::ParseData& pd = d_parse_stack.front();
+   if (pd.d_fstream) {
+      fclose(pd.d_fstream);
+   }
+   d_parse_stack.pop_front();
 }
 
 /*
@@ -326,17 +319,18 @@ void Parser::popIncludeFile()
  *************************************************************************
  */
 
-int Parser::yyinput(
+int
+Parser::yyinput(
    char* buffer,
    const int max_size)
 {
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    int byte = 0;
    if (mpi.getRank() == 0) {
       byte = static_cast<int>(fread(buffer,
                                  1,
                                  max_size,
-                                 d_parse_stack.getFirstItem().d_fstream));
+                                 d_parse_stack.front().d_fstream));
    }
    mpi.Bcast(&byte, 1, MPI_INT, 0);
    if (byte > 0) {

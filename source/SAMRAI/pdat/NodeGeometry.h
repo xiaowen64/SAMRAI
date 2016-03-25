@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -19,7 +19,9 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/make_shared.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -52,7 +54,12 @@ public:
     */
    static hier::Box
    toNodeBox(
-      const hier::Box& box);
+      const hier::Box& box)
+   {
+      return box.empty() ?
+             box :
+             hier::Box(box.lower(), box.upper() + 1, box.getBlockId());
+   }
 
    /*!
     * @brief Transform a node-centered box.
@@ -62,7 +69,6 @@ public:
     * transformation defined by the Transformation object.
     *
     * @param[in,out]  box
-    * @param[in,out]  normal_direction
     * @param[in]      transformation
     */
    static void
@@ -81,14 +87,14 @@ public:
     */
    static void
    transform(
-      pdat::NodeIndex& index,
+      NodeIndex& index,
       const hier::Transformation& transformation);
 
    /*!
     * @brief Construct the node geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit NodeGeometry(
+   NodeGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 
@@ -101,7 +107,7 @@ public:
     * @brief Compute the overlap in node-centered index space between
     * the source box geometry and the destination box geometry.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -131,7 +137,7 @@ public:
     * @brief Set up a EdgeOverlap object based on the given boxes and the
     * transformation.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -141,14 +147,20 @@ public:
     * object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this node centered box
     * geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
 private:
    /**
@@ -156,7 +168,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have node centered geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const NodeGeometry& dst_geometry,
       const NodeGeometry& src_geometry,
@@ -164,11 +176,24 @@ private:
       const hier::Box& fill_box,
       const bool overwrite_interior,
       const hier::Transformation& transformation,
-      const hier::BoxContainer& dst_restrict_boxes);
+      const hier::BoxContainer& dst_restrict_boxes)
+   {
+      hier::BoxContainer dst_boxes;
+      dst_geometry.computeDestinationBoxes(dst_boxes,
+         src_geometry,
+         src_mask,
+         fill_box,
+         overwrite_interior,
+         transformation,
+         dst_restrict_boxes);
+
+      // Create the node overlap data object using the boxes and source shift
+      return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
+   }
 
    static void
    rotateAboutAxis(
-      pdat::NodeIndex& index,
+      NodeIndex& index,
       const int axis,
       const int num_rotations);
 
@@ -185,7 +210,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeGeometry.I"
-#endif
+
 #endif

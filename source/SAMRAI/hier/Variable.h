@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class for application-level variables
  *
  ************************************************************************/
@@ -14,9 +14,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -65,7 +65,7 @@ namespace hier {
  * @see hier::PatchDataFactory
  */
 
-class Variable:public tbox::DescribedClass
+class Variable
 {
 public:
    /**
@@ -75,16 +75,19 @@ public:
     * number changes as new variable instances are created.
     */
    static int
-   getCurrentMaximumInstanceNumber();
+   getCurrentMaximumInstanceNumber()
+   {
+      return s_instance_counter;
+   }
 
    /**
     * Create a variable object with the specified name and patch data
     * factory.  On creation, each variable is assigned a unique instance
     * identifier.
     */
-   explicit Variable(
+   Variable(
       const std::string& name,
-      const tbox::Pointer<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory>& factory);
 
    /**
     * Virtual destructor for variable objects.
@@ -96,13 +99,19 @@ public:
     * The instance identifiers are unique integers numbered starting from zero.
     */
    int
-   getInstanceIdentifier() const;
+   getInstanceIdentifier() const
+   {
+      return d_instance;
+   }
 
    /**
     * Return the name assigned to this variable.
     */
    const std::string&
-   getName() const;
+   getName() const
+   {
+      return d_name;
+   }
 
    /**
     * Return true if the fine data values represent the variable quantity
@@ -127,21 +136,31 @@ public:
     */
    void
    setPatchDataFactory(
-      tbox::Pointer<PatchDataFactory> factory);
+      const boost::shared_ptr<PatchDataFactory>& factory)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *factory);
+      d_factory = factory;
+   }
 
    /**
     * Return a non-const pointer to a patch data factory that will be used
     * to instantiate instances of this variable on the patches.  The factory
     * returned will have been set by the variable subclasses.
     */
-   tbox::Pointer<PatchDataFactory>
-   getPatchDataFactory() const;
+   boost::shared_ptr<PatchDataFactory>
+   getPatchDataFactory() const
+   {
+      return d_factory;
+   }
 
    /**
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    Variable(
@@ -154,7 +173,7 @@ private:
 
    std::string d_name;
    int d_instance;
-   tbox::Pointer<PatchDataFactory> d_factory;
+   boost::shared_ptr<PatchDataFactory> d_factory;
 
    static int s_instance_counter;
 
@@ -162,7 +181,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Variable.I"
-#endif
+
 #endif

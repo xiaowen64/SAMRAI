@@ -2,9 +2,8 @@
 ##
 ## File:        $URL$
 ## Package:     SAMRAI scripts
-## Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision$
-## Modified:    $LastChangedDate$
 ## Description: perl script to update Xd sed files to templates on DIM
 ##
 

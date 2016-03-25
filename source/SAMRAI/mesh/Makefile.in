@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Description:   primary makefile for compiling the SAMRAI mesh package 
 ##
 #########################################################################
@@ -27,11 +27,12 @@ OBJS = 	\
 	GriddingAlgorithm.o \
 	GriddingAlgorithmConnectorWidthRequestor.o \
 	StandardTagAndInitStrategy.o \
-        StandardTagAndInitialize.o \
-        StandardTagAndInitializeConnectorWidthRequestor.o \
+	StandardTagAndInitialize.o \
+	StandardTagAndInitializeConnectorWidthRequestor.o \
 	TagAndInitializeStrategy.o \
 	BalanceUtilities.o \
 	TreeLoadBalancer.o \
+	TreeLoadBalancerOld.o \
 	ChopAndPackLoadBalancer.o \
 	LoadBalanceStrategy.o \
 	GriddingAlgorithmStrategy.o \

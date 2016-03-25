@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores HDF5 format data.
  *
  ************************************************************************/
@@ -24,8 +24,6 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/DatabaseBox.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 
 #ifdef RCSID
@@ -33,7 +31,9 @@
 #endif
 #include "hdf5.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -61,6 +61,13 @@ public:
     */
    explicit HDFDatabase(
       const std::string& name);
+
+   /**
+    * Constructor used to create sub-databases.
+    */
+   HDFDatabase(
+      const std::string& name,
+      hid_t group_ID);
 
    /**
     * The database destructor closes the HDF5 group or data file.
@@ -123,7 +130,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    putDatabase(
       const std::string& key);
 
@@ -134,7 +141,7 @@ public:
     *
     * When assertion checking is active, the key string must be non-empty.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    getDatabase(
       const std::string& key);
 
@@ -468,8 +475,8 @@ public:
    /**
     * @brief Returns the name of this database.
     *
-    * The name for the root of the database is the name supplied when creating it.
-    * Names for nested databases are the keyname of the database.
+    * The name for the root of the database is the name supplied when creating
+    * it.  Names for nested databases are the keyname of the database.
     *
     */
    virtual std::string
@@ -479,7 +486,10 @@ public:
     * Return the group_id so VisIt can access an object's HDF database.
     */
    hid_t
-   getGroupId();
+   getGroupId()
+   {
+      return d_group_id;
+   }
 
    using Database::putBoolArray;
    using Database::getBoolArray;
@@ -523,13 +533,6 @@ private:
       const char* name,
       int type,
       void* database);
-
-   /*
-    * Private constructor used internally to create sub-databases.
-    */
-   HDFDatabase(
-      const std::string& name,
-      hid_t group_ID);
 
    /*
     * Private utility routine for inserting array data in the database
@@ -664,7 +667,7 @@ private:
    /*
     * List of (key,type) pairs assembled when searching for keys.
     */
-   List<KeyData> d_keydata;
+   std::list<KeyData> d_keydata;
 
    /*
     *************************************************************************
@@ -698,6 +701,6 @@ private:
 }
 }
 
-#endif
 
+#endif
 #endif

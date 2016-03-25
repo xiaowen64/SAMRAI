@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test program to demonstrate/test a user defined logger appender
  *
  ************************************************************************/
@@ -64,7 +64,7 @@ int main(
 
       fstream file("user.log", fstream::out);
 
-      tbox::Pointer<tbox::Logger::Appender> appender(
+      boost::shared_ptr<tbox::Logger::Appender> appender(
          new StreamAppender(&file));
 
       tbox::Logger::getInstance()->setWarningAppender(appender);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for params, tagging, init for gridding.
  *
  ************************************************************************/
@@ -16,10 +16,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <stdio.h>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/TagAndInitializeStrategy.I"
-#endif
 
 namespace SAMRAI {
 namespace mesh {
@@ -50,15 +46,14 @@ TagAndInitializeStrategy::~TagAndInitializeStrategy()
  *
  *************************************************************************
  */
-bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
+bool
+TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
    hier::BoxContainer& refine_boxes,
    const int level_num,
    const double time)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num >= 0);
    TBOX_ASSERT(time >= 0.);
-#endif
 
    /*
     * The cycle counter and boolean array specifying whether times
@@ -209,13 +204,12 @@ bool TagAndInitializeStrategy::getUserSuppliedRefineBoxes(
  *************************************************************************
  */
 
-void TagAndInitializeStrategy::resetRefineBoxes(
+void
+TagAndInitializeStrategy::resetRefineBoxes(
    const hier::BoxContainer& refine_boxes,
    const int level_num)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num >= 0);
-#endif
 
    int i = d_reset_refine_boxes.getSize();
    if (i <= level_num) {
@@ -239,12 +233,11 @@ void TagAndInitializeStrategy::resetRefineBoxes(
  *************************************************************************
  */
 
-void TagAndInitializeStrategy::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+void
+TagAndInitializeStrategy::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
-#endif
+   TBOX_ASSERT(db);
 
    /*
     * Read refine boxes.
@@ -256,8 +249,8 @@ void TagAndInitializeStrategy::getFromInput(
          << "for TagAndInitializeStrategy class for \n"
          << "discussion of the entry format." << std::endl);
    }
-   tbox::Pointer<tbox::Database> refine_box_db =
-      db->getDatabase("RefineBoxes");
+   boost::shared_ptr<tbox::Database> refine_box_db(
+      db->getDatabase("RefineBoxes"));
    tbox::Array<std::string> box_keys = refine_box_db->getAllKeys();
    int nkeys = box_keys.getSize();
 
@@ -319,8 +312,8 @@ void TagAndInitializeStrategy::getFromInput(
                              << "of the expected input format."
                              << std::endl);
          }
-         tbox::Pointer<tbox::Database> level_refine_box_db =
-            refine_box_db->getDatabase(level_boxes_name);
+         boost::shared_ptr<tbox::Database> level_refine_box_db(
+            refine_box_db->getDatabase(level_boxes_name));
 
          /*
           * Read cycles.
@@ -397,11 +390,6 @@ void TagAndInitializeStrategy::getFromInput(
          d_refine_boxes_use_times[ln] = false;
       }
    } // not using new input format
-}
-
-const tbox::Dimension& TagAndInitializeStrategy::getDim() const
-{
-   return d_dim;
 }
 
 }

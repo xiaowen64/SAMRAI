@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Statistical characteristics of a Connector.
  *
  ************************************************************************/
@@ -28,9 +28,16 @@ public:
    /*!
     * @brief Constructor.
     *
-    * @param[i] connector
+    * Compute and store statistics for the given Connector.  The
+    * statistics reflects the current Connector state and can be
+    * printed out afterwards.  All processes in the Connector's
+    * SAMRAI_MPI must call this constructor because it requires
+    * collective communication.
+    *
+    * @param[in] connector
     */
-   explicit ConnectorStatistics(const Connector &connector);
+   explicit ConnectorStatistics(
+      const Connector &connector);
 
    /*!
     * @brief Print out local and globally reduced statistics on the
@@ -114,10 +121,25 @@ private:
       double d_values[NUMBER_OF_QUANTITIES];
    };
 
-   void computeLocalConnectorStatistics(StatisticalQuantities &sq) const;
+   void
+   computeLocalConnectorStatistics( const Connector &connector );
 
-   //! @brief Connector to compute statistics for.
-   const Connector &d_connector;
+   void
+   reduceStatistics();
+
+   tbox::SAMRAI_MPI d_mpi;
+
+   //! @brief Statistics of local process.
+   StatisticalQuantities d_sq;
+   //! @brief Global min of d_sq.
+   StatisticalQuantities d_sq_min;
+   //! @brief Global max of d_sq.
+   StatisticalQuantities d_sq_max;
+   //! @brief Global sum of d_sq.
+   StatisticalQuantities d_sq_sum;
+
+   int d_rank_of_min[NUMBER_OF_QUANTITIES];
+   int d_rank_of_max[NUMBER_OF_QUANTITIES];
 
    /*!
     * @brief Names of the quantities in StatisticalQuantities.
@@ -137,9 +159,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/ConnectorStatistics.I"
-#endif
 
 #endif  // included_hier_ConnectorStatistics

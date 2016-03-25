@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered complex data on
  *                a  mesh.
  *
@@ -73,31 +73,20 @@ NodeComplexInjection::~NodeComplexInjection()
 {
 }
 
-bool NodeComplexInjection::findCoarsenOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<NodeVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int NodeComplexInjection::getOperatorPriority() const
+int
+NodeComplexInjection::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-NodeComplexInjection::getStencilWidth() const {
+NodeComplexInjection::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void NodeComplexInjection::coarsen(
+void
+NodeComplexInjection::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,
@@ -107,13 +96,15 @@ void NodeComplexInjection::coarsen(
 {
    TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
 
-   tbox::Pointer<NodeData<dcomplex> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<NodeData<dcomplex> >
-   cdata = coarse.getPatchData(dst_component);
+   boost::shared_ptr<NodeData<dcomplex> > fdata(
+      fine.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<NodeData<dcomplex> > cdata(
+      coarse.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
    const hier::Index filo = fdata->getGhostBox().lower();

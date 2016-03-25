@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   An input manager singleton class that parses input files
  *
  ************************************************************************/
@@ -13,9 +13,9 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/InputDatabase.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -76,7 +76,10 @@ public:
     * so, it returns true.  If not, false.
     */
    static bool
-   inputDatabaseExists();
+   inputDatabaseExists()
+   {
+      return s_input_db;
+   }
 
    /**
     * Accessor method for the root input database held by InputManager.
@@ -87,10 +90,11 @@ public:
     * SAMRAI class:
     *
     *       // get root database
-    *       Pointer<Database> root_db =
+    *       boost::shared_ptr<Database> root_db =
     *          InputManager::getManager()->getInputDatabase();
     *       // get class's sub-database
-    *       Pointer<Database> class_db = root_db->getDatabase("MyClass");
+    *       boost::shared_ptr<Database> class_db =
+    *          root_db->getDatabase("MyClass");
     *       // get parameter(s) from sub-database
     *       int dummy = class_db->getInteger("dummy");
     *
@@ -104,23 +108,26 @@ public:
     * This function is intended for SAMRAI classes in which there is no
     * easy or efficient way to supply input parameters.
     */
-   static Pointer<Database>
-   getInputDatabase();
+   static boost::shared_ptr<Database>
+   getInputDatabase()
+   {
+      return s_input_db;
+   }
 
    /**
     * Create a new database named "main" from the specified input file.
     */
-   virtual Pointer<InputDatabase>
+   boost::shared_ptr<InputDatabase>
    parseInputFile(
       const std::string& filename);
 
    /**
     * Parse data from the specified file into the existing database.
     */
-   virtual void
+   void
    parseInputFile(
       const std::string& filename,
-      Pointer<InputDatabase> db);
+      const boost::shared_ptr<InputDatabase>& input_db);
 
 protected:
    /**
@@ -134,7 +141,7 @@ protected:
     * The destructor for the input manager is protected, since only the
     * singleton class and subclasses may destroy the manager objects.
     */
-   virtual ~InputManager();
+   ~InputManager();
 
 private:
    InputManager(
@@ -155,7 +162,7 @@ private:
 
    static StartupShutdownManager::Handler s_finalize_handler;
 
-   static Pointer<Database> s_input_db;
+   static boost::shared_ptr<Database> s_input_db;
 };
 
 }

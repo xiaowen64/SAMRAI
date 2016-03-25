@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated node centered patch data type
  *
  ************************************************************************/
@@ -14,13 +14,10 @@
 #include "SAMRAI/pdat/NodeData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeData.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -48,7 +45,7 @@ NodeData<TYPE>::NodeData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   const hier::Box node = NodeGeometry::toNodeBox(this->getGhostBox());
+   const hier::Box node = NodeGeometry::toNodeBox(getGhostBox());
    d_data.initializeArray(node, depth);
 
 }
@@ -77,10 +74,76 @@ NodeData<TYPE>::NodeData(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::operator = (
+void
+NodeData<TYPE>::operator = (
    const NodeData<TYPE>& foo)
 {
    NULL_USE(foo);
+}
+
+template<class TYPE>
+int
+NodeData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+ArrayData<TYPE>&
+NodeData<TYPE>::getArrayData()
+{
+   return d_data;
+}
+
+template<class TYPE>
+const ArrayData<TYPE>&
+NodeData<TYPE>::getArrayData() const
+{
+   return d_data;
+}
+
+template<class TYPE>
+TYPE*
+NodeData<TYPE>::getPointer(
+   int depth)
+{
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data.getPointer(depth);
+}
+
+template<class TYPE>
+const TYPE*
+NodeData<TYPE>::getPointer(
+   int depth) const
+{
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data.getPointer(depth);
+}
+
+template<class TYPE>
+TYPE&
+NodeData<TYPE>::operator () (
+   const NodeIndex& i,
+   int depth)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data(i, depth);
+}
+
+template<class TYPE>
+const TYPE&
+NodeData<TYPE>::operator () (
+   const NodeIndex& i,
+   int depth) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data(i, depth);
 }
 
 /*
@@ -93,7 +156,8 @@ void NodeData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void NodeData<TYPE>::copy(
+void
+NodeData<TYPE>::copy(
    const hier::PatchData& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -111,7 +175,8 @@ void NodeData<TYPE>::copy(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::copy2(
+void
+NodeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -137,7 +202,8 @@ void NodeData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::copy(
+void
+NodeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -155,7 +221,7 @@ void NodeData<TYPE>::copy(
           hier::Transformation::NO_ROTATE) {
          d_data.copy(t_src->d_data,
             t_overlap->getDestinationBoxContainer(),
-            t_overlap->getSourceOffset());
+            t_overlap->getTransformation());
       } else {
          copyWithRotation(*t_src, *t_overlap);
       }
@@ -163,7 +229,8 @@ void NodeData<TYPE>::copy(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::copy2(
+void
+NodeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
@@ -181,14 +248,26 @@ void NodeData<TYPE>::copy2(
        hier::Transformation::NO_ROTATE) {
       t_dst->d_data.copy(d_data,
          t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       t_dst->copyWithRotation(*this, *t_overlap);
    }
 }
 
 template<class TYPE>
-void NodeData<TYPE>::copyWithRotation(
+void
+NodeData<TYPE>::copyOnBox(
+   const NodeData<TYPE>& src,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   const hier::Box node_box = NodeGeometry::toNodeBox(box);
+   d_data.copy(src.getArrayData(), node_box);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::copyWithRotation(
    const NodeData<TYPE>& src,
    const NodeOverlap& overlap)
 {
@@ -215,11 +294,13 @@ void NodeData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   node_rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(node_rotatebox * overlap_box);
 
@@ -227,9 +308,10 @@ void NodeData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         for (hier::Box::Iterator ci(copybox); ci; ci++) {
+         hier::Box::iterator ciend(copybox, false);
+         for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-            NodeIndex dst_index(ci(), hier::IntVector::getZero(dim));
+            NodeIndex dst_index(*ci, hier::IntVector::getZero(dim));
             NodeIndex src_index(dst_index);
             NodeGeometry::transform(src_index, back_trans);
 
@@ -251,7 +333,8 @@ void NodeData<TYPE>::copyWithRotation(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::copyDepth(
+void
+NodeData<TYPE>::copyDepth(
    int dst_depth,
    const NodeData<TYPE>& src,
    int src_depth)
@@ -274,13 +357,15 @@ void NodeData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-bool NodeData<TYPE>::canEstimateStreamSizeFromBox() const
+bool
+NodeData<TYPE>::canEstimateStreamSizeFromBox() const
 {
    return ArrayData<TYPE>::canEstimateStreamSizeFromBox();
 }
 
 template<class TYPE>
-int NodeData<TYPE>::getDataStreamSize(
+int
+NodeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const NodeOverlap* t_overlap =
@@ -302,7 +387,8 @@ int NodeData<TYPE>::getDataStreamSize(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::packStream(
+void
+NodeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
@@ -315,14 +401,15 @@ void NodeData<TYPE>::packStream(
        hier::Transformation::NO_ROTATE) {
       d_data.packStream(stream,
          t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       packWithRotation(stream, *t_overlap);
    }
 }
 
 template<class TYPE>
-void NodeData<TYPE>::packWithRotation(
+void
+NodeData<TYPE>::packWithRotation(
    tbox::MessageStream& stream,
    const NodeOverlap& overlap) const
 {
@@ -349,7 +436,9 @@ void NodeData<TYPE>::packWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   hier::Transformation back_trans(back_rotate, back_shift);
+   hier::Transformation back_trans(back_rotate, back_shift,
+                                   rotatebox.getBlockId(),
+                                   getBox().getBlockId());
 
    const int depth = getDepth();
 
@@ -357,18 +446,19 @@ void NodeData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(node_rotatebox * overlap_box);
 
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            for (hier::Box::Iterator ci(copybox); ci; ci++) {
+            hier::Box::iterator ciend(copybox, false);
+            for (hier::Box::iterator ci(copybox, true); ci != ciend; ++ci) {
 
-               NodeIndex src_index(ci(), hier::IntVector::getZero(dim));
+               NodeIndex src_index(*ci, hier::IntVector::getZero(dim));
                NodeGeometry::transform(src_index, back_trans);
 
                buffer[i] = d_data(src_index, d);
@@ -382,7 +472,8 @@ void NodeData<TYPE>::packWithRotation(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::unpackStream(
+void
+NodeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
@@ -396,6 +487,48 @@ void NodeData<TYPE>::unpackStream(
       t_overlap->getSourceOffset());
 }
 
+template<class TYPE>
+void
+NodeData<TYPE>::fill(
+   const TYPE& t,
+   int d)
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   d_data.fill(t, d);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::fill(
+   const TYPE& t,
+   const hier::Box& box,
+   int d)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   d_data.fill(t, NodeGeometry::toNodeBox(box), d);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::fillAll(
+   const TYPE& t)
+{
+   d_data.fillAll(t);
+}
+
+template<class TYPE>
+void
+NodeData<TYPE>::fillAll(
+   const TYPE& t,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   d_data.fillAll(t, NodeGeometry::toNodeBox(box));
+}
+
 /*
  *************************************************************************
  *
@@ -406,7 +539,8 @@ void NodeData<TYPE>::unpackStream(
  */
 
 template<class TYPE>
-size_t NodeData<TYPE>::getSizeOfData(
+size_t
+NodeData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts)
@@ -428,7 +562,8 @@ size_t NodeData<TYPE>::getSizeOfData(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::print(
+void
+NodeData<TYPE>::print(
    const hier::Box& box,
    std::ostream& os,
    int prec) const
@@ -442,7 +577,8 @@ void NodeData<TYPE>::print(
 }
 
 template<class TYPE>
-void NodeData<TYPE>::print(
+void
+NodeData<TYPE>::print(
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -452,9 +588,10 @@ void NodeData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   for (NodeIterator i(box); i; i++) {
-      os << "array" << i() << " = "
-         << d_data(i(), depth) << std::endl << std::flush;
+   NodeIterator iend(box, false);
+   for (NodeIterator i(box, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data(*i, depth) << std::endl << std::flush;
    }
 }
 
@@ -469,10 +606,11 @@ void NodeData<TYPE>::print(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+NodeData<TYPE>::getSpecializedFromDatabase(
+   const boost::shared_ptr<tbox::Database>& database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_NODEDATA_VERSION");
    if (ver != PDAT_NODEDATA_VERSION) {
@@ -482,9 +620,7 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
-   array_database = database->getDatabase("d_data");
-   (d_data).getFromDatabase(array_database);
+   d_data.getFromDatabase(database->getDatabase("d_data"));
 }
 
 /*
@@ -497,19 +633,18 @@ void NodeData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void NodeData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+NodeData<TYPE>::putSpecializedToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_NODEDATA_VERSION", PDAT_NODEDATA_VERSION);
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
-   array_database = database->putDatabase("d_data");
-   (d_data).putToDatabase(array_database);
+   d_data.putUnregisteredToDatabase(database->putDatabase("d_data"));
 }
 
 }

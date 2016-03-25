@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
@@ -13,7 +13,7 @@
 
 #include "SAMRAI/mesh/BalanceUtilities.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellData.h"
@@ -44,7 +44,8 @@ math::PatchCellDataNormOpsReal<double> BalanceUtilities::s_norm_ops;
  *************************************************************************
  */
 
-void BalanceUtilities::privateHeapify(
+void
+BalanceUtilities::privateHeapify(
    tbox::Array<int>& permutation,
    tbox::Array<double>& workload,
    const int index,
@@ -54,9 +55,13 @@ void BalanceUtilities::privateHeapify(
    const int r = l + 1;
    int s = index;
    if ((l < heap_size) &&
-       (workload[permutation[s]] > workload[permutation[l]])) s = l;
+       (workload[permutation[s]] > workload[permutation[l]])) {
+      s = l;
+   }
    if ((r < heap_size) &&
-       (workload[permutation[s]] > workload[permutation[r]])) s = r;
+       (workload[permutation[s]] > workload[permutation[r]])) {
+      s = r;
+   }
    if (s != index) {
       const int tmp = permutation[s];
       permutation[s] = permutation[index];
@@ -65,7 +70,8 @@ void BalanceUtilities::privateHeapify(
    }
 }
 
-void BalanceUtilities::privateHeapify(
+void
+BalanceUtilities::privateHeapify(
    tbox::Array<int>& permutation,
    tbox::Array<SpatialKey>& spatial_keys,
    const int index,
@@ -75,9 +81,13 @@ void BalanceUtilities::privateHeapify(
    const int r = l + 1;
    int s = index;
    if ((l < heap_size) &&
-       (spatial_keys[permutation[s]] < spatial_keys[permutation[l]])) s = l;
+       (spatial_keys[permutation[s]] < spatial_keys[permutation[l]])) {
+      s = l;
+   }
    if ((r < heap_size) &&
-       (spatial_keys[permutation[s]] < spatial_keys[permutation[r]])) s = r;
+       (spatial_keys[permutation[s]] < spatial_keys[permutation[r]])) {
+      s = r;
+   }
    if (s != index) {
       const int tmp = permutation[s];
       permutation[s] = permutation[index];
@@ -94,7 +104,8 @@ void BalanceUtilities::privateHeapify(
  *
  *************************************************************************
  */
-void BalanceUtilities::privateRecursiveProcAssign(
+void
+BalanceUtilities::privateRecursiveProcAssign(
    const int wt_index_lo,
    const int wt_index_hi,
    tbox::Array<double>& weights,
@@ -104,11 +115,9 @@ void BalanceUtilities::privateRecursiveProcAssign(
    const double avg_weight)
 {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(wt_index_hi >= wt_index_lo);
    TBOX_ASSERT(proc_index_hi >= proc_index_lo);
    TBOX_ASSERT((wt_index_hi - wt_index_lo) >= (proc_index_hi - proc_index_lo));
-#endif
 
    int i;
 
@@ -190,7 +199,8 @@ void BalanceUtilities::privateRecursiveProcAssign(
  *************************************************************************
  */
 
-void BalanceUtilities::privatePrimeFactorization(
+void
+BalanceUtilities::privatePrimeFactorization(
    const int N,
    tbox::Array<int>& p)
 {
@@ -262,7 +272,8 @@ void BalanceUtilities::privatePrimeFactorization(
 
 }
 
-void BalanceUtilities::privateResetPrimesArray(
+void
+BalanceUtilities::privateResetPrimesArray(
    tbox::Array<int>& p)
 {
    // keep a copy of the original p in array "temp"
@@ -298,7 +309,8 @@ void BalanceUtilities::privateResetPrimesArray(
  *************************************************************************
  */
 
-bool BalanceUtilities::privateBadCutPointsExist(
+bool
+BalanceUtilities::privateBadCutPointsExist(
    const hier::BoxContainer& physical_domain)
 {
    hier::BoxContainer bounding_box(physical_domain.getBoundingBox());
@@ -317,7 +329,8 @@ bool BalanceUtilities::privateBadCutPointsExist(
  *************************************************************************
  */
 
-void BalanceUtilities::privateInitializeBadCutPointsForBox(
+void
+BalanceUtilities::privateInitializeBadCutPointsForBox(
    tbox::Array<tbox::Array<bool> >& bad_cut_points,
    hier::Box& box,
    bool bad_domain_boundaries_exist,
@@ -387,7 +400,8 @@ void BalanceUtilities::privateInitializeBadCutPointsForBox(
  *************************************************************************
  */
 
-bool BalanceUtilities::privateFindBestCutDimension(
+bool
+BalanceUtilities::privateFindBestCutDimension(
    int& cut_dim_out,
    const hier::Box& in_box,
    const hier::IntVector& min_size,
@@ -482,7 +496,8 @@ bool BalanceUtilities::privateFindBestCutDimension(
  *************************************************************************
  */
 
-int BalanceUtilities::privateFindCutPoint(
+int
+BalanceUtilities::privateFindCutPoint(
    double total_work,
    double ideal_workload,
    int mincut,
@@ -569,7 +584,8 @@ int BalanceUtilities::privateFindCutPoint(
  *************************************************************************
  */
 
-void BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
+void
+BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
    hier::Box& box_lo,
    tbox::Array<tbox::Array<bool> >& bad_cut_points_for_boxlo,
    hier::Box& box_hi,
@@ -634,9 +650,10 @@ void BalanceUtilities::privateCutBoxesAndSetBadCutPoints(
  *************************************************************************
  */
 
-void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
+void
+BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
+   std::list<double>& out_workloads,
    const hier::Box& in_box,
    double in_box_workload,
    double ideal_workload,
@@ -652,7 +669,7 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
    if (in_box_workload <= ((1. + workload_tolerance) * ideal_workload)) {
 
       out_boxes.pushFront(in_box);
-      out_workloads.addItem(in_box_workload);
+      out_workloads.push_front(in_box_workload);
 
    } else {
 
@@ -731,7 +748,7 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             bad_cut_points_for_boxlo);
 
          hier::BoxContainer boxes_hi;
-         tbox::List<double> work_hi;
+         std::list<double> work_hi;
 
          double box_hi_workload = (double)box_hi.size();
          privateRecursiveBisectionUniformSingleBox(boxes_hi,
@@ -745,12 +762,12 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
             bad_cut_points_for_boxhi);
 
          out_boxes.spliceBack(boxes_hi);
-         out_workloads.catenateItems(work_hi);
+         out_workloads.splice(out_workloads.end(), work_hi);
 
       } else {  // !can_cut_box
 
          out_boxes.pushFront(in_box);
-         out_workloads.addItem(in_box_workload);
+         out_workloads.push_front(in_box_workload);
 
       }
 
@@ -769,10 +786,11 @@ void BalanceUtilities::privateRecursiveBisectionUniformSingleBox(
  *************************************************************************
  */
 
-void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
+void
+BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
-   const tbox::Pointer<hier::Patch>& patch,
+   std::list<double>& out_workloads,
+   const boost::shared_ptr<hier::Patch>& patch,
    const hier::Box& in_box,
    double in_box_workload,
    int work_data_index,
@@ -782,7 +800,7 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    const hier::IntVector& cut_factor,
    tbox::Array<tbox::Array<bool> >& bad_cut_points)
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
    TBOX_DIM_ASSERT_CHECK_ARGS4(*patch, in_box, min_size, cut_factor);
 
    const tbox::Dimension dim(in_box.getDim());
@@ -790,7 +808,7 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
    if (in_box_workload <= ((1. + workload_tolerance) * ideal_workload)) {
 
       out_boxes.pushFront(in_box);
-      out_workloads.addItem(in_box_workload);
+      out_workloads.push_front(in_box_workload);
 
    } else {
 
@@ -877,7 +895,7 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             bad_cut_points_for_boxlo);
 
          hier::BoxContainer boxes_hi;
-         tbox::List<double> work_hi;
+         std::list<double> work_hi;
 
          double box_hi_workload = in_box_workload - box_lo_workload;
          privateRecursiveBisectionNonuniformSingleBox(boxes_hi,
@@ -893,12 +911,12 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
             bad_cut_points_for_boxhi);
 
          out_boxes.spliceBack(boxes_hi);
-         out_workloads.catenateItems(work_hi);
+         out_workloads.splice(out_workloads.end(), work_hi);
 
       } else {  // !can_cut_box
 
          out_boxes.pushFront(in_box);
-         out_workloads.addItem(in_box_workload);
+         out_workloads.push_front(in_box_workload);
 
       }
 
@@ -914,16 +932,18 @@ void BalanceUtilities::privateRecursiveBisectionNonuniformSingleBox(
  *************************************************************************
  */
 
-double BalanceUtilities::computeNonUniformWorkload(
-   tbox::Pointer<hier::Patch> patch,
+double
+BalanceUtilities::computeNonUniformWorkload(
+   const boost::shared_ptr<hier::Patch>& patch,
    int wrk_indx,
    const hier::Box& box)
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*patch, box);
 
-   const tbox::Pointer<pdat::CellData<double> > work_data =
-      patch->getPatchData(wrk_indx);
+   const boost::shared_ptr<pdat::CellData<double> > work_data(
+      patch->getPatchData(wrk_indx),
+      boost::detail::dynamic_cast_tag());
 
    double workload = s_norm_ops.L1Norm(work_data, box);
 
@@ -940,14 +960,13 @@ double BalanceUtilities::computeNonUniformWorkload(
  *************************************************************************
  */
 
-double BalanceUtilities::binPack(
+double
+BalanceUtilities::binPack(
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& weights,
    const int nproc)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(nproc > 0);
-#endif
 
    /*
     * Create the mapping array, find the average workload, and zero weights
@@ -958,9 +977,7 @@ double BalanceUtilities::binPack(
 
    double avg_work = 0.0;
    for (int w = 0; w < nboxes; w++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(weights[w] >= 0.0);
-#endif
       avg_work += weights[w];
    }
    avg_work /= nproc;
@@ -1023,16 +1040,15 @@ double BalanceUtilities::binPack(
  *************************************************************************
  */
 
-double BalanceUtilities::spatialBinPack(
+double
+BalanceUtilities::spatialBinPack(
    hier::ProcessorMapping& mapping,
    tbox::Array<double>& weights,
    hier::BoxContainer& boxes,
    const int nproc)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(nproc > 0);
    TBOX_ASSERT(weights.getSize() == boxes.size());
-#endif
 
    const int nboxes = boxes.size();
 
@@ -1041,8 +1057,8 @@ double BalanceUtilities::spatialBinPack(
     * is positive.
     */
    hier::IntVector offset(boxes.front().lower());
-   for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
-      offset.min(itr().lower());
+   for (hier::BoxContainer::iterator itr(boxes); itr != boxes.end(); ++itr) {
+      offset.min(itr->lower());
    }
 
    /* construct array of spatialKeys */
@@ -1052,10 +1068,11 @@ double BalanceUtilities::spatialBinPack(
    if (nboxes > 0) {
       const tbox::Dimension& dim = boxes.front().getDim();
 
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
 
          /* compute center of box */
-         hier::IntVector center = (itr().upper() + itr().lower()) / 2;
+         hier::IntVector center = (itr->upper() + itr->lower()) / 2;
 
          if (dim == tbox::Dimension(1)) {
             spatial_keys[i].setKey(center(0) - offset(0));
@@ -1102,14 +1119,16 @@ double BalanceUtilities::spatialBinPack(
       tbox::Array<double> unsorted_weights(nboxes);
 
       i = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          unsorted_boxes[i] = *itr;
          unsorted_weights[i] = weights[i];
          ++i;
       }
 
       i = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[i]];
          weights[i] = unsorted_weights[permutation[i]];
          ++i;
@@ -1141,9 +1160,7 @@ double BalanceUtilities::spatialBinPack(
 
    double avg_work = 0.0;
    for (i = 0; i < nboxes; i++) {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(weights[i] >= 0.0);
-#endif
       avg_work += weights[i];
    }
    avg_work /= nproc;
@@ -1199,9 +1216,10 @@ double BalanceUtilities::spatialBinPack(
  **************************************************************************
  */
 
-void BalanceUtilities::recursiveBisectionUniform(
+void
+BalanceUtilities::recursiveBisectionUniform(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
+   std::list<double>& out_workloads,
    const hier::BoxContainer& in_boxes,
    const double ideal_workload,
    const double workload_tolerance,
@@ -1222,14 +1240,15 @@ void BalanceUtilities::recursiveBisectionUniform(
    TBOX_ASSERT(physical_domain.size() > 0);
 
    out_boxes.clear();
-   out_workloads.clearItems();
+   out_workloads.clear();
 
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
 
-   for (hier::BoxContainer::ConstIterator ib(in_boxes); ib != in_boxes.end(); ++ib) {
+   for (hier::BoxContainer::const_iterator ib(in_boxes);
+        ib != in_boxes.end(); ++ib) {
 
-      hier::Box box2chop = ib();
+      hier::Box box2chop = *ib;
 
       TBOX_ASSERT(!box2chop.empty());
 
@@ -1238,7 +1257,7 @@ void BalanceUtilities::recursiveBisectionUniform(
       if (boxwork <= ((1.0 + workload_tolerance) * ideal_workload)) {
 
          out_boxes.pushFront(box2chop);
-         out_workloads.addItem(boxwork);
+         out_workloads.push_front(boxwork);
 
       } else {
 
@@ -1251,7 +1270,7 @@ void BalanceUtilities::recursiveBisectionUniform(
             physical_domain);
 
          hier::BoxContainer tempboxes;
-         tbox::List<double> temploads;
+         std::list<double> temploads;
          privateRecursiveBisectionUniformSingleBox(
             tempboxes,
             temploads,
@@ -1264,7 +1283,7 @@ void BalanceUtilities::recursiveBisectionUniform(
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
-         out_workloads.catenateItems(temploads);
+         out_workloads.splice(out_workloads.end(), temploads);
 
       }
    }
@@ -1283,10 +1302,11 @@ void BalanceUtilities::recursiveBisectionUniform(
  **************************************************************************
  */
 
-void BalanceUtilities::recursiveBisectionNonuniform(
+void
+BalanceUtilities::recursiveBisectionNonuniform(
    hier::BoxContainer& out_boxes,
-   tbox::List<double>& out_workloads,
-   const tbox::Pointer<hier::PatchLevel>& in_level,
+   std::list<double>& out_workloads,
+   const boost::shared_ptr<hier::PatchLevel>& in_level,
    int work_id,
    double ideal_workload,
    const double workload_tolerance,
@@ -1307,13 +1327,14 @@ void BalanceUtilities::recursiveBisectionNonuniform(
    TBOX_ASSERT(physical_domain.size() > 0);
 
    out_boxes.clear();
-   out_workloads.clearItems();
+   out_workloads.clear();
 
    bool bad_domain_boundaries_exist =
       privateBadCutPointsExist(physical_domain);
 
-   for (hier::PatchLevel::Iterator ip(in_level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+   for (hier::PatchLevel::iterator ip(in_level->begin());
+        ip != in_level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       hier::Box box2chop = patch->getBox();
 
@@ -1324,7 +1345,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
       if (boxwork <= ((1. + workload_tolerance) * ideal_workload)) {
 
          out_boxes.pushFront(box2chop);
-         out_workloads.addItem(boxwork);
+         out_workloads.push_front(boxwork);
 
       } else {
 
@@ -1337,7 +1358,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
             physical_domain);
 
          hier::BoxContainer tempboxes;
-         tbox::List<double> temploads;
+         std::list<double> temploads;
          privateRecursiveBisectionNonuniformSingleBox(
             tempboxes,
             temploads,
@@ -1352,7 +1373,7 @@ void BalanceUtilities::recursiveBisectionNonuniform(
             bad_cut_points);
 
          out_boxes.spliceBack(tempboxes);
-         out_workloads.catenateItems(temploads);
+         out_workloads.splice(out_workloads.end(), temploads);
       }
 
    }
@@ -1374,7 +1395,8 @@ void BalanceUtilities::recursiveBisectionNonuniform(
  *************************************************************************
  */
 
-void BalanceUtilities::computeDomainDependentProcessorLayout(
+void
+BalanceUtilities::computeDomainDependentProcessorLayout(
    hier::IntVector& proc_dist,
    int num_procs,
    const hier::Box& box)
@@ -1484,7 +1506,8 @@ void BalanceUtilities::computeDomainDependentProcessorLayout(
  *************************************************************************
  */
 
-void BalanceUtilities::computeDomainIndependentProcessorLayout(
+void
+BalanceUtilities::computeDomainIndependentProcessorLayout(
    hier::IntVector& proc_dist,
    int num_procs,
    const hier::Box& box)
@@ -1580,13 +1603,12 @@ void BalanceUtilities::computeDomainIndependentProcessorLayout(
  *************************************************************************
  */
 
-void BalanceUtilities::sortDescendingBoxWorkloads(
+void
+BalanceUtilities::sortDescendingBoxWorkloads(
    hier::BoxContainer& boxes,
    tbox::Array<double>& workload)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(boxes.size() == workload.getSize());
-#endif
 
    /*
     * Create the permutation array that represents indices in sorted order
@@ -1623,14 +1645,16 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
       tbox::Array<double> unsorted_workload(nboxes);
 
       int l = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          unsorted_boxes[l] = *itr;
          unsorted_workload[l] = workload[l];
          ++l;
       }
 
       int m = 0;
-      for (hier::BoxContainer::Iterator itr(boxes); itr != boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr(boxes);
+           itr != boxes.end(); ++itr) {
          *itr = unsorted_boxes[permutation[m]];
          workload[m] = unsorted_workload[permutation[m]];
          ++m;
@@ -1656,14 +1680,13 @@ void BalanceUtilities::sortDescendingBoxWorkloads(
  **************************************************************************
  */
 
-double BalanceUtilities::computeLoadBalanceEfficiency(
-   const tbox::Pointer<hier::PatchLevel>& level,
+double
+BalanceUtilities::computeLoadBalanceEfficiency(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    std::ostream& os,
    int workload_data_id)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!level.isNull());
-#endif
+   TBOX_ASSERT(level);
 
    NULL_USE(os);
    const tbox::SAMRAI_MPI& mpi(level->getBoxLevel()->getMPI());
@@ -1681,17 +1704,20 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
 
    if (workload_data_id < 0) {
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
             (*ip)->getBox().size();
       }
 
    } else {
 
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> patch = *ip;
-         tbox::Pointer<pdat::CellData<double> > weight =
-            patch->getPatchData(workload_data_id);
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& patch = *ip;
+         boost::shared_ptr<pdat::CellData<double> > weight(
+            patch->getPatchData(workload_data_id),
+            boost::detail::dynamic_cast_tag());
 
          work[mapping.getProcessorAssignment(ip->getLocalId().getValue())] +=
             s_norm_ops.L1Norm(weight, patch->getBox());
@@ -1714,6 +1740,220 @@ double BalanceUtilities::computeLoadBalanceEfficiency(
 
    return efficiency;
 
+}
+
+
+
+/*
+ *************************************************************************
+ * Gather and report load balance for a single balancing.
+ *************************************************************************
+ */
+void
+BalanceUtilities::gatherAndReportLoadBalance(
+   double local_load,
+   const tbox::SAMRAI_MPI& mpi,
+   std::ostream& os)
+{
+   int nproc = mpi.getSize();
+   std::vector<double> workloads(nproc);
+   if (mpi.getSize() > 1) {
+      mpi.Allgather(&local_load,
+         1,
+         MPI_DOUBLE,
+         &workloads[0],
+         1,
+         MPI_DOUBLE);
+   } else {
+      workloads[0] = local_load;
+   }
+   reportLoadBalance(workloads, os);
+}
+
+
+
+/*
+ *************************************************************************
+ * Gather and report load balance for multiple balancings.
+ *************************************************************************
+ */
+void
+BalanceUtilities::gatherAndReportLoadBalance(
+   const std::vector<double>& local_loads,
+   const tbox::SAMRAI_MPI& mpi,
+   std::ostream& os)
+{
+   if (mpi.getSize() > 1) {
+      int nproc = mpi.getSize();
+      std::vector<double> mutable_local_loads(local_loads);
+      std::vector<double> global_workloads(nproc * local_loads.size());
+      mpi.Allgather(&mutable_local_loads[0],
+         static_cast<int>(local_loads.size()),
+         MPI_DOUBLE,
+         &global_workloads[0],
+         static_cast<int>(local_loads.size()),
+         MPI_DOUBLE);
+      std::vector<double> workloads_at_seq_i(nproc);
+      for (size_t i = 0; i < local_loads.size(); ++i) {
+         for (int n = 0; n < nproc; ++n) {
+            workloads_at_seq_i[n] = global_workloads[i + n * local_loads.size()];
+         }
+         os << "================ Sequence " << i << " ===============\n";
+         reportLoadBalance(workloads_at_seq_i, os);
+      }
+   } else {
+      std::vector<double> workloads(1);
+      workloads[0] = local_loads[0];
+      reportLoadBalance(workloads, os);
+   }
+}
+
+
+
+/*
+ *************************************************************************
+ *************************************************************************
+ */
+void
+BalanceUtilities::reportLoadBalance(
+   const std::vector<double>& workloads,
+   std::ostream& os)
+{
+   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const int nproc = mpi.getSize();
+
+   const double demarks[] = { 0.50,
+                              0.70,
+                              0.85,
+                              0.92,
+                              0.98,
+                              1.02,
+                              1.08,
+                              1.15,
+                              1.30,
+                              1.50,
+                              2.00 };
+   const int ndemarks = 11;
+
+   TBOX_ASSERT((int)workloads.size() == nproc);
+
+   RankAndLoad* rank_and_load = new RankAndLoad[nproc];
+
+   double total_load = 0.0;
+
+   for (int i = 0; i < nproc; ++i) {
+      rank_and_load[i].rank = i;
+      rank_and_load[i].load = workloads[i];
+      total_load += workloads[i];
+   }
+   qsort((void *)rank_and_load,
+      nproc,
+      sizeof(RankAndLoad),
+      qsortRankAndLoadCompareAscending);
+
+   const double avg_load = total_load / nproc;
+   const double min_load = rank_and_load[0].load;
+   const int r_min_load = rank_and_load[0].rank;
+   const double max_load = rank_and_load[nproc - 1].load;
+   const int r_max_load = rank_and_load[nproc - 1].rank;
+
+   os << "total/avg loads: "
+      << total_load << " / "
+      << avg_load << "\n";
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+   os << std::setprecision(2)
+      << "min/max loads: "
+      << min_load << " @ P" << r_min_load << " / "
+      << max_load << " @ P" << r_max_load << "   "
+      << "diffs: "
+      << min_load - avg_load << " / "
+      << max_load - avg_load << "   "
+      << std::setprecision(3)
+      << "normalized: "
+      << (avg_load != 0 ? min_load / avg_load : 0.0) << " / "
+      << (avg_load != 0 ? max_load / avg_load : 0.0) << "\n";
+
+   const char bars[] = "----";
+   const char space[] = "   ";
+   os.setf(std::ios_base::fixed);
+   os << bars;
+   for (int n = 0; n < ndemarks; ++n) {
+      os << std::setw(4) << std::setprecision(2) << demarks[n] << bars;
+   }
+   os << '\n';
+
+   double population;
+   int irank = 0;
+#ifdef __INTEL_COMPILER
+#pragma warning (disable:1572)
+#endif
+   for (int n = 0; n < ndemarks; ++n) {
+      double top = demarks[n];
+      int old_irank = irank;
+      for ( ; irank < nproc; ++irank)
+         if (avg_load == 0 ||
+             rank_and_load[irank].load / avg_load > top) break;
+      int nrank = irank - old_irank;
+      population = 100.0 * nrank / nproc;
+      os << std::setw(5) << population << space;
+   }
+   population = 100.0 * (nproc - irank) / nproc;
+   os << population << space;
+   os << '\n';
+
+   delete[] rank_and_load;
+}
+
+
+
+/*
+ *************************************************************************
+ * for use when sorting loads using the C-library qsort
+ *************************************************************************
+ */
+int
+BalanceUtilities::qsortRankAndLoadCompareDescending(
+   const void* v,
+   const void* w)
+{
+   const RankAndLoad* lv = (const RankAndLoad *)v;
+   const RankAndLoad* lw = (const RankAndLoad *)w;
+   if (lv->load > lw->load) {
+      return -1;
+   }
+
+   if (lv->load < lw->load) {
+      return 1;
+   }
+
+   return 0;
+}
+
+
+
+/*
+ *************************************************************************
+ * for use when sorting loads using the C-library qsort
+ *************************************************************************
+ */
+int
+BalanceUtilities::qsortRankAndLoadCompareAscending(
+   const void* v,
+   const void* w)
+{
+   const RankAndLoad* lv = (const RankAndLoad *)v;
+   const RankAndLoad* lw = (const RankAndLoad *)w;
+   if (lv->load < lw->load) {
+      return -1;
+   }
+
+   if (lv->load > lw->load) {
+      return 1;
+   }
+
+   return 0;
 }
 
 }

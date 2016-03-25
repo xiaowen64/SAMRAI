@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface between implicit integrator and equations to solve.
  *
  ************************************************************************/
@@ -14,7 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -55,7 +56,7 @@ public:
     */
    virtual void
    setupSolutionVector(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > solution) = 0;
+      const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution) = 0;
 
    /**
     * Return time increment for advancing the solution at the first timestep.

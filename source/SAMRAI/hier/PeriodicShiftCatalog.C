@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a mapped_box_level of a distributed box graph.
  *
  ************************************************************************/
@@ -13,13 +13,8 @@
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #include <iomanip>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PeriodicShiftCatalog.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -48,7 +43,8 @@ PeriodicShiftCatalog::s_finalize_handler(
  ***********************************************************************
  */
 
-const PeriodicShiftCatalog *PeriodicShiftCatalog::getCatalog(
+const PeriodicShiftCatalog*
+PeriodicShiftCatalog::getCatalog(
    const tbox::Dimension& dim)
 {
    if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == NULL) {
@@ -62,7 +58,8 @@ const PeriodicShiftCatalog *PeriodicShiftCatalog::getCatalog(
  ***********************************************************************
  */
 
-void PeriodicShiftCatalog::finalizeCallback()
+void
+PeriodicShiftCatalog::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       if (s_periodic_shift_catalog_instance[i] != NULL) {
@@ -80,7 +77,7 @@ void PeriodicShiftCatalog::finalizeCallback()
 PeriodicShiftCatalog::PeriodicShiftCatalog(
    const tbox::Dimension& dim):
    d_dim(dim),
-   d_shifts(1, hier::IntVector::getZero(dim)),
+   d_shifts(1, IntVector::getZero(dim)),
    d_opposite_number(1),
    d_zero_shift_number(0)
 {
@@ -101,7 +98,8 @@ PeriodicShiftCatalog::~PeriodicShiftCatalog()
  ***********************************************************************
  */
 
-void PeriodicShiftCatalog::setShifts(
+void
+PeriodicShiftCatalog::setShifts(
    const tbox::Dimension& dim,
    const std::vector<IntVector>& shifts)
 {
@@ -178,7 +176,8 @@ void PeriodicShiftCatalog::setShifts(
  ***********************************************************************
  */
 
-void PeriodicShiftCatalog::initializeShiftsByIndexDirections(
+void
+PeriodicShiftCatalog::initializeShiftsByIndexDirections(
    const IntVector& shift_distance_along_index_directions)
 {
 

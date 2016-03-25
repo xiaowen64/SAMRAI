@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Routines for summing node data at patch boundaries
  *
  ************************************************************************/
@@ -19,11 +19,12 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/pdat/NodeVariable.h"
 #include "SAMRAI/pdat/OuternodeVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -31,8 +32,8 @@ namespace algs {
 
 /*!
  *  @brief Class PatchBoundaryNodeSum provides operations for summing node data
- *  values at nodes that are shared by multiple patches on a single level or across
- *  multiple hierarchy levels.
+ *  values at nodes that are shared by multiple patches on a single level or
+ *  across multiple hierarchy levels.
  *
  *  Usage of a patch boundry node sum involves the following sequence of steps:
  *
@@ -58,9 +59,10 @@ namespace algs {
  *         my_node_sum.computeSum()
  *     \endverbatim
  *
- *  The result of these operations is that each node patch data value associated
- *  with the registered ids at patch boundaries, on either the single level or
- *  range of hierarchy levels, is replaced by the sum of all data values at the node.
+ *  The result of these operations is that each node patch data value
+ *  associated with the registered ids at patch boundaries, on either the
+ *  single level or range of hierarchy levels, is replaced by the sum of all
+ *  data values at the node.
  *
  *  Note that only one of the setupSum() functions may be called once a
  *  PatchBoundaryNodeSum object is created.
@@ -83,7 +85,12 @@ public:
     */
    static int
    getNumSharedPatchDataSlots(
-      int max_variables_to_register);
+      int max_variables_to_register)
+   {
+      // node boundary sum requires two internal outernode variables
+      // (source and destination) for each registered variable.
+      return 2 * max_variables_to_register;
+   }
 
    /*!
     *  @brief Static function used to predetermine number of patch data
@@ -100,7 +107,13 @@ public:
     */
    static int
    getNumUniquePatchDataSlots(
-      int max_variables_to_register);
+      int max_variables_to_register)
+   {
+      NULL_USE(max_variables_to_register);
+      // all patch data slots used by node boundary sum are static
+      // and shared among all objects.
+      return 0;
+   }
 
    /*!
     *  @brief Constructor initializes object to default (mostly undefined)
@@ -110,7 +123,7 @@ public:
     *  in error reporting.  When assertion checking is on, the string
     *  cannot be empty.
     */
-   PatchBoundaryNodeSum(
+   explicit PatchBoundaryNodeSum(
       const std::string& object_name);
 
    /*!
@@ -143,7 +156,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchLevel> level);
+      const boost::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Set up for summation operations for node data at shared nodes
@@ -161,7 +174,7 @@ public:
     */
    void
    setupSum(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -187,14 +200,15 @@ public:
     *  a coarse level). The correct steps required to deal with hanging
     *  nodes is algorithm dependent so, if left unspecified, values at the
     *  hanging nodes will not be adjusted.  However, because many algorithms
-    *  average hanging nodes we provide the capability to do it here.  Note that
-    *  the hanging node interpolation provided does not take into consideration
-    *  the spatial location of the nodes.  So the interpolation may not be
-    *  correct for coordinate systems other than standard Cartesian grid geometry.
+    *  average hanging nodes we provide the capability to do it here.  Note
+    *  that the hanging node interpolation provided does not take into
+    *  consideration the spatial location of the nodes.  So the interpolation
+    *  may not be correct for coordinate systems other than standard Cartesian
+    *  grid geometry.
     *
-    *  @param fill_hanging_nodes Optional boolean value specifying whether hanging
-    *         node values should be set to values interpolated from neighboring
-    *         non-hanging node values.  The default is false.
+    *  @param fill_hanging_nodes Optional boolean value specifying whether
+    *         hanging node values should be set to values interpolated from
+    *         neighboring non-hanging node values.  The default is false.
     */
    void
    computeSum(
@@ -206,7 +220,10 @@ public:
     * @return The object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -215,7 +232,7 @@ private:
     */
    void
    doLevelSum(
-      tbox::Pointer<hier::PatchLevel> level) const;
+      const boost::shared_ptr<hier::PatchLevel>& level) const;
 
    /*
     * Private member function to set node node data on a fine level at a
@@ -224,8 +241,8 @@ private:
     */
    void
    doLocalCoarseFineBoundarySum(
-      tbox::Pointer<hier::PatchLevel> fine_level,
-      tbox::Pointer<hier::PatchLevel> coarsened_fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      const boost::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id,
       bool fill_hanging_nodes) const;
@@ -236,7 +253,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const tbox::Array<int>& node_data_id,
       const tbox::Array<int>& onode_data_id) const;
 
@@ -246,7 +263,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      tbox::Pointer<hier::PatchLevel> level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       const tbox::Array<int>& onode_data_id,
       const tbox::Array<int>& node_data_id) const;
 
@@ -274,48 +291,50 @@ private:
    tbox::Array<int> d_num_registered_data_by_depth;
 
    /*
-    * Node-centered variables and patch data indices used as internal work quantities.
+    * Node-centered variables and patch data indices used as internal work
+    * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_onode_src_variable;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_tmp_onode_dst_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    tbox::Array<int> d_onode_src_id;
    tbox::Array<int> d_onode_dst_id;
 
    /*
-    * Sets of indices for temporary variables to expedite allocation/deallocation.
+    * Sets of indices for temporary variables to expedite allocation and
+    * deallocation.
     */
    hier::ComponentSelector d_onode_src_data_set;
    hier::ComponentSelector d_onode_dst_data_set;
 
-   tbox::Pointer<hier::PatchLevel> d_level;
+   boost::shared_ptr<hier::PatchLevel> d_level;
 
-   tbox::Pointer<hier::PatchHierarchy> d_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
    bool d_level_setup_called;
    bool d_hierarchy_setup_called;
 
-   tbox::Pointer<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> >
-   d_single_level_sum_schedule;
-   tbox::Array<tbox::Pointer<xfer::RefineSchedule> > d_cfbdry_copy_schedule;
-   tbox::Array<tbox::Pointer<xfer::CoarsenSchedule> > d_sync_coarsen_schedule;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+      d_single_level_sum_schedule;
+   tbox::Array<boost::shared_ptr<xfer::RefineSchedule> >
+      d_cfbdry_copy_schedule;
+   tbox::Array<boost::shared_ptr<xfer::CoarsenSchedule> >
+      d_sync_coarsen_schedule;
 
-   tbox::Array<tbox::Pointer<hier::PatchLevel> > d_cfbdry_tmp_level;
+   tbox::Array<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
 
-   tbox::Array<tbox::Pointer<hier::CoarseFineBoundary> > d_coarse_fine_boundary;
+   tbox::Array<boost::shared_ptr<hier::CoarseFineBoundary> >
+      d_coarse_fine_boundary;
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/PatchBoundaryNodeSum.I"
-#endif
 #endif

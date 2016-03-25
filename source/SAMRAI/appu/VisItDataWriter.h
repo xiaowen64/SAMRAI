@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
@@ -29,11 +29,12 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace appu {
@@ -155,7 +156,7 @@ namespace appu {
  *
  */
 
-class VisItDataWriter:public virtual tbox::DescribedClass
+class VisItDataWriter
 {
 public:
    /*!
@@ -186,6 +187,7 @@ public:
     *   - when assertion checking is active, the object name string is
     *     empty, or the number_procs_per_file is <= 0.
     *
+    * @param dim
     * @param object_name String name for data writer object
     * @param dump_directory_name String name for dump directory, which
     *   may include a path.
@@ -206,7 +208,7 @@ public:
     *
     * The destructor for the writer does nothing interesting.
     */
-   virtual ~VisItDataWriter();
+   ~VisItDataWriter();
 
    /*!
     * @brief This method sets the default data writer to use for derived
@@ -220,12 +222,16 @@ public:
     *   - assertion checking is active and the default_derived_writer
     *     pointer is null.
     *
-    * @param default_derived_writer tbox::Pointer to a VisDerivedDataStrategy
+    * @param default_derived_writer Pointer to a VisDerivedDataStrategy
     *  object.
     */
    void
    setDefaultDerivedDataWriter(
-      VisDerivedDataStrategy* default_derived_writer);
+      VisDerivedDataStrategy* default_derived_writer)
+   {
+      TBOX_ASSERT(default_derived_writer != (VisDerivedDataStrategy *)NULL);
+      d_default_derived_writer = default_derived_writer;
+   }
 
    /*!
     * @brief This method sets the data writer to use for materials.
@@ -234,11 +240,15 @@ public:
     *   - assertion checking is active and the materials_data__writer
     *     pointer is null.
     *
-    * @param materials_data_writer tbox::Pointer to a VisMaterialsDataStrategy object.
+    * @param materials_data_writer Pointer to a VisMaterialsDataStrategy object.
     */
    void
    setMaterialsDataWriter(
-      VisMaterialsDataStrategy* materials_data_writer);
+      VisMaterialsDataStrategy* materials_data_writer)
+   {
+      TBOX_ASSERT(materials_data_writer != (VisMaterialsDataStrategy *)NULL);
+      d_materials_writer = materials_data_writer;
+   }
 
    /*!
     * @brief This method registers a variable with the VisIt data writer.
@@ -325,7 +335,7 @@ public:
     * @param scale_factor (optional) scale factor with which to multiply
     *    all data values
     * @param variable_centering (optional) centering of derived data - "CELL" or "NODE"
-    * @param mix type (optional) indicate whether or not the mixed material
+    * @param variable_mix_type (optional) indicate whether or not the mixed material
     *    state will be stored, "MIXED", or the default of using cell averages
     *    "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must
     *    be provided.
@@ -616,7 +626,7 @@ public:
     */
    void
    writePlotData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int time_step,
       double simulation_time = 0.0);
 
@@ -632,7 +642,11 @@ public:
     */
    void
    setSummaryFilename(
-      std::string& filename);
+      std::string& filename)
+   {
+      TBOX_ASSERT(!filename.empty());
+      d_summary_filename = filename + ".samrai";
+   }
 
    /*!
     * @brief Returns the object name.
@@ -640,7 +654,10 @@ public:
     * @return The object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -724,9 +741,7 @@ private:
     * writing data from multiple tbox::MPI processes.
     */
    struct childParentStruct {
-      childParentStruct():child(-1),
-         parent(-1) {
-      }                                              // Kill warnings about uninit values.
+      childParentStruct();
       int child;
       int parent;
    };
@@ -865,8 +880,8 @@ private:
       bool d_isa_species;
       std::string d_species_name;
       VisItItem* d_parent_material_pointer;
-      tbox::Pointer<tbox::Database> d_species_HDFGroup;
-      tbox::Pointer<tbox::Database> d_extents_species_HDFGroup;
+      boost::shared_ptr<tbox::Database> d_species_HDFGroup;
+      boost::shared_ptr<tbox::Database> d_extents_species_HDFGroup;
    };
 
    /*
@@ -903,7 +918,7 @@ private:
     */
    void
    writeHDFFiles(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       double simulation_time);
 
    /*
@@ -912,15 +927,15 @@ private:
     */
    void
    initializePlotVariableMinMaxInfo(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /*
     * Write variable data to HDF file.
     */
    void
    writeVisItVariablesToHDFFile(
-      tbox::Pointer<tbox::Database> processor_HDFGroup,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<tbox::Database>& processor_HDFGroup,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarsest_level,
       int finest_level);
 
@@ -930,8 +945,8 @@ private:
     */
    void
    packRegularAndDerivedData(
-      tbox::Pointer<tbox::Database> patch_HDFGroup,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       hier::Patch& patch);
 
@@ -940,8 +955,8 @@ private:
     */
    void
    packMaterialsData(
-      tbox::Pointer<tbox::Database> patch_HDFGroup,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<tbox::Database>& patch_HDFGroup,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       hier::Patch& patch);
 
@@ -951,7 +966,7 @@ private:
     */
    void
    packSpeciesData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       hier::Patch& patch);
 
@@ -974,7 +989,7 @@ private:
     */
    int
    getGlobalPatchNumber(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const int patch_number);
 
@@ -984,8 +999,8 @@ private:
     */
    void
    writeParentChildInfoToSummaryHDFFile(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      tbox::Pointer<tbox::Database> basic_HDFGroup);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const boost::shared_ptr<tbox::Database>& basic_HDFGroup);
 
    /*
     *    Sort function for use by qsort to sort child_parent array
@@ -1011,7 +1026,7 @@ private:
    void
    writeSummaryToHDFFile(
       std::string dump_dir_name,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarsest_plot_level,
       int finest_plot_level,
       double simulation_time);
@@ -1023,7 +1038,7 @@ private:
     */
    void
    exchangeMinMaxPatchInformation(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_plot_level,
       const int finest_plot_level);
 
@@ -1033,7 +1048,7 @@ private:
     */
    void
    packPatchDataIntoDoubleBuffer(
-      const tbox::Pointer<hier::PatchData> pdata,
+      const boost::shared_ptr<hier::PatchData>& pdata,
       const int depth_index,
       const variable_data_type type_of_data,
       const hier::Box patch_box,
@@ -1230,7 +1245,7 @@ private:
     *  tbox::List of scalar and vector variables registered with
     *  VisItDataWriter.
     */
-   tbox::List<VisItItem> d_plot_items;
+   std::list<VisItItem> d_plot_items;
 
    /*
     * Boolean that is set to true only in multiblock problems.
@@ -1246,7 +1261,7 @@ private:
    tbox::Array<std::string> d_visit_expression_types;
 
    //! @brief Timer for writePlotData().
-   static tbox::Pointer<tbox::Timer> t_write_plot_data;
+   static boost::shared_ptr<tbox::Timer> t_write_plot_data;
 
    /*!
     * @brief Initialize static objects and register shutdown routine.
@@ -1254,7 +1269,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_write_plot_data = tbox::TimerManager::getManager()->getTimer(
+         "appu:VisItDataWriter::writePlotData()");
+   }
 
    /*!
     * @brief Method registered with ShutdownRegister to cleanup statics.
@@ -1262,7 +1281,10 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_write_plot_data.reset();
+   }
 
    /*
     * Static initialization and cleanup handler.
@@ -1274,8 +1296,5 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/appu/VisItDataWriter.I"
-#endif
 #endif
 #endif

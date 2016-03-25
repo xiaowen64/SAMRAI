@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for edge-centered patch data
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/FaceData.h"
 #include "SAMRAI/pdat/FaceDoubleConstantRefine.h"
@@ -23,6 +22,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "PatchMultiblockTestStrategy.h"
 #include "SAMRAI/hier/Variable.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -43,7 +44,7 @@ public:
    FaceMultiblockTest(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> main_input_db,
+      boost::shared_ptr<tbox::Database> main_input_db,
       bool do_refine,
       bool do_coarsen,
       const string& refine_option);
@@ -70,7 +71,7 @@ public:
       const hier::Connector& dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& bbox,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its
@@ -92,7 +93,7 @@ public:
    virtual void
    initializeDataOnPatch(
       hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id,
       char src_or_dst);
@@ -103,7 +104,7 @@ public:
    void
    tagCellsToRefine(
       hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       int tag_index);
 
@@ -113,7 +114,7 @@ public:
    bool
    verifyResults(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id);
 
@@ -122,7 +123,7 @@ public:
    postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const tbox::Pointer<hier::VariableContext>& context,
+      const boost::shared_ptr<hier::VariableContext>& context,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
@@ -132,7 +133,7 @@ private:
     */
    void
    readTestInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /*
     * Object string identifier for error reporting
@@ -144,7 +145,7 @@ private:
    string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<tbox::Pointer<hier::Variable> > d_variables;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables;
 
 };
 

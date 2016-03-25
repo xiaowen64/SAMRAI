@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
@@ -63,46 +63,66 @@ public:
     */
    const PatchBoundaries&
    operator = (
-      const PatchBoundaries& r);
+      const PatchBoundaries& r)
+   {
+      for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
+         d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
+      }
+      return *this;
+   }
 
    /*!
     * @brief Array access operator.
     *
     * @param[in] i  Array index.
     */
-   tbox::Array<hier::BoundaryBox>&
+   tbox::Array<BoundaryBox>&
    operator [] (
-      unsigned int i);
+      unsigned int i)
+   {
+      TBOX_ASSERT(i < d_dim.getValue());
+      return d_array_of_bboxes[i];
+   }
 
    /*!
     * @brief Const Array access operator.
     *
     * @param[in] i  Array index.
     */
-   const tbox::Array<hier::BoundaryBox>&
+   const tbox::Array<BoundaryBox>&
    operator [] (
-      unsigned int i) const;
+      unsigned int i) const
+   {
+      TBOX_ASSERT(i < d_dim.getValue());
+      return d_array_of_bboxes[i];
+   }
 
    /*!
     * @brief Get copy of the internal arrays.
     *
     * @return  Copy of the internal arrays.
     */
-   tbox::Array<tbox::Array<hier::BoundaryBox> >
-   getArrays();
+   tbox::Array<tbox::Array<BoundaryBox> >
+   getArrays()
+   {
+      return d_array_of_bboxes;
+   }
 
    /*!
     * @brief Get const copy of the internal arrays.
     *
     * @return  Const copy of the internal arrays.
     */
-   const tbox::Array<tbox::Array<hier::BoundaryBox> >
-   getArrays() const;
+   const tbox::Array<tbox::Array<BoundaryBox> >
+   getArrays() const
+   {
+      return d_array_of_bboxes;
+   }
 
    /*!
     * @brief friend declaration
     */
-   friend class::std::map<int, SAMRAI::hier::PatchBoundaries>;
+   friend class::std::map<int, PatchBoundaries>;
 
 private:
    /*!
@@ -121,7 +141,7 @@ private:
    /*
     * @brief Internal arrays of BoundaryBox
     */
-   tbox::Array<tbox::Array<hier::BoundaryBox> > d_array_of_bboxes;
+   tbox::Array<tbox::Array<BoundaryBox> > d_array_of_bboxes;
 };
 
 } // SAMRAI namespace
@@ -133,10 +153,6 @@ private:
  */
 #pragma report(enable, CPPC5334)
 #pragma report(enable, CPPC5328)
-#endif
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchBoundaries.I"
 #endif
 
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
@@ -157,7 +157,10 @@ public:
     * @see init()
     */
    static const SAMRAI_MPI&
-   getSAMRAIWorld();
+   getSAMRAIWorld()
+   {
+      return s_samrai_world;
+   }
 
    /*!
     * @brief Get a static invalid rank number.
@@ -166,7 +169,10 @@ public:
     * number rather than using a hard-coded "magic" negative integer value.
     */
    static int
-   getInvalidRank();
+   getInvalidRank()
+   {
+      return s_invalid_rank;
+   }
 
    /*!
     * @brief Constructor.
@@ -193,20 +199,29 @@ public:
     * internal communicator was set.
     */
    int
-   getRank() const;
+   getRank() const
+   {
+      return d_rank;
+   }
 
    /*!
     * @brief Get the size (number of processes) of the internal
     * communicator the last time it was set.
     */
    int
-   getSize() const;
+   getSize() const
+   {
+      return d_size;
+   }
 
    /*!
     * @brief Get the internal communicator.
     */
    const Comm&
-   getCommunicator() const;
+   getCommunicator() const
+   {
+      return d_comm;
+   }
 
    /*!
     * @brief Set the internal communicator.
@@ -252,7 +267,13 @@ public:
     */
    const SAMRAI_MPI&
    operator = (
-      const SAMRAI_MPI& rhs);
+      const SAMRAI_MPI& rhs)
+   {
+      d_comm = rhs.d_comm;
+      d_rank = rhs.d_rank;
+      d_size = rhs.d_size;
+      return *this;
+   }
 
    /*!
     * @brief Equality comparison operator (compares MPI communicator).
@@ -261,7 +282,10 @@ public:
     */
    bool
    operator == (
-      const SAMRAI_MPI& rhs) const;
+      const SAMRAI_MPI& rhs) const
+   {
+      return d_comm == rhs.d_comm;
+   }
 
    /*!
     * @brief Inequality comparison operator (compares MPI communicator).
@@ -270,7 +294,10 @@ public:
     */
    bool
    operator != (
-      const SAMRAI_MPI& rhs) const;
+      const SAMRAI_MPI& rhs) const
+   {
+      return d_comm != rhs.d_comm;
+   }
 
    //@{
    //! @name Static MPI wrappers matching MPI interfaces.
@@ -584,6 +611,35 @@ public:
 
    //@}
 
+   //@{
+
+   //! @name Generic high-level operations not in MPI interfaces.
+
+   /*!
+    * @brief Parallel prefix sum for integers.
+    *
+    * Given an input x, the output is the sum of x from process 0 up
+    * to and including the local process's x.  This implementation
+    * allows an array of x, each of which is summed independently of
+    * the other.
+    *
+    * @param[in,out] x   Array of integers to sum.
+    *
+    * @param[in] count Number of items in x.  Must be the same on all
+    * processes.
+    *
+    * @param[in] tag MPI tag for communication.
+    *
+    * @return MPI_SUCCESS or an MPI error code.
+    */
+   int
+   parallelPrefixSum(
+      int* x,
+      int count,
+      int tag) const;
+
+   // @}
+
    /*!
     * @brief Set flag indicating whether exit or MPI_Abort is called
     * when running with one processor.
@@ -595,7 +651,10 @@ public:
     */
    static void
    setCallAbortInSerialInsteadOfExit(
-      bool flag = true);
+      bool flag = true)
+   {
+      s_call_abort_in_serial_instead_of_exit = flag;
+   }
 
    /*!
     * @brief Set flag indicating whether MPI_Abort or abort is called
@@ -608,7 +667,10 @@ public:
     */
    static void
    setCallAbortInParallelInsteadOfMPIAbort(
-      bool flag = true);
+      bool flag = true)
+   {
+      s_call_abort_in_parallel_instead_of_mpiabort = flag;
+   }
 
    /*!
     * @brief Call MPI_Abort or exit depending on whether running with one
@@ -644,7 +706,10 @@ public:
     * @see disableMPI().
     */
    static bool
-   usingMPI();
+   usingMPI()
+   {
+      return s_mpi_is_initialized;
+   }
 
    /*!
     * @brief Initialize MPI and SAMRAI_MPI.
@@ -759,9 +824,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/SAMRAI_MPI.I"
-#endif
 
 #endif

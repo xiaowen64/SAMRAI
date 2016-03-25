@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
@@ -14,11 +14,9 @@
 
 #include "SAMRAI/hier/BlockId.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
-
 
 /*!
  * @brief BoxContainer iterator picking items with a specified
@@ -31,18 +29,9 @@ namespace hier {
  */
 class BoxContainerSingleBlockIterator
 {
+friend class BoxContainer;
 
 public:
-   /*!
-    * @brief Constructor
-    *
-    * @param [i] container
-    * @param [i] block_id
-    */
-   BoxContainerSingleBlockIterator(
-      const BoxContainer& container,
-      const BlockId& block_id);
-
    //! @brief Destructor
    ~BoxContainerSingleBlockIterator();
 
@@ -51,40 +40,55 @@ public:
     */
    BoxContainerSingleBlockIterator&
    operator = (
-      const BoxContainerSingleBlockIterator& r);
+      const BoxContainerSingleBlockIterator& r)
+   {
+      d_mapped_boxes = r.d_mapped_boxes;
+      d_iter = r.d_iter;
+      d_block_id = r.d_block_id;
+      return *this;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box&
-   operator * () const;
+   operator * () const
+   {
+      return *d_iter;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box *
-   operator -> () const;
+   operator -> () const
+   {
+      return &(*d_iter);
+   }
 
    /*!
     * @brief Equality comparison.
     */
    bool
    operator == (
-      const BoxContainerSingleBlockIterator& r) const;
+      const BoxContainerSingleBlockIterator& r) const
+   {
+      return d_mapped_boxes == r.d_mapped_boxes &&
+             d_block_id == r.d_block_id &&
+             d_iter == r.d_iter;
+   }
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const BoxContainerSingleBlockIterator& r) const;
-
-   /*!
-    * @brief Whether the iterator can be dereferenced.  When the
-    * iterator reaches its end, this returns false.
-    */
-   bool
-   isValid() const;
+      const BoxContainerSingleBlockIterator& r) const
+   {
+      return d_mapped_boxes != r.d_mapped_boxes ||
+             d_block_id != r.d_block_id ||
+             d_iter != r.d_iter;
+   }
 
    /*!
     * @brief Pre-increment iterator.
@@ -113,6 +117,18 @@ public:
 
 private:
    /*!
+    * @brief Constructor
+    *
+    * @param [i] container
+    * @param [i] block_id
+    * @param [i] begin
+    */
+   BoxContainerSingleBlockIterator(
+      const BoxContainer& container,
+      const BlockId& block_id,
+      bool begin);
+
+   /*!
     * @brief BoxContainer being iterated through.
     */
    const BoxContainer* d_mapped_boxes;
@@ -125,15 +141,11 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxContainer::ConstIterator d_iter;
+   BoxContainer::const_iterator d_iter;
 
 };
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxContainerSingleBlockIterator.I"
-#endif
 
 #endif  // included_hier_BoxContainerSingleBlockIterator

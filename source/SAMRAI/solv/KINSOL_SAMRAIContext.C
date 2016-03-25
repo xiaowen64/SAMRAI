@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
@@ -18,10 +18,6 @@
 #include "SAMRAI/solv/Sundials_SAMRAIVector.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/KINSOL_SAMRAIContext.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -42,7 +38,7 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 
 KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    KINSOLAbstractFunctions* my_functions)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -117,25 +113,20 @@ KINSOL_SAMRAIContext::~KINSOL_SAMRAIContext()
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::initialize(
-   tbox::Pointer<SAMRAIVectorReal<double> > solution)
+void
+KINSOL_SAMRAIContext::initialize(
+   const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!solution.isNull());
-#endif
+   TBOX_ASSERT(solution);
 
    d_solution_vector = Sundials_SAMRAIVector::createSundialsVector(solution);
    d_KINSOL_solver->initialize(d_solution_vector);
 }
 
-int KINSOL_SAMRAIContext::solve()
+int
+KINSOL_SAMRAIContext::solve()
 {
    return d_KINSOL_solver->solve();
-}
-
-KINSOLSolver *KINSOL_SAMRAIContext::getKINSOLSolver()
-{
-   return d_KINSOL_solver;
 }
 
 /*
@@ -148,8 +139,9 @@ KINSOLSolver *KINSOL_SAMRAIContext::getKINSOLSolver()
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+void
+KINSOL_SAMRAIContext::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db)
 {
    if (db) {
       if (db->keyExists("residual_stop_tolerance")) {
@@ -285,19 +277,18 @@ void KINSOL_SAMRAIContext::getFromInput(
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::getFromRestart()
+void
+KINSOL_SAMRAIContext::getFromRestart()
 {
 
-   tbox::Pointer<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("SOLV_KINSOL_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_KINSOL_SAMRAI_CONTEXT_VERSION) {
@@ -336,12 +327,11 @@ void KINSOL_SAMRAIContext::getFromRestart()
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+void
+KINSOL_SAMRAIContext::putToDatabase(
+   const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
-#endif
+   TBOX_ASSERT(db);
 
    db->putInteger("SOLV_KINSOL_SAMRAI_CONTEXT_VERSION",
       SOLV_KINSOL_SAMRAI_CONTEXT_VERSION);
@@ -375,7 +365,8 @@ void KINSOL_SAMRAIContext::putToDatabase(
  *************************************************************************
  */
 
-void KINSOL_SAMRAIContext::printClassData(
+void
+KINSOL_SAMRAIContext::printClassData(
    std::ostream& os) const
 {
    os << "\nKINSOL_SAMRAIContext::printClassData..." << std::endl;

@@ -175,9 +175,8 @@
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2011 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2012 Lawrence Livermore National Security, LLC
 
-// Modified:	$LastChangedDate$
 // Description:	Yacc grammar description for the input database
 //
 
@@ -2107,7 +2106,7 @@ yyreduce:
          Parser::getParser()->error("Box dimension too large (> 3)");
       } else {
          const int n = (yyvsp[(2) - (5)].u_keydata)->d_array_size;
-	 const tbox::Dimension dim(static_cast<unsigned short>(n));
+	 const Dimension dim(static_cast<unsigned short>(n));
          (yyval.u_keydata)->d_box.setDim(dim);
 
          KeyData* list_lower = (yyvsp[(2) - (5)].u_keydata);
@@ -2876,9 +2875,9 @@ static KeyData* lookup_variable(
    result->d_integer    = 0;
 
    Parser *parser = Parser::getParser();
-   Pointer<Database> db = parser->getDatabaseWithKey(key);
+   boost::shared_ptr<Database> db(parser->getDatabaseWithKey(key));
 
-   if (db.isNull()) {
+   if (!db) {
       string tmp("Variable ``");
       tmp += key;
       tmp += "'' not found in database";

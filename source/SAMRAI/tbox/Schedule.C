@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -26,7 +26,8 @@
 namespace SAMRAI {
 namespace tbox {
 
-typedef List<Pointer<Transaction> >::Iterator Iterator;
+typedef std::list<boost::shared_ptr<Transaction> >::iterator Iterator;
+typedef std::list<boost::shared_ptr<Transaction> >::const_iterator ConstIterator;
 
 const int Schedule::s_default_first_tag = 0;
 const int Schedule::s_default_second_tag = 1;
@@ -41,13 +42,13 @@ const size_t Schedule::s_default_first_message_length = 1000;
 const std::string Schedule::s_default_timer_prefix("tbox::Schedule");
 std::map<std::string, Schedule::TimerStruct> Schedule::s_static_timers;
 
-tbox::StartupShutdownManager::Handler
+StartupShutdownManager::Handler
 Schedule::s_initialize_finalize_handler(
    Schedule::initializeCallback,
    0,
    0,
    Schedule::finalizeCallback,
-   tbox::StartupShutdownManager::priorityTimers);
+   StartupShutdownManager::priorityTimers);
 
 /*
  *************************************************************************
@@ -57,7 +58,7 @@ Schedule::s_initialize_finalize_handler(
 Schedule::Schedule():
    d_coms(NULL),
    d_com_stage(),
-   d_mpi(tbox::SAMRAI_MPI::getSAMRAIWorld()),
+   d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_first_tag(s_default_first_tag),
    d_second_tag(s_default_second_tag),
    d_first_message_length(s_default_first_message_length)
@@ -86,19 +87,20 @@ Schedule::~Schedule()
  * on the source and destination processors of the transaction.
  *************************************************************************
  */
-void Schedule::addTransaction(
-   const Pointer<Transaction>& transaction)
+void
+Schedule::addTransaction(
+   const boost::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
 
    if ((d_mpi.getRank() == src_id) && (d_mpi.getRank() == dst_id)) {
-      d_local_set.addItem(transaction);
+      d_local_set.push_front(transaction);
    } else {
       if (d_mpi.getRank() == dst_id) {
-         d_recv_sets[src_id].addItem(transaction);
+         d_recv_sets[src_id].push_front(transaction);
       } else if (d_mpi.getRank() == src_id) {
-         d_send_sets[dst_id].addItem(transaction);
+         d_send_sets[dst_id].push_front(transaction);
       }
    }
 }
@@ -110,19 +112,20 @@ void Schedule::addTransaction(
  * on the source and destination processors of the transaction.
  *************************************************************************
  */
-void Schedule::appendTransaction(
-   const Pointer<Transaction>& transaction)
+void
+Schedule::appendTransaction(
+   const boost::shared_ptr<Transaction>& transaction)
 {
    const int src_id = transaction->getSourceProcessor();
    const int dst_id = transaction->getDestinationProcessor();
 
    if ((d_mpi.getRank() == src_id) && (d_mpi.getRank() == dst_id)) {
-      d_local_set.appendItem(transaction);
+      d_local_set.push_back(transaction);
    } else {
       if (d_mpi.getRank() == dst_id) {
-         d_recv_sets[src_id].appendItem(transaction);
+         d_recv_sets[src_id].push_back(transaction);
       } else if (d_mpi.getRank() == src_id) {
-         d_send_sets[dst_id].appendItem(transaction);
+         d_send_sets[dst_id].push_back(transaction);
       }
    }
 }
@@ -132,13 +135,14 @@ void Schedule::appendTransaction(
  * Access number of send transactions.
  *************************************************************************
  */
-int Schedule::getNumSendTransactions(
+int
+Schedule::getNumSendTransactions(
    const int rank) const
 {
    int size = 0;
    TransactionSets::const_iterator mi = d_send_sets.find(rank);
    if (mi != d_send_sets.end()) {
-      size = mi->second.size();
+      size = static_cast<int>(mi->second.size());
    }
    return size;
 }
@@ -148,25 +152,16 @@ int Schedule::getNumSendTransactions(
  * Access number of receive transactions.
  *************************************************************************
  */
-int Schedule::getNumRecvTransactions(
+int
+Schedule::getNumRecvTransactions(
    const int rank) const
 {
    int size = 0;
    TransactionSets::const_iterator mi = d_recv_sets.find(rank);
    if (mi != d_recv_sets.end()) {
-      size = mi->second.size();
+      size = static_cast<int>(mi->second.size());
    }
    return size;
-}
-
-/*
- *************************************************************************
- * Access number of send transactions.
- *************************************************************************
- */
-int Schedule::getNumLocalTransactions() const
-{
-   return d_local_set.size();
 }
 
 /*
@@ -174,7 +169,8 @@ int Schedule::getNumLocalTransactions() const
  * Perform the communication described by the schedule.
  *************************************************************************
  */
-void Schedule::communicate()
+void
+Schedule::communicate()
 {
    d_object_timers->t_communicate->start();
    beginCommunication();
@@ -190,7 +186,8 @@ void Schedule::communicate()
  * communication has finished.
  *************************************************************************
  */
-void Schedule::beginCommunication()
+void
+Schedule::beginCommunication()
 {
    d_object_timers->t_begin_communication->start();
    allocateCommunicationObjects();
@@ -205,7 +202,8 @@ void Schedule::beginCommunication()
  * unpack received data into their destinations.
  *************************************************************************
  */
-void Schedule::finalizeCommunication()
+void
+Schedule::finalizeCommunication()
 {
    d_object_timers->t_finalize_communication->start();
    performLocalCopies();
@@ -222,7 +220,8 @@ void Schedule::finalizeCommunication()
  * message lengths to avoid overheads due to unknown lengths.
  *************************************************************************
  */
-void Schedule::postReceives()
+void
+Schedule::postReceives()
 {
    if (d_recv_sets.empty()) {
       /*
@@ -242,7 +241,7 @@ void Schedule::postReceives()
     * send posted earlier is paired with a receive that is also posted
     * earlier.
     */
-   tbox::AsyncCommPeer<char>* recv_coms = d_coms;
+   AsyncCommPeer<char>* recv_coms = d_coms;
 
    // Initialize iterators to where we want to start looping.
    size_t icom = 0; // Index into recv_coms.
@@ -263,16 +262,18 @@ void Schedule::postReceives()
       TBOX_ASSERT(mi->first == recv_coms[icom].getPeerRank());
 
       // Compute incoming message size, if possible.
-      const List<Pointer<Transaction> >& transactions = mi->second;
+      const std::list<boost::shared_ptr<Transaction> >& transactions =
+         mi->second;
       unsigned int byte_count = 0;
       bool can_estimate_incoming_message_size = true;
-      for (Iterator r(transactions); r; r++) {
-         if (!r()->canEstimateIncomingMessageSize()) {
+      for (ConstIterator r = transactions.begin();
+           r != transactions.end(); r++) {
+         if (!(*r)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
             break;
          }
          byte_count +=
-            static_cast<unsigned int>(r()->computeIncomingMessageSize());
+            static_cast<unsigned int>((*r)->computeIncomingMessageSize());
       }
 
       // Set AsyncCommPeer to receive known message length.
@@ -284,7 +285,7 @@ void Schedule::postReceives()
       d_object_timers->t_post_receives->start();
       recv_coms[icom].beginRecv();
       if (recv_coms[icom].isDone()) {
-         d_completed_coms.push_back(&recv_coms[icom]);
+         recv_coms[icom].pushToCompletionQueue();
       }
       d_object_timers->t_post_receives->stop();
 
@@ -302,7 +303,8 @@ void Schedule::postReceives()
  * sends.
  *************************************************************************
  */
-void Schedule::postSends()
+void
+Schedule::postSends()
 {
    d_object_timers->t_post_sends->start();
    /*
@@ -315,7 +317,7 @@ void Schedule::postSends()
 
    int rank = d_mpi.getRank();
 
-   tbox::AsyncCommPeer<char>* send_coms = d_coms + d_recv_sets.size();
+   AsyncCommPeer<char>* send_coms = d_coms + d_recv_sets.size();
 
    // Initialize iterators to where we want to start looping.
    TransactionSets::const_iterator mi = d_send_sets.upper_bound(rank);
@@ -337,21 +339,24 @@ void Schedule::postSends()
       TBOX_ASSERT(mi->first == send_coms[icom].getPeerRank());
 
       // Compute message size and whether receiver can estimate it.
-      const List<Pointer<Transaction> >& transactions = mi->second;
+      const std::list<boost::shared_ptr<Transaction> >& transactions =
+         mi->second;
       size_t byte_count = 0;
       bool can_estimate_incoming_message_size = true;
-      for (Iterator pack(transactions); pack; pack++) {
-         if (!pack()->canEstimateIncomingMessageSize()) {
+      for (ConstIterator pack = transactions.begin();
+           pack != transactions.end(); pack++) {
+         if (!(*pack)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
          }
-         byte_count += pack()->computeOutgoingMessageSize();
+         byte_count += (*pack)->computeOutgoingMessageSize();
       }
 
       // Pack outgoing data into a message.
       MessageStream outgoing_stream(byte_count, MessageStream::Write);
       d_object_timers->t_pack_stream->start();
-      for (Iterator pack(transactions); pack; pack++) {
-         pack()->packStream(outgoing_stream);
+      for (ConstIterator pack = transactions.begin();
+           pack != transactions.end(); pack++) {
+         (*pack)->packStream(outgoing_stream);
       }
       d_object_timers->t_pack_stream->stop();
 
@@ -362,10 +367,10 @@ void Schedule::postSends()
 
       // Begin non-blocking send operation.
       send_coms[icom].beginSend(
-         (char *)outgoing_stream.getBufferStart(),
+         (const char *)outgoing_stream.getBufferStart(),
          static_cast<int>(outgoing_stream.getCurrentSize()));
       if (send_coms[icom].isDone()) {
-         d_completed_coms.push_back(&send_coms[icom]);
+         send_coms[icom].pushToCompletionQueue();
       }
    }
 
@@ -377,11 +382,13 @@ void Schedule::postSends()
  * Perform all of the local memory-to-memory copies for this processor.
  *************************************************************************
  */
-void Schedule::performLocalCopies()
+void
+Schedule::performLocalCopies()
 {
    d_object_timers->t_local_copies->start();
-   for (Iterator local(d_local_set); local; local++) {
-      local()->copyLocalData();
+   for (Iterator local = d_local_set.begin();
+        local != d_local_set.end(); local++) {
+      (*local)->copyLocalData();
    }
    d_object_timers->t_local_copies->stop();
 }
@@ -394,71 +401,42 @@ void Schedule::performLocalCopies()
  * operations are completed.
  *************************************************************************
  */
-void Schedule::processCompletedCommunications()
+void
+Schedule::processCompletedCommunications()
 {
    d_object_timers->t_process_incoming_messages->start();
-   do {
 
-      // Process completed communications in d_completed_coms.
-      for (size_t i = 0; i < d_completed_coms.size(); ++i) {
-         AsyncCommPeer<char>* completed_comm =
-            dynamic_cast<AsyncCommPeer<char> *>(d_completed_coms[i]);
-         TBOX_ASSERT(completed_comm != NULL);
-         TBOX_ASSERT(completed_comm->isDone());
-         if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
+   while ( d_com_stage.numberOfCompletedMembers() > 0 ||
+           d_com_stage.advanceSome() ) {
 
-            const int sender = completed_comm->getPeerRank();
+      AsyncCommPeer<char>* completed_comm =
+         dynamic_cast<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
 
-            // Copy message into stream.
-            MessageStream incoming_stream(completed_comm->getRecvSize(),
-                                          MessageStream::Read);
-            memcpy(
-               incoming_stream.getBufferStart(),
-               completed_comm->getRecvData(),
-               completed_comm->getRecvSize() * sizeof(char));
-            completed_comm->clearRecvData();
+      TBOX_ASSERT(completed_comm != NULL);
+      TBOX_ASSERT(completed_comm->isDone());
+      if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
 
-            d_object_timers->t_unpack_stream->start();
-            for (Iterator recv(d_recv_sets[sender]); recv; recv++) {
-               recv()->unpackStream(incoming_stream);
-            }
-            d_object_timers->t_unpack_stream->stop();
-         } else {
-            // No further action required for completed send.
+         const int sender = completed_comm->getPeerRank();
+
+         // Copy message into stream.
+         MessageStream incoming_stream(
+            completed_comm->getRecvSize() * sizeof(char),
+            MessageStream::Read,
+            completed_comm->getRecvData());
+         completed_comm->clearRecvData();
+
+         d_object_timers->t_unpack_stream->start();
+         for (Iterator recv = d_recv_sets[sender].begin();
+              recv != d_recv_sets[sender].end(); recv++) {
+            (*recv)->unpackStream(incoming_stream);
          }
+         d_object_timers->t_unpack_stream->stop();
+      } else {
+         // No further action required for completed send.
       }
-
-      // Check for more completed communications.
-      d_completed_coms.clear();
-      d_com_stage.advanceSome(d_completed_coms);
-
-   } while (!d_completed_coms.empty());
+   }
 
    d_object_timers->t_process_incoming_messages->stop();
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void Schedule::setMPITag(
-   const int tag0,
-   const int tag1)
-{
-   TBOX_ASSERT(tag0 >= 0);
-   TBOX_ASSERT(tag1 >= 0);
-   d_first_tag = tag0;
-   d_second_tag = tag1;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void Schedule::setMPI(
-   const SAMRAI_MPI& mpi)
-{
-   d_mpi = mpi;
 }
 
 /*
@@ -467,11 +445,11 @@ void Schedule::setMPI(
  * them ready to send/receive.
  *************************************************************************
  */
-void Schedule::allocateCommunicationObjects()
+void
+Schedule::allocateCommunicationObjects()
 {
    const size_t length = d_recv_sets.size() + d_send_sets.size();
    d_coms = new AsyncCommPeer<char>[length];
-   d_completed_coms.reserve(length);
 
    size_t counter = 0;
    for (TransactionSets::iterator ti = d_recv_sets.begin();
@@ -498,20 +476,11 @@ void Schedule::allocateCommunicationObjects()
 
 /*
  *************************************************************************
- *************************************************************************
- */
-void Schedule::deallocateCommunicationObjects()
-{
-   delete[] d_coms;
-   d_coms = NULL;
-}
-
-/*
- *************************************************************************
  * Print class data to the specified output stream.
  *************************************************************************
  */
-void Schedule::printClassData(
+void
+Schedule::printClassData(
    std::ostream& stream) const
 {
    stream << "Schedule::printClassData()" << std::endl;
@@ -522,25 +491,28 @@ void Schedule::printClassData(
 
    for (TransactionSets::const_iterator ss = d_send_sets.begin();
         ss != d_send_sets.end(); ++ss) {
-      const List<Pointer<Transaction> >& send_set = ss->second;
+      const std::list<boost::shared_ptr<Transaction> >& send_set = ss->second;
       stream << "Send Set: " << ss->first << std::endl;
-      for (Iterator send(send_set); send; send++) {
-         send()->printClassData(stream);
+      for (ConstIterator send = send_set.begin();
+           send != send_set.end(); send++) {
+         (*send)->printClassData(stream);
       }
    }
 
    for (TransactionSets::const_iterator rs = d_recv_sets.begin();
         rs != d_recv_sets.end(); ++rs) {
-      const List<Pointer<Transaction> >& recv_set = rs->second;
+      const std::list<boost::shared_ptr<Transaction> >& recv_set = rs->second;
       stream << "Recv Set: " << rs->first << std::endl;
-      for (Iterator recv(recv_set); recv; recv++) {
-         recv()->printClassData(stream);
+      for (ConstIterator recv = recv_set.begin();
+           recv != recv_set.end(); recv++) {
+         (*recv)->printClassData(stream);
       }
    }
 
    stream << "Local Set" << std::endl;
-   for (Iterator local(d_local_set); local; local++) {
-      local()->printClassData(stream);
+   for (ConstIterator local = d_local_set.begin();
+        local != d_local_set.end(); local++) {
+      (*local)->printClassData(stream);
    }
 }
 
@@ -548,18 +520,8 @@ void Schedule::printClassData(
  ***********************************************************************
  ***********************************************************************
  */
-void Schedule::setFirstMessageLength(
-   int first_message_length)
-{
-   TBOX_ASSERT(first_message_length > 0);
-   d_first_message_length = first_message_length;
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-void Schedule::setTimerPrefix(
+void
+Schedule::setTimerPrefix(
    const std::string& timer_prefix)
 {
    std::map<std::string, TimerStruct>::iterator ti(
@@ -577,53 +539,31 @@ void Schedule::setTimerPrefix(
  ***********************************************************************
  ***********************************************************************
  */
-void Schedule::getAllTimers(
+void
+Schedule::getAllTimers(
    const std::string& timer_prefix,
    TimerStruct& timers)
 {
-   timers.t_communicate = tbox::TimerManager::getManager()->
+   timers.t_communicate = TimerManager::getManager()->
       getTimer(timer_prefix + "::communicate()");
-   timers.t_begin_communication = tbox::TimerManager::getManager()->
+   timers.t_begin_communication = TimerManager::getManager()->
       getTimer(timer_prefix + "::beginCommunication()");
-   timers.t_finalize_communication = tbox::TimerManager::getManager()->
+   timers.t_finalize_communication = TimerManager::getManager()->
       getTimer(timer_prefix + "::finalizeCommunication()");
-   timers.t_post_receives = tbox::TimerManager::getManager()->
+   timers.t_post_receives = TimerManager::getManager()->
       getTimer(timer_prefix + "::postReceives()");
-   timers.t_post_sends = tbox::TimerManager::getManager()->
+   timers.t_post_sends = TimerManager::getManager()->
       getTimer(timer_prefix + "::postSends()");
-   timers.t_process_incoming_messages = tbox::TimerManager::getManager()->
+   timers.t_process_incoming_messages = TimerManager::getManager()->
       getTimer(timer_prefix + "::processIncomingMessages()");
-   timers.t_MPI_wait = tbox::TimerManager::getManager()->
+   timers.t_MPI_wait = TimerManager::getManager()->
       getTimer(timer_prefix + "::MPI_wait");
-   timers.t_pack_stream = tbox::TimerManager::getManager()->
+   timers.t_pack_stream = TimerManager::getManager()->
       getTimer(timer_prefix + "::pack_stream");
-   timers.t_unpack_stream = tbox::TimerManager::getManager()->
+   timers.t_unpack_stream = TimerManager::getManager()->
       getTimer(timer_prefix + "::unpack_stream");
-   timers.t_local_copies = tbox::TimerManager::getManager()->
+   timers.t_local_copies = TimerManager::getManager()->
       getTimer(timer_prefix + "::performLocalCopies()");
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-void Schedule::initializeCallback()
-{
-   TimerStruct& timers(s_static_timers[s_default_timer_prefix]);
-   getAllTimers(s_default_timer_prefix, timers);
-}
-
-/*
- ***************************************************************************
- * Release static timers.  To be called by shutdown registry to make sure
- * memory for timers does not leak.
- ***************************************************************************
- */
-
-void Schedule::finalizeCallback()
-{
-   s_static_timers.clear();
 }
 
 }

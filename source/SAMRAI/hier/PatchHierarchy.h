@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -14,20 +14,19 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/ComponentSelector.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchLevelFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -209,8 +208,7 @@ public:
       /*!
        * @brief Destructor
        */
-      virtual ~ConnectorWidthRequestorStrategy() {
-      }
+      virtual ~ConnectorWidthRequestorStrategy();
 
       /*
        * TODO: How is a developer supposed to know what IntVector values
@@ -224,23 +222,25 @@ public:
        * requested between levels in the given PatchHierarchy. The two vector
        * parameters will contain the computed widths.
        * @par Assumptions
+       * <ul>
        * <li> On completion of the function call, self_connector_width must be
        *      of length @c patch_hierarchy.getMaxNumberOfLevels().
        * <li> On completion of the function call, fine_connector_width must be
        *      of length @c patch_hierarchy.getMaxNumberOfLevels() - 1.
+       * </ul>
        *
-       * @param[out] self_connector_width Array of widths for Connectors
+       * @param[out] self_connector_widths Array of widths for Connectors
        * from a level to itself.
        *
-       * @param[out] fine_connector_width Array of widths for Connectors
+       * @param[out] fine_connector_widths Array of widths for Connectors
        * from a level to the next finer level.
        *
        * @param[in]  patch_hierarchy
        */
       virtual void
       computeRequiredConnectorWidths(
-         std::vector<hier::IntVector>& self_connector_widths,
-         std::vector<hier::IntVector>& fine_connector_widths,
+         std::vector<IntVector>& self_connector_widths,
+         std::vector<IntVector>& fine_connector_widths,
          const PatchHierarchy& patch_hierarchy) const = 0;
    };
 
@@ -266,11 +266,11 @@ public:
  * @param[in]  database Database specifying hierarchy parameters.
  * @param[in]  register_for_restart @b Default: true
  */
-   explicit PatchHierarchy(
+   PatchHierarchy(
       const std::string& object_name,
-      tbox::Pointer<GridGeometry> geometry,
-      const tbox::Pointer<tbox::Database>& database =
-         tbox::Pointer<tbox::Database>(NULL),
+      const boost::shared_ptr<BaseGridGeometry>& geometry,
+      const boost::shared_ptr<tbox::Database>& database =
+         boost::shared_ptr<tbox::Database>(),
       bool register_for_restart = true);
 
    /*!
@@ -300,10 +300,10 @@ public:
     * @param[in]  refine_ratio
     * @param[in]  register_for_restart
     */
-   tbox::Pointer<hier::PatchHierarchy>
+   boost::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
       const std::string& fine_hierarchy_name,
-      const hier::IntVector& refine_ratio,
+      const IntVector& refine_ratio,
       bool register_for_restart) const;
 
    /*!
@@ -323,16 +323,16 @@ public:
     * this must be done before any data operations can be performed on
     * the new hierarchy.
     *
-    * @return Pointer to the coarsened patch hierarchy.
+    * @return boost::shared_ptr to the coarsened patch hierarchy.
     *
     * @param[in]  coarse_hierarchy_name
     * @param[in]  coarsen_ratio
     * @param[in]  register_for_restart
     */
-   tbox::Pointer<hier::PatchHierarchy>
+   boost::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
       const std::string& coarse_hierarchy_name,
-      const hier::IntVector& coarsen_ratio,
+      const IntVector& coarsen_ratio,
       bool register_for_restart) const;
 
 /*
@@ -372,9 +372,13 @@ public:
     *
     * @param[in]  level
     */
-   tbox::Pointer<PatchLevel>
+   boost::shared_ptr<PatchLevel>
    getPatchLevel(
-      const int level) const;
+      const int level) const
+   {
+      TBOX_ASSERT((level >= 0) && (level < d_number_levels));
+      return d_patch_levels[level];
+   }
 
    /*!
     * @brief Get the patch descriptor.
@@ -382,8 +386,11 @@ public:
     * @return a pointer to the patch descriptor used for the patches in
     * the patch hierarchy.
     */
-   tbox::Pointer<PatchDescriptor>
-   getPatchDescriptor() const;
+   boost::shared_ptr<PatchDescriptor>
+   getPatchDescriptor() const
+   {
+      return d_patch_descriptor;
+   }
 
    /*!
     * @brief Check if the level exists
@@ -395,7 +402,10 @@ public:
     */
    bool
    levelExists(
-      const int level) const;
+      const int level) const
+   {
+      return (level < d_number_levels) && d_patch_levels[level];
+   }
 
    /*!
     * @brief Check if a finer level exists.
@@ -408,7 +418,10 @@ public:
     */
    bool
    finerLevelExists(
-      const int level) const;
+      const int level) const
+   {
+      return (level + 1 < d_number_levels) && d_patch_levels[level + 1];
+   }
 
    /*!
     * @brief Get the number of levels in the hierarchy.
@@ -416,7 +429,10 @@ public:
     * @return The number of levels that currently exist in the hierarchy.
     */
    int
-   getNumberOfLevels() const;
+   getNumberOfLevels() const
+   {
+      return d_number_levels;
+   }
 
    /*!
     * @brief Get the finest level in the hierarchy.
@@ -425,7 +441,10 @@ public:
     * existing in the hierarchy.
     */
    int
-   getFinestLevelNumber() const;
+   getFinestLevelNumber() const
+   {
+      return d_number_levels - 1;
+   }
 
    /*!
     * @brief Check whether specified level can be refined.
@@ -436,7 +455,11 @@ public:
     */
    bool
    levelCanBeRefined(
-      const int level_number) const;
+      const int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return level_number < getMaxNumberOfLevels() - 1;
+   }
 
    /*!
     * @brief Return a pointer to the specified BoxLevel.
@@ -445,9 +468,12 @@ public:
     *
     * @param[in]  level
     */
-   const tbox::Pointer<BoxLevel>&
+   const boost::shared_ptr<BoxLevel>&
    getBoxLevel(
-      const int level) const;
+      const int level) const
+   {
+      return d_patch_levels[level]->getBoxLevel();
+   }
 
    /*!
     * @brief Get the connector between two levels
@@ -525,7 +551,7 @@ public:
 
 /*
  * TODO: This DomainBoxLevel, etc. stuff (if it is really needed) should
- * be moved to the GridGeometry class.  It makes the role of this class
+ * be moved to the BaseGridGeometry class.  It makes the role of this class
  * too divergent by having it here.
  */
 /*!
@@ -537,14 +563,20 @@ public:
  * @return The domain description as a BoxLevel
  */
    const BoxLevel&
-   getDomainBoxLevel() const;
+   getDomainBoxLevel() const
+   {
+      return d_domain_mapped_box_level;
+   }
 
    /*!
     * @brief Returns the SAMRAI_MPI communicator over which the domain
     * BoxLevel is distributed.
     */
    const tbox::SAMRAI_MPI&
-   getMPI() const;
+   getMPI() const
+   {
+      return d_domain_mapped_box_level.getMPI();
+   }
 
    //@{
 
@@ -564,7 +596,23 @@ public:
     */
    void
    setMaxNumberOfLevels(
-      int max_levels);
+      int max_levels)
+   {
+      d_max_levels = max_levels;
+      if (d_max_levels != int(d_ratio_to_coarser.size())) {
+         d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
+         d_smallest_patch_size.resize(
+            d_max_levels,
+            d_smallest_patch_size.back());
+         d_largest_patch_size.resize(
+            d_max_levels,
+            d_largest_patch_size.back());
+         d_proper_nesting_buffer.resize(
+            d_max_levels - 1,
+            d_proper_nesting_buffer.empty() ?
+               1 : d_proper_nesting_buffer.back());
+      }
+   }
 
    /*!
     * @brief Get the maximum number of levels allowed on the hierarchy.
@@ -574,7 +622,10 @@ public:
     * @return The maximum number of levels allowed on the hierarchy.
     */
    int
-   getMaxNumberOfLevels() const;
+   getMaxNumberOfLevels() const
+   {
+      return d_max_levels;
+   }
 
    /*!
     * @brief Set the ratio to coarser level.
@@ -585,7 +636,11 @@ public:
    void
    setRatioToCoarserLevel(
       const IntVector& ratio,
-      int level);
+      int level)
+   {
+      TBOX_ASSERT(level > 0 && level < d_max_levels);
+      d_ratio_to_coarser[level] = ratio;
+   }
 
    /*!
     * @brief Get the ratio between specified level and next coarser level
@@ -596,7 +651,11 @@ public:
     */
    const IntVector&
    getRatioToCoarserLevel(
-      int level) const;
+      int level) const
+   {
+      TBOX_ASSERT(level < d_max_levels);
+      return d_ratio_to_coarser[level];
+   }
 
    /*!
     * @brief Set the smallest patch size on the given level.
@@ -607,7 +666,11 @@ public:
    void
    setSmallestPatchSize(
       const IntVector& size,
-      int level);
+      int level)
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      d_smallest_patch_size[level] = size;
+   }
 
    /*!
     * @brief Get the smallest patch size on the given level.
@@ -618,7 +681,11 @@ public:
     */
    const IntVector&
    getSmallestPatchSize(
-      int level) const;
+      int level) const
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      return d_smallest_patch_size[level];
+   }
 
    /*!
     * @brief Set the largest patch size on the given level.
@@ -629,7 +696,11 @@ public:
    void
    setLargestPatchSize(
       const IntVector& size,
-      int level);
+      int level)
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      d_largest_patch_size[level] = size;
+   }
 
    /*!
     * @brief Get the largest patch size.
@@ -640,7 +711,11 @@ public:
     */
    const IntVector&
    getLargestPatchSize(
-      int level) const;
+      int level) const
+   {
+      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      return d_largest_patch_size[level];
+   }
 
    /*!
     * @brief Get the proper nesting buffer for a specific level.
@@ -654,42 +729,55 @@ public:
     *
     * @return The proper nesting buffer
     *
-    * @param[in]  level
+    * @param[in]  ln
     */
    int
    getProperNestingBuffer(
-      int ln) const;
+      int ln) const
+   {
+      TBOX_ASSERT(ln >= 0 && ln < d_max_levels);
+      return (ln < d_max_levels - 1) ? d_proper_nesting_buffer[ln] : -1;
+   }
 
    /*!
     * @brief Get flag for allowing patches smaller than ghost width.
     */
    bool
-   allowPatchesSmallerThanGhostWidth() const;
+   allowPatchesSmallerThanGhostWidth() const
+   {
+      return d_allow_patches_smaller_than_ghostwidth;
+   }
 
    /*!
     * @brief Get flag for allowing patches smaller than user-provided minimum
     * size.
     */
    bool
-   allowPatchesSmallerThanMinimumSize() const;
+   allowPatchesSmallerThanMinimumSize() const
+   {
+      return d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps;
+   }
 
    //@}
 
-/*
- * TODO: Since we have really never used the patch factory and patch
- * level factory concepts beyond their defaults, should we remove them?
- */
-/*!
- * @brief Set the factory used to create patch objects.
- *
- * If a factory is not specified, then the default factory will create
- * patch objects of type Patch.
- *
- * @param[in]  factory
- */
+   /*
+    * TODO: Since we have really never used the patch factory and patch
+    * level factory concepts beyond their defaults, should we remove them?
+    */
+   /*!
+    * @brief Set the factory used to create patch objects.
+    *
+    * If a factory is not specified, then the default factory will create
+    * patch objects of type Patch.
+    *
+    * @param[in]  factory
+    */
    void
    setPatchFactory(
-      tbox::Pointer<PatchFactory> factory);
+      const boost::shared_ptr<PatchFactory>& factory)
+   {
+      d_patch_factory = factory;
+   }
 
    /*!
     * @brief Set the factory used to create patch level objects.
@@ -701,15 +789,21 @@ public:
     */
    void
    setPatchLevelFactory(
-      tbox::Pointer<PatchLevelFactory> factory);
+      const boost::shared_ptr<PatchLevelFactory>& factory)
+   {
+      d_patch_level_factory = factory;
+   }
 
    /*!
     * @brief Get the grid geometry.
     *
     * @return a pointer to the grid geometry object.
     */
-   tbox::Pointer<GridGeometry>
-   getGridGeometry() const;
+   boost::shared_ptr<BaseGridGeometry>
+   getGridGeometry() const
+   {
+      return d_grid_geometry;
+   }
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
@@ -728,25 +822,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> database);
-
-   /*!
-    * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the database.
-    *
-    * Only those patch data indicated in the ComponentSelector are written to
-    * the specified database.
-    *
-    * @par Assertions
-    * When assertion checking is active, the database pointer must be non-null.
-    *
-    * @param[out]  database
-    * @param[in]  patchdata_write_table
-    */
-   void
-   putToDatabase(
-      tbox::Pointer<tbox::Database> database,
-      const ComponentSelector& patchdata_write_table);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Read in the entire hierarchy from the restart file.
@@ -755,10 +831,12 @@ public:
     * object_name specified in the constructor.
     *
     * @note
+    * <ul>
     * <li> This method handles the memory allocation for each PatchLevel
     *      it reads in.
     * <li> The number of levels read in is the minimum of the d_max_levels
     *      and the number of levels stored in the database.
+    * </ul>
     *
     * @par Assertions
     * When assertion checking is active, @c d_max_levels must be
@@ -776,23 +854,27 @@ public:
     * to read in from the database.
     *
     * @note
+    * <ul>
     * <li>   Warning messages will be printed to the log file if
     *        any patch data component specified in the
     *        component_selector cannot be found in the database.
     * <li>   This method handles the memory allocation for each PatchLevel
     *        it reads in.
+    * </ul>
     *
     * @par Assertions
     *
+    * <ul>
     * <li>   The database argument must not be null.
     * <li>   The number of levels (if given) must be greater than zero.
+    * </ul>
     *
     * @param[in]  database
     * @param[in]  component_selector
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -801,7 +883,10 @@ public:
     * @return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * @brief Print a patch hierarchy to a specified degree of detail.
@@ -821,7 +906,7 @@ public:
     *
     * @param[in,out]    os The output stream
     * @param[in]        border string around output text
-    * @param[depth]     depth
+    * @param[in]     depth
     */
    int
    recursivePrint(
@@ -835,13 +920,34 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
     * Static integer constant describing class's version number.
     */
    static const int HIER_PATCH_HIERARCHY_VERSION;
+
+   /*!
+    * @brief Writes the state of the PatchHierarchy object and the PatchLevels
+    * it contains to the database.
+    *
+    * Only those patch data indicated in the ComponentSelector are written to
+    * the specified database.
+    *
+    * @par Assertions
+    * When assertion checking is active, the database pointer must be non-null.
+    *
+    * @param[out]  database
+    * @param[in]  patchdata_write_table
+    */
+   void
+   putToDatabase(
+      const boost::shared_ptr<tbox::Database>& database,
+      const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Read input data from specified database and initialize
@@ -854,7 +960,7 @@ private:
     */
    void
    getFromInput(
-      const tbox::Pointer<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Set up things for the entire class.
@@ -862,7 +968,12 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      /*
+       * No-op.  This class doesn't
+       */
+   }
 
    /*!
     * @brief Free static timers.
@@ -897,17 +1008,17 @@ private:
    /*!
     * @brief Array of pointers to PatchLevels that make up the hierarchy
     */
-   tbox::Array<tbox::Pointer<PatchLevel> > d_patch_levels;
+   tbox::Array<boost::shared_ptr<PatchLevel> > d_patch_levels;
 
    /*!
-    * @brief GridGeometry that was used to construct the hierarchy
+    * @brief BaseGridGeometry that was used to construct the hierarchy
     */
-   tbox::Pointer<GridGeometry> d_grid_geometry;
+   boost::shared_ptr<BaseGridGeometry> d_grid_geometry;
 
    /*!
     * @brief PatchDescriptor that is shared by every patch on the hierarchy
     */
-   tbox::Pointer<PatchDescriptor> d_patch_descriptor;
+   boost::shared_ptr<PatchDescriptor> d_patch_descriptor;
 
 /*
  * TODO: Since we have really never used the patch factory and patch
@@ -916,12 +1027,12 @@ private:
 /*!
  * @brief Factory used to create patches on the hierarchy
  */
-   tbox::Pointer<PatchFactory> d_patch_factory;
+   boost::shared_ptr<PatchFactory> d_patch_factory;
 
    /*!
     * @brief Factory used to create levels on the hierarchy
     */
-   tbox::Pointer<PatchLevelFactory> d_patch_level_factory;
+   boost::shared_ptr<PatchLevelFactory> d_patch_level_factory;
 
    //@{
    //! @name Parameters for setting up the hierarchy.
@@ -937,7 +1048,7 @@ private:
     * The vector will be sized to d_max_levels.  d_ratio_to_coarser[n] is
     * the refinement ratio betwee level @c n and level @c n-1.
     */
-   std::vector<hier::IntVector> d_ratio_to_coarser;
+   std::vector<IntVector> d_ratio_to_coarser;
 
    /*
     * @brief Proper nesting buffer for each level.
@@ -970,13 +1081,13 @@ private:
    /*!
     * @brief Smallest patch sizes for each level.
     */
-   std::vector<hier::IntVector> d_smallest_patch_size;
+   std::vector<IntVector> d_smallest_patch_size;
 
    /*!
     * @brief Largest patch sizes for each level.  A negative value means
     * unlimited.
     */
-   std::vector<hier::IntVector> d_largest_patch_size;
+   std::vector<IntVector> d_largest_patch_size;
 
    /*!
     * @brief Whether to normally allow patches smaller than the max
@@ -1054,11 +1165,11 @@ private:
    //! @name Domain-related objects.
 
 /*
- * TODO: These things (if really needed) should be moved to the GridGeometry
- * class.  However, the GridGeometry object cannot own a MappedBoxLevel
- * because the GridGeometry object is incapable of creating a tbox::Pointer
- * to itself.  Might need to change BoxLevel to take a raw pointer to
- * GridGeometry.
+ * TODO: These things (if really needed) should be moved to the
+ * BaseGridGeometry class.  However, the BaseGridGeometry object cannot own a
+ * MappedBoxLevel because the BaseGridGeometry object is incapable of creating
+ * a boost::shared_ptr to itself.  Might need to change BoxLevel to take a raw
+ * pointer to BaseGridGeometry.
  */
 
    /*!
@@ -1079,7 +1190,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchHierarchy.I"
-#endif
 #endif

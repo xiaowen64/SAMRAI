@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   PoissonGaussianSolution class declaration
  *
  ************************************************************************/
@@ -82,17 +82,15 @@ public:
    void
    setGridData(
       hier::Patch& patch,
-      pdat::SideData<double>& diffcoef_data,
-      pdat::CellData<double>& ccoef_data,
       pdat::CellData<double>& exact_data,
       pdat::CellData<double>& source_data);
 
    virtual void
    setBcCoefs(
-      tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-      tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-      const tbox::Pointer<hier::Variable>& variable,
+      const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+      const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+      const boost::shared_ptr<hier::Variable>& variable,
       const hier::Patch& patch,
       const hier::BoundaryBox& bdry_box,
       const double fill_time = 0.0) const;

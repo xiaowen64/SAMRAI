@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   First layer cell fill pattern class
  *
  ************************************************************************/
@@ -15,9 +15,9 @@
 
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -71,9 +71,9 @@ public:
     * @param[in] transformation  the transformation from source to
     *                            destination index space.
     *
-    * @return                Pointer to the calculated overlap object
+    * @return                boost::shared_ptr to the calculated overlap object
     */
-   tbox::Pointer<hier::BoxOverlap>
+   boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -97,13 +97,13 @@ public:
     *                        refine operator (cell-centered represtentation)
     * @param[in] patch_box   box representing the patch where a refine operator
     *                        will fill data.  (cell-centered representation)
-    * @param[in] data box    box representing the full extent of the region
+    * @param[in] data_box    box representing the full extent of the region
     *                        covered by a patch data object, including all
     *                        ghosts (cell-centered representation)
     * @param[in] pdf         patch data factory for the data that is to be
     *                        filled
     */
-   tbox::Pointer<hier::BoxOverlap>
+   boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
       const hier::Box& patch_box,

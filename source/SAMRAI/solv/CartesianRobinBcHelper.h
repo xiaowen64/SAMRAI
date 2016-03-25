@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
@@ -20,7 +20,9 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -57,10 +59,11 @@ public:
     *
     * Requires a concrete implementation of RobinBcCoefStrategy.
     *
+    * @param dim
     * @param object_name Name of the object, for general referencing.
     * @param coef_strategy Coefficients strategy being helped.
     */
-   CartesianRobinBcHelper(
+   explicit CartesianRobinBcHelper(
       const tbox::Dimension& dim,
       std::string object_name = std::string(),
       RobinBcCoefStrategy* coef_strategy = NULL);
@@ -112,7 +115,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    //@}
 
@@ -299,12 +302,19 @@ public:
     * Provide the implementation that can be used to set the
     * Robin bc coefficients.
     *
-    * @param coef_strategy tbox::Pointer to a concrete inmplementation of
+    * @param coef_strategy Pointer to a concrete inmplementation of
     *        the coefficient strategy.
     */
    void
    setCoefImplementation(
-      const RobinBcCoefStrategy* coef_strategy);
+      const RobinBcCoefStrategy* coef_strategy)
+   {
+      if (!coef_strategy) {
+         TBOX_ERROR(d_object_name << ": Invalid pointer value"
+                                  << std::endl);
+      }
+      d_coef_strategy = coef_strategy;
+   }
 
    /*!
     * @brief Set the data id that should be filled when setting
@@ -317,7 +327,10 @@ public:
     */
    void
    setTargetDataId(
-      int target_data_id);
+      int target_data_id)
+   {
+      d_target_data_id = target_data_id;
+   }
 
    /*!
     * @brief Set whether boundary filling should assume homogeneous
@@ -332,7 +345,10 @@ public:
     */
    void
    setHomogeneousBc(
-      bool homogeneous_bc);
+      bool homogeneous_bc)
+   {
+      d_homogeneous_bc = homogeneous_bc;
+   }
 
    //@}
 
@@ -342,7 +358,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*!
@@ -431,14 +450,11 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   tbox::Pointer<tbox::Timer> t_set_boundary_values_in_cells;
-   tbox::Pointer<tbox::Timer> t_use_set_bc_coefs;
+   boost::shared_ptr<tbox::Timer> t_set_boundary_values_in_cells;
+   boost::shared_ptr<tbox::Timer> t_use_set_bc_coefs;
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/CartesianRobinBcHelper.I"
-#endif
 #endif  // included_solv_CartesianRobinBcHelper

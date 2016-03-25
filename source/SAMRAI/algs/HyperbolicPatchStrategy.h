@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -17,10 +17,11 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -65,7 +66,7 @@ public:
    /**
     * Blank constructor for HyperbolicPatchStrategy.
     */
-   HyperbolicPatchStrategy(
+   explicit HyperbolicPatchStrategy(
       const tbox::Dimension& dim);
 
    /**
@@ -197,7 +198,7 @@ public:
     */
    virtual void
    preprocessAdvanceLevelState(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -232,7 +233,7 @@ public:
     */
    virtual void
    postprocessAdvanceLevelState(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -306,8 +307,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const tbox::Pointer<hier::VariableContext> coarsened_fine,
-      const tbox::Pointer<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -434,8 +435,11 @@ public:
    /**
     * Return pointer to patch data context.
     */
-   tbox::Pointer<hier::VariableContext>
-   getDataContext() const;
+   boost::shared_ptr<hier::VariableContext>
+   getDataContext() const
+   {
+      return d_data_context;
+   }
 
    /**
     * The hyperbolic integrator controls the context for the data to be used
@@ -445,23 +449,33 @@ public:
     */
    void
    setDataContext(
-      tbox::Pointer<hier::VariableContext> context);
+      const boost::shared_ptr<hier::VariableContext>& context)
+   {
+      d_data_context = context;
+   }
 
    /**
     * The clearDataContext() routine resets the data context to be null.
     */
    void
-   clearDataContext();
+   clearDataContext()
+   {
+      d_data_context.reset();
+   }
 
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::VariableContext> d_data_context;
+   boost::shared_ptr<hier::VariableContext> d_data_context;
 };
 
 }
 }
+
 #endif

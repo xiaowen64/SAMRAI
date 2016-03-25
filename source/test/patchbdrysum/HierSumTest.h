@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
@@ -30,9 +30,10 @@
 #include "SAMRAI/algs/PatchBoundaryNodeSum.h"
 #include "SAMRAI/algs/PatchBoundaryEdgeSum.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/appu/VisItDataWriter.h"
+#include "SAMRAI/appu/VisItDataWriter.h"\
+
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 using namespace SAMRAI;
@@ -83,10 +84,10 @@ public:
    HierSumTest(
       const string& object_name,
       const tbox::Dimension& dim,
-      Pointer<Database> input_db
+      boost::shared_ptr<Database> input_db
 #ifdef HAVE_HDF5
       ,
-      Pointer<appu::VisItDataWriter> viz_writer
+      boost::shared_ptr<appu::VisItDataWriter> viz_writer
 #endif
       );
 
@@ -107,7 +108,7 @@ public:
     */
    int
    setInitialNodeValues(
-      const Pointer<PatchHierarchy> hierarchy);
+      const boost::shared_ptr<PatchHierarchy> hierarchy);
 
    /*!
     * Set edge values before the level sum operation and return integer
@@ -115,14 +116,14 @@ public:
     */
    int
    setInitialEdgeValues(
-      const Pointer<PatchLevel> level);
+      const boost::shared_ptr<PatchLevel> level);
 
    /*!
     * Setup the node hierarchy sum.
     */
    void
    setupOuternodeSum(
-      const Pointer<PatchHierarchy> hierarchy);
+      const boost::shared_ptr<PatchHierarchy> hierarchy);
 
    /*!
     * Invoke the node hierarchy sum communication.
@@ -135,7 +136,7 @@ public:
     */
    void
    setupOuteredgeSum(
-      const Pointer<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy> hierarchy,
       const int level_num);
 
    /*!
@@ -151,7 +152,7 @@ public:
     */
    int
    checkNodeResult(
-      const Pointer<PatchHierarchy> hierarchy);
+      const boost::shared_ptr<PatchHierarchy> hierarchy);
 
    /*!
     * Check edge result after level sum operation and return integer number of
@@ -159,7 +160,7 @@ public:
     */
    int
    checkEdgeResult(
-      const Pointer<PatchLevel> level);
+      const boost::shared_ptr<PatchLevel> level);
 
 /***************************************************************************
  *
@@ -192,13 +193,13 @@ public:
 
    virtual void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>(NULL),
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    /*!
@@ -221,7 +222,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const Pointer<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -239,7 +240,7 @@ public:
     */
    virtual void
    applyGradientDetector(
-      const Pointer<PatchHierarchy> hierarchy,
+      const boost::shared_ptr<PatchHierarchy>& hierarchy,
       const int level_number,
       const double time,
       const int tag_index,
@@ -258,7 +259,7 @@ private:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /*
     * Set boundary conditions at physical boundaries and coarse-fine
@@ -292,11 +293,16 @@ private:
    const tbox::Dimension d_dim;
 
    /*
+    * Node, edge, and cell variable depths - all are equal.
+    */
+   int d_depth;
+
+   /*
     * Variable - u
     */
-   Pointer<CellVariable<double> > d_ucell_var;
-   Pointer<NodeVariable<double> > d_unode_var;
-   Pointer<EdgeVariable<double> > d_uedge_var;
+   boost::shared_ptr<CellVariable<double> > d_ucell_var;
+   boost::shared_ptr<NodeVariable<double> > d_unode_var;
+   boost::shared_ptr<EdgeVariable<double> > d_uedge_var;
 
    /*
     * Ghost vectors
@@ -313,15 +319,10 @@ private:
    int d_uedge_id;
 
    /*
-    * Node, edge, and cell variable depths - all are equal.
-    */
-   int d_depth;
-
-   /*
     * Node and edge sum utilities.
     */
-   Pointer<PatchBoundaryNodeSum> d_node_sum_util;
-   Array<Pointer<PatchBoundaryEdgeSum> > d_edge_sum_util;
+   boost::shared_ptr<PatchBoundaryNodeSum> d_node_sum_util;
+   Array<boost::shared_ptr<PatchBoundaryEdgeSum> > d_edge_sum_util;
 
    /*
     * Flag to tell whether to check data before communication.  Usually,

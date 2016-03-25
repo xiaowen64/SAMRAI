@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Implicit time integration manager class for nonlinear problems.
  *
  ************************************************************************/
@@ -20,10 +20,6 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/algs/ImplicitIntegrator.I"
-#endif
 
 namespace SAMRAI {
 namespace algs {
@@ -45,22 +41,22 @@ const int ImplicitIntegrator::ALGS_IMPLICIT_INTEGRATOR_VERSION = 1;
 
 ImplicitIntegrator::ImplicitIntegrator(
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    ImplicitEquationStrategy* implicit_equations,
    solv::NonlinearSolverStrategy* nonlinear_solver,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy)
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(implicit_equations != ((ImplicitEquationStrategy *)NULL));
    TBOX_ASSERT(nonlinear_solver != ((solv::NonlinearSolverStrategy *)NULL));
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    d_object_name = object_name;
    d_implicit_equations = implicit_equations;
    d_nonlinear_solver = nonlinear_solver;
    d_patch_hierarchy = hierarchy;
 
-   d_solution_vector.setNull();
+   d_solution_vector.reset();
 
    d_initial_time =
       d_final_time =
@@ -108,13 +104,15 @@ ImplicitIntegrator::~ImplicitIntegrator()
  *************************************************************************
  */
 
-void ImplicitIntegrator::initialize()
+void
+ImplicitIntegrator::initialize()
 {
    d_finest_level = d_patch_hierarchy->getFinestLevelNumber();
 
-   d_solution_vector = new solv::SAMRAIVectorReal<double>("solution_vector",
-                                                          d_patch_hierarchy,
-                                                          0, d_finest_level);
+   d_solution_vector.reset(
+      new solv::SAMRAIVectorReal<double>("solution_vector",
+                                         d_patch_hierarchy,
+                                         0, d_finest_level));
 
    d_implicit_equations->setupSolutionVector(d_solution_vector);
 
@@ -144,7 +142,8 @@ void ImplicitIntegrator::initialize()
  *************************************************************************
  */
 
-int ImplicitIntegrator::advanceSolution(
+int
+ImplicitIntegrator::advanceSolution(
    const double dt,
    const bool first_step)
 {
@@ -193,7 +192,8 @@ int ImplicitIntegrator::advanceSolution(
  *************************************************************************
  */
 
-double ImplicitIntegrator::getNextDt(
+double
+ImplicitIntegrator::getNextDt(
    const bool good_solution,
    const int solver_retcode)
 {
@@ -223,7 +223,8 @@ double ImplicitIntegrator::getNextDt(
  *************************************************************************
  */
 
-bool ImplicitIntegrator::checkNewSolution(
+bool
+ImplicitIntegrator::checkNewSolution(
    const int solver_retcode) const
 {
    bool good_solution =
@@ -249,7 +250,8 @@ bool ImplicitIntegrator::checkNewSolution(
  *************************************************************************
  */
 
-double ImplicitIntegrator::updateSolution()
+double
+ImplicitIntegrator::updateSolution()
 {
    d_current_time += d_current_dt;
    d_old_dt = d_current_dt;
@@ -270,17 +272,16 @@ double ImplicitIntegrator::updateSolution()
  *************************************************************************
  */
 
-void ImplicitIntegrator::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+void
+ImplicitIntegrator::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(is_from_restart || !db.isNull());
-#endif
+   TBOX_ASSERT(is_from_restart || db);
 
    if (is_from_restart) {
 
-      if (!db.isNull()) {
+      if (db) {
          if (db->keyExists("final_time")) {
             d_final_time = db->getDouble("final_time");
             if (d_final_time < d_initial_time) {
@@ -348,12 +349,11 @@ void ImplicitIntegrator::getFromInput(
  *************************************************************************
  */
 
-void ImplicitIntegrator::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+void
+ImplicitIntegrator::putToDatabase(
+   const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
-#endif
+   TBOX_ASSERT(db);
 
    db->putInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION",
       ALGS_IMPLICIT_INTEGRATOR_VERSION);
@@ -379,19 +379,18 @@ void ImplicitIntegrator::putToDatabase(
  *************************************************************************
  */
 
-void ImplicitIntegrator::getFromRestart()
+void
+ImplicitIntegrator::getFromRestart()
 {
 
-   tbox::Pointer<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_IMPLICIT_INTEGRATOR_VERSION");
    if (ver != ALGS_IMPLICIT_INTEGRATOR_VERSION) {
@@ -419,7 +418,8 @@ void ImplicitIntegrator::getFromRestart()
  *************************************************************************
  */
 
-void ImplicitIntegrator::printClassData(
+void
+ImplicitIntegrator::printClassData(
    std::ostream& os) const
 {
    os << "\nImplicitIntegrator::printClassData..." << std::endl;
@@ -431,9 +431,9 @@ void ImplicitIntegrator::printClassData(
    os << "d_nonlinear_solver = "
       << (solv::NonlinearSolverStrategy *)d_nonlinear_solver << std::endl;
    os << "d_patch_hierarchy = "
-      << (hier::PatchHierarchy *)d_patch_hierarchy << std::endl;
+      << d_patch_hierarchy.get() << std::endl;
    os << "d_solution_vector = "
-      << (solv::SAMRAIVectorReal<double> *)d_solution_vector << std::endl;
+      << d_solution_vector.get() << std::endl;
 
    os << "d_finest_level = " << d_finest_level << std::endl;
    os << "d_initial_time = " << d_initial_time << std::endl;

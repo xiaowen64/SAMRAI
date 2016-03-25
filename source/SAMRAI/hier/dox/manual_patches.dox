@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Generation of SAMRAI Doxygen source code manual 
  *
  ************************************************************************/
@@ -15,10 +15,10 @@ namespace SAMRAI {
 
   The AMR hierarchy management classes implement the patch hierarchy,
   patch levels, and patches used to represent the multi-resolution AMR grid.
+  - SAMRAI::hier::BaseGridGeometry
   - SAMRAI::hier::BoundaryBox
   - SAMRAI::hier::BoundaryLookupTable
   - SAMRAI::hier::CoarseFineBoundary
-  - SAMRAI::hier::GridGeometry
   - SAMRAI::hier::Patch
   - SAMRAI::hier::PatchFactory
   - SAMRAI::hier::PatchGeometry

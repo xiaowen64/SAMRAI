@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Class containing numerical routines for modified Bratu problem
  *
  ************************************************************************/
@@ -60,11 +60,11 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace SAMRAI;
@@ -106,10 +106,10 @@ public:
    ModifiedBratuProblem(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry,
-      tbox::Pointer<appu::VisItDataWriter> visit_data_writer =
-         tbox::Pointer<appu::VisItDataWriter>(NULL));
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer =
+         boost::shared_ptr<appu::VisItDataWriter>());
 
    /**
     * Destructor for ModifiedBratuProblem class does nothing.
@@ -126,7 +126,7 @@ public:
     */
    void
    setVectorWeights(
-      tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      boost::shared_ptr<hier::PatchHierarchy> hierarchy);
 
    /**
     * Set the nonlinear solution vector so that the new solution data is
@@ -136,7 +136,7 @@ public:
     */
    void
    setupSolutionVector(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > solution);
+      const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution);
 
    /**
     * Return time increment for advancing the solution at the first timestep.
@@ -210,18 +210,18 @@ public:
 
    virtual void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>(NULL),
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    void
    resetHierarchyConfiguration(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
    //@}
@@ -322,10 +322,10 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio)
    {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
    }
 
    void postprocessRefine(
@@ -334,10 +334,10 @@ public:
       const hier::Box& fine_box,
       const hier::IntVector& ratio)
    {
-      (void)fine;
-      (void)coarse;
-      (void)fine_box;
-      (void)ratio;
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
    }
 
    hier::IntVector getRefineOpStencilWidth() const
@@ -362,10 +362,10 @@ public:
       const hier::Box& coarse_box,
       const hier::IntVector& ratio)
    {
-      (void)coarse;
-      (void)fine;
-      (void)coarse_box;
-      (void)ratio;
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
    }
 
    void postprocessCoarsen(
@@ -374,10 +374,10 @@ public:
       const hier::Box& coarse_box,
       const hier::IntVector& ratio)
    {
-      (void)coarse;
-      (void)fine;
-      (void)coarse_box;
-      (void)ratio;
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
    }
 
    hier::IntVector getCoarsenOpStencilWidth() const
@@ -394,7 +394,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * Write class data to given output stream.
@@ -414,7 +414,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    /*
@@ -425,20 +425,20 @@ private:
    void
    getLevelEdges(
       hier::BoxContainer& boxes,
-      tbox::Pointer<hier::Patch> patch,
-      tbox::Pointer<hier::PatchLevel> level,
+      boost::shared_ptr<hier::Patch> patch,
+      boost::shared_ptr<hier::PatchLevel> level,
       const int dim,
       const int face);
 
    void
    correctLevelFlux(
-      tbox::Pointer<hier::PatchLevel> level);
+      boost::shared_ptr<hier::PatchLevel> level);
 
    void
    correctPatchFlux(
-      tbox::Pointer<hier::PatchLevel> level,
-      tbox::Pointer<hier::Patch> patch,
-      tbox::Pointer<pdat::CellData<double> > u);
+      boost::shared_ptr<hier::PatchLevel> level,
+      boost::shared_ptr<hier::Patch> patch,
+      boost::shared_ptr<pdat::CellData<double> > u);
 
    //@{
    /*!
@@ -453,8 +453,8 @@ private:
 
    void
    evaluateBratuFunction(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > x,
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > f);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > x,
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > f);
 
    /*!
     * @brief Compute A(x)*x.
@@ -464,17 +464,17 @@ private:
     */
    int
    jacobianTimesVector(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > vector,
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > product);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > vector,
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > product);
 
    void
    setupBratuPreconditioner(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > x);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > x);
 
    int
    applyBratuPreconditioner(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > r,
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > z);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > r,
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > z);
 
    /*!
     * @brief Recompute the jacobian A(x).
@@ -485,7 +485,7 @@ private:
     */
    void
    evaluateBratuJacobian(
-      tbox::Pointer<solv::SAMRAIVectorReal<double> > x);
+      boost::shared_ptr<solv::SAMRAIVectorReal<double> > x);
 
    //@}
 
@@ -504,7 +504,7 @@ private:
     * We cache a pointer to the grid geometry object to set up initial
     * data and set physical boundary conditions.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Parameters read from input.
@@ -518,26 +518,26 @@ private:
     *
     * Contexts are labels to describe the way variables are used.
     */
-   tbox::Pointer<hier::VariableContext> d_current;
-   tbox::Pointer<hier::VariableContext> d_new;
-   tbox::Pointer<hier::VariableContext> d_scratch;
+   boost::shared_ptr<hier::VariableContext> d_current;
+   boost::shared_ptr<hier::VariableContext> d_new;
+   boost::shared_ptr<hier::VariableContext> d_scratch;
 
    /*
     * Variables for the discrete problem; see comments above class constructor.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_solution;
-   tbox::Pointer<pdat::CellVariable<double> > d_source_term;
-   tbox::Pointer<pdat::CellVariable<double> > d_exponential_term;
-   tbox::Pointer<pdat::SideVariable<double> > d_diffusion_coef;
-   tbox::Pointer<pdat::SideVariable<double> > d_flux;
-   tbox::Pointer<pdat::OutersideVariable<double> > d_coarse_fine_flux;
+   boost::shared_ptr<pdat::CellVariable<double> > d_solution;
+   boost::shared_ptr<pdat::CellVariable<double> > d_source_term;
+   boost::shared_ptr<pdat::CellVariable<double> > d_exponential_term;
+   boost::shared_ptr<pdat::SideVariable<double> > d_diffusion_coef;
+   boost::shared_ptr<pdat::SideVariable<double> > d_flux;
+   boost::shared_ptr<pdat::OutersideVariable<double> > d_coarse_fine_flux;
 
    /*
     * For storing Jacobian A(x) stuff and computing Jacobian-vector
     * multiply A(x)*v.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_jacobian_a;
-   tbox::Pointer<pdat::FaceVariable<double> > d_jacobian_b;
+   boost::shared_ptr<pdat::CellVariable<double> > d_jacobian_a;
+   boost::shared_ptr<pdat::FaceVariable<double> > d_jacobian_b;
    int d_jacobian_a_id;
    int d_jacobian_b_id;
    hier::ComponentSelector d_jacobian_data;
@@ -546,8 +546,8 @@ private:
     * For storing Jacobian A(x) stuff in setting up and applying
     * the preconditioner A(x)*z=r.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_precond_a;
-   tbox::Pointer<pdat::FaceVariable<double> > d_precond_b;
+   boost::shared_ptr<pdat::CellVariable<double> > d_precond_a;
+   boost::shared_ptr<pdat::FaceVariable<double> > d_precond_b;
    int d_precond_a_id;
    int d_precond_b_id;
    hier::ComponentSelector d_precond_data;
@@ -567,10 +567,9 @@ private:
     * a pointer to it here.  A variable is used to define weights for the
     * solution vector entries on a composite grid.
     */
-   tbox::Pointer<solv::SAMRAIVectorReal<double> > d_solution_vector;
-   tbox::Pointer<solv::SAMRAIVectorReal<double> > d_current_soln_vector;
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
 
-   tbox::Pointer<pdat::CellVariable<double> > d_weight;
+   boost::shared_ptr<pdat::CellVariable<double> > d_weight;
 
    int d_weight_id;
 
@@ -584,16 +583,16 @@ private:
     */
    RefineAlgorithm d_fill_new_level;
    RefineAlgorithm d_soln_fill;
-   tbox::Array<tbox::Pointer<RefineSchedule> > d_soln_fill_schedule;
+   tbox::Array<boost::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
    CoarsenAlgorithm d_flux_coarsen;
-   tbox::Array<tbox::Pointer<CoarsenSchedule> > d_flux_coarsen_schedule;
+   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
    CoarsenAlgorithm d_soln_coarsen;
-   tbox::Array<tbox::Pointer<CoarsenSchedule> > d_soln_coarsen_schedule;
+   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
    CoarsenAlgorithm d_scratch_soln_coarsen;
-   tbox::Array<tbox::Pointer<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
+   tbox::Array<boost::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
 
-   tbox::Pointer<RefineOperator> d_soln_refine_op;
-   tbox::Pointer<CoarsenOperator> d_soln_coarsen_op;
+   boost::shared_ptr<RefineOperator> d_soln_refine_op;
+   boost::shared_ptr<CoarsenOperator> d_soln_coarsen_op;
 
    /*
     * Current solution time and time increment used in the solution process.
@@ -611,13 +610,13 @@ private:
     * in the hierarchy.
     */
    bool d_use_old_solver;
-   tbox::Pointer<solv::CellPoissonFACSolver> d_FAC_solver;
+   boost::shared_ptr<solv::CellPoissonFACSolver> d_FAC_solver;
 
    int d_max_precond_its;
    double d_precond_tol;
 
-   static tbox::Pointer<tbox::Timer> s_copy_timer;
-   static tbox::Pointer<tbox::Timer> s_pc_timer;
+   static boost::shared_ptr<tbox::Timer> s_copy_timer;
+   static boost::shared_ptr<tbox::Timer> s_pc_timer;
 
 };
 

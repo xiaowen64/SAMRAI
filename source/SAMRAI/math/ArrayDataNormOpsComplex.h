@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex data arrays.
  *
  ************************************************************************/
@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/tbox/Complex.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace math {
@@ -101,7 +102,11 @@ public:
    L2NormWithControlVolume(
       const pdat::ArrayData<dcomplex>& data,
       const pdat::ArrayData<double>& cvol,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+      return sqrt(real(dotWithControlVolume(data, data, cvol, box)));
+   }
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -111,7 +116,11 @@ public:
    double
    L2Norm(
       const pdat::ArrayData<dcomplex>& data,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+      return sqrt(real(dot(data, data, box)));
+   }
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -201,4 +210,5 @@ private:
 
 }
 }
+
 #endif

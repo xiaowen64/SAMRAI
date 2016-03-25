@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outerface data objects
  *
  ************************************************************************/
@@ -19,9 +19,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/FaceDataFactory.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuterfaceDataFactory.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -58,14 +57,15 @@ OuterfaceDataFactory<TYPE>::~OuterfaceDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 OuterfaceDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new OuterfaceDataFactory<TYPE>(
-                                                   ghosts.getDim(), d_depth));
+   return boost::make_shared<OuterfaceDataFactory<TYPE> >(
+      ghosts.getDim(),
+      d_depth);
 }
 
 /*
@@ -77,15 +77,13 @@ OuterfaceDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 OuterfaceDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new OuterfaceData<TYPE>(patch.getBox(), d_depth);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::make_shared<OuterfaceData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -97,7 +95,7 @@ OuterfaceDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 OuterfaceDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -105,8 +103,14 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector zero_vector(hier::IntVector::getZero(getDim()));
 
-   hier::BoxGeometry* boxgeometry = new OuterfaceGeometry(box, zero_vector);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<OuterfaceGeometry>(box, zero_vector);
+}
+
+template<class TYPE>
+int
+OuterfaceDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
 }
 
 /*
@@ -118,7 +122,8 @@ OuterfaceDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OuterfaceDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -131,6 +136,37 @@ size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
 /*
  *************************************************************************
  *
+ * Return a boolean true value indicating that fine data for the outerface
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OuterfaceVariable<DIM> class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuterfaceDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outerface data index space extends beyond the
+ * interior of patches.  That is, outerface data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuterfaceDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
  * Determine whether this is a valid copy operation to/from OuterfaceData
  * between the supplied datatype.
  *
@@ -138,8 +174,9 @@ size_t OuterfaceDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OuterfaceDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+OuterfaceDataFactory<TYPE>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -149,15 +186,19 @@ bool OuterfaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      tbox::Pointer<FaceDataFactory<TYPE> > fdf = dst_pdf;
-      if (!fdf.isNull()) {
+      boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (fdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuterfaceDataFactory<TYPE> > ofdf = dst_pdf;
-      if (!ofdf.isNull()) {
+      boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (ofdf) {
          valid_copy = true;
       }
    }

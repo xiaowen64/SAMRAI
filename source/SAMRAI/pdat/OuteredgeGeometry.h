@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Box geometry information for edge centered objects
  *
  ************************************************************************/
@@ -18,7 +18,8 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -65,7 +66,7 @@ public:
     * @brief Construct an outeredge geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit OuteredgeGeometry(
+   OuteredgeGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 
@@ -78,7 +79,7 @@ public:
     * @brief Compute the overlap in edge-centered index space on the
     * boundaries of the source box geometry and the destination box geometry.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -93,7 +94,7 @@ public:
     * @brief Set up a EdgeOverlap object based on the given boxes and the
     * transformation.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -102,22 +103,28 @@ public:
     * @brief Return the box for this outeredge box geometry object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this outeredge box geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
 private:
    /*!
     * Compute overlap between a source outeredge geometry and a destination
     * edge geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
-      const pdat::EdgeGeometry& dst_geometry,
+      const EdgeGeometry& dst_geometry,
       const OuteredgeGeometry& src_geometry,
       const hier::Box& src_mask,
       const hier::Box& fill_box,
@@ -129,7 +136,7 @@ private:
     * Compute overlap between a source outeredge geometry and a destination
     * outeredge geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const OuteredgeGeometry& dst_geometry,
       const OuteredgeGeometry& src_geometry,
@@ -152,7 +159,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuteredgeGeometry.I"
-#endif
+
 #endif

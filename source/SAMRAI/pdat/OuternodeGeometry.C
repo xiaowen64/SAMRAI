@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,14 +12,12 @@
 #define included_pdat_OuternodeGeometry_C
 
 #include "SAMRAI/pdat/OuternodeGeometry.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/NodeGeometry.h"
-#include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeGeometry.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -61,7 +59,7 @@ OuternodeGeometry::~OuternodeGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -83,7 +81,7 @@ OuternodeGeometry::calculateOverlap(
    const OuternodeGeometry* t_src_onode =
       dynamic_cast<const OuternodeGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src_onode != NULL) && (t_dst_node != NULL)) {
       over = doOverlap(*t_dst_node, *t_src_onode, src_mask, fill_box,
             overwrite_interior,
@@ -115,7 +113,7 @@ OuternodeGeometry::calculateOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const NodeGeometry& dst_geometry,
    const OuternodeGeometry& src_geometry,
@@ -196,9 +194,9 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
          hier::BoxContainer node_restrict_boxes;
-         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+         for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
-            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(*b));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -207,8 +205,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the outernode overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -222,7 +219,7 @@ OuternodeGeometry::doOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const OuternodeGeometry& dst_geometry,
    const NodeGeometry& src_geometry,
@@ -302,9 +299,9 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && src_boxes.size()) {
          hier::BoxContainer node_restrict_boxes;
-         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+         for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
-            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(*b));
          }
          src_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -313,8 +310,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(src_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(src_boxes, transformation);
 }
 
 /*
@@ -328,7 +324,7 @@ OuternodeGeometry::doOverlap(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::doOverlap(
    const OuternodeGeometry& dst_geometry,
    const OuternodeGeometry& src_geometry,
@@ -433,9 +429,9 @@ OuternodeGeometry::doOverlap(
 
       if (dst_restrict_boxes.size() && dst_boxes.size()) {
          hier::BoxContainer node_restrict_boxes;
-         for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+         for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
               b != dst_restrict_boxes.end(); ++b) {
-            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(b()));
+            node_restrict_boxes.pushBack(NodeGeometry::toNodeBox(*b));
          }
          dst_boxes.intersectBoxes(node_restrict_boxes);
       }
@@ -444,8 +440,7 @@ OuternodeGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 
@@ -456,21 +451,20 @@ OuternodeGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 OuternodeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    hier::BoxContainer dst_boxes;
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      hier::Box node_box(NodeGeometry::toNodeBox(b()));
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      hier::Box node_box(NodeGeometry::toNodeBox(*b));
       dst_boxes.pushBack(node_box);
    }
 
    // Create the node overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 

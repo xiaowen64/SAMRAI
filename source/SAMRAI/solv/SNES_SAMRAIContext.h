@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
@@ -41,6 +41,7 @@ extern "C" {
 #include "SAMRAI/solv/SNESAbstractFunctions.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace solv {
@@ -216,7 +217,7 @@ public:
     */
    SNES_SAMRAIContext(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       SNESAbstractFunctions* my_functions);
 
    /*!
@@ -229,13 +230,19 @@ public:
     * Return the PETSc nonlinear solver object.
     */
    SNES
-   getSNESSolver() const;
+   getSNESSolver() const
+   {
+      return d_SNES_solver;
+   }
 
    /*!
     * Return pointer to object providing user-defined functions for SNES.
     */
    SNESAbstractFunctions *
-   getSNESFunctions() const;
+   getSNESFunctions() const
+   {
+      return d_SNES_functions;
+   }
 
    /*!
     * Return the PETSc linear solver object.
@@ -246,163 +253,252 @@ public:
     * Return the PETSc Krylov solver object.
     */
    KSP
-   getKrylovSolver() const;
+   getKrylovSolver() const
+   {
+      return d_krylov_solver;
+   }
 
    /*!
     * Return the PETSc Mat object for the Jacobian.
     */
    Mat
-   getJacobianMatrix() const;
+   getJacobianMatrix() const
+   {
+      return d_jacobian;
+   }
 
    /*!
     *  Get absolute tolerance for nonlinear solver.
     */
    double
-   getAbsoluteTolerance() const;
+   getAbsoluteTolerance() const
+   {
+      return d_absolute_tolerance;
+   }
 
    /*!
     *  Set absolute tolerance for nonlinear solver.
     */
    void
    setAbsoluteTolerance(
-      double abs_tol);
+      double abs_tol)
+   {
+      d_absolute_tolerance = abs_tol;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get relative tolerance for nonlinear solver.
     */
    double
-   getRelativeTolerance() const;
+   getRelativeTolerance() const
+   {
+      return d_relative_tolerance;
+   }
 
    /*!
     *  Set relative tolerance for nonlinear solver.
     */
    void
    setRelativeTolerance(
-      double rel_tol);
+      double rel_tol)
+   {
+      d_relative_tolerance = rel_tol;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get step tolerance for nonlinear solver.
     */
    double
-   getStepTolerance() const;
+   getStepTolerance() const
+   {
+      return d_step_tolerance;
+   }
 
    /*!
     *  Set step tolerance for nonlinear solver.
     */
    void
    setStepTolerance(
-      double step_tol);
+      double step_tol)
+   {
+      d_step_tolerance = step_tol;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get maximum iterations for nonlinear solver.
     */
    int
-   getMaxNonlinearIterations() const;
+   getMaxNonlinearIterations() const
+   {
+      return d_maximum_nonlinear_iterations;
+   }
 
    /*!
     *  Set maximum iterations for nonlinear solver.
     */
    void
    setMaxNonlinearIterations(
-      int max_nli);
+      int max_nli)
+   {
+      d_maximum_nonlinear_iterations = max_nli;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get maximum function evaluations by nonlinear solver.
     */
    int
-   getMaxFunctionEvaluations() const;
+   getMaxFunctionEvaluations() const
+   {
+      return d_maximum_function_evals;
+   }
 
    /*!
     *  Set maximum function evaluations in nonlinear solver.
     */
    void
    setMaxFunctionEvaluations(
-      int max_feval);
+      int max_feval)
+   {
+      d_maximum_function_evals = max_feval;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get strategy for forcing term.
     */
    std::string
-   getForcingTermStrategy() const;
+   getForcingTermStrategy() const
+   {
+      return d_forcing_term_strategy;
+   }
 
    /*!
     *  Set strategy for forcing term.
     */
    void
    setForcingTermStrategy(
-      std::string& strategy);
+      std::string& strategy)
+   {
+      TBOX_ASSERT(strategy == "CONSTANT" ||
+         strategy == "EWCHOICE1" ||
+         strategy == "EWCHOICE2");
+      d_forcing_term_strategy = strategy;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get value of constant forcing term.
     */
    double
-   getConstantForcingTerm() const;
+   getConstantForcingTerm() const
+   {
+      return d_constant_forcing_term;
+   }
 
    /*!
     *  Set value of constant forcing term.
     */
    void
    setConstantForcingTerm(
-      double fixed_eta);
+      double fixed_eta)
+   {
+      d_constant_forcing_term = fixed_eta;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get value of initial forcing term.
     */
    double
-   getInitialForcingTerm() const;
+   getInitialForcingTerm() const
+   {
+      return d_initial_forcing_term;
+   }
 
    /*!
     *  Set value of initial forcing term.
     */
    void
    setInitialForcingTerm(
-      double initial_eta);
+      double initial_eta)
+   {
+      d_initial_forcing_term = initial_eta;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get value of maximum forcing term.
     */
    double
-   getMaximumForcingTerm() const;
+   getMaximumForcingTerm() const
+   {
+      return d_maximum_forcing_term;
+   }
 
    /*!
     *  Set value of maximum forcing term.
     */
    void
    setMaximumForcingTerm(
-      double max_eta);
+      double max_eta)
+   {
+      d_maximum_forcing_term = max_eta;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get value of exponent in Eisenstat-Walker Choice 2 forcing term.
     */
    double
-   getEWChoice2Exponent() const;
+   getEWChoice2Exponent() const
+   {
+      return d_EW_choice2_alpha;
+   }
 
    /*!
     *  Set value of exponent in Eisenstat-Walker Choice 2 forcing term.
     */
    void
    setEWChoice2Exponent(
-      double alpha);
+      double alpha)
+   {
+      d_EW_choice2_alpha = alpha;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get value of exponent in Eisenstat-Walker Choice 2 safeguard.
     */
    double
-   getEWChoice2SafeguardExponent() const;
+   getEWChoice2SafeguardExponent() const
+   {
+      return d_EW_safeguard_exponent;
+   }
 
    /*!
     *  Set value of exponent in Eisenstat-Walker Choice 2 safeguard.
     */
    void
    setEWChoice2SafeguardExponent(
-      double beta);
+      double beta)
+   {
+      d_EW_safeguard_exponent = beta;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get value of factor used to scale Eisenstat-Walker Choice 2
     * forcing term.
     */
    double
-   getEWChoice2ScaleFactor() const;
+   getEWChoice2ScaleFactor() const
+   {
+      return d_EW_choice2_gamma;
+   }
 
    /*!
     * Set value of factor used to scale Eisenstat-Walker Choice 2
@@ -410,14 +506,21 @@ public:
     */
    void
    setEWChoice2ScaleFactor(
-      double gamma);
+      double gamma)
+   {
+      d_EW_choice2_gamma = gamma;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     *  Get value of threshold to disable safeguard in Eisenstat-Walker
     *  forcing terms.
     */
    double
-   getEWSafeguardThreshold() const;
+   getEWSafeguardThreshold() const
+   {
+      return d_EW_safeguard_disable_threshold;
+   }
 
    /*!
     *  Set value of threshold to disable safeguard in Eisenstat-Walker
@@ -425,137 +528,211 @@ public:
     */
    void
    setEWSafeguardThreshold(
-      double threshold);
+      double threshold)
+   {
+      d_EW_safeguard_disable_threshold = threshold;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get type of linear solver.
     */
    std::string
-   getLinearSolverType() const;
+   getLinearSolverType() const
+   {
+      return d_linear_solver_type;
+   }
 
    /*!
     * Set type of linear solver.
     */
    void
    setLinearSolverType(
-      std::string& type);
+      std::string& type)
+   {
+      d_linear_solver_type = type;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get whether a preconditioner is used.
     */
    bool
-   getUsesPreconditioner() const;
+   getUsesPreconditioner() const
+   {
+      return d_uses_preconditioner;
+   }
 
    /*!
     * Set whether to use a preconditioner.
     */
    void
    setUsesPreconditioner(
-      bool uses_preconditioner);
+      bool uses_preconditioner)
+   {
+      d_uses_preconditioner = uses_preconditioner;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get absolute tolerance for linear solver.
     */
    double
-   getLinearSolverAbsoluteTolerance() const;
+   getLinearSolverAbsoluteTolerance() const
+   {
+      return d_linear_solver_absolute_tolerance;
+   }
 
    /*!
     * Set absolute tolerance for linear solver.
     */
    void
    setLinearSolverAbsoluteTolerance(
-      double abs_tol);
+      double abs_tol)
+   {
+      d_linear_solver_absolute_tolerance = abs_tol;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get divergence tolerance for linear solver.
     */
    double
-   getLinearSolverDivergenceTolerance() const;
+   getLinearSolverDivergenceTolerance() const
+   {
+      return d_linear_solver_divergence_tolerance;
+   }
 
    /*!
     * Set divergence tolerance for linear solver.
     */
    void
    setLinearSolverDivergenceTolerance(
-      double div_tol);
+      double div_tol)
+   {
+      d_linear_solver_divergence_tolerance = div_tol;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get maximum linear iterations for linear solver.
     */
    int
-   getMaximumLinearIterations() const;
+   getMaximumLinearIterations() const
+   {
+      return d_maximum_linear_iterations;
+   }
 
    /*!
     * Set maximum linear iterations for linear solver.
     */
    void
    setMaximumLinearIterations(
-      int max_li);
+      int max_li)
+   {
+      d_maximum_linear_iterations = max_li;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get maximum Krylov dimension in GMRES linear solver.
     */
    int
-   getMaximumGMRESKrylovDimension() const;
+   getMaximumGMRESKrylovDimension() const
+   {
+      return d_maximum_gmres_krylov_dimension;
+   }
 
    /*!
     * Set maximum Krylov dimension in GMRES linear solver.
     */
    void
    setMaximumGMRESKrylovDimension(
-      int d);
+      int d)
+   {
+      d_maximum_gmres_krylov_dimension = d;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get orthogonalization method used in GMRES linear solver.
     */
    std::string
-   getGMRESOrthogonalizationMethod() const;
+   getGMRESOrthogonalizationMethod() const
+   {
+      return d_gmres_orthogonalization_algorithm;
+   }
 
    /*!
     * Set orthogonalization method used in GMRES linear solver.
     */
    void
    setGMRESOrthogonalizationMethod(
-      std::string& method);
+      std::string& method)
+   {
+      d_gmres_orthogonalization_algorithm = method;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get whether a method for explicit Jacobian-vector products is provided.
     */
    bool
-   getUsesExplicitJacobian() const;
+   getUsesExplicitJacobian() const
+   {
+      return d_uses_explicit_jacobian;
+   }
 
    /*!
     * Set whether a method for explicit Jacobian-vector products is provided.
     */
    void
    setUsesExplicitJacobian(
-      bool use_jac);
+      bool use_jac)
+   {
+      d_uses_explicit_jacobian = use_jac;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get method for computing differencing parameter.
     */
    std::string
-   getDifferencingParameterMethod() const;
+   getDifferencingParameterMethod() const
+   {
+      return d_differencing_parameter_strategy;
+   }
 
    /*!
     * Set method for computing differencing parameter.
     */
    void
    setDifferencingParameterMethod(
-      std::string& method);
+      std::string& method)
+   {
+      d_differencing_parameter_strategy = method;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Get estimate of error in function evaluation.
     */
    double
-   getFunctionEvaluationError() const;
+   getFunctionEvaluationError() const
+   {
+      return d_function_evaluation_error;
+   }
 
    /*!
     * Set estimate of error in function evaluation.
     */
    void
    setFunctionEvaluationError(
-      double evaluation_error);
+      double evaluation_error)
+   {
+      d_function_evaluation_error = evaluation_error;
+      d_context_needs_initialization = true;
+   }
 
    /*!
     * Initialize the state of the SNES solver based on vector argument
@@ -564,7 +741,7 @@ public:
     */
    void
    initialize(
-      tbox::Pointer<SAMRAIVectorReal<double> > solution);
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution);
 
    /*!
     *  Reset the state of the nonlinear solver after regridding.
@@ -586,14 +763,23 @@ public:
     * Obtain number of nonlinear iterations.
     */
    int
-   getNumberOfNonlinearIterations() const;
+   getNumberOfNonlinearIterations() const
+   {
+      return d_nonlinear_iterations;
+   }
 
    /*!
     * Obtain total number of linear iterations accumulated over all
     * nonlinear iterations.
     */
    int
-   getTotalNumberOfLinearIterations() const;
+   getTotalNumberOfLinearIterations() const
+   {
+      int linear_itns;
+      int ierr = SNESGetLinearSolveIterations(d_SNES_solver, &linear_itns);
+      PETSC_SAMRAI_ERROR(ierr);
+      return linear_itns;
+   }
 
    /*!
     * Report reason for termination.
@@ -610,7 +796,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /*!
     * Print out all members of integrator instance to given output stream.
@@ -623,7 +809,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -640,7 +829,13 @@ private:
       SNES snes,                            // SNES context
       Vec x,                                // input vector
       Vec f,                                // residual vector
-      void* ctx);                           // user-defined context
+      void* ctx)                            // user-defined context
+   {
+      NULL_USE(snes);
+      ((SNES_SAMRAIContext *)ctx)->getSNESFunctions()->
+         evaluateNonlinearFunction(x, f);
+      return 0;
+   }
 
    static int
    SNESJacobianSet(
@@ -655,17 +850,36 @@ private:
    SNESJacobianTimesVector(
       Mat M,                                     //  Jacobian matrix
       Vec xin,                                   //  input vector
-      Vec xout);                                 //  output vector
+      Vec xout)                                  //  output vector
+   {
+      void* ctx;
+      int ierr = MatShellGetContext(M, &ctx);
+      PETSC_SAMRAI_ERROR(ierr);
+      return ((SNES_SAMRAIContext *)ctx)->
+             getSNESFunctions()->jacobianTimesVector(xin, xout);
+   }
 
    static int
    SNESsetupPreconditioner(
-      void* ctx);                                  // input vector
+      void* ctx)                                   // input vector
+   {
+      Vec current_solution;
+      int ierr = SNESGetSolution(((SNES_SAMRAIContext *)ctx)->getSNESSolver(),
+            &current_solution);
+      PETSC_SAMRAI_ERROR(ierr);
+      return ((SNES_SAMRAIContext *)ctx)->
+             getSNESFunctions()->setupPreconditioner(current_solution);
+   }
 
    static int
    SNESapplyPreconditioner(
       void* ctx,                                  // user-defined context
       Vec xin,                                    // input vector
-      Vec xout);                                  // output vector
+      Vec xout)                                   // output vector
+   {
+      return ((SNES_SAMRAIContext *)ctx)->
+             getSNESFunctions()->applyPreconditioner(xin, xout);
+   }
 
    /*
     * Create and cache needed Petsc objects.
@@ -690,7 +904,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Read solver parameters from restart database matching object name.
@@ -739,7 +953,7 @@ private:
    Vec d_residual_vector;
 
    /*
-    * tbox::Pointer to object which provides user-supplied functions to SNES.
+    * Pointer to object which provides user-supplied functions to SNES.
     */
    SNESAbstractFunctions* d_SNES_functions;
 
@@ -799,8 +1013,5 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/SNES_SAMRAIContext.I"
-#endif
 #endif
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Euler gas dynamics sample application
  *
  ************************************************************************/
@@ -34,7 +34,6 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/Timer.h"
@@ -71,6 +70,8 @@ using namespace std;
 #include "AutoTester.h"
 #endif
 
+#include <boost/shared_ptr.hpp>
+
 void
 outputStats(
    mesh::GriddingAlgorithm& gridding_algorithm,
@@ -78,7 +79,7 @@ outputStats(
 
 using namespace SAMRAI;
 
-using namespace SAMRAI::tbox;
+using namespace tbox;
 
 /*
  ************************************************************************
@@ -243,7 +244,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      Pointer<Database> input_db = new InputDatabase("input_db");
+      boost::shared_ptr<Database> input_db(new InputDatabase("input_db"));
       InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -253,7 +254,7 @@ int main(
        * restart interval is non-zero, create a restart database.
        */
 
-      Pointer<Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<Database> main_db(input_db->getDatabase("Main"));
 
       string base_name = main_db->getStringWithDefault("base_name", "unnamed");
 
@@ -397,67 +398,71 @@ int main(
        * and the roles they play in this application, see comments at top of file.
        */
 
-      Pointer<geom::CartesianGridGeometry> grid_geometry =
-         new geom::CartesianGridGeometry("CartesianGeometry",
-            input_db->getDatabase("CartesianGeometry"));
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+         new geom::CartesianGridGeometry(
+            "CartesianGeometry",
+            input_db->getDatabase("CartesianGeometry")));
 
-      Pointer<hier::PatchHierarchy> patch_hierarchy =
-         new hier::PatchHierarchy("PatchHierarchy", grid_geometry,
-            input_db->getDatabase("PatchHierarchy"));
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         new hier::PatchHierarchy(
+            "PatchHierarchy",
+            grid_geometry,
+            input_db->getDatabase("PatchHierarchy")));
 
       Euler* euler_model = new Euler("Euler",
             input_db->getDatabase("Euler"),
             grid_geometry);
 
-      Pointer<algs::HyperbolicLevelIntegrator> hyp_level_integrator =
-         new algs::HyperbolicLevelIntegrator("HyperbolicLevelIntegrator",
-            input_db->getDatabase(
-               "HyperbolicLevelIntegrator"),
-            euler_model, true,
-            use_refined_timestepping);
+      boost::shared_ptr<algs::HyperbolicLevelIntegrator> hyp_level_integrator(
+         new algs::HyperbolicLevelIntegrator(
+            "HyperbolicLevelIntegrator",
+            input_db->getDatabase("HyperbolicLevelIntegrator"),
+            euler_model,
+            true,
+            use_refined_timestepping));
 
-      Pointer<mesh::StandardTagAndInitialize> error_detector =
-         new mesh::StandardTagAndInitialize("StandardTagAndInitialize",
+      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
+         new mesh::StandardTagAndInitialize(
+            "StandardTagAndInitialize",
             hyp_level_integrator,
-            input_db->getDatabase("StandardTagAndInitialize"));
+            input_db->getDatabase("StandardTagAndInitialize")));
 
-      Pointer<Database> abr_db =
-         input_db->getDatabase("BergerRigoutsos");
-      Pointer<mesh::BergerRigoutsos>
-      new_box_generator = new mesh::BergerRigoutsos(abr_db);
+      boost::shared_ptr<Database> abr_db(
+         input_db->getDatabase("BergerRigoutsos"));
+      boost::shared_ptr<mesh::BergerRigoutsos> new_box_generator(
+         new mesh::BergerRigoutsos(abr_db));
 #if 0
-      Pointer<mesh::BergerRigoutsos<NDIM> >
-      old_box_generator = new mesh::BergerRigoutsos<NDIM>();
+      boost::shared_ptr<mesh::BergerRigoutsos<NDIM> > old_box_generator;
       const char which_br = main_db->getCharWithDefault("which_br", 'o');
-      Pointer<mesh::BoxGeneratorStrategy> box_generator =
+      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
          which_br == 'o'
-         ? Pointer<mesh::BoxGeneratorStrategy>(old_box_generator)
-         : Pointer<mesh::BoxGeneratorStrategy>(new_box_generator);
+         ? boost::shared_ptr<mesh::BoxGeneratorStrategy>(old_box_generator)
+         : boost::shared_ptr<mesh::BoxGeneratorStrategy>(new_box_generator));
 #endif
 
-      Pointer<mesh::TreeLoadBalancer> load_balancer =
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
-            input_db->getDatabase("TreeLoadBalancer"));
+            input_db->getDatabase("TreeLoadBalancer")));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      Pointer<mesh::GriddingAlgorithm> gridding_algorithm =
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             dim,
             "GriddingAlgorithm",
             input_db->getDatabase("GriddingAlgorithm"),
             error_detector,
             new_box_generator,
-            load_balancer);
+            load_balancer));
 
-      Pointer<algs::TimeRefinementIntegrator> time_integrator =
-         new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
-            input_db->getDatabase(
-               "TimeRefinementIntegrator"),
+      boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
+         new algs::TimeRefinementIntegrator(
+            "TimeRefinementIntegrator",
+            input_db->getDatabase("TimeRefinementIntegrator"),
             patch_hierarchy,
             hyp_level_integrator,
-            gridding_algorithm);
+            gridding_algorithm));
 
       /*
        * Set up Visualization writer.  Note that the Euler application
@@ -466,10 +471,11 @@ int main(
        * is not necessary.
        */
 #ifdef HAVE_HDF5
-      Pointer<appu::VisItDataWriter> visit_data_writer =
-         new appu::VisItDataWriter("Euler VisIt Writer",
+      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+         new appu::VisItDataWriter(
+            "Euler VisIt Writer",
             visit_dump_dirname,
-            visit_number_procs_per_file);
+            visit_number_procs_per_file));
       if (uses_visit) {
          euler_model->registerVisItDataWriter(visit_data_writer);
       }
@@ -515,10 +521,10 @@ int main(
       /*
        * Create timers for measuring I/O.
        */
-      Pointer<Timer> t_write_viz = TimerManager::getManager()->
-         getTimer("apps::main::write_viz");
-      Pointer<Timer> t_write_restart = TimerManager::getManager()->
-         getTimer("apps::main::write_restart");
+      boost::shared_ptr<Timer> t_write_viz(
+         TimerManager::getManager()->getTimer("apps::main::write_viz"));
+      boost::shared_ptr<Timer> t_write_restart(
+         TimerManager::getManager()->getTimer("apps::main::write_restart");
 
       t_write_viz->start();
       if (viz_dump_interval > 0) {
@@ -575,10 +581,12 @@ int main(
          int hierarchy_cell_count = 0;
          for (int ln = 0; ln < patch_hierarchy->getNumberLevels(); ++ln) {
             int level_cell_count = 0;
-            Pointer<hier::PatchLevel> patch_level =
-               patch_hierarchy->getPatchLevel(ln);
-            for (hier::PatchLevel::Iterator pi(patch_level); pi; pi++) {
-               tbox::Pointer<hier::Patch> patch = patch_level->getPatch(*pi);
+            boost::shared_ptr<hier::PatchLevel> patch_level(
+               patch_hierarchy->getPatchLevel(ln));
+            for (hier::PatchLevel::iterator pi(patch_level->begin());
+                 pi != patch_level->end(); ++pi) {
+               boost::shared_ptr<hier::Patch> patch(
+                  patch_level->getPatch(*pi));
                level_cell_count += patch->getBox().size();
             }
             cell_count_stat[ln]->recordProcStat(level_cell_count);
@@ -676,18 +684,18 @@ int main(
       /*
        * At conclusion of simulation, deallocate objects.
        */
-      patch_hierarchy.setNull();
-      grid_geometry.setNull();
+      patch_hierarchy.reset();
+      grid_geometry.reset();
 
-      new_box_generator.setNull();
-      load_balancer.setNull();
-      hyp_level_integrator.setNull();
-      error_detector.setNull();
-      gridding_algorithm.setNull();
-      time_integrator.setNull();
+      new_box_generator.reset();
+      load_balancer.reset();
+      hyp_level_integrator.reset();
+      error_detector.reset();
+      gridding_algorithm.reset();
+      time_integrator.reset();
 
 #ifdef HAVE_HDF5
-      visit_data_writer.setNull();
+      visit_data_writer.reset();
 #endif
 
       if (euler_model) delete euler_model;

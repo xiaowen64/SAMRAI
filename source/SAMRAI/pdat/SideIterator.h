@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Iterator for side centered patch data types
  *
  ************************************************************************/
@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (SideIterator c(box, axis); c; c++) {
+ * SideIterator cend(box, axis, false);
+ * for (SideIterator c(box, axis, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -50,7 +51,8 @@ public:
     */
    SideIterator(
       const hier::Box& box,
-      const int axis);
+      const int axis,
+      bool begin);
 
    /**
     * Copy constructor for the side iterator
@@ -63,7 +65,12 @@ public:
     */
    SideIterator&
    operator = (
-      const SideIterator& iterator);
+      const SideIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the side iterator.
@@ -74,38 +81,31 @@ public:
     * Extract the side index corresponding to the iterator position in the box.
     */
    const SideIndex&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
-    * Extract the side index corresponding to the iterator position in the box.
+    * Extract a pointer to the side index corresponding to the iterator
+    * position in the box.
     */
-   const SideIndex&
-   operator () () const;
+   const SideIndex*
+   operator -> () const
+   {
+      return &d_index;
+   }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void
-   * () const;
-#endif
+   SideIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   SideIterator
    operator ++ (
       int);
 
@@ -114,14 +114,20 @@ public:
     */
    bool
    operator == (
-      const SideIterator& iterator) const;
+      const SideIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const SideIterator& iterator) const;
+      const SideIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    SideIndex d_index;
@@ -130,7 +136,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideIterator.I"
-#endif
+
 #endif

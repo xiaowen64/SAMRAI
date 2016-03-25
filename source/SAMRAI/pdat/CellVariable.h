@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -44,7 +44,7 @@ public:
     * depth (i.e., number of data values at each cell index location).
     * A default depth of one is provided.
     */
-   explicit CellVariable(
+   CellVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1);
@@ -62,17 +62,15 @@ public:
     * patches.  However, some value must be supplied for communication
     * operations.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /*!
     * @brief Return false indicating that cell data on a patch interior
     * does not exist on the patch boundary.
     */
-   bool dataLivesOnPatchBorder() const {
-      return false;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /*!
     * @brief Return the the depth (number of components).
@@ -91,8 +89,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/CellVariable.C"
-#endif
 
 #endif

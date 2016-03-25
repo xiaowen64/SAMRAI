@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -27,9 +27,6 @@
 #pragma report(disable, CPPC5334)
 #pragma report(disable, CPPC5328)
 #endif
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/SimpleCellRobinBcCoefs.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -47,7 +44,6 @@ SimpleCellRobinBcCoefs::SimpleCellRobinBcCoefs(
    const std::string& object_name):
    d_dim(dim),
    d_object_name(object_name),
-   d_hierarchy(NULL),
    d_ln_min(-1),
    d_ln_max(-1),
    d_flux_id(-1),
@@ -63,12 +59,13 @@ SimpleCellRobinBcCoefs::~SimpleCellRobinBcCoefs()
 {
 }
 
-void SimpleCellRobinBcCoefs::setHierarchy(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+void
+SimpleCellRobinBcCoefs::setHierarchy(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int ln_min,
    const int ln_max)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
 
    d_hierarchy = hierarchy;
@@ -91,7 +88,8 @@ void SimpleCellRobinBcCoefs::setHierarchy(
 #endif
 }
 
-void SimpleCellRobinBcCoefs::setBoundaries(
+void
+SimpleCellRobinBcCoefs::setBoundaries(
    const std::string& boundary_type,
    const int fluxes,
    const int flags,
@@ -178,11 +176,12 @@ void SimpleCellRobinBcCoefs::setBoundaries(
  ************************************************************************
  */
 
-void SimpleCellRobinBcCoefs::setBcCoefs(
-   tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-   const tbox::Pointer<hier::Variable>& variable,
+void
+SimpleCellRobinBcCoefs::setBcCoefs(
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    double fill_time) const
@@ -196,16 +195,15 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
 
    const int ln = patch.getPatchLevelNumber();
    const hier::GlobalId& global_id = patch.getGlobalId();
-   const hier::BlockId& block_id = patch.getBox().getBlockId();
    const int location_index = bdry_box.getLocationIndex();
 
-   tbox::Pointer<hier::PatchData> patch_data;
-   tbox::Pointer<pdat::OuterfaceData<double> > flux_data_ptr;
-   tbox::Pointer<pdat::SideData<double> > diffcoef_data_ptr;
-   tbox::Pointer<pdat::OuterfaceData<int> > flag_data_ptr;
+   boost::shared_ptr<hier::PatchData> patch_data;
+   boost::shared_ptr<pdat::OuterfaceData<double> > flux_data_ptr;
+   boost::shared_ptr<pdat::SideData<double> > diffcoef_data_ptr;
+   boost::shared_ptr<pdat::OuterfaceData<int> > flag_data_ptr;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (!gcoef_data.isNull()) {
+   if (gcoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *gcoef_data);
 
       if (d_bdry_types[location_index] == DIRICHLET
@@ -225,8 +223,9 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "the same hierarchy as cached\n"
                              << "Dirichlet coefficients.");
          }
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-         if (!level->getPatch(global_id, block_id)->getBox().isSpatiallyEqual(patch.getBox())) {
+         boost::shared_ptr<hier::PatchLevel> level(
+            d_hierarchy->getPatchLevel(ln));
+         if (!level->getPatch(global_id)->getBox().isSpatiallyEqual(patch.getBox())) {
             TBOX_ERROR(
                d_object_name << ": patch is not in the hierarchy\n"
                              << "of cached boundary data.\n"
@@ -239,7 +238,9 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
       if (d_bdry_types[location_index] == NEUMANN
           || d_bdry_types[location_index] == MIXED) {
          patch_data = patch.getPatchData(d_flux_id);
-         flux_data_ptr = patch_data;
+         flux_data_ptr =
+            boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+                                        hier::PatchData>(patch_data);
          if (!patch_data) {
             TBOX_ERROR(d_object_name << ": Flux data (patch data id = "
                                      << d_flux_id << ") does not exist.");
@@ -252,7 +253,9 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          }
          if (d_diffusion_coef_id != -1) {
             patch_data = patch.getPatchData(d_diffusion_coef_id);
-            diffcoef_data_ptr = patch_data;
+            diffcoef_data_ptr =
+               boost::dynamic_pointer_cast<pdat::SideData<double>,
+                                           hier::PatchData>(patch_data);
             if (!patch_data) {
                TBOX_ERROR(d_object_name << ": Diffusion coefficient data\n"
                   "(patch data id = " << d_diffusion_coef_id
@@ -266,10 +269,11 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          }
       }
    }
-   if (!acoef_data.isNull()) {
+   if (acoef_data) {
       if (d_bdry_types[location_index] == MIXED) {
          patch_data = patch.getPatchData(d_flag_id);
-         flag_data_ptr = patch.getPatchData(d_flag_id);
+         flag_data_ptr = boost::dynamic_pointer_cast<pdat::OuterfaceData<int>,
+                                                     hier::PatchData>(patch.getPatchData(d_flag_id));
          if (!patch_data) {
             TBOX_ERROR(d_object_name << ": Flags data (patch data id = "
                                      << d_flag_id << ") does not exist.");
@@ -287,27 +291,28 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
    int bn;
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!acoef_data.isNull()) {
+   if (acoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *acoef_data);
    }
-   if (!bcoef_data.isNull()) {
+   if (bcoef_data) {
       TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *bcoef_data);
    }
 #endif
 
    if (d_bdry_types[location_index] == DIRICHLET) {
 
-      if (!acoef_data.isNull()) {
+      if (acoef_data) {
          acoef_data->fill(1.0);
       }
-      if (!bcoef_data.isNull()) {
+      if (bcoef_data) {
          bcoef_data->fill(0.0);
       }
 
-      if (!gcoef_data.isNull()) {
+      if (gcoef_data) {
 
-         tbox::Pointer<geom::CartesianPatchGeometry> pg =
-            patch.getPatchGeometry();
+         boost::shared_ptr<geom::CartesianPatchGeometry> pg(
+            patch.getPatchGeometry(),
+            boost::detail::dynamic_cast_tag());
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          /*
@@ -329,7 +334,7 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "after the hierarchy changed.\n");
          }
 #endif
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
 
          std::map<hier::BoxId, int> foo = d_dirichlet_data_pos[ln];
          int position = foo[mapped_box_id] + bn;
@@ -340,34 +345,39 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
       }
    } else if (d_bdry_types[location_index] == NEUMANN) {
 
-      if (!acoef_data.isNull()) {
+      if (acoef_data) {
          acoef_data->fill(0.0);
       }
-      if (!bcoef_data.isNull()) {
+      if (bcoef_data) {
          bcoef_data->fill(1.0);
       }
 
-      if (!gcoef_data.isNull()) {
-         flux_data_ptr = patch.getPatchData(d_flux_id);
+      if (gcoef_data) {
+         flux_data_ptr =
+            boost::dynamic_pointer_cast<pdat::OuterfaceData<double>,
+                                        hier::PatchData>(patch.getPatchData(d_flux_id));
          pdat::OuterfaceData<double>& flux_data(*flux_data_ptr);
          const int axis = location_index / 2;
          const int face = location_index % 2;
          pdat::ArrayData<double>& g = *gcoef_data;
-         pdat::ArrayDataIterator ai(g.getBox());
+         pdat::ArrayDataIterator ai(g.getBox(), true);
+         pdat::ArrayDataIterator aiend(g.getBox(), false);
          hier::Index offset_to_inside(d_dim, 0);
          if (face != 0) offset_to_inside(axis) = -1;
          if (d_diffusion_coef_id == -1) {
-            for ( ; ai; ai++) {
-               pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+            for ( ; ai != aiend; ++ai) {
+               pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / d_diffusion_coef_constant;
                tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
          } else {
-            diffcoef_data_ptr = patch.getPatchData(d_diffusion_coef_id);
+            diffcoef_data_ptr =
+               boost::dynamic_pointer_cast<pdat::SideData<double>,
+                                           hier::PatchData>(patch.getPatchData(d_diffusion_coef_id));
             const pdat::ArrayData<double>& diffcoef_array_data =
                diffcoef_data_ptr->getArrayData(axis);
-            for ( ; ai; ai++) {
-               pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+            for ( ; ai != aiend; ++ai) {
+               pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
                g(*ai, 0) = flux_data(fi, face) / diffcoef_array_data(*ai, 0);
                tbox::plog << location_index << '\t' << g(*ai, 0) << '\n';
             }
@@ -378,16 +388,19 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
 
       const int axis = location_index / 2;
       const int face = location_index % 2;
-      flag_data_ptr = patch.getPatchData(d_flag_id);
+      flag_data_ptr =
+         boost::dynamic_pointer_cast<pdat::OuterfaceData<int>,
+                                     hier::PatchData>(patch.getPatchData(d_flag_id));
       pdat::OuterfaceData<int>& flag_data(*flag_data_ptr);
       hier::Index offset_to_inside(d_dim, 0);
       if (face != 0) offset_to_inside(axis) = -1;
 
-      if (!acoef_data.isNull()) {
+      if (acoef_data) {
          pdat::ArrayData<double>& a = *acoef_data;
-         pdat::ArrayDataIterator ai(a.getBox());
-         for ( ; ai; ai++) {
-            pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+         pdat::ArrayDataIterator ai(a.getBox(), true);
+         pdat::ArrayDataIterator aiend(a.getBox(), false);
+         for ( ; ai != aiend; ++ai) {
+            pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
             if (flag_data(fi, face) == 0) {
                a(*ai, 0) = 1.0;
             } else {
@@ -396,11 +409,12 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          }
       }
 
-      if (!bcoef_data.isNull()) {
+      if (bcoef_data) {
          pdat::ArrayData<double>& b = *bcoef_data;
-         pdat::ArrayDataIterator bi(b.getBox());
-         for ( ; bi; bi++) {
-            pdat::FaceIndex fi(bi() + offset_to_inside, axis, face);
+         pdat::ArrayDataIterator bi(b.getBox(), true);
+         pdat::ArrayDataIterator biend(b.getBox(), false);
+         for ( ; bi != biend; ++bi) {
+            pdat::FaceIndex fi(*bi + offset_to_inside, axis, face);
             if (flag_data(fi, face) == 0) {
                b(*bi, 0) = 0.0;
             } else {
@@ -409,9 +423,10 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
          }
       }
 
-      if (!gcoef_data.isNull()) {
-         tbox::Pointer<geom::CartesianPatchGeometry> pg =
-            patch.getPatchGeometry();
+      if (gcoef_data) {
+         boost::shared_ptr<geom::CartesianPatchGeometry> pg(
+            patch.getPatchGeometry(),
+            boost::detail::dynamic_cast_tag());
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          /*
@@ -433,23 +448,26 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
                              << "hierarchy changed.\n");
          }
 #endif
-         hier::BoxId mapped_box_id(global_id, block_id);
+         hier::BoxId mapped_box_id(global_id);
 
          std::map<hier::BoxId, int> foo = d_dirichlet_data_pos[ln];
          int position = foo[mapped_box_id] + bn;
 
          const pdat::ArrayData<double>& dirichlet_array_data =
             *d_dirichlet_data[position];
-         diffcoef_data_ptr = patch.getPatchData(d_diffusion_coef_id);
+         diffcoef_data_ptr =
+            boost::dynamic_pointer_cast<pdat::SideData<double>,
+                                        hier::PatchData>(patch.getPatchData(d_diffusion_coef_id));
          pdat::ArrayData<double>& g = *gcoef_data;
          pdat::OuterfaceData<double>& flux_data(*flux_data_ptr);
-         pdat::ArrayDataIterator ai(g.getBox());
-         for ( ; ai; ai++) {
-            pdat::FaceIndex fi(ai() + offset_to_inside, axis, face);
+         pdat::ArrayDataIterator ai(g.getBox(), true);
+         pdat::ArrayDataIterator aiend(g.getBox(), false);
+         for ( ; ai != aiend; ++ai) {
+            pdat::FaceIndex fi(*ai + offset_to_inside, axis, face);
             if (flag_data(fi, face) == 0) {
                g(*ai, 0) = dirichlet_array_data(*ai, 0);
             } else {
-               pdat::FaceIndex fi2(ai() + offset_to_inside, axis, face);
+               pdat::FaceIndex fi2(*ai + offset_to_inside, axis, face);
                if (d_diffusion_coef_id == -1) {
                   g(*ai, 0) = flux_data(fi2, face) / d_diffusion_coef_constant;
                } else {
@@ -473,7 +491,8 @@ void SimpleCellRobinBcCoefs::setBcCoefs(
  * that does not extend.
  ***********************************************************************
  */
-hier::IntVector SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
+hier::IntVector
+SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
 {
    return hier::IntVector::getZero(d_dim);
 }
@@ -500,7 +519,8 @@ hier::IntVector SimpleCellRobinBcCoefs::numberOfExtensionsFillable() const
  *
  ************************************************************************
  */
-void SimpleCellRobinBcCoefs::cacheDirichletData(
+void
+SimpleCellRobinBcCoefs::cacheDirichletData(
    int dirichlet_data_id)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -518,14 +538,14 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
-      hier::PatchLevel::Iterator pi(level);
-      for ( ; pi; pi++) {
+      hier::PatchLevel::iterator pi(level.begin());
+      for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
-         hier::BoxId mapped_box_id(global_id, block_id);
-         tbox::Pointer<geom::CartesianPatchGeometry> pg =
-            patch.getPatchGeometry();
+         hier::BoxId mapped_box_id(global_id);
+         boost::shared_ptr<geom::CartesianPatchGeometry> pg(
+            patch.getPatchGeometry(),
+            boost::detail::dynamic_cast_tag());
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          d_dirichlet_data_pos[ln][mapped_box_id] = n_reqd_boxes;
@@ -536,25 +556,25 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
-      hier::PatchLevel::Iterator pi(level);
-      for ( ; pi; pi++) {
+      hier::PatchLevel::iterator pi(level.begin());
+      for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
-         hier::BoxId mapped_box_id(global_id, block_id);
-         tbox::Pointer<pdat::CellData<double> > cell_data =
-            patch.getPatchData(dirichlet_data_id);
-         tbox::Pointer<geom::CartesianPatchGeometry> pg =
-            patch.getPatchGeometry();
+         hier::BoxId mapped_box_id(global_id);
+         boost::shared_ptr<pdat::CellData<double> > cell_data(
+            patch.getPatchData(dirichlet_data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<geom::CartesianPatchGeometry> pg(
+            patch.getPatchGeometry(),
+            boost::detail::dynamic_cast_tag());
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
             const hier::BoundaryBox& bdry_box = codim1_boxes[bn];
             position = d_dirichlet_data_pos[ln][mapped_box_id] + bn;
             hier::Box databox = makeSideBoundaryBox(bdry_box);
-            d_dirichlet_data[position] =
-               new pdat::ArrayData<double>(databox,
-                                           1);
+            d_dirichlet_data[position].reset(
+               new pdat::ArrayData<double>(databox, 1));
             pdat::ArrayData<double>& array_data = *d_dirichlet_data[position];
             hier::IntVector shift_amount(d_dim, 0);
             const int location_index = bdry_box.getLocationIndex();
@@ -577,7 +597,8 @@ void SimpleCellRobinBcCoefs::cacheDirichletData(
  *
  ************************************************************************
  */
-void SimpleCellRobinBcCoefs::restoreDirichletData(
+void
+SimpleCellRobinBcCoefs::restoreDirichletData(
    int dirichlet_data_id)
 {
    if (d_dirichlet_data_pos.empty()) {
@@ -588,16 +609,17 @@ void SimpleCellRobinBcCoefs::restoreDirichletData(
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       hier::PatchLevel& level = (hier::PatchLevel &)
          * d_hierarchy->getPatchLevel(ln);
-      hier::PatchLevel::Iterator pi(level);
-      for ( ; pi; pi++) {
+      hier::PatchLevel::iterator pi(level.begin());
+      for ( ; pi != level.end(); ++pi) {
          hier::Patch& patch = **pi;
          const hier::GlobalId& global_id = patch.getGlobalId();
-         const hier::BlockId& block_id = patch.getBox().getBlockId();
-         hier::BoxId mapped_box_id(global_id, block_id);
-         tbox::Pointer<pdat::CellData<double> > cell_data =
-            patch.getPatchData(dirichlet_data_id);
-         tbox::Pointer<geom::CartesianPatchGeometry> pg =
-            patch.getPatchGeometry();
+         hier::BoxId mapped_box_id(global_id);
+         boost::shared_ptr<pdat::CellData<double> > cell_data(
+            patch.getPatchData(dirichlet_data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<geom::CartesianPatchGeometry> pg(
+            patch.getPatchGeometry(),
+            boost::detail::dynamic_cast_tag());
          const tbox::Array<hier::BoundaryBox>& codim1_boxes =
             pg->getCodimensionBoundaries(1);
          for (bn = 0; bn < codim1_boxes.getSize(); ++bn) {
@@ -619,27 +641,14 @@ void SimpleCellRobinBcCoefs::restoreDirichletData(
    }
 }
 
-void SimpleCellRobinBcCoefs::setDiffusionCoefId(
-   int diffusion_coef_id)
-{
-   d_diffusion_coef_id = diffusion_coef_id;
-   d_diffusion_coef_constant = 0.0;
-}
-
-void SimpleCellRobinBcCoefs::setDiffusionCoefConstant(
-   double diffusion_coef_constant)
-{
-   d_diffusion_coef_constant = diffusion_coef_constant;
-   d_diffusion_coef_id = -1;
-}
-
 /*
  ************************************************************************
  * Make surface box on boundary using standard boundary box
  ************************************************************************
  */
 
-hier::Box SimpleCellRobinBcCoefs::makeSideBoundaryBox(
+hier::Box
+SimpleCellRobinBcCoefs::makeSideBoundaryBox(
    const hier::BoundaryBox& boundary_box) const
 {
    if (boundary_box.getBoundaryType() != 1) {

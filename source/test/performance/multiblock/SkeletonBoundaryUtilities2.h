@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating Skeleton 2d boundary data
  *
  ************************************************************************/
@@ -17,7 +17,8 @@
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 #ifndef included_String
 #include <string>
 #define included_String
@@ -130,7 +131,7 @@ public:
    static void
    readBoundaryInput(
       BoundaryUtilityStrategy* bdry_strategy,
-      tbox::Pointer<tbox::Database> bdry_db,
+      const boost::shared_ptr<tbox::Database>& bdry_db,
       tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);
@@ -152,7 +153,7 @@ public:
    static void
    fillEdgeBoundaryData(
       const string& varname,
-      tbox::Pointer<pdat::CellData<double> >& vardata,
+      boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_edge_conds,
@@ -175,7 +176,7 @@ public:
    static void
    fillNodeBoundaryData(
       const string& varname,
-      tbox::Pointer<pdat::CellData<double> >& vardata,
+      boost::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const tbox::Array<int>& bdry_node_conds,
@@ -237,13 +238,13 @@ private:
    static void
    read2dBdryEdges(
       BoundaryUtilityStrategy* bdry_strategy,
-      tbox::Pointer<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> bdry_db,
       tbox::Array<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read2dBdryNodes(
-      tbox::Pointer<tbox::Database> bdry_db,
+      boost::shared_ptr<tbox::Database> bdry_db,
       const tbox::Array<int>& edge_conds,
       tbox::Array<int>& node_conds,
       const hier::IntVector& periodic);

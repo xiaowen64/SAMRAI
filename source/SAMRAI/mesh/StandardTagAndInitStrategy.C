@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for Richardson extrapolation error detection.
  *
  ************************************************************************/
@@ -36,8 +36,9 @@ StandardTagAndInitStrategy::~StandardTagAndInitStrategy()
  *************************************************************************
  */
 
-void StandardTagAndInitStrategy::applyGradientDetector(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+void
+StandardTagAndInitStrategy::applyGradientDetector(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const double error_data_time,
    const int tag_index,
@@ -50,16 +51,16 @@ void StandardTagAndInitStrategy::applyGradientDetector(
    NULL_USE(tag_index);
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation_too);
-   TBOX_WARNING("StandardTagAndInitStrategy::applyGradientDetector()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes no cell tagging) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::applyGradientDetector()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
-void StandardTagAndInitStrategy::coarsenDataForRichardsonExtrapolation(
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+void
+StandardTagAndInitStrategy::coarsenDataForRichardsonExtrapolation(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
-   const tbox::Pointer<hier::PatchLevel> coarser_level,
+   const boost::shared_ptr<hier::PatchLevel>& coarser_level,
    const double coarsen_data_time,
    const bool before_advance)
 {
@@ -68,15 +69,14 @@ void StandardTagAndInitStrategy::coarsenDataForRichardsonExtrapolation(
    NULL_USE(coarser_level);
    NULL_USE(coarsen_data_time);
    NULL_USE(before_advance);
-   TBOX_WARNING("StandardTagAndInitStrategy::"
-      << "coarsenDataForRichardsonExtrapolation()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes nothing) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::coarsenDataForRichardsonExtrapolation()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
-void StandardTagAndInitStrategy::applyRichardsonExtrapolation(
-   const tbox::Pointer<hier::PatchLevel> level,
+void
+StandardTagAndInitStrategy::applyRichardsonExtrapolation(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const double error_data_time,
    const int tag_index,
    const double deltat,
@@ -91,45 +91,44 @@ void StandardTagAndInitStrategy::applyRichardsonExtrapolation(
    NULL_USE(error_coarsen_ratio);
    NULL_USE(initial_time);
    NULL_USE(uses_gradient_detector_too);
-   TBOX_WARNING("StandardTagAndInitStrategy::"
-      << "applyRichardsonExtrapolation()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes nothing) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::applyRichardsonExtrapolation()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
-double StandardTagAndInitStrategy::getLevelDt(
-   const tbox::Pointer<hier::PatchLevel> level,
+double
+StandardTagAndInitStrategy::getLevelDt(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const double dt_time,
    const bool initial_time)
 {
    NULL_USE(level);
    NULL_USE(dt_time);
    NULL_USE(initial_time);
-   TBOX_WARNING("StandardTagAndInitStrategy::getLevelDt()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\nsimply returns 0.) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::getLevelDt()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
    return 0.0;
 }
 
-void StandardTagAndInitStrategy::resetTimeDependentData(
-   const tbox::Pointer<hier::PatchLevel> level,
+void
+StandardTagAndInitStrategy::resetTimeDependentData(
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const double new_time,
    const bool can_be_refined)
 {
    NULL_USE(level);
    NULL_USE(new_time);
    NULL_USE(can_be_refined);
-   TBOX_WARNING("StandardTagAndInitStrategy::resetTimeDependentData()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes nothing) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::resetTimeDependentData()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
-double StandardTagAndInitStrategy::advanceLevel(
-   const tbox::Pointer<hier::PatchLevel> level,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+double
+StandardTagAndInitStrategy::advanceLevel(
+   const boost::shared_ptr<hier::PatchLevel>& level,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const double current_time,
    const double new_time,
    const bool first_step,
@@ -143,22 +142,20 @@ double StandardTagAndInitStrategy::advanceLevel(
    NULL_USE(first_step);
    NULL_USE(last_step);
    NULL_USE(regrid_advance);
-   TBOX_WARNING("StandardTagAndInitStrategy::advanceLevel()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes nothing) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::advanceLevel()"
+      << "\nNo derived class supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
    return 0.0;
 }
 
-void StandardTagAndInitStrategy::resetDataToPreadvanceState(
-   const tbox::Pointer<hier::PatchLevel> level)
+void
+StandardTagAndInitStrategy::resetDataToPreadvanceState(
+   const boost::shared_ptr<hier::PatchLevel>& level)
 {
    NULL_USE(level);
-   TBOX_WARNING("StandardTagAndInitStrategy::"
-      << "resetDataToPreadvanceState()"
-      << "\nNo class supplies a concrete implementation for "
-      << "\nthis method.  The default abstract method (which "
-      << "\ndoes nothing) is executed" << std::endl);
+   TBOX_ERROR("StandardTagAndInitStrategy::resetDataToPreadvanceState()"
+      << "\nNo class derived supplies a concrete implementation for "
+      << "\nthis method." << std::endl);
 }
 
 }

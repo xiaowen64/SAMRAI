@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A factory for building SiloDatabases
  *
  ************************************************************************/
@@ -28,7 +28,7 @@ class SiloDatabaseFactory:public DatabaseFactory
    /**
     * Build a new Database object.
     */
-   virtual Pointer<Database>
+   virtual boost::shared_ptr<Database>
    allocate(
       const std::string& name);
 };

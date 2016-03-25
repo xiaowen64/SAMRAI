@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface for writing material related data to a VisIt
  *                dump file.
  *
@@ -151,7 +151,7 @@ public:
     * individual cells are not mixed, as this indicates that the patch contains
     * multiple materials.
     *
-    * @param buffer Double precision array into which the material
+    * @param mat_list Double precision array into which the material
     *  numbers (or negative indices) are packed.
     * @param mix_zones std::vector<int> into which the cell number
     *  associated with the mixed components are packed.

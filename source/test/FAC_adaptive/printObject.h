@@ -3,20 +3,20 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Misc printing functions in FAC solver test.
  *
  ************************************************************************/
 #ifndef included_printObject_h
 #define included_printObject_h
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/hier/Box.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;

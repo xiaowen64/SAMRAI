@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,10 +12,6 @@
 #define included_pdat_NodeOverlap_C
 
 #include "SAMRAI/pdat/NodeOverlap.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeOverlap.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -33,9 +29,28 @@ NodeOverlap::~NodeOverlap()
 {
 }
 
-bool NodeOverlap::isOverlapEmpty() const
+bool
+NodeOverlap::isOverlapEmpty() const
 {
    return d_is_overlap_empty;
+}
+
+const hier::BoxContainer&
+NodeOverlap::getDestinationBoxContainer() const
+{
+   return d_dst_boxes;
+}
+
+const hier::IntVector&
+NodeOverlap::getSourceOffset() const
+{
+   return d_transformation.getOffset();
+}
+
+const hier::Transformation&
+NodeOverlap::getTransformation() const
+{
+   return d_transformation;
 }
 
 }

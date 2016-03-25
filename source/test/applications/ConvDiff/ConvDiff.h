@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in Heat equation ex.
  *
  ************************************************************************/
@@ -24,13 +24,14 @@
 #include "SAMRAI/algs/MethodOfLinesIntegrator.h"
 #include "SAMRAI/algs/MethodOfLinesPatchStrategy.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include <string>
 using namespace std;
 #define included_String
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
+
+#include <boost/shared_ptr.hpp>
 
 /**
  * The ConvDiff class provides numerical routines for a sample problem
@@ -77,8 +78,8 @@ public:
    ConvDiff(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geom);
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * The destructor for ConvDiff.
@@ -91,8 +92,12 @@ public:
    ///      registerModelVariables(),
    ///      initializeDataOnPatch(),
    ///      computeStableDtOnPatch(),
-   ///      singleStep,
+   ///      singleStep(),
    ///      tagGradientDetectorCells(),
+   ///      preprocessRefine(),
+   ///      postprocessRefine(),
+   ///      preprocessCoarsen(),
+   ///      postprocessCoarsen()
    ///
    ///  are concrete implementations of functions declared in the
    ///  algs::MethodOfLinesPatchStrategy abstract base class.
@@ -157,6 +162,38 @@ public:
       const int tag_index,
       const bool uses_richardson_extrapolation_too);
 
+   /*
+    * Pre- and post-processing routines for implementing user-defined
+    * spatial interpolation routines applied to variables.
+    */
+   virtual void preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio);
+
+   virtual void postprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio);
+
+   /*
+    * Pre- and post-processing routines for implementing user-defined
+    * spatial coarsening routines applied to variables.
+    */
+   virtual void preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio);
+
+   virtual void postprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio);
+
    ///
    ///  The following routines:
    ///
@@ -186,7 +223,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -198,13 +235,13 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
    void
    readNeumannBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -216,7 +253,7 @@ public:
 #ifdef HAVE_HDF5
    void
    registerVisItDataWriter(
-      tbox::Pointer<appu::VisItDataWriter> viz_writer);
+      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -238,7 +275,7 @@ private:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    virtual void
@@ -246,7 +283,7 @@ private:
 
    void
    readStateDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       tbox::Array<double>& uval);
@@ -273,21 +310,21 @@ private:
    tbox::Dimension d_dim;
 
    /*
-    * tbox::Pointer to the grid geometry object used (Cartesian) to setup
+    * boost::shared_ptr to the grid geometry object used (Cartesian) to setup
     * initial data and to set physical boundary conditions.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
 #ifdef HAVE_HDF5
-   tbox::Pointer<appu::VisItDataWriter> d_visit_writer;
+   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
    /*
-    * Pointers to variables.  d_primitive_vars - [u]
-    *                         d_function_eval  - [F(u)]
+    * boost::shared_ptrs to variables.  d_primitive_vars - [u]
+    *                                   d_function_eval  - [F(u)]
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_primitive_vars;
-   tbox::Pointer<pdat::CellVariable<double> > d_function_eval;
+   boost::shared_ptr<pdat::CellVariable<double> > d_primitive_vars;
+   boost::shared_ptr<pdat::CellVariable<double> > d_function_eval;
 
    /*
     * Convection-diffusion equation constant vectors

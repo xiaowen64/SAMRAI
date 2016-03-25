@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Singleton manager for hierarchy data operation objects.
  *
  ************************************************************************/
@@ -38,7 +38,6 @@
 #include "SAMRAI/pdat/EdgeVariable.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace math {
@@ -62,32 +61,6 @@ HierarchyDataOpsManager::s_shutdown_handler(
    HierarchyDataOpsManager::shutdownCallback,
    0,
    tbox::StartupShutdownManager::priorityHierarchyDataOpsManager);
-
-HierarchyDataOpsManager *HierarchyDataOpsManager::getManager()
-{
-   if (!s_pdat_op_manager_instance) {
-      s_pdat_op_manager_instance = new HierarchyDataOpsManager();
-   }
-   return s_pdat_op_manager_instance;
-}
-
-void HierarchyDataOpsManager::shutdownCallback()
-{
-   if (s_pdat_op_manager_instance) delete s_pdat_op_manager_instance;
-   s_pdat_op_manager_instance = ((HierarchyDataOpsManager *)NULL);
-}
-
-void HierarchyDataOpsManager::registerSingletonSubclassInstance(
-   HierarchyDataOpsManager* subclass_instance)
-{
-   if (!s_pdat_op_manager_instance) {
-      s_pdat_op_manager_instance = subclass_instance;
-   } else {
-      TBOX_ERROR("HierarchyDataOpsManager internal error...\n"
-         << "Attempting to set Singleton instance to subclass instance,"
-         << "\n but Singleton instance already set." << std::endl);
-   }
-}
 
 /*
  *************************************************************************
@@ -116,31 +89,41 @@ HierarchyDataOpsManager::~HierarchyDataOpsManager()
  * when an equivalent request is made.
  */
 
-tbox::Pointer<HierarchyDataOpsReal<double> >
+boost::shared_ptr<HierarchyDataOpsReal<double> >
 HierarchyDataOpsManager::getOperationsDouble(
-   const tbox::Pointer<hier::Variable>& variable,
-   tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::Variable>& variable,
+   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
-   TBOX_ASSERT(!variable.isNull());
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
 
-   const tbox::Pointer<pdat::CellVariable<double> > cellvar(variable);
-   const tbox::Pointer<pdat::FaceVariable<double> > facevar(variable);
-   const tbox::Pointer<pdat::NodeVariable<double> > nodevar(variable);
-   const tbox::Pointer<pdat::SideVariable<double> > sidevar(variable);
-   const tbox::Pointer<pdat::EdgeVariable<double> > edgevar(variable);
+   const boost::shared_ptr<pdat::CellVariable<double> > cellvar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::FaceVariable<double> > facevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::NodeVariable<double> > nodevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::SideVariable<double> > sidevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::EdgeVariable<double> > edgevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<HierarchyDataOpsReal<double> > ops;
+   boost::shared_ptr<HierarchyDataOpsReal<double> > ops;
 
-   if (!(cellvar.isNull())) {
+   if (cellvar) {
 
       if (get_unique) {
-         ops = new HierarchyCellDataOpsReal<double>(hierarchy);
+         ops.reset(new HierarchyCellDataOpsReal<double>(hierarchy));
       } else {
          const int n = d_cell_ops_double.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_cell_ops_double[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -148,19 +131,19 @@ HierarchyDataOpsManager::getOperationsDouble(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyCellDataOpsReal<double>(hierarchy);
+            ops.reset(new HierarchyCellDataOpsReal<double>(hierarchy));
             d_cell_ops_double.resizeArray(n + 1);
             d_cell_ops_double[n] = ops;
          }
       }
 
-   } else if (!(facevar.isNull())) {
+   } else if (facevar) {
 
       if (get_unique) {
-         ops = new HierarchyFaceDataOpsReal<double>(hierarchy);
+         ops.reset(new HierarchyFaceDataOpsReal<double>(hierarchy));
       } else {
          const int n = d_face_ops_double.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_face_ops_double[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -168,19 +151,19 @@ HierarchyDataOpsManager::getOperationsDouble(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyFaceDataOpsReal<double>(hierarchy);
+            ops.reset(new HierarchyFaceDataOpsReal<double>(hierarchy));
             d_face_ops_double.resizeArray(n + 1);
             d_face_ops_double[n] = ops;
          }
       }
 
-   } else if (!(nodevar.isNull())) {
+   } else if (nodevar) {
 
       if (get_unique) {
-         ops = new HierarchyNodeDataOpsReal<double>(hierarchy);
+         ops.reset(new HierarchyNodeDataOpsReal<double>(hierarchy));
       } else {
          const int n = d_node_ops_double.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_node_ops_double[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -188,19 +171,19 @@ HierarchyDataOpsManager::getOperationsDouble(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyNodeDataOpsReal<double>(hierarchy);
+            ops.reset(new HierarchyNodeDataOpsReal<double>(hierarchy));
             d_node_ops_double.resizeArray(n + 1);
             d_node_ops_double[n] = ops;
          }
       }
 
-   } else if (!(sidevar.isNull())) {
+   } else if (sidevar) {
 
       if (get_unique) {
-         ops = new HierarchySideDataOpsReal<double>(hierarchy);
+         ops.reset(new HierarchySideDataOpsReal<double>(hierarchy));
       } else {
          const int n = d_side_ops_double.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_side_ops_double[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -208,19 +191,19 @@ HierarchyDataOpsManager::getOperationsDouble(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchySideDataOpsReal<double>(hierarchy);
+            ops.reset(new HierarchySideDataOpsReal<double>(hierarchy));
             d_side_ops_double.resizeArray(n + 1);
             d_side_ops_double[n] = ops;
          }
       }
 
-   } else if (!(edgevar.isNull())) {
+   } else if (edgevar) {
 
       if (get_unique) {
-         ops = new HierarchyEdgeDataOpsReal<double>(hierarchy);
+         ops.reset(new HierarchyEdgeDataOpsReal<double>(hierarchy));
       } else {
          const int n = d_edge_ops_double.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_edge_ops_double[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -228,7 +211,7 @@ HierarchyDataOpsManager::getOperationsDouble(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyEdgeDataOpsReal<double>(hierarchy);
+            ops.reset(new HierarchyEdgeDataOpsReal<double>(hierarchy));
             d_edge_ops_double.resizeArray(n + 1);
             d_edge_ops_double[n] = ops;
          }
@@ -256,114 +239,124 @@ HierarchyDataOpsManager::getOperationsDouble(
  * when an equivalent request is made.
  */
 
-tbox::Pointer<HierarchyDataOpsReal<float> >
+boost::shared_ptr<HierarchyDataOpsReal<float> >
 HierarchyDataOpsManager::getOperationsFloat(
-   const tbox::Pointer<hier::Variable>& variable,
-   tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::Variable>& variable,
+   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
-   TBOX_ASSERT(!variable.isNull());
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
 
-   const tbox::Pointer<pdat::CellVariable<float> > cellvar(variable);
-   const tbox::Pointer<pdat::FaceVariable<float> > facevar(variable);
-   const tbox::Pointer<pdat::NodeVariable<float> > nodevar(variable);
-   const tbox::Pointer<pdat::SideVariable<float> > sidevar(variable);
-   const tbox::Pointer<pdat::EdgeVariable<float> > edgevar(variable);
+   const boost::shared_ptr<pdat::CellVariable<float> > cellvar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::FaceVariable<float> > facevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::NodeVariable<float> > nodevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::SideVariable<float> > sidevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::EdgeVariable<float> > edgevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<HierarchyDataOpsReal<float> > ops;
+   boost::shared_ptr<HierarchyDataOpsReal<float> > ops;
 
-   if (!(cellvar.isNull())) {
+   if (cellvar) {
 
       if (get_unique) {
-         ops = new HierarchyCellDataOpsReal<float>(hierarchy);
+         ops.reset(new HierarchyCellDataOpsReal<float>(hierarchy));
       } else {
          const int n = d_cell_ops_float.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_cell_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_cell_ops_float[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyCellDataOpsReal<float>(hierarchy);
+            ops.reset(new HierarchyCellDataOpsReal<float>(hierarchy));
             d_cell_ops_float.resizeArray(n + 1);
             d_cell_ops_float[n] = ops;
          }
       }
 
-   } else if (!(facevar.isNull())) {
+   } else if (facevar) {
 
       if (get_unique) {
-         ops = new HierarchyFaceDataOpsReal<float>(hierarchy);
+         ops.reset(new HierarchyFaceDataOpsReal<float>(hierarchy));
       } else {
          const int n = d_face_ops_float.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_face_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_face_ops_float[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyFaceDataOpsReal<float>(hierarchy);
+            ops.reset(new HierarchyFaceDataOpsReal<float>(hierarchy));
             d_face_ops_float.resizeArray(n + 1);
             d_face_ops_float[n] = ops;
          }
       }
 
-   } else if (!(nodevar.isNull())) {
+   } else if (nodevar) {
 
       if (get_unique) {
-         ops = new HierarchyNodeDataOpsReal<float>(hierarchy);
+         ops.reset(new HierarchyNodeDataOpsReal<float>(hierarchy));
       } else {
          const int n = d_node_ops_float.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_node_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_node_ops_float[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyNodeDataOpsReal<float>(hierarchy);
+            ops.reset(new HierarchyNodeDataOpsReal<float>(hierarchy));
             d_node_ops_float.resizeArray(n + 1);
             d_node_ops_float[n] = ops;
          }
       }
 
-   } else if (!(sidevar.isNull())) {
+   } else if (sidevar) {
 
       if (get_unique) {
-         ops = new HierarchySideDataOpsReal<float>(hierarchy);
+         ops.reset(new HierarchySideDataOpsReal<float>(hierarchy));
       } else {
          const int n = d_side_ops_float.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_side_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_side_ops_float[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchySideDataOpsReal<float>(hierarchy);
+            ops.reset(new HierarchySideDataOpsReal<float>(hierarchy));
             d_side_ops_float.resizeArray(n + 1);
             d_side_ops_float[n] = ops;
          }
       }
 
-   } else if (!(edgevar.isNull())) {
+   } else if (edgevar) {
 
       if (get_unique) {
-         ops = new HierarchyEdgeDataOpsReal<float>(hierarchy);
+         ops.reset(new HierarchyEdgeDataOpsReal<float>(hierarchy));
       } else {
          const int n = d_edge_ops_float.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_edge_ops_float[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_edge_ops_float[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyEdgeDataOpsReal<float>(hierarchy);
+            ops.reset(new HierarchyEdgeDataOpsReal<float>(hierarchy));
             d_edge_ops_float.resizeArray(n + 1);
             d_edge_ops_float[n] = ops;
          }
@@ -391,31 +384,41 @@ HierarchyDataOpsManager::getOperationsFloat(
  * when an equivalent request is made.
  */
 
-tbox::Pointer<HierarchyDataOpsComplex>
+boost::shared_ptr<HierarchyDataOpsComplex>
 HierarchyDataOpsManager::getOperationsComplex(
-   const tbox::Pointer<hier::Variable>& variable,
-   tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::Variable>& variable,
+   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
-   TBOX_ASSERT(!variable.isNull());
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
 
-   const tbox::Pointer<pdat::CellVariable<dcomplex> > cellvar(variable);
-   const tbox::Pointer<pdat::FaceVariable<dcomplex> > facevar(variable);
-   const tbox::Pointer<pdat::NodeVariable<dcomplex> > nodevar(variable);
-   const tbox::Pointer<pdat::SideVariable<dcomplex> > sidevar(variable);
-   const tbox::Pointer<pdat::EdgeVariable<dcomplex> > edgevar(variable);
+   const boost::shared_ptr<pdat::CellVariable<dcomplex> > cellvar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::FaceVariable<dcomplex> > facevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::NodeVariable<dcomplex> > nodevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::SideVariable<dcomplex> > sidevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::EdgeVariable<dcomplex> > edgevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<HierarchyDataOpsComplex> ops;
+   boost::shared_ptr<HierarchyDataOpsComplex> ops;
 
-   if (!(cellvar.isNull())) {
+   if (cellvar) {
 
       if (get_unique) {
-         ops = new HierarchyCellDataOpsComplex(hierarchy);
+         ops.reset(new HierarchyCellDataOpsComplex(hierarchy));
       } else {
          const int n = d_cell_ops_double.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_cell_ops_complex[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -423,19 +426,19 @@ HierarchyDataOpsManager::getOperationsComplex(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyCellDataOpsComplex(hierarchy);
+            ops.reset(new HierarchyCellDataOpsComplex(hierarchy));
             d_cell_ops_complex.resizeArray(n + 1);
             d_cell_ops_complex[n] = ops;
          }
       }
 
-   } else if (!(facevar.isNull())) {
+   } else if (facevar) {
 
       if (get_unique) {
-         ops = new HierarchyFaceDataOpsComplex(hierarchy);
+         ops.reset(new HierarchyFaceDataOpsComplex(hierarchy));
       } else {
          const int n = d_face_ops_complex.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_face_ops_complex[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -443,19 +446,19 @@ HierarchyDataOpsManager::getOperationsComplex(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyFaceDataOpsComplex(hierarchy);
+            ops.reset(new HierarchyFaceDataOpsComplex(hierarchy));
             d_face_ops_complex.resizeArray(n + 1);
             d_face_ops_complex[n] = ops;
          }
       }
 
-   } else if (!(nodevar.isNull())) {
+   } else if (nodevar) {
 
       if (get_unique) {
-         ops = new HierarchyNodeDataOpsComplex(hierarchy);
+         ops.reset(new HierarchyNodeDataOpsComplex(hierarchy));
       } else {
          const int n = d_node_ops_complex.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_node_ops_complex[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -463,19 +466,19 @@ HierarchyDataOpsManager::getOperationsComplex(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyNodeDataOpsComplex(hierarchy);
+            ops.reset(new HierarchyNodeDataOpsComplex(hierarchy));
             d_node_ops_complex.resizeArray(n + 1);
             d_node_ops_complex[n] = ops;
          }
       }
 
-   } else if (!(sidevar.isNull())) {
+   } else if (sidevar) {
 
       if (get_unique) {
-         ops = new HierarchySideDataOpsComplex(hierarchy);
+         ops.reset(new HierarchySideDataOpsComplex(hierarchy));
       } else {
          const int n = d_side_ops_complex.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_side_ops_complex[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -483,19 +486,19 @@ HierarchyDataOpsManager::getOperationsComplex(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchySideDataOpsComplex(hierarchy);
+            ops.reset(new HierarchySideDataOpsComplex(hierarchy));
             d_side_ops_complex.resizeArray(n + 1);
             d_side_ops_complex[n] = ops;
          }
       }
 
-   } else if (!(edgevar.isNull())) {
+   } else if (edgevar) {
 
       if (get_unique) {
-         ops = new HierarchyEdgeDataOpsComplex(hierarchy);
+         ops.reset(new HierarchyEdgeDataOpsComplex(hierarchy));
       } else {
          const int n = d_edge_ops_complex.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy !=
                 d_edge_ops_complex[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
@@ -503,7 +506,7 @@ HierarchyDataOpsManager::getOperationsComplex(
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyEdgeDataOpsComplex(hierarchy);
+            ops.reset(new HierarchyEdgeDataOpsComplex(hierarchy));
             d_edge_ops_complex.resizeArray(n + 1);
             d_edge_ops_complex[n] = ops;
          }
@@ -531,114 +534,124 @@ HierarchyDataOpsManager::getOperationsComplex(
  * when an equivalent request is made.
  */
 
-tbox::Pointer<HierarchyDataOpsInteger>
+boost::shared_ptr<HierarchyDataOpsInteger>
 HierarchyDataOpsManager::getOperationsInteger(
-   const tbox::Pointer<hier::Variable>& variable,
-   tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::Variable>& variable,
+   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    bool get_unique)
 {
-   TBOX_ASSERT(!variable.isNull());
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(hierarchy);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*variable, *hierarchy);
 
-   const tbox::Pointer<pdat::CellVariable<int> > cellvar(variable);
-   const tbox::Pointer<pdat::FaceVariable<int> > facevar(variable);
-   const tbox::Pointer<pdat::NodeVariable<int> > nodevar(variable);
-   const tbox::Pointer<pdat::SideVariable<int> > sidevar(variable);
-   const tbox::Pointer<pdat::EdgeVariable<int> > edgevar(variable);
+   const boost::shared_ptr<pdat::CellVariable<int> > cellvar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::FaceVariable<int> > facevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::NodeVariable<int> > nodevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::SideVariable<int> > sidevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<pdat::EdgeVariable<int> > edgevar(
+      variable,
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<HierarchyDataOpsInteger> ops;
+   boost::shared_ptr<HierarchyDataOpsInteger> ops;
 
-   if (!(cellvar.isNull())) {
+   if (cellvar) {
 
       if (get_unique) {
-         ops = new HierarchyCellDataOpsInteger(hierarchy);
+         ops.reset(new HierarchyCellDataOpsInteger(hierarchy));
       } else {
          const int n = d_cell_ops_int.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_cell_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_cell_ops_int[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyCellDataOpsInteger(hierarchy);
+            ops.reset(new HierarchyCellDataOpsInteger(hierarchy));
             d_cell_ops_int.resizeArray(n + 1);
             d_cell_ops_int[n] = ops;
          }
       }
 
-   } else if (!(facevar.isNull())) {
+   } else if (facevar) {
 
       if (get_unique) {
-         ops = new HierarchyFaceDataOpsInteger(hierarchy);
+         ops.reset(new HierarchyFaceDataOpsInteger(hierarchy));
       } else {
          const int n = d_face_ops_int.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_face_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_face_ops_int[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyFaceDataOpsInteger(hierarchy);
+            ops.reset(new HierarchyFaceDataOpsInteger(hierarchy));
             d_face_ops_int.resizeArray(n + 1);
             d_face_ops_int[n] = ops;
          }
       }
 
-   } else if (!(nodevar.isNull())) {
+   } else if (nodevar) {
 
       if (get_unique) {
-         ops = new HierarchyNodeDataOpsInteger(hierarchy);
+         ops.reset(new HierarchyNodeDataOpsInteger(hierarchy));
       } else {
          const int n = d_node_ops_int.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_node_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_node_ops_int[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyNodeDataOpsInteger(hierarchy);
+            ops.reset(new HierarchyNodeDataOpsInteger(hierarchy));
             d_node_ops_int.resizeArray(n + 1);
             d_node_ops_int[n] = ops;
          }
       }
 
-   } else if (!(sidevar.isNull())) {
+   } else if (sidevar) {
 
       if (get_unique) {
-         ops = new HierarchySideDataOpsInteger(hierarchy);
+         ops.reset(new HierarchySideDataOpsInteger(hierarchy));
       } else {
          const int n = d_side_ops_int.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_side_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_side_ops_int[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchySideDataOpsInteger(hierarchy);
+            ops.reset(new HierarchySideDataOpsInteger(hierarchy));
             d_side_ops_int.resizeArray(n + 1);
             d_side_ops_int[n] = ops;
          }
       }
 
-   } else if (!(edgevar.isNull())) {
+   } else if (edgevar) {
 
       if (get_unique) {
-         ops = new HierarchyEdgeDataOpsInteger(hierarchy);
+         ops.reset(new HierarchyEdgeDataOpsInteger(hierarchy));
       } else {
          const int n = d_edge_ops_int.getSize();
-         for (int i = 0; i < n && ops.isNull(); ++i) {
+         for (int i = 0; i < n && !ops; ++i) {
             if (hierarchy != d_edge_ops_int[i]->getPatchHierarchy()) continue;
             // A compatible operator has been found at i.
             ops = d_edge_ops_int[i];
          }
          if (!ops) {
             // No compatible operator has been found.
-            ops = new HierarchyEdgeDataOpsInteger(hierarchy);
+            ops.reset(new HierarchyEdgeDataOpsInteger(hierarchy));
             d_edge_ops_int.resizeArray(n + 1);
             d_edge_ops_int[n] = ops;
          }

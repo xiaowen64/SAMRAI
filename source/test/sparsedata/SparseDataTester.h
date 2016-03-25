@@ -3,14 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test class for SparseData.
  *
  ************************************************************************/
 #ifndef included_SparseDataTester_h
 #define included_SparseDataTester_h
 
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -19,6 +18,7 @@
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/hier/Index.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
 
@@ -30,7 +30,7 @@ class SparseDataTester
 {
 public:
    SparseDataTester(
-      const SAMRAI::tbox::Dimension& dim);
+      const tbox::Dimension& dim);
    ~SparseDataTester();
 
    bool
@@ -64,7 +64,7 @@ private:
 #ifdef HAVE_BOOST_HEADERS
    void
    _fillObject(
-      tbox::Pointer<SparseDataType> sparse_data);
+      boost::shared_ptr<SparseDataType> sparse_data);
    void
    _getDblKeys(
       std::vector<std::string>& keys);
@@ -79,14 +79,14 @@ private:
       int* values);
    bool
    _testCopy(
-      tbox::Pointer<SparseDataType> src,
-      tbox::Pointer<SparseDataType> dst);
-   tbox::Pointer<SparseDataType>
+      boost::shared_ptr<SparseDataType> src,
+      boost::shared_ptr<SparseDataType> dst);
+   boost::shared_ptr<SparseDataType>
    _createEmptySparseData();
    hier::Index
    _getRandomIndex();
 
-   tbox::Pointer<SparseDataType> d_sparse_data;
+   boost::shared_ptr<SparseDataType> d_sparse_data;
 #endif
 
    bool d_initialized;

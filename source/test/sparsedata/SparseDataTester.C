@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test class for SparseData (implementation).
  *
  ************************************************************************/
@@ -40,7 +40,7 @@ SparseDataTester::testConstruction()
 #ifdef HAVE_BOOST_HEADERS
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
-   hier::Box box(lo, hi);
+   hier::Box box(lo, hi, hier::BlockId(0));
 
    hier::IntVector vec(d_dim, 0);
    hier::IntVector ghosts(d_dim, 0);
@@ -49,8 +49,8 @@ SparseDataTester::testConstruction()
    std::vector<std::string> ikeys;
    _getIntKeys(ikeys);
 
-   tbox::Pointer<SparseDataType> sparse(new SparseDataType(box, ghosts,
-                                           dkeys, ikeys));
+   boost::shared_ptr<SparseDataType> sparse(
+      new SparseDataType(box, ghosts, dkeys, ikeys));
    d_sparse_data = sparse;
 
    d_sparse_data->printNames(tbox::plog);
@@ -63,7 +63,7 @@ SparseDataTester::testConstruction()
       d_initialized = true;
    }
 
-   SparseDataType::Iterator iter = d_sparse_data->registerIndex(hi);
+   SparseDataType::iterator iter = d_sparse_data->registerIndex(hi);
 
    SparseDataType::AttributeIterator index_iter(d_sparse_data->begin(hi)),
    index_iterend(d_sparse_data->end(hi));
@@ -90,7 +90,7 @@ SparseDataTester::testCopy()
 
    // ensure d_sparse_data is empty before we start
    d_sparse_data->clear();
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
    bool success = _testCopy(d_sparse_data, sample);
    // clean up d_sparse_data
    d_sparse_data->clear();
@@ -108,7 +108,7 @@ SparseDataTester::testCopy2()
    // ensure the tester's copy of d_sparse_data is empty before
    // we start
    d_sparse_data->clear();
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
    _fillObject(sample);
 
    bool success = _testCopy(sample, d_sparse_data);
@@ -126,7 +126,7 @@ SparseDataTester::testAdd()
 {
    bool success = true;
 #ifdef HAVE_BOOST_HEADERS
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
 
    success = success && (sample->empty() ? true : false);
    if (success)
@@ -145,13 +145,13 @@ bool
 SparseDataTester::testRemove()
 {
 #ifdef HAVE_BOOST_HEADERS
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
    _fillObject(sample);
    bool success = (!sample->empty() ? true : false);
    hier::Index idx = _getRandomIndex();
 
    int size = d_sparse_data->size();
-   SparseDataType::Iterator iter = d_sparse_data->begin();
+   SparseDataType::iterator iter = d_sparse_data->begin();
    while (iter != d_sparse_data->end()) {
       if (iter.getIndex() == idx) {
          sample->remove(iter);
@@ -180,12 +180,12 @@ SparseDataTester::testPackStream()
    bool success = true;
 #ifdef HAVE_BOOST_HEADERS
 
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
    _fillObject(sample);
 
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
-   hier::Box box(lo, hi);
+   hier::Box box(lo, hi, hier::BlockId(0));
    hier::BoxContainer blist(box);
    hier::Transformation trans(hier::IntVector::getZero(d_dim));
 
@@ -193,20 +193,20 @@ SparseDataTester::testPackStream()
 
    int strsize = sample->getDataStreamSize(overlap);
 
-   SparseDataType::Iterator iter(sample);
+   SparseDataType::iterator iter(sample.get());
 
    tbox::MessageStream str(strsize, tbox::MessageStream::Write);
    sample->packStream(str, overlap);
    tbox::plog << "Printing sample1" << std::endl;
    sample->printAttributes(tbox::plog);
 
-   tbox::Pointer<SparseDataType> sample2 = _createEmptySparseData();
-   tbox::MessageStream upStr(strsize, tbox::MessageStream::Read);
-   memcpy(upStr.getBufferStart(), str.getBufferStart(), strsize);
+   boost::shared_ptr<SparseDataType> sample2(_createEmptySparseData());
+   tbox::MessageStream upStr(strsize, tbox::MessageStream::Read,
+                             str.getBufferStart());
 
    sample2->unpackStream(upStr, overlap);
 
-   SparseDataType::Iterator iter2(sample2);
+   SparseDataType::iterator iter2(sample2.get());
 
    sample2->printNames(tbox::plog);
    tbox::plog << "Printing sample2" << std::endl;
@@ -240,16 +240,17 @@ SparseDataTester::testDatabaseInterface()
    bool success = true;
 #ifdef HAVE_BOOST_HEADERS
 
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
    _fillObject(sample);
-   tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
-   sample->putToDatabase(input_db);
+   boost::shared_ptr<tbox::Database> input_db(
+      new tbox::InputDatabase("input_db"));
+   sample->putUnregisteredToDatabase(input_db);
 
-   tbox::Pointer<SparseDataType> sample2 = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample2(_createEmptySparseData());
    sample2->getFromDatabase(input_db);
 
-   SparseDataType::Iterator iter1(sample);
-   SparseDataType::Iterator iter2(sample2);
+   SparseDataType::iterator iter1(sample.get());
+   SparseDataType::iterator iter2(sample2.get());
 
    for ( ; iter1 != sample->end() && iter2 != sample2->end() && success;
          ++iter1, ++iter2) {
@@ -269,15 +270,15 @@ void
 SparseDataTester::testTiming()
 {
 #ifdef HAVE_BOOST_HEADERS
-   tbox::Pointer<tbox::Timer> timer =
-      tbox::TimerManager::getManager()->getTimer("SparseDataAddItem", true);
+   boost::shared_ptr<tbox::Timer> timer(
+      tbox::TimerManager::getManager()->getTimer("SparseDataAddItem", true));
 
    hier::IntVector v(d_dim, 0);
    tbox::plog << "Begin Timing" << std::endl;
-   tbox::Pointer<SparseDataType> sample = _createEmptySparseData();
+   boost::shared_ptr<SparseDataType> sample(_createEmptySparseData());
 
    timer->start();
-   SparseDataType::Iterator iter;
+   SparseDataType::iterator iter;
    for (int i = 0; i < 100; ++i) {
       for (int j = 0; j < 100; ++j) {
          v[0] = i;
@@ -313,15 +314,15 @@ SparseDataTester::testTiming()
 
 bool
 SparseDataTester::_testCopy(
-   tbox::Pointer<SparseDataType> src,
-   tbox::Pointer<SparseDataType> dst)
+   boost::shared_ptr<SparseDataType> src,
+   boost::shared_ptr<SparseDataType> dst)
 {
    bool success = true;
    src->copy(*dst);
    TBOX_ASSERT(src->size() == dst->size());
-   pdat::SparseData<pdat::CellGeometry>::Iterator me(src);
-   pdat::SparseData<pdat::CellGeometry>::Iterator me_end = src->end();
-   pdat::SparseData<pdat::CellGeometry>::Iterator other(dst);
+   pdat::SparseData<pdat::CellGeometry>::iterator me(src.get());
+   pdat::SparseData<pdat::CellGeometry>::iterator me_end = src->end();
+   pdat::SparseData<pdat::CellGeometry>::iterator other(dst.get());
 
    for ( ; me != me_end && success != false; ++me, ++other) {
       if (me != other) {
@@ -346,7 +347,7 @@ SparseDataTester::_getRandomIndex()
 
 void
 SparseDataTester::_fillObject(
-   tbox::Pointer<SparseDataType> sparse_data)
+   boost::shared_ptr<SparseDataType> sparse_data)
 {
    hier::IntVector v(d_dim, 0);
    double* dvalues = new double[DSIZE];
@@ -354,7 +355,7 @@ SparseDataTester::_fillObject(
    int* ivalues = new int[ISIZE];
    _getIntValues(ivalues);
 
-   SparseDataType::Iterator iter;
+   SparseDataType::iterator iter;
    for (int i = 1; i < NUM_INDICES; ++i) {
       v[0] = i;
       v[1] = i;
@@ -369,21 +370,20 @@ SparseDataTester::_fillObject(
    delete[] ivalues;
 }
 
-tbox::Pointer<pdat::SparseData<pdat::CellGeometry> >
+boost::shared_ptr<pdat::SparseData<pdat::CellGeometry> >
 SparseDataTester::_createEmptySparseData()
 {
    hier::Index lo = hier::Index(d_dim, 0);
    hier::Index hi = hier::Index(d_dim, 100);
-   hier::Box box(lo, hi);
+   hier::Box box(lo, hi, hier::BlockId(0));
    hier::IntVector ghosts(d_dim, 0);
 
    std::vector<std::string> dkeys;
    _getDblKeys(dkeys);
    std::vector<std::string> ikeys;
    _getIntKeys(ikeys);
-   tbox::Pointer<SparseDataType> sample(
+   return boost::shared_ptr<SparseDataType>(
       new SparseDataType(box, ghosts, dkeys, ikeys));
-   return sample;
 }
 
 void

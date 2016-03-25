@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -32,7 +32,7 @@ using namespace std;
 OuternodeDataTest::OuternodeDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -41,7 +41,7 @@ OuternodeDataTest::OuternodeDataTest(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
 #endif
 
@@ -72,10 +72,11 @@ OuternodeDataTest::OuternodeDataTest(
       getDatabase("PatchHierarchy")->
       getInteger("max_levels") - 1;
 
-   d_cart_grid_geometry = new geom::CartesianGridGeometry(
+   d_cart_grid_geometry.reset(
+      new geom::CartesianGridGeometry(
          dim,
          "CartesianGridGeometry",
-         main_input_db->getDatabase("CartesianGridGeometry"));
+         main_input_db->getDatabase("CartesianGridGeometry")));
 
    setGridGeometry(d_cart_grid_geometry);
 
@@ -88,10 +89,10 @@ OuternodeDataTest::~OuternodeDataTest()
 }
 
 void OuternodeDataTest::readTestInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    /*
@@ -141,16 +142,16 @@ void OuternodeDataTest::registerVariables(
    d_variables_dst.resizeArray(nvars);
 
    for (int i = 0; i < nvars; i++) {
-      d_variables_src[i] =
+      d_variables_src[i].reset(
          new pdat::OuternodeVariable<double>(
             d_dim,
             d_variable_src_name[i],
-            d_variable_depth[i]);
-      d_variables_dst[i] =
+            d_variable_depth[i]));
+      d_variables_dst[i].reset(
          new pdat::NodeVariable<double>(
             d_dim,
             d_variable_dst_name[i],
-            d_variable_depth[i]);
+            d_variable_depth[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
@@ -173,15 +174,17 @@ void OuternodeDataTest::registerVariables(
 }
 
 void OuternodeDataTest::setLinearData(
-   tbox::Pointer<pdat::NodeData<double> > data,
+   boost::shared_ptr<pdat::NodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -192,24 +195,25 @@ void OuternodeDataTest::setLinearData(
 
    const hier::Box sbox = data->getGhostBox() * box;
 
-   for (pdat::NodeIterator ci(sbox); ci; ci++) {
+   pdat::NodeIterator ciend(sbox, false);
+   for (pdat::NodeIterator ci(sbox, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of node center and
        * set data to linear profile.
        */
 
-      x = lowerx[0] + dx[0] * (ci() (0) - loweri(0));
+      x = lowerx[0] + dx[0] * ((*ci)(0) - loweri(0));
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + dx[1] * (ci() (1) - loweri(1));
+         y = lowerx[1] + dx[1] * ((*ci)(1) - loweri(1));
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + dx[2] * (ci() (2) - loweri(2));
+         z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
       for (int d = 0; d < depth; d++) {
-         (*data)(ci(), d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
+         (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
    }
@@ -217,14 +221,14 @@ void OuternodeDataTest::setLinearData(
 }
 
 void OuternodeDataTest::setLinearData(
-   tbox::Pointer<pdat::OuternodeData<double> > data,
+   boost::shared_ptr<pdat::OuternodeData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    NULL_USE(box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_ASSERT(box.isSpatiallyEqual(patch.getBox()));
    if (!box.isSpatiallyEqual(data->getBox())) {
       TBOX_ERROR("Box is not identical to data box, which is\n"
@@ -232,7 +236,9 @@ void OuternodeDataTest::setLinearData(
    }
 #endif
 
-   tbox::Pointer<geom::CartesianPatchGeometry> pgeom = patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -245,23 +251,24 @@ void OuternodeDataTest::setLinearData(
    for (n = 0; n < d_dim.getValue(); ++n) {
       for (s = 0; s < 2; ++s) {
          const hier::Box databox = data->getDataBox(n, s);
-         for (hier::Box::Iterator bi(databox); bi; bi++) {
+         hier::Box::iterator biend(databox, false);
+         for (hier::Box::iterator bi(databox, true); bi != biend; ++bi) {
 
             /*
              * Compute spatial location of node center and
              * set data to linear profile.
              */
 
-            x = lowerx[0] + dx[0] * (bi() (0) - loweri(0));
+            x = lowerx[0] + dx[0] * ((*bi)(0) - loweri(0));
             y = z = 0.;
             if (d_dim > tbox::Dimension(1)) {
-               y = lowerx[1] + dx[1] * (bi() (1) - loweri(1));
+               y = lowerx[1] + dx[1] * ((*bi)(1) - loweri(1));
             }
             if (d_dim > tbox::Dimension(2)) {
-               z = lowerx[2] + dx[2] * (bi() (2) - loweri(2));
+               z = lowerx[2] + dx[2] * ((*bi)(2) - loweri(2));
             }
 
-            pdat::NodeIndex ni(bi(), (pdat::NodeIndex::Corner)0);
+            pdat::NodeIndex ni(*bi, (pdat::NodeIndex::Corner)0);
             for (int d = 0; d < depth; d++) {
                (*data)(ni,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
@@ -275,7 +282,7 @@ void OuternodeDataTest::setLinearData(
 
 void OuternodeDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -283,26 +290,30 @@ void OuternodeDataTest::initializeDataOnPatch(
    NULL_USE(level_number);
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
    variable_db->printClassData();
-   tbox::Array<tbox::Pointer<hier::Variable> >& variables =
-      src_or_dst == 's' ? d_variables_src : d_variables_dst;
+   tbox::Array<boost::shared_ptr<hier::Variable> >& variables(
+      src_or_dst == 's' ? d_variables_src : d_variables_dst);
 
    if (d_do_refine) {
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         tbox::Pointer<hier::PatchData> data = patch.getPatchData(variables[i],
-               getDataContext());
-         TBOX_ASSERT(!data.isNull());
+         boost::shared_ptr<hier::PatchData> data(
+            patch.getPatchData(variables[i], getDataContext()));
+         TBOX_ASSERT(data);
 
-         tbox::Pointer<pdat::OuternodeData<double> > onode_data = data;
-         tbox::Pointer<pdat::NodeData<double> > node_data = data;
+         boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
+            data,
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
+            data,
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = data->getBox();
 
-         if (!node_data.isNull()) {
+         if (node_data) {
             setLinearData(node_data, dbox, patch);
          }
-         if (!onode_data.isNull()) {
+         if (onode_data) {
             setLinearData(onode_data, dbox, patch);
          }
 
@@ -312,18 +323,22 @@ void OuternodeDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < variables.getSize(); i++) {
 
-         tbox::Pointer<hier::PatchData> data = patch.getPatchData(variables[i],
-               getDataContext());
-         TBOX_ASSERT(!data.isNull());
-         tbox::Pointer<pdat::OuternodeData<double> > onode_data = data;
-         tbox::Pointer<pdat::NodeData<double> > node_data = data;
+         boost::shared_ptr<hier::PatchData> data(
+            patch.getPatchData(variables[i], getDataContext()));
+         TBOX_ASSERT(data);
+         boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
+            data,
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
+            data,
+            boost::detail::dynamic_cast_tag());
 
          hier::Box dbox = data->getGhostBox();
 
-         if (!node_data.isNull()) {
+         if (node_data) {
             setLinearData(node_data, dbox, patch);
          }
-         if (!onode_data.isNull()) {
+         if (onode_data) {
             setLinearData(onode_data, dbox, patch);
          }
 
@@ -334,12 +349,12 @@ void OuternodeDataTest::initializeDataOnPatch(
 }
 
 void OuternodeDataTest::checkPatchInteriorData(
-   const tbox::Pointer<pdat::OuternodeData<double> >& data,
+   const boost::shared_ptr<pdat::OuternodeData<double> >& data,
    const hier::Box& interior,
-   const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const
+   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
 #endif
 
    const pdat::NodeIndex loweri(interior.lower(), (pdat::NodeIndex::Corner)0);
@@ -349,26 +364,27 @@ void OuternodeDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (pdat::NodeIterator ci(interior); ci; ci++) {
+   pdat::NodeIterator ciend(interior, false);
+   for (pdat::NodeIterator ci(interior, true); ci != ciend; ++ci) {
 
       /*
        * Compute spatial location of edge and
        * compare data to linear profile.
        */
 
-      x = lowerx[0] + dx[0] * (ci() (0) - loweri(0));
+      x = lowerx[0] + dx[0] * ((*ci)(0) - loweri(0));
       y = z = 0.;
       if (d_dim > tbox::Dimension(1)) {
-         y = lowerx[1] + dx[1] * (ci() (1) - loweri(1));
+         y = lowerx[1] + dx[1] * ((*ci)(1) - loweri(1));
       }
       if (d_dim > tbox::Dimension(2)) {
-         z = lowerx[2] + dx[2] * (ci() (2) - loweri(2));
+         z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
       double value;
       for (int d = 0; d < depth; d++) {
          value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
-         if (!(tbox::MathUtilities<double>::equalEps((*data)(ci(),
+         if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci,
                                                              d), value))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
                        << endl;
@@ -384,9 +400,9 @@ void OuternodeDataTest::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)patch;
-   (void)gcw;
-   (void)time;
+   NULL_USE(patch);
+   NULL_USE(gcw);
+   NULL_USE(time);
 
    TBOX_ERROR("Only coarsen operations can be done with this test.\n"
       << "Coarsen operations should not need physical bc.\n");
@@ -402,10 +418,10 @@ void OuternodeDataTest::setPhysicalBoundaryConditions(
  */
 bool OuternodeDataTest::verifyResults(
    const hier::Patch& patch,
-   const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-   (void)hierarchy;
+   NULL_USE(hierarchy);
    bool test_failed = false;
    if (d_do_refine || d_do_coarsen) {
 
@@ -420,7 +436,7 @@ bool OuternodeDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      tbox::Pointer<pdat::NodeData<double> > solution(
+      boost::shared_ptr<pdat::NodeData<double> > solution(
          new pdat::NodeData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -435,18 +451,20 @@ bool OuternodeDataTest::verifyResults(
 
       for (int i = 0; i < d_variables_dst.getSize(); i++) {
 
-         tbox::Pointer<pdat::NodeData<double> > node_data =
-            patch.getPatchData(d_variables_dst[i], getDataContext());
+         boost::shared_ptr<pdat::NodeData<double> > node_data(
+            patch.getPatchData(d_variables_dst[i], getDataContext()),
+            boost::detail::dynamic_cast_tag());
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 
-         for (pdat::NodeIterator ci(dbox); ci; ci++) {
-            double correct = (*solution)(ci());
+         pdat::NodeIterator ciend(dbox, false);
+         for (pdat::NodeIterator ci(dbox, true); ci != ciend; ++ci) {
+            double correct = (*solution)(*ci);
             for (int d = 0; d < depth; d++) {
-               double result = (*node_data)(ci(), d);
+               double result = (*node_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."
-                             << " : node index = " << ci() << endl;
+                             << " : node index = " << *ci << endl;
                   tbox::perr << "    hier::Variable = "
                              << d_variable_src_name[i]
                              << " : depth index = " << d << endl;
@@ -462,7 +480,7 @@ bool OuternodeDataTest::verifyResults(
          tbox::plog << "Outernode test Successful!" << endl;
       }
 
-      solution.setNull();   // just to be anal...
+      solution.reset();   // just to be anal...
 
       tbox::plog << "\nExiting OuternodeDataTest::verifyResults..." << endl;
       tbox::plog << "level_number = " << level_number << endl;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating face data objects
  *
  ************************************************************************/
@@ -19,9 +19,8 @@
 #include "SAMRAI/pdat/OuterfaceDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/FaceDataFactory.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -40,8 +39,7 @@ FaceDataFactory<TYPE>::FaceDataFactory(
    bool fine_boundary_represents_var):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_mb_trans(NULL)
+   d_fine_boundary_represents_var(fine_boundary_represents_var)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -51,9 +49,6 @@ FaceDataFactory<TYPE>::FaceDataFactory(
 template<class TYPE>
 FaceDataFactory<TYPE>::~FaceDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -65,16 +60,16 @@ FaceDataFactory<TYPE>::~FaceDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 FaceDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new FaceDataFactory<TYPE>(
-                                                   d_depth,
-                                                   ghosts,
-                                                   d_fine_boundary_represents_var));
+   return boost::make_shared<FaceDataFactory>(
+      d_depth,
+      ghosts,
+      d_fine_boundary_represents_var);
 }
 
 /*
@@ -86,15 +81,16 @@ FaceDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 FaceDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new FaceData<TYPE>(patch.getBox(), d_depth, this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::make_shared<FaceData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts);
 }
 
 /*
@@ -106,14 +102,20 @@ FaceDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 FaceDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new FaceGeometry(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<FaceGeometry>(box, d_ghosts);
+}
+
+template<class TYPE>
+int
+FaceDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
 }
 
 /*
@@ -125,7 +127,8 @@ FaceDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t FaceDataFactory<TYPE>::getSizeOfMemory(
+size_t
+FaceDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -133,7 +136,7 @@ size_t FaceDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(FaceData<TYPE>));
    const size_t data =
-      FaceData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts);
+      FaceData<TYPE>::getSizeOfData(box, d_depth, d_ghosts);
    return obj + data;
 }
 
@@ -147,8 +150,9 @@ size_t FaceDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool FaceDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+FaceDataFactory<TYPE>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -158,20 +162,46 @@ bool FaceDataFactory<TYPE>::validCopyTo(
     * Valid options are FaceData and OuterfaceData.
     */
    if (!valid_copy) {
-      tbox::Pointer<FaceDataFactory<TYPE> > fdf = dst_pdf;
-      if (!fdf.isNull()) {
+      boost::shared_ptr<FaceDataFactory<TYPE> > fdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (fdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuterfaceDataFactory<TYPE> > ofdf = dst_pdf;
-      if (!ofdf.isNull()) {
+      boost::shared_ptr<OuterfaceDataFactory<TYPE> > ofdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (ofdf) {
          valid_copy = true;
       }
    }
 
    return valid_copy;
+}
+
+/*
+ * Return a boolean value indicating how data for the face quantity will be
+ * treated on coarse-fine interfaces.  This value is passed into the
+ * constructor.  See the FaceVariable<DIM> class header file for more
+ * information.
+ */
+template<class TYPE>
+bool
+FaceDataFactory<TYPE>::fineBoundaryRepresentsVariable() const {
+   return d_fine_boundary_represents_var;
+}
+
+/*
+ * Return true since the face data index space extends beyond the interior of
+ * patches.  That is, face data lives on patch borders.
+ */
+template<class TYPE>
+bool
+FaceDataFactory<TYPE>::dataLivesOnPatchBorder() const {
+   return true;
 }
 
 }

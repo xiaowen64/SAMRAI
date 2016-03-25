@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex edge-centered patch data.
  *
  ************************************************************************/
@@ -20,8 +20,9 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -46,7 +47,6 @@ namespace math {
  */
 
 class PatchEdgeDataOpsComplex:
-   public tbox::DescribedClass,
    public PatchEdgeDataBasicOps<dcomplex>,
    public PatchEdgeDataNormOpsComplex
 {
@@ -63,8 +63,8 @@ public:
     */
    void
    copyData(
-      tbox::Pointer<pdat::EdgeData<dcomplex> >& dst,
-      const tbox::Pointer<pdat::EdgeData<dcomplex> >& src,
+      const boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<dcomplex> >& src,
       const hier::Box& box) const;
 
    /**
@@ -73,7 +73,7 @@ public:
     */
    void
    swapData(
-      tbox::Pointer<hier::Patch> patch,
+      const boost::shared_ptr<hier::Patch>& patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -82,7 +82,7 @@ public:
     */
    void
    printData(
-      const tbox::Pointer<pdat::EdgeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::EdgeData<dcomplex> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -91,9 +91,14 @@ public:
     */
    void
    setToScalar(
-      tbox::Pointer<pdat::EdgeData<dcomplex> >& dst,
+      const boost::shared_ptr<pdat::EdgeData<dcomplex> >& dst,
       const dcomplex& alpha,
-      const hier::Box& box) const;
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      dst->fillAll(alpha, box);
+   }
 
 private:
    // The following are not implemented:
@@ -107,4 +112,5 @@ private:
 
 }
 }
+
 #endif

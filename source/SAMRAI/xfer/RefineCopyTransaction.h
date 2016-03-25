@@ -3,8 +3,9 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   Communication transaction for data copies during data refining
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Description:   Communication transaction for data copies during data
+ *                refining
  *
  ************************************************************************/
 
@@ -14,7 +15,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Transaction.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/xfer/RefineClasses.h"
 
@@ -51,7 +52,13 @@ public:
    static void
    setRefineItems(
       const RefineClasses::Data** refine_items,
-      int num_refine_items);
+      int num_refine_items)
+   {
+      TBOX_ASSERT(refine_items != (const RefineClasses::Data **)NULL);
+      TBOX_ASSERT(num_refine_items >= 0);
+      s_refine_items = refine_items;
+      s_num_refine_items = num_refine_items;
+   }
 
    /*!
     * Static member function to unset the array of refine class data items that
@@ -60,7 +67,11 @@ public:
     * of different schedules.  The array is unset in the RefineSchedule class.
     */
    static void
-   unsetRefineItems();
+   unsetRefineItems()
+   {
+      s_refine_items = (const RefineClasses::Data **)NULL;
+      s_num_refine_items = 0;
+   }
 
    /*!
     * Construct a transaction with the specified source and destination
@@ -72,24 +83,23 @@ public:
     * copy, (2) packing a message stream with source patch data, or (3) unpacking
     * destination patch data from a message stream.
     *
-    * @param dst_level        tbox::Pointer to destination patch level.
-    * @param src_level        tbox::Pointer to source patch level.
-    * @param overlap          tbox::Pointer to overlap region between patches.
-    * @param dst_patch        Integer index of destination patch in destination
-    *                         patch level.
-    * @param src_patch        Integer index of source patch in source patch level.
+    * @param dst_level        boost::shared_ptr to destination patch level.
+    * @param src_level        boost::shared_ptr to source patch level.
+    * @param overlap          boost::shared_ptr to overlap region between patches.
+    * @param dst_mapped_box   Destination Box in destination patch level.
+    * @param src_mapped_box   Source Box in source patch level.
     * @param refine_item_id   Integer id of refine data item owned by refine schedule.
     *
     * When assertion checking is active, an assertion will result if any of the pointer
     * arguments is null, or if any of the integer arguments are invalid (i.e., < 0);
     */
-   explicit RefineCopyTransaction(
-      tbox::Pointer<hier::PatchLevel>& dst_level,
-      tbox::Pointer<hier::PatchLevel>& src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+   RefineCopyTransaction(
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
-      int refine_item_id);
+      const int refine_item_id);
 
    /*!
     * The virtual destructor for the copy transaction releases all
@@ -124,17 +134,13 @@ public:
     * Return the sending processor number for the communications transaction.
     */
    virtual int
-   getSourceProcessor() {
-      return d_src_patch_rank;
-   }
+   getSourceProcessor();
 
    /*!
     * Return the receiving processor number for the communications transaction.
     */
    virtual int
-   getDestinationProcessor() {
-      return d_dst_patch_rank;
-   }
+   getDestinationProcessor();
 
    /*!
     * Pack the transaction data into the message stream.
@@ -173,11 +179,11 @@ private:
    static const RefineClasses::Data** s_refine_items;
    static int s_num_refine_items;
 
-   tbox::Pointer<hier::Patch> d_dst_patch;
+   boost::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
-   tbox::Pointer<hier::Patch> d_src_patch;
+   boost::shared_ptr<hier::Patch> d_src_patch;
    int d_src_patch_rank;
-   tbox::Pointer<hier::BoxOverlap> d_overlap;
+   boost::shared_ptr<hier::BoxOverlap> d_overlap;
    int d_refine_item_id;
    int d_incoming_bytes;
    int d_outgoing_bytes;
@@ -186,4 +192,5 @@ private:
 
 }
 }
+
 #endif

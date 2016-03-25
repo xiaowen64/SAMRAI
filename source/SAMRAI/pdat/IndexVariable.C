@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   IndexVariable implementation
  *
  ************************************************************************/
@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/IndexDataFactory.h"
 
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -34,8 +36,8 @@ IndexVariable<TYPE, BOX_GEOMETRY>::IndexVariable(
    // default zero ghost cells
    hier::Variable(
       name,
-      tbox::Pointer<SAMRAI::hier::PatchDataFactory>(
-         new IndexDataFactory<TYPE, BOX_GEOMETRY>(hier::IntVector::getZero(dim))))
+      boost::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(
+         hier::IntVector::getZero(dim)))
 {
 }
 
@@ -57,7 +59,8 @@ IndexVariable<TYPE, BOX_GEOMETRY>::~IndexVariable()
 template<class TYPE, class BOX_GEOMETRY>
 IndexVariable<TYPE, BOX_GEOMETRY>::IndexVariable(
    const IndexVariable<TYPE, BOX_GEOMETRY>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    // not implemented
    NULL_USE(foo);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real side-centered patch data.
  *
  ************************************************************************/
@@ -23,16 +23,10 @@ PatchSideDataOpsReal<TYPE>::PatchSideDataOpsReal()
 {
 }
 
-#if 0
-/*
- * This was moved into the header due to what looks like bug in the
- * XLC compiler.
- */
 template<class TYPE>
 PatchSideDataOpsReal<TYPE>::~PatchSideDataOpsReal()
 {
 }
-#endif
 
 /*
  *************************************************************************
@@ -52,7 +46,8 @@ PatchSideDataOpsReal<TYPE>::PatchSideDataOpsReal(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::operator = (
+void
+PatchSideDataOpsReal<TYPE>::operator = (
    const PatchSideDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -67,17 +62,22 @@ void PatchSideDataOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::swapData(
-   tbox::Pointer<hier::Patch> patch,
+void
+PatchSideDataOpsReal<TYPE>::swapData(
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::SideData<TYPE> > d1 = patch->getPatchData(data1_id);
-   tbox::Pointer<pdat::SideData<TYPE> > d2 = patch->getPatchData(data2_id);
+   boost::shared_ptr<pdat::SideData<TYPE> > d1(
+      patch->getPatchData(data1_id),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::SideData<TYPE> > d2(
+      patch->getPatchData(data2_id),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getDirectionVector() == d2->getDirectionVector());
@@ -88,12 +88,13 @@ void PatchSideDataOpsReal<TYPE>::swapData(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::printData(
-   const tbox::Pointer<pdat::SideData<TYPE> >& data,
+void
+PatchSideDataOpsReal<TYPE>::printData(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    s << "Data box = " << box << std::endl;
@@ -102,19 +103,20 @@ void PatchSideDataOpsReal<TYPE>::printData(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::copyData(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
-   const tbox::Pointer<pdat::SideData<TYPE> >& src,
+void
+PatchSideDataOpsReal<TYPE>::copyData(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::SideData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
-   const tbox::Dimension& dim(box.getDim());
+   int dimVal = box.getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          (dst->getArrayData(d)).copy(src->getArrayData(d), side_box);
@@ -123,12 +125,13 @@ void PatchSideDataOpsReal<TYPE>::copyData(
 }
 
 template<class TYPE>
-void PatchSideDataOpsReal<TYPE>::setToScalar(
-   tbox::Pointer<pdat::SideData<TYPE> >& dst,
+void
+PatchSideDataOpsReal<TYPE>::setToScalar(
+   const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    dst->fillAll(alpha, box);

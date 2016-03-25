@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered integer data on
  *                a  mesh.
  *
@@ -72,31 +72,20 @@ NodeIntegerInjection::~NodeIntegerInjection()
 {
 }
 
-bool NodeIntegerInjection::findCoarsenOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<NodeVariable<int> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int NodeIntegerInjection::getOperatorPriority() const
+int
+NodeIntegerInjection::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-NodeIntegerInjection::getStencilWidth() const {
+NodeIntegerInjection::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void NodeIntegerInjection::coarsen(
+void
+NodeIntegerInjection::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,
@@ -104,13 +93,15 @@ void NodeIntegerInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<NodeData<int> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<NodeData<int> >
-   cdata = coarse.getPatchData(dst_component);
+   boost::shared_ptr<NodeData<int> > fdata(
+      fine.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<NodeData<int> > cdata(
+      coarse.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
 

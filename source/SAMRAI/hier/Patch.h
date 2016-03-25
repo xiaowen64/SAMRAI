@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -16,14 +16,17 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/ComponentSelector.h"
 #include "SAMRAI/hier/PatchData.h"
+#include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchGeometry.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
+#include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -54,7 +57,7 @@ namespace hier {
  * @see hier::PatchDataFactory
  * @see hier::PatchGeometry
  */
-class Patch:public tbox::DescribedClass
+class Patch
 {
 public:
    /*!
@@ -66,9 +69,9 @@ public:
     * @param[in]  mapped_box
     * @param[in]  descriptor
     */
-   explicit Patch(
+   Patch(
       const Box& mapped_box,
-      tbox::Pointer<PatchDescriptor> descriptor);
+      const boost::shared_ptr<PatchDescriptor>& descriptor);
 
    /*!
     * @brief Virtual destructor for patch objects.
@@ -85,7 +88,10 @@ public:
     * @return The box over which this patch is defined.
     */
    const Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_mapped_box;
+   }
 
    /*!
     * @brief Get the GlobalId for this patch.
@@ -97,7 +103,10 @@ public:
     * @return GlobalId for this patch.
     */
    const GlobalId&
-   getGlobalId() const;
+   getGlobalId() const
+   {
+      return d_mapped_box.getGlobalId();
+   }
 
    /*!
     * @brief Get the patch's LocalId.
@@ -108,7 +117,10 @@ public:
     * @return The LocalId of this patch.
     */
    const LocalId&
-   getLocalId() const;
+   getLocalId() const
+   {
+      return d_mapped_box.getLocalId();
+   }
 
    /*!
     * @brief Get the patch descriptor.
@@ -118,8 +130,11 @@ public:
     *
     * @return the patch descriptor for this patch.
     */
-   tbox::Pointer<PatchDescriptor>
-   getPatchDescriptor() const;
+   boost::shared_ptr<PatchDescriptor>
+   getPatchDescriptor() const
+   {
+      return d_descriptor;
+   }
 
    /*!
     * @brief Get the patch data identified by the specified id.
@@ -134,9 +149,13 @@ public:
     *
     * @param[in]  id
     */
-   tbox::Pointer<PatchData>
+   boost::shared_ptr<PatchData>
    getPatchData(
-      const int id) const;
+      const int id) const
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      return d_patch_data[id];
+   }
 
    /*!
     * @brief Get the patch data associated with the specified variable and
@@ -153,10 +172,17 @@ public:
     * @param[in]  variable
     * @param[in]  context
     */
-   tbox::Pointer<PatchData>
+   boost::shared_ptr<PatchData>
    getPatchData(
-      const tbox::Pointer<Variable> variable,
-      const tbox::Pointer<VariableContext> context) const;
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context) const
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *variable);
+      int id = VariableDatabase::getDatabase()->
+         mapVariableAndContextToIndex(variable, context);
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      return d_patch_data[id];
+   }
 
    /*!
     * @brief Set the patch data Pointer associated with the specified
@@ -177,7 +203,12 @@ public:
    void
    setPatchData(
       const int id,
-      tbox::Pointer<PatchData> data);
+      const boost::shared_ptr<PatchData>& data)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *data);
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      d_patch_data[id] = data;
+   }
 
    /*!
     * @brief Check whether the specified component has been allocated.
@@ -188,7 +219,10 @@ public:
     */
    bool
    checkAllocated(
-      const int id) const;
+      const int id) const
+   {
+      return (id < d_patch_data.getSize()) && d_patch_data[id];
+   }
 
    /*!
     * @brief Get the size of the patch data
@@ -199,7 +233,11 @@ public:
     */
    size_t
    getSizeOfPatchData(
-      const int id) const;
+      const int id) const
+   {
+      return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
+         d_mapped_box);
+   }
 
    /*!
     * @brief Get the size of the patch data for all components specified
@@ -251,7 +289,14 @@ public:
     */
    void
    deallocatePatchData(
-      const int id);
+      const int id)
+   {
+      TBOX_ASSERT((id >= 0) &&
+         (id < d_descriptor->getMaxNumberRegisteredComponents()));
+      if (id < d_patch_data.getSize()) {
+         d_patch_data[id].reset();
+      }
+   }
 
    /*!
     * @brief Deallocate the specified components.
@@ -273,15 +318,21 @@ public:
     */
    void
    setPatchGeometry(
-      tbox::Pointer<PatchGeometry> geometry);
+      const boost::shared_ptr<PatchGeometry>& geometry)
+   {
+      d_patch_geometry = geometry;
+   }
 
    /*!
     * @brief Get the patch geometry
     *
     * @return pointer to patch geometry object.
     */
-   tbox::Pointer<PatchGeometry>
-   getPatchGeometry() const;
+   boost::shared_ptr<PatchGeometry>
+   getPatchGeometry() const
+   {
+      return d_patch_geometry;
+   }
 
    /*!
     * @brief Set the timestamp value for the specified patch component.
@@ -292,7 +343,12 @@ public:
    void
    setTime(
       const double timestamp,
-      const int id);
+      const int id)
+   {
+      TBOX_ASSERT((id >= 0) && (id < d_patch_data.getSize()));
+      TBOX_ASSERT(d_patch_data[id]);
+      d_patch_data[id]->setTime(timestamp);
+   }
 
    /*!
     * @brief Set the timestamp value for the specified patch components.
@@ -332,7 +388,10 @@ public:
     * @see inHierarchy()
     */
    int
-   getPatchLevelNumber() const;
+   getPatchLevelNumber() const
+   {
+      return d_patch_level_number;
+   }
 
    /*!
     * @brief Set the patch level number for this patch.
@@ -345,8 +404,10 @@ public:
     */
    void
    setPatchLevelNumber(
-      const int level_number);
-
+      const int level_number)
+   {
+      d_patch_level_number = level_number;
+   }
    /*!
     * @brief Determine if the level holding this patch resides in a hierarchy.
     *
@@ -354,7 +415,10 @@ public:
     * otherwise false.
     */
    bool
-   inHierarchy() const;
+   inHierarchy() const
+   {
+      return d_patch_in_hierarchy;
+   }
 
    /*!
     * @brief Set a flag determining if the patch resides in a hierarchy.
@@ -367,7 +431,10 @@ public:
     */
    void
    setPatchInHierarchy(
-      bool in_hierarchy);
+      bool in_hierarchy)
+   {
+      d_patch_in_hierarchy = in_hierarchy;
+   }
 
    /*!
     * @brief Get the patch data items from the database.
@@ -378,7 +445,7 @@ public:
     * The class version and restart file version must be equal.
     *
     * @par Assertions
-    * Checks that the database is a non-null Pointer,
+    * Checks that the database is a non-null boost::shared_ptr,
     * that data retrieved from the database are of the type
     * expected, and that the patch_number read in from the database
     * matches the patch number assigned to this Patch.
@@ -392,7 +459,7 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database> database,
+      const boost::shared_ptr<tbox::Database>& database,
       const ComponentSelector& component_selector);
 
    /*!
@@ -401,16 +468,16 @@ public:
     * Class version number and the state of the patch object are written.
     * Patch data objects specified in the component selector are also written.
     * @par Assertions
-    * Check that database is a non-null Pointer.
+    * Check that database is a non-null boost::shared_ptr.
     *
     * @param[in]  database
     * @param[in]  patchdata_write_table The ComponentSelector specifying the
     *             patch data components to write.
     */
    void
-   putToDatabase(
-      tbox::Pointer<tbox::Database> database,
-      const ComponentSelector& patchdata_write_table);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database,
+      const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Print a patch (for debugging).
@@ -435,7 +502,10 @@ public:
     * @return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_mapped_box.getDim();
+   }
 
    /*!
     * @brief Output patch information (box and number of components).
@@ -468,11 +538,11 @@ private:
     */
    Box d_mapped_box;
 
-   tbox::Pointer<PatchDescriptor> d_descriptor;
+   boost::shared_ptr<PatchDescriptor> d_descriptor;
 
-   tbox::Pointer<PatchGeometry> d_patch_geometry;
+   boost::shared_ptr<PatchGeometry> d_patch_geometry;
 
-   tbox::Array<tbox::Pointer<PatchData> > d_patch_data;
+   tbox::Array<boost::shared_ptr<PatchData> > d_patch_data;
 
    int d_patch_level_number;
 
@@ -482,7 +552,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Patch.I"
-#endif
+
 #endif

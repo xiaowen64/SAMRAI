@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -15,8 +15,8 @@
 #include "SAMRAI/tbox/Clock.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <vector>
 
@@ -28,6 +28,8 @@
 
 namespace SAMRAI {
 namespace tbox {
+
+class TimerManager;
 
 /**
  * Class Timer holds the exclusive and total start, stop, and elapsed
@@ -42,8 +44,8 @@ namespace tbox {
  * specified in that class.
  *
  * Wallclock time may be computed by the systems internal clocks which require
- * an object of type clock_t, or by SAMRAI_MPI::Wtime() if the code is linked to MPI
- * libraries.
+ * an object of type clock_t, or by SAMRAI_MPI::Wtime() if the code is linked
+ * to MPI libraries.
  *
  * In addition to running or not running, a timer may be active or inactive.
  * An inactive timer is one that is created within a program but will never
@@ -57,31 +59,36 @@ namespace tbox {
  * @see tbox::TimerManager
  */
 
-class TimerManager;
-
-class Timer:public DescribedClass
+class Timer
 {
    friend class TimerManager;
 public:
    /**
-    * Empty virtual destructor for Timer class.
+    * Empty destructor for Timer class.
     */
-   virtual ~Timer();
+   ~Timer();
 
    /**
     * Return string name for timer.
     */
    const std::string&
-   getName() const;
+   getName() const
+   {
+      return d_name;
+   }
 
    /**
     * Start the timer if active.
+    *
+    * It is an error to start a timer that is already started.
     */
    void
    start();
 
    /**
     * Stop the timer if active.
+    *
+    * It is an error to stop a timer that is already stopped.
     */
    void
    stop();
@@ -120,62 +127,132 @@ public:
     * Return total system time (between starts and stops)
     */
    double
-   getTotalSystemTime() const;
+   getTotalSystemTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_system_total / Clock::getClockCycle();
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return total user time
     */
    double
-   getTotalUserTime() const;
+   getTotalUserTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_user_total / Clock::getClockCycle();
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return total wallclock time
     */
    double
-   getTotalWallclockTime() const;
+   getTotalWallclockTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_wallclock_total;
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return max wallclock time
     */
    double
-   getMaxWallclockTime() const;
+   getMaxWallclockTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_max_wallclock;
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return exclusive system time.
     */
    double
-   getExclusiveSystemTime() const;
+   getExclusiveSystemTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_system_exclusive / Clock::getClockCycle();
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return exclusive user time.
     */
    double
-   getExclusiveUserTime() const;
+   getExclusiveUserTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_user_exclusive / Clock::getClockCycle();
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return exclusive wallclock time.
     */
    double
-   getExclusiveWallclockTime() const;
+   getExclusiveWallclockTime() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_wallclock_exclusive;
+#else
+      return 0.0;
+#endif
+   }
 
    /**
     * Return true if the timer is active; false otherwise.
     */
    bool
-   isActive() const;
+   isActive() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_is_active;
+#else
+      return false;
+#endif
+   }
 
    /**
     * Return true if timer is running; false otherwise.
     */
    bool
-   isRunning() const;
+   isRunning() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_is_running;
+#else
+      return false;
+#endif
+   }
 
    /**
     * Return number of accesses to start()-stop() functions for the
     * timer.
     */
    int
-   getNumberAccesses() const;
+   getNumberAccesses() const
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      return d_accesses;
+#else
+      return 0;
+#endif
+   }
 
    /**
     * Compute load balance efficiency based on wallclock (non-exclusive)
@@ -193,24 +270,24 @@ public:
    /**
     * Write timer data members to database.
     */
-   virtual void
-   putToDatabase(
-      Pointer<Database> db);
+   void
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<Database>& db) const;
 
    /**
     * Read restarted times from restart database.  When assertion checking
     * is on, the database pointer must be non-null.
     */
-   virtual void
+   void
    getFromRestart(
-      Pointer<Database> db);
+      const boost::shared_ptr<Database>& db);
 
 protected:
    /**
     * The constructor for the Timer class sets timer name string
     * and integer identifiers, and initializes the timer state.
     */
-   Timer(
+   explicit Timer(
       const std::string& name);
 
    /*
@@ -218,14 +295,26 @@ protected:
     */
    void
    setActive(
-      bool is_active);
+      bool is_active)
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      d_is_active = is_active;
+#endif
+   }
 
    /**
     * Add Timer that running concurrently with this one.
     */
    void
    addConcurrentTimer(
-      const Timer& timer);
+      const Timer& timer)
+   {
+#ifdef ENABLE_SAMRAI_TIMERS
+      if (!isConcurrentTimer(timer)) {
+         d_concurrent_timers.push_back(&timer);
+      }
+#endif
+   }
 
    /**
     * Return if the timer is running concurrently with this one.
@@ -308,7 +397,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Timer.I"
-#endif
 #endif

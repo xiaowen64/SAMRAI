@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for float outerside patch data.
  *
  ************************************************************************/
@@ -17,9 +17,10 @@
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/pdat/OutersideData.h"
 #include "SAMRAI/pdat/OutersideVariable.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 /*
  *************************************************************************
@@ -119,19 +120,8 @@ OutersideFloatLinearTimeInterpolateOp::~OutersideFloatLinearTimeInterpolateOp()
 {
 }
 
-bool OutersideFloatLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   const tbox::Pointer<OutersideVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-void OutersideFloatLinearTimeInterpolateOp::timeInterpolate(
+void
+OutersideFloatLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

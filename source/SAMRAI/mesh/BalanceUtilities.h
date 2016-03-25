@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
@@ -13,14 +13,14 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
 #include "SAMRAI/mesh/SpatialKey.h"
 
 #include <iostream>
+#include <list>
 
 namespace SAMRAI {
 namespace mesh {
@@ -122,7 +122,7 @@ struct BalanceUtilities {
    static void
    recursiveBisectionUniform(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
+      std::list<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
       double ideal_workload,
       const double workload_tolerance,
@@ -179,8 +179,8 @@ struct BalanceUtilities {
    static void
    recursiveBisectionNonuniform(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
-      const tbox::Pointer<hier::PatchLevel>& in_level,
+      std::list<double>& out_workloads,
+      const boost::shared_ptr<hier::PatchLevel>& in_level,
       int work_id,
       double ideal_workload,
       const double workload_tolerance,
@@ -257,7 +257,7 @@ struct BalanceUtilities {
     */
    static double
    computeNonUniformWorkload(
-      tbox::Pointer<hier::Patch> patch,
+      const boost::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);
 
@@ -276,11 +276,95 @@ struct BalanceUtilities {
     */
    static double
    computeLoadBalanceEfficiency(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       std::ostream& os,
       int workload_data_id = -1);
 
+   //@{
+
+   //! @name Load balance reporting.
+
+   /*!
+    * @brief Gather workloads in an MPI group and write out a summary
+    * of load balance efficiency.
+    *
+    * To be used for performance evaluation.  Not recommended for general use.
+    *
+    * @param[in] local_workload Workload of the local process
+    *
+    * @param[in] mpi Represents all processes involved in the load balancing.
+    *
+    * @param[in] output_stream
+    *
+    * TODO: This method is a utility that doesn't strictly belong in a
+    * strategy design pattern.  It should be moved elsewhere.
+    */
+   static void
+   gatherAndReportLoadBalance(
+      double local_workload,
+      const tbox::SAMRAI_MPI& mpi,
+      std::ostream& output_stream = tbox::plog);
+
+   /*!
+    * @brief Gather a sequence of workloads in an MPI group and write
+    * out a summary of load balance efficiency.
+    *
+    * Each value in the sequence of workloads represent a certain load
+    * the local process had over a sequence of load balancings.
+    *
+    * To be used for performance evaluation.  Not recommended for general use.
+    *
+    * @param[in] local_loads Sequence of workloads of the local
+    * process.  The size of @c local_loads is the number times load
+    * balancing has been used.  It must be the same across all
+    * processors in @c mpi.
+    *
+    * @param[in] mpi Represents all processes involved in the load balancing.
+    *
+    * @param[in] output_stream
+    */
+   static void
+   gatherAndReportLoadBalance(
+      const std::vector<double>& local_loads,
+      const tbox::SAMRAI_MPI& mpi,
+      std::ostream& output_stream = tbox::plog);
+
+   /*!
+    * @brief Write out a short report of how well load is balanced.
+    *
+    * Given the workloads of a number of processes, format and write
+    * out a brief report for assessing how well balanced the workloads
+    * are.
+    *
+    * @param[in] workloads One value for each process.  The number of
+    * processes is taken to be the size of this container.
+    *
+    * @param[in] output_stream
+    */
+   static void
+   reportLoadBalance(
+      const std::vector<double>& workloads,
+      std::ostream& output_stream);
+
+   //@}
+
 private:
+
+   struct RankAndLoad {
+      int rank;
+      double load;
+   };
+
+   static int
+   qsortRankAndLoadCompareAscending(
+      const void* v,
+      const void* w);
+
+   static int
+   qsortRankAndLoadCompareDescending(
+      const void* v,
+      const void* w);
+
    static math::PatchCellDataNormOpsReal<double> s_norm_ops;
 
    static void
@@ -359,7 +443,7 @@ private:
    static void
    privateRecursiveBisectionUniformSingleBox(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
+      std::list<double>& out_workloads,
       const hier::Box& in_box,
       double in_box_workload,
       double ideal_workload,
@@ -371,8 +455,8 @@ private:
    static void
    privateRecursiveBisectionNonuniformSingleBox(
       hier::BoxContainer& out_boxes,
-      tbox::List<double>& out_workloads,
-      const tbox::Pointer<hier::Patch>& patch,
+      std::list<double>& out_workloads,
+      const boost::shared_ptr<hier::Patch>& patch,
       const hier::Box& in_box,
       double in_box_workload,
       int work_data_index,

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating cell data objects
  *
  ************************************************************************/
@@ -17,9 +17,7 @@
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellDataFactory.I"
-#endif
+#include <boost/make_shared.hpp>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -45,21 +43,15 @@ CellDataFactory<TYPE>::CellDataFactory(
    int depth,
    const hier::IntVector& ghosts):
    hier::PatchDataFactory(ghosts),
-   d_depth(depth),
-   d_mb_trans(NULL)
+   d_depth(depth)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
-
-   d_mb_trans = NULL;
 }
 
 template<class TYPE>
 CellDataFactory<TYPE>::~CellDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -71,14 +63,13 @@ CellDataFactory<TYPE>::~CellDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 CellDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new CellDataFactory<TYPE>(
-                                                   d_depth, ghosts));
+   return boost::make_shared<CellDataFactory<TYPE> >(d_depth, ghosts);
 }
 
 /*
@@ -90,15 +81,16 @@ CellDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 CellDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new CellData<TYPE>(patch.getBox(), this->d_depth, this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::make_shared<CellData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts);
 }
 
 /*
@@ -110,14 +102,20 @@ CellDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 CellDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new CellGeometry(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<CellGeometry>(box, d_ghosts);
+}
+
+template<class TYPE>
+int
+CellDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
 }
 
 /*
@@ -129,7 +127,8 @@ CellDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t CellDataFactory<TYPE>::getSizeOfMemory(
+size_t
+CellDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -137,7 +136,7 @@ size_t CellDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(CellData<TYPE>));
    const size_t data =
-      CellData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts);
+      CellData<TYPE>::getSizeOfData(box, d_depth, d_ghosts);
    return obj + data;
 }
 
@@ -151,8 +150,9 @@ size_t CellDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool CellDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+CellDataFactory<TYPE>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -161,11 +161,45 @@ bool CellDataFactory<TYPE>::validCopyTo(
    /*
     * Only valid option is CellData.
     */
-   tbox::Pointer<CellDataFactory<TYPE> > cdf = dst_pdf;
-   if (!cdf.isNull()) {
+   boost::shared_ptr<CellDataFactory<TYPE> > cdf(
+      dst_pdf,
+      boost::detail::dynamic_cast_tag());
+   if (cdf) {
       valid_copy = true;
    }
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that the cell data quantities will
+ * always be treated as though fine values represent them on coarse-fine
+ * interfaces.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return false since the cell data index space matches the cell-centered
+ * index space for AMR patches.  Thus, cell data does not live on patch
+ * borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return false;
 }
 
 }

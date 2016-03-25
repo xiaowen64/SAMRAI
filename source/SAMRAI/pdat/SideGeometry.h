@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -19,7 +19,8 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -93,7 +94,7 @@ public:
     * space box, ghost cell width and directions vector indicating
     * which coordinate directions are allocated.
     */
-   explicit SideGeometry(
+   SideGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts,
       const hier::IntVector& directions);
@@ -107,7 +108,7 @@ public:
     * @brief Compute the overlap in side-centered index space between
     * the source box geometry and the destination box geometry.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -122,7 +123,7 @@ public:
     * @brief Set up a SideOverlap object based on the given boxes and the
     * transformation.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -132,14 +133,20 @@ public:
     * object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this side centered box
     * geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
    /*!
     * Return constant reference to vector describing which coordinate
@@ -150,7 +157,10 @@ public:
     * A non-zero value indicates otherwise.
     */
    const hier::IntVector&
-   getDirectionVector() const;
+   getDirectionVector() const
+   {
+      return d_directions;
+   }
 
 private:
    /**
@@ -158,7 +168,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have side centered geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const SideGeometry& dst_geometry,
       const SideGeometry& src_geometry,
@@ -170,7 +180,7 @@ private:
 
    static void
    rotateAboutAxis(
-      pdat::SideIndex& index,
+      SideIndex& index,
       const int axis,
       const int num_rotations);
 
@@ -188,7 +198,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideGeometry.I"
-#endif
+
 #endif

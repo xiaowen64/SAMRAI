@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Template for a multiblock AMR Euler code
  *
  ************************************************************************/
@@ -37,7 +37,7 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
 #include "SAMRAI/pdat/NodeData.h"
@@ -95,21 +95,21 @@ using namespace std;
 MblkEuler::MblkEuler(
    const string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<hier::GridGeometry>& grid_geom):
+   boost::shared_ptr<tbox::Database> input_db,
+   boost::shared_ptr<hier::BaseGridGeometry>& grid_geom):
    MblkHyperbolicPatchStrategy(dim),
+   d_object_name(object_name),
    d_dim(dim),
+   d_grid_geometry(grid_geom),
+   d_use_nonuniform_workload(false),
    d_nghosts(hier::IntVector(d_dim, CELLG)),
    d_fluxghosts(hier::IntVector(d_dim, FLUXG)),
    d_nodeghosts(hier::IntVector(d_dim, NODEG))
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
-   d_object_name = object_name;
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
-
-   d_grid_geometry = grid_geom;
 
    //
    // Setup MblkGeometry object to manage construction of mapped grids
@@ -119,30 +119,14 @@ MblkEuler::MblkEuler(
          input_db,
          grid_geom->getNumberBlocks());
 
-   d_use_nonuniform_workload = false;
-
-   tbox::Pointer<tbox::Database> mbe_db = input_db->getDatabase("MblkEuler");
-
-   //
-   // Default parameters for the numerical method.
-   //
+   boost::shared_ptr<tbox::Database> mbe_db(
+      input_db->getDatabase("MblkEuler"));
 
    //
    // zero out initial condition variables
    //
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_axis, d_dim.getValue());
-
-   d_front_position.resizeArray(0);
-
-   d_rev_rad.resizeArray(0);
-   d_rev_axis.resizeArray(0);
-
-   d_amn.resizeArray(0);
-   d_m_mode.resizeArray(0);
-   d_n_mode.resizeArray(0);
-   d_phiy.resizeArray(0);
-   d_phiz.resizeArray(0);
 
    //
    // Initialize object with data read from given input/restart databases.
@@ -156,10 +140,10 @@ MblkEuler::MblkEuler(
    //
    // quantities that define state of linear advection problem.
    //
-   d_state = new pdat::CellVariable<double>(dim, "state", d_nState);
-   d_vol = new pdat::CellVariable<double>(dim, "vol", 1);
-   d_flux = new pdat::SideVariable<double>(dim, "flux", d_nState);
-   d_xyz = new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue());
+   d_state.reset(new pdat::CellVariable<double>(dim, "state", d_nState));
+   d_vol.reset(new pdat::CellVariable<double>(dim, "vol", 1));
+   d_flux.reset(new pdat::SideVariable<double>(dim, "flux", d_nState));
+   d_xyz.reset(new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue()));
 
    //
    // drop the region layout as a table
@@ -216,41 +200,41 @@ void MblkEuler::registerModelVariables(
    //
    // zonal data and its fluxes
    //
-   d_cell_time_interp_op =
-      new pdat::CellDoubleLinearTimeInterpolateOp();
+   d_cell_time_interp_op.reset(
+      new pdat::CellDoubleLinearTimeInterpolateOp());
 
    integrator->registerVariable(d_state, d_nghosts,
       MblkHyperbolicLevelIntegrator::TIME_DEP,
-      SAMRAI::tbox::Pointer<SAMRAI::hier::CoarsenOperator>(NULL),
-      SAMRAI::tbox::Pointer<SAMRAI::hier::RefineOperator>(NULL),
+      boost::shared_ptr<hier::CoarsenOperator>(),
+      boost::shared_ptr<hier::RefineOperator>(),
       d_cell_time_interp_op);
 
    integrator->registerVariable(d_vol, d_nghosts,
       MblkHyperbolicLevelIntegrator::TIME_DEP,
-      SAMRAI::tbox::Pointer<SAMRAI::hier::CoarsenOperator>(NULL),
-      SAMRAI::tbox::Pointer<SAMRAI::hier::RefineOperator>(NULL),
+      boost::shared_ptr<hier::CoarsenOperator>(),
+      boost::shared_ptr<hier::RefineOperator>(),
       d_cell_time_interp_op);
 
    integrator->registerVariable(d_flux, d_fluxghosts,
       MblkHyperbolicLevelIntegrator::FLUX,
-      SAMRAI::tbox::Pointer<SAMRAI::hier::CoarsenOperator>(NULL));
+      boost::shared_ptr<hier::CoarsenOperator>());
 
    //
    // The nodal position data
    //
-   tbox::Pointer<hier::TimeInterpolateOperator> node_time_interp_op(
+   boost::shared_ptr<hier::TimeInterpolateOperator> node_time_interp_op(
       new pdat::NodeDoubleLinearTimeInterpolateOp());
 
    integrator->registerVariable(d_xyz, d_nodeghosts,
       MblkHyperbolicLevelIntegrator::TIME_DEP,
-      SAMRAI::tbox::Pointer<SAMRAI::hier::CoarsenOperator>(NULL),
-      SAMRAI::tbox::Pointer<SAMRAI::hier::RefineOperator>(NULL),
+      boost::shared_ptr<hier::CoarsenOperator>(),
+      boost::shared_ptr<hier::RefineOperator>(),
       node_time_interp_op);
 
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
 
 #ifdef HAVE_HDF5
-   if (d_visit_writer.isNull()) {
+   if (!d_visit_writer) {
       TBOX_WARNING(
          d_object_name << ": registerModelVariables()"
                        << "\nVisit data writer was"
@@ -300,17 +284,20 @@ void MblkEuler::initializeDataOnPatch(
 
    if (initial_time) {
 
-      tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-            getDataContext());
-      tbox::Pointer<pdat::CellData<double> > vol = patch.getPatchData(d_vol,
-            getDataContext());
-      tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-            getDataContext());
+      boost::shared_ptr<pdat::CellData<double> > state(
+         patch.getPatchData(d_state, getDataContext()),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<double> > vol(
+         patch.getPatchData(d_vol, getDataContext()),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::NodeData<double> > xyz(
+         patch.getPatchData(d_xyz, getDataContext()),
+         boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!state.isNull());
-      TBOX_ASSERT(!vol.isNull());
-      TBOX_ASSERT(!xyz.isNull());
+      TBOX_ASSERT(state);
+      TBOX_ASSERT(vol);
+      TBOX_ASSERT(xyz);
       TBOX_ASSERT(state->getGhostCellWidth() == vol->getGhostCellWidth());
 #endif
 
@@ -642,8 +629,9 @@ void MblkEuler::initializeDataOnPatch(
       if (!patch.checkAllocated(d_workload_data_id)) {
          patch.allocatePatchData(d_workload_data_id);
       }
-      tbox::Pointer<pdat::CellData<double> > workload_data =
-         patch.getPatchData(d_workload_data_id);
+      boost::shared_ptr<pdat::CellData<double> > workload_data(
+         patch.getPatchData(d_workload_data_id),
+         boost::detail::dynamic_cast_tag());
       workload_data->fillAll(1.0);
    }
 
@@ -664,8 +652,8 @@ double MblkEuler::computeStableDtOnPatch(
    const bool initial_time,
    const double dt_time)
 {
-   (void)initial_time;
-   (void)dt_time;
+   NULL_USE(initial_time);
+   NULL_USE(dt_time);
 
    //
    // Build the mapped grid on the patch.
@@ -684,17 +672,19 @@ double MblkEuler::computeStableDtOnPatch(
    //
    // get the cell data and their bounds
    //
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
    hier::IntVector state_ghosts = state->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
 
    pdat::CellData<double> Aii(patch.getBox(), 9, hier::IntVector(d_dim, 0));
 
-   TBOX_ASSERT(!state.isNull());
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(state);
+   TBOX_ASSERT(xyz);
 
    int imin = ifirst(0);
    int imax = ilast(0);
@@ -912,8 +902,9 @@ void MblkEuler::testPatchExtrema(
    hier::Patch& patch,
    const char* pos)
 {
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
    hier::IntVector state_ghosts = state->getGhostCellWidth();
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -983,8 +974,6 @@ void MblkEuler::computeFluxesOnPatch(
    const double time,
    const double dt)
 {
-   (void)time;
-
    //
    // process the SAMRAI data
    //
@@ -995,18 +984,22 @@ void MblkEuler::computeFluxesOnPatch(
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
 
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > vol = patch.getPatchData(d_vol,
-         getDataContext());
-   tbox::Pointer<pdat::SideData<double> > flux = patch.getPatchData(d_flux,
-         getDataContext());
-   tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > vol(
+      patch.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::SideData<double> > flux(
+      patch.getPatchData(d_flux, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!state.isNull());
-   TBOX_ASSERT(!flux.isNull());
-   TBOX_ASSERT(!vol.isNull());
+   TBOX_ASSERT(state);
+   TBOX_ASSERT(flux);
+   TBOX_ASSERT(vol);
    TBOX_ASSERT(state->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(vol->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
@@ -1495,8 +1488,9 @@ void MblkEuler::markPhysicalBoundaryConditions(
    hier::Patch& patch,
    const hier::IntVector& ghost_width_to_fill)
 {
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    //
    // the domain and its ghost box
@@ -1520,7 +1514,8 @@ void MblkEuler::markPhysicalBoundaryConditions(
    int ny = jmax - jmin + 1;
    int nxny = nx * ny;
 
-   const tbox::Pointer<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
 
    for (int ii = 0; ii < 3; ii++) {
 
@@ -1595,17 +1590,18 @@ void MblkEuler::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
+   NULL_USE(fill_time);
 
    const int block_number = patch.getBox().getBlockId().getBlockValue();
 
    markPhysicalBoundaryConditions(patch, ghost_width_to_fill);
 
-   (void)fill_time;
-
-   tbox::Pointer<pdat::NodeData<double> > position = patch.getPatchData(d_xyz,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > state = patch.getPatchData(d_state,
-         getDataContext());
+   boost::shared_ptr<pdat::NodeData<double> > position(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > state(
+      patch.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    //
    // the patch and its ghost box
@@ -1621,8 +1617,8 @@ void MblkEuler::setPhysicalBoundaryConditions(
    //
    // the index space of this block and its neighbors
    //
-   const tbox::Pointer<hier::PatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    const hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -1754,23 +1750,27 @@ void MblkEuler::postprocessRefine(
    const hier::Box& fine_box,                                 // where the fine data is needed
    const hier::IntVector& ratio)
 {
-   tbox::Pointer<pdat::CellData<double> > cstate = coarse.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > cvol = coarse.getPatchData(d_vol,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > cstate(
+      coarse.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > cvol(
+      coarse.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fstate = fine.getPatchData(d_state,
-         getDataContext());
-   tbox::Pointer<pdat::CellData<double> > fvol = fine.getPatchData(d_vol,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > fstate(
+      fine.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fvol(
+      fine.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    int depth = cstate->getDepth();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cstate.isNull());
-   TBOX_ASSERT(!fstate.isNull());
-   TBOX_ASSERT(!cvol.isNull());
-   TBOX_ASSERT(!fvol.isNull());
+   TBOX_ASSERT(cstate);
+   TBOX_ASSERT(fstate);
+   TBOX_ASSERT(cvol);
+   TBOX_ASSERT(fvol);
    TBOX_ASSERT(cstate->getDepth() == fstate->getDepth());
 #endif
 
@@ -2020,22 +2020,26 @@ void MblkEuler::postprocessCoarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio)
 {
-   tbox::Pointer<pdat::CellData<double> > cstate =
-      coarse.getPatchData(d_state, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > cvol =
-      coarse.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > cstate(
+      coarse.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > cvol(
+      coarse.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::CellData<double> > fstate =
-      fine.getPatchData(d_state, getDataContext());
-   tbox::Pointer<pdat::CellData<double> > fvol =
-      fine.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > fstate(
+      fine.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fvol(
+      fine.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    int depth = cstate->getDepth();
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!cstate.isNull());
-   TBOX_ASSERT(!cvol.isNull());
-   TBOX_ASSERT(!fstate.isNull());
-   TBOX_ASSERT(!fvol.isNull());
+   TBOX_ASSERT(cstate);
+   TBOX_ASSERT(cvol);
+   TBOX_ASSERT(fstate);
+   TBOX_ASSERT(fvol);
    TBOX_ASSERT(cstate->getDepth() == fstate->getDepth());
 #endif
 
@@ -2215,8 +2219,9 @@ void MblkEuler::tagGradientDetectorCells(
    //
    const int error_level_number = patch.getPatchLevelNumber();
 
-   tbox::Pointer<pdat::NodeData<double> > xyz = patch.getPatchData(d_xyz,
-         getDataContext());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
    double* x = xyz->getPointer(0);
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
@@ -2231,17 +2236,21 @@ void MblkEuler::tagGradientDetectorCells(
    tbox::plog << "level  = " << level << endl;
    tbox::plog << "box    = " << patch.getBox() << endl;
 
-   tbox::Pointer<pdat::CellData<int> > tags = patch.getPatchData(tag_indx);
-   tbox::Pointer<pdat::CellData<double> > var = patch.getPatchData(d_state,
-         getDataContext());
+   boost::shared_ptr<pdat::CellData<int> > tags(
+      patch.getPatchData(tag_indx),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > var(
+      patch.getPatchData(d_state, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    //
    // Create a set of temporary tags and set to untagged value.
    //
-   tbox::Pointer<pdat::CellData<int> > temp_tags(new pdat::CellData<int>(
-                                                    pbox,
-                                                    1,
-                                                    d_nghosts));
+   boost::shared_ptr<pdat::CellData<int> > temp_tags(
+      new pdat::CellData<int>(
+         pbox,
+         1,
+         d_nghosts));
    temp_tags->fillAll(FALSE);
 
    hier::IntVector tag_ghost = tags->getGhostCellWidth();
@@ -2294,7 +2303,7 @@ void MblkEuler::tagGradientDetectorCells(
    for (int ncrit = 0; ncrit < d_refinement_criteria.getSize(); ncrit++) {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!var.isNull());
+      TBOX_ASSERT(var);
 #endif
       string ref = d_refinement_criteria[ncrit];
 
@@ -2471,9 +2480,9 @@ void MblkEuler::tagGradientDetectorCells(
          if (d_mblk_geometry->getRefineBoxes(refine_boxes,
                 patch.getBox().getBlockId().getBlockValue(),
                 level_number)) {
-            for (hier::BoxContainer::Iterator b(refine_boxes); b != refine_boxes.end();
-                 ++b) {
-               hier::Box intersect = pbox * b();
+            for (hier::BoxContainer::iterator b(refine_boxes);
+                 b != refine_boxes.end(); ++b) {
+               hier::Box intersect = pbox * (*b);
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE, intersect);
                }
@@ -2487,8 +2496,9 @@ void MblkEuler::tagGradientDetectorCells(
    //
    // Update tags
    //
-   for (pdat::CellIterator ic(pbox); ic; ic++) {
-      (*tags)(ic(), 0) = (*temp_tags)(ic(), 0);
+   pdat::CellIterator icend(pbox, false);
+   for (pdat::CellIterator ic(pbox, true); ic != icend; ++ic) {
+      (*tags)(*ic, 0) = (*temp_tags)(*ic, 0);
    }
 
    tbox::plog << "--------------------- end tagGradientCells" << endl;
@@ -2509,7 +2519,7 @@ void MblkEuler::fillSingularityBoundaryConditions(
    const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
-   const tbox::Pointer<hier::GridGeometry>& grid_geometry)
+   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
 
    NULL_USE(patch);
@@ -2536,8 +2546,8 @@ void MblkEuler::setMappedGridOnPatch(
    //
    // compute level domain
    //
-   const tbox::Pointer<hier::PatchGeometry>
-   patch_geom = patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> patch_geom(
+      patch.getPatchGeometry());
    hier::IntVector ratio = patch_geom->getRatio();
    hier::BoxContainer domain_boxes;
    d_grid_geometry->computePhysicalDomain(domain_boxes, ratio,
@@ -2548,23 +2558,23 @@ void MblkEuler::setMappedGridOnPatch(
    //
    d_dom_current_nboxes = domain_boxes.size();
 
-   hier::BoxContainer::Iterator itr(domain_boxes);
-   d_dom_current_bounds[0] = itr().lower(0);
-   d_dom_current_bounds[1] = itr().lower(1);
-   d_dom_current_bounds[2] = itr().lower(2);
-   d_dom_current_bounds[3] = itr().upper(0);
-   d_dom_current_bounds[4] = itr().upper(1);
-   d_dom_current_bounds[5] = itr().upper(2);
-   itr++;
+   hier::BoxContainer::iterator itr(domain_boxes);
+   d_dom_current_bounds[0] = itr->lower(0);
+   d_dom_current_bounds[1] = itr->lower(1);
+   d_dom_current_bounds[2] = itr->lower(2);
+   d_dom_current_bounds[3] = itr->upper(0);
+   d_dom_current_bounds[4] = itr->upper(1);
+   d_dom_current_bounds[5] = itr->upper(2);
+   ++itr;
 
-   for (int i = 1; i < d_dom_current_nboxes; i++, itr++) {
-      d_dom_current_bounds[0] = MIN(d_dom_current_bounds[0], itr().lower(0));
-      d_dom_current_bounds[1] = MIN(d_dom_current_bounds[1], itr().lower(1));
-      d_dom_current_bounds[2] = MIN(d_dom_current_bounds[2], itr().lower(2));
+   for (int i = 1; i < d_dom_current_nboxes; i++, ++itr) {
+      d_dom_current_bounds[0] = MIN(d_dom_current_bounds[0], itr->lower(0));
+      d_dom_current_bounds[1] = MIN(d_dom_current_bounds[1], itr->lower(1));
+      d_dom_current_bounds[2] = MIN(d_dom_current_bounds[2], itr->lower(2));
 
-      d_dom_current_bounds[3] = MAX(d_dom_current_bounds[3], itr().upper(0));
-      d_dom_current_bounds[4] = MAX(d_dom_current_bounds[4], itr().upper(1));
-      d_dom_current_bounds[5] = MAX(d_dom_current_bounds[5], itr().upper(2));
+      d_dom_current_bounds[3] = MAX(d_dom_current_bounds[3], itr->upper(0));
+      d_dom_current_bounds[4] = MAX(d_dom_current_bounds[4], itr->upper(1));
+      d_dom_current_bounds[5] = MAX(d_dom_current_bounds[5], itr->upper(2));
    }
 
    //
@@ -2590,11 +2600,13 @@ void MblkEuler::setMappedGridOnPatch(
 void MblkEuler::setVolumeOnPatch(
    const hier::Patch& patch)
 {
-   tbox::Pointer<pdat::CellData<double> > vol =
-      patch.getPatchData(d_vol, getDataContext());
+   boost::shared_ptr<pdat::CellData<double> > vol(
+      patch.getPatchData(d_vol, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(d_xyz, getDataContext());
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(d_xyz, getDataContext()),
+      boost::detail::dynamic_cast_tag());
 
    hier::IntVector vol_ghosts = vol->getGhostCellWidth();
    hier::IntVector xyz_ghosts = xyz->getGhostCellWidth();
@@ -2670,10 +2682,10 @@ void MblkEuler::setVolumeOnPatch(
 
 #ifdef HAVE_HDF5
 void MblkEuler::registerVisItDataWriter(
-   tbox::Pointer<appu::VisItDataWriter> viz_writer)
+   boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(viz_writer.isNull()));
+   TBOX_ASSERT(viz_writer);
 #endif
    d_visit_writer = viz_writer;
 }
@@ -2697,7 +2709,7 @@ void MblkEuler::printClassData(
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
    for (j = 0; j < d_grid_geometry->getNumberBlocks(); j++) {
-//      os << (geom::BlockGridGeometry*)d_grid_geometry[j] << endl;
+//      os << (geom::GridGeometry*)d_grid_geometry[j] << endl;
    }
 
    // ----------------------------------------------
@@ -2723,14 +2735,14 @@ void MblkEuler::printClassData(
  *************************************************************************
  */
 void MblkEuler::getFromInput(
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
-   tbox::Pointer<tbox::Database> db = input_db->getDatabase("MblkEuler");
+   boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkEuler"));
 
    //
    // --------------- load balancing inputs
@@ -2843,7 +2855,8 @@ void MblkEuler::getFromInput(
             char tmp[20];
             sprintf(tmp, "region_%d", i + 1);  //
             string lkey = tmp;
-            tbox::Pointer<tbox::Database> region_db = db->getDatabase(lkey);
+            boost::shared_ptr<tbox::Database> region_db(
+               db->getDatabase(lkey));
 
             d_rev_rad[i] = region_db->getDoubleArray("radius");
             d_rev_axis[i] = region_db->getDoubleArray("axis");
@@ -2917,8 +2930,8 @@ void MblkEuler::getFromInput(
       //
       if (d_advection_test) {
          if (db->keyExists("state_data")) {
-            tbox::Pointer<tbox::Database> state_db = db->getDatabase(
-                  "state_data");
+            boost::shared_ptr<tbox::Database> state_db(
+               db->getDatabase("state_data"));
             tbox::Array<double> lpsi;
             for (int iState = 0; iState < d_nState; iState++) {
                lpsi = state_db->getDoubleArray(d_state_names[iState]);
@@ -2940,7 +2953,7 @@ void MblkEuler::getFromInput(
    //  --------------- refinement criteria inputs
    //
    if (db->keyExists("Refinement_data")) {
-      tbox::Pointer<tbox::Database> refine_db = db->getDatabase(
+      boost::shared_ptr<tbox::Database> refine_db = db->getDatabase(
             "Refinement_data");
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
@@ -2957,11 +2970,11 @@ void MblkEuler::getFromInput(
 
       tbox::Array<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
-      tbox::Pointer<tbox::Database> error_db;
+      boost::shared_ptr<tbox::Database> error_db;
       for (int i = 0; i < refinement_keys.getSize(); i++) {
 
          string error_key = refinement_keys[i];
-         error_db.setNull();
+         error_db.reset();
 
          if (!(error_key == "refine_criteria")) {
 
@@ -2984,7 +2997,7 @@ void MblkEuler::getFromInput(
             //
             // process the specific keys
             //
-            if (!error_db.isNull() && error_key == "GRADIENT") {
+            if (error_db && error_key == "GRADIENT") {
 
                d_state_grad_names = error_db->getStringArray("names");
                int nStateLocal = d_state_grad_names.getSize();
@@ -3051,10 +3064,10 @@ void MblkEuler::getFromInput(
  */
 
 void MblkEuler::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+   const boost::shared_ptr<tbox::Database>& db) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    db->putInteger("MBLKEULER_VERSION", MBLKEULER_VERSION);
@@ -3076,16 +3089,14 @@ void MblkEuler::putToDatabase(
  */
 void MblkEuler::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("MBLKEULER_VERSION");
    if (ver != MBLKEULER_VERSION) {

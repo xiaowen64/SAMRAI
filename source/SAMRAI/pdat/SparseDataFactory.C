@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Implementation for SparseDataFactory
  *
  ************************************************************************/
@@ -16,8 +16,10 @@
 
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/SparseData.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
+
+#include <boost/shared_ptr.hpp>
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -45,37 +47,37 @@ SparseDataFactory<BOX_GEOMETRY>::~SparseDataFactory()
  * Implementation of base class pure virtual functions
  */
 template<typename BOX_GEOMETRY>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 SparseDataFactory<BOX_GEOMETRY>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
-   return tbox::Pointer<hier::PatchDataFactory>(
-             new SparseDataFactory<BOX_GEOMETRY>(ghosts, d_dbl_attributes,
-                d_int_attributes));
+   return boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
+      ghosts,
+      d_dbl_attributes,
+      d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 SparseDataFactory<BOX_GEOMETRY>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
-   hier::PatchData* pd = new SparseData<BOX_GEOMETRY>(
-         patch.getBox(), this->d_ghosts, this->d_dbl_attributes,
-         this->d_int_attributes);
-   return tbox::Pointer<hier::PatchData>(pd);
+   return boost::make_shared<SparseData<BOX_GEOMETRY> >(
+         patch.getBox(),
+         d_ghosts,
+         d_dbl_attributes,
+         d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 SparseDataFactory<BOX_GEOMETRY>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
-   hier::BoxGeometry* boxGeometry =
-      new BOX_GEOMETRY(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxGeometry);
+   return boost::make_shared<BOX_GEOMETRY>(box, d_ghosts);
 }
 
 template<typename BOX_GEOMETRY>
@@ -92,17 +94,18 @@ SparseDataFactory<BOX_GEOMETRY>::getSizeOfMemory(
 template<typename BOX_GEOMETRY>
 bool
 SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
-   const tbox::Pointer<PatchDataFactory>& dst_pdf) const
+   const boost::shared_ptr<PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
    bool valid_copy = false;
 
    if (!valid_copy) {
 
-      tbox::Pointer<SparseDataFactory<BOX_GEOMETRY> >
-      idf = dst_pdf;
+      boost::shared_ptr<SparseDataFactory<BOX_GEOMETRY> > idf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
 
-      if (!idf.isNull()) {
+      if (idf) {
          valid_copy = true;
       }
    }

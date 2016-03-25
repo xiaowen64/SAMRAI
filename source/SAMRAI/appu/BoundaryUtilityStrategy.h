@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface for processing user-defined boundary data in
  *                CartesianBoundaryUtilities classes
  *
@@ -15,9 +15,9 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -58,9 +58,7 @@ public:
 
    /*!
     * Read DIRICHLET boundary state values for an edge (in 2d) or a face
-    * (in 3d) from a given database.  This virtual function is given a
-    * blank implementation here to avoid the need for users to do the same
-    * if they do not need this functionality.
+    * (in 3d) from a given database.
     *
     * @param db      Input database from which to read boundary values.
     * @param db_name Name of input database (e.g., for error reporting).
@@ -68,20 +66,13 @@ public:
     *                            or face (in 3d) boundary.
     */
    virtual void readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
-      int bdry_location_index)
-   {
-      NULL_USE(db);
-      NULL_USE(db_name);
-      NULL_USE(bdry_location_index);
-   }
+      int bdry_location_index) = 0;
 
    /*!
     * Read NEUMANN boundary state values for an edge (in 2d) or a face
-    * (in 3d) from a given database.  This virtual function is given a
-    * blank implementation here to avoid the need for users to do the same
-    * if they do not need this functionality.
+    * (in 3d) from a given database.
     *
     * @param db      Input database from which to read boundary values.
     * @param db_name Name of input database (e.g., for error reporting).
@@ -89,14 +80,9 @@ public:
     *                            or face (in 3d) boundary.
     */
    virtual void readNeumannBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       std::string& db_name,
-      int bdry_location_index)
-   {
-      NULL_USE(db);
-      NULL_USE(db_name);
-      NULL_USE(bdry_location_index);
-   }
+      int bdry_location_index) = 0;
 
 };
 

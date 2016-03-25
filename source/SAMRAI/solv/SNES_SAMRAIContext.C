@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
@@ -16,13 +16,8 @@
 #include "SAMRAI/solv/PETSc_SAMRAIVectorReal.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/tbox/RestartManager.h"
-#include "SAMRAI/tbox/Utilities.h"
 
 #ifdef HAVE_PETSC
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/solv/SNES_SAMRAIContext.I"
-#endif
 
 namespace SAMRAI {
 namespace solv {
@@ -37,19 +32,9 @@ const int SNES_SAMRAIContext::SOLV_SNES_SAMRAI_CONTEXT_VERSION = 1;
  *
  *************************************************************************
  */
-int SNES_SAMRAIContext::SNESFuncEval(
-   SNES snes,
-   Vec x,
-   Vec f,
-   void* ctx)
-{
-   NULL_USE(snes);
-   ((SNES_SAMRAIContext *)ctx)->getSNESFunctions()->
-   evaluateNonlinearFunction(x, f);
-   return 0;
-}
 
-int SNES_SAMRAIContext::SNESJacobianSet(
+int
+SNES_SAMRAIContext::SNESJacobianSet(
    SNES snes,
    Vec x,
    Mat* A,
@@ -74,42 +59,6 @@ int SNES_SAMRAIContext::SNESJacobianSet(
    return retval;
 }
 
-int SNES_SAMRAIContext::SNESJacobianTimesVector(
-   Mat M,
-   Vec xin,
-   Vec xout)
-{
-   void* ctx;
-   int ierr = 0;
-   NULL_USE(ierr);
-
-   ierr = MatShellGetContext(M, &ctx);
-   PETSC_SAMRAI_ERROR(ierr);
-   return ((SNES_SAMRAIContext *)ctx)->
-          getSNESFunctions()->jacobianTimesVector(xin, xout);
-}
-
-int SNES_SAMRAIContext::SNESsetupPreconditioner(
-   void* ctx)
-{
-   int ierr = 0;
-   Vec current_solution;
-   ierr = SNESGetSolution(((SNES_SAMRAIContext *)ctx)->getSNESSolver(),
-         &current_solution);
-   PETSC_SAMRAI_ERROR(ierr);
-   return ((SNES_SAMRAIContext *)ctx)->
-          getSNESFunctions()->setupPreconditioner(current_solution);
-}
-
-int SNES_SAMRAIContext::SNESapplyPreconditioner(
-   void* ctx,
-   Vec r,
-   Vec z)
-{
-   return ((SNES_SAMRAIContext *)ctx)->
-          getSNESFunctions()->applyPreconditioner(r, z);
-}
-
 /*
  *************************************************************************
  *
@@ -122,7 +71,7 @@ int SNES_SAMRAIContext::SNESapplyPreconditioner(
  */
 SNES_SAMRAIContext::SNES_SAMRAIContext(
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    SNESAbstractFunctions* my_functions)
 {
    TBOX_ASSERT(!object_name.empty());
@@ -224,331 +173,15 @@ SNES_SAMRAIContext::~SNES_SAMRAIContext()
 /*
  *************************************************************************
  *
- * Access functions for PETSc objects, and user-supplied functions.
- *
- *************************************************************************
- */
-SNES SNES_SAMRAIContext::getSNESSolver() const
-{
-   return d_SNES_solver;
-}
-
-SNESAbstractFunctions *SNES_SAMRAIContext::getSNESFunctions() const
-{
-   return d_SNES_functions;
-}
-
-KSP SNES_SAMRAIContext::getKrylovSolver() const
-{
-   return d_krylov_solver;
-}
-
-Mat SNES_SAMRAIContext::getJacobianMatrix() const
-{
-   return d_jacobian;
-}
-
-/*
- *************************************************************************
- *
- *  Access functions for parameters that control solver behavior.
- *
- *************************************************************************
- */
-double SNES_SAMRAIContext::getAbsoluteTolerance() const
-{
-   return d_absolute_tolerance;
-}
-
-void SNES_SAMRAIContext::setAbsoluteTolerance(
-   double abs_tol)
-{
-   d_absolute_tolerance = abs_tol;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getRelativeTolerance() const
-{
-   return d_relative_tolerance;
-}
-
-void SNES_SAMRAIContext::setRelativeTolerance(
-   double rel_tol)
-{
-   d_relative_tolerance = rel_tol;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getStepTolerance() const
-{
-   return d_step_tolerance;
-}
-
-void SNES_SAMRAIContext::setStepTolerance(
-   double step_tol)
-{
-   d_step_tolerance = step_tol;
-   d_context_needs_initialization = true;
-}
-
-int SNES_SAMRAIContext::getMaxNonlinearIterations() const
-{
-   return d_maximum_nonlinear_iterations;
-}
-
-void SNES_SAMRAIContext::setMaxNonlinearIterations(
-   int max_nli)
-{
-   d_maximum_nonlinear_iterations = max_nli;
-   d_context_needs_initialization = true;
-}
-
-int SNES_SAMRAIContext::getMaxFunctionEvaluations() const
-{
-   return d_maximum_function_evals;
-}
-
-void SNES_SAMRAIContext::setMaxFunctionEvaluations(
-   int max_feval)
-{
-   d_maximum_function_evals = max_feval;
-   d_context_needs_initialization = true;
-}
-
-std::string SNES_SAMRAIContext::getForcingTermStrategy() const
-{
-   return d_forcing_term_strategy;
-}
-
-void SNES_SAMRAIContext::setForcingTermStrategy(
-   std::string& strategy)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(strategy == "CONSTANT" ||
-      strategy == "EWCHOICE1" ||
-      strategy == "EWCHOICE2");
-#endif
-   d_forcing_term_strategy = strategy;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getConstantForcingTerm() const
-{
-   return d_constant_forcing_term;
-}
-
-void SNES_SAMRAIContext::setConstantForcingTerm(
-   double fixed_eta)
-{
-   d_constant_forcing_term = fixed_eta;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getInitialForcingTerm() const
-{
-   return d_initial_forcing_term;
-}
-
-void SNES_SAMRAIContext::setInitialForcingTerm(
-   double initial_eta)
-{
-   d_initial_forcing_term = initial_eta;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getMaximumForcingTerm() const
-{
-   return d_maximum_forcing_term;
-}
-
-void SNES_SAMRAIContext::setMaximumForcingTerm(
-   double max_eta)
-{
-   d_maximum_forcing_term = max_eta;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getEWChoice2Exponent() const
-{
-   return d_EW_choice2_alpha;
-}
-
-void SNES_SAMRAIContext::setEWChoice2Exponent(
-   double alpha)
-{
-   d_EW_choice2_alpha = alpha;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getEWChoice2SafeguardExponent() const
-{
-   return d_EW_safeguard_exponent;
-}
-
-void SNES_SAMRAIContext::setEWChoice2SafeguardExponent(
-   double beta)
-{
-   d_EW_safeguard_exponent = beta;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getEWChoice2ScaleFactor() const
-{
-   return d_EW_choice2_gamma;
-}
-
-void SNES_SAMRAIContext::setEWChoice2ScaleFactor(
-   double gamma)
-{
-   d_EW_choice2_gamma = gamma;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getEWSafeguardThreshold() const
-{
-   return d_EW_safeguard_disable_threshold;
-}
-
-void SNES_SAMRAIContext::setEWSafeguardThreshold(
-   double threshold)
-{
-   d_EW_safeguard_disable_threshold = threshold;
-   d_context_needs_initialization = true;
-}
-
-std::string SNES_SAMRAIContext::getLinearSolverType() const
-{
-   return d_linear_solver_type;
-}
-
-void SNES_SAMRAIContext::setLinearSolverType(
-   std::string& type)
-{
-   d_linear_solver_type = type;
-   d_context_needs_initialization = true;
-}
-
-bool SNES_SAMRAIContext::getUsesPreconditioner() const
-{
-   return d_uses_preconditioner;
-}
-
-void SNES_SAMRAIContext::setUsesPreconditioner(
-   bool uses_preconditioner)
-{
-   d_uses_preconditioner = uses_preconditioner;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getLinearSolverAbsoluteTolerance() const
-{
-   return d_linear_solver_absolute_tolerance;
-}
-
-void SNES_SAMRAIContext::setLinearSolverAbsoluteTolerance(
-   double abs_tol)
-{
-   d_linear_solver_absolute_tolerance = abs_tol;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getLinearSolverDivergenceTolerance() const
-{
-   return d_linear_solver_divergence_tolerance;
-}
-
-void SNES_SAMRAIContext::setLinearSolverDivergenceTolerance(
-   double div_tol)
-{
-   d_linear_solver_divergence_tolerance = div_tol;
-   d_context_needs_initialization = true;
-}
-
-int SNES_SAMRAIContext::getMaximumLinearIterations() const
-{
-   return d_maximum_linear_iterations;
-}
-
-void SNES_SAMRAIContext::setMaximumLinearIterations(
-   int max_li)
-{
-   d_maximum_linear_iterations = max_li;
-   d_context_needs_initialization = true;
-}
-
-int SNES_SAMRAIContext::getMaximumGMRESKrylovDimension() const
-{
-   return d_maximum_gmres_krylov_dimension;
-}
-
-void SNES_SAMRAIContext::setMaximumGMRESKrylovDimension(
-   int d)
-{
-   d_maximum_gmres_krylov_dimension = d;
-   d_context_needs_initialization = true;
-}
-
-std::string SNES_SAMRAIContext::getGMRESOrthogonalizationMethod() const
-{
-   return d_gmres_orthogonalization_algorithm;
-}
-
-void SNES_SAMRAIContext::setGMRESOrthogonalizationMethod(
-   std::string& method)
-{
-   d_gmres_orthogonalization_algorithm = method;
-   d_context_needs_initialization = true;
-}
-
-bool SNES_SAMRAIContext::getUsesExplicitJacobian() const
-{
-   return d_uses_explicit_jacobian;
-}
-
-void SNES_SAMRAIContext::setUsesExplicitJacobian(
-   bool use_jac)
-{
-   d_uses_explicit_jacobian = use_jac;
-   d_context_needs_initialization = true;
-}
-
-std::string SNES_SAMRAIContext::getDifferencingParameterMethod() const
-{
-   return d_differencing_parameter_strategy;
-}
-
-void SNES_SAMRAIContext::setDifferencingParameterMethod(
-   std::string& method)
-{
-   d_differencing_parameter_strategy = method;
-   d_context_needs_initialization = true;
-}
-
-double SNES_SAMRAIContext::getFunctionEvaluationError() const
-{
-   return d_function_evaluation_error;
-}
-
-void SNES_SAMRAIContext::setFunctionEvaluationError(
-   double evaluation_error)
-{
-   d_function_evaluation_error = evaluation_error;
-   d_context_needs_initialization = true;
-}
-
-/*
- *************************************************************************
- *
  * Routines to initialize PETSc/SNES solver and solve nonlinear system.
  *
  *************************************************************************
  */
-void SNES_SAMRAIContext::initialize(
-   tbox::Pointer<SAMRAIVectorReal<double> > solution)
+void
+SNES_SAMRAIContext::initialize(
+   const boost::shared_ptr<SAMRAIVectorReal<double> >& solution)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!solution.isNull());
-#endif
+   TBOX_ASSERT(solution);
 
    /*
     * Set up vectors for solution and nonlinear residual.
@@ -557,8 +190,8 @@ void SNES_SAMRAIContext::initialize(
    d_solution_vector =
       PETSc_SAMRAIVectorReal<double>::createPETScVector(solution);
 
-   tbox::Pointer<SAMRAIVectorReal<double> > residual =
-      solution->cloneVector("residual");
+   boost::shared_ptr<SAMRAIVectorReal<double> > residual(
+      solution->cloneVector("residual"));
    residual->allocateVectorData();
    d_residual_vector =
       PETSc_SAMRAIVectorReal<double>::createPETScVector(residual);
@@ -574,20 +207,19 @@ void SNES_SAMRAIContext::initialize(
  *
  *************************************************************************
  */
-void SNES_SAMRAIContext::resetSolver(
+void
+SNES_SAMRAIContext::resetSolver(
    const int coarsest_level,
    const int finest_level)
 {
-   tbox::Pointer<SAMRAIVectorReal<double> > solution_vector =
-      PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(
-         d_solution_vector);
+   boost::shared_ptr<SAMRAIVectorReal<double> > solution_vector(
+      PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(d_solution_vector));
    solution_vector->deallocateVectorData();
    solution_vector->resetLevels(coarsest_level, finest_level);
    solution_vector->allocateVectorData();
 
-   tbox::Pointer<SAMRAIVectorReal<double> > residual_vector =
-      PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(
-         d_residual_vector);
+   boost::shared_ptr<SAMRAIVectorReal<double> > residual_vector(
+      PETSc_SAMRAIVectorReal<double>::getSAMRAIVector(d_residual_vector));
    residual_vector->deallocateVectorData();
    residual_vector->resetLevels(coarsest_level, finest_level);
    residual_vector->allocateVectorData();
@@ -604,7 +236,8 @@ void SNES_SAMRAIContext::resetSolver(
  *
  *************************************************************************
  */
-int SNES_SAMRAIContext::solve()
+int
+SNES_SAMRAIContext::solve()
 {
    int ierr;
 
@@ -639,41 +272,14 @@ int SNES_SAMRAIContext::solve()
 /*
  *************************************************************************
  *
- * Get the number of nonlinear iterations used in last solve.
- *
- *************************************************************************
- */
-int SNES_SAMRAIContext::getNumberOfNonlinearIterations() const
-{
-   return d_nonlinear_iterations;
-}
-
-/*
- *************************************************************************
- *
- * Get the total number of linear iterations used in last solve.
- *
- *************************************************************************
- */
-int SNES_SAMRAIContext::getTotalNumberOfLinearIterations() const
-{
-   int linear_itns;
-   int ierr = SNESGetLinearSolveIterations(d_SNES_solver,
-         &linear_itns);
-   PETSC_SAMRAI_ERROR(ierr);
-   return linear_itns;
-}
-
-/*
- *************************************************************************
- *
  *  Report the reason for termination of nonlinear iterations.  SNES
  *  return codes are translated here, and a message is placed in the
  *  specified output stream.  Test only on relevant completion codes.
  *
  *************************************************************************
  */
-void SNES_SAMRAIContext::reportCompletionCode(
+void
+SNES_SAMRAIContext::reportCompletionCode(
    std::ostream& os) const
 {
    switch ((int)d_SNES_completion_code) {
@@ -711,7 +317,8 @@ void SNES_SAMRAIContext::reportCompletionCode(
  *
  *************************************************************************
  */
-void SNES_SAMRAIContext::createPetscObjects()
+void
+SNES_SAMRAIContext::createPetscObjects()
 {
    int ierr = 0;
    NULL_USE(ierr);
@@ -766,7 +373,8 @@ void SNES_SAMRAIContext::createPetscObjects()
  *
  *************************************************************************
  */
-void SNES_SAMRAIContext::initializePetscObjects()
+void
+SNES_SAMRAIContext::initializePetscObjects()
 {
    int ierr = 0;
    NULL_USE(ierr);
@@ -949,7 +557,8 @@ void SNES_SAMRAIContext::initializePetscObjects()
  *
  *************************************************************************
  */
-void SNES_SAMRAIContext::destroyPetscObjects()
+void
+SNES_SAMRAIContext::destroyPetscObjects()
 {
    if (d_jacobian) {
       MatDestroy(d_jacobian);
@@ -972,8 +581,9 @@ void SNES_SAMRAIContext::destroyPetscObjects()
  *************************************************************************
  */
 
-void SNES_SAMRAIContext::getFromInput(
-   tbox::Pointer<tbox::Database> db)
+void
+SNES_SAMRAIContext::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db)
 {
    if (db) {
       if (db->keyExists("maximum_nonlinear_iterations")) {
@@ -1083,19 +693,18 @@ void SNES_SAMRAIContext::getFromInput(
  *************************************************************************
  */
 
-void SNES_SAMRAIContext::getFromRestart()
+void
+SNES_SAMRAIContext::getFromRestart()
 {
 
-   tbox::Pointer<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION");
    if (ver != SOLV_SNES_SAMRAI_CONTEXT_VERSION) {
@@ -1146,12 +755,11 @@ void SNES_SAMRAIContext::getFromRestart()
 
 }
 
-void SNES_SAMRAIContext::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+void
+SNES_SAMRAIContext::putToDatabase(
+   const boost::shared_ptr<tbox::Database>& db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
-#endif
+   TBOX_ASSERT(db);
 
    db->putInteger("SOLV_SNES_SAMRAI_CONTEXT_VERSION",
       SOLV_SNES_SAMRAI_CONTEXT_VERSION);
@@ -1207,7 +815,8 @@ void SNES_SAMRAIContext::putToDatabase(
  *************************************************************************
  */
 
-void SNES_SAMRAIContext::printClassData(
+void
+SNES_SAMRAIContext::printClassData(
    std::ostream& os) const
 {
    os << "\nSNES_SAMRAIContext::printClassData..." << std::endl;

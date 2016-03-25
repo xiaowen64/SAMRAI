@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Manager class for variables used in a SAMRAI application.
  *
  ************************************************************************/
@@ -17,9 +17,7 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/VariableDatabase.I"
-#endif
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace hier {
@@ -47,7 +45,8 @@ VariableDatabase::s_shutdown_handler(
  *************************************************************************
  */
 
-VariableDatabase *VariableDatabase::getDatabase()
+VariableDatabase*
+VariableDatabase::getDatabase()
 {
    if (!s_variable_database_instance) {
       s_variable_database_instance = new VariableDatabase();
@@ -55,7 +54,8 @@ VariableDatabase *VariableDatabase::getDatabase()
    return s_variable_database_instance;
 }
 
-void VariableDatabase::shutdownCallback()
+void
+VariableDatabase::shutdownCallback()
 {
    if (s_variable_database_instance) {
       delete s_variable_database_instance;
@@ -72,10 +72,9 @@ void VariableDatabase::shutdownCallback()
  *************************************************************************
  */
 
-VariableDatabase::VariableDatabase()
+VariableDatabase::VariableDatabase() :
+   d_patch_descriptor(boost::make_shared<PatchDescriptor>())
 {
-   d_patch_descriptor = new hier::PatchDescriptor();
-
    d_max_variable_id = idUndefined();
    d_max_context_id = idUndefined();
    d_max_descriptor_id = idUndefined();
@@ -89,7 +88,8 @@ VariableDatabase::~VariableDatabase()
 {
 }
 
-void VariableDatabase::registerSingletonSubclassInstance(
+void
+VariableDatabase::registerSingletonSubclassInstance(
    VariableDatabase* subclass_instance)
 {
    if (!s_variable_database_instance) {
@@ -104,24 +104,87 @@ void VariableDatabase::registerSingletonSubclassInstance(
 /*
  *************************************************************************
  *
+ * Accessory functions to retrieve data members.
+ *
+ *************************************************************************
+ */
+
+boost::shared_ptr<PatchDescriptor>
+VariableDatabase::getPatchDescriptor() const
+{
+   return d_patch_descriptor;
+}
+
+int
+VariableDatabase::getNumberOfRegisteredPatchDataIndices() const
+{
+   return d_num_registered_patch_data_ids;
+}
+
+int
+VariableDatabase::getNumberOfRegisteredVariableContexts() const
+{
+   // currently, we do not allow removal of variable contexts
+   // so this suffices
+   return d_max_context_id + 1;
+}
+
+/*
+ *************************************************************************
+ *
+ * Accessory functions to manage patch data ids for restart.
+ *
+ *************************************************************************
+ */
+
+ComponentSelector
+VariableDatabase::getPatchDataRestartTable() const
+{
+   return d_patchdata_restart_table;
+}
+
+bool
+VariableDatabase::isPatchDataRegisteredForRestart(
+   int index) const
+{
+   return d_patchdata_restart_table.isSet(index);
+}
+
+void
+VariableDatabase::registerPatchDataForRestart(
+   int index)
+{
+   d_patchdata_restart_table.setFlag(index);
+}
+
+void
+VariableDatabase::unregisterPatchDataForRestart(
+   int index)
+{
+   d_patchdata_restart_table.clrFlag(index);
+}
+
+/*
+ *************************************************************************
+ *
  * Return the context in the database with the given name, or add a
  * context to the database with that name if no such context exists.
  *
  *************************************************************************
  */
 
-tbox::Pointer<hier::VariableContext>
+boost::shared_ptr<VariableContext>
 VariableDatabase::getContext(
    const std::string& name)
 {
-   tbox::Pointer<hier::VariableContext> context(NULL);
+   boost::shared_ptr<VariableContext> context;
 
    if (!name.empty()) {
 
       int ctxt_id = getContextId_Private(name);
 
       if (ctxt_id == idUndefined()) {
-         context = new hier::VariableContext(name);
+         context.reset(new VariableContext(name));
          addContext_Private(context);
       } else {
          context = d_contexts[ctxt_id];
@@ -141,7 +204,8 @@ VariableDatabase::getContext(
  *************************************************************************
  */
 
-bool VariableDatabase::checkContextExists(
+bool
+VariableDatabase::checkContextExists(
    const std::string& name) const
 {
    int ctxt_id = getContextId_Private(name);
@@ -158,10 +222,11 @@ bool VariableDatabase::checkContextExists(
  *************************************************************************
  */
 
-void VariableDatabase::addVariable(
-   const tbox::Pointer<hier::Variable> variable)
+void
+VariableDatabase::addVariable(
+   const boost::shared_ptr<Variable>& variable)
 {
-   TBOX_ASSERT(!variable.isNull());
+   TBOX_ASSERT(variable);
 
    const bool user_variable = true;
    bool variable_added = addVariable_Private(variable, user_variable);
@@ -185,11 +250,11 @@ void VariableDatabase::addVariable(
  *************************************************************************
  */
 
-tbox::Pointer<hier::Variable>
+boost::shared_ptr<Variable>
 VariableDatabase::getVariable(
    const std::string& name) const
 {
-   tbox::Pointer<hier::Variable> variable(NULL);
+   boost::shared_ptr<Variable> variable;
 
    int var_id = getVariableId(name);
 
@@ -209,7 +274,8 @@ VariableDatabase::getVariable(
  *************************************************************************
  */
 
-bool VariableDatabase::checkVariableExists(
+bool
+VariableDatabase::checkVariableExists(
    const std::string& name) const
 {
    int var_id = getVariableId(name);
@@ -231,11 +297,12 @@ bool VariableDatabase::checkVariableExists(
  *************************************************************************
  */
 
-int VariableDatabase::registerClonedPatchDataIndex(
-   const tbox::Pointer<hier::Variable> variable,
+int
+VariableDatabase::registerClonedPatchDataIndex(
+   const boost::shared_ptr<Variable>& variable,
    int old_id)
 {
-   TBOX_ASSERT(!variable.isNull());
+   TBOX_ASSERT(variable);
 
    int new_id = idUndefined();
 
@@ -292,11 +359,12 @@ int VariableDatabase::registerClonedPatchDataIndex(
  *************************************************************************
  */
 
-int VariableDatabase::registerPatchDataIndex(
-   const tbox::Pointer<hier::Variable> variable,
+int
+VariableDatabase::registerPatchDataIndex(
+   const boost::shared_ptr<Variable>& variable,
    int data_id)
 {
-   TBOX_ASSERT(!variable.isNull());
+   TBOX_ASSERT(variable);
 
    int new_id = data_id;
 
@@ -304,8 +372,8 @@ int VariableDatabase::registerPatchDataIndex(
 
       new_id = d_patch_descriptor->definePatchDataComponent(
             variable->getName(),
-            variable->getPatchDataFactory()->cloneFactory(variable->
-               getPatchDataFactory()->getGhostCellWidth()));
+            variable->getPatchDataFactory()->cloneFactory(
+               variable->getPatchDataFactory()->getGhostCellWidth()));
 
       const bool user_variable = true;
       addVariablePatchDataIndexPairToDatabase_Private(variable,
@@ -347,16 +415,16 @@ int VariableDatabase::registerPatchDataIndex(
  *************************************************************************
  */
 
-void VariableDatabase::removePatchDataIndex(
+void
+VariableDatabase::removePatchDataIndex(
    int data_id)
 {
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      tbox::Pointer<hier::Variable> variable =
-         d_index2variable_map[data_id];
+      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
-      if (!variable.isNull()) {
+      if (variable) {
 
          tbox::Array<int>& indx_array =
             d_variable_context2index_map[variable->getInstanceIdentifier()];
@@ -370,14 +438,14 @@ void VariableDatabase::removePatchDataIndex(
 
          d_patch_descriptor->removePatchDataComponent(data_id);
 
-         if (!d_index2variable_map[data_id].isNull()) {
+         if (d_index2variable_map[data_id]) {
             d_num_registered_patch_data_ids--;
          }
 
-         d_index2variable_map[data_id].setNull();
+         d_index2variable_map[data_id].reset();
          if (data_id == d_max_descriptor_id) {
             for (int id = d_max_descriptor_id; id >= 0; id--) {
-               if (d_index2variable_map[id].isNull()) {
+               if (!d_index2variable_map[id]) {
                   d_max_descriptor_id--;
                } else {
                   break;
@@ -400,25 +468,26 @@ void VariableDatabase::removePatchDataIndex(
  *************************************************************************
  */
 
-bool VariableDatabase::checkVariablePatchDataIndex(
-   const tbox::Pointer<hier::Variable> variable,
+bool
+VariableDatabase::checkVariablePatchDataIndex(
+   const boost::shared_ptr<Variable>& variable,
    int data_id) const
 {
-   TBOX_ASSERT(!variable.isNull());
+   TBOX_ASSERT(variable);
    TBOX_ASSERT(data_id >= 0 &&
       data_id < d_patch_descriptor->getMaxNumberRegisteredComponents());
 
    bool ret_value = false;
 
-   tbox::Pointer<hier::Variable> test_variable;
+   boost::shared_ptr<Variable> test_variable;
 
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
       test_variable = d_index2variable_map[data_id];
    }
 
-   if (!test_variable.isNull()) {
+   if (test_variable) {
 
-      ret_value = (variable.getPointer() == test_variable.getPointer());
+      ret_value = (variable.get() == test_variable.get());
 
    }
 
@@ -434,22 +503,23 @@ bool VariableDatabase::checkVariablePatchDataIndex(
  *************************************************************************
  */
 
-bool VariableDatabase::checkVariablePatchDataIndexType(
-   const tbox::Pointer<hier::Variable> variable,
+bool
+VariableDatabase::checkVariablePatchDataIndexType(
+   const boost::shared_ptr<Variable>& variable,
    int data_id) const
 {
-   TBOX_ASSERT(!variable.isNull());
+   TBOX_ASSERT(variable);
    TBOX_ASSERT(data_id >= 0 &&
       data_id < d_patch_descriptor->getMaxNumberRegisteredComponents());
 
    bool ret_value = false;
 
-   if (!(d_patch_descriptor->getPatchDataFactory(data_id).isNull())) {
+   if (d_patch_descriptor->getPatchDataFactory(data_id)) {
 
-      tbox::Pointer<hier::PatchDataFactory> dfact =
-         d_patch_descriptor->getPatchDataFactory(data_id);
+      boost::shared_ptr<PatchDataFactory> dfact(
+         d_patch_descriptor->getPatchDataFactory(data_id));
 
-      if (!dfact.isNull() &&
+      if (dfact &&
           (typeid(*(variable->getPatchDataFactory())) == typeid(*dfact))) {
          ret_value = true;
       }
@@ -468,13 +538,14 @@ bool VariableDatabase::checkVariablePatchDataIndexType(
  *************************************************************************
  */
 
-int VariableDatabase::registerVariableAndContext(
-   const tbox::Pointer<hier::Variable> variable,
-   const tbox::Pointer<hier::VariableContext> context,
-   const hier::IntVector& ghosts)
+int
+VariableDatabase::registerVariableAndContext(
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context,
+   const IntVector& ghosts)
 {
-   TBOX_ASSERT(!variable.isNull());
-   TBOX_ASSERT(!context.isNull());
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(context);
    TBOX_ASSERT(ghosts.min() >= 0);
 
    bool user_variable = true;
@@ -495,12 +566,13 @@ int VariableDatabase::registerVariableAndContext(
  *************************************************************************
  */
 
-int VariableDatabase::mapVariableAndContextToIndex(
-   const tbox::Pointer<hier::Variable> variable,
-   const tbox::Pointer<hier::VariableContext> context) const
+int
+VariableDatabase::mapVariableAndContextToIndex(
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context) const
 {
-   TBOX_ASSERT(!(variable.isNull()));
-   TBOX_ASSERT(!(context.isNull()));
+   TBOX_ASSERT(variable);
+   TBOX_ASSERT(context);
 
    int index = idUndefined();
 
@@ -528,17 +600,18 @@ int VariableDatabase::mapVariableAndContextToIndex(
  *************************************************************************
  */
 
-bool VariableDatabase::mapIndexToVariable(
+bool
+VariableDatabase::mapIndexToVariable(
    const int index,
-   tbox::Pointer<hier::Variable>& variable) const
+   boost::shared_ptr<Variable>& variable) const
 {
-   variable.setNull();
+   variable.reset();
 
    if ((index >= 0) && (index <= d_max_descriptor_id)) {
       variable = d_index2variable_map[index];
    }
 
-   return !variable.isNull();
+   return variable;
 }
 
 /*
@@ -551,21 +624,22 @@ bool VariableDatabase::mapIndexToVariable(
  *************************************************************************
  */
 
-bool VariableDatabase::mapIndexToVariableAndContext(
+bool
+VariableDatabase::mapIndexToVariableAndContext(
    const int index,
-   tbox::Pointer<hier::Variable>& variable,
-   tbox::Pointer<hier::VariableContext>& context) const
+   boost::shared_ptr<Variable>& variable,
+   boost::shared_ptr<VariableContext>& context) const
 {
    bool found = false;
 
-   variable.setNull();
-   context.setNull();
+   variable.reset();
+   context.reset();
 
    if ((index >= 0) && (index <= d_max_descriptor_id)) {
 
       variable = d_index2variable_map[index];
 
-      if (!variable.isNull()) {
+      if (variable) {
 
          const tbox::Array<int>& var_indx_array =
             d_variable_context2index_map[variable->getInstanceIdentifier()];
@@ -595,7 +669,8 @@ bool VariableDatabase::mapIndexToVariableAndContext(
  *************************************************************************
  */
 
-void VariableDatabase::printClassData(
+void
+VariableDatabase::printClassData(
    std::ostream& os,
    bool print_only_user_defined_variables) const
 {
@@ -609,7 +684,7 @@ void VariableDatabase::printClassData(
    os << "Variable Contexts registered with database:";
    for (i = 0; i <= d_max_context_id; i++) {
       os << "\nContext id = " << i;
-      if (!d_contexts[i].isNull()) {
+      if (d_contexts[i]) {
          os << " : Context name = " << d_contexts[i]->getName();
       } else {
          os << " : NOT IN DATABASE";
@@ -620,7 +695,7 @@ void VariableDatabase::printClassData(
    os << "Variables registered with database:";
    for (i = 0; i <= d_max_variable_id; i++) {
       os << "\nVariable instance = " << i;
-      if (!d_variables[i].isNull()) {
+      if (d_variables[i]) {
          os << "\n";
          if (!print_only_user_defined_variables ||
              (print_only_user_defined_variables &&
@@ -638,7 +713,7 @@ void VariableDatabase::printClassData(
       << std::endl << std::flush;
    os << "Variable-Context pairs mapping to Patch Data Indices in database:";
    for (i = 0; i <= d_max_variable_id; i++) {
-      if (!d_variables[i].isNull()) {
+      if (d_variables[i]) {
          if (!print_only_user_defined_variables ||
              (print_only_user_defined_variables &&
               d_is_user_variable[i])) {
@@ -667,7 +742,7 @@ void VariableDatabase::printClassData(
    os << "Mapping from Patch Data Indices to Variables:";
    for (i = 0; i <= d_max_descriptor_id; i++) {
       os << "\nPatch data id = " << i << " -- ";
-      if (d_index2variable_map[i].isNull()) {
+      if (!d_index2variable_map[i]) {
          os << "UNDEFINED in database";
       } else {
          int vid = d_index2variable_map[i]->getInstanceIdentifier();
@@ -707,11 +782,12 @@ void VariableDatabase::printClassData(
  *************************************************************************
  */
 
-int VariableDatabase::registerInternalSAMRAIVariable(
-   const tbox::Pointer<hier::Variable> variable,
-   const hier::IntVector& ghosts)
+int
+VariableDatabase::registerInternalSAMRAIVariable(
+   const boost::shared_ptr<Variable>& variable,
+   const IntVector& ghosts)
 {
-   TBOX_ASSERT(!variable.isNull());
+   TBOX_ASSERT(variable);
    TBOX_ASSERT(ghosts.min() >= 0);
 
    int data_id = idUndefined();
@@ -719,7 +795,7 @@ int VariableDatabase::registerInternalSAMRAIVariable(
    int var_id = variable->getInstanceIdentifier();
    if (var_id <= d_max_variable_id) {
 
-      if (!d_variables[var_id].isNull() &&
+      if (d_variables[var_id] &&
           d_is_user_variable[var_id]) {
          TBOX_ERROR(
             "hier::VariableDatabase::registerInternalSAMRAIVariable error...\n"
@@ -752,15 +828,15 @@ int VariableDatabase::registerInternalSAMRAIVariable(
  *************************************************************************
  */
 
-void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
+void
+VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
    int data_id)
 {
    if ((data_id >= 0) && (data_id <= d_max_descriptor_id)) {
 
-      tbox::Pointer<hier::Variable> variable =
-         d_index2variable_map[data_id];
+      boost::shared_ptr<Variable> variable(d_index2variable_map[data_id]);
 
-      if (!variable.isNull() &&
+      if (variable &&
           !d_is_user_variable[variable->getInstanceIdentifier()]) {
          removePatchDataIndex(data_id);
       }
@@ -776,14 +852,15 @@ void VariableDatabase::removeInternalSAMRAIVariablePatchDataIndex(
  *************************************************************************
  */
 
-int VariableDatabase::getVariableId(
+int
+VariableDatabase::getVariableId(
    const std::string& name) const
 {
    int ret_id = idUndefined();
 
    if (!name.empty()) {
       for (int i = 0; i <= d_max_variable_id; i++) {
-         if (!d_variables[i].isNull() &&
+         if (d_variables[i] &&
              (d_variables[i]->getName() == name)) {
             ret_id = i;
             break;
@@ -803,14 +880,15 @@ int VariableDatabase::getVariableId(
  *************************************************************************
  */
 
-int VariableDatabase::getContextId_Private(
+int
+VariableDatabase::getContextId_Private(
    const std::string& name) const
 {
    int ret_id = idUndefined();
 
    if (!name.empty()) {
       for (int i = 0; i <= d_max_context_id; i++) {
-         if (!d_contexts[i].isNull() &&
+         if (d_contexts[i] &&
              (d_contexts[i]->getName() == name)) {
             ret_id = i;
             break;
@@ -821,8 +899,9 @@ int VariableDatabase::getContextId_Private(
    return ret_id;
 }
 
-void VariableDatabase::addContext_Private(
-   const tbox::Pointer<hier::VariableContext> context)
+void
+VariableDatabase::addContext_Private(
+   const boost::shared_ptr<VariableContext>& context)
 {
    int new_id = context->getIndex();
    int oldsize = d_contexts.getSize();
@@ -846,8 +925,9 @@ void VariableDatabase::addContext_Private(
  *************************************************************************
  */
 
-void VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
-   const tbox::Pointer<hier::Variable> variable,
+void
+VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
+   const boost::shared_ptr<Variable>& variable,
    int data_id,
    bool user_variable)
 {
@@ -868,8 +948,8 @@ void VariableDatabase::addVariablePatchDataIndexPairToDatabase_Private(
             data_id + 1));
    }
 
-   if (d_index2variable_map[data_id].isNull() &&
-       !variable.isNull()) {
+   if (!d_index2variable_map[data_id] &&
+       variable) {
       d_num_registered_patch_data_ids++;
    }
 
@@ -912,7 +992,7 @@ VariableDatabase::removeVariable(
       // We cannot erase the item from the list, because the list's index is
       // assumed to be the instance identifier.  So, we just set this item to
       // undefined.
-      d_variables[var_id].setNull();
+      d_variables[var_id].reset();
       if (var_id == d_max_variable_id) {
          --d_max_variable_id;
       }
@@ -930,8 +1010,9 @@ VariableDatabase::removeVariable(
  *************************************************************************
  */
 
-bool VariableDatabase::addVariable_Private(
-   const tbox::Pointer<hier::Variable> variable,
+bool
+VariableDatabase::addVariable_Private(
+   const boost::shared_ptr<Variable>& variable,
    bool user_variable)
 {
    bool ret_value = true;
@@ -941,7 +1022,7 @@ bool VariableDatabase::addVariable_Private(
    bool grow_array = false;
 
    if (var_id < d_variables.getSize()) {
-      var_found = !d_variables[var_id].isNull();
+      var_found = d_variables[var_id];
    } else {
       grow_array = true;
    }
@@ -1018,10 +1099,11 @@ bool VariableDatabase::addVariable_Private(
  *************************************************************************
  */
 
-int VariableDatabase::registerVariableAndContext_Private(
-   const tbox::Pointer<hier::Variable> variable,
-   const tbox::Pointer<hier::VariableContext> context,
-   const hier::IntVector& ghosts,
+int
+VariableDatabase::registerVariableAndContext_Private(
+   const boost::shared_ptr<Variable>& variable,
+   const boost::shared_ptr<VariableContext>& context,
+   const IntVector& ghosts,
    bool user_variable)
 {
 
@@ -1047,13 +1129,13 @@ int VariableDatabase::registerVariableAndContext_Private(
          // Check the descriptor id. If valid, get the associated
          // PatchDataFactory instance.
          if (desc_id != idUndefined()) {
-            tbox::Pointer<hier::PatchDataFactory> factory =
-               d_patch_descriptor->getPatchDataFactory(desc_id);
+            boost::shared_ptr<PatchDataFactory> factory(
+               d_patch_descriptor->getPatchDataFactory(desc_id));
 
             // Ensure the factory is not null and that the ghost
             // cells are the same as what we passed in.  If the ghost
             // cells aren't the same, we'll report an error and abort.
-            if (!factory.isNull() &&
+            if (factory &&
                 (factory->getGhostCellWidth() != ghosts)) {
                TBOX_ERROR("hier::VariableDatabase::registerVariableAndContext"
                   << " error ...\n" << "Attempting to to register variable "
@@ -1064,7 +1146,7 @@ int VariableDatabase::registerVariableAndContext_Private(
                   << "registered with a different ghost width. " << std::endl);
             } else {
                // reset the boolean flag if necessary
-               if (!factory.isNull()) {
+               if (factory) {
                   make_new_factory = false;
                }
             }
@@ -1075,8 +1157,8 @@ int VariableDatabase::registerVariableAndContext_Private(
    // Create the new factory if necessary
    if (make_new_factory) {
 
-      tbox::Pointer<hier::PatchDataFactory> new_factory =
-         variable->getPatchDataFactory()->cloneFactory(ghosts);
+      boost::shared_ptr<PatchDataFactory> new_factory(
+         variable->getPatchDataFactory()->cloneFactory(ghosts));
 
       std::string tmp(variable->getName());
       tmp += separator;

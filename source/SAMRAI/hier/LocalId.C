@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Generic identifier used on a single process.
  *
  ************************************************************************/
@@ -16,10 +16,6 @@
 
 #include <iostream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/LocalId.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -29,10 +25,48 @@ LocalId::s_invalid_id(
 const LocalId LocalId::s_zero_id(0);
 
 /*
- ********************************************************************************
- ********************************************************************************
+ *******************************************************************************
+ *******************************************************************************
  */
-std::ostream& operator << (
+LocalId::LocalId():
+   d_value(getInvalidId().d_value) {
+}
+
+/*
+ *******************************************************************************
+ *******************************************************************************
+ */
+LocalId::LocalId(
+   const LocalId& other):
+   d_value(other.d_value) {
+}
+
+/*
+ *******************************************************************************
+ *******************************************************************************
+ */
+LocalId::LocalId(
+   const int& value):
+   d_value(value) {
+}
+
+/*
+ *******************************************************************************
+ *******************************************************************************
+ */
+LocalId::~LocalId()
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   d_value = s_invalid_id.d_value;
+#endif
+}
+
+/*
+ *******************************************************************************
+ *******************************************************************************
+ */
+std::ostream&
+operator << (
    std::ostream& co,
    const LocalId& r)
 {

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerface complex data on
  *                a Cartesian mesh.
  *
@@ -110,31 +110,20 @@ CartesianOuterfaceComplexWeightedAverage()
 {
 }
 
-bool CartesianOuterfaceComplexWeightedAverage::findCoarsenOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<pdat::OuterfaceVariable<dcomplex> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int CartesianOuterfaceComplexWeightedAverage::getOperatorPriority() const
+int
+CartesianOuterfaceComplexWeightedAverage::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-CartesianOuterfaceComplexWeightedAverage::getStencilWidth() const {
+CartesianOuterfaceComplexWeightedAverage::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void CartesianOuterfaceComplexWeightedAverage::coarsen(
+void
+CartesianOuterfaceComplexWeightedAverage::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,
@@ -146,25 +135,27 @@ void CartesianOuterfaceComplexWeightedAverage::coarsen(
 
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, coarse, fine, coarse_box, ratio);
 
-   tbox::Pointer<pdat::OuterfaceData<dcomplex> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<pdat::OuterfaceData<dcomplex> >
-   cdata = coarse.getPatchData(dst_component);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   boost::shared_ptr<pdat::OuterfaceData<dcomplex> > fdata(
+      fine.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::OuterfaceData<dcomplex> > cdata(
+      coarse.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-#endif
 
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
    const hier::Index cilo = cdata->getGhostBox().lower();
    const hier::Index cihi = cdata->getGhostBox().upper();
 
-   const tbox::Pointer<CartesianPatchGeometry> fgeom =
-      fine.getPatchGeometry();
-   const tbox::Pointer<CartesianPatchGeometry> cgeom =
-      coarse.getPatchGeometry();
+   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
+      fine.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
+   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
+      coarse.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();

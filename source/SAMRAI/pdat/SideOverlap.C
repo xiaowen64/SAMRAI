@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,10 +12,6 @@
 #define included_pdat_SideOverlap_C
 
 #include "SAMRAI/pdat/SideOverlap.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideOverlap.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -39,9 +35,31 @@ SideOverlap::~SideOverlap()
 {
 }
 
-bool SideOverlap::isOverlapEmpty() const
+bool
+SideOverlap::isOverlapEmpty() const
 {
    return d_is_overlap_empty;
+}
+
+const hier::BoxContainer&
+SideOverlap::getDestinationBoxContainer(
+   const int axis) const
+{
+   TBOX_ASSERT((axis >= 0) && (axis < d_dst_boxes.getSize()));
+
+   return d_dst_boxes[axis];
+}
+
+const hier::IntVector&
+SideOverlap::getSourceOffset() const
+{
+   return d_transformation.getOffset();
+}
+
+const hier::Transformation&
+SideOverlap::getTransformation() const
+{
+   return d_transformation;
 }
 
 }

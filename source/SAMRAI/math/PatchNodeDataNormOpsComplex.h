@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Norm operations for complex node-centered data.
  *
  ************************************************************************/
@@ -17,7 +17,9 @@
 #include "SAMRAI/math/ArrayDataNormOpsComplex.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace math {
@@ -66,17 +68,29 @@ public:
     */
    int
    numberOfEntries(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-      const hier::Box& box) const;
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(data);
+      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+      return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox())).size() *
+         data->getDepth();
+   }
 
    /**
     * Return sum of control volume entries for the node-centered data object.
     */
    double
    sumControlVolumes(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-      const tbox::Pointer<pdat::NodeData<double> >& cvol,
-      const hier::Box& box) const;
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol,
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(data && cvol);
+      return d_array_ops.sumControlVolumes(data->getArrayData(),
+         cvol->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
    /**
     * Set destination component to norm of source component.  That is,
@@ -85,9 +99,16 @@ public:
     */
    void
    abs(
-      tbox::Pointer<pdat::NodeData<double> >& dst,
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& src,
-      const hier::Box& box) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& dst,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& src,
+      const hier::Box& box) const
+   {
+      TBOX_ASSERT(dst && src);
+      TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+      d_array_ops.abs(dst->getArrayData(),
+         src->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
    /**
     * Return discrete \f$L_1\f$-norm of the data using the control volume to
@@ -98,10 +119,10 @@ public:
     */
    double
    L1Norm(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete \f$L_2\f$-norm of the data using the control volume to
@@ -113,10 +134,10 @@ public:
     */
    double
    L2Norm(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete weighted \f$L_2\f$-norm of the data using the control
@@ -128,11 +149,11 @@ public:
     */
    double
    weightedL2Norm(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& weight,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete root mean squared norm of the data.  If the control
@@ -143,10 +164,10 @@ public:
     */
    double
    RMSNorm(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return discrete weighted root mean squared norm of the data.  If the
@@ -157,11 +178,11 @@ public:
     */
    double
    weightedRMSNorm(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& weight,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& weight,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the \f$\max\f$-norm of the data using the control volume to weight
@@ -172,10 +193,10 @@ public:
     */
    double
    maxNorm(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the dot product of the two data arrays using the control volume
@@ -185,11 +206,11 @@ public:
     */
    dcomplex
    dot(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data1,
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data2,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data1,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data2,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > cvol =
-         tbox::Pointer<pdat::NodeData<double> >(NULL)) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& cvol =
+         boost::shared_ptr<pdat::NodeData<double> >()) const;
 
    /**
     * Return the integral of the function represented by the data array.
@@ -197,9 +218,16 @@ public:
     */
    dcomplex
    integral(
-      const tbox::Pointer<pdat::NodeData<dcomplex> >& data,
+      const boost::shared_ptr<pdat::NodeData<dcomplex> >& data,
       const hier::Box& box,
-      const tbox::Pointer<pdat::NodeData<double> > vol) const;
+      const boost::shared_ptr<pdat::NodeData<double> >& vol) const
+   {
+      TBOX_ASSERT(data);
+      return d_array_ops.integral(
+         data->getArrayData(),
+         vol->getArrayData(),
+         pdat::NodeGeometry::toNodeBox(box));
+   }
 
 private:
    // The following are not implemented:
@@ -214,4 +242,5 @@ private:
 
 }
 }
+
 #endif

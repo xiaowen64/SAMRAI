@@ -2,9 +2,8 @@
 ##
 ## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/tools/scripts/conversion2.0/renameXd.pl $
 ## Package:     SAMRAI scripts
-## Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 ## Description: perl script to rename getNumber methods to be getNumberOf 
 ##
 

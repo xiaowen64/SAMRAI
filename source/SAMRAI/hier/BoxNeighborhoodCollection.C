@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   A class describing the adjacency of Boxes.
  *
  ************************************************************************/
@@ -13,24 +13,21 @@
 
 #include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxNeighborhoodCollection.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
 
 const int BoxNeighborhoodCollection::HIER_BOX_NBRHD_COLLECTION_VERSION = 0;
 
+BoxNeighborhoodCollection::BoxNeighborhoodCollection()
+{
+}
+
 BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    const BoxContainer& base_boxes)
 {
    // For each base Box in base_boxes create an empty neighborhood.
-   for (BoxContainer::ConstIterator itr(base_boxes.begin());
+   for (BoxContainer::const_iterator itr(base_boxes.begin());
         itr != base_boxes.end(); ++itr) {
       insert(itr->getId());
    }
@@ -51,7 +48,12 @@ BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    }
 }
 
-BoxNeighborhoodCollection& BoxNeighborhoodCollection::operator = (
+BoxNeighborhoodCollection::~BoxNeighborhoodCollection()
+{
+}
+
+BoxNeighborhoodCollection&
+BoxNeighborhoodCollection::operator = (
    const BoxNeighborhoodCollection& rhs)
 {
    // Empty this container then iterate through the other collection and
@@ -68,7 +70,8 @@ BoxNeighborhoodCollection& BoxNeighborhoodCollection::operator = (
    return *this;
 }
 
-bool BoxNeighborhoodCollection::operator == (
+bool
+BoxNeighborhoodCollection::operator == (
    const BoxNeighborhoodCollection& rhs) const
 {
    // Both collections must belong to the same process and have the same
@@ -116,13 +119,15 @@ bool BoxNeighborhoodCollection::operator == (
    return result;
 }
 
-bool BoxNeighborhoodCollection::operator != (
+bool
+BoxNeighborhoodCollection::operator != (
    const BoxNeighborhoodCollection& rhs) const
 {
   return !(*this == rhs);
 }
 
-int BoxNeighborhoodCollection::sumNumNeighbors() const
+int
+BoxNeighborhoodCollection::sumNumNeighbors() const
 {
    // Count the neighbors in each base Box.
    int ct = 0;
@@ -133,7 +138,8 @@ int BoxNeighborhoodCollection::sumNumNeighbors() const
    return ct;
 }
 
-bool BoxNeighborhoodCollection::hasNeighbor(
+bool
+BoxNeighborhoodCollection::hasNeighbor(
    const ConstIterator& base_box_itr,
    const Box& nbr) const
 {
@@ -152,7 +158,8 @@ bool BoxNeighborhoodCollection::hasNeighbor(
    }
 }
 
-bool BoxNeighborhoodCollection::neighborhoodEqual(
+bool
+BoxNeighborhoodCollection::neighborhoodEqual(
    const BoxId& base_box_id,
    const BoxNeighborhoodCollection& other) const
 {
@@ -171,7 +178,8 @@ bool BoxNeighborhoodCollection::neighborhoodEqual(
    return result;
 }
 
-bool BoxNeighborhoodCollection::isLocal(
+bool
+BoxNeighborhoodCollection::isLocal(
    int rank) const
 {
    // See if all the neighbors of all base Boxes belong to the same processor
@@ -190,7 +198,8 @@ bool BoxNeighborhoodCollection::isLocal(
    return is_local;
 }
 
-void BoxNeighborhoodCollection::getOwners(
+void
+BoxNeighborhoodCollection::getOwners(
    std::set<int>& owners) const
 {
    // Put the processor id of all neigbhors of all base Boxes into owners.
@@ -201,7 +210,8 @@ void BoxNeighborhoodCollection::getOwners(
    return;
 }
 
-void BoxNeighborhoodCollection::getOwners(
+void
+BoxNeighborhoodCollection::getOwners(
    ConstIterator& base_box_itr,
    std::set<int>& owners) const
 {
@@ -214,7 +224,8 @@ void BoxNeighborhoodCollection::getOwners(
    return;
 }
 
-void BoxNeighborhoodCollection::insert(
+void
+BoxNeighborhoodCollection::insert(
    Iterator& base_box_itr,
    const Box& new_nbr)
 {
@@ -240,7 +251,8 @@ void BoxNeighborhoodCollection::insert(
    return;
 }
 
-void BoxNeighborhoodCollection::insert(
+void
+BoxNeighborhoodCollection::insert(
    Iterator& base_box_itr,
    const BoxContainer& new_nbrs)
 {
@@ -248,7 +260,7 @@ void BoxNeighborhoodCollection::insert(
    TBOX_ASSERT(base_box_itr != end());
 
    // Add each neighbor in the container to the base Box.
-   for (BoxContainer::ConstIterator new_nbr_itr(new_nbrs.begin());
+   for (BoxContainer::const_iterator new_nbr_itr(new_nbrs.begin());
         new_nbr_itr != new_nbrs.end(); ++new_nbr_itr) {
 
       // First add this new neighbor to the collection of neighbors if it is
@@ -274,7 +286,8 @@ void BoxNeighborhoodCollection::insert(
    return;
 }
 
-void BoxNeighborhoodCollection::erase(
+void
+BoxNeighborhoodCollection::erase(
    Iterator& base_box_itr,
    const Box& nbr)
 {
@@ -300,7 +313,8 @@ void BoxNeighborhoodCollection::erase(
    return;
 }
 
-void BoxNeighborhoodCollection::erase(
+void
+BoxNeighborhoodCollection::erase(
    Iterator& base_box_itr,
    const BoxContainer& nbrs)
 {
@@ -308,7 +322,7 @@ void BoxNeighborhoodCollection::erase(
    TBOX_ASSERT(base_box_itr != end());
 
    // Remove each neighbor in the container from the base Box.
-   for (BoxContainer::ConstIterator old_nbr_itr(nbrs.begin());
+   for (BoxContainer::const_iterator old_nbr_itr(nbrs.begin());
         old_nbr_itr != nbrs.end(); ++old_nbr_itr) {
 
       HeadBoxPool::iterator nbr_itr = d_nbrs.find(*old_nbr_itr);
@@ -331,7 +345,8 @@ void BoxNeighborhoodCollection::erase(
    return;
 }
 
-BoxNeighborhoodCollection::InsertRetType BoxNeighborhoodCollection::insert(
+BoxNeighborhoodCollection::InsertRetType
+BoxNeighborhoodCollection::insert(
    const BoxId& new_base_box)
 {
    // First, add the base Box to the pool of base Boxes.  If it's already there
@@ -353,7 +368,8 @@ BoxNeighborhoodCollection::InsertRetType BoxNeighborhoodCollection::insert(
    }
 }
 
-void BoxNeighborhoodCollection::erase(
+void
+BoxNeighborhoodCollection::erase(
    Iterator& base_box_itr)
 {
    TBOX_ASSERT(base_box_itr.d_collection == this);
@@ -366,7 +382,8 @@ void BoxNeighborhoodCollection::erase(
    return;
 }
 
-void BoxNeighborhoodCollection::erase(
+void
+BoxNeighborhoodCollection::erase(
    Iterator& first_base_box_itr,
    Iterator& last_base_box_itr)
 {
@@ -380,7 +397,8 @@ void BoxNeighborhoodCollection::erase(
    return;
 }
 
-void BoxNeighborhoodCollection::eraseNonLocalNeighborhoods(
+void
+BoxNeighborhoodCollection::eraseNonLocalNeighborhoods(
    int rank)
 {
    // Find all base Boxes which do not belong to the same processor as this
@@ -398,7 +416,8 @@ void BoxNeighborhoodCollection::eraseNonLocalNeighborhoods(
    return;
 }
 
-void BoxNeighborhoodCollection::eraseEmptyNeighborhoods()
+void
+BoxNeighborhoodCollection::eraseEmptyNeighborhoods()
 {
    // Find all base Boxes which have no neighbors and remove them entirely.
    for (Iterator base_box_itr(begin()); base_box_itr != end();) {
@@ -414,7 +433,8 @@ void BoxNeighborhoodCollection::eraseEmptyNeighborhoods()
    return;
 }
 
-void BoxNeighborhoodCollection::erasePeriodicNeighbors()
+void
+BoxNeighborhoodCollection::erasePeriodicNeighbors()
 {
    for (Iterator base_box_itr(begin()); base_box_itr != end(); ++base_box_itr) {
       for (NeighborIterator nbr(begin(base_box_itr)); nbr != end(base_box_itr);) {
@@ -428,7 +448,8 @@ void BoxNeighborhoodCollection::erasePeriodicNeighbors()
    return;
 }
 
-void BoxNeighborhoodCollection::clear()
+void
+BoxNeighborhoodCollection::clear()
 {
    // Entirely remove all base Boxes and their neighborhoods.
    d_adj_list.clear();
@@ -438,7 +459,8 @@ void BoxNeighborhoodCollection::clear()
    return;
 }
 
-void BoxNeighborhoodCollection::coarsenNeighbors(
+void
+BoxNeighborhoodCollection::coarsenNeighbors(
    const IntVector& ratio)
 {
    for (HeadBoxPool::iterator nbr_itr(d_nbrs.begin());
@@ -449,7 +471,8 @@ void BoxNeighborhoodCollection::coarsenNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::refineNeighbors(
+void
+BoxNeighborhoodCollection::refineNeighbors(
    const IntVector& ratio)
 {
    for (HeadBoxPool::iterator nbr_itr(d_nbrs.begin());
@@ -460,7 +483,8 @@ void BoxNeighborhoodCollection::refineNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::growNeighbors(
+void
+BoxNeighborhoodCollection::growNeighbors(
    const IntVector& growth)
 {
    for (HeadBoxPool::iterator nbr_itr(d_nbrs.begin());
@@ -471,7 +495,8 @@ void BoxNeighborhoodCollection::growNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::getNeighbors(
+void
+BoxNeighborhoodCollection::getNeighbors(
    BoxContainer& neighbors) const
 {
    // Iterate through the neighbors of each neighborhood and dump them into the
@@ -497,7 +522,8 @@ void BoxNeighborhoodCollection::getNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::getNeighbors(
+void
+BoxNeighborhoodCollection::getNeighbors(
    BoxContainer& neighbors,
    const BlockId& block_id) const
 {
@@ -516,7 +542,8 @@ void BoxNeighborhoodCollection::getNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::getNeighbors(
+void
+BoxNeighborhoodCollection::getNeighbors(
    std::map<BlockId, BoxContainer>& neighbors) const
 {
    for (ConstIterator base_box_itr(begin());
@@ -530,7 +557,8 @@ void BoxNeighborhoodCollection::getNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::getNeighbors(
+void
+BoxNeighborhoodCollection::getNeighbors(
    const BoxId& base_box_id,
    BoxContainer& neighbors) const
 {
@@ -540,7 +568,8 @@ void BoxNeighborhoodCollection::getNeighbors(
    }
 }
 
-void BoxNeighborhoodCollection::getPeriodicNeighbors(
+void
+BoxNeighborhoodCollection::getPeriodicNeighbors(
    BoxContainer& result) const
 {
    // Iterate through each neighbor of each base Box and place each neighbor
@@ -558,7 +587,8 @@ void BoxNeighborhoodCollection::getPeriodicNeighbors(
    return;
 }
 
-void BoxNeighborhoodCollection::putToIntBuffer(
+void
+BoxNeighborhoodCollection::putToIntBuffer(
    std::vector<int>& send_mesg,
    const tbox::Dimension& dim,
    int buff_init) const
@@ -613,7 +643,8 @@ void BoxNeighborhoodCollection::putToIntBuffer(
    return;
 }
 
-void BoxNeighborhoodCollection::getFromIntBuffer(
+void
+BoxNeighborhoodCollection::getFromIntBuffer(
    const std::vector<int>& recv_mesg,
    const std::vector<int>& proc_offset,
    const tbox::Dimension& dim,
@@ -659,60 +690,53 @@ void BoxNeighborhoodCollection::getFromIntBuffer(
 
 // These are defined in NeighborhoodSet but it's not clear that they
 // are ever called or even needed.
-void BoxNeighborhoodCollection::putToDatabase(
-   tbox::Database& database) const
+void
+BoxNeighborhoodCollection::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
    // This appears to be used in the RedistributedRestartUtility.
-   database.putBool("d_is_edge_set", true);
+   database->putBool("d_is_edge_set", true);
 
-   database.putInteger(
+   database->putInteger(
       "HIER_BOX_NBRHD_COLLECTION_VERSION",
       HIER_BOX_NBRHD_COLLECTION_VERSION);
    const int num_neighborhoods = numBoxNeighborhoods();
-   database.putInteger("number_of_sets", num_neighborhoods);
+   database->putInteger("number_of_sets", num_neighborhoods);
 
    if (num_neighborhoods > 0) {
 
-      std::vector<int> block_ids(num_neighborhoods);
       std::vector<int> owners(num_neighborhoods);
       std::vector<int> local_indices(num_neighborhoods);
       std::vector<int> periodic_ids(num_neighborhoods);
       for (ConstIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& base_box_id = *ei;
-         block_ids.push_back(base_box_id.getBlockId().getBlockValue());
          owners.push_back(base_box_id.getOwnerRank());
          local_indices.push_back(base_box_id.getLocalId().getValue());
          periodic_ids.push_back(base_box_id.getPeriodicId().getPeriodicValue());
       }
 
-      database.putIntegerArray(
-         "block_ids",
-         &block_ids[0],
-         num_neighborhoods);
-      database.putIntegerArray(
+      database->putIntegerArray(
          "owners",
          &owners[0],
          num_neighborhoods);
-      database.putIntegerArray(
+      database->putIntegerArray(
          "local_indices",
          &local_indices[0],
          num_neighborhoods);
-      database.putIntegerArray(
+      database->putIntegerArray(
          "periodic_ids",
          &periodic_ids[0],
          num_neighborhoods);
-
       const std::string set_db_string("set_for_local_id_");
 
       for (ConstIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& mbid = *ei;
          const std::string set_name =
             set_db_string
-            + tbox::Utilities::blockToString(mbid.getBlockId().getBlockValue())
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-         tbox::Database& nbr_db = *database.putDatabase(set_name);
+         tbox::Database& nbr_db = *database->putDatabase(set_name);
 
          const int mbs_size = numNeighbors(ei);
          nbr_db.putInteger("mapped_box_set_size", mbs_size);
@@ -763,20 +787,16 @@ void BoxNeighborhoodCollection::putToDatabase(
    return;
 }
 
-void BoxNeighborhoodCollection::getFromDatabase(
+void
+BoxNeighborhoodCollection::getFromDatabase(
    tbox::Database& database)
 {
    const unsigned int number_of_sets = database.getInteger("number_of_sets");
    if (number_of_sets > 0) {
 
-      std::vector<int> block_ids(number_of_sets);
       std::vector<int> owners(number_of_sets);
       std::vector<int> local_indices(number_of_sets);
       std::vector<int> periodic_ids(number_of_sets);
-      database.getIntegerArray(
-         "block_ids",
-         &block_ids[0],
-         number_of_sets);
       database.getIntegerArray(
          "owners",
          &owners[0],
@@ -796,15 +816,14 @@ void BoxNeighborhoodCollection::getFromDatabase(
          BoxId box_id(
             LocalId(local_indices[i]),
             owners[i],
-            BlockId(block_ids[i]),
             PeriodicId(periodic_ids[i]));
          const std::string set_name =
             set_db_string
-            + tbox::Utilities::blockToString(box_id.getBlockId().getBlockValue())
             + tbox::Utilities::processorToString(box_id.getOwnerRank())
             + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
             + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
-         tbox::Pointer<tbox::Database> nbr_db = database.getDatabase(set_name);
+         boost::shared_ptr<tbox::Database> nbr_db(
+            database.getDatabase(set_name));
          const unsigned int mbs_size =
             nbr_db->getInteger("mapped_box_set_size");
          Iterator base_box_loc = insert(box_id).first;
@@ -838,17 +857,141 @@ void BoxNeighborhoodCollection::getFromDatabase(
 
             for (unsigned int i = 0; i < mbs_size; ++i) {
                Box nbr(db_box_array[i]);
-               nbr.getId().initialize(
-                  LocalId(local_ids[i]),
-                  ranks[i],
-                  BlockId(block_ids[i]),
-                  PeriodicId(periodic_ids[i]));
+               nbr.setBlockId(BlockId(block_ids[i]));
+               BoxId box_id(LocalId(local_ids[i]),
+                            ranks[i],
+                            PeriodicId(periodic_ids[i]));
+               nbr.setId(box_id);
                insert(base_box_loc, nbr);
             }
          }
       }
    }
    return;
+}
+
+BoxNeighborhoodCollection::Iterator::Iterator(
+   BoxNeighborhoodCollection& nbrhds,
+   bool from_start) :
+   d_collection(&nbrhds),
+   d_itr(from_start ? nbrhds.d_adj_list.begin() :
+                      nbrhds.d_adj_list.end()),
+   d_base_boxes_itr(from_start ? nbrhds.d_base_boxes.begin() :
+                                 nbrhds.d_base_boxes.end())
+{
+}
+
+BoxNeighborhoodCollection::Iterator::Iterator(
+   BoxNeighborhoodCollection& nbrhds,
+   AdjListItr itr) :
+   d_collection(&nbrhds),
+   d_itr(itr),
+   d_base_boxes_itr(nbrhds.d_base_boxes.find(*(itr->first)))
+{
+}
+
+BoxNeighborhoodCollection::Iterator::Iterator(
+   const Iterator& other) :
+   d_collection(other.d_collection),
+   d_itr(other.d_itr),
+   d_base_boxes_itr(other.d_base_boxes_itr)
+{
+}
+
+BoxNeighborhoodCollection::Iterator::~Iterator()
+{
+}
+
+BoxNeighborhoodCollection::ConstIterator::ConstIterator(
+   const BoxNeighborhoodCollection& nbrhds,
+   bool from_start) :
+   d_collection(&nbrhds),
+   d_itr(from_start ? nbrhds.d_adj_list.begin() :
+                      nbrhds.d_adj_list.end()),
+   d_base_boxes_itr(from_start ? nbrhds.d_base_boxes.begin() :
+                                 nbrhds.d_base_boxes.end())
+{
+}
+
+BoxNeighborhoodCollection::ConstIterator::ConstIterator(
+   const BoxNeighborhoodCollection& nbrhds,
+   AdjListConstItr itr) :
+   d_collection(&nbrhds),
+   d_itr(itr),
+   d_base_boxes_itr(nbrhds.d_base_boxes.find(*(itr->first)))
+{
+}
+
+BoxNeighborhoodCollection::ConstIterator::ConstIterator(
+   const ConstIterator& other) :
+   d_collection(other.d_collection),
+   d_itr(other.d_itr),
+   d_base_boxes_itr(other.d_base_boxes_itr)
+{
+}
+
+BoxNeighborhoodCollection::ConstIterator::ConstIterator(
+   const Iterator& other) :
+   d_collection(other.d_collection),
+   d_itr(other.d_itr),
+   d_base_boxes_itr(other.d_base_boxes_itr)
+{
+}
+
+BoxNeighborhoodCollection::ConstIterator::~ConstIterator()
+{
+}
+
+BoxNeighborhoodCollection::NeighborIterator::NeighborIterator(
+   Iterator& base_box_itr,
+   bool from_start) :
+   d_collection(base_box_itr.d_collection),
+   d_base_box(base_box_itr.d_itr->first),
+   d_itr(from_start ? base_box_itr.d_itr->second.begin() :
+                      base_box_itr.d_itr->second.end())
+{
+}
+
+BoxNeighborhoodCollection::NeighborIterator::NeighborIterator(
+   const NeighborIterator& other) :
+   d_collection(other.d_collection),
+   d_base_box(other.d_base_box),
+   d_itr(other.d_itr)
+{
+}
+
+BoxNeighborhoodCollection::NeighborIterator::~NeighborIterator()
+{
+}
+
+BoxNeighborhoodCollection::ConstNeighborIterator::ConstNeighborIterator(
+   const ConstIterator& base_box_itr,
+   bool from_start) :
+   d_collection(base_box_itr.d_collection),
+   d_base_box(base_box_itr.d_itr->first),
+   d_itr(from_start ? base_box_itr.d_itr->second.begin() :
+                      base_box_itr.d_itr->second.end())
+{
+}
+
+BoxNeighborhoodCollection::ConstNeighborIterator::ConstNeighborIterator(
+   const ConstNeighborIterator& other) :
+   d_collection(other.d_collection),
+   d_base_box(other.d_base_box),
+   d_itr(other.d_itr)
+{
+}
+
+BoxNeighborhoodCollection::ConstNeighborIterator::ConstNeighborIterator(
+   const NeighborIterator& other) :
+   d_collection(other.d_collection),
+   d_base_box(other.d_base_box),
+   d_itr(other.d_itr)
+{
+}
+
+BoxNeighborhoodCollection::ConstNeighborIterator::~ConstNeighborIterator()
+{
 }
 
 }

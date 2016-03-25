@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program for FAC Poisson example
  *
  ************************************************************************/
@@ -21,7 +21,6 @@ using namespace std;
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -30,6 +29,8 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include "FACPoisson.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -94,7 +95,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -111,7 +113,7 @@ int main(
        * all name strings in this program.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -139,15 +141,17 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geometry(
-         new geom::CartesianGridGeometry(dim,
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+         new geom::CartesianGridGeometry(
+            dim,
             base_name + "CartesianGridGeometry",
             input_db->getDatabase("CartesianGridGeometry")));
       tbox::plog << "Cartesian Geometry:" << endl;
       grid_geometry->printClassData(tbox::plog);
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy(
-         new hier::PatchHierarchy(base_name + "::PatchHierarchy",
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         new hier::PatchHierarchy(
+            base_name + "::PatchHierarchy",
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
@@ -162,41 +166,39 @@ int main(
                              dim,
                              input_db->isDatabase("FACPoisson") ?
                              input_db->getDatabase("FACPoisson") :
-                             tbox::Pointer<tbox::Database>(NULL));
+                             boost::shared_ptr<tbox::Database>());
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer
        * object references required by the gridding_algorithm object.
        */
-      tbox::Pointer<mesh::StandardTagAndInitialize> tag_and_initializer(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
             dim,
             "CellTaggingMethod",
-            tbox::Pointer<mesh::StandardTagAndInitStrategy>(&fac_poisson, false),
-            input_db->getDatabase("StandardTagAndInitialize")
-            ));
-      tbox::Pointer<mesh::BergerRigoutsos> box_generator(
+            &fac_poisson,
+            input_db->getDatabase("StandardTagAndInitialize")));
+      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
-      tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
-         new mesh::TreeLoadBalancer(dim,
+      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+         new mesh::TreeLoadBalancer(
+            dim,
             "load balancer",
-            tbox::Pointer<tbox::Database>()));
-      load_balancer->setSAMRAI_MPI(
-         SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld());
+            boost::shared_ptr<tbox::Database>()));
+      load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       /*
        * Create the gridding algorithm used to generate the SAMR grid
        * and create the grid.
        */
-      tbox::Pointer<mesh::GriddingAlgorithm> gridding_algorithm;
-      gridding_algorithm =
+      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "Gridding Algorithm",
             input_db->getDatabase("GriddingAlgorithm"),
             tag_and_initializer,
             box_generator,
-            load_balancer);
+            load_balancer));
       tbox::plog << "Gridding algorithm:" << endl;
       gridding_algorithm->printClassData(tbox::plog);
 
@@ -232,13 +234,13 @@ int main(
          if (vis_writer[i] == "VisIt") use_visit = true;
       }
 #ifdef HAVE_HDF5
-      tbox::Pointer<appu::VisItDataWriter> visit_writer;
+      boost::shared_ptr<appu::VisItDataWriter> visit_writer;
       string vis_filename =
          main_db->getStringWithDefault("vis_filename", base_name);
       if (use_visit) {
-         visit_writer = new appu::VisItDataWriter(dim,
+         visit_writer.reset(new appu::VisItDataWriter(dim,
                "Visit Writer",
-               vis_filename + ".visit");
+               vis_filename + ".visit"));
          fac_poisson.setupPlotter(*visit_writer);
       }
 #endif

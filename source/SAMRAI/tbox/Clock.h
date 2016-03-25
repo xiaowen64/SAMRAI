@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with system clock
  *
  ************************************************************************/
@@ -12,6 +12,8 @@
 #define included_tbox_Clock
 
 #include "SAMRAI/SAMRAI_config.h"
+
+#include "SAMRAI/tbox/SAMRAI_MPI.h"
 
 #ifdef HAVE_CTIME
 #include <ctime>
@@ -42,10 +44,11 @@ namespace tbox {
  * obj.tms_stime) and will return the time since the system was started.
  *
  * The return value from the call to times() can be used to compute elapsed
- * wallclock time.  Alternatively, one can use SAMRAI_MPI::Wtime() if MPI libraries
- * are included.  Two methods are defined for accessing system time - one that
- * has a clock_t struct argument for wallclock time (the non-MPI case) and
- * one that has a double argument to record the value of SAMRAI_MPI::Wtime().
+ * wallclock time.  Alternatively, one can use SAMRAI_MPI::Wtime() if MPI
+ * libraries are included.  Two methods are defined for accessing system time
+ * - one that has a clock_t struct argument for wallclock time (the non-MPI
+ * case) and one that has a double argument to record the value of
+ * SAMRAI_MPI::Wtime().
  *
  * Computing user/system/wallclock time with the times() function is performed
  * as follows:
@@ -74,31 +77,55 @@ struct Clock {
     */
    static void
    initialize(
-      clock_t& clock);
+      clock_t& clock)
+   {
+#ifdef HAVE_SYS_TIMES_H
+      clock = times(&s_tms_buffer);
+#endif
+   }
 
    /**
     * Initialize system clock, where clock is in double format.
     */
    static void
    initialize(
-      double& clock);
+      double& clock)
+   {
+      clock = 0.0;
+   }
 
    /**
     * Timestamp user, system, and walltime clocks.  Wallclock argument is in
-    * double format since it will access wallclock times from SAMRAI_MPI::Wtime()
-    * function.
+    * double format since it will access wallclock times from
+    * SAMRAI_MPI::Wtime() function.
     */
    static void
    timestamp(
       clock_t& user,
       clock_t& sys,
-      double& wall);
+      double& wall)
+   {
+#ifdef HAVE_SYS_TIMES_H
+      s_null_clock_t = times(&s_tms_buffer);
+      wall = SAMRAI_MPI::Wtime();
+      sys = s_tms_buffer.tms_stime;
+      user = s_tms_buffer.tms_utime;
+#endif
+   }
 
    /**
     * Returns clock cycle for the system.
     */
    static double
-   getClockCycle();
+   getClockCycle()
+   {
+#ifdef _POSIX_VERSION
+      double clock_cycle = double(sysconf(_SC_CLK_TCK));
+#else
+      double clock_cycle = 1.0;
+#endif
+      return clock_cycle;
+   }
 
 private:
 #ifdef HAVE_SYS_TIMES_H

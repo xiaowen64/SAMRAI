@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility class for logging.
  *
  ************************************************************************/
@@ -11,8 +11,10 @@
 #ifndef included_tbox_Logger
 #define included_tbox_Logger
 
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/tbox/StartupShutdownManager.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -66,7 +68,7 @@ namespace tbox {
  *
  *
  * This Appender could be use to log warning message using:
- * tbox::Pointer<tbox::Logger::Appender> appender = new ConsoleAppender()
+ * boost::shared_ptr<tbox::Logger::Appender> appender = new ConsoleAppender()
  * tbox::Logger.getInstance() -> setWarningAppender(appender);
  *
  * Normally this would be done at the start of an application.
@@ -94,8 +96,7 @@ public:
          const std::string& filename,
          const int line) = 0;
 
-      virtual ~Appender() {
-      }
+      virtual ~Appender();
    };
 
    /*!
@@ -111,7 +112,10 @@ public:
    logAbort(
       const std::string& message,
       const std::string& filename,
-      const int line);
+      const int line)
+   {
+      d_abort_appender->logMessage(message, filename, line);
+   }
 
    /*!
     * Logs warning message with file & location.
@@ -120,7 +124,12 @@ public:
    logWarning(
       const std::string& message,
       const std::string& filename,
-      const int line);
+      const int line)
+   {
+      if (d_log_warning) {
+         d_warning_appender->logMessage(message, filename, line);
+      }
+   }
 
    /*!
     * Logs debug message with file & location.
@@ -129,7 +138,12 @@ public:
    logDebug(
       const std::string& message,
       const std::string& filename,
-      const int line);
+      const int line)
+   {
+      if (d_log_debug) {
+         d_debug_appender->logMessage(message, filename, line);
+      }
+   }
 
    /*!
     * Set the Appender for logging abort messages to an
@@ -139,7 +153,10 @@ public:
     */
    void
    setAbortAppender(
-      tbox::Pointer<Appender> appender);
+      const boost::shared_ptr<Appender>& appender)
+   {
+      d_abort_appender = appender;
+   }
 
    /*!
     * Set the Appender for logging warning messages to an
@@ -149,7 +166,10 @@ public:
     */
    void
    setWarningAppender(
-      tbox::Pointer<Appender> appender);
+      const boost::shared_ptr<Appender>& appender)
+   {
+      d_warning_appender = appender;
+   }
 
    /*!
     * Set the Appender for logging debug messages to an
@@ -159,7 +179,10 @@ public:
     */
    void
    setDebugAppender(
-      tbox::Pointer<Appender> appender);
+      const boost::shared_ptr<Appender>& appender)
+   {
+      d_debug_appender = appender;
+   }
 
    /*!
     * Turn logging of warning messages on or off.
@@ -168,7 +191,10 @@ public:
     */
    void
    setWarning(
-      bool onoff);
+      bool onoff)
+   {
+      d_log_warning = onoff;
+   }
 
    /*!
     * Turn logging of debug messages on or off.
@@ -177,7 +203,10 @@ public:
     */
    void
    setDebug(
-      bool onoff);
+      bool onoff)
+   {
+      d_log_debug = onoff;
+   }
 
 private:
    /*
@@ -208,9 +237,9 @@ private:
    /*
     * Appenders for each type of logging.
     */
-   tbox::Pointer<Appender> d_abort_appender;
-   tbox::Pointer<Appender> d_warning_appender;
-   tbox::Pointer<Appender> d_debug_appender;
+   boost::shared_ptr<Appender> d_abort_appender;
+   boost::shared_ptr<Appender> d_warning_appender;
+   boost::shared_ptr<Appender> d_debug_appender;
 
    /*
     * Logging state (on or off)
@@ -218,8 +247,7 @@ private:
    bool d_log_warning;
    bool d_log_debug;
 
-   static StartupShutdownManager::Handler
-      s_finalize_handler;
+   static StartupShutdownManager::Handler s_finalize_handler;
 
 };
 

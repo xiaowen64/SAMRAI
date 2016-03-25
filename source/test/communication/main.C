@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
@@ -22,7 +22,6 @@ using namespace std;
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/tbox/TimerManager.h"
@@ -41,6 +40,8 @@ using namespace std;
 #include "OutersideDataTest.h"
 #include "OuterfaceDataTest.h"
 //#include "MultiVariableDataTest.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -157,7 +158,7 @@ using namespace SAMRAI;
  *       Appropriate input sections must be provided for these objects
  *       as needed.
  *
- *     o Each test must register a hier::GridGeometry object
+ *     o Each test must register a hier::BaseGridGeometry object
  *       with the
  *       PatchDataTestStrategy base class so the hierarchy can be
  *       constructed.  Consult the constructor of each test class
@@ -208,7 +209,8 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+      boost::shared_ptr<tbox::InputDatabase> input_db(
+         new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -223,8 +225,8 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         tbox::Pointer<tbox::Database> global_db =
-            input_db->getDatabase("GlobalInputs");
+         boost::shared_ptr<tbox::Database> global_db(
+            input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
                getBool("call_abort_in_serial_instead_of_exit");
@@ -238,7 +240,7 @@ int main(
        * analysis), and read in test information.
        */
 
-      tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -362,19 +364,21 @@ int main(
             "Error in Main input: illegal test = " << test_to_run << endl);
       }
 
-      tbox::Pointer<CommTester> comm_tester(new CommTester("CommTester",
-                                               dim,
-                                               input_db,
-                                               patch_data_test,
-                                               do_refine,
-                                               do_coarsen,
-                                               refine_option));
+      boost::shared_ptr<CommTester> comm_tester(
+         new CommTester(
+            "CommTester",
+            dim,
+            input_db,
+            patch_data_test,
+            do_refine,
+            do_coarsen,
+            refine_option));
 
-      tbox::Pointer<mesh::StandardTagAndInitialize> cell_tagger(
+      boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
             dim,
             "StandardTaggingAndInitializer",
-            comm_tester,
+            comm_tester.get(),
             input_db->getDatabase("StandardTaggingAndInitializer")));
 
       comm_tester->setupHierarchy(input_db, cell_tagger);
@@ -389,15 +393,15 @@ int main(
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
-      tbox::Pointer<tbox::Timer> refine_create_time =
-         time_man->getTimer("test::main::createRefineSchedule");
-      tbox::Pointer<tbox::Timer> refine_comm_time =
-         time_man->getTimer("test::main::performRefineOperations");
+      boost::shared_ptr<tbox::Timer> refine_create_time(
+         time_man->getTimer("test::main::createRefineSchedule"));
+      boost::shared_ptr<tbox::Timer> refine_comm_time(
+         time_man->getTimer("test::main::performRefineOperations"));
 
-      tbox::Pointer<tbox::Timer> coarsen_create_time =
-         time_man->getTimer("test::main::createCoarsenSchedule");
-      tbox::Pointer<tbox::Timer> coarsen_comm_time =
-         time_man->getTimer("test::main::performCoarsenOperations");
+      boost::shared_ptr<tbox::Timer> coarsen_create_time(
+         time_man->getTimer("test::main::createCoarsenSchedule"));
+      boost::shared_ptr<tbox::Timer> coarsen_comm_time(
+         time_man->getTimer("test::main::performCoarsenOperations"));
 
       const bool plot = main_db->getBoolWithDefault("plot", false);
       VisItDerivedData vdd;
@@ -405,8 +409,11 @@ int main(
 #ifdef HAVE_HDF5
          const std::string visit_filename = base_name + ".visit";
          /* Create the VisIt data writer. */
-         tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
-            new appu::VisItDataWriter(dim, "VisIt Writer", visit_filename));
+         boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+            new appu::VisItDataWriter(
+               dim,
+               "VisIt Writer",
+               visit_filename));
          /*
           * The VisItDataWriter requires some value to be plotted.
           * We are registering the owner value just so we can plot.
@@ -426,8 +433,8 @@ int main(
        * Create communication schedules and perform communication operations.
        */
 
-      tbox::Pointer<hier::PatchHierarchy> patch_hierarchy =
-         comm_tester->getPatchHierarchy();
+      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+         comm_tester->getPatchHierarchy());
       patch_hierarchy->recursivePrint(tbox::plog,
          "H-> ",
          3);

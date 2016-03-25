@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Coarsening algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -19,8 +19,9 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
+#include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -82,6 +83,7 @@ namespace xfer {
  *         user-defined spatial data coarsening operations.
  *    <li> Invoke the coarsenData() method in the communication schedule to
  *         perform the data transfers.
+ * </ul>
  *
  * Note that each coarsen schedule created by a coarsen algorithm remains valid
  * as long as the levels involved in the communication process do not change;
@@ -92,7 +94,7 @@ namespace xfer {
  * @see xfer::CoarsenClasses
  */
 
-class CoarsenAlgorithm:public tbox::DescribedClass
+class CoarsenAlgorithm
 {
 public:
    /*!
@@ -123,9 +125,9 @@ public:
       bool fill_coarse_data = false);
 
    /*!
-    * @brief The virtual destructor releases all internal storage.
+    * @brief The destructor releases all internal storage.
     */
-   virtual ~CoarsenAlgorithm();
+   ~CoarsenAlgorithm();
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
@@ -174,20 +176,20 @@ public:
     *                           properly process the patch data on coarse and
     *                           fine patch levels during the coarsening
     *                           process.
-    * @param[in] var_fill_pattern Pointer to the variable fill pattern, which
-    *                             controls how box overlaps are constructed.
-    *                             If the NULL default is used, then class
-    *                             BoxGeometryVariableFillPattern will be used
-    *                             internally.
+    * @param[in] var_fill_pattern boost::shared_ptr to the variable fill
+    *                             pattern, which controls how box overlaps are
+    *                             constructed.  If the NULL default is used,
+    *                             then class BoxGeometryVariableFillPattern
+    *                             will be used internally.
     */
    void
    registerCoarsen(
       const int dst,
       const int src,
-      const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
+      const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
       const hier::IntVector& gcw_to_coarsen,
-      tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
+      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
+         boost::shared_ptr<VariableFillPattern>());
 
    /*!
     * @brief Register a coarsening operation with the coarsening algorithm.
@@ -199,9 +201,13 @@ public:
    registerCoarsen(
       const int dst,
       const int src,
-      const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
-      tbox::Pointer<VariableFillPattern> var_fill_pattern =
-         (tbox::Pointer<BoxGeometryVariableFillPattern>) NULL);
+      const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
+      const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
+         boost::shared_ptr<VariableFillPattern>())
+   {
+      registerCoarsen(dst, src, opcoarsen,
+         hier::IntVector::getZero(d_dim), var_fill_pattern);
+   }
 
    /*!
     * @brief Create a communication schedule to coarsen data from the given
@@ -219,30 +225,30 @@ public:
     * Note that the schedule remains valid as long as the levels do not
     * change; thus, it can be used for multiple data communication cycles.
     *
-    * @return Pointer to coarsen schedule that performs the data transfers.
+    * @return boost::shared_ptr to coarsen schedule that performs the data
+    *         transfers.
     *
-    * @param[in] crse_level     Pointer to coarse (destination) level.
-    * @param[in] fine_level     Pointer to fine (source) level.
-    * @param[in] patch_strategy Pointer to a coarsen patch strategy that
-    *                           provides user-defined coarsen operations.  If
-    *                           this patch strategy is null (default state),
+    * @param[in] crse_level     boost::shared_ptr to coarse (destination) level.
+    * @param[in] fine_level     boost::shared_ptr to fine (source) level.
+    * @param[in] coarsen_strategy boost::shared_ptr to a coarsen patch strategy
+    *                           that provides user-defined coarsen operations.
+    *                           If this patch strategy is null (default state),
     *                           then no user-defined coarsen operations will be
     *                           performed.
-    * @param[in] transaction_factory Optional Pointer to a coarsen transaction
-    *                                factory that creates data transactions for
-    *                                the schedule.  If this pointer is null
-    *                                default state), then a
+    * @param[in] transaction_factory Optional boost::shared_ptr to a coarsen
+    *                                transaction factory that creates data
+    *                                transactions for the schedule.  If this
+    *                                pointer is null default state), then a
     *                                StandardCoarsenTransactionFactory object
     *                                will be used.
     */
-   tbox::Pointer<xfer::CoarsenSchedule>
+   boost::shared_ptr<CoarsenSchedule>
    createSchedule(
-      tbox::Pointer<hier::PatchLevel> crse_level,
-      tbox::Pointer<hier::PatchLevel> fine_level,
-      xfer::CoarsenPatchStrategy * coarsen_strategy =
-         ((xfer::CoarsenPatchStrategy *)NULL),
-      tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory =
-         tbox::Pointer<xfer::CoarsenTransactionFactory>(NULL));
+      const boost::shared_ptr<hier::PatchLevel>& crse_level,
+      const boost::shared_ptr<hier::PatchLevel>& fine_level,
+      CoarsenPatchStrategy * coarsen_strategy = ((CoarsenPatchStrategy *)NULL),
+      const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
+         boost::shared_ptr<CoarsenTransactionFactory>());
 
    /*!
     * @brief Given a previously-generated coarsen schedule, check for
@@ -257,11 +263,16 @@ public:
     *
     * @return true if schedule reset is valid; false otherwise.
     *
-    * @param[in] schedule  Pointer to coarsen schedule, which cannot be null.
+    * @param[in] schedule  boost::shared_ptr to coarsen schedule, which cannot
+    *                      be null.
     */
    bool
    checkConsistency(
-      tbox::Pointer<xfer::CoarsenSchedule> schedule) const;
+      const boost::shared_ptr<CoarsenSchedule>& schedule) const
+   {
+      TBOX_ASSERT(schedule);
+      return d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses());
+   }
 
    /*!
     * @brief Given a previously-generated coarsen schedule, reconfigure it to
@@ -275,19 +286,19 @@ public:
     * schedule originally, and this is enforced using a call to
     * checkConsistency().
     *
-    * @param[in,out] schedule  Pointer to coarsen schedule, which cannot be
-    *                          null.
+    * @param[in,out] schedule  boost::shared_ptr to coarsen schedule, which
+    *                          cannot be null.
     */
    void
    resetSchedule(
-      tbox::Pointer<xfer::CoarsenSchedule> schedule) const;
+      const boost::shared_ptr<CoarsenSchedule>& schedule) const;
 
    /*!
     * @brief Print the coarsen algorithm state to the specified data stream.
     *
     * @param[out] stream Output data stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& stream) const;
 
@@ -295,7 +306,10 @@ public:
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    CoarsenAlgorithm(
@@ -317,7 +331,7 @@ private:
    /*!
     * CoarsenClasses object holds all of the registered coarsen items.
     */
-   tbox::Pointer<xfer::CoarsenClasses> d_coarsen_classes;
+   boost::shared_ptr<CoarsenClasses> d_coarsen_classes;
 
    /*!
     * Tells if special behavior to pre-fill the temporary coarse level with
@@ -333,4 +347,5 @@ private:
 
 }
 }
+
 #endif

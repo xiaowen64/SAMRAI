@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI class to manage package startup and shutdown
  *
  ************************************************************************/
@@ -31,14 +31,16 @@ namespace tbox {
  *
  * The four steps of the startup/shutdown mechanism are:
  *
- * <ul> initialize -- called at the start of a program after MPI is
+ * <ul>
+ * <li> initialize -- called at the start of a program after MPI is
  *      initialized but befor any other SAMRAI objects are used.
- * <ul> startup -- called to begin a problem-specific segment of the code.
- * <ul> shutdown -- called at the end of a problem-specific segment of the
+ * <li> startup -- called to begin a problem-specific segment of the code.
+ * <li> shutdown -- called at the end of a problem-specific segment of the
  *                  code.  Shuts down and deallocates everything that was
  *                  started and allocated by startup.
- * <ul> finalize -- called at the end of a program right before MPI is
+ * <li> finalize -- called at the end of a program right before MPI is
  *                  finalized.
+ * </ul>
  *
  * The startup and shutdown functions may be called multiple times within a
  * run, in order to allow for the execution of more than one problem within one
@@ -67,7 +69,7 @@ public:
     * well as data for any classes that implement the initialize callback
     * interface through StartupShutdownManager.
     *
-    * @param[in] setup_IEEE_assertion_handlers (defaults to true)
+    * @param[in] initialize_IEEE_assertion_handlers (defaults to true)
     */
    static void
    initialize(
@@ -82,7 +84,13 @@ public:
     * solving multiple SAMRAI problems.
     */
    static void
-   startup();
+   startup()
+   {
+      TBOX_ASSERT(s_initialized);
+      TBOX_ASSERT(!s_started);
+      StartupShutdownManager::startup();
+      s_started = true;
+   }
 
    /*!
     * @brief Shutdown the SAMRAI package.
@@ -93,7 +101,13 @@ public:
     * solving multiple SAMRAI problems.
     */
    static void
-   shutdown();
+   shutdown()
+   {
+      TBOX_ASSERT(s_initialized);
+      TBOX_ASSERT(s_started);
+      StartupShutdownManager::shutdown();
+      s_started = false;
+   }
 
    /*!
     * @brief Final cleanup of the SAMRAI package.
@@ -110,19 +124,31 @@ public:
     * This function should be invoked only once.
     */
    static void
-   finalize();
+   finalize()
+   {
+      TBOX_ASSERT(s_initialized);
+      StartupShutdownManager::finalize();
+      PIO::finalize();
+      s_initialized = false;
+   }
 
    /*!
     * @brief Returns true if SAMRAIManager has been initialized.
     */
    static bool
-   isInitialized();
+   isInitialized()
+   {
+      return s_initialized;
+   }
 
    /*!
     * @brief Returns true if SAMRAIManager has been started.
     */
    static bool
-   isStarted();
+   isStarted()
+   {
+      return s_started;
+   }
 
    /*!
     * @brief Return maximum number of patch data entries supported by SAMRAI.
@@ -131,7 +157,11 @@ public:
     * the setMaxNumberPatchDataEntries() function.
     */
    static int
-   getMaxNumberPatchDataEntries();
+   getMaxNumberPatchDataEntries()
+   {
+      s_max_patch_data_entries_accessed = true;
+      return s_max_patch_data_entries;
+   }
 
    /*!
     * @brief Set maximum number of patch data entries supported by SAMRAI.

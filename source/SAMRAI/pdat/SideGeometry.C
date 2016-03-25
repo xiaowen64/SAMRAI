@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,14 +12,10 @@
 #define included_pdat_SideGeometry_C
 
 #include "SAMRAI/pdat/SideGeometry.h"
-#include "SAMRAI/pdat/SideOverlap.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideGeometry.I"
-#endif
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -65,7 +61,8 @@ SideGeometry::~SideGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> SideGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+SideGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -82,7 +79,7 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::calculateOverlap(
    const SideGeometry* t_src =
       dynamic_cast<const SideGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -104,7 +101,8 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::calculateOverlap(
  *************************************************************************
  */
 
-hier::Box SideGeometry::toSideBox(
+hier::Box
+SideGeometry::toSideBox(
    const hier::Box& box,
    int side_normal)
 {
@@ -136,7 +134,8 @@ hier::Box SideGeometry::toSideBox(
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> SideGeometry::doOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+SideGeometry::doOverlap(
    const SideGeometry& dst_geometry,
    const SideGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -145,7 +144,9 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
    const hier::IntVector& src_offset = transformation.getOffset();
+#endif
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
    TBOX_ASSERT(
       dst_geometry.getDirectionVector() == src_geometry.getDirectionVector());
@@ -192,9 +193,9 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::doOverlap(
 
          if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
             hier::BoxContainer side_restrict_boxes;
-            for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
-               side_restrict_boxes.pushBack(toSideBox(b(), d));
+               side_restrict_boxes.pushBack(toSideBox(*b, d));
             }
             dst_boxes[d].intersectBoxes(side_restrict_boxes);
          }
@@ -205,8 +206,7 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::doOverlap(
 
    // Create the side overlap data object using the boxes and source shift
 
-   hier::BoxOverlap* overlap = new SideOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<SideOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -216,7 +216,7 @@ tbox::Pointer<hier::BoxOverlap> SideGeometry::doOverlap(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 SideGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -224,16 +224,15 @@ SideGeometry::setUpOverlap(
    const tbox::Dimension& dim(transformation.getOffset().getDim());
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
       for (int d = 0; d < dim.getValue(); d++) {
-         hier::Box side_box(SideGeometry::toSideBox(b(), d));
+         hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
    }
 
    // Create the side overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new SideOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<SideOverlap>(dst_boxes, transformation);
 
 }
 
@@ -560,15 +559,15 @@ SideGeometry::transform(
 }
 
 void
-SideGeometry::rotateAboutAxis(pdat::SideIndex& index,
-                              const int axis,
-                              const int num_rotations)
+SideGeometry::rotateAboutAxis(SideIndex& index,
+   const int axis,
+   const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   pdat::SideIndex tmp_index(dim);
+   SideIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; j++) {
       tmp_index = index;
       index(a) = tmp_index(b);

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Iterator for edge centered patch data types
  *
  ************************************************************************/
@@ -28,7 +28,8 @@ namespace pdat {
  * \verbatim
  * hier::Box box;
  * ...
- * for (EdgeIterator c(box, axis); c; c++) {
+ * EdgeIterator cend(box, axis, false);
+ * for (EdgeIterator c(box, axis, true); c != cend; ++c) {
  *    // use index c of the box
  * }
  * \endverbatim
@@ -48,9 +49,10 @@ public:
     * Constructor for the edge iterator.  The iterator will enumerate
     * the indices in the argument box.
     */
-   explicit EdgeIterator(
+   EdgeIterator(
       const hier::Box& box,
-      const int axis);
+      const int axis,
+      bool begin);
 
    /**
     * Copy constructor for the edge iterator
@@ -63,7 +65,12 @@ public:
     */
    EdgeIterator&
    operator = (
-      const EdgeIterator& iterator);
+      const EdgeIterator& iterator)
+   {
+      d_index = iterator.d_index;
+      d_box = iterator.d_box;
+      return *this;
+   }
 
    /**
     * Destructor for the edge iterator.
@@ -74,38 +81,31 @@ public:
     * Extract the edge index corresponding to the iterator position in the box.
     */
    const EdgeIndex&
-   operator * () const;
+   operator * () const
+   {
+      return d_index;
+   }
 
    /**
-    * Extract the edge index corresponding to the iterator position in the box.
+    * Extract a pointer to the edge index corresponding to the iterator
+    * position in the box.
     */
-   const EdgeIndex&
-   operator () () const;
+   const EdgeIndex*
+   operator -> () const
+   {
+      return &d_index;
+   }
 
    /**
-    * Return true if the iterator points to a valid index within the box.
+    * Pre-increment the iterator to point to the next index in the box.
     */
-   operator bool () const;
-
-#ifndef LACKS_BOOL_VOID_RESOLUTION
-   /**
-    * Return a non-NULL if the iterator points to a valid index within the box.
-    */
-   operator const void
-   * () const;
-#endif
+   EdgeIterator&
+   operator ++ ();
 
    /**
-    * Return whether the iterator points to a valid index within the box.
-    * This operator mimics the !p operation applied to a pointer p.
+    * Post-increment the iterator to point to the next index in the box.
     */
-   bool
-   operator ! () const;
-
-   /**
-    * Increment the iterator to point to the next index in the box.
-    */
-   void
+   EdgeIterator
    operator ++ (
       int);
 
@@ -114,14 +114,20 @@ public:
     */
    bool
    operator == (
-      const EdgeIterator& iterator) const;
+      const EdgeIterator& iterator) const
+   {
+      return d_index == iterator.d_index;
+   }
 
    /**
     * Test two iterators for inequality (different index values).
     */
    bool
    operator != (
-      const EdgeIterator& iterator) const;
+      const EdgeIterator& iterator) const
+   {
+      return d_index != iterator.d_index;
+   }
 
 private:
    EdgeIndex d_index;
@@ -130,7 +136,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/EdgeIterator.I"
-#endif
+
 #endif

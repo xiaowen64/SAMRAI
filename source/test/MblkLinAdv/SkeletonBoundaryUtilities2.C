@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 2D Skeleton boundary data
  *
  ************************************************************************/
@@ -99,14 +99,14 @@ bool SkeletonBoundaryUtilities2::s_fortran_constants_stuffed = false;
 
 void SkeletonBoundaryUtilities2::readBoundaryInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   tbox::Pointer<tbox::Database> bdry_db,
+   const boost::shared_ptr<tbox::Database>& bdry_db,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 #endif
@@ -143,7 +143,7 @@ void SkeletonBoundaryUtilities2::readBoundaryInput(
 
 void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
    const string& varname,
-   tbox::Pointer<pdat::CellData<double> >& vardata,
+   boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_edge_conds,
@@ -151,7 +151,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 #endif
@@ -160,8 +160,8 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const tbox::Pointer<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
 
    const hier::Box& interior = patch.getBox();
    const hier::Index& ifirst(interior.lower());
@@ -222,7 +222,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
 
 void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    const string& varname,
-   tbox::Pointer<pdat::CellData<double> >& vardata,
+   boost::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const tbox::Array<int>& bdry_node_conds,
@@ -230,7 +230,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
 {
    NULL_USE(varname);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!vardata.isNull());
+   TBOX_ASSERT(vardata);
    TBOX_ASSERT(bdry_node_conds.getSize() == NUM_2D_NODES);
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 #endif
@@ -239,8 +239,8 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const tbox::Pointer<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> pgeom(
+      patch.getPatchGeometry());
 
    const hier::Box& interior(patch.getBox());
    const hier::Index& ifirst(interior.lower());
@@ -383,11 +383,11 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   tbox::Pointer<hier::PatchGeometry> pgeom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   tbox::Pointer<pdat::CellData<double> > vardata =
-      patch.getPatchData(data_id);
+   boost::shared_ptr<pdat::CellData<double> > vardata(
+      patch.getPatchData(data_id),
+      boost::detail::dynamic_cast_tag());
 
    string bdry_type_str;
    if (btype == Bdry::EDGE2D) {
@@ -483,10 +483,11 @@ int SkeletonBoundaryUtilities2::checkBdryData(
       dbox.upper(idir) = ilast(idir);
    }
 
-   pdat::CellIterator id(dbox);
-   for (pdat::CellIterator ic(cbox); ic; ic++) {
-      double checkval = valfact * (*vardata)(id(), depth) + constval;
-      pdat::CellIndex check = ic();
+   pdat::CellIterator id(dbox, true);
+   pdat::CellIterator icend(cbox, false);
+   for (pdat::CellIterator ic(cbox, true); ic != icend; ++ic) {
+      double checkval = valfact * (*vardata)(*id, depth) + constval;
+      pdat::CellIndex check = *ic;
       for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
          double offcheckval = checkval + dxfact * (p + 1);
          if ((*vardata)(check, depth) != offcheckval) {
@@ -499,7 +500,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
          }
          check(idir) += offsign;
       }
-      id++;
+      ++id;
    }
 
    return num_bad_values;
@@ -512,13 +513,13 @@ int SkeletonBoundaryUtilities2::checkBdryData(
 
 void SkeletonBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
-   tbox::Pointer<tbox::Database> bdry_db,
+   boost::shared_ptr<tbox::Database> bdry_db,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 #endif
 
@@ -564,9 +565,9 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
 
          if (need_data_read) {
             if (bdry_db->keyExists(bdry_loc_str)) {
-               tbox::Pointer<tbox::Database> bdry_loc_db =
-                  bdry_db->getDatabase(bdry_loc_str);
-               if (!bdry_loc_db.isNull()) {
+               boost::shared_ptr<tbox::Database> bdry_loc_db(
+                  bdry_db->getDatabase(bdry_loc_str));
+               if (bdry_loc_db) {
                   if (bdry_loc_db->keyExists("boundary_condition")) {
                      string bdry_cond_str =
                         bdry_loc_db->getString("boundary_condition");
@@ -606,13 +607,13 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
  */
 
 void SkeletonBoundaryUtilities2::read2dBdryNodes(
-   tbox::Pointer<tbox::Database> bdry_db,
+   boost::shared_ptr<tbox::Database> bdry_db,
    const tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!bdry_db.isNull());
+   TBOX_ASSERT(bdry_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 #endif
@@ -648,9 +649,9 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
          }
 
          if (bdry_db->keyExists(bdry_loc_str)) {
-            tbox::Pointer<tbox::Database> bdry_loc_db =
-               bdry_db->getDatabase(bdry_loc_str);
-            if (!bdry_loc_db.isNull()) {
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               bdry_db->getDatabase(bdry_loc_str));
+            if (bdry_loc_db) {
                if (bdry_loc_db->keyExists("boundary_condition")) {
                   string bdry_cond_str =
                      bdry_loc_db->getString("boundary_condition");

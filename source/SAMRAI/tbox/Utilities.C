@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Utility functions for error reporting, file manipulation, etc.
  *
  ************************************************************************/
@@ -31,22 +31,10 @@ namespace SAMRAI {
 namespace tbox {
 
 /*
- * Routine to rename a file.
- */
-void Utilities::renameFile(
-   const std::string& old_filename,
-   const std::string& new_filename)
-{
-   TBOX_ASSERT(!old_filename.empty());
-   TBOX_ASSERT(!new_filename.empty());
-
-   rename(old_filename.c_str(), new_filename.c_str());
-}
-
-/*
  * Routine to recursively construct directories based on a relative path name.
  */
-void Utilities::recursiveMkdir(
+void
+Utilities::recursiveMkdir(
    const std::string& path,
    mode_t mode,
    bool only_node_zero_creates)
@@ -59,7 +47,7 @@ void Utilities::recursiveMkdir(
    const char seperator = '/';
 #endif
 
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if ((!only_node_zero_creates) || (mpi.getRank() == 0)) {
       int length = static_cast<int>(path.length());
       char* path_buf = new char[length + 1];
@@ -147,7 +135,8 @@ void Utilities::recursiveMkdir(
 /*
  * Routine to convert an integer to a string.
  */
-std::string Utilities::intToString(
+std::string
+Utilities::intToString(
    int num,
    int min_width)
 {
@@ -163,42 +152,16 @@ std::string Utilities::intToString(
    return os.str();  //returns the string form of the stringstream object
 }
 
-std::string Utilities::nodeToString(
-   int num)
-{
-   return intToString(num, s_node_width);
-}
-
-std::string Utilities::processorToString(
-   int num)
-{
-   return intToString(num, s_processor_width);
-}
-
-std::string Utilities::patchToString(
-   int num) {
-   return intToString(num, s_patch_width);
-}
-
-std::string Utilities::levelToString(
-   int num) {
-   return intToString(num, s_level_width);
-}
-
-std::string Utilities::blockToString(
-   int num) {
-   return intToString(num, s_block_width);
-}
-
 /*
  * Routine that calls abort and prints calling location to error stream.
  */
-void Utilities::abort(
+void
+Utilities::abort(
    const std::string& message,
    const std::string& filename,
    const int line)
 {
-   tbox::Logger::getInstance()->logAbort(message, filename, line);
+   Logger::getInstance()->logAbort(message, filename, line);
 
    SAMRAI_MPI::abort();
 }

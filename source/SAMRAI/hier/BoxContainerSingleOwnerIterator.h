@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
@@ -13,7 +13,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -29,18 +28,9 @@ namespace hier {
  */
 class BoxContainerSingleOwnerIterator
 {
+friend class BoxContainer;
 
 public:
-   /*!
-    * @brief Constructor
-    *
-    * @param [i] container
-    * @param [i] owner_rank
-    */
-   BoxContainerSingleOwnerIterator(
-      const BoxContainer& container,
-      const int& owner_rank);
-
    //! @brief Destructor
    ~BoxContainerSingleOwnerIterator();
 
@@ -49,40 +39,55 @@ public:
     */
    BoxContainerSingleOwnerIterator&
    operator = (
-      const BoxContainerSingleOwnerIterator& r);
+      const BoxContainerSingleOwnerIterator& r)
+   {
+      d_mapped_boxes = r.d_mapped_boxes;
+      d_iter = r.d_iter;
+      d_owner_rank = r.d_owner_rank;
+      return *this;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box&
-   operator * () const;
+   operator * () const
+   {
+      return *d_iter;
+   }
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
    const Box *
-   operator -> () const;
+   operator -> () const
+   {
+      return &(*d_iter);
+   }
 
    /*!
     * @brief Equality comparison.
     */
    bool
    operator == (
-      const BoxContainerSingleOwnerIterator& r) const;
+      const BoxContainerSingleOwnerIterator& r) const
+   {
+      return d_mapped_boxes == r.d_mapped_boxes &&
+             d_owner_rank == r.d_owner_rank &&
+             d_iter == r.d_iter;
+   }
 
    /*!
     * @brief Inequality comparison.
     */
    bool
    operator != (
-      const BoxContainerSingleOwnerIterator& r) const;
-
-   /*!
-    * @brief Whether the iterator can be dereferenced.  When the
-    * iterator reaches its end, this returns false.
-    */
-   bool
-   isValid() const;
+      const BoxContainerSingleOwnerIterator& r) const
+   {
+      return d_mapped_boxes != r.d_mapped_boxes ||
+             d_owner_rank != r.d_owner_rank ||
+             d_iter != r.d_iter;
+   }
 
    /*!
     * @brief Pre-increment iterator.
@@ -105,6 +110,18 @@ public:
 
 private:
    /*!
+    * @brief Constructor
+    *
+    * @param [i] container
+    * @param [i] owner_rank
+    * @param [i] begin
+    */
+   BoxContainerSingleOwnerIterator(
+      const BoxContainer& container,
+      const int& owner_rank,
+      bool begin);
+
+   /*!
     * @brief BoxContainer being iterated through.
     */
    const BoxContainer* d_mapped_boxes;
@@ -117,15 +134,11 @@ private:
    /*!
     * @brief The iterator.
     */
-   BoxContainer::ConstIterator d_iter;
+   BoxContainer::const_iterator d_iter;
 
 };
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxContainerSingleOwnerIterator.I"
-#endif
 
 #endif  // included_hier_BoxContainerSingleOwnerIterator

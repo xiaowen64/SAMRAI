@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -23,13 +23,14 @@
 #include "SAMRAI/pdat/OuternodeData.h"
 #include "SAMRAI/hier/Patch.h"
 #include "PatchDataTestStrategy.h"
-#include "SAMRAI/tbox/Pointer.h"
 #ifndef included_String
 #include <string>
 using namespace std;
 #define included_String
 #endif
 #include "SAMRAI/hier/Variable.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 
@@ -70,7 +71,7 @@ public:
    OuternodeDataTest(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> main_input_db,
+      boost::shared_ptr<tbox::Database> main_input_db,
       bool do_refine,
       bool do_coarsen,
       const std::string& refine_option);
@@ -110,7 +111,7 @@ public:
    virtual void
    initializeDataOnPatch(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       char src_or_dst);
 
@@ -120,7 +121,7 @@ public:
    bool
    verifyResults(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number);
 
 private:
@@ -129,14 +130,14 @@ private:
     */
    void
    readTestInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Set linear function data for testing interpolation
     */
    void
    setLinearData(
-      tbox::Pointer<pdat::OuternodeData<double> > data,
+      boost::shared_ptr<pdat::OuternodeData<double> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
@@ -145,15 +146,15 @@ private:
     */
    void
    setLinearData(
-      tbox::Pointer<pdat::NodeData<double> > data,
+      boost::shared_ptr<pdat::NodeData<double> > data,
       const hier::Box& box,
       const hier::Patch& patch) const;
 
    void
    checkPatchInteriorData(
-      const tbox::Pointer<pdat::OuternodeData<double> >& data,
+      const boost::shared_ptr<pdat::OuternodeData<double> >& data,
       const hier::Box& interior,
-      const tbox::Pointer<geom::CartesianPatchGeometry>& pgeom) const;
+      const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const;
 
    const tbox::Dimension d_dim;
 
@@ -165,7 +166,7 @@ private:
    /*
     * Data members specific to this node data test.
     */
-   tbox::Pointer<geom::CartesianGridGeometry> d_cart_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_cart_grid_geometry;
 
    /*
     * Data members specific to this node data test.
@@ -180,8 +181,8 @@ private:
    std::string d_refine_option;
    int d_finest_level_number;
 
-   tbox::Array<tbox::Pointer<hier::Variable> > d_variables_src;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_variables_dst;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_src;
+   tbox::Array<boost::shared_ptr<hier::Variable> > d_variables_dst;
 
 };
 

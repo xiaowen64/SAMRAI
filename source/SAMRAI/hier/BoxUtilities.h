@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Routines for processing boxes within a domain of index space.
  *
  ************************************************************************/
@@ -17,7 +17,8 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/List.h"
+
+#include <list>
 
 namespace SAMRAI {
 namespace hier {
@@ -266,7 +267,7 @@ struct BoxUtilities {
    chopBox(
       BoxContainer& boxes,
       const Box& box,
-      const tbox::Array<tbox::List<int> > cut_points);
+      const tbox::Array<std::list<int> > cut_points);
 
    /**
     * Extend the box in the list to domain boundary as needed so that
@@ -446,7 +447,7 @@ struct BoxUtilities {
     */
    static bool
    findBestCutPointsGivenMax(
-      tbox::Array<tbox::List<int> >& cut_points,
+      tbox::Array<std::list<int> >& cut_points,
       const Box& box,
       const IntVector& max_size,
       const IntVector& min_size,
@@ -497,7 +498,7 @@ struct BoxUtilities {
    static bool
    findBestCutPointsForDirectionGivenMax(
       const int idir,
-      tbox::List<int>& cut_points,
+      std::list<int>& cut_points,
       const Box& box,
       const int max_size,
       const int min_size,
@@ -549,7 +550,7 @@ struct BoxUtilities {
     */
    static bool
    findBestCutPointsGivenNumber(
-      tbox::Array<tbox::List<int> >& cut_points,
+      tbox::Array<std::list<int> >& cut_points,
       const Box& box,
       const IntVector& number_boxes,
       const IntVector& min_size,
@@ -599,7 +600,7 @@ struct BoxUtilities {
    static bool
    findBestCutPointsForDirectionGivenNumber(
       const int idir,
-      tbox::List<int>& cut_points,
+      std::list<int>& cut_points,
       const Box& box,
       const int num_boxes,
       const int min_size,
@@ -809,7 +810,7 @@ struct BoxUtilities {
     */
    static void
    fixBadCutPoints(
-      tbox::Array<tbox::List<int> >& cuts,
+      tbox::Array<std::list<int> >& cuts,
       const tbox::Array<tbox::Array<bool> >& bad_cuts,
       const Box& box,
       const IntVector& min_size,
@@ -863,7 +864,7 @@ struct BoxUtilities {
    static void
    fixBadCutPointsForDirection(
       const int dir,
-      tbox::List<int>& cuts,
+      std::list<int>& cuts,
       const tbox::Array<bool>& bad_cuts,
       const Box& box,
       const int min_size,

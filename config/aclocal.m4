@@ -4062,7 +4062,6 @@ AC_ARG_WITH(boost,
 
 case "$with_boost" in
   no)
-    AC_MSG_NOTICE([configuring without BOOST support])
     : Do nothing
   ;;
   yes)
@@ -4107,7 +4106,6 @@ dnl  Package:        SAMRAI
 dnl  Copyright:      (c) 1997-2010 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
-dnl  Modified:       $LastChangedDate$ 
 dnl  Description:    Misc SAMRAI macros
 dnl
 
@@ -4310,10 +4308,9 @@ fi
 dnl
 dnl  File:           $HeadURL$
 dnl  Package:        SAMRAI
-dnl  Copyright:      (c) 1997-2011 Lawrence Livermore National Security, LLC
+dnl  Copyright:      (c) 1997-2012 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
-dnl  Modified:       $LastChangedDate$ 
 dnl  Description:    Macro to control whether timers are compile into or
 dnl                  out of SAMRAI
 dnl               

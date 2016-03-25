@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Concrete subclass of tbox
  *
  ************************************************************************/
@@ -13,13 +13,13 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
+
+#include <boost/shared_ptr.hpp>
 
 using namespace std;
 using namespace SAMRAI;
@@ -64,7 +64,7 @@ public:
     */
    MainRestartData(
       const string& object_name,
-      tbox::Pointer<tbox::Database> input_db);
+      boost::shared_ptr<tbox::Database> input_db);
 
    /**
     * The virtual destructor for the serializable base class does nothing
@@ -134,7 +134,7 @@ public:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
 private:
    /**
@@ -145,7 +145,7 @@ private:
     */
    virtual void
    getFromInput(
-      tbox::Pointer<tbox::Database> input_db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /**

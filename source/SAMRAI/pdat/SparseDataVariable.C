@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   SparseDataVariable
  *
  ************************************************************************/
@@ -12,6 +12,8 @@
 #define included_pdat_SparseDataVariable_C
 
 #include "SAMRAI/pdat/SparseDataVariable.h"
+
+#include <boost/make_shared.hpp>
 
 #ifdef HAVE_BOOST_HEADERS
 
@@ -27,10 +29,9 @@ SparseDataVariable<BOX_GEOMETRY>::SparseDataVariable(
    const std::vector<std::string>& dbl_attributes,
    const std::vector<std::string>& int_attributes):
    hier::Variable(name,
-                  tbox::Pointer<hier::PatchDataFactory>(
-                     new SparseDataFactory<BOX_GEOMETRY>(
-                        hier::IntVector::getZero(dim),
-                        dbl_attributes, int_attributes)))
+                  boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
+                     hier::IntVector::getZero(dim),
+                     dbl_attributes, int_attributes))
 {
 }
 

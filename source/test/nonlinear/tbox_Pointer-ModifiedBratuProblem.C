@@ -3,14 +3,14 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   $Description
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "ModifiedBratuProblem.h"
+
+#include <boost/shared_ptr.hpp>
 
 #if !defined(HAVE_PETSC) || !defined(HAVE_SUNDIALS) || !defined(HAVE_HYPRE)
 
@@ -27,6 +27,6 @@
 
 #else
 
-template class SAMRAI::tbox::Pointer<ModifiedBratuProblem>;
+template class boost::shared_ptr<ModifiedBratuProblem>;
 
 #endif

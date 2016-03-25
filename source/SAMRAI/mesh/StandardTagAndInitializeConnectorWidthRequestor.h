@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -48,10 +48,10 @@ public:
     * Implements the pure virtual method
     * hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths()
     *
-    * @param[out] self_connector_width Array of widths for Connectors
+    * @param[out] self_connector_widths Array of widths for Connectors
     * from a level to itself.
     *
-    * @param[out] fine_connector_width Array of widths for Connectors
+    * @param[out] fine_connector_widths Array of widths for Connectors
     * from a level to the next finer level.
     *
     * @param[in]  patch_hierarchy

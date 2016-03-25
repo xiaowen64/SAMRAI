@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -76,8 +76,8 @@ public:
    MblkLinAdv(
       const string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db,
-      tbox::Pointer<hier::GridGeometry>& grid_geom);
+      boost::shared_ptr<tbox::Database> input_db,
+      boost::shared_ptr<hier::BaseGridGeometry>& grid_geom);
 
    /**
     * The destructor for MblkLinAdv does nothing.
@@ -236,7 +236,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry);
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /**
     * Build mapped grid on patch
@@ -255,7 +255,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -267,7 +267,18 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
+      string& db_name,
+      int bdry_location_index);
+
+   /**
+    * This routine is a concrete implementation of the virtual function
+    * in the base class BoundaryUtilityStrategy.  It is a blank implementation
+    * for the purposes of this class.
+    */
+   void
+   readNeumannBoundaryDataEntry(
+      const boost::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -284,7 +295,7 @@ public:
     */
    void
    registerVisItDataWriter(
-      tbox::Pointer<appu::VisItDataWriter> viz_writer);
+      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -306,7 +317,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       bool is_from_restart);
 
    void
@@ -314,7 +325,7 @@ private:
 
    void
    readStateDataEntry(
-      tbox::Pointer<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       tbox::Array<double>& uval);
@@ -356,37 +367,37 @@ private:
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */
-   tbox::Pointer<hier::GridGeometry> d_grid_geometry;
+   boost::shared_ptr<hier::BaseGridGeometry> d_grid_geometry;
 #ifdef HAVE_HDF5
-   tbox::Pointer<appu::VisItDataWriter> d_visit_writer;
+   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
    /*
     * Data items used for nonuniform load balance, if used.
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_workload_variable;
+   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
    /**
-    * tbox::Pointer to state variable vector - [u]
+    * boost::shared_ptr to state variable vector - [u]
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_uval;
+   boost::shared_ptr<pdat::CellVariable<double> > d_uval;
 
    /**
-    * tbox::Pointer to cell volume - [v]
+    * boost::shared_ptr to cell volume - [v]
     */
-   tbox::Pointer<pdat::CellVariable<double> > d_vol;
+   boost::shared_ptr<pdat::CellVariable<double> > d_vol;
 
    /**
-    * tbox::Pointer to flux variable vector  - [F]
+    * boost::shared_ptr to flux variable vector  - [F]
     */
-   tbox::Pointer<pdat::SideVariable<double> > d_flux;
+   boost::shared_ptr<pdat::SideVariable<double> > d_flux;
 
    /**
-    * tbox::Pointer to grid - [xyz]
+    * boost::shared_ptr to grid - [xyz]
     */
-   tbox::Pointer<pdat::NodeVariable<double> > d_xyz;
+   boost::shared_ptr<pdat::NodeVariable<double> > d_xyz;
    int d_xyz_id;
    bool d_dx_set;
 
@@ -495,13 +506,14 @@ private:
    MblkGeometry* d_mblk_geometry;
 
    /*
-    * Operators to be used with BlockGridGeometry
+    * Operators to be used with GridGeometry
     */
-   tbox::Pointer<SkeletonCellDoubleConservativeLinearRefine>
-   d_cell_cons_linear_refine_op;
-   tbox::Pointer<SkeletonCellDoubleWeightedAverage> d_cell_cons_coarsen_op;
-   tbox::Pointer<hier::TimeInterpolateOperator> d_cell_time_interp_op;
-   tbox::Pointer<SkeletonOutersideDoubleWeightedAverage> d_side_cons_coarsen_op;
+   boost::shared_ptr<SkeletonCellDoubleConservativeLinearRefine>
+      d_cell_cons_linear_refine_op;
+   boost::shared_ptr<SkeletonCellDoubleWeightedAverage> d_cell_cons_coarsen_op;
+   boost::shared_ptr<hier::TimeInterpolateOperator> d_cell_time_interp_op;
+   boost::shared_ptr<SkeletonOutersideDoubleWeightedAverage>
+      d_side_cons_coarsen_op;
 
 };
 

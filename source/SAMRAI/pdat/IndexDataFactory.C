@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   IndexDataFactory implementation
  *
  ************************************************************************/
@@ -17,6 +17,8 @@
 #include "SAMRAI/pdat/IndexData.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -50,15 +52,13 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::~IndexDataFactory()
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 IndexDataFactory<TYPE, BOX_GEOMETRY>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new IndexDataFactory<TYPE,
-                                                                     BOX_GEOMETRY>(
-                                                   ghosts));
+   return boost::make_shared<IndexDataFactory<TYPE, BOX_GEOMETRY> >(ghosts);
 }
 
 /*
@@ -70,14 +70,15 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::cloneFactory(
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 IndexDataFactory<TYPE, BOX_GEOMETRY>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* pd = new IndexData<TYPE, BOX_GEOMETRY>(patch.getBox(), this->d_ghosts);
-   return tbox::Pointer<hier::PatchData>(pd);
+   return boost::make_shared<IndexData<TYPE, BOX_GEOMETRY> >(
+      patch.getBox(),
+      d_ghosts);
 }
 
 /*
@@ -89,14 +90,13 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::allocate(
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 IndexDataFactory<TYPE, BOX_GEOMETRY>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new BOX_GEOMETRY(box, this->d_ghosts);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<BOX_GEOMETRY>(box, d_ghosts);
 }
 
 /*
@@ -108,7 +108,8 @@ IndexDataFactory<TYPE, BOX_GEOMETRY>::getBoxGeometry(
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-size_t IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
+size_t
+IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -127,8 +128,9 @@ size_t IndexDataFactory<TYPE, BOX_GEOMETRY>::getSizeOfMemory(
  */
 
 template<class TYPE, class BOX_GEOMETRY>
-bool IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -139,13 +141,47 @@ bool IndexDataFactory<TYPE, BOX_GEOMETRY>::validCopyTo(
     * and type.
     */
    if (!valid_copy) {
-      tbox::Pointer<IndexDataFactory<TYPE, BOX_GEOMETRY> > idf = dst_pdf;
-      if (!idf.isNull()) {
+      boost::shared_ptr<IndexDataFactory<TYPE, BOX_GEOMETRY> > idf(
+         dst_pdf, boost::detail::dynamic_cast_tag());
+      if (idf) {
          valid_copy = true;
       }
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that the index data quantities
+ * will always be treated as though fine values represent them on
+ * coarse-fine interfaces. See the IndexVariable<DIM> class header file for
+ * more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE, class BOX_GEOMETRY>
+bool
+IndexDataFactory<TYPE, BOX_GEOMETRY>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return false since the index data index space matches the cell-centered
+ * index space for AMR patches.  Thus, index data does not live on patch
+ * borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE, class BOX_GEOMETRY>
+bool
+IndexDataFactory<TYPE, BOX_GEOMETRY>::dataLivesOnPatchBorder() const
+{
+   return false;
 }
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   PoissonGaussianDiffcoefSolution class implementation
  *
  ************************************************************************/
@@ -44,9 +44,9 @@ PoissonGaussianDiffcoefSolution::PoissonGaussianDiffcoefSolution(
    d_cscomp(dim),
    d_sccomp(dim)
 {
-   (void)object_name;
-   (void)out_stream;
-   (void)log_stream;
+   NULL_USE(object_name);
+   NULL_USE(out_stream);
+   NULL_USE(log_stream);
 
    setFromDatabase(database);
 }
@@ -166,8 +166,8 @@ void PoissonGaussianDiffcoefSolution::setPoissonSpecifications(
    int C_patch_data_id,
    int D_patch_data_id) const
 {
-   (void)C_patch_data_id;
-   (void)D_patch_data_id;
+   NULL_USE(C_patch_data_id);
+   NULL_USE(D_patch_data_id);
 
    sps.setDPatchDataId(D_patch_data_id);
    sps.setCZero();
@@ -176,17 +176,12 @@ void PoissonGaussianDiffcoefSolution::setPoissonSpecifications(
 void PoissonGaussianDiffcoefSolution::setGridData(
    hier::Patch& patch,
    pdat::SideData<double>& diffcoef_data,
-   pdat::CellData<double>& ccoef_data,
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   (void)ccoef_data;
-   (void)diffcoef_data;
-   (void)exact_data;
-   (void)source_data;
-
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    const double* h = patch_geom->getDx();
    const double* xl = patch_geom->getXLower();
@@ -200,10 +195,11 @@ void PoissonGaussianDiffcoefSolution::setGridData(
          for (j = 0; j < d_dim.getValue(); ++j) {
             sl[j] = j != axis ? xl[j] + 0.5 * h[j] : xl[j];
          }
-         pdat::SideData<double>::Iterator iter(patch.getBox(), axis);
+         pdat::SideData<double>::iterator iter(patch.getBox(), axis, true);
+         pdat::SideData<double>::iterator iterend(patch.getBox(), axis, false);
          if (d_dim == tbox::Dimension(2)) {
             double x, y;
-            for ( ; iter; iter++) {
+            for ( ; iter != iterend; ++iter) {
                const pdat::SideIndex& index = *iter;
                x = sl[0] + (index[0] - il[0]) * h[0];
                y = sl[1] + (index[1] - il[1]) * h[1];
@@ -211,7 +207,7 @@ void PoissonGaussianDiffcoefSolution::setGridData(
             }
          } else if (d_dim == tbox::Dimension(3)) {
             double x, y, z;
-            for ( ; iter; iter++) {
+            for ( ; iter != iterend; ++iter) {
                const pdat::SideIndex& index = *iter;
                x = sl[0] + (index[0] - il[0]) * h[0];
                y = sl[1] + (index[1] - il[1]) * h[1];
@@ -228,10 +224,11 @@ void PoissonGaussianDiffcoefSolution::setGridData(
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
       }
-      pdat::CellData<double>::Iterator iter(patch.getBox());
+      pdat::CellData<double>::iterator iter(patch.getBox(), true);
+      pdat::CellData<double>::iterator iterend(patch.getBox(), false);
       if (d_dim == tbox::Dimension(2)) {
          double x, y;
-         for ( ; iter; iter++) {
+         for ( ; iter != iterend; ++iter) {
             const pdat::CellIndex& index = *iter;
             x = sl[0] + (index[0] - il[0]) * h[0];
             y = sl[1] + (index[1] - il[1]) * h[1];
@@ -240,7 +237,7 @@ void PoissonGaussianDiffcoefSolution::setGridData(
          }
       } else if (d_dim == tbox::Dimension(3)) {
          double x, y, z;
-         for ( ; iter; iter++) {
+         for ( ; iter != iterend; ++iter) {
             const pdat::CellIndex& index = *iter;
             x = sl[0] + (index[0] - il[0]) * h[0];
             y = sl[1] + (index[1] - il[1]) * h[1];
@@ -263,19 +260,20 @@ std::ostream& operator << (
 }
 
 void PoissonGaussianDiffcoefSolution::setBcCoefs(
-   tbox::Pointer<pdat::ArrayData<double> >& acoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& bcoef_data,
-   tbox::Pointer<pdat::ArrayData<double> >& gcoef_data,
-   const tbox::Pointer<hier::Variable>& variable,
+   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const boost::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
 {
-   (void)variable;
-   (void)fill_time;
+   NULL_USE(variable);
+   NULL_USE(fill_time);
 
-   tbox::Pointer<geom::CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */

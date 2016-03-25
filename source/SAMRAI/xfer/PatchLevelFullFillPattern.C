@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -15,10 +15,6 @@
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/MathUtilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelFullFillPattern.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -64,7 +60,8 @@ PatchLevelFullFillPattern::~PatchLevelFullFillPattern()
  *************************************************************************
  */
 
-void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
+void
+PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
    hier::BoxLevel& fill_mapped_boxes,
    hier::Connector& dst_to_fill,
    const hier::BoxLevel& dst_mapped_box_level,
@@ -81,8 +78,8 @@ void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
    const hier::BoxContainer& dst_mapped_boxes =
       dst_mapped_box_level.getBoxes();
 
-   for (hier::RealBoxConstIterator ni(dst_mapped_boxes);
-        ni.isValid(); ++ni) {
+   for (hier::RealBoxConstIterator ni(dst_mapped_boxes.realBegin());
+        ni != dst_mapped_boxes.realEnd(); ++ni) {
       const hier::Box& dst_mapped_box = *ni;
       hier::Box fill_mapped_box(dst_mapped_box);
       fill_mapped_box.grow(fill_ghost_width);
@@ -101,7 +98,8 @@ void PatchLevelFullFillPattern::computeFillBoxesAndNeighborhoodSets(
  *************************************************************************
  */
 
-void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
+void
+PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    FillSet& dst_fill_boxes_on_src_proc,
    const hier::BoxLevel& dst_mapped_box_level,
    const hier::Connector& src_to_dst,
@@ -138,15 +136,47 @@ void PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
    } else {
       src_to_dst.getLocalNeighbors(all_dst_nabrs);
    }
-   for (hier::BoxContainer::ConstIterator na = all_dst_nabrs.begin();
+   for (hier::BoxContainer::const_iterator na = all_dst_nabrs.begin();
         na != all_dst_nabrs.end(); ++na) {
-      hier::BoxContainer& fill_boxes = dst_fill_boxes_on_src_proc[na->getId()];
+      FillSet::Iterator dst_fill_boxes_iter =
+         dst_fill_boxes_on_src_proc.insert(na->getId()).first;
       hier::Box fill_box(*na);
       fill_box.grow(fill_ghost_width);
-      fill_boxes.insert(fill_box);
+      dst_fill_boxes_on_src_proc.insert(dst_fill_boxes_iter, fill_box);
       d_max_fill_boxes = tbox::MathUtilities<int>::Max(d_max_fill_boxes,
-            static_cast<int>(fill_boxes.size()));
+            static_cast<int>(dst_fill_boxes_on_src_proc.numNeighbors(
+               dst_fill_boxes_iter)));
    }
+}
+
+bool
+PatchLevelFullFillPattern::needsToCommunicateDestinationFillBoxes() const
+{
+   return false;
+}
+
+bool
+PatchLevelFullFillPattern::doesSourceLevelCommunicateToDestination() const
+{
+   return true;
+}
+
+bool
+PatchLevelFullFillPattern::fillingCoarseFineGhosts() const
+{
+   return true;
+}
+
+bool
+PatchLevelFullFillPattern::fillingEnhancedConnectivityOnly() const
+{
+   return false;
+}
+
+int
+PatchLevelFullFillPattern::getMaxFillBoxes() const
+{
+   return d_max_fill_boxes;
 }
 
 }

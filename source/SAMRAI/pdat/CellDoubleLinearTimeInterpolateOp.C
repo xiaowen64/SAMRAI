@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for cell-centered double patch data.
  *
  ************************************************************************/
@@ -17,9 +17,10 @@
 #include "SAMRAI/pdat/CellVariable.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Index.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 /*
  *************************************************************************
@@ -83,19 +84,8 @@ CellDoubleLinearTimeInterpolateOp::~CellDoubleLinearTimeInterpolateOp()
 {
 }
 
-bool CellDoubleLinearTimeInterpolateOp::findTimeInterpolateOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   const tbox::Pointer<CellVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == "STD_LINEAR_TIME_INTERPOLATE")) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-void CellDoubleLinearTimeInterpolateOp::timeInterpolate(
+void
+CellDoubleLinearTimeInterpolateOp::timeInterpolate(
    hier::PatchData& dst_data,
    const hier::Box& where,
    const hier::PatchData& src_data_old,

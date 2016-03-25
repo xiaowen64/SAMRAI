@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for time interpolation operators.
  *
  ************************************************************************/
@@ -16,9 +16,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -44,10 +43,9 @@ namespace hier {
  * or for a new time interpolation routine on an existing type), define
  * the operator by inheriting from this abstract base class.  The operator
  * subclass must implement the interpolation operation in the timeInterpolate()
- * function, and provide a response to a general operator request in the
- * findTimeInterpolateOperator() function.  Then, the new operator must be
- * added to the operator list for the appropriate transfer geometry object
- * using the Geometry<DIM>::addTimeInterpolateOperator() function.
+ * function.  Then, the new operator must be added to the operator list
+ * for the appropriate transfer geometry object using the
+ * Geometry<DIM>::addTimeInterpolateOperator() function.
  *
  * Although time interpolation operators usually depend only on patch data
  * centering and data type and not the mesh coordinate system, they are
@@ -56,14 +54,15 @@ namespace hier {
  * @see hier::TransferOperatorRegistry
  */
 
-class TimeInterpolateOperator:public tbox::DescribedClass
+class TimeInterpolateOperator
 {
 public:
    /**
     * The default constructor for the coarsening operator does
     * nothing interesting.
     */
-   TimeInterpolateOperator();
+   TimeInterpolateOperator(
+      const std::string& name = "STD_LINEAR_TIME_INTERPOLATE");
 
    /**
     * The virtual destructor for the coarsening operator does
@@ -72,13 +71,13 @@ public:
    virtual ~TimeInterpolateOperator();
 
    /**
-    * Return true if the time interpolation operation matches the
-    * variable and name std::string identifier request; false, otherwise.
+    * Return name std::string identifier of the time interpolate operation.
     */
-   virtual bool
-   findTimeInterpolateOperator(
-      const tbox::Pointer<Variable>& var,
-      const std::string& op_name) const = 0;
+   const std::string&
+   getOperatorName() const
+   {
+      return d_name;
+   }
 
    /**
     * Perform time interpolation between two patch data sources
@@ -102,6 +101,7 @@ private:
    operator = (
       const TimeInterpolateOperator&);
 
+   const std::string d_name;
 };
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Some simple generic database test functions
  *
  ************************************************************************/
@@ -30,9 +30,9 @@ void setupTestData(
  * Write database and test contents.
  */
 void writeTestData(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
-   if (db.isNull()) {
+   if (!db) {
       tbox::perr << "FAILED: - Test #0-write: database to write to is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
@@ -42,37 +42,39 @@ void writeTestData(
     * Build database hierarchy and test.
     */
 
-   tbox::Pointer<tbox::Database> arraydb = db->putDatabase("Array Entries");
+   boost::shared_ptr<tbox::Database> arraydb(db->putDatabase("Array Entries"));
 
-   tbox::Pointer<tbox::Database> scalardb = db->putDatabase("Scalar Entries");
-   tbox::Pointer<tbox::Database> scalardb_empty =
-      scalardb->putDatabase("Empty");
-   tbox::Pointer<tbox::Database> scalardb_full = scalardb->putDatabase("Full");
-   tbox::Pointer<tbox::Database> defaultdb = db->putDatabase("Default");
-   tbox::Pointer<tbox::Database> namesdb = db->putDatabase("Name Entries");
-   tbox::Pointer<tbox::Database> vectordb = db->putDatabase("stl_vector");
+   boost::shared_ptr<tbox::Database> scalardb(
+      db->putDatabase("Scalar Entries"));
+   boost::shared_ptr<tbox::Database> scalardb_empty(
+      scalardb->putDatabase("Empty"));
+   boost::shared_ptr<tbox::Database> scalardb_full(
+      scalardb->putDatabase("Full"));
+   boost::shared_ptr<tbox::Database> defaultdb(db->putDatabase("Default"));
+   boost::shared_ptr<tbox::Database> namesdb(db->putDatabase("Name Entries"));
+   boost::shared_ptr<tbox::Database> vectordb(db->putDatabase("stl_vector"));
 
    NULL_USE(defaultdb);
 
-   if (arraydb.isNull()) {
+   if (!arraydb) {
       tbox::perr << "FAILED: - Test #1a-write: `arraydb' is null" << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (scalardb.isNull()) {
+   if (!scalardb) {
       tbox::perr << "FAILED: - Test #1b-write: `scalardb' is null" << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (scalardb_empty.isNull()) {
+   if (!scalardb_empty) {
       tbox::perr << "FAILED: - Test #1c-write: `scalardb_empty' is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (scalardb_full.isNull()) {
+   if (!scalardb_full) {
       tbox::perr << "FAILED: - Test #1d-write: `scalardb_full' is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
    }
-   if (vectordb.isNull()) {
+   if (!vectordb) {
       tbox::perr << "FAILED: - Test #1e-write: `vectordb' is null"
                  << endl;
       tbox::SAMRAI_MPI::abort();
@@ -157,7 +159,7 @@ void writeTestData(
    namesdb->putDouble("Name-with-dashes", scalardb_full_thisDouble);
    namesdb->putDouble("Name-with-!@#$%^&*()_+-=", scalardb_full_thisDouble);
 
-   std::vector<SAMRAI::hier::IntVector> vector_IntVector(2);
+   std::vector<hier::IntVector> vector_IntVector(2);
    vector_IntVector[0] = intVector1;
    vector_IntVector[1] = intVector2;
 
@@ -170,7 +172,7 @@ void writeTestData(
  * Read database and test contents.
  */
 void readTestData(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
    testDatabaseContents(db, "read");
 }
@@ -179,50 +181,52 @@ void readTestData(
  * Test contents of database.
  */
 void testDatabaseContents(
-   tbox::Pointer<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> db,
    const string& tag)
 {
 
-   if (db.isNull()) {
+   if (!db) {
       tbox::perr << "FAILED: - Test #0-" << tag
                  << ": database to read from is null" << endl;
       ++number_of_failures;
    }
 
-   tbox::Pointer<tbox::Database> arraydb = db->getDatabase("Array Entries");
+   boost::shared_ptr<tbox::Database> arraydb(db->getDatabase("Array Entries"));
 
-   tbox::Pointer<tbox::Database> scalardb = db->getDatabase("Scalar Entries");
-   tbox::Pointer<tbox::Database> scalardb_empty =
-      scalardb->getDatabase("Empty");
-   tbox::Pointer<tbox::Database> scalardb_full = scalardb->getDatabase("Full");
-   tbox::Pointer<tbox::Database> defaultdb = db->getDatabase("Default");
+   boost::shared_ptr<tbox::Database> scalardb(
+      db->getDatabase("Scalar Entries"));
+   boost::shared_ptr<tbox::Database> scalardb_empty(
+      scalardb->getDatabase("Empty"));
+   boost::shared_ptr<tbox::Database> scalardb_full(
+      scalardb->getDatabase("Full"));
+   boost::shared_ptr<tbox::Database> defaultdb(db->getDatabase("Default"));
 
-   tbox::Pointer<tbox::Database> namesdb = db->getDatabase("Name Entries");
+   boost::shared_ptr<tbox::Database> namesdb(db->getDatabase("Name Entries"));
 
-   tbox::Pointer<tbox::Database> vectordb = db->getDatabase("stl_vector");
+   boost::shared_ptr<tbox::Database> vectordb(db->getDatabase("stl_vector"));
 
-   if (arraydb.isNull()) {
+   if (!arraydb) {
       tbox::perr << "FAILED: - Test #1a-" << tag
                  << ": `arraydb' is null" << endl;
       ++number_of_failures;
    }
-   if (scalardb.isNull()) {
+   if (!scalardb) {
       tbox::perr << "FAILED: - Test #1b-" << tag
                  << ": `scalardb' is null" << endl;
       ++number_of_failures;
    }
-   if (scalardb_empty.isNull()) {
+   if (!scalardb_empty) {
       tbox::perr << "FAILED: - Test #1c-" << tag
                  << ": `scalardb_empty' is null" << endl;
       ++number_of_failures;
    }
-   if (scalardb_full.isNull()) {
+   if (!scalardb_full) {
       tbox::perr << "FAILED: - Test #1d-" << tag
                  << ": `scalardb_full' is null" << endl;
       ++number_of_failures;
    }
 
-   if (vectordb.isNull()) {
+   if (!vectordb) {
       tbox::perr << "FAILED: - Test #1e-" << tag
                  << ": `vectordb' is null" << endl;
       ++number_of_failures;
@@ -1166,7 +1170,7 @@ void testDatabaseContents(
    /*
     * Tests for reading stl::vector
     */
-   std::vector<SAMRAI::hier::IntVector> vector_IntVector(2);
+   std::vector<hier::IntVector> vector_IntVector(2);
 
    vectordb->getVector("vector_IntVector", vector_IntVector);
 

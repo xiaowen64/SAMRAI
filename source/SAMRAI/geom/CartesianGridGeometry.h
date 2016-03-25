@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -13,15 +13,15 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/geom/GridGeometry.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/GridGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Serializable.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -36,8 +36,8 @@ namespace geom {
  * domain.  The mesh increments on each level are defined with respect to
  * the coarsest hierarchy level and multiplying those values by the proper
  * refinement ratio.  This class sets geometry information on each patch in
- * an AMR hierarchy.  This class is derived from the hier::GridGeometry base
- * class.
+ * an AMR hierarchy.  This class is derived from the geom::GridGeometry
+ * base class.
  *
  * An object of this class requires numerous parameters to be read from
  * input.  Also, data must be written to and read from files for restart.
@@ -95,12 +95,13 @@ namespace geom {
  * y-direction, and having 50 cells in the x-direction and 40 cells in
  * the y-direction, with the cell size 1 unit in each direction.
  *
- * @see hier::GridGeometry
+ * @see geom::GridGeometry
  */
 
 class CartesianGridGeometry:
-   public hier::GridGeometry
+   public geom::GridGeometry
 {
+   friend class TransferOperatorRegistry;
 
    typedef hier::PatchGeometry::TwoDimBool TwoDimBool;
 
@@ -118,10 +119,10 @@ public:
     * Errors: passing in a null database pointer or an empty std::string
     * will result in an unrecoverable assertion.
     */
-   explicit CartesianGridGeometry(
+   CartesianGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool register_for_restart = true);
 
    /**
@@ -135,12 +136,40 @@ public:
     * Errors: passing in an empty std::string, or null data pointers will
     * result in an unrecoverable assertion.
     */
-   explicit CartesianGridGeometry(
+   CartesianGridGeometry(
       const std::string& object_name,
       const double* x_lo,
       const double* x_up,
       const hier::BoxContainer& domain,
       bool register_for_restart = true);
+
+   /*!
+    * @brief Construct a new coarsened/refined CartesianGridGeometry object
+    * with the supplied domain.
+    *
+    * This method is intended to be called only by boost::make_shared from the
+    * make[Coarsened, Refined]GridGeometry methods to make a coarsened or
+    * refined version of a given CartesianGridGeometry.
+    *
+    * @param[in] object_name The same name as the uncoarsened/unrefined grid
+    *            geometry.
+    * @param[in] x_lo The same lower corner as the uncoarsened/unrefined grid
+    *            geometry.
+    * @param[in] x_up The same upper corner as the uncoarsened/unrefined grid
+    *            geometry.
+    * @param[in] domain The coarsened/refined domain.
+    * @param[in] op_reg The same operator registry as the uncoarsened/unrefined
+    *            grid geometry.
+    * @param[in] register_for_restart Flag indicating whether this instance
+    *            should be registered for restart.
+    */
+   CartesianGridGeometry(
+      const std::string& object_name,
+      const double* x_lo,
+      const double* x_up,
+      const hier::BoxContainer& domain,
+      const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg,
+      bool register_for_restart);
 
    /**
     * Destructor for CartesianGridGeometry deallocates
@@ -151,10 +180,9 @@ public:
 
    /**
     * Create and return a pointer to a refined version of this Cartesian grid
-    * geometry object. This function is pure virtual in the
-    * hier::GridGeometry base class.
+    * geometry object.
     */
-   tbox::Pointer<hier::GridGeometry>
+   boost::shared_ptr<hier::BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
       const hier::IntVector& refine_ratio,
@@ -162,10 +190,9 @@ public:
 
    /**
     * Create and return a pointer to a coarsened version of this Cartesian grid
-    * geometry object. This function is pure virtual in the
-    * hier::GridGeometry base class.
+    * geometry object.
     */
-   tbox::Pointer<hier::GridGeometry>
+   boost::shared_ptr<hier::BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
       const hier::IntVector& coarsen_ratio,
@@ -173,8 +200,7 @@ public:
 
    /*
     * Compute grid data for patch and assign new geom_CartesianPatchGeometry
-    * object to patch.  This function is pure virtual in the hier::GridGeometry
-    * base class.
+    * object to patch.
     */
    void
    setGeometryDataOnPatch(
@@ -196,21 +222,30 @@ public:
     * Return const pointer to dx array for reference level in hierarchy.
     */
    const double *
-   getDx() const;
+   getDx() const
+   {
+      return d_dx;
+   }
 
    /**
     * Return const pointer to lower spatial coordinate for reference
     * level in hierarchy.
     */
    const double *
-   getXLower() const;
+   getXLower() const
+   {
+      return d_x_lo;
+   }
 
    /**
     * Return const pointer to upper spatial coordinate for reference
     * level in hierarchy.
     */
    const double *
-   getXUpper() const;
+   getXUpper() const
+   {
+      return d_x_up;
+   }
 
    /**
     * Print class data representation.
@@ -227,7 +262,14 @@ public:
     */
    virtual void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
+
+protected:
+   /*!
+    * @brief Build operators appropriate for a CartesianGridGeometry.
+    */
+   virtual void
+   buildOperators();
 
 private:
    /*
@@ -245,7 +287,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*
@@ -283,7 +325,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianGridGeometry.I"
-#endif
+
 #endif

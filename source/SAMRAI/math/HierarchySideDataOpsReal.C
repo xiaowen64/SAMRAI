@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real side data on multiple levels.
  *
  ************************************************************************/
@@ -27,15 +27,14 @@ namespace math {
 
 template<class TYPE>
 HierarchySideDataOpsReal<TYPE>::HierarchySideDataOpsReal(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level):
-   HierarchyDataOpsReal<TYPE>()
+   HierarchyDataOpsReal<TYPE>(),
+   d_hierarchy(hierarchy)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!hierarchy.isNull());
-#endif
-   d_hierarchy = hierarchy;
+   TBOX_ASSERT(hierarchy);
+
    if ((coarsest_level < 0) || (finest_level < 0)) {
       if (d_hierarchy->getNumberOfLevels() == 0) {
          d_coarsest_level = coarsest_level;
@@ -62,42 +61,44 @@ HierarchySideDataOpsReal<TYPE>::~HierarchySideDataOpsReal()
  */
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::setPatchHierarchy(
-   tbox::Pointer<hier::PatchHierarchy> hierarchy)
+void
+HierarchySideDataOpsReal<TYPE>::setPatchHierarchy(
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
 
    d_hierarchy = hierarchy;
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::resetLevels(
+void
+HierarchySideDataOpsReal<TYPE>::resetLevels(
    const int coarsest_level,
    const int finest_level)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((coarsest_level >= 0)
       && (finest_level >= coarsest_level)
       && (finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    d_coarsest_level = coarsest_level;
    d_finest_level = finest_level;
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       d_nonoverlapping_side_boxes[d].resizeArray(d_finest_level + 1);
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer side_boxes;
 
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dimVal; nd++) {
          side_boxes = level->getBoxes();
-         for (hier::BoxContainer::Iterator i(side_boxes); i != side_boxes.end(); ++i) {
+         for (hier::BoxContainer::iterator i(side_boxes);
+              i != side_boxes.end(); ++i) {
             *i = pdat::SideGeometry::toSideBox(*i, nd);
          }
          hier::BoxUtilities::makeNonOverlappingBoxContainers(
@@ -108,7 +109,7 @@ void HierarchySideDataOpsReal<TYPE>::resetLevels(
 }
 
 template<class TYPE>
-const tbox::Pointer<hier::PatchHierarchy>
+const boost::shared_ptr<hier::PatchHierarchy>
 HierarchySideDataOpsReal<TYPE>::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -133,7 +134,8 @@ HierarchySideDataOpsReal<TYPE>::HierarchySideDataOpsReal(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::operator = (
+void
+HierarchySideDataOpsReal<TYPE>::operator = (
    const HierarchySideDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -148,28 +150,33 @@ void HierarchySideDataOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::copyData(
+void
+HierarchySideDataOpsReal<TYPE>::copyData(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.copyData(dst, src, box);
@@ -178,33 +185,37 @@ void HierarchySideDataOpsReal<TYPE>::copyData(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::swapData(
+void
+HierarchySideDataOpsReal<TYPE>::swapData(
    const int data1_id,
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   tbox::Pointer<pdat::SideDataFactory<TYPE> >
-   d1fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id);
-   TBOX_ASSERT(!d1fact.isNull());
-   tbox::Pointer<pdat::SideDataFactory<TYPE> >
-   d2fact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id);
-   TBOX_ASSERT(!d2fact.isNull());
+   boost::shared_ptr<pdat::SideDataFactory<TYPE> > d1fact(
+      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
+      boost::detail::dynamic_cast_tag());
+   TBOX_ASSERT(d1fact);
+   boost::shared_ptr<pdat::SideDataFactory<TYPE> > d2fact(
+      d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
+            boost::detail::dynamic_cast_tag());
+   TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() ==
       d2fact->getGhostCellWidth());
    TBOX_ASSERT(d1fact->getDirectionVector() == d2fact->getDirectionVector());
 #endif
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -212,17 +223,16 @@ void HierarchySideDataOpsReal<TYPE>::swapData(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::printData(
+void
+HierarchySideDataOpsReal<TYPE>::printData(
    const int data_id,
    std::ostream& s,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    s << "Patch descriptor id = " << data_id << std::endl;
    s << "Factory = " << typeid(*d_hierarchy->getPatchDescriptor()->
@@ -231,14 +241,18 @@ void HierarchySideDataOpsReal<TYPE>::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
       s << "Level number = " << ln << std::endl;
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > d = p->getPatchData(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > d(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(d);
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          d_patch_ops.printData(d, box, s);
@@ -247,27 +261,30 @@ void HierarchySideDataOpsReal<TYPE>::printData(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::setToScalar(
+void
+HierarchySideDataOpsReal<TYPE>::setToScalar(
    const int data_id,
    const TYPE& alpha,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > d = p->getPatchData(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > d(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(d);
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          d_patch_ops.setToScalar(d, alpha, box);
@@ -284,29 +301,34 @@ void HierarchySideDataOpsReal<TYPE>::setToScalar(
  */
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::scale(
+void
+HierarchySideDataOpsReal<TYPE>::scale(
    const int dst_id,
    const TYPE& alpha,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.scale(dst, alpha, src, box);
@@ -315,29 +337,34 @@ void HierarchySideDataOpsReal<TYPE>::scale(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::addScalar(
+void
+HierarchySideDataOpsReal<TYPE>::addScalar(
    const int dst_id,
    const int src_id,
    const TYPE& alpha,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.addScalar(dst, src, alpha, box);
@@ -346,30 +373,37 @@ void HierarchySideDataOpsReal<TYPE>::addScalar(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::add(
+void
+HierarchySideDataOpsReal<TYPE>::add(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.add(dst, src1, src2, box);
@@ -378,30 +412,37 @@ void HierarchySideDataOpsReal<TYPE>::add(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::subtract(
+void
+HierarchySideDataOpsReal<TYPE>::subtract(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.subtract(dst, src1, src2, box);
@@ -410,30 +451,37 @@ void HierarchySideDataOpsReal<TYPE>::subtract(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::multiply(
+void
+HierarchySideDataOpsReal<TYPE>::multiply(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.multiply(dst, src1, src2, box);
@@ -442,30 +490,37 @@ void HierarchySideDataOpsReal<TYPE>::multiply(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::divide(
+void
+HierarchySideDataOpsReal<TYPE>::divide(
    const int dst_id,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.divide(dst, src1, src2, box);
@@ -474,28 +529,33 @@ void HierarchySideDataOpsReal<TYPE>::divide(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::reciprocal(
+void
+HierarchySideDataOpsReal<TYPE>::reciprocal(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.reciprocal(dst, src, box);
@@ -504,7 +564,8 @@ void HierarchySideDataOpsReal<TYPE>::reciprocal(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::linearSum(
+void
+HierarchySideDataOpsReal<TYPE>::linearSum(
    const int dst_id,
    const TYPE& alpha,
    const int src1_id,
@@ -512,24 +573,30 @@ void HierarchySideDataOpsReal<TYPE>::linearSum(
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.linearSum(dst, alpha, src1, beta, src2, box);
@@ -538,31 +605,38 @@ void HierarchySideDataOpsReal<TYPE>::linearSum(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::axpy(
+void
+HierarchySideDataOpsReal<TYPE>::axpy(
    const int dst_id,
    const TYPE& alpha,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.axpy(dst, alpha, src1, src2, box);
@@ -571,31 +645,38 @@ void HierarchySideDataOpsReal<TYPE>::axpy(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::axmy(
+void
+HierarchySideDataOpsReal<TYPE>::axmy(
    const int dst_id,
    const TYPE& alpha,
    const int src1_id,
    const int src2_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src1 = p->getPatchData(src1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src2 = p->getPatchData(src2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src1(
+            p->getPatchData(src1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src2(
+            p->getPatchData(src2_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.axmy(dst, alpha, src1, src2, box);
@@ -604,28 +685,33 @@ void HierarchySideDataOpsReal<TYPE>::axmy(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::abs(
+void
+HierarchySideDataOpsReal<TYPE>::abs(
    const int dst_id,
    const int src_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!dst.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(dst);
+
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
          d_patch_ops.abs(dst, src, box);
@@ -634,28 +720,31 @@ void HierarchySideDataOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::setRandomValues(
+void
+HierarchySideDataOpsReal<TYPE>::setRandomValues(
    const int data_id,
    const TYPE& width,
    const TYPE& low,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data = p->getPatchData(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!data.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > data(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(data);
+
          hier::Box box = (interior_only ? p->getBox() : data->getGhostBox());
 
          d_patch_ops.setRandomValues(data, width, low, box);
@@ -672,46 +761,47 @@ void HierarchySideDataOpsReal<TYPE>::setRandomValues(
  */
 
 template<class TYPE>
-int HierarchySideDataOpsReal<TYPE>::numberOfEntries(
+int
+HierarchySideDataOpsReal<TYPE>::numberOfEntries(
    const int data_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
-   const tbox::Dimension& dim(d_hierarchy->getDim());
+   int dimVal = d_hierarchy->getDim().getValue();
 
    int entries = 0;
 
    if (interior_only) {
 
-      tbox::Pointer<pdat::SideDataFactory<TYPE> >
-      dfact = d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!dfact.isNull());
-#endif
+      boost::shared_ptr<pdat::SideDataFactory<TYPE> > dfact(
+         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
+         boost::detail::dynamic_cast_tag());
+
+      TBOX_ASSERT(dfact);
+
       const hier::IntVector& directions = dfact->getDirectionVector();
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
+         boost::shared_ptr<hier::PatchLevel> level(
+            d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int dc = 0; dc < dim.getValue(); dc++) {
+         for (int dc = 0; dc < dimVal; dc++) {
             TBOX_ASSERT(npatches == d_nonoverlapping_side_boxes[dc][ln].getSize());
          }
 #endif
          for (int il = 0; il < npatches; il++) {
-            for (int eb = 0; eb < dim.getValue(); eb++) {
+            for (int eb = 0; eb < dimVal; eb++) {
                if (directions(eb)) {
-                  hier::BoxContainer::ConstIterator lb =
+                  hier::BoxContainer::const_iterator lb =
                      ((d_nonoverlapping_side_boxes[eb][ln])[il]).begin();
                   for ( ; lb != ((d_nonoverlapping_side_boxes[eb][ln])[il]).end();
                        ++lb) {
-                     entries += lb().size();
+                     entries += lb->size();
                   }
                }
             }
@@ -723,13 +813,16 @@ int HierarchySideDataOpsReal<TYPE>::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-         tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-         for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-            tbox::Pointer<pdat::SideData<TYPE> > d =
-               (*ip)->getPatchData(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!d.isNull());
-#endif
+         boost::shared_ptr<hier::PatchLevel> level(
+            d_hierarchy->getPatchLevel(ln));
+         for (hier::PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
+            boost::shared_ptr<pdat::SideData<TYPE> > d(
+               (*ip)->getPatchData(data_id),
+               boost::detail::dynamic_cast_tag());
+
+            TBOX_ASSERT(d);
+
             entries += d_patch_ops.numberOfEntries(d, d->getGhostBox());
          }
       }
@@ -746,31 +839,37 @@ int HierarchySideDataOpsReal<TYPE>::numberOfEntries(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::sumControlVolumes(
+double
+HierarchySideDataOpsReal<TYPE>::sumControlVolumes(
    const int data_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(vol_id >= 0);
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double sum = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::SideData<double> > cv = p->getPatchData(vol_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!cv.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > data(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            p->getPatchData(vol_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(cv);
+
          hier::Box box = cv->getGhostBox();
 
          sum += d_patch_ops.sumControlVolumes(data, cv, box);
@@ -785,38 +884,45 @@ double HierarchySideDataOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::L1Norm(
+double
+HierarchySideDataOpsReal<TYPE>::L1Norm(
    const int data_id,
    const int vol_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > data(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data.isNull());
-#endif
+
+            TBOX_ASSERT(data);
+
             box = data->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          norm += d_patch_ops.L1Norm(data, box, cv);
       }
    }
@@ -832,7 +938,8 @@ double HierarchySideDataOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::L2Norm(
+double
+HierarchySideDataOpsReal<TYPE>::L2Norm(
    const int data_id,
    const int vol_id,
    bool local_only) const
@@ -846,39 +953,48 @@ double HierarchySideDataOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::weightedL2Norm(
+double
+HierarchySideDataOpsReal<TYPE>::weightedL2Norm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double norm_squared = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::SideData<TYPE> > weight = p->getPatchData(wgt_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > data(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > weight(
+            p->getPatchData(wgt_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data.isNull());
-#endif
+
+            TBOX_ASSERT(data);
+
             box = data->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          double pnorm = d_patch_ops.weightedL2Norm(data, weight, box, cv);
 
          norm_squared += pnorm * pnorm;
@@ -893,7 +1009,8 @@ double HierarchySideDataOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::RMSNorm(
+double
+HierarchySideDataOpsReal<TYPE>::RMSNorm(
    const int data_id,
    const int vol_id) const
 {
@@ -907,7 +1024,8 @@ double HierarchySideDataOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::weightedRMSNorm(
+double
+HierarchySideDataOpsReal<TYPE>::weightedRMSNorm(
    const int data_id,
    const int wgt_id,
    const int vol_id) const
@@ -923,38 +1041,45 @@ double HierarchySideDataOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double HierarchySideDataOpsReal<TYPE>::maxNorm(
+double
+HierarchySideDataOpsReal<TYPE>::maxNorm(
    const int data_id,
    const int vol_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data = p->getPatchData(data_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > data(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data.isNull());
-#endif
+
+            TBOX_ASSERT(data);
+
             box = data->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(data, box, cv));
       }
@@ -971,40 +1096,49 @@ double HierarchySideDataOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE HierarchySideDataOpsReal<TYPE>::dot(
+TYPE
+HierarchySideDataOpsReal<TYPE>::dot(
    const int data1_id,
    const int data2_id,
    const int vol_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE dprod = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data1 = p->getPatchData(data1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > data2 = p->getPatchData(data2_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > data1(
+            p->getPatchData(data1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > data2(
+            p->getPatchData(data2_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data1.isNull());
-#endif
+
+            TBOX_ASSERT(data1);
+
             box = data1->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          dprod += d_patch_ops.dot(data1, data2, box, cv);
       }
    }
@@ -1018,33 +1152,36 @@ TYPE HierarchySideDataOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE HierarchySideDataOpsReal<TYPE>::integral(
+TYPE
+HierarchySideDataOpsReal<TYPE>::integral(
    const int data_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE local_integral = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data =
-            p->getPatchData(data_id);
-         tbox::Pointer<pdat::SideData<double> > vol = p->getPatchData(vol_id);
+         boost::shared_ptr<pdat::SideData<TYPE> > data(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<double> > vol(
+            p->getPatchData(vol_id),
+            boost::detail::dynamic_cast_tag());
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!data.isNull());
-         TBOX_ASSERT(!vol.isNull());
-#endif
+         TBOX_ASSERT(data);
+         TBOX_ASSERT(vol);
 
          hier::Box box = data->getGhostBox();
 
@@ -1068,39 +1205,48 @@ TYPE HierarchySideDataOpsReal<TYPE>::integral(
  */
 
 template<class TYPE>
-int HierarchySideDataOpsReal<TYPE>::computeConstrProdPos(
+int
+HierarchySideDataOpsReal<TYPE>::computeConstrProdPos(
    const int data1_id,
    const int data2_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > data1 = p->getPatchData(data1_id);
-         tbox::Pointer<pdat::SideData<TYPE> > data2 = p->getPatchData(data2_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > data1(
+            p->getPatchData(data1_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > data2(
+            p->getPatchData(data2_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!data1.isNull());
-#endif
+
+            TBOX_ASSERT(data1);
+
             box = data1->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.computeConstrProdPos(data1, data2, box, cv));
       }
@@ -1114,76 +1260,93 @@ int HierarchySideDataOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void HierarchySideDataOpsReal<TYPE>::compareToScalar(
+void
+HierarchySideDataOpsReal<TYPE>::compareToScalar(
    const int dst_id,
    const int src_id,
    const TYPE& alpha,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!dst.isNull());
-#endif
+
+            TBOX_ASSERT(dst);
+
             box = dst->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          d_patch_ops.compareToScalar(dst, src, alpha, box, cv);
       }
    }
 }
 
 template<class TYPE>
-int HierarchySideDataOpsReal<TYPE>::testReciprocal(
+int
+HierarchySideDataOpsReal<TYPE>::testReciprocal(
    const int dst_id,
    const int src_id,
    const int vol_id) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > dst = p->getPatchData(dst_id);
-         tbox::Pointer<pdat::SideData<TYPE> > src = p->getPatchData(src_id);
-         tbox::Pointer<pdat::SideData<double> > cv;
+         boost::shared_ptr<pdat::SideData<TYPE> > dst(
+            p->getPatchData(dst_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > src(
+            p->getPatchData(src_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<hier::PatchData> pd;
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-#ifdef DEBUG_CHECK_ASSERTIONS
-            TBOX_ASSERT(!dst.isNull());
-#endif
+
+            TBOX_ASSERT(dst);
+
             box = dst->getGhostBox();
-            cv = p->getPatchData(vol_id);
+            pd = p->getPatchData(vol_id);
          }
 
+         boost::shared_ptr<pdat::SideData<double> > cv(
+            pd,
+            boost::detail::dynamic_cast_tag());
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.testReciprocal(dst, src, box, cv));
       }
@@ -1197,28 +1360,34 @@ int HierarchySideDataOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE HierarchySideDataOpsReal<TYPE>::maxPointwiseDivide(
+TYPE
+HierarchySideDataOpsReal<TYPE>::maxPointwiseDivide(
    const int numer_id,
    const int denom_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE max = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > numer = p->getPatchData(numer_id);
-         tbox::Pointer<pdat::SideData<TYPE> > denom = p->getPatchData(denom_id);
+         boost::shared_ptr<pdat::SideData<TYPE> > numer(
+            p->getPatchData(numer_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > denom(
+            p->getPatchData(denom_id),
+            boost::detail::dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1236,28 +1405,34 @@ TYPE HierarchySideDataOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE HierarchySideDataOpsReal<TYPE>::minPointwiseDivide(
+TYPE
+HierarchySideDataOpsReal<TYPE>::minPointwiseDivide(
    const int numer_id,
    const int denom_id,
    bool local_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE min = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > numer = p->getPatchData(numer_id);
-         tbox::Pointer<pdat::SideData<TYPE> > denom = p->getPatchData(denom_id);
+         boost::shared_ptr<pdat::SideData<TYPE> > numer(
+            p->getPatchData(numer_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<pdat::SideData<TYPE> > denom(
+            p->getPatchData(denom_id),
+            boost::detail::dynamic_cast_tag());
 
          hier::Box box = p->getBox();
 
@@ -1275,29 +1450,33 @@ TYPE HierarchySideDataOpsReal<TYPE>::minPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE HierarchySideDataOpsReal<TYPE>::min(
+TYPE
+HierarchySideDataOpsReal<TYPE>::min(
    const int data_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > d = p->getPatchData(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > d(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(d);
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          minval = tbox::MathUtilities<TYPE>::Min(minval, d_patch_ops.min(d, box));
@@ -1312,29 +1491,33 @@ TYPE HierarchySideDataOpsReal<TYPE>::min(
 }
 
 template<class TYPE>
-TYPE HierarchySideDataOpsReal<TYPE>::max(
+TYPE
+HierarchySideDataOpsReal<TYPE>::max(
    const int data_id,
    const bool interior_only) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_hierarchy.isNull());
+   TBOX_ASSERT(d_hierarchy);
    TBOX_ASSERT((d_coarsest_level >= 0)
       && (d_finest_level >= d_coarsest_level)
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
-#endif
+
    const tbox::SAMRAI_MPI& mpi(d_hierarchy->getMPI());
 
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ln++) {
-      tbox::Pointer<hier::PatchLevel> level = d_hierarchy->getPatchLevel(ln);
-      for (hier::PatchLevel::Iterator ip(level); ip; ip++) {
-         tbox::Pointer<hier::Patch> p = *ip;
+      boost::shared_ptr<hier::PatchLevel> level(
+         d_hierarchy->getPatchLevel(ln));
+      for (hier::PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& p = *ip;
 
-         tbox::Pointer<pdat::SideData<TYPE> > d = p->getPatchData(data_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-         TBOX_ASSERT(!d.isNull());
-#endif
+         boost::shared_ptr<pdat::SideData<TYPE> > d(
+            p->getPatchData(data_id),
+            boost::detail::dynamic_cast_tag());
+
+         TBOX_ASSERT(d);
+
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
          maxval = tbox::MathUtilities<TYPE>::Max(maxval, d_patch_ops.max(d, box));

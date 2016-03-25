@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
@@ -19,10 +19,6 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/pdat/NodeOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeData.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -114,10 +110,129 @@ OuternodeData<TYPE>::OuternodeData(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::operator = (
+void
+OuternodeData<TYPE>::operator = (
    const OuternodeData<TYPE>& foo)
 {
    NULL_USE(foo);
+}
+
+template<class TYPE>
+int
+OuternodeData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+bool
+OuternodeData<TYPE>::dataExists(
+   int face_normal) const
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+
+   return d_data[face_normal][0].isInitialized();
+}
+
+template<class TYPE>
+TYPE*
+OuternodeData<TYPE>::getPointer(
+   int face_normal,
+   int side,
+   int depth)
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[face_normal][side].getPointer(depth);
+}
+
+template<class TYPE>
+const TYPE*
+OuternodeData<TYPE>::getPointer(
+   int face_normal,
+   int side,
+   int depth) const
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[face_normal][side].getPointer(depth);
+}
+
+template<class TYPE>
+ArrayData<TYPE>&
+OuternodeData<TYPE>::getArrayData(
+   int face_normal,
+   int side)
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+
+   return d_data[face_normal][side];
+}
+
+template<class TYPE>
+const ArrayData<TYPE>&
+OuternodeData<TYPE>::getArrayData(
+   int face_normal,
+   int side) const
+{
+   TBOX_ASSERT((face_normal >= 0) && (face_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+
+   return d_data[face_normal][side];
+}
+
+template<class TYPE>
+TYPE&
+OuternodeData<TYPE>::operator () (
+   const NodeIndex& i,
+   int depth)
+{
+   for (int d = getDim().getValue() - 1; d >= 0; d--) {
+      if (i[d] == d_data[d][0].getBox().lower()[d]) {
+         return d_data[d][0](i, depth);
+      }
+      if (i[d] == d_data[d][1].getBox().upper()[d]) {
+         return d_data[d][1](i, depth);
+      }
+   }
+
+   /*
+    * The following lines should only be executed if there's a bug
+    * in the Outernode datatype.
+    */
+   TBOX_ERROR("Bad index used to access outernode data\n"
+      << "Given index is not an outernode of this instance.\n");
+   return d_data[0][0](i, depth);
+}
+
+template<class TYPE>
+const TYPE&
+OuternodeData<TYPE>::operator () (
+   const NodeIndex& i,
+   int depth) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+
+   for (int d = getDim() - 1; d >= 0; d--) {
+      if (i[d] == d_data[d][0].getBox().lower()[d]) {
+         return d_data[d][0](i, depth);
+      }
+      if (i[d] == d_data[d][1].getBox().upper()[d]) {
+         return d_data[d][1](i, depth);
+      }
+   }
+   /*
+    * The following lines should only be executed if there's a bug
+    * in the Outernode datatype.
+    */
+   TBOX_ERROR("Bad index used to access outernode data\n"
+      << "Given index is not an outernode of this instance.\n");
+   return d_data[0][0](i, depth);
 }
 
 /*
@@ -130,7 +245,8 @@ void OuternodeData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::copy(
+void
+OuternodeData<TYPE>::copy(
    const hier::PatchData& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -154,7 +270,8 @@ void OuternodeData<TYPE>::copy(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copy2(
+void
+OuternodeData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -186,7 +303,8 @@ void OuternodeData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::copy(
+void
+OuternodeData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -216,7 +334,8 @@ void OuternodeData<TYPE>::copy(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copy2(
+void
+OuternodeData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
@@ -255,7 +374,8 @@ void OuternodeData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyDepth(
+void
+OuternodeData<TYPE>::copyDepth(
    int dst_depth,
    const NodeData<TYPE>& src,
    int src_depth)
@@ -284,7 +404,8 @@ void OuternodeData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyDepth2(
+void
+OuternodeData<TYPE>::copyDepth2(
    int dst_depth,
    NodeData<TYPE>& dst,
    int src_depth) const
@@ -312,7 +433,8 @@ void OuternodeData<TYPE>::copyDepth2(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::sum(
+void
+OuternodeData<TYPE>::sum(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -374,13 +496,15 @@ void OuternodeData<TYPE>::sum(
  */
 
 template<class TYPE>
-bool OuternodeData<TYPE>::canEstimateStreamSizeFromBox() const
+bool
+OuternodeData<TYPE>::canEstimateStreamSizeFromBox() const
 {
    return ArrayData<TYPE>::canEstimateStreamSizeFromBox();
 }
 
 template<class TYPE>
-int OuternodeData<TYPE>::getDataStreamSize(
+int
+OuternodeData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const NodeOverlap* t_overlap =
@@ -408,7 +532,8 @@ int OuternodeData<TYPE>::getDataStreamSize(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::packStream(
+void
+OuternodeData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
@@ -419,10 +544,10 @@ void OuternodeData<TYPE>::packStream(
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
+   for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
         dst_box != dst_boxes.end(); ++dst_box) {
       const hier::Box src_box =
-         hier::Box::shift(dst_box(), -src_offset);
+         hier::Box::shift(*dst_box, -src_offset);
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int loc = 0; loc < 2; loc++) {
             const hier::Box intersect = src_box * d_data[d][loc].getBox();
@@ -437,7 +562,8 @@ void OuternodeData<TYPE>::packStream(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::unpackStream(
+void
+OuternodeData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
@@ -448,12 +574,12 @@ void OuternodeData<TYPE>::unpackStream(
 
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-   for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
+   for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
         dst_box != dst_boxes.end(); ++dst_box) {
       for (int d = 0; d < getDim().getValue(); d++) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =
-               dst_box() * d_data[d][f].getBox();
+               (*dst_box) * d_data[d][f].getBox();
             if (!intersect.empty()) {
                d_data[d][f].unpackStream(stream, intersect, src_offset);
             }
@@ -472,7 +598,8 @@ void OuternodeData<TYPE>::unpackStream(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::unpackStreamAndSum(
+void
+OuternodeData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
@@ -484,11 +611,11 @@ void OuternodeData<TYPE>::unpackStreamAndSum(
    const hier::BoxContainer& dst_boxes = t_overlap->getDestinationBoxContainer();
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
-      for (hier::BoxContainer::ConstIterator dst_box(dst_boxes);
+      for (hier::BoxContainer::const_iterator dst_box(dst_boxes);
            dst_box != dst_boxes.end(); ++dst_box) {
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect =
-               dst_box() * d_data[d][f].getBox();
+               (*dst_box) * d_data[d][f].getBox();
             if (!intersect.empty()) {
                d_data[d][f].unpackStreamAndSum(stream, intersect, src_offset);
             }
@@ -507,7 +634,8 @@ void OuternodeData<TYPE>::unpackStreamAndSum(
  */
 
 template<class TYPE>
-size_t OuternodeData<TYPE>::getSizeOfData(
+size_t
+OuternodeData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth)
 {
@@ -563,8 +691,8 @@ OuternodeData<TYPE>::getDataBox(
     * We start with the full box and chop it down to the databox
     * corresponding to the given face_normal and side.
     */
-   hier::Box databox = NodeGeometry::toNodeBox(this->getBox());
-   const hier::IntVector& ghosts = this->getGhostCellWidth();
+   hier::Box databox = NodeGeometry::toNodeBox(getBox());
+   const hier::IntVector& ghosts = getGhostCellWidth();
 
    for (int dh = face_normal + 1; dh < getDim().getValue(); dh++) {
 
@@ -597,7 +725,8 @@ OuternodeData<TYPE>::getDataBox(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::fill(
+void
+OuternodeData<TYPE>::fill(
    const TYPE& t,
    int d)
 {
@@ -614,7 +743,8 @@ void OuternodeData<TYPE>::fill(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::fill(
+void
+OuternodeData<TYPE>::fill(
    const TYPE& t,
    const hier::Box& box,
    int d)
@@ -633,7 +763,8 @@ void OuternodeData<TYPE>::fill(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::fillAll(
+void
+OuternodeData<TYPE>::fillAll(
    const TYPE& t)
 {
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -647,7 +778,8 @@ void OuternodeData<TYPE>::fillAll(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::fillAll(
+void
+OuternodeData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
@@ -673,7 +805,8 @@ void OuternodeData<TYPE>::fillAll(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyFromNode(
+void
+OuternodeData<TYPE>::copyFromNode(
    const NodeData<TYPE>& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -690,7 +823,8 @@ void OuternodeData<TYPE>::copyFromNode(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyToNode(
+void
+OuternodeData<TYPE>::copyToNode(
    NodeData<TYPE>& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -715,7 +849,8 @@ void OuternodeData<TYPE>::copyToNode(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyFromNode(
+void
+OuternodeData<TYPE>::copyFromNode(
    const NodeData<TYPE>& src,
    const NodeOverlap& overlap)
 {
@@ -734,7 +869,8 @@ void OuternodeData<TYPE>::copyFromNode(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyToNode(
+void
+OuternodeData<TYPE>::copyToNode(
    NodeData<TYPE>& dst,
    const NodeOverlap& overlap) const
 {
@@ -753,7 +889,8 @@ void OuternodeData<TYPE>::copyToNode(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyFromOuternode(
+void
+OuternodeData<TYPE>::copyFromOuternode(
    const OuternodeData<TYPE>& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -776,7 +913,8 @@ void OuternodeData<TYPE>::copyFromOuternode(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyFromOuternode(
+void
+OuternodeData<TYPE>::copyFromOuternode(
    const OuternodeData<TYPE>& src,
    const NodeOverlap& overlap)
 {
@@ -801,7 +939,8 @@ void OuternodeData<TYPE>::copyFromOuternode(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyToOuternode(
+void
+OuternodeData<TYPE>::copyToOuternode(
    OuternodeData<TYPE>& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -824,7 +963,8 @@ void OuternodeData<TYPE>::copyToOuternode(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::copyToOuternode(
+void
+OuternodeData<TYPE>::copyToOuternode(
    OuternodeData<TYPE>& dst,
    const NodeOverlap& overlap) const
 {
@@ -857,7 +997,8 @@ void OuternodeData<TYPE>::copyToOuternode(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::print(
+void
+OuternodeData<TYPE>::print(
    const hier::Box& box,
    std::ostream& os,
    int prec) const
@@ -870,7 +1011,8 @@ void OuternodeData<TYPE>::print(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::print(
+void
+OuternodeData<TYPE>::print(
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -889,7 +1031,8 @@ void OuternodeData<TYPE>::print(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::printAxisSide(
+void
+OuternodeData<TYPE>::printAxisSide(
    int face_normal,
    int side,
    const hier::Box& box,
@@ -907,7 +1050,8 @@ void OuternodeData<TYPE>::printAxisSide(
 }
 
 template<class TYPE>
-void OuternodeData<TYPE>::printAxisSide(
+void
+OuternodeData<TYPE>::printAxisSide(
    int face_normal,
    int side,
    const hier::Box& box,
@@ -923,9 +1067,10 @@ void OuternodeData<TYPE>::printAxisSide(
    const hier::Box nodebox = NodeGeometry::toNodeBox(box);
    const hier::Box region = nodebox * d_data[face_normal][side].getBox();
    os.precision(prec);
-   for (hier::Box::Iterator i(region); i; i++) {
-      os << "array" << i() << " = "
-         << d_data[face_normal][side](i(), depth) << std::endl << std::flush;
+   hier::Box::iterator iend(region, false);
+   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data[face_normal][side](*i, depth) << std::endl << std::flush;
    }
 }
 
@@ -940,10 +1085,11 @@ void OuternodeData<TYPE>::printAxisSide(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+OuternodeData<TYPE>::getSpecializedFromDatabase(
+   const boost::shared_ptr<tbox::Database>& database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_OUTERNODEDATA_VERSION");
    if (ver != PDAT_OUTERNODEDATA_VERSION) {
@@ -953,7 +1099,7 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
@@ -980,10 +1126,11 @@ void OuternodeData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void OuternodeData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+OuternodeData<TYPE>::putSpecializedToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_OUTERNODEDATA_VERSION",
       PDAT_OUTERNODEDATA_VERSION);
@@ -991,17 +1138,17 @@ void OuternodeData<TYPE>::putSpecializedToDatabase(
    database->putInteger("d_depth", d_depth);
 
    std::string array_name;
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       if (d_data[i][0].isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";
          array_database = database->putDatabase(array_name);
-         (d_data[i][0]).putToDatabase(array_database);
+         (d_data[i][0]).putUnregisteredToDatabase(array_database);
       }
       if (d_data[i][1].isInitialized()) {
          array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
          array_database = database->putDatabase(array_name);
-         (d_data[i][1]).putToDatabase(array_database);
+         (d_data[i][1]).putUnregisteredToDatabase(array_database);
       }
    }
 }

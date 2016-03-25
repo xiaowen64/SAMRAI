@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   IndexVariable
  *
  ************************************************************************/
@@ -48,7 +48,7 @@ public:
    /**
     * Create an index variable object with the specified name.
     */
-   explicit IndexVariable(
+   IndexVariable(
       const tbox::Dimension& dim,
       const std::string& name);
 
@@ -88,8 +88,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/IndexVariable.C"
-#endif
 
 #endif

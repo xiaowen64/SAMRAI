@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   RefineSchedule's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -41,10 +41,10 @@ public:
     * Implements the pure virtual method
     * hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths()
     *
-    * @param[out] self_connector_width Array of widths for Connectors
+    * @param[out] self_connector_widths Array of widths for Connectors
     * from a level to itself.
     *
-    * @param[out] fine_connector_width Array of widths for Connectors
+    * @param[out] fine_connector_widths Array of widths for Connectors
     * from a level to the next finer level.
     *
     * @param[in]  patch_hierarchy
@@ -84,7 +84,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      hier::PatchHierarchy::registerAutoConnectorWidthRequestorStrategy(
+         s_auto_registered_connector_width_requestor);
+   }
 
    /*!
     * Free static timers.
@@ -92,7 +96,9 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+   }
 
    /*!
     * @brief Static object that is auto-registered in PatchHierarchy

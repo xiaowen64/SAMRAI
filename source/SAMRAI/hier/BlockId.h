@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Block identifier in multiblock domain.
  *
  ************************************************************************/
@@ -61,7 +61,11 @@ public:
     */
    BlockId&
    operator = (
-      const BlockId& rhs);
+      const BlockId& rhs)
+   {
+      d_value = rhs.d_value;
+      return *this;
+   }
 
    /*!
     * @brief Set to an int value.
@@ -70,31 +74,46 @@ public:
     */
    void
    setId(
-      const int& rhs);
+      const int& rhs)
+   {
+      d_value = rhs;
+   }
 
    /*!
     * @brief Whether the value is valid.
     */
    bool
-   isValid() const;
+   isValid() const
+   {
+      return d_value != s_invalid_id.d_value;
+   }
 
    /*!
     * @brief Access the numerical value.
     */
    const int&
-   getBlockValue() const;
+   getBlockValue() const
+   {
+      return d_value;
+   }
 
    /*!
     * @brief Get the BlockId with a numerical value of zero.
     */
    static const BlockId&
-   zero();
+   zero()
+   {
+      return s_zero_id;
+   }
 
    /*!
     * @brief Get the designated invalid value for this class.
     */
    static const BlockId&
-   invalidId();
+   invalidId()
+   {
+      return s_invalid_id;
+   }
 
    //@{
 
@@ -109,7 +128,10 @@ public:
     */
    bool
    operator == (
-      const BlockId& rhs) const;
+      const BlockId& rhs) const
+   {
+      return d_value == rhs.d_value;
+   }
 
    /*!
     * @brief Inequality operator.
@@ -120,7 +142,11 @@ public:
     */
    bool
    operator != (
-      const BlockId& rhs) const;
+      const BlockId& rhs) const
+   {
+      return d_value != rhs.d_value;
+   }
+   
 
    /*!
     * @brief Less-than operator.
@@ -131,7 +157,10 @@ public:
     */
    bool
    operator < (
-      const BlockId& rhs) const;
+      const BlockId& rhs) const
+   {
+      return d_value < rhs.d_value;
+   }
 
    /*!
     * @brief Greater-than operator.
@@ -142,7 +171,10 @@ public:
     */
    bool
    operator > (
-      const BlockId& rhs) const;
+      const BlockId& rhs) const
+   {
+      return d_value > rhs.d_value;
+   }
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -153,7 +185,10 @@ public:
     */
    bool
    operator <= (
-      const BlockId& rhs) const;
+      const BlockId& rhs) const
+   {
+      return d_value <= rhs.d_value;
+   }
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -164,7 +199,10 @@ public:
     */
    bool
    operator >= (
-      const BlockId& rhs) const;
+      const BlockId& rhs) const
+   {
+      return d_value >= rhs.d_value;
+   }
 
    //@}
 
@@ -181,7 +219,10 @@ public:
     */
    bool
    operator == (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value == rhs;
+   }
 
    /*!
     * @brief Inequality operator.
@@ -192,7 +233,10 @@ public:
     */
    bool
    operator != (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value != rhs;
+   }
 
    /*!
     * @brief Less-than operator.
@@ -203,7 +247,10 @@ public:
     */
    bool
    operator < (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value < rhs;
+   }
 
    /*!
     * @brief Greater-than operator.
@@ -214,7 +261,10 @@ public:
     */
    bool
    operator > (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value > rhs;
+   }
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -225,7 +275,10 @@ public:
     */
    bool
    operator <= (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value <= rhs;
+   }
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -236,7 +289,10 @@ public:
     */
    bool
    operator >= (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value >= rhs;
+   }
 
    //@}
 
@@ -246,7 +302,11 @@ public:
    friend std::ostream&
    operator << (
       std::ostream& co,
-      const BlockId& r);
+      const BlockId& r)
+   {
+      co << r.d_value;
+      return co;
+   }
 
 private:
    /*!
@@ -268,9 +328,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BlockId.I"
-#endif
 
 #endif  // included_hier_BlockId

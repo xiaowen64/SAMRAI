@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   For describing coarse-fine boundary interfaces
  *
  ************************************************************************/
@@ -13,7 +13,7 @@
 
 #include "SAMRAI/hier/CoarseFineBoundary.h"
 
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Connector.h"
 #include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
 #include "SAMRAI/hier/PatchLevel.h"
@@ -38,7 +38,6 @@ CoarseFineBoundary::CoarseFineBoundary(
 
 CoarseFineBoundary::CoarseFineBoundary(
    const CoarseFineBoundary& rhs):
-   tbox::DescribedClass(),
    d_dim(rhs.d_dim),
    d_initialized(1, false),
    d_boundary_boxes(rhs.d_boundary_boxes)
@@ -120,7 +119,8 @@ CoarseFineBoundary::~CoarseFineBoundary()
  * the coarse-fine boundary (instead of the domain boundary).
  ************************************************************************
  */
-void CoarseFineBoundary::computeFromLevel(
+void
+CoarseFineBoundary::computeFromLevel(
    const PatchLevel& level,
    const Connector& mapped_box_level_to_domain,
    const Connector& mapped_box_level_to_self,
@@ -134,7 +134,7 @@ void CoarseFineBoundary::computeFromLevel(
    const BoxLevel& mapped_box_level = *level.getBoxLevel();
    const IntVector& ratio = level.getRatioToLevelZero();
 
-   tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
+   boost::shared_ptr<BaseGridGeometry> grid_geometry (level.getGridGeometry());
 
    /*
     * Get the domain's periodic shift.
@@ -200,15 +200,15 @@ void CoarseFineBoundary::computeFromLevel(
    mapped_box_level_to_self.getLocalNeighbors(fake_domain_list);
 
    /*
-    * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+    * Call BaseGridGeometry::computeBoundaryGeometry with arguments contrived
     * such that they give the coarse-fine boundaries instead of the domain
     * boundaries.  The basic algorithm used by
-    * GridGeometry::computeBoundaryGeometry is
+    * BaseGridGeometry::computeBoundaryGeometry is
     * 1. grow boxes by ghost width
     * 2. remove intersection with domain
     * 3. reorganize and classify resulting boxes
     *
-    * This is how we get GridGeometry::computeBoundaryGeometry to
+    * This is how we get BaseGridGeometry::computeBoundaryGeometry to
     * compute the coarse-fine boundary instead of the physical boundary.
     *
     * Since we handle the periodic boundaries ourselves, do not treat
@@ -239,7 +239,8 @@ void CoarseFineBoundary::computeFromLevel(
    d_initialized[0] = true;
 }
 
-void CoarseFineBoundary::computeFromLevel(
+void
+CoarseFineBoundary::computeFromLevel(
    const PatchLevel& level,
    const PatchLevel& level0,
    const IntVector& max_ghost_width)
@@ -255,9 +256,9 @@ void CoarseFineBoundary::computeFromLevel(
       level0.getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
    /*
-    * Get the dimension and number of blocks from the GridGeometry.
+    * Get the dimension and number of blocks from the grid geometry.
     */
-   tbox::Pointer<GridGeometry> grid_geometry = level.getGridGeometry();
+   boost::shared_ptr<BaseGridGeometry> grid_geometry(level.getGridGeometry());
    int nblocks = grid_geometry->getNumberBlocks();
 
    tbox::Array<BoxContainer> adjusted_level_domain(nblocks);
@@ -273,12 +274,13 @@ void CoarseFineBoundary::computeFromLevel(
       /*
        * Construct an iterator which filters only level's boxes in this block.
        */
-      BoxContainerSingleBlockIterator itr(all_boxes_on_level, block_id);
+      BoxContainerSingleBlockIterator itr(
+         all_boxes_on_level.begin(block_id));
 
       /*
        * Only do work if there any boxes in this block.
        */
-      if (itr.isValid()) {
+      if (itr != all_boxes_on_level.end(block_id)) {
 
          /*
           * Construct the array of boxes on level and level0 in this block.
@@ -299,10 +301,13 @@ void CoarseFineBoundary::computeFromLevel(
 
          BoxContainer pseudo_domain(phys_domain);
          pseudo_domain.unorder();
-         for (tbox::List<GridGeometry::Neighbor>::Iterator
-              ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
+         const std::list<BaseGridGeometry::Neighbor>& nbr_list =
+            grid_geometry->getNeighbors(block_id);
+         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+              nbr_list.begin();
+              ni != nbr_list.end(); ni++) {
 
-            BoxContainer neighbor_domain(ni().getTransformedDomain());
+            BoxContainer neighbor_domain(ni->getTransformedDomain());
             neighbor_domain.refine(ratio);
 
             pseudo_domain.spliceFront(neighbor_domain);
@@ -319,7 +324,7 @@ void CoarseFineBoundary::computeFromLevel(
          adjusted_level_domain[i] = level_domain;
          adjusted_level_domain[i].unorder();
 
-         for (PatchLevel::Iterator p(level); p; ++p) {
+         for (PatchLevel::iterator p(level.begin()); p != level.end(); ++p) {
             if ((*p)->getBox().getBlockId() == i &&
                 (*p)->getPatchGeometry()->getTouchesRegularBoundary()) {
 
@@ -338,13 +343,14 @@ void CoarseFineBoundary::computeFromLevel(
           * boundaries from being identified as coarse-fine boundaries when
           * they are not.
           */
-         for (tbox::List<GridGeometry::Neighbor>::Iterator
-              ni(grid_geometry->getNeighbors(block_id)); ni; ni++) {
+         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
+              nbr_list.begin();
+              ni != nbr_list.end(); ni++) {
 
             /*
              * Construct the array of boxes on level in this neighbor's block.
              */
-            BlockId nbr_block_id(ni().getBlockId());
+            BlockId nbr_block_id(ni->getBlockId());
             BoxContainer neighbor_boxes(all_boxes_on_level, nbr_block_id);
 
             if (neighbor_boxes.size()) {
@@ -372,15 +378,15 @@ void CoarseFineBoundary::computeFromLevel(
    d_boundary_boxes.clear();
 
    /*
-    * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+    * Call BaseGridGeometry::computeBoundaryGeometry with arguments contrived
     * such that they give the coarse-fine boundaries instead of the
     * domain boundaries.  The basic algorithm used by
-    * GridGeometry::computeBoundaryGeometry is
+    * BaseGridGeometry::computeBoundaryGeometry is
     * 1. grow boxes by ghost width
     * 2. remove intersection with domain
     * 3. reorganize and classify resulting boxes
     *
-    * This is how we get GridGeometry::computeBoundaryGeometry to
+    * This is how we get BaseGridGeometry::computeBoundaryGeometry to
     * compute the coarse-fine boundary instead of the physical boundary.
     *
     * Send the adjusted level boxes as the domain for the
@@ -406,47 +412,6 @@ void CoarseFineBoundary::computeFromLevel(
 
 }
 
-void CoarseFineBoundary::clear()
-{
-   d_boundary_boxes.clear();
-}
-
-const tbox::Array<BoundaryBox>&
-CoarseFineBoundary::getNodeBoundaries(
-   const GlobalId& global_id,
-   const BlockId& block_id) const
-{
-   return getBoundaries(global_id, d_dim.getValue(), block_id);
-}
-
-const tbox::Array<BoundaryBox>&
-CoarseFineBoundary::getEdgeBoundaries(
-   const GlobalId& global_id,
-   const BlockId& block_id) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_dim.getValue() < 2) {
-      TBOX_ERROR("CoarseFineBoundary::getEdgeBoundaries():  There are\n"
-         << "no edge boundaries in " << d_dim << "d.\n");
-   }
-#endif
-   return getBoundaries(global_id, d_dim.getValue() - 1, block_id);
-}
-
-const tbox::Array<BoundaryBox>&
-CoarseFineBoundary::getFaceBoundaries(
-   const GlobalId& global_id,
-   const BlockId& block_id) const
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_dim.getValue() < 3) {
-      TBOX_ERROR("CoarseFineBoundary::getFaceBoundaries():  There are\n"
-         << "no face boundaries in " << d_dim << "d.\n");
-   }
-#endif
-   return getBoundaries(global_id, d_dim.getValue() - 2, block_id);
-}
-
 const tbox::Array<BoundaryBox>&
 CoarseFineBoundary::getBoundaries(
    const GlobalId& global_id,
@@ -458,14 +423,15 @@ CoarseFineBoundary::getBoundaries(
       TBOX_ERROR("The boundary boxes have not been computed.");
    }
 
-   BoxId mapped_box_id(global_id, block_id);
+   BoxId mapped_box_id(global_id);
    std::map<BoxId, PatchBoundaries>::const_iterator
       mi = d_boundary_boxes.find(mapped_box_id);
    TBOX_ASSERT(mi != d_boundary_boxes.end());
    return (*mi).second[boundary_type - 1];
 }
 
-void CoarseFineBoundary::printClassData(
+void
+CoarseFineBoundary::printClassData(
    std::ostream& os) const {
    os << "\nCoarseFineBoundary::printClassData...";
    for (std::map<BoxId, PatchBoundaries>::const_iterator
@@ -485,14 +451,6 @@ void CoarseFineBoundary::printClassData(
       }
    }
    os << "\n";
-}
-
-CoarseFineBoundary& CoarseFineBoundary::operator = (
-   const CoarseFineBoundary& rhs)
-{
-   d_initialized = rhs.d_initialized;
-   d_boundary_boxes = rhs.d_boundary_boxes;
-   return *this;
 }
 
 }

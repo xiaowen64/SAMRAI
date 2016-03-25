@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -14,7 +14,6 @@
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
-#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 
 // Cell data coarsen operators
 #include "SAMRAI/geom/CartesianCellComplexWeightedAverage.h"
@@ -28,10 +27,6 @@
 #include "SAMRAI/geom/CartesianCellDoubleLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianCellFloatLinearRefine.h"
-#include "SAMRAI/pdat/CellComplexConstantRefine.h"
-#include "SAMRAI/pdat/CellDoubleConstantRefine.h"
-#include "SAMRAI/pdat/CellFloatConstantRefine.h"
-#include "SAMRAI/pdat/CellIntegerConstantRefine.h"
 
 // Edge data coarsen operators
 #include "SAMRAI/geom/CartesianEdgeComplexWeightedAverage.h"
@@ -41,10 +36,6 @@
 // Edge data refine operators
 #include "SAMRAI/geom/CartesianEdgeDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianEdgeFloatConservativeLinearRefine.h"
-#include "SAMRAI/pdat/EdgeComplexConstantRefine.h"
-#include "SAMRAI/pdat/EdgeDoubleConstantRefine.h"
-#include "SAMRAI/pdat/EdgeFloatConstantRefine.h"
-#include "SAMRAI/pdat/EdgeIntegerConstantRefine.h"
 
 // Face data coarsen operators
 #include "SAMRAI/geom/CartesianFaceComplexWeightedAverage.h"
@@ -54,16 +45,6 @@
 // Face data refine operators
 #include "SAMRAI/geom/CartesianFaceDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianFaceFloatConservativeLinearRefine.h"
-#include "SAMRAI/pdat/FaceComplexConstantRefine.h"
-#include "SAMRAI/pdat/FaceDoubleConstantRefine.h"
-#include "SAMRAI/pdat/FaceFloatConstantRefine.h"
-#include "SAMRAI/pdat/FaceIntegerConstantRefine.h"
-
-// Node data coarsen operators
-#include "SAMRAI/pdat/NodeComplexInjection.h"
-#include "SAMRAI/pdat/NodeDoubleInjection.h"
-#include "SAMRAI/pdat/NodeFloatInjection.h"
-#include "SAMRAI/pdat/NodeIntegerInjection.h"
 
 // Node data refine operators
 #include "SAMRAI/geom/CartesianNodeComplexLinearRefine.h"
@@ -74,15 +55,6 @@
 #include "SAMRAI/geom/CartesianOuterfaceComplexWeightedAverage.h"
 #include "SAMRAI/geom/CartesianOuterfaceDoubleWeightedAverage.h"
 #include "SAMRAI/geom/CartesianOuterfaceFloatWeightedAverage.h"
-
-// Outerface data refine operators
-#include "SAMRAI/pdat/OuterfaceComplexConstantRefine.h"
-#include "SAMRAI/pdat/OuterfaceDoubleConstantRefine.h"
-#include "SAMRAI/pdat/OuterfaceFloatConstantRefine.h"
-#include "SAMRAI/pdat/OuterfaceIntegerConstantRefine.h"
-
-// Outernode data coarsen operators
-#include "SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h"
 
 // Outerside data coarsen operators
 #include "SAMRAI/geom/CartesianOutersideDoubleWeightedAverage.h"
@@ -95,38 +67,18 @@
 // Side data refine operators
 #include "SAMRAI/geom/CartesianSideDoubleConservativeLinearRefine.h"
 #include "SAMRAI/geom/CartesianSideFloatConservativeLinearRefine.h"
-#include "SAMRAI/pdat/SideComplexConstantRefine.h"
-#include "SAMRAI/pdat/SideDoubleConstantRefine.h"
-#include "SAMRAI/pdat/SideFloatConstantRefine.h"
-#include "SAMRAI/pdat/SideIntegerConstantRefine.h"
 
-// Time interpolation operators
-#include "SAMRAI/pdat/CellComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/CellFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/EdgeComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/EdgeDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/FaceDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/FaceFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/NodeComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/NodeFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OuterfaceComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OuterfaceFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OutersideComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OutersideDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/OutersideFloatLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h"
-#include "SAMRAI/pdat/SideFloatLinearTimeInterpolateOp.h"
+#include "SAMRAI/pdat/CellVariable.h"
+#include "SAMRAI/pdat/EdgeVariable.h"
+#include "SAMRAI/pdat/FaceVariable.h"
+#include "SAMRAI/pdat/NodeVariable.h"
+#include "SAMRAI/pdat/OuterfaceVariable.h"
+#include "SAMRAI/pdat/OutersideVariable.h"
+#include "SAMRAI/pdat/SideVariable.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
@@ -137,12 +89,10 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <boost/make_shared.hpp>
 #include <cstdlib>
 #include <fstream>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianGridGeometry.I"
-#endif
+#include <typeinfo>
 
 namespace SAMRAI {
 namespace geom {
@@ -164,15 +114,12 @@ const int CartesianGridGeometry::GEOM_CARTESIAN_GRID_GEOMETRY_VERSION = 2;
 CartesianGridGeometry::CartesianGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    bool register_for_restart):
-   hier::GridGeometry(dim, object_name,
-                      tbox::Pointer<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(dim))),
+   GridGeometry(dim, object_name),
    d_domain_box(dim)
 {
-   TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 
    d_registered_for_restart = register_for_restart;
 
@@ -187,7 +134,6 @@ CartesianGridGeometry::CartesianGridGeometry(
    }
 
    getFromInput(input_db, is_from_restart);
-
 }
 
 CartesianGridGeometry::CartesianGridGeometry(
@@ -196,13 +142,10 @@ CartesianGridGeometry::CartesianGridGeometry(
    const double* x_up,
    const hier::BoxContainer& domain,
    bool register_for_restart):
-   hier::GridGeometry(domain.front().getDim(), object_name,
-                      tbox::Pointer<hier::TransferOperatorRegistry>(
-                         new SAMRAITransferOperatorRegistry(domain.front().getDim()))),
+   GridGeometry(domain.front().getDim(), object_name),
    d_domain_box(domain.front().getDim())
 {
    TBOX_ASSERT(domain.size() > 0);
-   TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(!(x_lo == (double *)NULL));
    TBOX_ASSERT(!(x_up == (double *)NULL));
 
@@ -214,7 +157,42 @@ CartesianGridGeometry::CartesianGridGeometry(
    }
 
    setGeometryData(x_lo, x_up, domain);
+}
 
+CartesianGridGeometry::CartesianGridGeometry(
+   const std::string& object_name,
+   const double* x_lo,
+   const double* x_up,
+   const hier::BoxContainer& domain,
+   const boost::shared_ptr<hier::TransferOperatorRegistry>& op_reg,
+   bool register_for_restart) :
+   GridGeometry(domain.front().getDim(), object_name, op_reg),
+   d_domain_box(domain.front().getDim())
+{
+   TBOX_ASSERT(domain.size() > 0);
+   TBOX_ASSERT(!(x_lo == (double *)NULL));
+   TBOX_ASSERT(!(x_up == (double *)NULL));
+
+   d_registered_for_restart = register_for_restart;
+
+   if (d_registered_for_restart) {
+      tbox::RestartManager::getManager()->
+      registerRestartItem(getObjectName(), this);
+   }
+
+   setGeometryData(x_lo, x_up, domain);
+}
+
+/*
+ *************************************************************************
+ *
+ * Destructor for CartesianGridGeometry deallocates grid storage.
+ *
+ *************************************************************************
+ */
+
+CartesianGridGeometry::~CartesianGridGeometry()
+{
 }
 
 /*
@@ -226,7 +204,7 @@ CartesianGridGeometry::CartesianGridGeometry(
  *************************************************************************
  */
 
-tbox::Pointer<hier::GridGeometry>
+boost::shared_ptr<hier::BaseGridGeometry>
 CartesianGridGeometry::makeRefinedGridGeometry(
    const std::string& fine_geom_name,
    const hier::IntVector& refine_ratio,
@@ -238,20 +216,21 @@ CartesianGridGeometry::makeRefinedGridGeometry(
    TBOX_ASSERT(fine_geom_name != getObjectName());
    TBOX_ASSERT(refine_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer fine_domain(this->getPhysicalDomain());
+   hier::BoxContainer fine_domain(getPhysicalDomain());
    fine_domain.refine(refine_ratio);
 
-   CartesianGridGeometry* fine_geometry =
-      new CartesianGridGeometry(fine_geom_name,
+   boost::shared_ptr<hier::BaseGridGeometry> fine_geometry(
+      boost::make_shared<CartesianGridGeometry>(fine_geom_name,
          d_x_lo,
          d_x_up,
          fine_domain,
-         register_for_restart);
+         d_transfer_operator_registry,
+         register_for_restart));
 
-   fine_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
+   fine_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<hier::GridGeometry>(fine_geometry);
+   return fine_geometry;
 }
 
 /*
@@ -263,8 +242,8 @@ CartesianGridGeometry::makeRefinedGridGeometry(
  *************************************************************************
  */
 
-tbox::Pointer<hier::GridGeometry> CartesianGridGeometry::
-makeCoarsenedGridGeometry(
+boost::shared_ptr<hier::BaseGridGeometry>
+CartesianGridGeometry::makeCoarsenedGridGeometry(
    const std::string& coarse_geom_name,
    const hier::IntVector& coarsen_ratio,
    bool register_for_restart) const
@@ -275,17 +254,17 @@ makeCoarsenedGridGeometry(
    TBOX_ASSERT(coarse_geom_name != getObjectName());
    TBOX_ASSERT(coarsen_ratio > hier::IntVector::getZero(dim));
 
-   hier::BoxContainer coarse_domain(this->getPhysicalDomain());
+   hier::BoxContainer coarse_domain(getPhysicalDomain());
    coarse_domain.coarsen(coarsen_ratio);
 
    /*
     * Need to check that domain can be coarsened by given ratio.
     */
-   const hier::BoxContainer& fine_domain = this->getPhysicalDomain();
+   const hier::BoxContainer& fine_domain = getPhysicalDomain();
    const int nboxes = fine_domain.size();
-   hier::BoxContainer::ConstIterator fine_domain_itr(fine_domain);
-   hier::BoxContainer::Iterator coarse_domain_itr(coarse_domain);
-   for (int ib = 0; ib < nboxes; ib++, fine_domain_itr++, coarse_domain_itr++) {
+   hier::BoxContainer::const_iterator fine_domain_itr(fine_domain);
+   hier::BoxContainer::iterator coarse_domain_itr(coarse_domain);
+   for (int ib = 0; ib < nboxes; ib++, ++fine_domain_itr, ++coarse_domain_itr) {
       hier::Box testbox = hier::Box::refine(*coarse_domain_itr, coarsen_ratio);
       if (!testbox.isSpatiallyEqual(*fine_domain_itr)) {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -304,32 +283,18 @@ makeCoarsenedGridGeometry(
       }
    }
 
-   hier::GridGeometry* coarse_geometry =
-      new geom::CartesianGridGeometry(coarse_geom_name,
+   boost::shared_ptr<hier::BaseGridGeometry> coarse_geometry(
+      boost::make_shared<CartesianGridGeometry>(coarse_geom_name,
          d_x_lo,
          d_x_up,
          coarse_domain,
-         register_for_restart);
+         d_transfer_operator_registry,
+         register_for_restart));
 
-   coarse_geometry->initializePeriodicShift(this->getPeriodicShift(hier::
+   coarse_geometry->initializePeriodicShift(getPeriodicShift(hier::
          IntVector::getOne(dim)));
 
-   return tbox::Pointer<hier::GridGeometry>(coarse_geometry);
-}
-
-/*
- *************************************************************************
- *
- * Destructor for CartesianGridGeometry deallocates grid storage.
- *
- *************************************************************************
- */
-
-CartesianGridGeometry::~CartesianGridGeometry()
-{
-   if (d_registered_for_restart) {
-      tbox::RestartManager::getManager()->unregisterRestartItem(getObjectName());
-   }
+   return coarse_geometry;
 }
 
 /*
@@ -340,7 +305,8 @@ CartesianGridGeometry::~CartesianGridGeometry()
  *************************************************************************
  */
 
-void CartesianGridGeometry::setGeometryData(
+void
+CartesianGridGeometry::setGeometryData(
    const double* x_lo,
    const double* x_up,
    const hier::BoxContainer& domain)
@@ -355,12 +321,12 @@ void CartesianGridGeometry::setGeometryData(
       d_x_up[id] = x_up[id];
    }
 
-   this->setPhysicalDomain(domain, 1);
+   setPhysicalDomain(domain, 1);
 
    hier::Box bigbox(dim);
    const hier::BoxContainer& block_domain = getPhysicalDomain();
-   for (hier::BoxContainer::ConstIterator k(block_domain); k != block_domain.end();
-        ++k) {
+   for (hier::BoxContainer::const_iterator k(block_domain);
+        k != block_domain.end(); ++k) {
       bigbox += *k;
    }
 
@@ -382,7 +348,8 @@ void CartesianGridGeometry::setGeometryData(
  *************************************************************************
  */
 
-void CartesianGridGeometry::setGeometryDataOnPatch(
+void
+CartesianGridGeometry::setGeometryDataOnPatch(
    hier::Patch& patch,
    const hier::IntVector& ratio_to_level_zero,
    const TwoDimBool& touches_regular_bdry,
@@ -441,14 +408,117 @@ void CartesianGridGeometry::setGeometryDataOnPatch(
       x_up[id5] = x_lo[id5] + ((double)box.numberCells(id5)) * dx[id5];
    }
 
-   tbox::Pointer<CartesianPatchGeometry> geom(
-      new CartesianPatchGeometry(ratio_to_level_zero,
+   boost::shared_ptr<CartesianPatchGeometry> geom(
+      boost::make_shared<CartesianPatchGeometry>(ratio_to_level_zero,
          touches_regular_bdry,
          touches_periodic_bdry,
          dx, x_lo, x_up));
 
    patch.setPatchGeometry(geom);
 
+}
+
+void
+CartesianGridGeometry::buildOperators()
+{
+   GridGeometry::buildOperators();
+
+   // CartesianGridGeometry specific Coarsening Operators
+   addCoarsenOperator(
+      typeid(pdat::CellVariable<dcomplex>).name(),
+      boost::make_shared<CartesianCellComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::CellVariable<double>).name(),
+      boost::make_shared<CartesianCellDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::CellVariable<float>).name(),
+      boost::make_shared<CartesianCellFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::EdgeVariable<dcomplex>).name(),
+      boost::make_shared<CartesianEdgeComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::EdgeVariable<double>).name(),
+      boost::make_shared<CartesianEdgeDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::EdgeVariable<float>).name(),
+      boost::make_shared<CartesianEdgeFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::FaceVariable<dcomplex>).name(),
+      boost::make_shared<CartesianFaceComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::FaceVariable<double>).name(),
+      boost::make_shared<CartesianFaceDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::FaceVariable<float>).name(),
+      boost::make_shared<CartesianFaceFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OuterfaceVariable<dcomplex>).name(),
+      boost::make_shared<CartesianOuterfaceComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OuterfaceVariable<double>).name(),
+      boost::make_shared<CartesianOuterfaceDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OuterfaceVariable<float>).name(),
+      boost::make_shared<CartesianOuterfaceFloatWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::OutersideVariable<double>).name(),
+      boost::make_shared<CartesianOutersideDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::SideVariable<dcomplex>).name(),
+      boost::make_shared<CartesianSideComplexWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::SideVariable<double>).name(),
+      boost::make_shared<CartesianSideDoubleWeightedAverage>(d_dim));
+   addCoarsenOperator(
+      typeid(pdat::SideVariable<float>).name(),
+      boost::make_shared<CartesianSideFloatWeightedAverage>(d_dim));
+
+   // CartesianGridGeometry specific Refinement Operators
+   addRefineOperator(
+      typeid(pdat::CellVariable<dcomplex>).name(),
+      boost::make_shared<CartesianCellComplexConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<double>).name(),
+      boost::make_shared<CartesianCellDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<float>).name(),
+      boost::make_shared<CartesianCellFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::EdgeVariable<double>).name(),
+      boost::make_shared<CartesianEdgeDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::EdgeVariable<float>).name(),
+      boost::make_shared<CartesianEdgeFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::FaceVariable<double>).name(),
+      boost::make_shared<CartesianFaceDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::FaceVariable<float>).name(),
+      boost::make_shared<CartesianFaceFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::SideVariable<double>).name(),
+      boost::make_shared<CartesianSideDoubleConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::SideVariable<float>).name(),
+      boost::make_shared<CartesianSideFloatConservativeLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<dcomplex>).name(),
+      boost::make_shared<CartesianCellComplexLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<double>).name(),
+      boost::make_shared<CartesianCellDoubleLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::CellVariable<float>).name(),
+      boost::make_shared<CartesianCellFloatLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::NodeVariable<dcomplex>).name(),
+      boost::make_shared<CartesianNodeComplexLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::NodeVariable<double>).name(),
+      boost::make_shared<CartesianNodeDoubleLinearRefine>(d_dim));
+   addRefineOperator(
+      typeid(pdat::NodeVariable<float>).name(),
+      boost::make_shared<CartesianNodeFloatLinearRefine>(d_dim));
 }
 
 /*
@@ -459,7 +529,8 @@ void CartesianGridGeometry::setGeometryDataOnPatch(
  *************************************************************************
  */
 
-void CartesianGridGeometry::printClassData(
+void
+CartesianGridGeometry::printClassData(
    std::ostream& os) const
 {
    const tbox::Dimension& dim(getDim());
@@ -487,7 +558,7 @@ void CartesianGridGeometry::printClassData(
 
    os << "d_domain_box = " << d_domain_box << std::endl;
 
-   hier::GridGeometry::printClassData(os);
+   GridGeometry::printClassData(os);
 }
 
 /*
@@ -498,24 +569,25 @@ void CartesianGridGeometry::printClassData(
  *************************************************************************
  */
 
-void CartesianGridGeometry::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+void
+CartesianGridGeometry::putToDatabase(
+   const boost::shared_ptr<tbox::Database>& db) const
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension& dim(getDim());
 
    db->putInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION",
       GEOM_CARTESIAN_GRID_GEOMETRY_VERSION);
-   tbox::Array<tbox::DatabaseBox> temp_box_array = this->getPhysicalDomain();
+   tbox::Array<tbox::DatabaseBox> temp_box_array = getPhysicalDomain();
    db->putDatabaseBoxArray("d_physical_domain", temp_box_array);
 
    db->putDoubleArray("d_dx", d_dx, dim.getValue());
    db->putDoubleArray("d_x_lo", d_x_lo, dim.getValue());
    db->putDoubleArray("d_x_up", d_x_up, dim.getValue());
 
-   hier::IntVector level0_shift(this->getPeriodicShift(
-                                   hier::IntVector::getOne(dim)));
+   hier::IntVector level0_shift(
+      getPeriodicShift(hier::IntVector::getOne(dim)));
    int* temp_shift = &level0_shift[0];
    db->putIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
 
@@ -533,11 +605,12 @@ void CartesianGridGeometry::putToDatabase(
  *************************************************************************
  */
 
-void CartesianGridGeometry::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+void
+CartesianGridGeometry::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    const tbox::Dimension& dim(getDim());
 
@@ -555,8 +628,9 @@ void CartesianGridGeometry::getFromInput(
                << std::endl);
          }
          hier::LocalId local_id(0);
-         for (hier::BoxContainer::Iterator itr = input_domain.begin();
+         for (hier::BoxContainer::iterator itr = input_domain.begin();
               itr != input_domain.end(); ++itr) {
+            itr->setBlockId(hier::BlockId(0));
             domain.pushBack(hier::Box(*itr, local_id++, 0));
          }
       } else {
@@ -593,7 +667,7 @@ void CartesianGridGeometry::getFromInput(
       }
 
 
-      this->initializePeriodicShift(per_bc);
+      initializePeriodicShift(per_bc);
 
       setGeometryData(x_lo, x_up, domain);
 
@@ -611,22 +685,21 @@ void CartesianGridGeometry::getFromInput(
  *
  *************************************************************************
  */
-void CartesianGridGeometry::getFromRestart()
+void
+CartesianGridGeometry::getFromRestart()
 {
    const tbox::Dimension& dim(getDim());
 
-   tbox::Pointer<tbox::Database> restart_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> restart_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-
-   if (restart_db->isDatabase(getObjectName())) {
-      db = restart_db->getDatabase(getObjectName());
-   } else {
+   if (!restart_db->isDatabase(getObjectName())) {
       TBOX_ERROR("CartesianGridGeometry::getFromRestart() error...\n"
          << "    database with name " << getObjectName()
          << " not found in the restart file" << std::endl);
    }
+   boost::shared_ptr<tbox::Database> db(
+      restart_db->getDatabase(getObjectName()));
 
    int ver = db->getInteger("GEOM_CARTESIAN_GRID_GEOMETRY_VERSION");
    if (ver != GEOM_CARTESIAN_GRID_GEOMETRY_VERSION) {
@@ -643,8 +716,9 @@ void CartesianGridGeometry::getFromRestart()
 
    hier::BoxContainer domain;
    hier::LocalId local_id(0);
-   for (hier::BoxContainer::Iterator itr = restart_domain.begin();
+   for (hier::BoxContainer::iterator itr = restart_domain.begin();
         itr != restart_domain.end(); ++itr) {
+      itr->setBlockId(hier::BlockId(0));
       domain.pushBack(hier::Box(*itr, local_id++, 0));
    }
 
@@ -653,7 +727,7 @@ void CartesianGridGeometry::getFromRestart()
    hier::IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
    db->getIntegerArray("d_periodic_shift", temp_shift, dim.getValue());
-   this->initializePeriodicShift(periodic_shift);
+   initializePeriodicShift(periodic_shift);
 
 }
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Fill pattern class that fills patch interiors only
  *
  ************************************************************************/
@@ -56,7 +56,7 @@ PatchInteriorVariableFillPattern::~PatchInteriorVariableFillPattern()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 PatchInteriorVariableFillPattern::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -78,37 +78,12 @@ PatchInteriorVariableFillPattern::calculateOverlap(
 /*
  *************************************************************************
  *
- * Return the string name identifier.
- *
- *************************************************************************
- */
-const std::string& PatchInteriorVariableFillPattern::getPatternName() const
-{
-   return s_name_id;
-}
-
-/*
- *************************************************************************
- *
- * getStencilWidth() throws an error if called.  Only overridding
- * versions of this method in concrete subclasses should be called.
- *
- *************************************************************************
- */
-const hier::IntVector& PatchInteriorVariableFillPattern::getStencilWidth()
-{
-   return hier::IntVector::getZero(d_dim);
-}
-
-/*
- *************************************************************************
- *
  * Compute BoxOverlap that specifies data to be filled by refinement
  * operator.
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
@@ -127,6 +102,18 @@ PatchInteriorVariableFillPattern::computeFillBoxesOverlap(
 
    return pdf.getBoxGeometry(patch_box)->setUpOverlap(overlap_boxes,
       transformation);
+}
+
+const hier::IntVector&
+PatchInteriorVariableFillPattern::getStencilWidth()
+{
+   return hier::IntVector::getZero(d_dim);
+}
+
+const std::string&
+PatchInteriorVariableFillPattern::getPatternName() const
+{
+   return s_name_id;
 }
 
 }

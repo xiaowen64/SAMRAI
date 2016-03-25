@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Registry of BoxLevelHandles incident from a common BoxLevel.
  *
  ************************************************************************/
@@ -39,16 +39,8 @@ BoxLevelHandle::~BoxLevelHandle()
  ************************************************************************
  ************************************************************************
  */
-bool BoxLevelHandle::isAttached() const
-{
-   return d_box_level != NULL;
-}
-
-/*
- ************************************************************************
- ************************************************************************
- */
-const BoxLevel& BoxLevelHandle::getBoxLevel() const
+const BoxLevel&
+BoxLevelHandle::getBoxLevel() const
 {
    if (d_box_level == NULL) {
       TBOX_ERROR(
@@ -60,23 +52,11 @@ const BoxLevel& BoxLevelHandle::getBoxLevel() const
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
    // Sanity check: the BoxLevel's handle should be this handle.
-   if (d_box_level->getBoxLevelHandle().getPointer() != this) {
+   if (d_box_level->getBoxLevelHandle().get() != this) {
       TBOX_ERROR("Library error in BoxLevelHandle::getBoxLevel");
    }
 #endif
    return *d_box_level;
-}
-
-/*
- ************************************************************************
- * To be called by the object's BoxLevel when the
- * BoxLevel changes in a way that can invalidate the
- * Connector data.
- ************************************************************************
- */
-void BoxLevelHandle::detachMyBoxLevel()
-{
-   d_box_level = NULL;
 }
 
 }

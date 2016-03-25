@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Periodic shift identifier in periodic domain.
  *
  ************************************************************************/
@@ -15,10 +15,6 @@
 
 #include <iostream>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PeriodicId.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -26,10 +22,48 @@ const PeriodicId PeriodicId::s_invalid_id(-1);
 const PeriodicId PeriodicId::s_zero_id(0);
 
 /*
- ********************************************************************************
- ********************************************************************************
+ ******************************************************************************
+ ******************************************************************************
  */
-std::ostream& operator << (
+PeriodicId::PeriodicId():
+   d_value(invalidId().d_value) {
+}
+
+/*
+ ******************************************************************************
+ ******************************************************************************
+ */
+PeriodicId::PeriodicId(
+   const PeriodicId& other):
+   d_value(other.d_value) {
+}
+
+/*
+ ******************************************************************************
+ ******************************************************************************
+ */
+PeriodicId::PeriodicId(
+   const int& value):
+   d_value(value) {
+}
+
+/*
+ ******************************************************************************
+ ******************************************************************************
+ */
+PeriodicId::~PeriodicId()
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   d_value = s_invalid_id.d_value;
+#endif
+}
+
+/*
+ ******************************************************************************
+ ******************************************************************************
+ */
+std::ostream&
+operator << (
    std::ostream& co,
    const PeriodicId& r)
 {

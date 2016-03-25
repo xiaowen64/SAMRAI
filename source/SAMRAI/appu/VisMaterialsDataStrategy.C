@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface for writing material related data to VisIt
  *                dump file
  *
@@ -29,7 +29,8 @@ VisMaterialsDataStrategy::~VisMaterialsDataStrategy()
 {
 }
 
-int VisMaterialsDataStrategy::packMaterialFractionsIntoDoubleBuffer(
+int
+VisMaterialsDataStrategy::packMaterialFractionsIntoDoubleBuffer(
    double* buffer,
    const hier::Patch& patch,
    const hier::Box& region,
@@ -47,7 +48,8 @@ int VisMaterialsDataStrategy::packMaterialFractionsIntoDoubleBuffer(
    return 0;
 }
 
-int VisMaterialsDataStrategy::packMaterialFractionsIntoSparseBuffers(
+int
+VisMaterialsDataStrategy::packMaterialFractionsIntoSparseBuffers(
    int* mat_list,
    std::vector<int>& mix_zones,
    std::vector<int>& mix_mat,
@@ -71,7 +73,8 @@ int VisMaterialsDataStrategy::packMaterialFractionsIntoSparseBuffers(
    return 0;
 }
 
-int VisMaterialsDataStrategy::packSpeciesFractionsIntoDoubleBuffer(
+int
+VisMaterialsDataStrategy::packSpeciesFractionsIntoDoubleBuffer(
    double* buffer,
    const hier::Patch& patch,
    const hier::Box& region,

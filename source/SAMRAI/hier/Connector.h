@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Set of distributed box-graph relationships from one BoxLevel
  *                to another.
  *
@@ -14,7 +14,8 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxLevel.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxLevelHandle.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxNeighborhoodCollection.h"
 #include "SAMRAI/tbox/Timer.h"
 
@@ -50,7 +51,7 @@ class BoxLevelHandle;
  *   to which the Box in the base is related.
  */
 
-class Connector:public tbox::DescribedClass
+class Connector
 {
 public:
    /*!
@@ -150,7 +151,7 @@ public:
     * @param[in] base_width
     * @param[in] parallel_state
     */
-   explicit Connector(
+   Connector(
       const BoxLevel& base_mapped_box_level,
       const BoxLevel& head_mapped_box_level,
       const IntVector& base_width,
@@ -159,49 +160,80 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~Connector();
+   ~Connector();
 
    /*!
     * @brief Clear the Connector, putting it into an uninitialized state.
     */
    void
-   clear();
+   clear()
+   {
+      if ( d_base_handle ) {
+         d_relationships.clear();
+         d_global_relationships.clear();
+         d_mpi.setCommunicator(tbox::SAMRAI_MPI::commNull);
+         d_base_handle.reset();
+         d_head_handle.reset();
+         d_base_width(0) = d_ratio(0) = 0;
+         d_parallel_state = BoxLevel::DISTRIBUTED;
+      }
+   }
 
    /*!
     * @brief Clear the Connector's neighborhood relations.
     */
    void
-   clearNeighborhoods();
+   clearNeighborhoods()
+   {
+      d_relationships.clear();
+      d_global_relationships.clear();
+      return;
+   }
 
    /*!
     * @brief Returns true if the object has been finalized
     */
    bool
-   isFinalized() const;
+   isFinalized() const
+   {
+      return d_finalized;
+   }
 
    /*!
     * @brief Iterator pointing to the first neighborhood.
     */
    ConstNeighborhoodIterator
-   begin() const;
+   begin() const
+   {
+      return d_relationships.begin();
+   }
 
    /*!
     * @brief Iterator pointing to the first neighborhood.
     */
    NeighborhoodIterator
-   begin();
+   begin()
+   {
+      return d_relationships.begin();
+   }
 
    /*!
     * @brief Iterator pointing one past the last neighborhood.
     */
    ConstNeighborhoodIterator
-   end() const;
+   end() const
+   {
+      return d_relationships.end();
+   }
 
    /*!
     * @brief Iterator pointing one past the last neighborhood.
     */
    NeighborhoodIterator
-   end();
+   end()
+   {
+      return d_relationships.end();
+   }
 
    /*!
     * @brief Iterator pointing to the first neighbor in nbrhd.
@@ -210,7 +242,10 @@ public:
     */
    ConstNeighborIterator
    begin(
-      ConstNeighborhoodIterator& nbrhd) const;
+      const ConstNeighborhoodIterator& nbrhd) const
+   {
+      return nbrhd.d_collection->begin(nbrhd);
+   }
 
    /*!
     * @brief Iterator pointing to the first neighbor in nbrhd.
@@ -219,7 +254,12 @@ public:
     */
    NeighborIterator
    begin(
-      NeighborhoodIterator& nbrhd);
+      NeighborhoodIterator& nbrhd)
+   {
+      BoxNeighborhoodCollection* tmp =
+         const_cast<BoxNeighborhoodCollection*>(nbrhd.d_collection);
+      return tmp->begin(nbrhd);
+   }
 
    /*!
     * @brief Iterator pointing one past the last neighbor in nbrhd.
@@ -228,7 +268,10 @@ public:
     */
    ConstNeighborIterator
    end(
-      ConstNeighborhoodIterator& nbrhd) const;
+      const ConstNeighborhoodIterator& nbrhd) const
+   {
+      return nbrhd.d_collection->end(nbrhd);
+   }
 
    /*!
     * @brief Iterator pointing one past the last neighbor in nbrhd.
@@ -237,7 +280,12 @@ public:
     */
    NeighborIterator
    end(
-      NeighborhoodIterator& nbrhd);
+      NeighborhoodIterator& nbrhd)
+   {
+      BoxNeighborhoodCollection* tmp =
+         const_cast<BoxNeighborhoodCollection*>(nbrhd.d_collection);
+      return tmp->end(nbrhd);
+   }
 
    /*!
     * @brief Returns an Iterator pointing to the neighborhood of box_id--
@@ -247,7 +295,12 @@ public:
     */
    ConstNeighborhoodIterator
    findLocal(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+      BoxId non_per_id(box_id.getGlobalId(),
+                       PeriodicId::zero());
+      return d_relationships.find(non_per_id);
+   }
 
    /*!
     * @brief Returns an Iterator pointing to the neighborhood of box_id--
@@ -257,7 +310,12 @@ public:
     */
    NeighborhoodIterator
    findLocal(
-      const BoxId& box_id);
+      const BoxId& box_id)
+   {
+      BoxId non_per_id(box_id.getGlobalId(),
+                       PeriodicId::zero());
+      return d_relationships.find(non_per_id);
+   }
 
    /*!
     * @brief Returns an Iterator pointing to the neighborhood of box_id--
@@ -267,7 +325,18 @@ public:
     */
    ConstNeighborhoodIterator
    find(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+      const BoxNeighborhoodCollection& relationships = getRelations(box_id);
+      BoxId non_per_id(box_id.getGlobalId(),
+                       PeriodicId::zero());
+      ConstNeighborhoodIterator ei = relationships.find(non_per_id);
+      if (ei == relationships.end()) {
+         TBOX_ERROR("Connector::find: No neighbor set exists for\n"
+            << "box " << box_id << ".\n");
+      }
+      return ei;
+   }
 
    /*!
     * @brief Returns true if the local neighborhoods of this and other are the
@@ -277,7 +346,10 @@ public:
     */
    bool
    localNeighborhoodsEqual(
-      const Connector& other) const;
+      const Connector& other) const
+   {
+      return d_relationships == other.d_relationships;
+   }
 
    /*!
     * @brief Returns true if the neighborhood of the supplied BoxId of this
@@ -289,7 +361,15 @@ public:
    bool
    neighborhoodEqual(
       const BoxId& box_id,
-      const Connector& other) const;
+      const Connector& other) const
+   {
+      const BoxNeighborhoodCollection& relationships = getRelations(box_id);
+      const BoxNeighborhoodCollection& other_relationships =
+         other.getRelations(box_id);
+      BoxId non_per_id(box_id.getGlobalId(),
+                       PeriodicId::zero());
+      return relationships.neighborhoodEqual(box_id, other_relationships);
+   }
 
    /*!
     * @brief Return true if a neighbor set exists for the specified
@@ -299,7 +379,15 @@ public:
     */
    bool
    hasNeighborSet(
-      const BoxId& mapped_box_id) const;
+      const BoxId& mapped_box_id) const
+   {
+      const BoxNeighborhoodCollection& relationships =
+         getRelations(mapped_box_id);
+      BoxId non_per_id(mapped_box_id.getGlobalId(),
+                       PeriodicId::zero());
+      ConstNeighborhoodIterator ei = relationships.find(non_per_id);
+      return ei != relationships.end();
+   }
 
    /*!
     * @brief Return true if the supplied box is in the neighborhood of the
@@ -311,7 +399,11 @@ public:
    bool
    hasLocalNeighbor(
       const BoxId& box_id,
-      const Box& neighbor) const;
+      const Box& neighbor) const
+   {
+      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      return d_relationships.hasNeighbor(box_id, neighbor);
+   }
 
    /*!
     * @brief Return the neighbor set for the specified BoxId.
@@ -322,7 +414,13 @@ public:
    void
    getNeighborBoxes(
       const BoxId& box_id,
-      BoxContainer& nbr_boxes) const;
+      BoxContainer& nbr_boxes) const
+   {
+      const BoxNeighborhoodCollection& relationships = getRelations(box_id);
+      BoxId non_per_id(box_id.getGlobalId(),
+                       PeriodicId::zero());
+      relationships.getNeighbors(non_per_id, nbr_boxes);
+   }
 
    /*!
     * @brief Return all neighbors for all neighborhoods.
@@ -331,7 +429,11 @@ public:
     */
    void
    getLocalNeighbors(
-      BoxContainer& neighbors) const;
+      BoxContainer& neighbors) const
+   {
+      d_relationships.getNeighbors(neighbors);
+      return;
+   }
 
    /*!
     * @brief Return all neighbors for all neighborhoods segragated by BlockId.
@@ -340,7 +442,11 @@ public:
     */
    void
    getLocalNeighbors(
-      std::map<BlockId, BoxContainer>& neighbors) const;
+      std::map<BlockId, BoxContainer>& neighbors) const
+   {
+      d_relationships.getNeighbors(neighbors);
+      return;
+   }
 
    /*!
     * @brief Returns the number of neighbors in the neighborhood with the
@@ -350,7 +456,13 @@ public:
     */
    int
    numLocalNeighbors(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+      TBOX_ASSERT(hasNeighborSet(box_id));
+      BoxId non_per_id(box_id.getGlobalId(),
+                       PeriodicId::zero());
+      return d_relationships.numNeighbors(non_per_id);
+   }
 
    /*!
     * @brief Returns the number of empty neighborhoods in the Connector.
@@ -358,7 +470,16 @@ public:
     * @return The number of empty neighborhoods in the Connector.
     */
    int
-   numLocalEmptyNeighborhoods() const;
+   numLocalEmptyNeighborhoods() const
+   {
+      int ct = 0;
+      for (ConstNeighborhoodIterator itr = begin(); itr != end(); ++itr) {
+         if (d_relationships.emptyBoxNeighborhood(itr)) {
+            ++ct;
+         }
+      }
+      return ct;
+   }
 
    /*!
     * @brief Places the ranks of the processors owning all neighbors into
@@ -368,7 +489,11 @@ public:
     */
    void
    getLocalOwners(
-      std::set<int>& owners) const;
+      std::set<int>& owners) const
+   {
+      d_relationships.getOwners(owners);
+      return;
+   }
 
    /*!
     * @brief Places the ranks of the processors owning the neighbors of the Box
@@ -380,7 +505,11 @@ public:
    void
    getLocalOwners(
       ConstNeighborhoodIterator& base_boxes_itr,
-      std::set<int>& owners) const;
+      std::set<int>& owners) const
+   {
+      d_relationships.getOwners(base_boxes_itr, owners);
+      return;
+   }
 
    //@{
    /*!
@@ -421,7 +550,11 @@ public:
    void
    insertLocalNeighbor(
       const Box& neighbor,
-      const BoxId& box_id);
+      const BoxId& box_id)
+   {
+      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      d_relationships.insert(box_id, neighbor);
+   }
 
    /*!
     * @brief Adds a neighbor of the base box pointed to by base_box_itr.
@@ -432,7 +565,11 @@ public:
    void
    insertLocalNeighbor(
       const Box& neighbor,
-      NeighborhoodIterator& base_box_itr);
+      NeighborhoodIterator& base_box_itr)
+   {
+      TBOX_ASSERT( base_box_itr->getOwnerRank() == d_mpi.getRank() );
+      d_relationships.insert(base_box_itr, neighbor);
+   }
 
    /*!
     * @brief Erases the neighborhood of the specified BoxId.
@@ -441,19 +578,34 @@ public:
     */
    void
    eraseLocalNeighborhood(
-      const BoxId& box_id);
+      const BoxId& box_id)
+   {
+      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      d_relationships.erase(box_id);
+   }
 
    /*!
     * @brief Remove all the periodic relationships in the Connector.
     */
    void
-   removePeriodicRelationships();
+   removePeriodicRelationships()
+   {
+      d_relationships.erasePeriodicNeighbors();
+      if (d_parallel_state == BoxLevel::GLOBALIZED) {
+         d_global_relationships.erasePeriodicNeighbors();
+      }
+      return;
+   }
 
    /*!
     * @brief Remove all the periodic neighbors in all local neighborhoods.
     */
    void
-   removePeriodicLocalNeighbors();
+   removePeriodicLocalNeighbors()
+   {
+      d_relationships.erasePeriodicNeighbors();
+      return;
+   }
 
    /*!
     * @brief Check for any base boxes which are periodic.
@@ -461,7 +613,17 @@ public:
     * @return true if any base box is periodic
     */
    bool
-   hasPeriodicLocalNeighborhoodBaseBoxes() const;
+   hasPeriodicLocalNeighborhoodBaseBoxes() const
+   {
+      bool result = false;
+      for (ConstNeighborhoodIterator ei = begin(); ei != end(); ++ei) {
+         if (ei->getPeriodicId().getPeriodicValue() != 0) {
+            result = true;
+            break;
+         }
+      }
+      return result;
+   }
 
    /*!
     * @brief Make an empty set of neighbors of the supplied box_id.
@@ -470,13 +632,22 @@ public:
     */
    NeighborhoodIterator
    makeEmptyLocalNeighborhood(
-      const BoxId& box_id);
+      const BoxId& box_id)
+   {
+      TBOX_ASSERT( box_id.getOwnerRank() == d_mpi.getRank() );
+      return d_relationships.insert(box_id).first;
+   }
 
    /*!
     * @brief Remove empty sets of neighbors.
     */
    void
-   eraseEmptyNeighborSets();
+   eraseEmptyNeighborSets()
+   {
+      d_relationships.eraseEmptyNeighborhoods();
+      d_global_data_up_to_date = false;
+      return;
+   }
 
    /*!
     * @brief Returns true is the neighborhood of the supplied BoxId is empty.
@@ -485,7 +656,10 @@ public:
     */
    bool
    isEmptyNeighborhood(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+      return getRelations(box_id).emptyBoxNeighborhood(box_id);
+   }
 
    /*!
     * @brief Coarsen all neighbors of this connector by ratio.
@@ -494,7 +668,11 @@ public:
     */
    void
    coarsenLocalNeighbors(
-      const IntVector& ratio);
+      const IntVector& ratio)
+   {
+      d_relationships.coarsenNeighbors(ratio);
+      return;
+   }
 
    /*!
     * @brief Refine all neighbors of this connector by ratio.
@@ -503,7 +681,11 @@ public:
     */
    void
    refineLocalNeighbors(
-      const IntVector& ratio);
+      const IntVector& ratio)
+   {
+      d_relationships.refineNeighbors(ratio);
+      return;
+   }
 
    /*!
     * @brief Grow all neighbors of this connector by growth.
@@ -512,7 +694,11 @@ public:
     */
    void
    growLocalNeighbors(
-      const IntVector& growth);
+      const IntVector& growth)
+   {
+      d_relationships.growNeighbors(growth);
+      return;
+   }
 
    //@}
 
@@ -531,7 +717,7 @@ public:
     * true then this is the last atomic change being made and finalizeContext
     * should be called.
     *
-    * @param new_level
+    * @param new_base
     * @param finalize_context
     */
    void
@@ -543,7 +729,11 @@ public:
     * @brief Return a reference to the base BoxLevel.
     */
    const BoxLevel&
-   getBase() const;
+   getBase() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_base_handle->getBoxLevel();
+   }
 
    /*!
     * @brief Change the Connector head to new_head.  If finalize_context is
@@ -562,7 +752,11 @@ public:
     * @brief Return a reference to the head BoxLevel.
     */
    const BoxLevel&
-   getHead() const;
+   getHead() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_head_handle->getBoxLevel();
+   }
 
    /*!
     * @brief Get the refinement ratio between the base and head
@@ -573,7 +767,11 @@ public:
     * cannot be represented by an IntVector, truncated.  @see ratioIsExact().
     */
    const IntVector&
-   getRatio() const;
+   getRatio() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_ratio;
+   }
 
    /*!
     * @brief Whether the ratio given by getRatio() is exact.
@@ -582,14 +780,22 @@ public:
     * @see getRatio().
     */
    bool
-   ratioIsExact() const;
+   ratioIsExact() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_ratio_is_exact;
+   }
 
    /*!
     * @brief Return true if head BoxLevel is coarser than base
     * BoxLevel.
     */
    bool
-   getHeadCoarserFlag() const;
+   getHeadCoarserFlag() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_head_coarser;
+   }
 
    /*!
     * @brief Return true if the Connector contains only relationships to local
@@ -600,7 +806,10 @@ public:
     * processors.
     */
    bool
-   isLocal() const;
+   isLocal() const
+   {
+      return d_relationships.isLocal(getMPI().getRank());
+   }
 
    /*!
     * @brief Initialize to the transpose of a given Connector object,
@@ -684,14 +893,21 @@ public:
     * @brief Return the current parallel state.
     */
    BoxLevel::ParallelState
-   getParallelState() const;
+   getParallelState() const
+   {
+      return d_parallel_state;
+   }
 
    /*!
     * @brief Returns the MPI communication object, which is always
     * that of the base BoxLevel.
     */
    const tbox::SAMRAI_MPI&
-   getMPI() const;
+   getMPI() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_base_handle->getBoxLevel().getMPI();
+   }
 
    /*!
     * @brief Change the Connector width to new_width.  If finalize_context is
@@ -716,7 +932,11 @@ public:
     * boxes.
     */
    const IntVector&
-   getConnectorWidth() const;
+   getConnectorWidth() const
+   {
+      TBOX_ASSERT(isFinalized());
+      return d_base_width;
+   }
 
    /*!
     * @brief Shrink the width of the connector modifying the proximity
@@ -868,7 +1088,7 @@ public:
     * @param[in] transpose
     * @param[in] ignore_periodic_relationships
     *
-    * @return Number of errors in assuming that @c transpose is a
+    * @return Global number of errors in assuming that @c transpose is a
     * transpose of @c *this.
     */
    size_t
@@ -898,25 +1118,37 @@ public:
     */
    void
    setConnectorType(
-      ConnectorType connector_type);
+      ConnectorType connector_type)
+   {
+      d_connector_type = connector_type;
+   }
 
    /*!
     * @brief Return the Connector type.
     */
    ConnectorType
-   getConnectorType() const;
+   getConnectorType() const
+   {
+      return d_connector_type;
+   }
 
    /*!
     * @brief Return local number of neighbor sets.
     */
    int
-   getLocalNumberOfNeighborSets() const;
+   getLocalNumberOfNeighborSets() const
+   {
+      return d_relationships.numBoxNeighborhoods();
+   }
 
    /*!
     * @brief Return local number of relationships.
     */
    int
-   getLocalNumberOfRelationships() const;
+   getLocalNumberOfRelationships() const
+   {
+      return d_relationships.sumNumNeighbors();
+   }
 
    /*!
     * @brief Return global number of neighbor sets.
@@ -927,7 +1159,12 @@ public:
     * communication is needed, call cacheGlobalReducedData() first.
     */
    int
-   getGlobalNumberOfNeighborSets() const;
+   getGlobalNumberOfNeighborSets() const
+   {
+      TBOX_ASSERT(isFinalized());
+      cacheGlobalReducedData();
+      return d_global_number_of_neighbor_sets;
+   }
 
    /*!
     * @brief Return global number of relationships.
@@ -938,7 +1175,12 @@ public:
     * communication is needed, call cacheGlobalReducedData() first.
     */
    int
-   getGlobalNumberOfRelationships() const;
+   getGlobalNumberOfRelationships() const
+   {
+      TBOX_ASSERT(isFinalized());
+      cacheGlobalReducedData();
+      return d_global_number_of_relationships;
+   }
 
    /*!
     * @brief If global reduced data (global number of relationships,
@@ -961,7 +1203,11 @@ public:
     */
    void
    putNeighborhoodsToDatabase(
-      tbox::Database& database) const;
+      const boost::shared_ptr<tbox::Database>& database)
+   {
+      d_relationships.putUnregisteredToDatabase(database);
+      return;
+   }
 
    /*!
     * @brief Read the neighborhoods from a database.
@@ -970,7 +1216,11 @@ public:
     */
    void
    getNeighborhoodsFromDatabase(
-      tbox::Database& database);
+      tbox::Database& database)
+   {
+      d_relationships.getFromDatabase(database);
+      return;
+   }
 
    /*!
     *
@@ -980,8 +1230,8 @@ public:
     * @param[in] baseRefinementRatio
     * @param[in] headRefinementRatio
     * @param[out] ratio
-    * @param[out[ head_coarser
-    * @param[out] ratio_exact
+    * @param[out] head_coarser
+    * @param[out] ratio_is_exact
     */
    static void
    computeRatioInfo(
@@ -1003,7 +1253,7 @@ public:
    /*!
     * @brief Writes the requested neighborhood to tbox::perr.
     *
-    * @param[in[ box_id
+    * @param[in] box_id
     */
    void
    writeNeighborhoodToErrorStream(
@@ -1020,7 +1270,7 @@ public:
     * Connector and output parameters.  The Outputter is capable of
     * outputting its Connector, formatted according to the parameters.
     *
-    * To use, @see Connector::format().
+    * To use, @see Connector::format(), Connector::formatStatistics().
     */
    class Outputter
    {
@@ -1037,17 +1287,19 @@ private:
       Outputter(
          const Connector& connector,
          const std::string& border,
-         int detail_depth = 0);
+         int detail_depth = 0,
+         bool output_statistics = false);
       void
       operator = (
          const Outputter& r);               // Unimplemented private.
       const Connector& d_conn;
       const std::string d_border;
       const int d_detail_depth;
+      const bool d_output_statistics;
    };
 
    /*!
-    * @brief Return an Outputter object that is formatted
+    * @brief Return an object that can format the Connector for
     * insertion into output streams.
     *
     * Usage example:
@@ -1062,7 +1314,29 @@ private:
    Outputter
    format(
       const std::string& border = std::string(),
-      int detail_depth = 0) const;
+      int detail_depth = 0) const
+   {
+      return Outputter(*this, border, detail_depth);
+   }
+
+   /*!
+    * @brief Return an object that can format the Connector for
+    * inserting its global statistics into output streams.
+    *
+    * Usage example:
+    * @code
+    *    cout << "my connector statistics:\n"
+    *         << connector.formatStatistics("  ") << endl;
+    * @endcode
+    *
+    * @param[in] border
+    */
+   Outputter
+   formatStatistics(
+      const std::string& border = std::string()) const
+   {
+      return Outputter(*this, border, 0, true);
+   }
 
 private:
    /*
@@ -1079,14 +1353,32 @@ private:
     * Throws an unrecoverable assertion if not in GLOBALIZED mode.
     */
    const BoxNeighborhoodCollection&
-   getGlobalNeighborhoodSets() const;
+   getGlobalNeighborhoodSets() const
+   {
+      if (d_parallel_state == BoxLevel::DISTRIBUTED) {
+         TBOX_ERROR("Global connectivity unavailable in DISTRIBUTED state.");
+      }
+      return d_global_relationships;
+   }
 
    /*!
     * @brief Return the relationships appropriate to the parallel state.
     */
    const BoxNeighborhoodCollection&
    getRelations(
-      const BoxId& box_id) const;
+      const BoxId& box_id) const
+   {
+#ifndef DEBUG_CHECK_ASSERTIONS
+      NULL_USE(box_id);
+#endif
+      if (d_parallel_state == BoxLevel::DISTRIBUTED) {
+         TBOX_ASSERT(box_id.getOwnerRank() == d_mpi.getRank());
+      }
+      const BoxNeighborhoodCollection& relationships =
+         d_parallel_state == BoxLevel::DISTRIBUTED ?
+         d_relationships : d_global_relationships;
+      return relationships;
+   }
 
    /*!
     * @brief Create a copy of a DISTRIBUTED Connector and
@@ -1126,7 +1418,13 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   initializeCallback();
+   initializeCallback()
+   {
+      t_acquire_remote_relationships = tbox::TimerManager::getManager()->
+         getTimer("hier::Connector::acquireRemoteNeighborhoods()");
+      t_cache_global_reduced_data = tbox::TimerManager::getManager()->
+         getTimer("hier::Connector::cacheGlobalReducedData()");
+   }
 
    /*!
     * Free static timers.
@@ -1134,7 +1432,11 @@ private:
     * Only called by StartupShutdownManager.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      t_acquire_remote_relationships.reset();
+      t_cache_global_reduced_data.reset();
+   }
 
    //@{ @name Private utilities.
 
@@ -1146,7 +1448,7 @@ private:
     * We don't use a pointer to the BoxLevel, because it would
     * become dangling when the BoxLevel goes out of scope.
     */
-   tbox::Pointer<BoxLevelHandle> d_base_handle;
+   boost::shared_ptr<BoxLevelHandle> d_base_handle;
 
    /*!
     * @brief Handle for access to the base BoxLevel.
@@ -1154,7 +1456,7 @@ private:
     * We don't use a pointer to the BoxLevel, because it would
     * become dangling when the BoxLevel goes out of scope.
     */
-   tbox::Pointer<BoxLevelHandle> d_head_handle;
+   boost::shared_ptr<BoxLevelHandle> d_head_handle;
 
    /*!
     * @brief Connector width for the base BoxLevel.
@@ -1247,8 +1549,8 @@ private:
 
    ConnectorType d_connector_type;
 
-   static tbox::Pointer<tbox::Timer> t_acquire_remote_relationships;
-   static tbox::Pointer<tbox::Timer> t_cache_global_reduced_data;
+   static boost::shared_ptr<tbox::Timer> t_acquire_remote_relationships;
+   static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;
@@ -1257,9 +1559,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/Connector.I"
-#endif
 
 #endif // included_hier_Connector

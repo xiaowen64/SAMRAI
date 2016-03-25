@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <algorithm>
 #include <cstring>
@@ -70,23 +71,22 @@ public:
     *
     * @see initialize().
     */
-   AsyncCommPeer(
+   explicit AsyncCommPeer(
       AsyncCommStage* stage,
       AsyncCommStage::Handler* handler = NULL);
 
    /*!
     * @brief Destructor.
     */
-   virtual ~AsyncCommPeer(
-      void);
+   virtual ~AsyncCommPeer();
 
    /*!
     * @brief Initialize the object.
     *
     * Attach self to the given stage and set the Handler.
     *
-    * @param state The stage handling communicaiton requests for the object.
-    * @param hander Optional pointer to user-defined data.
+    * @param stage The stage handling communicaiton requests for the object.
+    * @param handler Optional pointer to user-defined data.
     */
    void
    initialize(
@@ -109,7 +109,10 @@ public:
       int peer_rank);
 
    int
-   getPeerRank() const;
+   getPeerRank() const
+   {
+      return d_peer_rank;
+   }
 
    /*!
     * @brief Limit the data length in first message of a communication.
@@ -130,7 +133,10 @@ public:
     */
    void
    limitFirstDataLength(
-      size_t max_first_data_len);
+      size_t max_first_data_len)
+   {
+      d_max_first_data_len = max_first_data_len;
+   }
    //@}
 
    /*!
@@ -286,6 +292,52 @@ public:
 
    //@}
 
+
+   //@{
+   //! @name Timers for MPI calls
+
+   /*!
+    * @brief Set the send-timer.
+    *
+    * Set the timer for non-blocking sends.
+    * If the timer is null, revert to the default timer named
+    * ""tbox::AsyncCommPeer::MPI_ISend".
+    *
+    * @param [in] send_timer
+    */
+   void setSendTimer(
+      const boost::shared_ptr<Timer> &send_timer );
+
+   /*!
+    * @brief Set the receive-timer.
+    *
+    * Set the timer for non-blocking receives.
+    * If the timer is null, revert to the default timer named
+    * ""tbox::AsyncCommPeer::MPI_IRecv".
+    *
+    * @param [in] recv_timer
+    */
+   void setRecvTimer(
+      const boost::shared_ptr<Timer> &recv_timer );
+
+   /*!
+    * @brief Set the wait-timer.
+    *
+    * Set the timer for blocking waits.
+    * If the timer is null, revert to the default timer named
+    * ""tbox::AsyncCommPeer::wait_all()".
+    *
+    * This timer is used when in this class and is not the same
+    * as the timer given to AsyncCommStage (unless the user sets
+    * it up that way explicitly).
+    *
+    * @param [in] wait_timer
+    */
+   void setWaitTimer(
+      const boost::shared_ptr<Timer> &wait_timer );
+
+   //@}
+
    /*!
     * @brief For use in debugging.
     */
@@ -301,12 +353,7 @@ private:
    union FlexData {
       int i;
       TYPE t;
-      FlexData()
-      {
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-         memset(&i, 0, std::max(sizeof(int), sizeof(TYPE)));
-#endif
-      }
+      FlexData();
    };
 
    /*
@@ -350,7 +397,12 @@ private:
 
    void
    resetStatus(
-      SAMRAI_MPI::Status& mpi_status);
+      SAMRAI_MPI::Status& mpi_status)
+   {
+      mpi_status.MPI_TAG =
+         mpi_status.MPI_SOURCE =
+            mpi_status.MPI_ERROR = -1;
+   }
 
    /*
     * @brief Resize the internal buffer to hold size FlexData unions.
@@ -362,10 +414,17 @@ private:
       size_t size);
 
    /*!
+    * @brief Set up things for the entire class.
+    *
+    * Only called by StartupShutdownManager.
+    */
+   static void
+   initializeCallback();
+
+   /*!
     * Free static timers.
     *
-    * To be called by shutdown registry to make sure memory for timers
-    * does not leak.
+    * Only called by StartupShutdownManager.
     */
    static void
    finalizeCallback();
@@ -452,35 +511,22 @@ private:
    // Make some temporary variable statuses to avoid repetitious allocations.
    int d_mpi_err;
 
-   static Pointer<Timer> t_waitall_timer;
-   static Pointer<Timer> t_send_timer;
-   static Pointer<Timer> t_recv_timer;
+   boost::shared_ptr<Timer> t_send_timer;
+   boost::shared_ptr<Timer> t_recv_timer;
+   boost::shared_ptr<Timer> t_wait_timer;
 
-   /**
-    * \brief Has shutdown handler been initialized.
-    *
-    * This should be checked and set in every ctor.
-    */
-   static bool s_initialized;
+   static boost::shared_ptr<Timer> t_default_send_timer;
+   static boost::shared_ptr<Timer> t_default_recv_timer;
+   static boost::shared_ptr<Timer> t_default_wait_timer;
 
-   /**
-    * \brief Initialize static state
-    */
-   static bool
-   initialize(
-      void);
+   static tbox::StartupShutdownManager::Handler
+      s_initialize_finalize_handler;
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/AsyncCommPeer.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/tbox/AsyncCommPeer.C"
-#endif
 
 #endif  // included_tbox_AsyncCommPeer

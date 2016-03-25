@@ -1,9 +1,8 @@
 c
 c  File:        $URL$
 c  Package:     SAMRAI application utilities
-c  Copyright:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2012 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
-c  Modified:    $LastChangedDate$
 c  Description: F77 routines for Cartesian 2d boundary conditions
 c
 define(NDIM,2)dnl

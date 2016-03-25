@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright 
  * information, see COPYRIGHT and COPYING.LESSER. 
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Input file for SAMRAI Linadv example problem
  *                (3d sinusoidal fronusoidal frontt) 
  *
@@ -135,6 +135,7 @@ LinAdv {
 BergerRigoutsos {
    algo_advance_mode = "ADVANCE_SOME"
    owner_mode = "MOST_OVERLAP"
+   laplace_cut_threshold_ar = 4
    log_node_history = FALSE
    use_level_boxes = TRUE // Used by SAMRAI-2, but not DLBG.
    use_private_communicator = TRUE
@@ -150,6 +151,8 @@ Main {
    dim = 3
    base_name    = "domex"
    log_all_nodes    = FALSE
+
+   // load_balancer_type = "ChopAndPackLoadBalancer"
 
 // visualization dump parameters
    viz_writer            = "VisIt" // use: "Vizamrai", "VisIt" for both
@@ -223,6 +226,8 @@ GriddingAlgorithm {
    // regrid_boxes_filename = "grid"
    sequentialize_patch_indices = FALSE
    barrier_and_time = TRUE
+   log_metadata_statistics = TRUE
+   print_steps = FALSE
 }
 
 V2GriddingAlgorithm {
@@ -277,12 +282,12 @@ TimeRefinementIntegrator {
    end_time              = 2.0      // final simulation time
    grow_dt               = 1.0e0    // growth factor for timesteps
    // max_integrator_steps  = 1     // max number of simulation timesteps
-   max_integrator_steps  = 25     // max number of simulation timesteps
+   max_integrator_steps  = 30     // max number of simulation timesteps
    // tag_buffer            = 3, 3, 3, 3, 3, 3
    barrier_and_time        = TRUE
 }
 
-LoadBalancer{
+ChopAndPackLoadBalancer{
   processors = 1, 1
   bin_pack_method = "GREEDY"
   // bin_pack_method = "SPATIAL"
@@ -290,6 +295,7 @@ LoadBalancer{
 }
 
 TreeLoadBalancer {
+  min_load_fraction_per_box = 0.03
   report_load_balance = FALSE
   barrier_before = TRUE
   barrier_after = TRUE
@@ -300,11 +306,13 @@ TreeLoadBalancer {
   print_swap_steps = FALSE
   print_break_steps = FALSE
   print_edge_steps = FALSE
+  slender_penalty_wt = 0.0
+  summarize_map = TRUE
 }
 
 HyperbolicLevelIntegrator {
-   cfl                      = 0.5
-   cfl_init                 = 0.5
+   cfl                      = 0.43
+   cfl_init                 = 0.43
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
    distinguish_mpi_reduction_costs = TRUE
@@ -312,6 +320,12 @@ HyperbolicLevelIntegrator {
 
 RefineSchedule {
   barrier_and_time = TRUE
+  extra_debug = FALSE
+}
+
+PersistentOverlapConnectors {
+   check_created_connectors = FALSE
+   check_accessed_connectors = FALSE
 }
 
 ////////////////////////////////////////////////////////////////////////

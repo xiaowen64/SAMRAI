@@ -3,12 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   An input manager singleton class that parses input files
  *
  ************************************************************************/
 
 #include "SAMRAI/tbox/InputManager.h"
+#include <boost/make_shared.hpp>
 #include <stdlib.h>
 #include <stdio.h>
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -23,8 +24,7 @@ namespace tbox {
 
 InputManager * InputManager::s_manager_instance = NULL;
 
-Pointer<Database> InputManager::s_input_db =
-   Pointer<Database>(NULL);
+boost::shared_ptr<Database> InputManager::s_input_db;
 
 StartupShutdownManager::Handler InputManager::s_finalize_handler(
    0,
@@ -42,7 +42,8 @@ StartupShutdownManager::Handler InputManager::s_finalize_handler(
  *************************************************************************
  */
 
-InputManager *InputManager::getManager()
+InputManager*
+InputManager::getManager()
 {
    if (!s_manager_instance) {
       s_manager_instance = new InputManager;
@@ -50,7 +51,8 @@ InputManager *InputManager::getManager()
    return s_manager_instance;
 }
 
-void InputManager::setManager(
+void
+InputManager::setManager(
    InputManager* manager)
 {
    if (s_manager_instance) {
@@ -59,14 +61,15 @@ void InputManager::setManager(
    s_manager_instance = manager;
 }
 
-void InputManager::finalizeCallback()
+void
+InputManager::finalizeCallback()
 {
    if (s_manager_instance) {
       delete s_manager_instance;
       s_manager_instance = ((InputManager *)NULL);
    }
 
-   s_input_db = ((InputDatabase *)NULL);
+   s_input_db.reset();
 }
 
 /*
@@ -89,43 +92,19 @@ InputManager::~InputManager()
 /*
  *************************************************************************
  *
- * Return whether or not the manager contains an valid input database.
- *
- *************************************************************************
- */
-
-bool InputManager::inputDatabaseExists()
-{
-   return !(s_input_db.isNull());
-}
-
-/*
- *************************************************************************
- *
  * Parse the specified input file and return the new database.
  *
  *************************************************************************
  */
 
-Pointer<InputDatabase>
+boost::shared_ptr<InputDatabase>
 InputManager::parseInputFile(
    const std::string& filename)
 {
-   Pointer<InputDatabase> db(new InputDatabase("main"));
-   this->parseInputFile(filename, db);
+   boost::shared_ptr<InputDatabase> db(
+      boost::make_shared<InputDatabase>("main"));
+   parseInputFile(filename, db);
    return db;
-}
-
-/*
- *************************************************************************
- *
- * Accessor method for InputManger's root input database.
- *
- *************************************************************************
- */
-Pointer<Database> InputManager::getInputDatabase()
-{
-   return s_input_db;
 }
 
 /*
@@ -136,12 +115,13 @@ Pointer<Database> InputManager::getInputDatabase()
  *************************************************************************
  */
 
-void InputManager::parseInputFile(
+void
+InputManager::parseInputFile(
    const std::string& filename,
-   Pointer<InputDatabase> db)
+   const boost::shared_ptr<InputDatabase>& db)
 {
    FILE* fstream = NULL;
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       fstream = fopen(filename.c_str(), "r");
    }

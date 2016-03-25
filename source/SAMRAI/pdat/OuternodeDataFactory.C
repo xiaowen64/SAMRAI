@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outernode data objects
  *
  ************************************************************************/
@@ -19,9 +19,7 @@
 #include "SAMRAI/pdat/OuternodeGeometry.h"
 #include "SAMRAI/hier/Patch.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OuternodeDataFactory.I"
-#endif
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -59,14 +57,15 @@ OuternodeDataFactory<TYPE>::~OuternodeDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 OuternodeDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new OuternodeDataFactory<TYPE>(
-                                                   ghosts.getDim(), d_depth));
+   return boost::make_shared<OuternodeDataFactory<TYPE> >(
+      ghosts.getDim(),
+      d_depth);
 }
 
 /*
@@ -78,15 +77,13 @@ OuternodeDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 OuternodeDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new OuternodeData<TYPE>(patch.getBox(), d_depth);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::make_shared<OuternodeData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -98,7 +95,7 @@ OuternodeDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 OuternodeDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -106,8 +103,14 @@ OuternodeDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
-   hier::BoxGeometry* boxgeometry = new OuternodeGeometry(box, zero_vector);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<OuternodeGeometry>(box, zero_vector);
+}
+
+template<class TYPE>
+int
+OuternodeDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
 }
 
 /*
@@ -119,7 +122,8 @@ OuternodeDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t OuternodeDataFactory<TYPE>::getSizeOfMemory(
+size_t
+OuternodeDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -140,8 +144,9 @@ size_t OuternodeDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool OuternodeDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+OuternodeDataFactory<TYPE>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -151,20 +156,55 @@ bool OuternodeDataFactory<TYPE>::validCopyTo(
     * Valid options are NodeData and OuternodeData.
     */
    if (!valid_copy) {
-      tbox::Pointer<NodeDataFactory<TYPE> > ndf = dst_pdf;
-      if (!ndf.isNull()) {
+      boost::shared_ptr<NodeDataFactory<TYPE> > ndf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (ndf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OuternodeDataFactory<TYPE> > ondf = dst_pdf;
-      if (!ondf.isNull()) {
+      boost::shared_ptr<OuternodeDataFactory<TYPE> > ondf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (ondf) {
          valid_copy = true;
       }
    }
 
    return valid_copy;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean true value indicating that fine data for the outernode
+ * quantity will take precedence on coarse-fine interfaces.  See the
+ * OuternodeVariable class header file for more information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuternodeDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the outernode data index space extends beyond the
+ * interior of patches.  That is, outernode data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+OuternodeDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
 }
 
 }

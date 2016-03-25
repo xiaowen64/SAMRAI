@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with mapping Connectors.
  *
  ************************************************************************/
@@ -11,7 +11,7 @@
 #define included_hier_BaseConnectorAlgorithm_C
 
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 
 namespace SAMRAI {
 namespace hier {
@@ -42,14 +42,14 @@ BaseConnectorAlgorithm::~BaseConnectorAlgorithm()
  * Receive messages and unpack info sent from other processes.
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::setupCommunication(
+void
+BaseConnectorAlgorithm::setupCommunication(
    tbox::AsyncCommPeer<int> *& all_comms,
    tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
    const tbox::SAMRAI_MPI& mpi,
    const std::set<int>& incoming_ranks,
    const std::set<int>& outgoing_ranks,
-   tbox::Pointer<tbox::Timer>& mpi_wait_timer,
+   const boost::shared_ptr<tbox::Timer>& mpi_wait_timer,
    int& operation_mpi_tag) const
 {
    /*
@@ -61,8 +61,6 @@ void BaseConnectorAlgorithm::setupCommunication(
    const int n_comm = static_cast<int>(
          incoming_ranks.size() + outgoing_ranks.size());
    all_comms = new tbox::AsyncCommPeer<int>[n_comm];
-
-   completed.reserve(incoming_ranks.size());
 
    const int tag0 = ++operation_mpi_tag;
    const int tag1 = ++operation_mpi_tag;
@@ -86,7 +84,7 @@ void BaseConnectorAlgorithm::setupCommunication(
                     << std::endl;
       }
       if (incoming_comm.isDone()) {
-         completed.insert(completed.end(), &incoming_comm);
+         incoming_comm.pushToCompletionQueue();
       }
    }
 
@@ -120,7 +118,8 @@ void BaseConnectorAlgorithm::setupCommunication(
  * and send them.
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
+void
+BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    std::vector<int>& send_mesg,
    const int idx_offset_to_ref,
    BoxContainer& referenced_new_head_nabrs,
@@ -145,13 +144,13 @@ void BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
    int* ptr = &send_mesg[offset];
    *(ptr++) = static_cast<int>(referenced_new_base_nabrs.size());
    *(ptr++) = static_cast<int>(referenced_new_head_nabrs.size());
-   for (BoxContainer::ConstIterator ni = referenced_new_base_nabrs.begin();
+   for (BoxContainer::const_iterator ni = referenced_new_base_nabrs.begin();
         ni != referenced_new_base_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
       ptr += Box::commBufferSize(dim);
    }
-   for (BoxContainer::ConstIterator ni = referenced_new_head_nabrs.begin();
+   for (BoxContainer::const_iterator ni = referenced_new_head_nabrs.begin();
         ni != referenced_new_head_nabrs.end(); ++ni) {
       const Box& mapped_box = *ni;
       mapped_box.putToIntBuffer(ptr);
@@ -182,50 +181,47 @@ void BaseConnectorAlgorithm::sendDiscoveryToOneProcess(
  * Receive messages and unpack info sent from other processes.
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::receiveAndUnpack(
+void
+BaseConnectorAlgorithm::receiveAndUnpack(
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base,
    std::set<int>& incoming_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
    tbox::AsyncCommStage& comm_stage,
-   tbox::AsyncCommStage::MemberVec& completed,
-   tbox::Pointer<tbox::Timer>& receive_and_unpack_timer) const
+   const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer) const
 {
    receive_and_unpack_timer->start();
    /*
     * Receive and unpack messages.
     */
-   do {
-      for (unsigned int i = 0; i < completed.size(); ++i) {
+   while ( comm_stage.numberOfCompletedMembers() > 0 ||
+           comm_stage.advanceSome() ) {
 
-         tbox::AsyncCommPeer<int>* peer =
-            dynamic_cast<tbox::AsyncCommPeer<int> *>(completed[i]);
-         TBOX_ASSERT(completed[i] != NULL);
-         TBOX_ASSERT(peer != NULL);
+      tbox::AsyncCommPeer<int>* peer =
+         dynamic_cast<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
 
-         if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
-            // Receive from this peer.
-            if (s_print_steps == 'y') {
-               tbox::plog << "Received from " << peer->getPeerRank()
-                          << std::endl;
-            }
-            unpackDiscoveryMessage(
-               peer,
-               new_base_to_new_head,
-               new_head_to_new_base);
+      TBOX_ASSERT(peer != NULL);
+
+      if ((size_t)(peer - all_comms) < incoming_ranks.size()) {
+         // Receive from this peer.
+         if (s_print_steps == 'y') {
+            tbox::plog << "Received from " << peer->getPeerRank()
+                       << std::endl;
          }
-         else {
-            // Sent to this peer.  No follow-up needed.
-            if (s_print_steps == 'y') {
-               tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
-            }
+         unpackDiscoveryMessage(
+            peer,
+            new_base_to_new_head,
+            new_head_to_new_base);
+      }
+      else {
+         // Sent to this peer.  No follow-up needed.
+         if (s_print_steps == 'y') {
+            tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
          }
       }
 
-      completed.clear();
-      comm_stage.advanceSome(completed);
+   }
 
-   } while (completed.size() > 0);
    receive_and_unpack_timer->stop();
 }
 
@@ -233,7 +229,8 @@ void BaseConnectorAlgorithm::receiveAndUnpack(
  ***********************************************************************
  ***********************************************************************
  */
-void BaseConnectorAlgorithm::unpackDiscoveryMessage(
+void
+BaseConnectorAlgorithm::unpackDiscoveryMessage(
    const tbox::AsyncCommPeer<int>* incoming_comm,
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base) const
@@ -281,7 +278,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       const LocalId id_gone(*(ptr++));
       const BlockId block_id_gone(*(ptr++));
       const int number_affected = *(ptr++);
-      const Box box_gone(dim, id_gone, sender, block_id_gone);
+      const Box box_gone(dim, GlobalId(id_gone, sender));
       if (s_print_steps == 'y') {
          tbox::plog << "Box " << box_gone
                     << " removed, affecting " << number_affected
@@ -291,7 +288,7 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
       for (int iii = 0; iii < number_affected; ++iii) {
          const LocalId id_affected(*(ptr++));
          const BlockId block_id_affected(*(ptr++));
-         BoxId affected_nbrhd(id_affected, rank, block_id_affected);
+         BoxId affected_nbrhd(id_affected, rank);
          if (s_print_steps == 'y') {
             tbox::plog << " Removing " << box_gone
                        << " from nabr list for " << id_affected
@@ -362,16 +359,18 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_new_base_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const BoxId new_base_box_id(local_id, rank, block_id);
+      const BoxId new_base_box_id(local_id, rank);
       const int n_new_head_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_base_box_id.
       if (n_new_head_nabrs_found > 0) {
          Connector::NeighborhoodIterator base_box_itr =
             new_base_to_new_head.makeEmptyLocalNeighborhood(new_base_box_id);
+         BoxId box_id;
          for (int j = 0; j < n_new_head_nabrs_found; ++j) {
-            tmp_box.getId().getFromIntBuffer(ptr);
+            box_id.getFromIntBuffer(ptr);
+            tmp_box.setId(box_id);
             ptr += BoxId::commBufferSize();
-            BoxContainer::ConstIterator na =
+            BoxContainer::const_iterator na =
                referenced_new_head_nabrs.find(tmp_box);
             TBOX_ASSERT(na != referenced_new_head_nabrs.end());
             const Box& new_head_nabr = *na;
@@ -384,16 +383,18 @@ void BaseConnectorAlgorithm::unpackDiscoveryMessage(
    for (int ii = 0; ii < n_new_head_boxes; ++ii) {
       const LocalId local_id(*(ptr++));
       const BlockId block_id(*(ptr++));
-      const BoxId new_head_box_id(local_id, rank, block_id);
+      const BoxId new_head_box_id(local_id, rank);
       const int n_new_base_nabrs_found = *(ptr++);
       // Add received neighbors to Box new_head_box_id.
       if (n_new_base_nabrs_found > 0) {
          Connector::NeighborhoodIterator base_box_itr =
             new_head_to_new_base->makeEmptyLocalNeighborhood(new_head_box_id);
+         BoxId box_id;
          for (int j = 0; j < n_new_base_nabrs_found; ++j) {
-            tmp_box.getId().getFromIntBuffer(ptr);
+            box_id.getFromIntBuffer(ptr);
+            tmp_box.setId(box_id);
             ptr += BoxId::commBufferSize();
-            BoxContainer::ConstIterator na =
+            BoxContainer::const_iterator na =
                referenced_new_base_nabrs.find(tmp_box);
             TBOX_ASSERT(na != referenced_new_base_nabrs.end());
             const Box& new_base_nabr = *na;

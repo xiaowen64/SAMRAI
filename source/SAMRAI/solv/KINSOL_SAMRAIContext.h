@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
@@ -169,7 +169,7 @@ public:
     */
    KINSOL_SAMRAIContext(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       KINSOLAbstractFunctions* my_functions);
 
    /**
@@ -185,7 +185,7 @@ public:
     */
    void
    initialize(
-      tbox::Pointer<SAMRAIVectorReal<double> > solution);
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& solution);
 
    /**
     * Solve the nonlinear problem and return and integer value defined by
@@ -202,7 +202,10 @@ public:
     * Return pointer to KINSOL solver C++ wrapper object.
     */
    KINSOLSolver *
-   getKINSOLSolver();
+   getKINSOLSolver()
+   {
+      return d_KINSOL_solver;
+   }
 
    /**
     * Read input parameters from given database.
@@ -212,7 +215,7 @@ public:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /**
     * Retrieve solver parameters from restart database matching object name.
@@ -232,7 +235,7 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * Print out all members of integrator instance to given output stream.
@@ -245,7 +248,10 @@ public:
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -293,8 +299,5 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/KINSOL_SAMRAIContext.I"
-#endif
 #endif
 #endif

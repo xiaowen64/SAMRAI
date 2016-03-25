@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
 ## Description:   primary makefile for compiling the SAMRAI tbox package 
 ##
 #########################################################################
@@ -22,20 +22,49 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = fortran
 
 OBJS = 	\
-        Grammar.o InputManager.o Parser.o Scanner.o DatabaseBox.o \
-	Database.o MemoryDatabase.o \
-	MemoryDatabaseFactory.o  \
-	MessageStream.o SAMRAI_MPI.o Schedule.o \
-	Transaction.o AsyncCommGroup.o AsyncCommStage.o \
-	BalancedDepthFirstTree.o DescribedClass.o ConstPointerBase.o \
-	MemoryUtilities.o PointerBase.o ReferenceCounter.o \
-	ArraySpecial.o HDFDatabase.o HDFDatabaseFactory.o \
-	SiloDatabase.o SiloDatabaseFactory.o RestartManager.o \
-	NullDatabase.o IEEE.o ParallelBuffer.o PIO.o SAMRAIManager.o \
-	StartupShutdownManager.o Tracer.o Utilities.o Logger.o \
-	MathUtilitiesSpecial.o Clock.o Statistic.o Statistician.o \
-	StatTransaction.o Timer.o TimerManager.o Dimension.o \
-        RankGroup.o 
+	ArraySpecial.o \
+	AsyncCommGroup.o \
+	AsyncCommStage.o \
+	BalancedDepthFirstTree.o \
+	Clock.o \
+	Database.o \
+	DatabaseBox.o \
+	DatabaseFactory.o \
+	Dimension.o \
+	Grammar.o \
+	HDFDatabase.o \
+	HDFDatabaseFactory.o \
+	IEEE.o \
+	InputManager.o \
+	Logger.o \
+	MathUtilitiesSpecial.o \
+	MemoryDatabase.o \
+	MemoryDatabaseFactory.o \
+	MemoryUtilities.o \
+	MessageStream.o \
+	NullDatabase.o \
+	PIO.o \
+	ParallelBuffer.o \
+	Parser.o \
+	RankGroup.o \
+	ReferenceCounter.o \
+	RestartManager.o \
+	SAMRAIManager.o \
+	SAMRAI_MPI.o \
+	Scanner.o \
+	Schedule.o \
+	Serializable.o \
+	SiloDatabase.o \
+	SiloDatabaseFactory.o \
+	StartupShutdownManager.o \
+	StatTransaction.o \
+	Statistic.o \
+	Statistician.o \
+	Timer.o \
+	TimerManager.o \
+	Tracer.o \
+	Transaction.o \
+	Utilities.o
 
 library: $(OBJS)
 	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done

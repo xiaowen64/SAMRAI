@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -69,15 +69,15 @@ operator << (
  * access to the individual attribute.
  *
  * Access to the Indexed elements is done through the SparseData iterator.
- * Clients should use the SparseData<BOX_GEOMETRY>::Iterator interface.
+ * Clients should use the SparseData<BOX_GEOMETRY>::iterator interface.
  *
  * Access to an Index's attribute list is done through the AttributeIterator.
  * Individual elements within an attribute are then accessed through the
  * operator[].
  *
  * <code>
- * SparseData<BOX_GEOMETRY>::Iterator index_iter = sparse_data.begin();
- * SparseData<BOX_GEOMETRY>::Iterator index_iter_end = sparse_data.end();
+ * SparseData<BOX_GEOMETRY>::iterator index_iter = sparse_data.begin();
+ * SparseData<BOX_GEOMETRY>::iterator index_iter_end = sparse_data.end();
  *
  * for (; index_iter != index_iter_end; ++index_iter) {
  *    // operator over all Index elements in the SparseData collection.
@@ -106,7 +106,7 @@ operator << (
  * see copy() and copy2() methods.
  *
  * To remove a single element from the SparseData list, you must use
- * the Iterator interface to erase it.
+ * the iterator interface to erase it.
  *
  * To erase all elements in the list, use the clear() method.
  *
@@ -137,9 +137,9 @@ private:
 
 public:
    /*!
-    * @brief Iterator access through SparseData<BOX_GEOMETRY>::Iterator
+    * @brief Iterator access through SparseData<BOX_GEOMETRY>::iterator
     */
-   typedef SparseDataIterator<BOX_GEOMETRY> Iterator;
+   typedef SparseDataIterator<BOX_GEOMETRY> iterator;
 
    /*!
     * @brief AttributeIterator access through
@@ -165,7 +165,7 @@ public:
     * @param [in] dbl_attributes The double (named) attributes
     * @param [in] int_attributes The integer (named) attributes
     */
-   explicit SparseData(
+   SparseData(
       const hier::Box& box,
       const hier::IntVector& ghosts,
       const std::vector<std::string>& dbl_names,
@@ -307,7 +307,7 @@ public:
     */
    void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * @brief Write out the specialized data to the Database.
@@ -320,7 +320,7 @@ public:
     */
    void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * @brief Returns the attribute ID associated with the named
@@ -375,7 +375,7 @@ public:
     *
     * @return The iterator pointing to the index item just added
     */
-   Iterator
+   iterator
    registerIndex(
       const hier::Index& index);
 
@@ -383,7 +383,7 @@ public:
     * @brief Remove this Index and its associated attributes
     * from the object.
     *
-    * Remove will invalidate Iterators. The proper way to use remove in
+    * Remove will invalidate iterators. The proper way to use remove in
     * a loop with iterators is as follows:
     *
     * <code>
@@ -401,7 +401,7 @@ public:
     */
    void
    remove(
-      Iterator& iter);
+      iterator& iter);
 
    /*!
     * @brief Erases all elements within the object.
@@ -438,7 +438,7 @@ public:
    /*!
     * @brief Provides an iterator to the first SparseData item.
     */
-   Iterator
+   iterator
    begin();
 
    /*!
@@ -447,7 +447,7 @@ public:
     * This iterator is a special value, and should never be considered to
     * contain any valid data.
     */
-   Iterator
+   iterator
    end();
 
    /*!
@@ -623,12 +623,10 @@ public:
       /**********************************************************************
       * non-modifying operations
       **********************************************************************/
-      const double *getDoubleAttributes() const {
-         return &d_dbl_attrs[0];
-      }
-      const int *getIntAttributes() const {
-         return &d_int_attrs[0];
-      }
+      const double*
+      getDoubleAttributes() const;
+      const int*
+      getIntAttributes() const;
 
       /**********************************************************************
       * operators (modifying and non-modifying
@@ -693,7 +691,7 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(
+   explicit SparseDataIterator(
       SparseData<BOX_GEOMETRY>& sparse_data);
 
    /*!
@@ -702,7 +700,7 @@ public:
     *
     * @param [in] sparse_data the SparseData oject
     */
-   SparseDataIterator(
+   explicit SparseDataIterator(
       SparseData<BOX_GEOMETRY> * sparse_data);
 
    /*!
@@ -748,13 +746,13 @@ public:
    /*!
     * @brief pre-increment operator
     */
-   void
+   SparseDataIterator&
    operator ++ ();
 
    /*!
     * @brief post-increment operator
     */
-   void
+   SparseDataIterator
    operator ++ (
       int);
 
@@ -916,13 +914,13 @@ public:
    /*!
     * @brief pre-increment operator
     */
-   void
+   SparseDataAttributeIterator&
    operator ++ ();
 
    /*!
     * @brief post-increment operator
     */
-   void
+   SparseDataAttributeIterator
    operator ++ (
       int);
 
@@ -977,13 +975,7 @@ private:
 } // namespace pdat
 } // namespace SAMRAI
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SparseData.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SparseData.C"
-#endif
 
 #endif
 #endif // included_pdat_SparseData

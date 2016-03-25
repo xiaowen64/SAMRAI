@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple Cartesian grid geometry for an AMR hierarchy.
  *
  ************************************************************************/
@@ -44,7 +44,7 @@ public:
     * patch boundary information to hier::PatchGeometry base class constructor
     * and allocates storage for spatial coordinates on patch.
     */
-   explicit CartesianPatchGeometry(
+   CartesianPatchGeometry(
       const hier::IntVector& ratio_to_level_zero,
       const TwoDimBool& touches_regular_bdry,
       const TwoDimBool& touches_periodic_bdry,
@@ -56,25 +56,34 @@ public:
     * Destructor for CartesianPatchGeometry deallocates the
     * storage for spatial coordinates on patch.
     */
-   ~CartesianPatchGeometry();
+   virtual ~CartesianPatchGeometry();
 
    /**
     * Return const pointer to dx array for patch.
     */
    const double *
-   getDx() const;
+   getDx() const
+   {
+      return d_dx;
+   }
 
    /**
     * Return const pointer to lower spatial coordinate for patch.
     */
    const double *
-   getXLower() const;
+   getXLower() const
+   {
+      return d_x_lo;
+   }
 
    /**
     * Return const pointer to upper spatial coordinate for patch.
     */
    const double *
-   getXUpper() const;
+   getXUpper() const
+   {
+      return d_x_up;
+   }
 
    /**
     * Print CartesianPatchGeometry class data.
@@ -100,7 +109,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/geom/CartesianPatchGeometry.I"
-#endif
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   $Description
  *
  ************************************************************************/
@@ -14,7 +14,7 @@
 #include "SAMRAI/tbox/PIO.h"
 
 using namespace sam_test;
-using namespace SAMRAI::tbox;
+using namespace tbox;
 
 int main(
    int argc,
@@ -28,7 +28,9 @@ int main(
    const Dimension dim(2);
 
    // for these tests we allow at most 2 procs
+#ifdef DEBUG_CHECK_ASSERTIONS
    const int nproc = mpi.getSize();
+#endif
    TBOX_ASSERT(nproc < 3);
 
    //if (argc < 2) {

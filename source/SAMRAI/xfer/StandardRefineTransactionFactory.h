@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory to create standard copy and time transactions
  *                for refine schedules.
  *
@@ -16,10 +16,11 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Transaction.h"
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace xfer {
@@ -50,7 +51,7 @@ public:
    /*!
     * @brief Set the array of RefineClass::Data items used by the transactions.
     */
-   void
+   virtual void
    setRefineItems(
       const RefineClasses::Data ** refine_items,
       int num_refine_items);
@@ -58,13 +59,13 @@ public:
    /*!
     * @brief Clear the array of RefineClass::Data items used by the transactions.
     */
-   void
+   virtual void
    unsetRefineItems();
 
    /*!
     * @brief Set simulation time used by the refine time transaction objects.
     */
-   void
+   virtual void
    setTransactionTime(
       double fill_time);
 
@@ -74,12 +75,11 @@ public:
     * object will be created.  Otherwise, a RefineCopyTransaction aill be
     * created.
     *
-    * @param dst_level      tbox::Pointer to destination patch level.
-    * @param src_level      tbox::Pointer to source patch level.
-    * @param overlap        tbox::Pointer to overlap region between patches.
-    * @param dst_patch_id   Integer index of destination patch in destination
-    *                       patch level.
-    * @param src_patch_id   Integer index of source patch in source patch level.
+    * @param dst_level      boost::shared_ptr to destination patch level.
+    * @param src_level      boost::shared_ptr to source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param dst_mapped_box Destination Box in destination patch level.
+    * @param src_mapped_box Source Box in source patch level.
     * @param ritem_id       Integer index of RefineClass::Data item associated
     *                       with transaction.
     * @param box            Optional const reference to box defining region of
@@ -88,16 +88,35 @@ public:
     *                       refine transaction involves time interpolation.
     *                       Default is false.
     */
-   tbox::Pointer<tbox::Transaction>
+   virtual boost::shared_ptr<tbox::Transaction>
    allocate(
-      tbox::Pointer<hier::PatchLevel> dst_level,
-      tbox::Pointer<hier::PatchLevel> src_level,
-      tbox::Pointer<hier::BoxOverlap> overlap,
+      const boost::shared_ptr<hier::PatchLevel>& dst_level,
+      const boost::shared_ptr<hier::PatchLevel>& src_level,
+      const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_mapped_box,
       const hier::Box& src_mapped_box,
       int ritem_id,
       const hier::Box& box,       // Default in v 2.x  = hier::Box()
       bool use_time_interpolation = false) const;
+
+   /*!
+    * @brief Virtual function allowing transaction factory to preprocess scratch
+    * space data before transactactions use it if they need to.  This function is
+    * optional for the concrete transaction factory object.
+    * The default implementation is a no-op.
+    *
+    * @param level        boost::shared_ptr to patch level holding scratch data.
+    * @param fill_time    Double value of simulation time corresponding to
+    *                     RefineSchedule operations.
+    * @param preprocess_vector Const reference to ComponentSelector that indicates
+    *                     patch data array indices of scratch patch data objects
+    *                     to preprocess.
+    */
+   virtual void
+   preprocessScratchSpace(
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      double fill_time,
+      const hier::ComponentSelector& preprocess_vector) const;
 
 private:
    // The following two functions are not implemented

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   IndexDataFactory
  *
  ************************************************************************/
@@ -18,7 +18,8 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -60,7 +61,7 @@ public:
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual tbox::Pointer<hier::PatchDataFactory>
+   virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -69,7 +70,7 @@ public:
     * The default information about the object (e.g., ghost cell width) is
     * taken from the factory.
     */
-   virtual tbox::Pointer<hier::PatchData>
+   virtual boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -78,7 +79,7 @@ public:
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
     */
-   virtual tbox::Pointer<hier::BoxGeometry>
+   virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -94,21 +95,21 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean true value indicating that the index data quantities will always
-    * be treated as though fine values represent them on coarse-fine interfaces.
-    * See the IndexVariable<DIM> class header file for more information.
+    * Return a boolean true value indicating that the index data quantities
+    * will always be treated as though fine values represent them on
+    * coarse-fine interfaces. See the IndexVariable<DIM> class header file for
+    * more information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
     * Return false since the index data index space matches the cell-centered
-    * index space for AMR patches.  Thus, index data does not live on patch borders.
+    * index space for AMR patches.  Thus, index data does not live on patch
+    * borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return false;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this IndexDataFactory to the
@@ -118,7 +119,7 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const;
+      const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
 private:
    IndexDataFactory(
@@ -132,8 +133,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/IndexDataFactory.C"
-#endif
 
 #endif

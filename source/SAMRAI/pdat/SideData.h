@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated side centered patch data type
  *
  ************************************************************************/
@@ -19,8 +19,8 @@
 #include "SAMRAI/pdat/SideIterator.h"
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <iostream>
 
 namespace SAMRAI {
@@ -132,7 +132,7 @@ public:
     *                   coordinate directions will have data associated
     *                   with them.
     */
-   explicit SideData(
+   SideData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts,
@@ -143,7 +143,7 @@ public:
     * vector of 1's.
     *
     */
-   explicit SideData(
+   SideData(
       const hier::Box& box,
       int depth,
       const hier::IntVector& ghosts);
@@ -475,7 +475,7 @@ public:
     */
    virtual void
    getSpecializedFromDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database);
 
    /*!
     * Write out the class version number and other data members to
@@ -485,14 +485,14 @@ public:
     */
    virtual void
    putSpecializedToDatabase(
-      tbox::Pointer<tbox::Database> database);
+      const boost::shared_ptr<tbox::Database>& database) const;
 
    /*!
     * The side iterator iterates over the elements on one axis of a side
     * centered box geometry.  This typedef is a convenience for using the
     * SideIterator class.
     */
-   typedef SideIterator Iterator;
+   typedef SideIterator iterator;
 
 private:
    /*
@@ -524,12 +524,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideData.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SideData.C"
-#endif
 
 #endif

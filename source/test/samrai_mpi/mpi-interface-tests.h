@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Test multiple SAMRAI interfaces.
  *
  ************************************************************************/
@@ -42,4 +42,15 @@ mpiInterfaceTestBcast(
  */
 int
 mpiInterfaceTestAllreduce(
+   int& fail_count);
+
+/*!
+ * @brief Test SAMRAI_MPI::parallelPrefixSum.
+ *
+ * @param fail_count Increment this count by number of failures.
+ *
+ * @return number of failures found.
+ */
+int
+mpiInterfaceTestParallelPrefixSum(
    int& fail_count);

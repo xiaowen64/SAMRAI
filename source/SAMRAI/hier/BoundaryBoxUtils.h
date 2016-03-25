@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Generic utilities for boundary box calculus.
  *
  ************************************************************************/
@@ -41,7 +41,7 @@ public:
    /*!
     * @brief Destructor.
     */
-   virtual ~BoundaryBoxUtils();
+   ~BoundaryBoxUtils();
 
    /*!
     * @brief Reset boundary box.
@@ -52,7 +52,11 @@ public:
     */
    void
    setBoundaryBox(
-      const BoundaryBox& bbox);
+      const BoundaryBox& bbox)
+   {
+      d_bbox = bbox;
+      computeOutwardShift();
+   }
 
    /*!
     * @brief Get boundary box.
@@ -60,7 +64,10 @@ public:
     * @return The boundary box
     */
    const BoundaryBox&
-   getBoundaryBox() const;
+   getBoundaryBox() const
+   {
+      return d_bbox;
+   }
 
    /*!
     * @brief Get the outward direction in logical space.
@@ -80,7 +87,10 @@ public:
     * @return IntVector containing the outward direction values
     */
    const IntVector&
-   getOutwardShift() const;
+   getOutwardShift() const
+   {
+      return d_outward;
+   }
 
    /*!
     * @brief Stretch box outward by the given ghost cell width.
@@ -101,7 +111,7 @@ public:
    void
    stretchBoxToGhostWidth(
       Box& box,
-      const hier::IntVector& ghost_cell_width) const;
+      const IntVector& ghost_cell_width) const;
 
    /*!
     * @brief Extend box outward by the given amount.
@@ -132,7 +142,10 @@ public:
     * @return The normal direction.
     */
    int
-   normalDir() const;
+   normalDir() const
+   {
+      return d_bbox.getLocationIndex() / 2;
+   }
 
    /*!
     * @brief Trim a boundary box so that it does not stick out
@@ -150,9 +163,9 @@ public:
     *
     * @return New trimmed boundary box.
     */
-   hier::BoundaryBox
+   BoundaryBox
    trimBoundaryBox(
-      const hier::Box& limit_box) const;
+      const Box& limit_box) const;
 
    /*!
     * @brief Return box describing the index space of the outer surface of
@@ -171,7 +184,7 @@ public:
     * @return a box to define the side indices corresponding to the
     * BoundaryBox
     */
-   hier::Box
+   Box
    getSurfaceBoxFromBoundaryBox() const;
 
 private:

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -62,7 +62,7 @@ public:
     * direction argument is specified, the only data for the given
     * side normal direction will be maintained and managed for this variable.
     */
-   explicit SideVariable(
+   SideVariable(
       const tbox::Dimension& dim,
       const std::string& name,
       int depth = 1,
@@ -132,8 +132,6 @@ private:
 }
 }
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/SideVariable.C"
-#endif
 
 #endif

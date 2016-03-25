@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                double data on a Skeleton mesh.
  *
@@ -86,18 +86,6 @@ SkeletonCellDoubleConservativeLinearRefine()
 {
 }
 
-bool SkeletonCellDoubleConservativeLinearRefine::findRefineOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const string& op_name) const
-{
-   const tbox::Pointer<pdat::CellVariable<double> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
 int
 SkeletonCellDoubleConservativeLinearRefine::getOperatorPriority() const
 {
@@ -123,12 +111,13 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
-   for (hier::BoxContainer::ConstIterator b = boxes.begin(); b != boxes.end(); ++b) {
+   for (hier::BoxContainer::const_iterator b = boxes.begin();
+        b != boxes.end(); ++b) {
       refine(fine,
          coarse,
          dst_component,
          src_component,
-         b(),
+         *b,
          ratio);
    }
 }
@@ -141,13 +130,15 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<pdat::CellData<double> >
-   cdata = coarse.getPatchData(src_component);
-   tbox::Pointer<pdat::CellData<double> >
-   fdata = fine.getPatchData(dst_component);
+   boost::shared_ptr<pdat::CellData<double> > cdata(
+      coarse.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::CellData<double> > fdata(
+      fine.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!cdata.isNull());
-   TBOX_ASSERT(!fdata.isNull());
+   TBOX_ASSERT(cdata);
+   TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
    const hier::Box cgbox(cdata->getGhostBox());
@@ -157,10 +148,10 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   const tbox::Pointer<hier::PatchGeometry> cgeom =
-      coarse.getPatchGeometry();
-   const tbox::Pointer<hier::PatchGeometry> fgeom =
-      fine.getPatchGeometry();
+   const boost::shared_ptr<hier::PatchGeometry> cgeom(
+      coarse.getPatchGeometry());
+   const boost::shared_ptr<hier::PatchGeometry> fgeom(
+      fine.getPatchGeometry());
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();

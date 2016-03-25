@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
@@ -12,10 +12,13 @@
 #define included_mesh_ChopAndPackLoadBalancer
 
 #include "SAMRAI/SAMRAI_config.h"
+#include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/mesh/LoadBalanceStrategy.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Timer.h"
+#include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -159,17 +162,18 @@ public:
     * Construct load balancer object, including setting default object state
     * and reading input data from the input data base, if required.
     *
-    * @param name       User-defined string identifier used for error
+    * @param[in] dim
+    * @param[in] name   User-defined string identifier used for error
     *                   reporting.  This string must be non-empty.
-    * @param input_db   (optional) database pointer providing parameters from
+    * @param[in] input_db (optional) database pointer providing parameters from
     *                   input file.  This pointer may be null indicating no
     *                   input will be read.
     */
    ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name,
-      tbox::Pointer<tbox::Database> input_db =
-         tbox::Pointer<tbox::Database>(NULL));
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * Construct load balancer object, including setting default object state
@@ -178,14 +182,15 @@ public:
     * identifier input.  If this constructor is used, the default object name
     * "ChopAndPackLoadBalancer" applies.
     *
-    * @param input_db   (optional) database pointer providing parameters from
-    *                   input file.  This pointer may be null indicating no
-    *                   input will be read.
+    * @param[in] dim
+    * @param[in] input_db (optional) database pointer providing parameters from
+    *                     input file.  This pointer may be null indicating no
+    *                     input will be read.
     */
-   ChopAndPackLoadBalancer(
+   explicit ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db =
-         tbox::Pointer<tbox::Database>(NULL));
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * The virtual destructor releases all internal storage.
@@ -213,7 +218,7 @@ public:
     * hierarchy levels.  See discussion about inputs above for information
     * on how this value is used during load balancing operations.
     *
-    * @param factor        Double value of tolerance. The default value is 0.0;
+    * @param tolerance     Double value of tolerance. The default value is 0.0;
     *
     * @param level_number  Optional integer number for level to which factor
     *                      is applied. If no value is given, the value will
@@ -283,7 +288,10 @@ public:
     */
    void
    setIgnoreLevelDomainIsSingleBox(
-      bool flag);
+      bool flag)
+   {
+      d_ignore_level_box_union_is_single_box = flag;
+   }
 
    /*!
     * Return true if load balancing procedure for given level depends on
@@ -312,28 +320,19 @@ public:
     * The load balancing algorithm should ignore any periodic image Boxes
     * in the input balance_mapped_box_level.
     *
-    * @param out_boxes       Output box array for generating patches on level.
-    * @param mapping         Output processor mapping for patches on level.
-    * @param in_boxes        Input box list representing union of patches on level.
+    * @param balance_mapped_box_level
+    * @param balance_to_anchor
+    * @param anchor_to_balance
     * @param hierarchy       Input patch hierarchy in which level will reside.
     * @param level_number    Input integer number of level in patch hierarchy.
     *                        This value must be >= 0.
-    * @param physical_domain Array of boxes describing the physical extent of
-    *                        the problem domain in the index space associated
-    *                        with the level.  This box array cannot be empty.
-    * @param ratio_to_hierarchy_level_zero  Input integer vector indicating
-    *                        ratio between index space of level to load balance
-    *                        and hierarchy level 0 (i.e., coarsest hierarchy level).
+    * @param unbalanced_to_attractor
+    * @param attractor_to_unbalanced 
     * @param min_size        Input integer vector of minimum dimensions for
     *                        output boxes. All entries must be > 0.
     * @param max_size        Input integer vector of maximum dimensions for
     *                        output boxes. All entries must be >= min_size.
-    * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
-    *                        corresponding cut factor vector entry.  All
-    *                        vector entries must be > 0.  See hier::BoxUtilities
-    *                        documentation for more details.
+    * @param domain_mapped_box_level
     * @param bad_interval    Input integer vector used to create boxes near
     *                        physical domain boundary with sufficient number
     *                        of cells.  No box face will be closer to the
@@ -348,6 +347,12 @@ public:
     *                        will be either in the domain interior or outside
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
+    * @param cut_factor      Input integer vector used to create boxes with
+    *                        correct dimensions.  The length of each box
+    *                        dimension will be an integer multiple of the
+    *                        corresponding cut factor vector entry.  All
+    *                        vector entries must be > 0.  See hier::BoxUtilities
+    *                        documentation for more details.
     * @param rank_group      Needed for compatibility with parent class.
     *                        This argument is ignored.
     */
@@ -356,7 +361,7 @@ public:
       hier::BoxLevel& balance_mapped_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::Connector& unbalanced_to_attractor,
       const hier::Connector& attractor_to_unbalanced,
@@ -380,7 +385,10 @@ public:
     * @return The name of this object.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    // The following are not implemented, but are provided here for
@@ -396,7 +404,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Given a list of boxes, representing the domain of a level in the AMR
@@ -448,7 +456,7 @@ private:
       hier::BoxContainer& out_boxes,
       hier::ProcessorMapping& mapping,
       const hier::BoxContainer& in_boxes,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::BoxContainer& physical_domain,
       const hier::IntVector& ratio_to_hierarchy_level_zero,
@@ -480,7 +488,7 @@ private:
       hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -497,7 +505,7 @@ private:
       hier::BoxContainer& out_boxes,
       tbox::Array<double>& out_workloads,
       const hier::BoxContainer& in_boxes,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int level_number,
       const hier::IntVector& ratio_to_coarsest_hierarchy_level,
       int wrk_indx,
@@ -541,16 +549,43 @@ private:
     */
    int
    getWorkloadDataId(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_workload_data_id.getSize() ?
+              d_workload_data_id[level_number] :
+              d_master_workload_data_id);
+   }
+
    double
    getMaxWorkloadFactor(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_max_workload_factor.getSize() ?
+              d_max_workload_factor[level_number] :
+              d_master_max_workload_factor);
+   }
+
    double
    getWorkloadTolerance(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_workload_tolerance.getSize() ?
+              d_workload_tolerance[level_number] :
+              d_master_workload_tolerance);
+   }
+
    std::string
    getBinPackMethod(
-      int level_number) const;
+      int level_number) const
+   {
+      TBOX_ASSERT(level_number >= 0);
+      return (level_number < d_bin_pack_method.getSize() ?
+              d_bin_pack_method[level_number] :
+              d_master_bin_pack_method);
+   }
 
    /*!
     * @brief Initialize static objects and register shutdown routine.
@@ -613,12 +648,12 @@ private:
    /*
     * Performance timers.
     */
-   static tbox::Pointer<tbox::Timer> t_load_balance_boxes;
-   static tbox::Pointer<tbox::Timer> t_load_balance_boxes_remove_intersection;
-   static tbox::Pointer<tbox::Timer> t_bin_pack_boxes;
-   static tbox::Pointer<tbox::Timer> t_bin_pack_boxes_sort;
-   static tbox::Pointer<tbox::Timer> t_bin_pack_boxes_pack;
-   static tbox::Pointer<tbox::Timer> t_chop_boxes;
+   static boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
+   static boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
+   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
+   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
+   static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;
+   static boost::shared_ptr<tbox::Timer> t_chop_boxes;
 
    /*
     * Static initialization and cleanup handler.
@@ -631,7 +666,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/ChopAndPackLoadBalancer.I"
-#endif
 #endif

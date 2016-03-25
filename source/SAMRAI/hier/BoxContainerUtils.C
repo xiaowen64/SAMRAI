@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Common Box operations for Box containers.
  *
  ************************************************************************/
@@ -14,10 +14,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoxContainerUtils.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
 
@@ -25,7 +21,8 @@ namespace hier {
  * Constructor does nothing because the objects are stateless.
  */
 
-BoxContainerUtils::BoxContainerUtils() {
+BoxContainerUtils::BoxContainerUtils()
+{
 }
 
 /*
@@ -33,13 +30,15 @@ BoxContainerUtils::BoxContainerUtils() {
  ***************************************************************************
  */
 
-void BoxContainerUtils::recursivePrintBoxVector(
+void
+BoxContainerUtils::recursivePrintBoxVector(
    const std::vector<Box>& mapped_boxes,
    std::ostream& os,
    const std::string& border,
    int detail_depth)
 {
-   (void)detail_depth;
+   NULL_USE(detail_depth);
+
    os << border;
    for (std::vector<Box>::const_iterator ni = mapped_boxes.begin();
         ni != mapped_boxes.end();

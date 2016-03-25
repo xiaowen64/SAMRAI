@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -15,6 +15,8 @@
 
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -55,7 +57,7 @@ FirstLayerCellVariableFillPattern::~FirstLayerCellVariableFillPattern()
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 FirstLayerCellVariableFillPattern::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -86,7 +88,8 @@ FirstLayerCellVariableFillPattern::calculateOverlap(
  *
  *************************************************************************
  */
-const hier::IntVector& FirstLayerCellVariableFillPattern::getStencilWidth()
+const hier::IntVector&
+FirstLayerCellVariableFillPattern::getStencilWidth()
 {
    return hier::IntVector::getOne(d_dim);
 }
@@ -98,7 +101,8 @@ const hier::IntVector& FirstLayerCellVariableFillPattern::getStencilWidth()
  *
  *************************************************************************
  */
-const std::string& FirstLayerCellVariableFillPattern::getPatternName() const
+const std::string&
+FirstLayerCellVariableFillPattern::getPatternName() const
 {
    return s_name_id;
 }
@@ -110,7 +114,8 @@ const std::string& FirstLayerCellVariableFillPattern::getPatternName() const
  *
  *************************************************************************
  */
-void FirstLayerCellVariableFillPattern::computeStencilBoxes(
+void
+FirstLayerCellVariableFillPattern::computeStencilBoxes(
    hier::BoxContainer& stencil_boxes,
    const hier::Box& dst_box) const
 {
@@ -130,7 +135,7 @@ void FirstLayerCellVariableFillPattern::computeStencilBoxes(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 FirstLayerCellVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::Box& patch_box,
@@ -146,11 +151,9 @@ FirstLayerCellVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.intersectBoxes(data_box);
    overlap_boxes.intersectBoxes(stencil_boxes);
 
-   hier::BoxOverlap* overlap =
-      new pdat::CellOverlap(
+   return boost::make_shared<CellOverlap>(
          overlap_boxes,
          hier::Transformation(hier::IntVector::getZero(patch_box.getDim())));
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
 }
 
 }

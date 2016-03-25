@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Multiblock binary trees of Boxes for overlap searches.
  *
  ************************************************************************/
@@ -14,39 +14,43 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/tbox/ConstPointer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
+#include <boost/shared_ptr.hpp>
 #include <vector>
 #include <map>
 
 namespace SAMRAI {
 namespace hier {
 
-class GridGeometry;
+class BaseGridGeometry;
+class BoxContainer;
 
 /*!
  * @brief Utility sorting Boxes into tree-like form for finding
- * box overlaps.  All boxes must be specified in the transformation
- * specified by their BlockId.
+ * box overlaps.  Boxes are sorted by BlockId and then a BoxTree is constructed
+ * for each block in a BoxContainer.
  *
- * Overlap searches are done by
- * - hasOverlap()
- * - findOverlapBoxes()
- *
- * Significant changes since design review:
- * - findOverlapBoxes requires refinement_ratio.
+ * Except for a destructor needed by boost shared_ptr, the entire interface is
+ * private.  This class is intended to be only used by BoxContainer, which
+ * is made a friend class.
  */
 
-class MultiblockBoxTree:public tbox::DescribedClass
+class MultiblockBoxTree
 {
 
+friend class BoxContainer;
+
 public:
+
+   /*!
+    * @brief Destructor.
+    */
+   ~MultiblockBoxTree();
+
+private:
+
    /*!
     * @brief Constructs a MultiblockBoxTree from set of Boxes.
-    *
-    * @param[in] grid_geometry GridGeometry desribing the multiblock
-    * environment.
     *
     * @param[in] boxes.  No empty boxes are allowed.
     *
@@ -55,122 +59,42 @@ public:
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
     */
-   explicit MultiblockBoxTree(
-      const GridGeometry& grid_geometry,
-      const BoxContainer& boxes,
-      size_t min_number = 10);
+   MultiblockBoxTree(
+      const BoxContainer& boxes, 
+      const BaseGridGeometry* grid_geometry,
+      const int min_number = 10);
 
    /*!
-    * @brief Constructs a MultiblockBoxTree from vector of Boxes.
-    *
-    * See MultiblockBoxTree( const tbox::Dimension& , const BoxContainer& , size_t min_number );
-    *
-    * @param[in] grid_geometry
-    *
-    * @param[in] boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number.  @b Default: 10
+    * Default constructor is unimplemented and should not be used.
     */
-   explicit MultiblockBoxTree(
-      const GridGeometry& grid_geometry,
-      const std::vector<Box>& boxes,
-      size_t min_number = 10);
-
-   /*!
-    * @brief Constructs a MultiblockBoxTree from a collection of BoxContainers each
-    * of which is associated with a specific BlockId.
-    *
-    * @param[in] grid_geometry
-    *
-    * @param[in] boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number.  @b Default: 10
-    */
-   explicit MultiblockBoxTree(
-      const GridGeometry& grid_geometry,
-      const std::map<BlockId, BoxContainer>& boxes,
-      size_t min_number = 10);
-
-   /*!
-    * @brief Default constructor constructs an uninitialized
-    * MultiblockBoxTree.
-    */
-   explicit MultiblockBoxTree();
-
-   /*!
-    * @brief Destructor.
-    */
-   ~MultiblockBoxTree();
-
-   /*!
-    * @brief Generates the tree from a BoxContainer.
-    *
-    * @param[in] grid_geometry
-    *
-    * @param[in] boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number
-    */
-   void
-   generateTree(
-      const GridGeometry& grid_geometry,
-      const BoxContainer& boxes,
-      size_t min_number = 10);
-
-   /*!
-    * @brief Generates the tree from lists of Boxes.
-    *
-    * @param[in] grid_geometry
-    *
-    * @param[in] boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number
-    */
-   void
-   generateTree(
-      const GridGeometry& grid_geometry,
-      const std::map<BlockId, BoxContainer>& boxes,
-      size_t min_number = 10);
-
-   /*!
-    * @brief Generates the tree of non-periodic Boxes from a BoxContainer.
-    *
-    * @param[in] grid_geometry
-    *
-    * @param[in] boxes.  No empty boxes are allowed.
-    *
-    * @param[in] min_number
-    */
-   void
-   generateNonPeriodicTree(
-      const GridGeometry& grid_geometry,
-      const BoxContainer& boxes,
-      size_t min_number = 10);
+   MultiblockBoxTree();
 
    /*!
     * @brief Return whether the tree contains any Boxes with the
     * given BlockId.
-    *
-    * If the method getSingleBlockBoxTree(const BlockId&) method
-    * will throw an unrecoverable error if this method returns false
-    * for the given BlockId.
     */
    bool
    hasBoxInBlock(
-      const BlockId& block_id) const;
+      const BlockId& block_id) const
+   {
+      return d_single_block_trees.find(block_id) !=
+             d_single_block_trees.end();
+   }
 
    /*!
-    * @brief Return the tree for a single block.
-    *
-    * If the Boxes initializing the tree did not contain at
-    * least one Box with the given BlockId, the corresponding
-    * single-block tree does not exist, and this method throws an
-    * unrecoverable error.  To check for the existance of the tree,
-    * use hasBoxInBlock().
+    * @brief Return the number of blocks represented in this tree.
     */
-   const BoxTree&
-   getSingleBlockBoxTree(
-      const BlockId& block_id) const;
+   int
+   getNumberBlocksInTree() const
+   {
+      return static_cast<int>(d_single_block_trees.size());
+   }
+
+   const BaseGridGeometry*
+   getGridGeometry() const
+   {
+      return d_grid_geometry;
+   }
 
    /*!
     * @brief Reset to uninitialized state.
@@ -178,119 +102,67 @@ public:
     * Uninitialized trees can be initialized using generateTree().
     */
    void
-   clear();
+   clear()
+   {
+      d_single_block_trees.clear();
+   }
 
-   /*!
-    * @brief Check whether the tree has been initialized.
-    *
-    * Uninitialized trees can be initialized using generateTree().
-    */
-   bool
-   isInitialized() const;
-
-   /*!
-    * @brief Return the GridGeometry object for the multiblock
-    * environment.
-    *
-    * Do not deallocate the returned GridGeometry.
-    */
-   const GridGeometry&
-   getGridGeometry() const;
 
    //@{
 
    //! @name Overlap checks
 
-   /*!
-    * @brief Whether the given Box has an overlap with
-    * Boxes in the tree.
+   /*
+    * @brief Whether the given box has an overlap with Boxes in the
+    * tree.
     *
-    * We also check for overlap with Boxes in blocks adjacent
-    * to box's block.
-    *
-    * @param[in] box
-    *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
+    * @param[in] box The box must have the same BlockId as all Boxes in the
+    * tree. 
     */
    bool
-   hasOverlap(
-      const Box& box,
-      bool include_singularity_block_neighbors = false) const;
+   hasOverlap(const Box& box) const; 
 
    /*!
-    * @brief Find all boxes that overlap the given Box and insert as neighbors
-    * of that box in overlap_connector.
+    * @brief Find all boxes that intersect with a given box.
     *
-    * @param[out] overlap_connector Overlap connector with box in its base
-    * BoxLevel.
+    * A pointer to every Box in the tree that intersects with the
+    * box argument will be added to the overlap_boxes output vector.  The
+    * vector is not sorted in any way.
     *
-    * @param[in] box
-    *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
-    *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
-    */
-   void
-   findOverlapBoxes(
-      Connector& overlap_connector,
-      const Box& box,
-      const IntVector& refinement_ratio,
-      bool include_singularity_block_neighbors = false) const;
-
-   /*!
-    * @brief Find all boxes that overlap the given Box.
-    *
-    * To avoid unneeded work, the output @b overlap_boxes
-    * container is not emptied.  Overlapping Boxes are simply
-    * added.
-    *
-    * Output is unsorted.
+    * This only works if the tree represents Boxes all having the same BlockId
+    * as the argument box.
     *
     * @param[out] overlap_boxes
     *
     * @param[in] box
-    *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
-    *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
     */
    void
    findOverlapBoxes(
-      std::vector<Box>& overlap_boxes,
-      const Box& box,
-      const IntVector& refinement_ratio,
-      bool include_singularity_block_neighbors = false) const;
+      std::vector<const Box*>& overlap_boxes,
+      const Box& box) const;
 
    /*!
-    * @brief Find all boxes that overlap the given Box.
+    * @brief Find all boxes that intersect with a given box.
     *
-    * Analogous to findOverlapBoxes returning a vector of Boxes
-    * but avoids the copies.  If the returned overlapped boxes are used
-    * in a context in which the MultiblockBoxTree is constant there is
-    * no point in incurring the cost of copying the tree's Boxes.  Just
-    * return a vector of their addresses.
+    * Uses refinement ratio and grid geometry to handle intersections
+    * across block boundaries if needed.
     *
-    * Output is unsorted.
+    * A pointer to every Box in the tree that intersects with the
+    * box argument will be added to the overlap_boxes output vector.  The
+    * vector is not sorted in any way.
     *
-    * @param[out] overlap_boxes Pointers to Boxes that overlap
-    * with box.
+    * @param[out]  overlap_boxes
     *
-    * @param[in] box
+    * @param[in]  box
     *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
+    * @param[in]  refinement_ratio  All boxes in this BoxContainer
+    * are assumed to exist in index space that has this refinement ratio 
+    * relative to the coarse-level domain stored in the grid geometry.
     *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
+    * @param[in]  include_singularity_block_neighbors  If true, intersections
+    * with neighboring blocks that touch only across an enhanced connectivity
+    * singularity will be added to output.  If false, those intersections are
+    * ignored.
     */
    void
    findOverlapBoxes(
@@ -300,22 +172,48 @@ public:
       bool include_singularity_block_neighbors = false) const;
 
    /*!
-    * @brief Find all boxes that overlap the given Box.
+    * @brief Find all boxes that intersect with a given box.
     *
-    * To avoid unneeded work, the output @b overlap_boxes
-    * container is not emptied.  Overlapping Boxes are simply
-    * added.
+    * Every Box in this tree that intersects with the box argument
+    * will be copied to the overlap_boxes output container.  The output
+    * container will retain the same ordered/unordered state that it had
+    * prior to being passed into this method.
     *
-    * Output is unsorted.
+    * This only works if the tree represents Boxes all having the same BlockId
+    * as the argument box.
+    *
+    * @param[out] overlap_boxes
     *
     * @param[in] box
+    */
+   void
+   findOverlapBoxes(
+      BoxContainer& overlap_boxes,
+      const Box& box) const;
+
+   /*!
+    * @brief Find all boxes that intersect with a given box.
     *
-    * @param[in] refinement_ratio Refinement ratio of box's index
-    * space.
+    * Uses refinement ratio and grid geometry to handle intersections
+    * across block boundaries if needed.
     *
-    * @param[in] include_singularity_block_neighbors Whether to include
-    * intersections with boxes in blocks that are neighbors of box's
-    * block across a multiblock singularity.
+    * Every Box in this tree that intersects with the box argument
+    * will be copied to the overlap_boxes output container.  The output
+    * container will retain the same ordered/unordered state that it had
+    * prior to being passed into this method.
+    *
+    * @param[out]  overlap_boxes
+    *
+    * @param[in]  box
+    *
+    * @param[in]  refinement_ratio  All boxes in this BoxContainer
+    * are assumed to exist in index space that has this refinement ratio 
+    * relative to the coarse-level domain stored in the grid geometry.
+    *
+    * @param[in]  include_singularity_block_neighbors  If true, intersections
+    * with neighboring blocks that touch only across an enhanced connectivity
+    * singularity will be added to output.  If false, those intersections are
+    * ignored.
     */
    void
    findOverlapBoxes(
@@ -324,49 +222,18 @@ public:
       const IntVector& refinement_ratio,
       bool include_singularity_block_neighbors = false) const;
 
-   /*!
-    * @brief Get the Boxes in the tree.
-    *
-    * @param[out] boxes
-    */
-   void
-   getBoxes(
-      std::vector<Box>& boxes) const;
-
-   /*!
-    * @brief Create a similar tree with the boxes refined by a given
-    * ratio.
-    *
-    * @param[in] ratio The boxes are refined by this ratio.
-    *
-    * Note that there is no coresponding version to create a coarsened
-    * tree.  Coarsened trees cannot be trivially generated like
-    * refined trees can.  To create a coarsened tree, you must
-    * manually get the boxes, coarsen them and use them to build a new
-    * tree.
-    */
-   tbox::Pointer<MultiblockBoxTree>
-   createRefinedTree(
-      const IntVector& ratio) const;
-
    //@}
 
 private:
    /*!
     * @brief Container of single-block BoxTrees.
     *
-    * For each BlockId represented in the set of Boxes, there is
+    * For each BlockId represented in the tree, there is
     * an entry in this container.
     */
-   std::map<BlockId, BoxTree> d_single_block_trees;
+   std::map<BlockId, boost::shared_ptr<BoxTree> > d_single_block_trees;
 
-   /*
-    * @brief GridGeometry object.
-    *
-    * Do not delete this object.
-    */
-   const GridGeometry *d_grid_geometry;
-
+   const BaseGridGeometry* d_grid_geometry;
 };
 
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated outerside centered patch data type
  *
  ************************************************************************/
@@ -14,16 +14,13 @@
 #include "SAMRAI/pdat/OutersideData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 #include "SAMRAI/pdat/SideOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include <stdio.h>
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideData.I"
-#endif
 namespace SAMRAI {
 namespace pdat {
 
@@ -50,7 +47,7 @@ OutersideData<TYPE>::OutersideData(
    TBOX_ASSERT(depth > 0);
 
    for (int d = 0; d < getDim().getValue(); d++) {
-      const hier::Box& ghosts = this->getGhostBox();
+      const hier::Box& ghosts = getGhostBox();
       const hier::Box sidebox = SideGeometry::toSideBox(ghosts, d);
       hier::Box outersidebox = sidebox;
       outersidebox.upper(d) = sidebox.lower(d);
@@ -85,10 +82,104 @@ OutersideData<TYPE>::OutersideData(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::operator = (
+void
+OutersideData<TYPE>::operator = (
    const OutersideData<TYPE>& foo)
 {
    NULL_USE(foo);
+}
+
+template<class TYPE>
+int
+OutersideData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+TYPE*
+OutersideData<TYPE>::getPointer(
+   int side_normal,
+   int side,
+   int depth)
+{
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[side_normal][side].getPointer(depth);
+}
+
+template<class TYPE>
+const TYPE*
+OutersideData<TYPE>::getPointer(
+   int side_normal,
+   int side,
+   int depth) const
+{
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[side_normal][side].getPointer(depth);
+}
+
+template<class TYPE>
+ArrayData<TYPE>&
+OutersideData<TYPE>::getArrayData(
+   int side_normal,
+   int side)
+{
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+
+   return d_data[side_normal][side];
+}
+
+template<class TYPE>
+const ArrayData<TYPE>&
+OutersideData<TYPE>::getArrayData(
+   int side_normal,
+   int side) const
+{
+   TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+
+   return d_data[side_normal][side];
+}
+
+template<class TYPE>
+TYPE&
+OutersideData<TYPE>::operator () (
+   const SideIndex& i,
+   int side,
+   int depth)
+{
+   const int axis = i.getAxis();
+
+   TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[axis][side](i, depth);
+}
+
+template<class TYPE>
+const TYPE&
+OutersideData<TYPE>::operator () (
+   const SideIndex& i,
+   int side,
+   int depth) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+
+   const int axis = i.getAxis();
+
+   TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
+   TBOX_ASSERT((side == 0) || (side == 1));
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data[axis][side](i, depth);
 }
 
 /*
@@ -101,7 +192,8 @@ void OutersideData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::copy(
+void
+OutersideData<TYPE>::copy(
    const hier::PatchData& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, src);
@@ -122,7 +214,8 @@ void OutersideData<TYPE>::copy(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::copy2(
+void
+OutersideData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, dst);
@@ -148,7 +241,8 @@ void OutersideData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::copy(
+void
+OutersideData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -159,7 +253,8 @@ void OutersideData<TYPE>::copy(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::copy2(
+void
+OutersideData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
@@ -191,7 +286,8 @@ void OutersideData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::copyDepth(
+void
+OutersideData<TYPE>::copyDepth(
    int dst_depth,
    const SideData<TYPE>& src,
    int src_depth)
@@ -220,7 +316,8 @@ void OutersideData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::copyDepth2(
+void
+OutersideData<TYPE>::copyDepth2(
    int dst_depth,
    SideData<TYPE>& dst,
    int src_depth) const
@@ -249,13 +346,15 @@ void OutersideData<TYPE>::copyDepth2(
  */
 
 template<class TYPE>
-bool OutersideData<TYPE>::canEstimateStreamSizeFromBox() const
+bool
+OutersideData<TYPE>::canEstimateStreamSizeFromBox() const
 {
    return ArrayData<TYPE>::canEstimateStreamSizeFromBox();
 }
 
 template<class TYPE>
-int OutersideData<TYPE>::getDataStreamSize(
+int
+OutersideData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const SideOverlap* t_overlap =
@@ -284,7 +383,8 @@ int OutersideData<TYPE>::getDataStreamSize(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::packStream(
+void
+OutersideData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
@@ -296,8 +396,9 @@ void OutersideData<TYPE>::packStream(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-         const hier::Box src_box = hier::Box::shift(b(), -src_offset);
+      for (hier::BoxContainer::const_iterator b(boxes);
+           b != boxes.end(); ++b) {
+         const hier::Box src_box = hier::Box::shift(*b, -src_offset);
          for (int f = 0; f < 2; f++) {
             const hier::Box intersect = src_box * d_data[d][f].getBox();
             if (!intersect.empty()) {
@@ -311,7 +412,8 @@ void OutersideData<TYPE>::packStream(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::unpackStream(
+void
+OutersideData<TYPE>::unpackStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
@@ -323,9 +425,10 @@ void OutersideData<TYPE>::unpackStream(
    const hier::IntVector& src_offset = t_overlap->getSourceOffset();
    for (int d = 0; d < getDim().getValue(); d++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
-      for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
+      for (hier::BoxContainer::const_iterator b(boxes);
+           b != boxes.end(); ++b) {
          for (int f = 0; f < 2; f++) {
-            const hier::Box intersect = b() * d_data[d][f].getBox();
+            const hier::Box intersect = (*b) * d_data[d][f].getBox();
             if (!intersect.empty()) {
                d_data[d][f].unpackStream(stream, intersect, src_offset);
             }
@@ -344,7 +447,8 @@ void OutersideData<TYPE>::unpackStream(
  */
 
 template<class TYPE>
-size_t OutersideData<TYPE>::getSizeOfData(
+size_t
+OutersideData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth)
 {
@@ -371,7 +475,8 @@ size_t OutersideData<TYPE>::getSizeOfData(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::fill(
+void
+OutersideData<TYPE>::fill(
    const TYPE& t,
    int d)
 {
@@ -384,7 +489,8 @@ void OutersideData<TYPE>::fill(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::fill(
+void
+OutersideData<TYPE>::fill(
    const TYPE& t,
    const hier::Box& box,
    int d)
@@ -399,7 +505,8 @@ void OutersideData<TYPE>::fill(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::fillAll(
+void
+OutersideData<TYPE>::fillAll(
    const TYPE& t)
 {
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -409,7 +516,8 @@ void OutersideData<TYPE>::fillAll(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::fillAll(
+void
+OutersideData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
@@ -430,7 +538,8 @@ void OutersideData<TYPE>::fillAll(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::print(
+void
+OutersideData<TYPE>::print(
    const hier::Box& box,
    std::ostream& os,
    int prec) const
@@ -443,7 +552,8 @@ void OutersideData<TYPE>::print(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::print(
+void
+OutersideData<TYPE>::print(
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -462,7 +572,8 @@ void OutersideData<TYPE>::print(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::printAxisSide(
+void
+OutersideData<TYPE>::printAxisSide(
    int side_normal,
    int side,
    const hier::Box& box,
@@ -480,7 +591,8 @@ void OutersideData<TYPE>::printAxisSide(
 }
 
 template<class TYPE>
-void OutersideData<TYPE>::printAxisSide(
+void
+OutersideData<TYPE>::printAxisSide(
    int side_normal,
    int side,
    const hier::Box& box,
@@ -498,9 +610,10 @@ void OutersideData<TYPE>::printAxisSide(
    const hier::Box region =
       sidebox * d_data[side_normal][side].getBox();
    os.precision(prec);
-   for (hier::Box::Iterator i(region); i; i++) {
-      os << "array" << i() << " = "
-         << d_data[side_normal][side](i(), depth) << std::endl;
+   hier::Box::iterator iend(region, false);
+   for (hier::Box::iterator i(region, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data[side_normal][side](*i, depth) << std::endl;
       os << std::flush;
    }
 }
@@ -516,10 +629,11 @@ void OutersideData<TYPE>::printAxisSide(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+OutersideData<TYPE>::getSpecializedFromDatabase(
+   const boost::shared_ptr<tbox::Database>& database)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_OUTERSIDEDATA_VERSION");
    if (ver != PDAT_OUTERSIDEDATA_VERSION) {
@@ -529,7 +643,7 @@ void OutersideData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i)
          + "_1";
@@ -552,26 +666,27 @@ void OutersideData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void OutersideData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+OutersideData<TYPE>::putSpecializedToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_OUTERSIDEDATA_VERSION",
       PDAT_OUTERSIDEDATA_VERSION);
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
+   boost::shared_ptr<tbox::Database> array_database;
    for (int i = 0; i < getDim().getValue(); i++) {
       std::string array_name = "d_data%d_" + tbox::Utilities::intToString(i)
          + "_1";
       array_database = database->putDatabase(array_name);
-      (d_data[i][0]).putToDatabase(array_database);
+      (d_data[i][0]).putUnregisteredToDatabase(array_database);
 
       array_name = "d_data%d_" + tbox::Utilities::intToString(i) + "_2";
       array_database = database->putDatabase(array_name);
-      (d_data[i][1]).putToDatabase(array_database);
+      (d_data[i][1]).putUnregisteredToDatabase(array_database);
    }
 }
 

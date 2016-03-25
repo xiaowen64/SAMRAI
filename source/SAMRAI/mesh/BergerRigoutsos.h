@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Asynchronous Berger-Rigoutsos clustering algorithm.
  *
  ************************************************************************/
@@ -17,8 +17,9 @@
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -69,6 +70,18 @@ namespace mesh {
  *   Zero means cut only at the center plane.  One means unlimited.
  *   Under most situations, one is fine.  A lower setting helps prevent
  *   parallel slivers.
+ * - laplace_cut_threshold_ar (0.0): specifies the mininum box
+ *   thickness that can be cut, as a ratio to the thinnest box
+ *   direction.  If the box doesn't have any direction thick
+ *   enough, then it has a reasonable aspect ratio, so we can
+ *   cut it in any direction.
+ *   Degenerate values of laplace_cut_threshold_ar:
+ *   1: cut any direction except the thinnest.
+ *   (0,1) and huge values: cut any direction.
+ *   0: Not a degenerate case but a special case meaning always
+ *   cut the thickest direction.  This leads to more cubic
+ *   boxes but may prevent cutting at important feature
+ *   changes.
  *
  * Debugging inputs (default):
  * - bool @b log_node_history (false):
@@ -80,25 +93,24 @@ namespace mesh {
  * - bool @b log_cluster (false):
  *   Whether to log the results of the clustering.
  */
-class BergerRigoutsos:public mesh::BoxGeneratorStrategy
+class BergerRigoutsos:public BoxGeneratorStrategy
 {
 
 public:
    /*!
     * @brief Constructor.
     */
-   BergerRigoutsos(
+   explicit BergerRigoutsos(
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> database =
-         tbox::Pointer<tbox::Database>(NULL));
+      const boost::shared_ptr<tbox::Database>& database =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.
     *
     * Deallocate internal data.
     */
-   ~BergerRigoutsos(
-      void);
+   virtual ~BergerRigoutsos();
 
    /*!
     * @brief Set the MPI communication object.
@@ -147,7 +159,7 @@ public:
       hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_data_index,
       const int tag_val,
       const hier::Box& bound_box,
@@ -155,7 +167,8 @@ public:
       const double efficiency_tol,
       const double combine_tol,
       const hier::IntVector& max_gcw,
-      const hier::BlockId& block_id) const;
+      const hier::BlockId& block_id,
+      const hier::LocalId& first_local_id) const;
 
 private:
    const tbox::Dimension d_dim;
@@ -194,6 +207,9 @@ private:
    //! @brief Max distance from center for Laplace cut.
    double d_max_lap_cut_from_center;
 
+   //! @brief Threshold for avoiding thinner dimensions for Laplace cut.
+   double d_laplace_cut_threshold_ar;
+
    //! @brief Whether to log execution node allocation and deallocation.
    bool d_log_node_history;
 
@@ -221,12 +237,12 @@ private:
    bool d_barrier_after;
    //@}
 
-   static tbox::Pointer<tbox::Timer> t_barrier_before;
-   static tbox::Pointer<tbox::Timer> t_barrier_after;
-   static tbox::Pointer<tbox::Timer> t_find_boxes_with_tags;
-   static tbox::Pointer<tbox::Timer> t_run_abr;
-   static tbox::Pointer<tbox::Timer> t_global_reductions;
-   static tbox::Pointer<tbox::Timer> t_sort_output_nodes;
+   static boost::shared_ptr<tbox::Timer> t_barrier_before;
+   static boost::shared_ptr<tbox::Timer> t_barrier_after;
+   static boost::shared_ptr<tbox::Timer> t_find_boxes_with_tags;
+   static boost::shared_ptr<tbox::Timer> t_run_abr;
+   static boost::shared_ptr<tbox::Timer> t_global_reductions;
+   static boost::shared_ptr<tbox::Timer> t_sort_output_nodes;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

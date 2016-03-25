@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -13,15 +13,8 @@
 
 #include "SAMRAI/hier/Patch.h"
 
-#include "SAMRAI/tbox/Utilities.h"
-#include "SAMRAI/hier/PatchDataFactory.h"
-
 #include <typeinfo>
 #include <string>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/Patch.I"
-#endif
 
 namespace SAMRAI {
 namespace hier {
@@ -38,7 +31,7 @@ const int Patch::HIER_PATCH_VERSION = 2;
 
 Patch::Patch(
    const Box& mapped_box,
-   tbox::Pointer<PatchDescriptor> descriptor):
+   const boost::shared_ptr<PatchDescriptor>& descriptor):
    d_mapped_box(mapped_box),
    d_descriptor(descriptor),
    d_patch_data(d_descriptor->getMaxNumberRegisteredComponents()),
@@ -71,13 +64,6 @@ Patch::~Patch()
  *************************************************************************
  */
 
-size_t Patch::getSizeOfPatchData(
-   const int id) const
-{
-   return d_descriptor->getPatchDataFactory(id)->getSizeOfMemory(
-      d_mapped_box);
-}
-
 size_t
 Patch::getSizeOfPatchData(
    const ComponentSelector& components) const
@@ -101,7 +87,8 @@ Patch::getSizeOfPatchData(
  *************************************************************************
  */
 
-void Patch::allocatePatchData(
+void
+Patch::allocatePatchData(
    const int id,
    const double time)
 {
@@ -120,7 +107,8 @@ void Patch::allocatePatchData(
    d_patch_data[id]->setTime(time);
 }
 
-void Patch::allocatePatchData(
+void
+Patch::allocatePatchData(
    const ComponentSelector& components,
    const double time)
 {
@@ -148,24 +136,14 @@ void Patch::allocatePatchData(
  *************************************************************************
  */
 
-void Patch::deallocatePatchData(
-   const int id)
-{
-   TBOX_ASSERT((id >= 0) &&
-      (id < d_descriptor->getMaxNumberRegisteredComponents()));
-
-   if (id < d_patch_data.getSize()) {
-      d_patch_data[id].setNull();
-   }
-}
-
-void Patch::deallocatePatchData(
+void
+Patch::deallocatePatchData(
    const ComponentSelector& components)
 {
    const int ncomponents = d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       if (components.isSet(i)) {
-         d_patch_data[i].setNull();
+         d_patch_data[i].reset();
       }
    }
 }
@@ -178,24 +156,26 @@ void Patch::deallocatePatchData(
  *************************************************************************
  */
 
-void Patch::setTime(
+void
+Patch::setTime(
    const double timestamp,
    const ComponentSelector& components)
 {
    const int ncomponents = d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
-      if (components.isSet(i) && !d_patch_data[i].isNull()) {
+      if (components.isSet(i) && d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
       }
    }
 }
 
-void Patch::setTime(
+void
+Patch::setTime(
    const double timestamp)
 {
    const int ncomponents = d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
-      if (!d_patch_data[i].isNull()) {
+      if (d_patch_data[i]) {
          d_patch_data[i]->setTime(timestamp);
       }
    }
@@ -211,11 +191,12 @@ void Patch::setTime(
  *************************************************************************
  */
 
-void Patch::getFromDatabase(
-   tbox::Pointer<tbox::Database> database,
+void
+Patch::getFromDatabase(
+   const boost::shared_ptr<tbox::Database>& database,
    const ComponentSelector& component_selector)
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("HIER_PATCH_VERSION");
    if (ver != HIER_PATCH_VERSION) {
@@ -227,10 +208,10 @@ void Patch::getFromDatabase(
    const LocalId patch_local_id(database->getInteger("d_patch_local_id"));
    int patch_owner = database->getInteger("d_patch_owner");
    int block_id = database->getInteger("d_block_id");
+   box.setBlockId(BlockId(block_id));
    d_mapped_box.initialize(box,
       patch_local_id,
-      patch_owner,
-      BlockId(block_id));
+      patch_owner);
 
    d_patch_level_number = database->getInteger("d_patch_level_number");
    d_patch_in_hierarchy = database->getBool("d_patch_in_hierarchy");
@@ -248,28 +229,24 @@ void Patch::getFromDatabase(
    for (int i = 0; i < patch_data_namelist.getSize(); i++) {
       std::string patch_data_name;
       int patch_data_index;
-      tbox::Pointer<tbox::Database> patch_data_database;
-      tbox::Pointer<PatchDataFactory> patch_data_factory;
 
       patch_data_name = patch_data_namelist[i];
 
-      if (database->isDatabase(patch_data_name)) {
-         patch_data_database = database->getDatabase(patch_data_name);
-      } else {
+      if (!database->isDatabase(patch_data_name)) {
          TBOX_ERROR("Patch::getFromDatabase() error...\n"
             << "   patch data" << patch_data_name
             << " not found in database" << std::endl);
       }
+      boost::shared_ptr<tbox::Database> patch_data_database(
+         database->getDatabase(patch_data_name));
 
-      patch_data_index = d_descriptor->
-         mapNameToIndex(patch_data_name);
+      patch_data_index = d_descriptor->mapNameToIndex(patch_data_name);
 
       if ((patch_data_index >= 0) &&
           (local_selector.isSet(patch_data_index))) {
-         patch_data_factory = d_descriptor->
-            getPatchDataFactory(patch_data_index);
-         d_patch_data[patch_data_index] =
-            patch_data_factory->allocate(*this);
+         boost::shared_ptr<PatchDataFactory> patch_data_factory(
+            d_descriptor->getPatchDataFactory(patch_data_index));
+         d_patch_data[patch_data_index] = patch_data_factory->allocate(*this);
          d_patch_data[patch_data_index]->getFromDatabase(patch_data_database);
 
          local_selector.clrFlag(patch_data_index);
@@ -303,11 +280,12 @@ void Patch::getFromDatabase(
  *
  *************************************************************************
  */
-void Patch::putToDatabase(
-   tbox::Pointer<tbox::Database> database,
-   const ComponentSelector& patchdata_write_table)
+void
+Patch::putUnregisteredToDatabase(
+   const boost::shared_ptr<tbox::Database>& database,
+   const ComponentSelector& patchdata_write_table) const
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int i;
 
@@ -330,15 +308,15 @@ void Patch::putToDatabase(
    }
 
    std::string patch_data_name;
-   tbox::Pointer<tbox::Database> patch_data_database;
    tbox::Array<std::string> patch_data_namelist(namelist_count);
    namelist_count = 0;
    for (i = 0; i < d_patch_data.getSize(); i++) {
       if (patchdata_write_table.isSet(i) && checkAllocated(i)) {
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
-         patch_data_database = database->putDatabase(patch_data_name);
-         (d_patch_data[i])->putToDatabase(patch_data_database);
+         boost::shared_ptr<tbox::Database> patch_data_database(
+            database->putDatabase(patch_data_name));
+         (d_patch_data[i])->putUnregisteredToDatabase(patch_data_database);
       }
    }
 
@@ -356,7 +334,8 @@ void Patch::putToDatabase(
  *************************************************************************
  */
 
-int Patch::recursivePrint(
+int
+Patch::recursivePrint(
    std::ostream& os,
    const std::string& border,
    int depth) const
@@ -377,7 +356,8 @@ int Patch::recursivePrint(
    return 0;
 }
 
-std::ostream& operator << (
+std::ostream&
+operator << (
    std::ostream& s,
    const Patch& patch)
 {
@@ -392,7 +372,7 @@ std::ostream& operator << (
    const int ncomponents = patch.d_patch_data.getSize();
    for (int i = 0; i < ncomponents; i++) {
       s << "Component(" << i << ")=";
-      if (patch.d_patch_data[i].isNull()) {
+      if (!patch.d_patch_data[i]) {
          s << "NULL\n";
       } else {
          s << typeid(*patch.d_patch_data[i]).name()

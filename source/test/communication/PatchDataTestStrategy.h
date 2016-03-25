@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
@@ -19,10 +19,10 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 using namespace std;
@@ -106,16 +106,16 @@ public:
     * Grid geometry access operations.
     */
    void setGridGeometry(
-      tbox::Pointer<geom::CartesianGridGeometry> grid_geom)
+      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!grid_geom.isNull());
+      TBOX_ASSERT(grid_geom);
 #endif
       d_grid_geometry = grid_geom;
    }
 
    ///
-   tbox::Pointer<geom::CartesianGridGeometry> getGridGeometry() const
+   boost::shared_ptr<geom::CartesianGridGeometry> getGridGeometry() const
    {
       return d_grid_geometry;
    }
@@ -124,23 +124,23 @@ public:
     * Utility functions for managing patch data context.
     */
    void setDataContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!context.isNull());
+      TBOX_ASSERT(context);
 #endif
       d_data_context = context;
    }
 
    ///
-   tbox::Pointer<hier::VariableContext> getDataContext() const
+   boost::shared_ptr<hier::VariableContext> getDataContext() const
    {
       return d_data_context;
    }
 
    void clearDataContext()
    {
-      d_data_context.setNull();
+      d_data_context.reset();
    }
 
    /**
@@ -148,14 +148,14 @@ public:
     */
    void
    readVariableInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Read arrays of refinement boxes from input database.
     */
    void
    readRefinementInput(
-      tbox::Pointer<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> db);
 
    /**
     * Virtual functions in interface to user-supplied boundary conditions,
@@ -219,7 +219,7 @@ public:
    virtual void
    initializeDataOnPatch(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       char src_or_dst) = 0;
    /**
@@ -230,7 +230,7 @@ public:
    virtual bool
    verifyResults(
       const hier::Patch& patch,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number) = 0;
 
 protected:
@@ -252,9 +252,9 @@ protected:
    tbox::Array<hier::BoxContainer> d_refine_level_boxes;
 
 private:
-   tbox::Pointer<geom::CartesianGridGeometry> d_grid_geometry;
+   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
-   tbox::Pointer<hier::VariableContext> d_data_context;
+   boost::shared_ptr<hier::VariableContext> d_data_context;
 
 };
 

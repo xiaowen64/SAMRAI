@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Describes boundaries for a patch
  *
  ************************************************************************/
@@ -13,12 +13,21 @@
 
 #include "SAMRAI/hier/PatchBoundaries.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchBoundaries.I"
-#endif
-
 namespace SAMRAI {
 namespace hier {
+
+/*
+ *************************************************************************
+ *
+ * Default constructor
+ *
+ *************************************************************************
+ */
+PatchBoundaries::PatchBoundaries():
+   d_dim(tbox::Dimension::getInvalidDimension()),
+   d_array_of_bboxes(0)
+{
+}
 
 /*
  *************************************************************************
@@ -49,23 +58,6 @@ PatchBoundaries::PatchBoundaries(
    for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
       d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
    }
-}
-
-/*
- *************************************************************************
- *
- * Assignment operator
- *
- *************************************************************************
- */
-const PatchBoundaries&
-PatchBoundaries::operator = (const PatchBoundaries& r)
-{
-   for (unsigned int d = 0; d < d_dim.getValue(); ++d) {
-      d_array_of_bboxes[d] = r.d_array_of_bboxes[d];
-   }
-
-   return *this;
 }
 
 } // SAMRAI namespace

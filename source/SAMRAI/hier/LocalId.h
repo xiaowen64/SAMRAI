@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Generic identifier used on a single process.
  *
  ************************************************************************/
@@ -65,7 +65,11 @@ public:
     */
    LocalId&
    operator = (
-      const LocalId& rhs);
+      const LocalId& rhs)
+   {
+      d_value = rhs.d_value;
+      return *this;
+   }
 
    /*!
     * @brief Assignment operator.
@@ -76,31 +80,47 @@ public:
     */
    LocalId&
    operator = (
-      const int& rhs);
+      const int& rhs)
+   {
+      d_value = rhs;
+      return *this;
+   }
 
    /*!
     * @brief Access the numerical value.
     */
    int&
-   getValue();
+   getValue()
+   {
+      return d_value;
+   }
 
    /*!
     * @brief Access the numerical value.
     */
    const int&
-   getValue() const;
+   getValue() const
+   {
+      return d_value;
+   }
 
    /*!
     * @brief Get the LocalId with a numerical value of zero.
     */
    static const LocalId&
-   getZero();
+   getZero()
+   {
+      return s_zero_id;
+   }
 
    /*!
     * @brief Get the designated invalid value for this class.
     */
    static const LocalId&
-   getInvalidId();
+   getInvalidId()
+   {
+      return s_invalid_id;
+   }
 
    //@{
 
@@ -113,7 +133,11 @@ public:
     * state.
     */
    LocalId
-   operator ++ ();
+   operator ++ ()
+   {
+      ++d_value;
+      return *this;
+   }
 
    /*!
     * @brief Post-increment iterator.
@@ -123,7 +147,12 @@ public:
     */
    LocalId
    operator ++ (
-      int);
+      int)
+   {
+      int saved = d_value;
+      ++d_value;
+      return LocalId(saved);
+   }
 
    /*!
     * @brief Addition.
@@ -132,7 +161,10 @@ public:
     */
    LocalId
    operator + (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return LocalId(d_value + rhs.d_value);
+   }
 
    /*!
     * @brief Subtraction.
@@ -141,7 +173,10 @@ public:
     */
    LocalId
    operator - (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return LocalId(d_value - rhs.d_value);
+   }
 
    /*!
     * @brief Multiplication.
@@ -150,7 +185,10 @@ public:
     */
    LocalId
    operator * (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return LocalId(d_value * rhs.d_value);
+   }
 
    /*!
     * @brief Division.
@@ -159,7 +197,10 @@ public:
     */
    LocalId
    operator / (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return LocalId(d_value / rhs.d_value);
+   }
 
    /*!
     * @brief Modulus.
@@ -168,7 +209,10 @@ public:
     */
    LocalId
    operator % (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return LocalId(d_value % rhs.d_value);
+   }
 
    /*!
     * @brief Addition and assignment.
@@ -177,7 +221,11 @@ public:
     */
    LocalId&
    operator += (
-      const LocalId& rhs);
+      const LocalId& rhs)
+   {
+      d_value += rhs.d_value;
+      return *this;
+   }
 
    /*!
     * @brief Subtraction and assignment.
@@ -186,7 +234,11 @@ public:
     */
    LocalId&
    operator -= (
-      const LocalId& rhs);
+      const LocalId& rhs)
+   {
+      d_value -= rhs.d_value;
+      return *this;
+   }
 
    /*!
     * @brief Integer addition.
@@ -195,7 +247,10 @@ public:
     */
    LocalId
    operator + (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return LocalId(d_value + rhs);
+   }
 
    /*!
     * @brief Integer subtraction.
@@ -204,7 +259,10 @@ public:
     */
    LocalId
    operator - (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return LocalId(d_value - rhs);
+   }
 
    /*!
     * @brief Integer multiplication.
@@ -213,7 +271,10 @@ public:
     */
    LocalId
    operator * (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return LocalId(d_value * rhs);
+   }
 
    /*!
     * @brief Integer division.
@@ -222,7 +283,10 @@ public:
     */
    LocalId
    operator / (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return LocalId(d_value / rhs);
+   }
 
    /*!
     * @brief Integer modulus.
@@ -231,7 +295,10 @@ public:
     */
    LocalId
    operator % (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return LocalId(d_value % rhs);
+   }
 
    /*!
     * @brief Integer addition and assignment.
@@ -240,7 +307,11 @@ public:
     */
    LocalId&
    operator += (
-      const int& rhs);
+      const int& rhs)
+   {
+      d_value += rhs;
+      return *this;
+   }
 
    /*!
     * @brief Integer subtraction and assignment.
@@ -249,7 +320,11 @@ public:
     */
    LocalId&
    operator -= (
-      const int& rhs);
+      const int& rhs)
+   {
+      d_value -= rhs;
+      return *this;
+   }
 
    //@}
 
@@ -266,7 +341,10 @@ public:
     */
    bool
    operator == (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return d_value == rhs.d_value;
+   }
 
    /*!
     * @brief Inequality operator.
@@ -277,7 +355,10 @@ public:
     */
    bool
    operator != (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return d_value != rhs.d_value;
+   }
 
    /*!
     * @brief Less-than operator.
@@ -288,7 +369,10 @@ public:
     */
    bool
    operator < (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return d_value < rhs.d_value;
+   }
 
    /*!
     * @brief Greater-than operator.
@@ -299,7 +383,10 @@ public:
     */
    bool
    operator > (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return d_value > rhs.d_value;
+   }
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -310,7 +397,10 @@ public:
     */
    bool
    operator <= (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return d_value <= rhs.d_value;
+   }
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -321,7 +411,10 @@ public:
     */
    bool
    operator >= (
-      const LocalId& rhs) const;
+      const LocalId& rhs) const
+   {
+      return d_value >= rhs.d_value;
+   }
 
    //@}
 
@@ -338,7 +431,10 @@ public:
     */
    bool
    operator == (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value == rhs;
+   }
 
    /*!
     * @brief Inequality operator.
@@ -349,7 +445,10 @@ public:
     */
    bool
    operator != (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value != rhs;
+   }
 
    /*!
     * @brief Less-than operator.
@@ -360,7 +459,10 @@ public:
     */
    bool
    operator < (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value < rhs;
+   }
 
    /*!
     * @brief Greater-than operator.
@@ -371,7 +473,10 @@ public:
     */
    bool
    operator > (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value > rhs;
+   }
 
    /*!
     * @brief Less-than-or-equal-to operator.
@@ -382,7 +487,10 @@ public:
     */
    bool
    operator <= (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value <= rhs;
+   }
 
    /*!
     * @brief Greater-thanor-equal-to operator.
@@ -393,7 +501,10 @@ public:
     */
    bool
    operator >= (
-      const int& rhs) const;
+      const int& rhs) const
+   {
+      return d_value >= rhs;
+   }
 
    //@}
 
@@ -425,9 +536,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/LocalId.I"
-#endif
 
 #endif  // included_hier_LocalId

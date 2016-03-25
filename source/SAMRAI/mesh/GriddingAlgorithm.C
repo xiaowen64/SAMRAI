@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   AMR hierarchy generation and regridding routines.
  *
  ************************************************************************/
@@ -15,7 +15,7 @@
 
 #include "SAMRAI/tbox/IEEE.h"
 #include "SAMRAI/tbox/RestartManager.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/BoxUtilities.h"
 #include "SAMRAI/hier/MappingConnectorAlgorithm.h"
@@ -31,10 +31,6 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <iomanip>
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/mesh/GriddingAlgorithm.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -84,13 +80,13 @@ GriddingAlgorithm::s_initialize_handler(
  *************************************************************************
  */
 GriddingAlgorithm::GriddingAlgorithm(
-   const tbox::Pointer<hier::PatchHierarchy>& hierarchy,
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const std::string& object_name,
-   tbox::Pointer<tbox::Database> input_db,
-   tbox::Pointer<TagAndInitializeStrategy> tag_init_strategy,
-   tbox::Pointer<BoxGeneratorStrategy> generator,
-   tbox::Pointer<LoadBalanceStrategy> balancer,
-   tbox::Pointer<LoadBalanceStrategy> balancer0,
+   const boost::shared_ptr<tbox::Database>& input_db,
+   const boost::shared_ptr<TagAndInitializeStrategy>& tag_init_strategy,
+   const boost::shared_ptr<BoxGeneratorStrategy>& generator,
+   const boost::shared_ptr<LoadBalanceStrategy>& balancer,
+   const boost::shared_ptr<LoadBalanceStrategy>& balancer0,
    bool register_for_restart):
    GriddingAlgorithmStrategy(),
    d_hierarchy(hierarchy),
@@ -102,7 +98,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_tag_init_strategy(tag_init_strategy),
    d_box_generator(generator),
    d_load_balancer(balancer),
-   d_load_balancer0(balancer0),
+   d_load_balancer0(balancer0 ? balancer0 : balancer),
    d_mb_tagger_strategy(NULL),
    d_true_tag(1),
    d_false_tag(0),
@@ -112,6 +108,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_check_nonnesting_user_boxes('e'),
    d_check_boundary_proximity_violation('e'),
    d_sequentialize_patch_indices(true),
+   d_log_metadata_statistics(false),
    d_enforce_proper_nesting(true),
    d_extend_to_domain_boundary(true),
    d_load_balance(true),
@@ -119,23 +116,18 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_check_overflow_nesting(false),
    d_check_proper_nesting(false),
    d_check_connectors(false),
-   d_print_hierarchy(false),
    d_print_steps(false)
 {
-   TBOX_ASSERT(!hierarchy.isNull());
+   TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
-   TBOX_ASSERT(!tag_init_strategy.isNull());
-   TBOX_ASSERT(!generator.isNull());
-   TBOX_ASSERT(!balancer.isNull());
+   TBOX_ASSERT(input_db);
+   TBOX_ASSERT(tag_init_strategy);
+   TBOX_ASSERT(generator);
+   TBOX_ASSERT(balancer);
 
    if (d_registered_for_restart) {
       tbox::RestartManager::getManager()->
       registerRestartItem(d_object_name, this);
-   }
-
-   if (d_load_balancer0.isNull()) {
-      d_load_balancer0 = d_load_balancer;
    }
 
    d_hierarchy->registerConnectorWidthRequestor(
@@ -162,16 +154,19 @@ GriddingAlgorithm::GriddingAlgorithm(
    tag_interior_variable_name += dim_extension.str();
    tag_buffer_variable_name += dim_extension.str();
 
-   d_tag = var_db->getVariable(tag_interior_variable_name);
-   if (d_tag.isNull()) {
-      d_tag = new pdat::CellVariable<int>(d_dim, tag_interior_variable_name, 1);
+   d_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+       var_db->getVariable(tag_interior_variable_name));
+   if (!d_tag) {
+      d_tag.reset(
+         new pdat::CellVariable<int>(d_dim, tag_interior_variable_name, 1));
    }
 
-   d_buf_tag = var_db->getVariable(tag_buffer_variable_name);
-   if (d_buf_tag.isNull()) {
-      d_buf_tag = new pdat::CellVariable<int>(d_dim,
-                                              tag_buffer_variable_name,
-                                              1);
+   d_buf_tag = boost::dynamic_pointer_cast<pdat::CellVariable<int>, hier::Variable>(
+      var_db->getVariable(tag_buffer_variable_name));
+   if (!d_buf_tag) {
+      d_buf_tag.reset(new pdat::CellVariable<int>(d_dim,
+                                                  tag_buffer_variable_name,
+                                                  1));
    }
 
    if ((*s_tag_indx)[d_dim.getValue() - 1] < 0) {
@@ -197,13 +192,13 @@ GriddingAlgorithm::GriddingAlgorithm(
    /*
     * Initialize communication algorithm for exchanging buffered tag data.
     */
-   d_bdry_fill_tags = new xfer::RefineAlgorithm(d_dim);
+   d_bdry_fill_tags.reset(new xfer::RefineAlgorithm(d_dim));
 
    d_bdry_fill_tags->
    registerRefine(d_buf_tag_indx,
       d_buf_tag_indx,
       d_buf_tag_indx,
-      ((tbox::Pointer<hier::RefineOperator>)NULL));
+      boost::shared_ptr<hier::RefineOperator>());
 
    d_efficiency_tolerance.resizeArray(d_hierarchy->getMaxNumberOfLevels());
    d_combine_efficiency.resizeArray(d_hierarchy->getMaxNumberOfLevels());
@@ -238,8 +233,10 @@ GriddingAlgorithm::GriddingAlgorithm(
       // Note: checkCoarsenRatios() must precede getErrorCoarsenRatio().
    }
    if (d_tag_init_strategy->getErrorCoarsenRatio() > 1) {
-      tbox::Pointer<StandardTagAndInitialize> std_tag_init(d_tag_init_strategy);
-      if (!std_tag_init.isNull()) {
+      boost::shared_ptr<StandardTagAndInitialize> std_tag_init(
+         d_tag_init_strategy,
+         boost::detail::dynamic_cast_tag());
+      if (std_tag_init) {
          d_hierarchy->registerConnectorWidthRequestor(
             std_tag_init->getConnectorWidthRequestor());
       }
@@ -291,6 +288,24 @@ GriddingAlgorithm::~GriddingAlgorithm()
    d_mb_tagger_strategy = NULL;
 }
 
+boost::shared_ptr<TagAndInitializeStrategy>
+GriddingAlgorithm::getTagAndInitializeStrategy() const
+{
+   return d_tag_init_strategy;
+}
+
+boost::shared_ptr<LoadBalanceStrategy>
+GriddingAlgorithm::getLoadBalanceStrategy() const
+{
+   return d_load_balancer;
+}
+
+boost::shared_ptr<LoadBalanceStrategy>
+GriddingAlgorithm::getLoadBalanceStrategyZero() const
+{
+   return d_load_balancer0;
+}
+
 /*
  *************************************************************************
  *
@@ -312,7 +327,8 @@ GriddingAlgorithm::~GriddingAlgorithm()
  *************************************************************************
  */
 
-void GriddingAlgorithm::makeCoarsestLevel(
+void
+GriddingAlgorithm::makeCoarsestLevel(
    const double level_time)
 {
 
@@ -334,7 +350,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
 
    bool level_zero_exists = false;
    if ((d_hierarchy->getNumberOfLevels() > 0)) {
-      if (!(d_hierarchy->getPatchLevel(ln).isNull())) {
+      if (d_hierarchy->getPatchLevel(ln)) {
          level_zero_exists = true;
       }
    }
@@ -445,7 +461,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
       new_mapped_box_level,
       new_to_domain,
       domain_to_new,
-      d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
+      d_hierarchy->getGridGeometry()->getDomainSearchTree(),
       domain_to_domain);
 
    if (d_check_connectors) {
@@ -519,17 +535,12 @@ void GriddingAlgorithm::makeCoarsestLevel(
        * Add computed Connectors to new level's collection of
        * persistent overlap Connectors.
        */
-      tbox::Pointer<hier::PatchLevel> new_level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> new_level(
+         d_hierarchy->getPatchLevel(ln));
       new_level->getBoxLevel()->getPersistentOverlapConnectors().
       cacheConnector(
          *new_level->getBoxLevel(),
          new_to_new);
-
-      if (d_print_hierarchy) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
-         d_hierarchy->recursivePrint(tbox::plog, "", 4);
-      }
 
       d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
          *d_hierarchy->getPatchLevel(0));
@@ -548,18 +559,13 @@ void GriddingAlgorithm::makeCoarsestLevel(
        */
       hier::BoxLevel old_mapped_box_level = *d_hierarchy->getBoxLevel(0);
 
-      tbox::Pointer<hier::PatchLevel> old_level =
-         d_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<hier::PatchLevel> old_level(
+         d_hierarchy->getPatchLevel(ln));
 
       d_hierarchy->removePatchLevel(ln);
 
       d_hierarchy->makeNewPatchLevel(ln,
          new_mapped_box_level);
-
-      if (d_print_hierarchy) {
-         tbox::plog << "GriddingAlgorithm::makeCoarsestLevel produced:\n";
-         d_hierarchy->recursivePrint(tbox::plog, "", 4);
-      }
 
       /*
        * Compute old<==>new.  Doing it this way is not scalable, but
@@ -586,7 +592,7 @@ void GriddingAlgorithm::makeCoarsestLevel(
          false,
          old_level);
 
-      old_level.setNull();
+      old_level.reset();
 
    }
    t_make_new->stop();
@@ -597,6 +603,10 @@ void GriddingAlgorithm::makeCoarsestLevel(
    d_tag_init_strategy->resetHierarchyConfiguration(d_hierarchy, ln, ln);
    if (d_barrier_and_time) {
       t_reset_hier->stop();
+   }
+
+   if (d_log_metadata_statistics) {
+      logMetadataStatistics("makeCoarsestLevel", 0, false, false);
    }
 
 #ifdef GA_RECORD_STATS
@@ -635,7 +645,8 @@ void GriddingAlgorithm::makeCoarsestLevel(
  *************************************************************************
  */
 
-void GriddingAlgorithm::makeFinerLevel(
+void
+GriddingAlgorithm::makeFinerLevel(
    const double level_time,
    const bool initial_time,
    const int tag_buffer,
@@ -647,9 +658,9 @@ void GriddingAlgorithm::makeFinerLevel(
       << d_hierarchy->getFinestLevelNumber() << "\n";
    }
 
-   TBOX_ASSERT(!(d_hierarchy.isNull()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(
-                    d_hierarchy->getFinestLevelNumber()).isNull()));
+   TBOX_ASSERT(d_hierarchy);
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(
+                    d_hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(tag_buffer >= 0);
 
    if (d_barrier_and_time) {
@@ -680,8 +691,8 @@ void GriddingAlgorithm::makeFinerLevel(
        */
       computeProperNestingData(d_base_ln);
 
-      const tbox::Pointer<hier::PatchLevel>
-      tag_level = d_hierarchy->getPatchLevel(tag_ln);
+      const boost::shared_ptr<hier::PatchLevel> tag_level(
+         d_hierarchy->getPatchLevel(tag_ln));
 
       hier::BoxLevel new_mapped_box_level(d_dim);
       hier::Connector* tag_to_new = new hier::Connector;
@@ -872,7 +883,7 @@ void GriddingAlgorithm::makeFinerLevel(
           * Deallocate tag arrays and schedule -- no longer needed.
           */
          tag_level->deallocatePatchData(d_tag_indx);
-         d_bdry_sched_tags[tag_ln].setNull();
+         d_bdry_sched_tags[tag_ln].reset();
 
       } else { /* do_tagging == false */
 
@@ -937,8 +948,8 @@ void GriddingAlgorithm::makeFinerLevel(
 
          d_hierarchy->makeNewPatchLevel(new_ln, new_mapped_box_level);
 
-         tbox::Pointer<hier::PatchLevel> new_level =
-            d_hierarchy->getPatchLevel(new_ln);
+         boost::shared_ptr<hier::PatchLevel> new_level(
+            d_hierarchy->getPatchLevel(new_ln));
 
          new_level->getBoxLevel()->getPersistentOverlapConnectors().
          cacheConnector(
@@ -955,11 +966,6 @@ void GriddingAlgorithm::makeFinerLevel(
             *new_level->getBoxLevel(),
             tag_to_new);
 
-         if (d_print_hierarchy) {
-            tbox::plog << "GriddingAlgorithm::makeFinerLevel produced:\n";
-            d_hierarchy->recursivePrint(tbox::plog, "", 4);
-         }
-
          d_hierarchy->getGridGeometry()->adjustMultiblockPatchLevelBoundaries(
             *d_hierarchy->getPatchLevel(new_ln));
 
@@ -975,6 +981,10 @@ void GriddingAlgorithm::makeFinerLevel(
             new_ln);
          t_reset_hier->stop();
          t_make_finer_create->stop();
+
+         if (d_log_metadata_statistics) {
+            logMetadataStatistics("makeFinerLevel", d_hierarchy->getFinestLevelNumber(), false, true);
+         }
       }
       else {
          delete tag_to_new;
@@ -1007,7 +1017,8 @@ void GriddingAlgorithm::makeFinerLevel(
  *************************************************************************
  */
 
-void GriddingAlgorithm::regridAllFinerLevels(
+void
+GriddingAlgorithm::regridAllFinerLevels(
    const int level_number,
    const double regrid_time,
    const tbox::Array<int>& tag_buffer,
@@ -1016,7 +1027,7 @@ void GriddingAlgorithm::regridAllFinerLevels(
 {
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(level_number).isNull()));
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(tag_buffer.getSize() >= level_number + 1);
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < tag_buffer.getSize(); i++) {
@@ -1034,16 +1045,13 @@ void GriddingAlgorithm::regridAllFinerLevels(
       if (d_print_steps) {
          tbox::plog
          << "GriddingAlgorithm::regridAllFinerLevels: regridding finer than "
-         << level_number << "\n";
+         << level_number << std::endl;
       }
 
       /*
        * d_base_ln is used by private methods during regrid.
        */
       d_base_ln = level_number;
-
-      const tbox::Pointer<hier::PatchLevel> patch_level =
-         d_hierarchy->getPatchLevel(level_number);
 
       t_process_error->start();
       /*
@@ -1111,10 +1119,18 @@ void GriddingAlgorithm::regridAllFinerLevels(
       if (d_print_steps) {
          tbox::plog
          << "GriddingAlgorithm::regridAllFinerLevels: regridded finer than "
-         << level_number << "\n";
+         << level_number << std::endl;
       }
 
    } //  if level cannot be refined, the routine drops through...
+
+   else {
+      if (d_print_steps) {
+         tbox::plog
+         << "GriddingAlgorithm::regridAllFinerLevels: level "
+         << level_number << " cannot be refined." << std::endl;
+      }
+   }
 
 #ifdef GA_RECORD_STATS
    // Verified that this does not use much time.
@@ -1127,10 +1143,6 @@ void GriddingAlgorithm::regridAllFinerLevels(
       t_regrid_all_finer->stop();
    }
 
-   if (d_print_hierarchy) {
-      tbox::plog << "GriddingAlgorithm::regridAllFinerLevels produced:\n";
-      d_hierarchy->recursivePrint(tbox::plog, "", 4);
-   }
 }
 
 /*
@@ -1167,7 +1179,8 @@ void GriddingAlgorithm::regridAllFinerLevels(
  *************************************************************************
  */
 
-void GriddingAlgorithm::regridFinerLevel(
+void
+GriddingAlgorithm::regridFinerLevel(
    const int tag_ln,
    const double regrid_time,
    const int finest_level_not_regridded,
@@ -1177,7 +1190,7 @@ void GriddingAlgorithm::regridFinerLevel(
 {
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(tag_ln).isNull()));
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(tag_ln));
    TBOX_ASSERT(finest_level_not_regridded >= 0
       && finest_level_not_regridded <= tag_ln);
    TBOX_ASSERT(tag_buffer.getSize() >= tag_ln + 1);
@@ -1205,8 +1218,8 @@ void GriddingAlgorithm::regridFinerLevel(
 
       int new_ln = tag_ln + 1;
 
-      tbox::Pointer<hier::PatchLevel>
-      tag_level = d_hierarchy->getPatchLevel(tag_ln);
+      boost::shared_ptr<hier::PatchLevel> tag_level(
+         d_hierarchy->getPatchLevel(tag_ln));
 
       /*
        * Compute nesting data at tag_ln for use in constructing
@@ -1335,7 +1348,7 @@ void GriddingAlgorithm::regridFinerLevel(
           */
 
          tag_level->deallocatePatchData(d_tag_indx);
-         d_bdry_sched_tags[tag_ln].setNull();
+         d_bdry_sched_tags[tag_ln].reset();
 
          if (d_barrier_and_time) {
             t_misc3->stop();
@@ -1386,6 +1399,12 @@ void GriddingAlgorithm::regridFinerLevel(
             tag_to_finer,
             finer_to_tag);
 
+         if (d_log_metadata_statistics) {
+            // Don't log the coarse Connector, if the coarse level will be updated.
+            logMetadataStatistics("regridFinerLevel", new_ln, new_ln<d_hierarchy->getFinestLevelNumber(), tag_ln==d_base_ln);
+            tbox::plog << "GriddingAlgorithm::regridFinerLevel finished logging level stats." << std::endl;
+         }
+
       } else {
 
          /*
@@ -1412,14 +1431,22 @@ void GriddingAlgorithm::regridFinerLevel(
  * Various tagging stuff done before recursively regridding a finer level.
  *************************************************************************
  */
-void GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
+void
+GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
    const int tag_ln,
    const bool level_is_coarsest_sync_level,
    const tbox::Array<double>& regrid_start_time,
    const double regrid_time)
 {
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid: entered with tag_ln = "
+      << tag_ln << "\n";
+   }
+
    const hier::IntVector& zero_vec(hier::IntVector::getZero(d_dim));
-   const tbox::Pointer<hier::PatchLevel>& tag_level(d_hierarchy->getPatchLevel(tag_ln));
+   const boost::shared_ptr<hier::PatchLevel>& tag_level(
+      d_hierarchy->getPatchLevel(tag_ln));
 
    /*
     * Create communication schedule for buffer tags and set tags to
@@ -1515,14 +1542,22 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
  * Various tagging stuff done after recursively regridding a finer level.
  *************************************************************************
  */
-void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
+void
+GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
    hier::Connector& tag_to_finer,
    hier::Connector& finer_to_tag,
    const int tag_ln,
    const tbox::Array<int>& tag_buffer)
 {
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid: entered with tag_ln = "
+      << tag_ln << "\n";
+   }
+
    const int new_ln = tag_ln + 1;
-   const tbox::Pointer<hier::PatchLevel>& tag_level(d_hierarchy->getPatchLevel(tag_ln));
+   const boost::shared_ptr<hier::PatchLevel>& tag_level(
+      d_hierarchy->getPatchLevel(tag_ln));
    const hier::OverlapConnectorAlgorithm oca;
    const hier::BoxLevelConnectorUtils mblc_utils;
 
@@ -1615,7 +1650,7 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
          dummy_finer_mapped_box_level,
          finer_to_tag,
          tag_to_finer,
-         d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
+         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          d_hierarchy->getConnector(tag_ln, tag_ln));
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1650,7 +1685,8 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
  * this method creates and installs new PatchLevel in the hierarchy.
  *************************************************************************
  */
-void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
+void
+GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    const int tag_ln,
    const double regrid_time,
    hier::Connector* tag_to_new,
@@ -1667,7 +1703,8 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    }
 
    const int new_ln = tag_ln + 1;
-   const tbox::Pointer<hier::PatchLevel>& tag_level = d_hierarchy->getPatchLevel(tag_ln);
+   const boost::shared_ptr<hier::PatchLevel>& tag_level(
+      d_hierarchy->getPatchLevel(tag_ln));
    const hier::BoxLevel& new_mapped_box_level(tag_to_new->getHead());
 
    const hier::OverlapConnectorAlgorithm oca;
@@ -1715,8 +1752,8 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
     * We need this while installing new objects.
     */
 
-   tbox::Pointer<hier::PatchLevel> old_fine_level;
-   tbox::ConstPointer<hier::BoxLevel> old_mapped_box_level;
+   boost::shared_ptr<hier::PatchLevel> old_fine_level;
+   boost::shared_ptr<const hier::BoxLevel> old_mapped_box_level;
    const hier::Connector* old_to_tag = NULL;
    const hier::Connector* tag_to_old = NULL;
 
@@ -1732,7 +1769,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       old_fine_level = d_hierarchy->getPatchLevel(new_ln);
       d_hierarchy->removePatchLevel(new_ln);
       // ratio = old_fine_level->getRatioToLevelZero();
-      assert(ratio == old_fine_level->getRatioToLevelZero());
+      TBOX_ASSERT(ratio == old_fine_level->getRatioToLevelZero());
 
    }
 
@@ -1808,8 +1845,8 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Cache Connectors for new level.
     */
-   tbox::Pointer<hier::PatchLevel> new_level =
-      d_hierarchy->getPatchLevel(new_ln);
+   boost::shared_ptr<hier::PatchLevel> new_level(
+      d_hierarchy->getPatchLevel(new_ln));
    new_level->getBoxLevel()->getPersistentOverlapConnectors().
    cacheConnector(
       *new_level->getBoxLevel(),
@@ -1858,8 +1895,8 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
       oca.assertOverlapCorrectness(*finer_to_new, false, true, true);
 #endif
 
-      tbox::Pointer<hier::PatchLevel> finer_level =
-         d_hierarchy->getPatchLevel(new_ln + 1);
+      boost::shared_ptr<hier::PatchLevel> finer_level(
+         d_hierarchy->getPatchLevel(new_ln + 1));
 
       new_level->getBoxLevel()->getPersistentOverlapConnectors().
       cacheConnector(
@@ -1872,7 +1909,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
          finer_to_new);
    }
 
-   if (!old_mapped_box_level.isNull()) {
+   if (old_mapped_box_level) {
 
       /*
        * Connect old to new by bridging.
@@ -1923,7 +1960,7 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
    /*
     * Destroy old patch level, if such a level existed prior to regrid.
     */
-   old_fine_level.setNull();
+   old_fine_level.reset();
    if (d_barrier_and_time) {
       t_regrid_finer_create->stop();
    }
@@ -1936,7 +1973,8 @@ void GriddingAlgorithm::regridFinerLevel_createAndInstallNewLevel(
  * boundary.
  *************************************************************************
  */
-size_t GriddingAlgorithm::checkBoundaryProximityViolation(
+size_t
+GriddingAlgorithm::checkBoundaryProximityViolation(
    const hier::BoxLevel& mapped_box_level,
    const hier::IntVector& extend_ghosts) const
 {
@@ -1950,25 +1988,31 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
     *    it means they are partially inside the domain.
     */
 
-   const hier::MultiblockBoxTree& periodic_domain_search_tree =
-      d_hierarchy->getGridGeometry()->getPeriodicDomainSearchTree();
+   const hier::BaseGridGeometry& grid_geometry(
+      *d_hierarchy->getGridGeometry()); 
 
-   tbox::Pointer<hier::MultiblockBoxTree> refined_periodic_domain_search_tree(
-      periodic_domain_search_tree.createRefinedTree(mapped_box_level.getRefinementRatio()));
+   const hier::BoxContainer& periodic_domain_search_tree(
+      grid_geometry.getPeriodicDomainSearchTree());
+
+   hier::BoxContainer refined_periodic_domain_search_tree(
+      periodic_domain_search_tree);
+   refined_periodic_domain_search_tree.refine(mapped_box_level.getRefinementRatio());
+   refined_periodic_domain_search_tree.makeTree(&grid_geometry);
 
    size_t nerr(0);
 
-   for (hier::RealBoxConstIterator bi(mapped_box_level.getBoxes());
-        bi.isValid(); ++bi) {
+   for (hier::RealBoxConstIterator bi(mapped_box_level.getBoxes().realBegin());
+        bi != mapped_box_level.getBoxes().realEnd(); ++bi) {
 
       hier::BoxContainer external_parts(*bi);
       external_parts.grow(extend_ghosts);
       external_parts.removeIntersections(
          mapped_box_level.getRefinementRatio(),
-         *refined_periodic_domain_search_tree);
+         refined_periodic_domain_search_tree);
 
-      for (hier::BoxContainer::Iterator bli(external_parts); bli != external_parts.end();
-           bli++) {
+      for (hier::BoxContainer::iterator bli(external_parts);
+           bli != external_parts.end();
+           ++bli) {
          hier::IntVector leftover_size((*bli).numberCells());
          for (int d = 0; d < d_dim.getValue(); ++d) {
             if (leftover_size(d) != 0 && leftover_size(d) < extend_ghosts(d)) {
@@ -1995,7 +2039,8 @@ size_t GriddingAlgorithm::checkBoundaryProximityViolation(
  * Check domain boxes for violations of user constraints.
  *******************************************************************
  */
-void GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) const {
+void
+GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes) const {
 
    hier::IntVector smallest_patch(d_dim);
    hier::IntVector largest_patch(d_dim);
@@ -2016,8 +2061,8 @@ void GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes)
     * Check minimum size violations.
     */
    int i = 0;
-   for (hier::BoxContainer::ConstIterator itr(domain_boxes); itr != domain_boxes.end();
-        ++itr, ++i) {
+   for (hier::BoxContainer::const_iterator itr(domain_boxes);
+        itr != domain_boxes.end(); ++itr, ++i) {
 
       hier::Box test_box = *itr;
       for (int dir = 0; dir < d_dim.getValue(); dir++) {
@@ -2081,7 +2126,8 @@ void GriddingAlgorithm::checkDomainBoxes(const hier::BoxContainer& domain_boxes)
  * Check for non-nesting user-specified boxes.
  *******************************************************************
  */
-void GriddingAlgorithm::checkNonnestingUserBoxes(
+void
+GriddingAlgorithm::checkNonnestingUserBoxes(
    const hier::Connector& new_to_tag,
    const hier::IntVector& nesting_buffer) const
 {
@@ -2129,7 +2175,8 @@ void GriddingAlgorithm::checkNonnestingUserBoxes(
  * Check for non-nesting user-specified boxes.
  *******************************************************************
  */
-void GriddingAlgorithm::checkBoundaryProximityViolation(
+void
+GriddingAlgorithm::checkBoundaryProximityViolation(
    const int tag_ln,
    const hier::BoxLevel& new_mapped_box_level) const
 {
@@ -2163,7 +2210,8 @@ void GriddingAlgorithm::checkBoundaryProximityViolation(
  *                                                                       *
  *************************************************************************
  */
-void GriddingAlgorithm::recordStatistics(
+void
+GriddingAlgorithm::recordStatistics(
    double current_time)
 {
 #ifdef GA_RECORD_STATS
@@ -2175,15 +2223,10 @@ void GriddingAlgorithm::recordStatistics(
       int level_gridcells = 0;
       int level_local_patches = 0;
       if (ln < d_hierarchy->getNumberOfLevels()) {
-         tbox::Pointer<hier::PatchLevel> patch_level =
+         const boost::shared_ptr<hier::PatchLevel>& patch_level =
             d_hierarchy->getPatchLevel(ln);
-         level_gridcells += patch_level->getLocalNumberOfCells();
-         level_local_patches += patch_level->getLocalNumberOfPatches();
-         for (hier::PatchLevel::Iterator ip(patch_level); ip; ip++) {
-            tbox::Pointer<hier::Patch> patch = *ip;
-            level_gridcells += patch->getBox().size();
-            level_local_patches += 1;
-         }
+         level_gridcells = patch_level->getLocalNumberOfCells();
+         level_local_patches = patch_level->getLocalNumberOfPatches();
       }
       d_boxes_stat[ln]->recordProcStat(double(level_local_patches));
       d_cells_stat[ln]->recordProcStat(double(level_gridcells));
@@ -2198,7 +2241,8 @@ void GriddingAlgorithm::recordStatistics(
  *                                                                       *
  *************************************************************************
  */
-void GriddingAlgorithm::printStatistics(
+void
+GriddingAlgorithm::printStatistics(
    std::ostream& s) const
 {
 #ifdef GA_RECORD_STATS
@@ -2276,7 +2320,8 @@ void GriddingAlgorithm::printStatistics(
  * TODO: remove level from this interface.  tag_ln is sufficient.
  *************************************************************************
  */
-void GriddingAlgorithm::checkNonrefinedTags(
+void
+GriddingAlgorithm::checkNonrefinedTags(
    const hier::PatchLevel& level,
    int tag_ln) const
 {
@@ -2304,9 +2349,9 @@ void GriddingAlgorithm::checkNonrefinedTags(
    for (hier::Connector::ConstNeighborhoodIterator ei = tag_to_violator.begin();
         ei != tag_to_violator.end(); ++ei) {
       const hier::BoxId& mapped_box_id = *ei;
-      tbox::Pointer<hier::Patch> patch = level.getPatch(mapped_box_id);
-      tbox::Pointer<pdat::CellData<int> > tag_data =
-         patch->getPatchData(d_tag_indx);
+      boost::shared_ptr<pdat::CellData<int> > tag_data(
+         level.getPatch(mapped_box_id)->getPatchData(d_tag_indx),
+         boost::detail::dynamic_cast_tag());
       for (hier::Connector::ConstNeighborIterator na = tag_to_violator.begin(ei);
            na != tag_to_violator.end(ei); ++na) {
          const hier::Box& vio_mapped_box = *na;
@@ -2348,7 +2393,7 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
 {
    d_buf_tag_ghosts = hier::IntVector(d_dim, tag_buffer);
 
-   d_bdry_fill_tags.setNull();
+   d_bdry_fill_tags.reset();
 
    hier::VariableDatabase* var_db =
       hier::VariableDatabase::getDatabase();
@@ -2370,25 +2415,27 @@ void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
       d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
    }
 
-   d_bdry_fill_tags = new xfer::RefineAlgorithm(d_dim);
+   d_bdry_fill_tags.reset(new xfer::RefineAlgorithm(d_dim));
 
    d_bdry_fill_tags->
    registerRefine(d_buf_tag_indx,
       d_buf_tag_indx,
       d_buf_tag_indx,
-      ((tbox::Pointer<hier::RefineOperator>)NULL));
+      boost::shared_ptr<hier::RefineOperator>());
 }
 
 /*
  *************************************************************************
  *************************************************************************
  */
-void GriddingAlgorithm::checkOverlappingPatches(
+void
+GriddingAlgorithm::checkOverlappingPatches(
    const hier::Connector& mapped_box_level_to_self) const
 {
    bool has_overlap = false;
    const hier::BoxLevel& mapped_box_level = mapped_box_level_to_self.getBase();
-   const hier::GridGeometry& grid_geom = *mapped_box_level.getGridGeometry();
+   const hier::BaseGridGeometry& grid_geom =
+      *mapped_box_level.getGridGeometry();
    const hier::IntVector& ratio = mapped_box_level.getRefinementRatio();
 
    for (hier::Connector::ConstNeighborhoodIterator ei = mapped_box_level_to_self.begin();
@@ -2445,7 +2492,8 @@ void GriddingAlgorithm::checkOverlappingPatches(
  *
  *************************************************************************
  */
-void GriddingAlgorithm::readLevelBoxes(
+void
+GriddingAlgorithm::readLevelBoxes(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& coarser_to_new,
    hier::Connector& new_to_coarser,
@@ -2526,9 +2574,10 @@ void GriddingAlgorithm::readLevelBoxes(
          d_hierarchy->getMPI(),
          hier::BoxLevel::GLOBALIZED);
       hier::LocalId i(0);
-      for (hier::BoxContainer::Iterator itr(boxes_to_refine);
+      for (hier::BoxContainer::iterator itr(boxes_to_refine);
            itr != boxes_to_refine.end(); ++itr, ++i) {
          hier::Box unbalanced_mapped_box(*itr, i, 0);
+         unbalanced_mapped_box.setBlockId(hier::BlockId(0));
          unbalanced_mapped_box_level.addBox(unbalanced_mapped_box);
       }
 
@@ -2614,7 +2663,7 @@ void GriddingAlgorithm::readLevelBoxes(
          new_mapped_box_level,
          new_to_coarser,
          coarser_to_new,
-         d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
+         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          coarser_to_coarser);
       new_mapped_box_level.finalize();
    }
@@ -2626,23 +2675,27 @@ void GriddingAlgorithm::readLevelBoxes(
  *************************************************************************
  */
 
-void GriddingAlgorithm::fillTags(
+void
+GriddingAlgorithm::fillTags(
    const int tag_value,
-   const tbox::Pointer<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_index) const
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
-   TBOX_ASSERT(!(tag_level.isNull()));
+   TBOX_ASSERT(tag_level);
    TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *tag_level);
 
    t_fill_tags->start();
 
-   for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
+   for (hier::PatchLevel::iterator ip(tag_level->begin());
+        ip != tag_level->end(); ++ip) {
 
-      tbox::Pointer<hier::Patch> patch = *ip;
-      tbox::Pointer<pdat::CellData<int> > tag_data = patch->getPatchData(tag_index);
-      TBOX_ASSERT(!(tag_data.isNull()));
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      boost::shared_ptr<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_index),
+         boost::detail::dynamic_cast_tag());
+      TBOX_ASSERT(tag_data);
 
       tag_data->fill(tag_value);
 
@@ -2659,16 +2712,17 @@ void GriddingAlgorithm::fillTags(
  *************************************************************************
  */
 
-void GriddingAlgorithm::fillTagsFromBoxLevel(
+void
+GriddingAlgorithm::fillTagsFromBoxLevel(
    const int tag_value,
-   const tbox::Pointer<hier::PatchLevel> tag_level,
+   const boost::shared_ptr<hier::PatchLevel>& tag_level,
    const int tag_index,
    const hier::Connector& tag_level_to_fill_mapped_box_level,
    const bool interior_only,
    const hier::IntVector& fill_box_growth) const
 {
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
-   TBOX_ASSERT(!(tag_level.isNull()));
+   TBOX_ASSERT(tag_level);
    TBOX_ASSERT(tag_index == d_tag_indx || tag_index == d_buf_tag_indx);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *tag_level, fill_box_growth);
 
@@ -2682,7 +2736,8 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
 
    const hier::OverlapConnectorAlgorithm oca;
 
-   const tbox::ConstPointer<hier::GridGeometry>& grid_geom(d_hierarchy->getGridGeometry());
+   const boost::shared_ptr<const hier::BaseGridGeometry>& grid_geom(
+      d_hierarchy->getGridGeometry());
 
    const hier::IntVector& ratio = tag_level_to_fill_mapped_box_level.getRatio();
 
@@ -2690,13 +2745,15 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
       hier::IntVector::ceilingDivide(fill_box_growth,
          tag_level_to_fill_mapped_box_level.getRatio());
 
-   for (hier::PatchLevel::Iterator ip(tag_level); ip; ip++) {
-      tbox::Pointer<hier::Patch> patch = *ip;
+   for (hier::PatchLevel::iterator ip(tag_level->begin());
+        ip != tag_level->end(); ++ip) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      tbox::Pointer<pdat::CellData<int> >
-      tag_data = patch->getPatchData(tag_index);
+      boost::shared_ptr<pdat::CellData<int> > tag_data(
+         patch->getPatchData(tag_index),
+         boost::detail::dynamic_cast_tag());
 
-      TBOX_ASSERT(!(tag_data.isNull()));
+      TBOX_ASSERT(tag_data);
 
       const hier::BoxId& mapped_box_id(patch->getBox().getId());
 
@@ -2708,7 +2765,7 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
          mapped_box_id,
          growth_in_tag_resolution);
 
-      for (NeighborSet::ConstIterator
+      for (NeighborSet::const_iterator
            ni = neighbors.begin(); ni != neighbors.end(); ++ni) {
          const hier::Box& neighbor(*ni);
          hier::Box box = neighbor;
@@ -2743,13 +2800,20 @@ void GriddingAlgorithm::fillTagsFromBoxLevel(
  *************************************************************************
  */
 
-void GriddingAlgorithm::bufferTagsOnLevel(
+void
+GriddingAlgorithm::bufferTagsOnLevel(
    const int tag_value,
-   const tbox::Pointer<hier::PatchLevel> level,
+   const boost::shared_ptr<hier::PatchLevel>& level,
    const int buffer_size) const
 {
+   if (d_print_steps) {
+      tbox::plog
+      << "GriddingAlgorithm::bufferTagsOnLevel: entered with tag_ln = "
+      << level->getLevelNumber() << "\n";
+   }
+
    TBOX_ASSERT((tag_value == d_true_tag) || (tag_value == d_false_tag));
-   TBOX_ASSERT(!(level.isNull()));
+   TBOX_ASSERT(level);
    TBOX_ASSERT(buffer_size >= 0);
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *level);
    /*
@@ -2762,21 +2826,25 @@ void GriddingAlgorithm::bufferTagsOnLevel(
     * distance from actual tags.
     */
    const int not_tag = ((tag_value == d_true_tag) ? d_false_tag : d_true_tag);
-   for (hier::PatchLevel::Iterator ip1(level); ip1; ip1++) {
-      tbox::Pointer<hier::Patch> patch = *ip1;
+   for (hier::PatchLevel::iterator ip1(level->begin());
+        ip1 != level->end(); ++ip1) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip1;
 
-      tbox::Pointer<pdat::CellData<int> >
-      buf_tag_data = patch->getPatchData(d_buf_tag_indx);
-      tbox::Pointer<pdat::CellData<int> >
-      tag_data = patch->getPatchData(d_tag_indx);
+      boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
+         patch->getPatchData(d_buf_tag_indx),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<int> > tag_data(
+         patch->getPatchData(d_tag_indx),
+         boost::detail::dynamic_cast_tag());
 
       buf_tag_data->fillAll(not_tag);
 
       const hier::Box& interior(patch->getBox());
 
-      for (pdat::CellIterator ic(interior); ic; ic++) {
-         if ((*tag_data)(ic()) == tag_value) {
-            (*buf_tag_data)(ic()) = d_true_tag;
+      pdat::CellIterator icend(interior, false);
+      for (pdat::CellIterator ic(interior, true); ic != icend; ++ic) {
+         if ((*tag_data)(*ic) == tag_value) {
+            (*buf_tag_data)(*ic) = d_true_tag;
          }
       }
    }
@@ -2794,23 +2862,30 @@ void GriddingAlgorithm::bufferTagsOnLevel(
    /*
     * Buffer tags on patch interior according to buffered tag data.
     */
-   for (hier::PatchLevel::Iterator ip2(level); ip2; ip2++) {
-      tbox::Pointer<hier::Patch> patch = *ip2;
+   for (hier::PatchLevel::iterator ip2(level->begin());
+        ip2 != level->end(); ++ip2) {
+      const boost::shared_ptr<hier::Patch>& patch = *ip2;
 
-      tbox::Pointer<pdat::CellData<int> > buf_tag_data =
-         patch->getPatchData(d_buf_tag_indx);
-      tbox::Pointer<pdat::CellData<int> > tag_data =
-         patch->getPatchData(d_tag_indx);
+      boost::shared_ptr<pdat::CellData<int> > buf_tag_data(
+         patch->getPatchData(d_buf_tag_indx),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<pdat::CellData<int> > tag_data(
+         patch->getPatchData(d_tag_indx),
+         boost::detail::dynamic_cast_tag());
 
       const hier::Box& tag_box(tag_data->getBox());
+      const hier::BlockId& tag_box_block_id = tag_box.getBlockId();
       hier::Box buf_tag_box(tag_box);
       buf_tag_box.grow(hier::IntVector(d_dim, buffer_size));
 
       tag_data->fillAll(not_tag);
 
-      for (pdat::CellIterator ic(buf_tag_box); ic; ic++) {
-         if ((*buf_tag_data)(ic()) == d_true_tag) {
-            hier::Box buf_box(ic() - buffer_size, ic() + buffer_size);
+      pdat::CellIterator icend(buf_tag_box, false);
+      for (pdat::CellIterator ic(buf_tag_box, true); ic != icend; ++ic) {
+         if ((*buf_tag_data)(*ic) == d_true_tag) {
+            hier::Box buf_box(*ic - buffer_size,
+               *ic + buffer_size,
+               tag_box_block_id);
             tag_data->fill(tag_value, buf_box);
          }
       }
@@ -2837,7 +2912,8 @@ void GriddingAlgorithm::bufferTagsOnLevel(
  *************************************************************************
  */
 
-void GriddingAlgorithm::findRefinementBoxes(
+void
+GriddingAlgorithm::findRefinementBoxes(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
@@ -2845,7 +2921,7 @@ void GriddingAlgorithm::findRefinementBoxes(
 {
    TBOX_ASSERT((tag_ln >= 0)
       && (tag_ln <= d_hierarchy->getFinestLevelNumber()));
-   TBOX_ASSERT(!(d_hierarchy->getPatchLevel(tag_ln).isNull()));
+   TBOX_ASSERT(d_hierarchy->getPatchLevel(tag_ln));
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, new_mapped_box_level, *d_hierarchy);
 
    if (d_print_steps) {
@@ -2898,8 +2974,8 @@ void GriddingAlgorithm::findRefinementBoxes(
       hier::IntVector::ceilingDivide(extend_ghosts,
          d_hierarchy->getRatioToCoarserLevel(new_ln));
 
-   tbox::Pointer<hier::PatchLevel> level =
-      d_hierarchy->getPatchLevel(tag_ln);
+   boost::shared_ptr<hier::PatchLevel> level(
+      d_hierarchy->getPatchLevel(tag_ln));
 
    if (d_print_steps) {
       tbox::plog << "GriddingAlgorithm::findRefinementBoxes: clustering\n";
@@ -2938,7 +3014,8 @@ void GriddingAlgorithm::findRefinementBoxes(
          getEfficiencyTolerance(tag_ln),
          getCombineEfficiency(tag_ln),
          tag_to_cluster_width,
-         hier::BlockId(0));
+         hier::BlockId(0),
+         hier::LocalId(0));
    } else {
       /*
        * TODO: The following loop is an inefficient work-around to
@@ -2947,6 +3024,7 @@ void GriddingAlgorithm::findRefinementBoxes(
        * changed to support multiblock.
        */
       hier::BoxContainer accumulated_mapped_boxes;
+      hier::LocalId first_local_id(0);
       for (int bn = 0; bn < nblocks; ++bn) {
          /*
           * Determine single smallest bounding box for all nesting boxes.
@@ -2965,13 +3043,27 @@ void GriddingAlgorithm::findRefinementBoxes(
                getEfficiencyTolerance(tag_ln),
                getCombineEfficiency(tag_ln),
                tag_to_cluster_width,
-               hier::BlockId(bn));
+               hier::BlockId(bn),
+               first_local_id);
             accumulated_mapped_boxes.insert(
                new_mapped_box_level.getBoxes().begin(),
                new_mapped_box_level.getBoxes().end());
+            if (accumulated_mapped_boxes.size() > 0) {
+               first_local_id =
+                  accumulated_mapped_boxes.back().getId().getLocalId() + 1;
+            }
          }
 
       }
+#ifdef DEBUG_CHECK_ASSERTIONS
+      std::set<int> local_ids;
+      for (hier::BoxContainer::iterator
+           ac_itr = accumulated_mapped_boxes.begin();
+           ac_itr != accumulated_mapped_boxes.end(); ++ac_itr) {
+         local_ids.insert(ac_itr->getId().getLocalId().getValue());
+      }
+      TBOX_ASSERT(static_cast<int>(local_ids.size()) == accumulated_mapped_boxes.size());
+#endif
       const hier::BoxLevel& tag_mapped_box_level(tag_to_new.getBase());
       new_mapped_box_level.swapInitialize(
          accumulated_mapped_boxes,
@@ -3273,6 +3365,15 @@ void GriddingAlgorithm::findRefinementBoxes(
                new_to_tag.getConnectorWidth() - smallest_box_to_refine);
          }
       }
+#ifdef DEBUG_CHECK_ASSERTIONS
+      std::set<int> new_local_ids;
+      const hier::BoxContainer& new_boxes = new_mapped_box_level.getBoxes();
+      for (hier::BoxContainer::const_iterator new_itr = new_boxes.begin();
+           new_itr != new_boxes.end(); ++new_itr) {
+         new_local_ids.insert(new_itr->getId().getLocalId().getValue());
+      }
+      TBOX_ASSERT(static_cast<int>(new_local_ids.size()) == new_boxes.size());
+#endif
 
       t_box_massage->stop();
 
@@ -3359,7 +3460,7 @@ void GriddingAlgorithm::findRefinementBoxes(
          new_mapped_box_level,
          new_to_tag,
          tag_to_new,
-         d_hierarchy->getGridGeometry()->getDomainSearchTree().getSingleBlockBoxTree(hier::BlockId::zero()),
+         d_hierarchy->getGridGeometry()->getDomainSearchTree(),
          tag_to_tag);
       if (d_print_steps) {
          tbox::plog << "GriddingAlgorithm begin adding periodic images."
@@ -3407,7 +3508,8 @@ void GriddingAlgorithm::findRefinementBoxes(
  ***********************************************************************
  ***********************************************************************
  */
-void GriddingAlgorithm::renumberBoxes(
+void
+GriddingAlgorithm::renumberBoxes(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
@@ -3444,7 +3546,8 @@ void GriddingAlgorithm::renumberBoxes(
  ***********************************************************************
  ***********************************************************************
  */
-void GriddingAlgorithm::refineNewBoxLevel(
+void
+GriddingAlgorithm::refineNewBoxLevel(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
@@ -3477,7 +3580,8 @@ void GriddingAlgorithm::refineNewBoxLevel(
  *************************************************************************
  */
 
-void GriddingAlgorithm::extendBoxesToDomainBoundary(
+void
+GriddingAlgorithm::extendBoxesToDomainBoundary(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
@@ -3513,8 +3617,8 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
       extend_ghosts);
    before_to_after.setConnectorType(hier::Connector::MAPPING);
 
-   for (hier::BoxContainer::ConstIterator
-        nn = before_nodes.begin(); nn != before_nodes.end(); ++nn) {
+   for (hier::BoxContainer::const_iterator nn = before_nodes.begin();
+        nn != before_nodes.end(); ++nn) {
       const hier::Box& before_mapped_box = *nn;
       hier::Box after_mapped_box = before_mapped_box;
       hier::BoxUtilities::extendBoxToDomainBoundary(
@@ -3546,17 +3650,20 @@ void GriddingAlgorithm::extendBoxesToDomainBoundary(
  *************************************************************************
  */
 
-void GriddingAlgorithm::makeOverflowNestingMap(
+void
+GriddingAlgorithm::makeOverflowNestingMap(
    hier::BoxLevel& nested_mapped_box_level,
    hier::Connector& unnested_to_nested,
    const hier::BoxLevel& unnested_mapped_box_level,
    const hier::Connector& unnested_to_reference) const
 {
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(unnested_mapped_box_level);
+#endif
+
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim,
       unnested_mapped_box_level,
       nested_mapped_box_level);
-
-   (void)unnested_mapped_box_level;
 
    t_make_overflow_map->start();
 
@@ -3603,7 +3710,8 @@ void GriddingAlgorithm::makeOverflowNestingMap(
  *************************************************************************
  */
 
-void GriddingAlgorithm::makeProperNestingMap(
+void
+GriddingAlgorithm::makeProperNestingMap(
    hier::BoxLevel& nested_mapped_box_level,
    hier::Connector& unnested_to_nested,
    const hier::BoxLevel& unnested_mapped_box_level,
@@ -3656,7 +3764,8 @@ void GriddingAlgorithm::makeProperNestingMap(
  * Boxes inside the nesting complement violate nesting.
  *************************************************************************
  */
-void GriddingAlgorithm::computeNestingViolator(
+void
+GriddingAlgorithm::computeNestingViolator(
    hier::BoxLevel& violator,
    hier::Connector& candidate_to_violator,
    const hier::BoxLevel& candidate,
@@ -3674,13 +3783,15 @@ void GriddingAlgorithm::computeNestingViolator(
    TBOX_ASSERT(hierarchy_to_candidate.getRatio() ==
       hier::IntVector::getOne(d_dim));
 
+   const hier::BaseGridGeometry& grid_geometry(
+      *d_hierarchy->getGridGeometry());
+
    t_compute_nesting_violator->start();
 
    const hier::BoxLevelConnectorUtils edge_utils;
    const hier::OverlapConnectorAlgorithm oca;
 
    const hier::BoxContainer& candidate_mapped_boxes = candidate.getBoxes();
-
    /*
     * Bridge candidate to d_nesting_complement.  Any part of the
     * candidate BoxLevel that overlaps d_nesting_complement
@@ -3698,29 +3809,30 @@ void GriddingAlgorithm::computeNestingViolator(
       candidate_to_violator,
       candidate_to_complement,
       zero_vector,
-      d_hierarchy->getGridGeometry()->getDomainSearchTree());
+      grid_geometry.getDomainSearchTree());
    /*
     * Above step ignored the domain complement components of nesting
     * definition (by necessity).  Where the candidate falls outside
     * the domain, it violates nesting.
     */
 
-   tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
-      d_hierarchy->getGridGeometry()->getDomainSearchTree().createRefinedTree(candidate.getRefinementRatio());
+   hier::BoxContainer refined_domain_search_tree(
+      d_hierarchy->getGridGeometry()->getDomainSearchTree());
+   refined_domain_search_tree.refine(candidate.getRefinementRatio());
+   refined_domain_search_tree.makeTree(&grid_geometry);
 
-   for (hier::BoxContainer::ConstIterator ni = candidate_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = candidate_mapped_boxes.begin();
         ni != candidate_mapped_boxes.end(); ++ni) {
       const hier::Box& cmb = *ni;
       hier::BoxContainer addl_violators(cmb);
       addl_violators.removeIntersections(
          candidate.getRefinementRatio(),
-         *refined_domain_search_tree);
+         refined_domain_search_tree);
       if (!addl_violators.isEmpty()) {
          /*
           * Non-periodic BoxId needed for NeighborhoodSet::find()
           */
          hier::BoxId cmb_non_per_id(cmb.getGlobalId(),
-                                    cmb.getBlockId(),
                                     hier::PeriodicId::zero());
          if (candidate_to_violator.hasNeighborSet(cmb_non_per_id)) {
             /*
@@ -3739,9 +3851,9 @@ void GriddingAlgorithm::computeNestingViolator(
                addl_violators.removeIntersections(*na);
             }
             if (!addl_violators.isEmpty()) {
-               for (hier::BoxContainer::Iterator bi(addl_violators);
+               for (hier::BoxContainer::iterator bi(addl_violators);
                     bi != addl_violators.end(); ++bi) {
-                  hier::BoxContainer::ConstIterator new_violator = violator.addBox(
+                  hier::BoxContainer::const_iterator new_violator = violator.addBox(
                         *bi, cmb.getBlockId());
                   candidate_to_violator.insertLocalNeighbor(*new_violator,
                      base_box_itr);
@@ -3766,7 +3878,8 @@ void GriddingAlgorithm::computeNestingViolator(
  *************************************************************************
  */
 
-void GriddingAlgorithm::computeProperNestingData(
+void
+GriddingAlgorithm::computeProperNestingData(
    const int ln)
 {
    TBOX_ASSERT(d_base_ln >= 0 && ln >= d_base_ln);
@@ -3858,8 +3971,8 @@ void GriddingAlgorithm::computeProperNestingData(
          d_to_nesting_complement[ln - 1].getMPI());
       const hier::BoxContainer& lnm1_complement_mapped_boxes =
          d_proper_nesting_complement[ln - 1].getBoxes();
-      for (hier::BoxContainer::ConstIterator ni =
-              lnm1_complement_mapped_boxes.begin();
+      for (hier::BoxContainer::const_iterator ni =
+           lnm1_complement_mapped_boxes.begin();
            ni != lnm1_complement_mapped_boxes.end(); ++ni) {
          hier::Box tmp_mapped_box = *ni;
          TBOX_ASSERT(!tmp_mapped_box.isPeriodicImage());
@@ -3921,7 +4034,8 @@ void GriddingAlgorithm::computeProperNestingData(
  *************************************************************************
  */
 
-void GriddingAlgorithm::growBoxesWithinNestingDomain(
+void
+GriddingAlgorithm::growBoxesWithinNestingDomain(
    hier::BoxLevel& new_mapped_box_level,
    hier::Connector& tag_to_new,
    hier::Connector& new_to_tag,
@@ -3934,7 +4048,9 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
 
    const hier::OverlapConnectorAlgorithm oca;
 
-   const int nblocks = d_hierarchy->getGridGeometry()->getNumberBlocks();
+   const hier::BaseGridGeometry& grid_geometry(
+      *d_hierarchy->getGridGeometry());
+   const int nblocks = grid_geometry.getNumberBlocks();
    hier::IntVector current_min_size(d_dim, tbox::MathUtilities<int>::getMax());
    for (int bn = 0; bn < nblocks; ++bn) {
       current_min_size.min(new_mapped_box_level.getGlobalMinBoxSize(bn));
@@ -3995,9 +4111,10 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
       min_size);
    new_to_grown.setConnectorType(hier::Connector::MAPPING);
 
-   tbox::Pointer<hier::MultiblockBoxTree> refined_domain_search_tree =
-      d_hierarchy->getGridGeometry()->getDomainSearchTree().createRefinedTree(
-         new_mapped_box_level.getRefinementRatio());
+   hier::BoxContainer refined_domain_search_tree(
+      grid_geometry.getDomainSearchTree());
+   refined_domain_search_tree.refine(new_mapped_box_level.getRefinementRatio());
+   refined_domain_search_tree.makeTree(&grid_geometry);
 
    std::vector<hier::Box> tmp_mapped_box_vector;
    tmp_mapped_box_vector.reserve(10);
@@ -4009,7 +4126,7 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
     * Box minus parts removed to satisfy nesting requirements.
     */
 
-   for (hier::BoxContainer::ConstIterator ni = new_mapped_boxes.begin();
+   for (hier::BoxContainer::const_iterator ni = new_mapped_boxes.begin();
         ni != new_mapped_boxes.end(); ++ni) {
       const hier::Box& omb = *ni;
       TBOX_ASSERT(!omb.isPeriodicImage());
@@ -4022,10 +4139,9 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
 
       hier::BoxContainer nesting_domain;
 
-      refined_domain_search_tree->findOverlapBoxes(
+      refined_domain_search_tree.findOverlapBoxes(
          nesting_domain,
          omb,
-         // omb.getBlockId(),
          new_mapped_box_level.getRefinementRatio());
 
       if (new_to_nesting_complement.hasNeighborSet(omb.getId())) {
@@ -4069,7 +4185,8 @@ void GriddingAlgorithm::growBoxesWithinNestingDomain(
    t_modify_connector->stop();
 }
 
-void GriddingAlgorithm::getGriddingParameters(
+void
+GriddingAlgorithm::getGriddingParameters(
    hier::IntVector& smallest_patch,
    hier::IntVector& smallest_box_to_refine,
    hier::IntVector& largest_patch,
@@ -4184,7 +4301,8 @@ void GriddingAlgorithm::getGriddingParameters(
  *************************************************************************
  */
 
-void GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
+void
+GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
 {
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(d_dim);
@@ -4244,7 +4362,8 @@ void GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
  *************************************************************************
  */
 
-void GriddingAlgorithm::printClassData(
+void
+GriddingAlgorithm::printClassData(
    std::ostream& os) const
 {
    os << "\nGriddingAlgorithm::printClassData..." << std::endl;
@@ -4259,14 +4378,14 @@ void GriddingAlgorithm::printClassData(
       << (GriddingAlgorithm *)this << std::endl;
    os << "d_object_name = " << d_object_name << std::endl;
    os << "d_tag_init_strategy = "
-      << (TagAndInitializeStrategy *)d_tag_init_strategy << std::endl;
+      << d_tag_init_strategy.get() << std::endl;
    os << "d_box_generator = "
-      << (BoxGeneratorStrategy *)d_box_generator << std::endl;
+      << d_box_generator.get() << std::endl;
    os << "d_load_balancer = "
-      << (LoadBalanceStrategy *)d_load_balancer << std::endl;
+      << d_load_balancer.get() << std::endl;
    os << "d_load_balancer0 = "
-      << (LoadBalanceStrategy *)d_load_balancer0 << std::endl;
-   os << "d_tag = " << d_tag.getPointer() << std::endl;
+      << d_load_balancer0.get() << std::endl;
+   os << "d_tag = " << d_tag.get() << std::endl;
    os << "d_tag_indx = " << d_tag_indx << std::endl;
    os << "d_buf_tag_indx = " << d_buf_tag_indx << std::endl;
    os << "d_true_tag = " << d_true_tag << std::endl;
@@ -4294,10 +4413,11 @@ void GriddingAlgorithm::printClassData(
  *************************************************************************
  */
 
-void GriddingAlgorithm::putToDatabase(
-   tbox::Pointer<tbox::Database> db)
+void
+GriddingAlgorithm::putToDatabase(
+   const boost::shared_ptr<tbox::Database>& db) const
 {
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("ALGS_GRIDDING_ALGORITHM_VERSION",
       ALGS_GRIDDING_ALGORITHM_VERSION);
@@ -4321,13 +4441,14 @@ void GriddingAlgorithm::putToDatabase(
  *************************************************************************
  */
 
-void GriddingAlgorithm::getFromInput(
-   tbox::Pointer<tbox::Database> db,
+void
+GriddingAlgorithm::getFromInput(
+   const boost::shared_ptr<tbox::Database>& db,
    bool is_from_restart)
 {
    NULL_USE(is_from_restart);
 
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    d_check_overflow_nesting =
       db->getBoolWithDefault("check_overflow_nesting", d_check_overflow_nesting);
@@ -4335,10 +4456,10 @@ void GriddingAlgorithm::getFromInput(
       db->getBoolWithDefault("check_proper_nesting", d_check_proper_nesting);
    d_check_connectors =
       db->getBoolWithDefault("check_connectors", d_check_connectors);
-   d_print_hierarchy =
-      db->getBoolWithDefault("print_hierarchy", d_print_hierarchy);
    d_print_steps =
       db->getBoolWithDefault("print_steps", d_print_steps);
+   d_log_metadata_statistics =
+      db->getBoolWithDefault("log_metadata_statistics", d_log_metadata_statistics);
 
    /*
     * Read input for efficiency tolerance.
@@ -4467,18 +4588,17 @@ void GriddingAlgorithm::getFromInput(
  *************************************************************************
  */
 
-void GriddingAlgorithm::getFromRestart()
+void
+GriddingAlgorithm::getFromRestart()
 {
-   tbox::Pointer<tbox::Database> root_db =
-      tbox::RestartManager::getManager()->getRootDatabase();
+   boost::shared_ptr<tbox::Database> root_db(
+      tbox::RestartManager::getManager()->getRootDatabase());
 
-   tbox::Pointer<tbox::Database> db;
-   if (root_db->isDatabase(d_object_name)) {
-      db = root_db->getDatabase(d_object_name);
-   } else {
+   if (!root_db->isDatabase(d_object_name)) {
       TBOX_ERROR("Restart database corresponding to "
          << d_object_name << " not found in restart file.");
    }
+   boost::shared_ptr<tbox::Database> db(root_db->getDatabase(d_object_name));
 
    int ver = db->getInteger("ALGS_GRIDDING_ALGORITHM_VERSION");
    if (ver != ALGS_GRIDDING_ALGORITHM_VERSION) {
@@ -4499,45 +4619,55 @@ void GriddingAlgorithm::getFromRestart()
 
 /*
  *************************************************************************
+ * Log metadata statistics after generating a new level.
+ *
+ * Log the given level, its peer connector and if requested, the
+ * connectors to the next finer and next coarser levels.  Connectors
+ * logged will have unit width.
  *************************************************************************
  */
-void GriddingAlgorithm::startupCallback()
+void
+GriddingAlgorithm::logMetadataStatistics(
+   const char *caller_name,
+   int ln,
+   bool log_fine_connector,
+   bool log_coarse_connector) const
 {
-   s_tag_indx = new tbox::Array<int>(tbox::Dimension::MAXIMUM_DIMENSION_VALUE, -1);
-   s_buf_tag_indx = new tbox::Array<int>(tbox::Dimension::MAXIMUM_DIMENSION_VALUE, -1);
+   const std::string name("L" + tbox::Utilities::levelToString(ln));
+   const hier::BoxLevel &level = *d_hierarchy->getPatchLevel(ln)->getBoxLevel();
+   hier::PersistentOverlapConnectors &poc = level.getPersistentOverlapConnectors();
+   const hier::IntVector &one_vector = hier::IntVector::getOne(d_dim);
+
+   tbox::plog << "GriddingAlgorithm::" << caller_name << " added " << name << ":\n"
+              << level.format("\t",0)
+              << name << " statistics:\n"
+              << level.formatStatistics("\t");
+
+   const hier::Connector &peer_conn = poc.findOrCreateConnector(level, one_vector, true);
+   tbox::plog << "Peer connector:\n" << peer_conn.format("\t",0)
+              << "Peer connector statistics:\n" << peer_conn.formatStatistics("\t");
+
+   if ( log_fine_connector ) {
+      const hier::BoxLevel &fine_level = *d_hierarchy->getPatchLevel(ln+1)->getBoxLevel();
+      const hier::Connector &fine_conn = poc.findOrCreateConnector(fine_level, one_vector, true);
+      tbox::plog << "Fine connector:\n" << fine_conn.format("\t",0)
+                 << "Fine connector statistics:\n" << fine_conn.formatStatistics("\t");
+   }
+
+   if ( log_coarse_connector ) {
+      const hier::BoxLevel &crse_level = *d_hierarchy->getPatchLevel(ln-1)->getBoxLevel();
+      const hier::Connector &crse_conn = poc.findOrCreateConnector(crse_level, one_vector, true);
+      tbox::plog << "Coarse connector:\n" << crse_conn.format("\t",0)
+                 << "Coarse connector statistics:\n" << crse_conn.formatStatistics("\t");
+   }
 }
 
 /*
  *************************************************************************
  *************************************************************************
  */
-void GriddingAlgorithm::shutdownCallback()
-{
-   delete s_tag_indx;
-   delete s_buf_tag_indx;
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void GriddingAlgorithm::initializeCallback()
-{
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void GriddingAlgorithm::finalizeCallback()
-{
-}
-
-/*
- *************************************************************************
- *************************************************************************
- */
-void GriddingAlgorithm::allocateTimers()
+void
+GriddingAlgorithm::allocateTimers()
 {
    /*
     * Timers:  for gathering performance information about box

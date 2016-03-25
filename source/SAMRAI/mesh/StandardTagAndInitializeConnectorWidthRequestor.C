@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -87,7 +87,8 @@ StandardTagAndInitializeConnectorWidthRequestor::StandardTagAndInitializeConnect
  *
  **************************************************************************
  */
-void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
+void
+StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& self_connector_widths,
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
@@ -133,7 +134,8 @@ void StandardTagAndInitializeConnectorWidthRequestor::computeRequiredConnectorWi
  *************************************************************************
  */
 
-int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
+int
+StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
    const tbox::Array<hier::IntVector>& ratios_to_coarser) const
 {
    const tbox::Dimension& dim(ratios_to_coarser[0].getDim());
@@ -163,12 +165,11 @@ int StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
    for (int ln = 1; ln < ratios_to_coarser.getSize(); ln++) {
 
       for (int d = 0; d < dim.getValue(); d++) {
-         int gcd =
-            SAMRAI::mesh::GCD(error_coarsen_ratio, ratios_to_coarser[ln](d));
+         int gcd = GCD(error_coarsen_ratio, ratios_to_coarser[ln](d));
          if ((gcd % error_coarsen_ratio) != 0) {
             gcd = ratios_to_coarser[ln](d);
             TBOX_ERROR(
-               "StandardTagAndInitialize::ConnectorWidthRequestor::computeCoarsenRatio:\n"
+               "StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio:\n"
                << "Unable to perform Richardson extrapolation because\n"
                << "the error coarsen ratio computed from the\n"
                << "ratios_to_coarser entries is not constant across all\n"

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,8 +12,54 @@
 #define included_pdat_SideIndex_C
 
 #include "SAMRAI/pdat/SideIndex.h"
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideIndex.I"
-#endif
 
+namespace SAMRAI {
+namespace pdat {
+
+SideIndex::SideIndex(
+   const tbox::Dimension& dim):
+   hier::Index(dim)
+{
+}
+
+SideIndex::SideIndex(
+   const hier::Index& rhs,
+   const int axis,
+   const int side):
+   hier::Index(rhs),
+   d_axis(axis)
+{
+   (*this)(d_axis) += side;
+}
+
+SideIndex::SideIndex(
+   const SideIndex& rhs):
+   hier::Index(rhs),
+   d_axis(rhs.d_axis)
+{
+}
+
+SideIndex::~SideIndex()
+{
+}
+
+hier::Index
+SideIndex::toCell(
+   const int side) const
+{
+   const tbox::Dimension& dim(getDim());
+
+   hier::Index index(dim);
+
+   for (int i = 0; i < dim.getValue(); i++) {
+      index(i) = (*this)(i);
+   }
+
+   index(d_axis) += (side - 1);
+
+   return index;
+}
+
+}
+}
 #endif

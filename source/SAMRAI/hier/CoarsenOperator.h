@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for spatial coarsening operators.
  *
  ************************************************************************/
@@ -16,8 +16,8 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <map>
 
@@ -48,12 +48,11 @@ namespace hier {
  * or for a new time coarsening routine on an existing type), define
  * the operator by inheriting from this abstract base class.  The operator
  * subclass must implement the coarsening operation in the coarsen()
- * function, and provide a response to a general operator request in the
- * findCoarsenOperator() function.  The stencil width and operator priority
- * must be returned from the getStencilWidth() and getOperatorPriority()
- * functions, respectively.  Then, the new operator must be added to the
+ * function.  The stencil width and operator priority must be returned
+ * from the getStencilWidth() and getOperatorPriority() functions,
+ * respectively.  Then, the new operator must be added to the
  * operator list for the appropriate transfer geometry object using the
- * Geometry<DIM>::addSpatialCOarsenOperator() function.
+ * Geometry<DIM>::addCarsenOperator() function.
  *
  * Since spatial coarsening operators usually depend on patch data centering
  * and data type as well as the mesh coordinate system, they are defined
@@ -62,7 +61,7 @@ namespace hier {
  * @see hier::TransferOperatorRegistry
  */
 
-class CoarsenOperator:public tbox::DescribedClass
+class CoarsenOperator
 {
 public:
    /*!
@@ -74,7 +73,7 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   explicit CoarsenOperator(
+   CoarsenOperator(
       const tbox::Dimension& dim,
       const std::string& name);
 
@@ -85,19 +84,13 @@ public:
    virtual ~CoarsenOperator();
 
    /**
-    * Return true if the coarsening operation matches the variable and
-    * name std::string identifier request; false, otherwise.
-    */
-   virtual bool
-   findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const = 0;
-
-   /**
     * Return name std::string identifier of the coarsening operation.
     */
    const std::string&
-   getOperatorName() const;
+   getOperatorName() const
+   {
+      return d_name;
+   }
 
    /**
     * Return the priority of this operator relative to other coarsening
@@ -147,7 +140,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    CoarsenOperator(
@@ -169,7 +165,11 @@ private:
     */
    void
    registerInLookupTable(
-      const std::string& name);
+      const std::string& name)
+   {
+      s_lookup_table.insert(
+         std::pair<std::string, CoarsenOperator *>(name, this));
+   }
 
    /*!
     * @brief Remove the operator with the given name.
@@ -183,22 +183,21 @@ private:
     * @brief Method registered with ShutdownRegister to cleanup statics.
     */
    static void
-   finalizeCallback();
+   finalizeCallback()
+   {
+      s_lookup_table.clear();
+   }
 
    const std::string d_name;
    const tbox::Dimension d_dim;
 
    static std::multimap<std::string, CoarsenOperator *> s_lookup_table;
 
-   static tbox::StartupShutdownManager::Handler
-      s_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_finalize_handler;
 
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/CoarsenOperator.I"
-#endif
 #endif

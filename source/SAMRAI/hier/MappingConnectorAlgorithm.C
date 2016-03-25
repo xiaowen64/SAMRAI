@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with mapping Connectors.
  *
  ************************************************************************/
@@ -26,13 +26,13 @@
 namespace SAMRAI {
 namespace hier {
 
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
-tbox::Pointer<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_setup_comm;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_remove_and_cache;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_discover_and_send;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_unpack;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
+boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
 
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
@@ -43,7 +43,8 @@ int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
  * with reused tags anyway.
  */
 
-tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(tbox::SAMRAI_MPI::commNull);
+tbox::SAMRAI_MPI MappingConnectorAlgorithm::s_class_mpi(
+   tbox::SAMRAI_MPI::commNull);
 
 tbox::StartupShutdownManager::Handler
 MappingConnectorAlgorithm::s_initialize_finalize_handler(
@@ -62,20 +63,6 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
-   /*
-    * While we figure out how to use multiple communicators in SAMRAI,
-    * we are still assuming that all communications use congruent
-    * communicators.  This class just makes a duplicate communicator
-    * to protect itself from unrelated communications in shared
-    * communicators.
-    */
-   if (s_class_mpi.getCommunicator() == tbox::SAMRAI_MPI::commNull) {
-      if (tbox::SAMRAI_MPI::usingMPI()) {
-         const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
-         s_class_mpi.dupCommunicator(mpi);
-      }
-   }
-
 }
 
 /*
@@ -91,7 +78,8 @@ MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
  ***********************************************************************
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::setSanityCheckMethodPreconditions(
+void
+MappingConnectorAlgorithm::setSanityCheckMethodPreconditions(
    bool do_check)
 {
    d_sanity_check_inputs = do_check;
@@ -101,7 +89,8 @@ void MappingConnectorAlgorithm::setSanityCheckMethodPreconditions(
  ***********************************************************************
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
+void
+MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
    bool do_check)
 {
    d_sanity_check_outputs = do_check;
@@ -112,7 +101,8 @@ void MappingConnectorAlgorithm::setSanityCheckMethodPostconditions(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::modify(
+void
+MappingConnectorAlgorithm::modify(
    Connector& anchor_to_mapped,
    Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -243,7 +233,8 @@ void MappingConnectorAlgorithm::modify(
  *****************************************************************************
  */
 
-void MappingConnectorAlgorithm::modify(
+void
+MappingConnectorAlgorithm::modify(
    Connector& anchor_to_mapped,
    Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -260,7 +251,7 @@ void MappingConnectorAlgorithm::modify(
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ci);
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
-            const hier::Box find_box(na->getDim(), *ci);
+            const Box find_box(na->getDim(), *ci);
             const Box& mapped_box(
                *old_to_new.getBase().getBoxes().find(find_box));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
@@ -356,7 +347,8 @@ void MappingConnectorAlgorithm::modify(
  *****************************************************************************
  */
 
-void MappingConnectorAlgorithm::modify(
+void
+MappingConnectorAlgorithm::modify(
    Connector& anchor_to_mapped,
    const Connector& old_to_new,
    BoxLevel* mutable_new,
@@ -484,7 +476,8 @@ void MappingConnectorAlgorithm::modify(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::privateModify(
+void
+MappingConnectorAlgorithm::privateModify(
    Connector& anchor_to_mapped,
    Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -660,7 +653,6 @@ void MappingConnectorAlgorithm::privateModify(
     */
    tbox::AsyncCommStage comm_stage;
    tbox::AsyncCommPeer<int> * all_comms(NULL);
-   tbox::AsyncCommStage::MemberVec completed;
 
    t_modify_misc->stop();
 
@@ -672,7 +664,6 @@ void MappingConnectorAlgorithm::privateModify(
    setupCommunication(
       all_comms,
       comm_stage,
-      completed,
       anchor.getMPI(),
       incoming_ranks,
       outgoing_ranks,
@@ -727,7 +718,6 @@ void MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       outgoing_ranks,
       all_comms,
-      completed,
       visible_new_nabrs,
       visible_anchor_nabrs,
       anchor_eto_old,
@@ -747,7 +737,6 @@ void MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       all_comms,
       comm_stage,
-      completed,
       t_modify_receive_and_unpack);
 
    t_modify_misc->start();
@@ -814,7 +803,8 @@ void MappingConnectorAlgorithm::privateModify(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::privateModify_checkParameters(
+void
+MappingConnectorAlgorithm::privateModify_checkParameters(
    const Connector& anchor_to_mapped,
    const Connector& mapped_to_anchor,
    const Connector& old_to_new,
@@ -918,7 +908,8 @@ void MappingConnectorAlgorithm::privateModify_checkParameters(
  * information in message buffers.
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::privateModify_removeAndCache(
+void
+MappingConnectorAlgorithm::privateModify_removeAndCache(
    std::map<int, std::vector<int> >& neighbor_removal_mesg,
    Connector& anchor_to_new,
    Connector* new_to_anchor,
@@ -1017,7 +1008,7 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
                   ++mesg[0];
                }
                mesg.insert(mesg.end(), old_gid_gone.getLocalId().getValue());
-               mesg.insert(mesg.end(), old_gid_gone.getBlockId().getBlockValue());
+               mesg.insert(mesg.end(), -1);
                int i_count = static_cast<int>(mesg.size());
                mesg.insert(mesg.end(), 0);
                do {
@@ -1054,14 +1045,14 @@ void MappingConnectorAlgorithm::privateModify_removeAndCache(
  * started asap to maximize communication and computation.
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::privateModify_discoverAndSend(
+void
+MappingConnectorAlgorithm::privateModify_discoverAndSend(
    std::map<int, std::vector<int> >& neighbor_removal_mesg,
    Connector& anchor_to_new,
    Connector* new_to_anchor,
    std::set<int>& incoming_ranks,
    std::set<int>& outgoing_ranks,
    tbox::AsyncCommPeer<int> all_comms[],
-   tbox::AsyncCommStage::MemberVec& completed,
    BoxContainer& visible_new_nabrs,
    BoxContainer& visible_anchor_nabrs,
    InvertedNeighborhoodSet& anchor_eto_old,
@@ -1108,10 +1099,10 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
        * highest of all owners of the visible Boxes, start at
        * the begining.)
        */
-      const Box start_loop_here(dim, LocalId::getZero(), rank + 1);
-      BoxContainer::Iterator anchor_ni =
+      const Box start_loop_here(dim, GlobalId(LocalId::getZero(), rank + 1));
+      BoxContainer::iterator anchor_ni =
          visible_anchor_nabrs.lowerBound(start_loop_here);
-      BoxContainer::Iterator new_ni =
+      BoxContainer::iterator new_ni =
          visible_new_nabrs.lowerBound(start_loop_here);
 
       if (anchor_ni == visible_anchor_nabrs.end() &&
@@ -1133,12 +1124,12 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
       if (s_print_steps == 'y') {
          tbox::plog << "visible_anchor_nabrs:" << std::endl;
-         for (BoxContainer::ConstIterator na = visible_anchor_nabrs.begin();
+         for (BoxContainer::const_iterator na = visible_anchor_nabrs.begin();
               na != visible_anchor_nabrs.end(); ++na) {
             tbox::plog << "  " << *na << std::endl;
          }
          tbox::plog << "visible_new_nabrs:" << std::endl;
-         for (BoxContainer::ConstIterator na = visible_new_nabrs.begin();
+         for (BoxContainer::const_iterator na = visible_new_nabrs.begin();
               na != visible_new_nabrs.end(); ++na) {
             tbox::plog << "  " << *na << std::endl;
          }
@@ -1291,9 +1282,6 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
                outgoing_comm,
                dim);
 
-            if (outgoing_comm.isDone()) {
-               completed.insert(completed.end(), &outgoing_comm);
-            }
             TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
 #ifdef DEBUG_CHECK_ASSERTIONS
             owners_sent_to.insert(curr_owner);
@@ -1341,10 +1329,11 @@ void MappingConnectorAlgorithm::privateModify_discoverAndSend(
  *
  ***********************************************************************
  */
-void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
+void
+MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const int owner_rank,
    BoxContainer& visible_base_nabrs,
-   BoxContainer::Iterator& base_ni,
+   BoxContainer::iterator& base_ni,
    std::vector<int>& send_mesg,
    const int remote_box_counter_index,
    Connector& mapped_connector,
@@ -1356,7 +1345,8 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
    const IntVector& refinement_ratio) const
 {
    const BoxLevel& old = mapping_connector.getBase();
-   const tbox::ConstPointer<GridGeometry>& grid_geometry(old.getGridGeometry());
+   const boost::shared_ptr<const BaseGridGeometry>& grid_geometry(
+      old.getGridGeometry());
    const int rank = old.getMPI().getRank();
 
    while (base_ni != visible_base_nabrs.end() &&
@@ -1477,7 +1467,8 @@ void MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::assertMappingValidity(
+void
+MappingConnectorAlgorithm::assertMappingValidity(
    const Connector& connector,
    char is_local_map) const
 {
@@ -1499,7 +1490,8 @@ void MappingConnectorAlgorithm::assertMappingValidity(
  ***********************************************************************
  */
 
-size_t MappingConnectorAlgorithm::findMappingErrors(
+size_t
+MappingConnectorAlgorithm::findMappingErrors(
    const Connector& connector,
    char is_local_map) const
 {
@@ -1548,8 +1540,8 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
     * Box that changed or disappeared.
     */
    const BoxContainer& old_mapped_boxes = connector.getBase().getBoxes();
-   for (RealBoxConstIterator ni(old_mapped_boxes); ni.isValid();
-        ++ni) {
+   for (RealBoxConstIterator ni(old_mapped_boxes.realBegin());
+        ni != old_mapped_boxes.realEnd(); ++ni) {
       const Box& old_mapped_box = *ni;
       if (!new_mapped_box_level.hasBox(old_mapped_box)) {
          // old_mapped_box disappeared.  Require a mapping for old_mapped_box.
@@ -1647,10 +1639,22 @@ size_t MappingConnectorAlgorithm::findMappingErrors(
  ***********************************************************************
  */
 
-void MappingConnectorAlgorithm::initializeCallback()
+void
+MappingConnectorAlgorithm::initializeCallback()
 {
    /*
-    * The first constructor:
+    * While we figure out how to use multiple communicators in SAMRAI,
+    * we are still assuming that all communications use congruent
+    * communicators.  This class just makes a duplicate communicator
+    * to protect itself from unrelated communications in shared
+    * communicators.
+    */
+   if (tbox::SAMRAI_MPI::usingMPI()) {
+      const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+      s_class_mpi.dupCommunicator(mpi);
+   }
+
+   /*
     * - gets timers from the TimerManager.
     * - sets up their deallocation.
     * - sets up debugging flags.
@@ -1659,11 +1663,11 @@ void MappingConnectorAlgorithm::initializeCallback()
    if (s_print_steps == '\0') {
       if (tbox::InputManager::inputDatabaseExists()) {
          s_print_steps = 'n';
-         tbox::Pointer<tbox::Database> idb =
-            tbox::InputManager::getInputDatabase();
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            tbox::Pointer<tbox::Database> ocu_db =
-               idb->getDatabase("MappingConnectorAlgorithm");
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("MappingConnectorAlgorithm"));
             s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
                   s_print_steps);
          }
@@ -1693,15 +1697,16 @@ void MappingConnectorAlgorithm::initializeCallback()
  ***************************************************************************
  */
 
-void MappingConnectorAlgorithm::finalizeCallback()
+void
+MappingConnectorAlgorithm::finalizeCallback()
 {
-   t_modify.setNull();
-   t_modify_setup_comm.setNull();
-   t_modify_remove_and_cache.setNull();
-   t_modify_discover_and_send.setNull();
-   t_modify_receive_and_unpack.setNull();
-   t_modify_MPI_wait.setNull();
-   t_modify_misc.setNull();
+   t_modify.reset();
+   t_modify_setup_comm.reset();
+   t_modify_remove_and_cache.reset();
+   t_modify_discover_and_send.reset();
+   t_modify_receive_and_unpack.reset();
+   t_modify_MPI_wait.reset();
+   t_modify_misc.reset();
 
    if (s_class_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull) {
       s_class_mpi.freeCommunicator();

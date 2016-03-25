@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <set>
 
@@ -54,8 +54,7 @@ namespace xfer {
  * @see xfer::RefineSchedule
  */
 
-class RefinePatchStrategy:
-   public virtual tbox::DescribedClass
+class RefinePatchStrategy
 {
 public:
    /*!
@@ -142,16 +141,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry)
-   {
-      NULL_USE(patch);
-      NULL_USE(encon_level);
-      NULL_USE(dst_to_encon);
-      NULL_USE(fill_time);
-      NULL_USE(fill_box);
-      NULL_USE(boundary_box);
-      NULL_USE(grid_geometry);
-   }
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /*!
     * @brief Return maximum stencil width needed for user-defined
@@ -232,7 +222,14 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::BoxContainer& fine_boxes,
-      const hier::IntVector& ratio);
+      const hier::IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_ARGS3(fine, coarse, ratio);
+      for (hier::BoxContainer::const_iterator b(fine_boxes);
+           b != fine_boxes.end(); ++b) {
+         preprocessRefine(fine, coarse, *b, ratio);
+      }
+   }
 
    /*!
     * Perform user-defined patch data refinement operations on a list of boxes.
@@ -254,13 +251,23 @@ public:
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::BoxContainer& fine_boxes,
-      const hier::IntVector& ratio);
+      const hier::IntVector& ratio)
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, fine, coarse, ratio);
+      for (hier::BoxContainer::const_iterator b(fine_boxes);
+           b != fine_boxes.end(); ++b) {
+         postprocessRefine(fine, coarse, *b, ratio);
+      }
+   }
 
    /*!
     * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*!
@@ -268,7 +275,11 @@ private:
     * registered.
     */
    static std::set<RefinePatchStrategy *>&
-   getCurrentObjects();
+   getCurrentObjects()
+   {
+      static std::set<RefinePatchStrategy *> current_objects;
+      return current_objects;
+   }
 
    /*!
     * @brief Dimension of the object.
@@ -280,16 +291,29 @@ private:
     * objects used in an application.
     */
    void
-   registerObject();
+   registerObject()
+   {
+      std::set<RefinePatchStrategy *>& current_objects =
+         RefinePatchStrategy::getCurrentObjects();
+      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
+      current_objects.insert(this);
+   }
 
    /*!
     * @brief Unregister the object.
     */
    void
-   unregisterObject();
+   unregisterObject()
+   {
+      std::set<RefinePatchStrategy *>& current_objects =
+         RefinePatchStrategy::getCurrentObjects();
+      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
+      current_objects.erase(this);
+   }
 
 };
 
 }
 }
+
 #endif

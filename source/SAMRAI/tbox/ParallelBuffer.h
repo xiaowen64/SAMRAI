@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Parallel I/O class buffer to manage parallel ostreams output
  *
  ************************************************************************/
@@ -39,7 +39,7 @@ public:
     * The destructor simply deallocates any internal data
     * buffers.  It does not modify the output streams.
     */
-   virtual ~ParallelBuffer();
+   ~ParallelBuffer();
 
    /**
     * Set whether the output stream will be active.  If the parallel buffer
@@ -58,7 +58,10 @@ public:
     */
    void
    setPrefixString(
-      const std::string& text);
+      const std::string& text)
+   {
+      d_prefix = text;
+   }
 
    /**
     * Set the primary output stream.  If not NULL, then output data is
@@ -67,7 +70,10 @@ public:
     */
    void
    setOutputStream1(
-      std::ostream* stream);
+      std::ostream* stream)
+   {
+      d_ostream1 = stream;
+   }
 
    /**
     * Set the secondary output stream.  If not NULL, then output data is sent
@@ -76,7 +82,10 @@ public:
     */
    void
    setOutputStream2(
-      std::ostream* stream);
+      std::ostream* stream)
+   {
+      d_ostream2 = stream;
+   }
 
    /**
     * Write a text string to the output stream.  Note that the string is
@@ -84,7 +93,10 @@ public:
     */
    void
    outputString(
-      const std::string& text);
+      const std::string& text)
+   {
+      outputString(text, static_cast<int>(text.length()));
+   }
 
    /**
     * Write a text string of the specified length to the output file.  Note
@@ -98,7 +110,7 @@ public:
    /**
     * Synchronize the parallel buffer (called from streambuf).
     */
-   virtual int
+   int
    sync();
 
 #if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
@@ -106,7 +118,7 @@ public:
     * Write the specified number of characters into the output stream (called
     * from streambuf).
     */
-   virtual std::streamsize
+   std::streamsize
    xsputn(
       const std::string& text,
       std::streamsize n);
@@ -116,7 +128,7 @@ public:
     * Write an overflow character into the parallel buffer (called from
     * streambuf).
     */
-   virtual int
+   int
    overflow(
       int ch);
 
@@ -127,8 +139,11 @@ public:
     * streambuf).  This is not implemented.  It is needed by the
     * MSVC++ stream implementation.
     */
-   virtual int
-   underflow();
+   int
+   underflow()
+   {
+      return EOF;
+   }
 #endif
 
 private:
@@ -139,13 +154,13 @@ private:
    void
    outputBuffer();              // output internal buffer data to streams
 
-   bool d_active;                // whether this output stream is active
-   std::string d_prefix;         // string prefix to prepend output strings
-   std::ostream* d_ostream1;     // primary output stream for buffer
-   std::ostream* d_ostream2;     // secondary output stream (e.g., for log file)
-   char* d_buffer;               // internal buffer to store accumulated string
-   int d_buffer_size;            // size of the internal output buffer
-   int d_buffer_ptr;             // number of charcters in the output buffer
+   bool d_active;               // whether this output stream is active
+   std::string d_prefix;        // string prefix to prepend output strings
+   std::ostream* d_ostream1;    // primary output stream for buffer
+   std::ostream* d_ostream2;    // secondary output stream (e.g., for log file)
+   char* d_buffer;              // internal buffer to store accumulated string
+   int d_buffer_size;           // size of the internal output buffer
+   int d_buffer_ptr;            // number of charcters in the output buffer
 
    static const int DEFAULT_BUFFER_SIZE;
 };

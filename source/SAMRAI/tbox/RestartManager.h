@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   An restart manager singleton class
  *
  ************************************************************************/
@@ -14,12 +14,12 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Serializable.h"
-#include "SAMRAI/tbox/List.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/DatabaseFactory.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
+#include <list>
 
 namespace SAMRAI {
 namespace tbox {
@@ -96,8 +96,11 @@ public:
     * Returns true if the run is from a restart file (i.e. a restart file
     * has been opened from main()).  Returns false otherwise.
     */
-   virtual bool
-   isFromRestart();
+   bool
+   isFromRestart()
+   {
+      return d_is_from_restart;
+   }
 
    /**
     * Attempts to mount, for reading, the restart file for the processor.
@@ -105,7 +108,7 @@ public:
     * mounts the restart file.
     * Returns true if open is successful; false otherwise.
     */
-   virtual bool
+   bool
    openRestartFile(
       const std::string& root_dirname,
       const int restore_num,
@@ -114,30 +117,45 @@ public:
    /**
     * Closes the restart file.
     */
-   virtual void
+   void
    closeRestartFile();
 
    /**
-    * Returns a Pointer to the root of the database.
+    * Returns a boost::shared_ptr to the root of the database.
     */
-   virtual Pointer<Database>
-   getRootDatabase();
+   boost::shared_ptr<Database>
+   getRootDatabase()
+   {
+      return d_database_root;
+   }
 
    /**
     * Sets the database for restore or dumps.
     *
     */
-   virtual void
+   void
    setRootDatabase(
-      Pointer<Database> database);
+      const boost::shared_ptr<Database>& database)
+   {
+      if (!database) {
+         d_database_root.reset();
+         d_is_from_restart = false;
+      } else {
+         d_database_root = database;
+         d_is_from_restart = true;
+      }
+   }
 
    /**
     * Sets the database for restore or dumps.
     *
     */
-   virtual void
+   void
    setDatabaseFactory(
-      Pointer<DatabaseFactory> database_factory);
+      const boost::shared_ptr<DatabaseFactory>& database_factory)
+   {
+      d_database_factory = database_factory;
+   }
 
    /**
     * Registers an object for restart with the given name.
@@ -146,7 +164,7 @@ public:
     * will result if either the string is empty or the serializable
     * object pointer is null.
     */
-   virtual void
+   void
    registerRestartItem(
       const std::string& name,
       Serializable* obj);
@@ -158,15 +176,18 @@ public:
     * When assertion checking is active, an unrecoverable assertion
     * will result if the string is empty.
     */
-   virtual void
+   void
    unregisterRestartItem(
       const std::string& name);
 
    /**
     * Clear all restart items managed by the restart manager.
     */
-   virtual void
-   clearRestartItems();
+   void
+   clearRestartItems()
+   {
+      d_restart_items_list.clear();
+   }
 
    /**
     * Write all objects registered to as restart objects to the
@@ -176,9 +197,12 @@ public:
     * Note:  This method creates/uses a restart directory structure
     *    with 00000 as the restore number.
     */
-   virtual void
+   void
    writeRestartFile(
-      const std::string& root_dirname);
+      const std::string& root_dirname)
+   {
+      writeRestartFile(root_dirname, 0);
+   }
 
    /**
     * Write all objects registered to as restart objects to the
@@ -186,7 +210,7 @@ public:
     * root of restart directory.  The integer argument is the
     * identification number associated with the restart files generated.
     */
-   virtual void
+   void
    writeRestartFile(
       const std::string& root_dirname,
       const int restore_num);
@@ -195,7 +219,7 @@ public:
     * Write all objects registered to as restart objects to the
     * restart database.
     */
-   virtual void
+   void
    writeRestartToDatabase();
 
 protected:
@@ -213,7 +237,7 @@ protected:
     * The destructor for the restart manager is protected, since only the
     * singleton class and subclasses may destroy the manager objects.
     */
-   virtual ~RestartManager();
+   ~RestartManager();
 
    /**
     * Initialize Singleton instance with instance of subclass.  This function
@@ -229,9 +253,9 @@ private:
     * Write all objects registered to as restart objects to the
     * restart database.
     */
-   virtual void
+   void
    writeRestartFile(
-      Pointer<Database> database);
+      const boost::shared_ptr<Database>& database);
 
    /*
     * Create the directory structure for the data files.
@@ -265,19 +289,15 @@ private:
    /*
     * list of objects registered to be written to the restart database
     */
-#ifdef LACKS_NAMESPACE_IN_DECLARE
-   List<RestartItem> d_restart_items_list;
-#else
-   List<RestartManager::RestartItem> d_restart_items_list;
-#endif
+   std::list<RestartManager::RestartItem> d_restart_items_list;
 
-   Pointer<Database> d_database_root;
+   boost::shared_ptr<Database> d_database_root;
 
    /*
     * Database factory use to create new databases.
     * Defaults so HDFDatabaseFactory.
     */
-   Pointer<DatabaseFactory> d_database_factory;
+   boost::shared_ptr<DatabaseFactory> d_database_factory;
 
    bool d_is_from_restart;
 
@@ -287,7 +307,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/RestartManager.I"
-#endif
 #endif

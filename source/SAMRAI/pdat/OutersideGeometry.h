@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -18,7 +18,8 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -52,7 +53,7 @@ public:
     * @brief Construct an outerside geometry object given an AMR index
     * space box and ghost cell width.
     */
-   explicit OutersideGeometry(
+   OutersideGeometry(
       const hier::Box& box,
       const hier::IntVector& ghosts);
 
@@ -65,7 +66,7 @@ public:
     * @brief Compute the overlap in side-centered index space on the
     * boundaries of the source box geometry and the destination box geometry.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -80,7 +81,7 @@ public:
     * @brief Set up a SideOverlap object based on the given boxes and the
     * offset.
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -89,13 +90,19 @@ public:
     * @brief Return the box for this outerside box geometry object.
     */
    const hier::Box&
-   getBox() const;
+   getBox() const
+   {
+      return d_box;
+   }
 
    /*!
     * @brief Return the ghost cell width for this outerside box geometry object.
     */
    const hier::IntVector&
-   getGhosts() const;
+   getGhosts() const
+   {
+      return d_ghosts;
+   }
 
 private:
    /**
@@ -103,7 +110,7 @@ private:
     * between the source and destination objects, where the source
     * has outerside geometry and the destination side geometry.
     */
-   static tbox::Pointer<hier::BoxOverlap>
+   static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const SideGeometry& dst_geometry,
       const OutersideGeometry& src_geometry,
@@ -126,7 +133,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideGeometry.I"
-#endif
+
 #endif

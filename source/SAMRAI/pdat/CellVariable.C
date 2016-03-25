@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -15,6 +15,8 @@
 #include "SAMRAI/pdat/CellDataFactory.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -33,9 +35,8 @@ CellVariable<TYPE>::CellVariable(
    const std::string& name,
    int depth):
    hier::Variable(name,
-                  SAMRAI::tbox::Pointer<SAMRAI::hier::PatchDataFactory>(
-                     new CellDataFactory<TYPE>(depth,
-                                               hier::IntVector::getZero(dim)))) // default zero ghost cells
+                  boost::make_shared<CellDataFactory<TYPE> >(depth,
+                     hier::IntVector::getZero(dim))) // default zero ghost cells
 {
 }
 
@@ -45,12 +46,47 @@ CellVariable<TYPE>::~CellVariable()
 }
 
 template<class TYPE>
-int CellVariable<TYPE>::getDepth() const
+int
+CellVariable<TYPE>::getDepth() const
 {
-   tbox::Pointer<CellDataFactory<TYPE> > cell_factory =
-      this->getPatchDataFactory();
+   boost::shared_ptr<CellDataFactory<TYPE> > cell_factory(
+      getPatchDataFactory());
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true indicating that cell data quantities will always
+ * be treated as though fine values take precedence on coarse-fine
+ * interfaces.  Note that this is really artificial since the cell
+ * data index space matches the cell-centered index space for AMR
+ * patches.  However, some value must be supplied for communication
+ * operations.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellVariable<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return true;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return false indicating that cell data on a patch interior
+ * does not exist on the patch boundary.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+CellVariable<TYPE>::dataLivesOnPatchBorder() const
+{
+   return false;
 }
 
 /*
@@ -66,13 +102,15 @@ int CellVariable<TYPE>::getDepth() const
 template<class TYPE>
 CellVariable<TYPE>::CellVariable(
    const CellVariable<TYPE>& foo):
-   hier::Variable(NULL, tbox::Pointer<SAMRAI::hier::PatchDataFactory>(NULL))
+   hier::Variable(NULL,
+                  boost::shared_ptr<hier::PatchDataFactory>())
 {
    NULL_USE(foo);
 }
 
 template<class TYPE>
-void CellVariable<TYPE>::operator = (
+void
+CellVariable<TYPE>::operator = (
    const CellVariable<TYPE>& foo)
 {
    NULL_USE(foo);

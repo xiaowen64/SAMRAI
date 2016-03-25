@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -17,7 +17,8 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -43,7 +44,7 @@ public:
     * the source to destination index spaces.  This information is used later
     * in the generation of communication schedules.
     */
-   explicit CellOverlap(
+   CellOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation);
 
@@ -101,7 +102,4 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellOverlap.I"
-#endif
 #endif

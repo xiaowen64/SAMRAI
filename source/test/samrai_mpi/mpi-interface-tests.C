@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   $Description
  *
  ************************************************************************/
@@ -14,7 +14,7 @@
 #include "mpi-interface-tests.h"
 
 using namespace SAMRAI;
-using namespace SAMRAI::tbox;
+using namespace tbox;
 
 /*
  * Start up MPI, SAMRAI and run various test of the SAMRAI_MPI interfaces.
@@ -26,7 +26,9 @@ void mpiInterfaceTests(
    bool runtime_mpi,
    bool mpi_disabled)
 {
-   (void)runtime_mpi;
+#ifdef HAVE_MPI
+   NULL_USE(runtime_mpi);
+#endif
 
 #ifndef HAVE_MPI
    if (runtime_mpi) {
@@ -45,6 +47,8 @@ void mpiInterfaceTests(
    mpiInterfaceTestBcast(fail_count);
 
    mpiInterfaceTestAllreduce(fail_count);
+
+   mpiInterfaceTestParallelPrefixSum(fail_count);
 
    SAMRAIManager::shutdown();
    SAMRAIManager::finalize();
@@ -94,4 +98,42 @@ int mpiInterfaceTestAllreduce(
       }
    }
    return 0;
+}
+
+/*
+ * Prefix sum test: sum numbers from all lower ranks.
+ */
+int mpiInterfaceTestParallelPrefixSum(
+   int& fail_count)
+{
+   SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   int nproc = mpi.getSize();
+
+   int rval = 0;
+
+   if (nproc != 1) {
+      int data[3];
+      data[0] = 1; // Prefix sum should yield rank+1
+      data[1] = 10; // Prefix sum should yield 10*(rank+1)
+      data[2] = mpi.getRank(); // Prefix sum should yield triangular numbers.
+      mpi.parallelPrefixSum(data, 3, 0);
+      if (data[0] != mpi.getRank()+1) {
+         perr << "parallelPrefixSum test failed." << std::endl;
+         rval += 1;
+      }
+      if (data[1] != 10*(mpi.getRank()+1)) {
+         perr << "parallelPrefixSum test failed." << std::endl;
+         rval += 1;
+      }
+      if (data[2] != mpi.getRank()*(mpi.getRank()+1)/2) {
+         perr << "parallelPrefixSum test failed." << std::endl;
+         rval += 1;
+      }
+      for ( int i=0; i<3; ++i ) {
+         std::cout << mpi.getRank() << ": ParallelPrefixSum[" << i << "] = " << data[i] << std::endl;
+      }
+
+      fail_count += rval;
+   }
+   return rval;
 }

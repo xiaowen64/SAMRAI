@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -12,13 +12,8 @@
 #define included_pdat_NodeGeometry_C
 
 #include "SAMRAI/pdat/NodeGeometry.h"
-#include "SAMRAI/pdat/NodeOverlap.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/NodeGeometry.I"
-#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -60,7 +55,8 @@ NodeGeometry::~NodeGeometry()
  *************************************************************************
  */
 
-tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
+boost::shared_ptr<hier::BoxOverlap>
+NodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -77,7 +73,7 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
    const NodeGeometry* t_src =
       dynamic_cast<const NodeGeometry *>(&src_geometry);
 
-   tbox::Pointer<hier::BoxOverlap> over(NULL);
+   boost::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -93,47 +89,13 @@ tbox::Pointer<hier::BoxOverlap> NodeGeometry::calculateOverlap(
 /*
  *************************************************************************
  *
- * Compute the overlap between two node centered boxes.  The algorithm
- * is fairly straight-forward.  First, the two boxes are converted into
- * node coordinates.  Then, the boxes are intersected and, if necessary,
- * the interior section is removed from the destination box.
- *
- *************************************************************************
- */
-
-tbox::Pointer<hier::BoxOverlap> NodeGeometry::doOverlap(
-   const NodeGeometry& dst_geometry,
-   const NodeGeometry& src_geometry,
-   const hier::Box& src_mask,
-   const hier::Box& fill_box,
-   const bool overwrite_interior,
-   const hier::Transformation& transformation,
-   const hier::BoxContainer& dst_restrict_boxes)
-{
-   hier::BoxContainer dst_boxes;
-   dst_geometry.computeDestinationBoxes(dst_boxes,
-      src_geometry,
-      src_mask,
-      fill_box,
-      overwrite_interior,
-      transformation,
-      dst_restrict_boxes);
-
-   // Create the node overlap data object using the boxes and source shift
-
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
-}
-
-/*
- *************************************************************************
- *
  * Compute the boxes that will be used to contstruct an overlap object
  *
  *************************************************************************
  */
 
-void NodeGeometry::computeDestinationBoxes(
+void
+NodeGeometry::computeDestinationBoxes(
    hier::BoxContainer& dst_boxes,
    const NodeGeometry& src_geometry,
    const hier::Box& src_mask,
@@ -142,7 +104,9 @@ void NodeGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset(transformation.getOffset());
+#endif
    TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
 
    // Translate the source box and grow the destination box by the ghost cells
@@ -172,9 +136,9 @@ void NodeGeometry::computeDestinationBoxes(
 
    if (dst_restrict_boxes.size() && dst_boxes.size()) {
       hier::BoxContainer node_restrict_boxes;
-      for (hier::BoxContainer::ConstIterator b(dst_restrict_boxes);
+      for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
            b != dst_restrict_boxes.end(); ++b) {
-         node_restrict_boxes.pushBack(toNodeBox(b()));
+         node_restrict_boxes.pushBack(toNodeBox(*b));
       }
       dst_boxes.intersectBoxes(node_restrict_boxes);
    }
@@ -187,21 +151,20 @@ void NodeGeometry::computeDestinationBoxes(
  *
  *************************************************************************
  */
-tbox::Pointer<hier::BoxOverlap>
+boost::shared_ptr<hier::BoxOverlap>
 NodeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
 {
    hier::BoxContainer dst_boxes;
 
-   for (hier::BoxContainer::ConstIterator b(boxes); b != boxes.end(); ++b) {
-      hier::Box node_box(NodeGeometry::toNodeBox(b()));
+   for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
+      hier::Box node_box(NodeGeometry::toNodeBox(*b));
       dst_boxes.pushBack(node_box);
    }
 
    // Create the node overlap data object using the boxes and source shift
-   hier::BoxOverlap* overlap = new NodeOverlap(dst_boxes, transformation);
-   return tbox::Pointer<hier::BoxOverlap>(overlap);
+   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 
@@ -240,7 +203,7 @@ NodeGeometry::transform(
 
 void
 NodeGeometry::transform(
-   pdat::NodeIndex& index,
+   NodeIndex& index,
    const hier::Transformation& transformation)
 {
    const tbox::Dimension& dim = index.getDim();
@@ -256,7 +219,7 @@ NodeGeometry::transform(
       const int rotation_num = static_cast<int>(rotation);
 
       if (rotation_num) {
-         pdat::NodeIndex tmp_index(dim);
+         NodeIndex tmp_index(dim);
          for (int r = 0; r < rotation_num; r++) {
             tmp_index = index;
             index(0) = tmp_index(1);
@@ -387,7 +350,7 @@ NodeGeometry::transform(
 }
 
 void
-NodeGeometry::rotateAboutAxis(pdat::NodeIndex& index,
+NodeGeometry::rotateAboutAxis(NodeIndex& index,
                               const int axis,
                               const int num_rotations)
 {
@@ -395,7 +358,7 @@ NodeGeometry::rotateAboutAxis(pdat::NodeIndex& index,
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
-   pdat::NodeIndex tmp_index(dim);
+   NodeIndex tmp_index(dim);
    for (int j = 0; j < num_rotations; j++) {
       tmp_index = index;
       index(a) = tmp_index(b);

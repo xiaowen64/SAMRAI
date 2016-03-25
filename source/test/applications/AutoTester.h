@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
- * Description:   (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
+ * Description:   (c) 1997-2012 Lawrence Livermore National Security, LLC
  *                Description:   Simple class used for autotesting.
  *
  ************************************************************************/
@@ -20,9 +20,10 @@
 #include "SAMRAI/algs/MethodOfLinesIntegrator.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
@@ -55,7 +56,7 @@ public:
    AutoTester(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      tbox::Pointer<tbox::Database> input_db);
+      boost::shared_ptr<tbox::Database> input_db);
 
    /**
     * Virtual destructor for AutoTester
@@ -69,10 +70,10 @@ public:
    int
    evalTestData(
       int iter,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
-      const tbox::Pointer<algs::TimeRefinementIntegrator> tri,
-      const tbox::Pointer<algs::HyperbolicLevelIntegrator> hli,
-      const tbox::Pointer<mesh::GriddingAlgorithm> ga);
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<algs::TimeRefinementIntegrator> tri,
+      const boost::shared_ptr<algs::HyperbolicLevelIntegrator> hli,
+      const boost::shared_ptr<mesh::GriddingAlgorithm> ga);
 
    /**
     * Checks result for applications using MethodOfLinesIntegrator
@@ -80,17 +81,17 @@ public:
    int
    evalTestData(
       int iter,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       const double time,
-      const tbox::Pointer<algs::MethodOfLinesIntegrator> mol,
-      const tbox::Pointer<mesh::GriddingAlgorithm> ga);
+      const boost::shared_ptr<algs::MethodOfLinesIntegrator> mol,
+      const boost::shared_ptr<mesh::GriddingAlgorithm> ga);
 
    /**
     * Check boxes on specified hierarchy level against test boxes.
     */
    int
    checkHierarchyBoxes(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
       int ln,
       const hier::BoxLevel& correct_mapped_box_level,
       int iter);
@@ -102,7 +103,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> input_db);
+      boost::shared_ptr<tbox::Database> input_db);
 
    std::string d_object_name;
 

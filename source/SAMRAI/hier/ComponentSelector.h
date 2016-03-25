@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple bit vector.
  *
  ************************************************************************/
@@ -12,8 +12,8 @@
 #define included_hier_ComponentSelector
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include <vector>
 #include <bitset>
@@ -35,7 +35,7 @@ namespace hier {
  *
  * @see tbox::SAMRAIManager
  */
-class ComponentSelector:public tbox::DescribedClass
+class ComponentSelector
 {
 public:
    /*!
@@ -65,14 +65,22 @@ public:
     * @return total number of flags (i.e., bits) in this component selector.
     */
    int
-   getSize() const;
+   getSize() const
+   {
+      return static_cast<int>(d_bit_vector.size()) * C_BITSET_SIZE;
+   }
 
    /*!
     * @brief Copy assignment operator.
     */
    ComponentSelector&
    operator = (
-      const ComponentSelector& flags);
+      const ComponentSelector& flags)
+   {
+      d_bit_vector = flags.d_bit_vector;
+      d_max_bit_index = flags.d_max_bit_index;
+      return *this;
+   }
 
    /*!
     * @brief Equality operator.  Two ComponentSelector objects are
@@ -80,7 +88,10 @@ public:
     */
    bool
    operator == (
-      const ComponentSelector& flags) const;
+      const ComponentSelector& flags) const
+   {
+      return d_bit_vector == flags.d_bit_vector;
+   }
 
    /*!
     * @brief Inequality operator.  Two ComponentSelector objects are
@@ -88,7 +99,10 @@ public:
     */
    bool
    operator != (
-      const ComponentSelector& flags) const;
+      const ComponentSelector& flags) const
+   {
+      return d_bit_vector != flags.d_bit_vector;
+   }
 
    /*!
     * @brief Generate and return a component selector set to the bitwise
@@ -165,7 +179,11 @@ public:
     */
    bool
    isSet(
-      const int i) const;
+      const int i) const
+   {
+      TBOX_ASSERT((i >= 0) && (i < getSize()));
+      return d_bit_vector[_index(i)].test(_element(i));
+   }
 
    /*!
     * @brief Set the specified bit vector position to true.
@@ -177,7 +195,11 @@ public:
     */
    void
    setFlag(
-      const int i);
+      const int i)
+   {
+      TBOX_ASSERT((i >= 0) && (i < getSize()));
+      d_bit_vector[_index(i)].set(_element(i));
+   }
 
    /*!
     * @brief Set the specified bit vector position to false.
@@ -189,25 +211,46 @@ public:
     */
    void
    clrFlag(
-      const int i);
+      const int i)
+   {
+      TBOX_ASSERT((i >= 0) && (i < getSize()));
+      d_bit_vector[_index(i)].reset(_element(i));
+      d_max_bit_index = _findMaxIndex(d_bit_vector);
+   }
 
    /*!
     * @brief Set all bit vector positions to true.
     */
    void
-   setAllFlags();
+   setAllFlags()
+   {
+      for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+         (d_bit_vector[vi]).set();
+      }
+      d_max_bit_index =
+         C_BITSET_SIZE * static_cast<int>(d_bit_vector.size()) - 1;
+   }
 
    /*!
     * @brief Set all bit vector positions to false.
     */
    void
-   clrAllFlags();
+   clrAllFlags()
+   {
+      for (size_t vi = 0; vi < d_bit_vector.size(); ++vi) {
+         (d_bit_vector[vi]).reset();
+      }
+      d_max_bit_index = -1;
+   }
 
    /*!
     * @brief Get the index of the highest set position.
     */
    int
-   getMaxIndex() const;
+   getMaxIndex() const
+   {
+      return d_max_bit_index;
+   }
 
    /*!
     * @brief check if any bits in the vector are set to true.
@@ -225,12 +268,15 @@ public:
     * @return True if no bits in the vector are set to true, otherwise false.
     */
    bool
-   none() const;
+   none() const
+   {
+      return !any();
+   }
 
    /*!
     * @brief Print the bit vector data to the specified output stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& os = tbox::plog) const;
 
@@ -252,19 +298,22 @@ private:
    // private function to return the index into the d_bit_vector
    int
    _index(
-      const int i) const;
+      const int i) const
+   {
+      return i / C_BITSET_SIZE;
+   }
 
    // private function to return the element within the d_bit_vector[i]
    // bitset.
    int
    _element(
-      const int i) const;
+      const int i) const
+   {
+      return i % C_BITSET_SIZE;
+   }
 };
 
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/ComponentSelector.I"
-#endif
 #endif

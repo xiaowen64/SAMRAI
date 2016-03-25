@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between Sundials vector interface and SAMRAI vectors.
  *
  ************************************************************************/
@@ -23,7 +23,8 @@
 
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -69,7 +70,7 @@ public:
     */
    static SundialsAbstractVector *
    createSundialsVector(
-      tbox::Pointer<SAMRAIVectorReal<double> > samrai_vec);
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec);
 
    /**
     * Destroy a given Sundials vector object. It is important to note that
@@ -84,7 +85,7 @@ public:
     * Return pointer to the SAMRAI vector object associated with the
     * given Sundials wrapper vector.
     */
-   static tbox::Pointer<SAMRAIVectorReal<double> >
+   static boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
       SundialsAbstractVector* sundials_vec);
 
@@ -92,7 +93,7 @@ public:
     * Return pointer to the SAMRAI vector object associated with the
     * given Sundials vector.
     */
-   static tbox::Pointer<SAMRAIVectorReal<double> >
+   static boost::shared_ptr<SAMRAIVectorReal<double> >
    getSAMRAIVector(
       N_Vector sundials_vec);
 
@@ -106,8 +107,8 @@ protected:
    /*
     * Constructor for Sundials_SAMRAIVector.
     */
-   Sundials_SAMRAIVector(
-      tbox::Pointer<SAMRAIVectorReal<double> > samrai_vector);
+   explicit Sundials_SAMRAIVector(
+      const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vector);
 
    /*
     * Virtual destructor for Sundials_SAMRAIVector.
@@ -118,8 +119,11 @@ private:
    /*
     * Return SAMRAI vector owned by this Sundials_SAMRAIVector object.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> >
-   getSAMRAIVector();
+   boost::shared_ptr<SAMRAIVectorReal<double> >
+   getSAMRAIVector()
+   {
+      return d_samrai_vector;
+   }
 
    /*
     * The makeNewVector() function clones the vector structure and allocate
@@ -293,15 +297,12 @@ private:
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */
-   tbox::Pointer<SAMRAIVectorReal<double> > d_samrai_vector;
+   boost::shared_ptr<SAMRAIVectorReal<double> > d_samrai_vector;
 
 };
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/Sundials_SAMRAIVector.I"
-#endif
-#endif
 
+#endif
 #endif

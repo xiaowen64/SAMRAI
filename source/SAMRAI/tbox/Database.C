@@ -3,27 +3,23 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for the SAMRAI database objects
  *
  ************************************************************************/
 
 #include "SAMRAI/tbox/Database.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Database.I"
-#endif
-
 #include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace tbox {
 
-Database::~Database()
+Database::Database()
 {
 }
 
-Database::Serializable::~Serializable()
+Database::~Database()
 {
 }
 
@@ -38,9 +34,10 @@ Database::Serializable::~Serializable()
  ************************************************************************
  */
 
-Pointer<Database> Database::getDatabaseWithDefault(
+boost::shared_ptr<Database>
+Database::getDatabaseWithDefault(
    const std::string& key,
-   const Pointer<Database>& defaultvalue)
+   const boost::shared_ptr<Database>& defaultvalue)
 {
    TBOX_ASSERT(!key.empty());
 
@@ -62,7 +59,8 @@ Pointer<Database> Database::getDatabaseWithDefault(
  *
  */
 
-void Database::putBool(
+void
+Database::putBool(
    const std::string& key,
    const bool& data)
 {
@@ -76,7 +74,8 @@ void Database::putBool(
  * key
  */
 
-void Database::putBoolArray(
+void
+Database::putBoolArray(
    const std::string& key,
    const Array<bool>& data)
 {
@@ -99,7 +98,8 @@ void Database::putBoolArray(
  * with a boolean type.
  */
 
-bool Database::getBool(
+bool
+Database::getBool(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -117,7 +117,8 @@ bool Database::getBool(
  * with a boolean type.
  */
 
-bool Database::getBoolWithDefault(
+bool
+Database::getBoolWithDefault(
    const std::string& key,
    const bool& defaultvalue)
 {
@@ -132,7 +133,8 @@ bool Database::getBoolWithDefault(
    }
 }
 
-void Database::getBoolArray(
+void
+Database::getBoolArray(
    const std::string& key,
    bool* data,
    const int nelements)
@@ -156,34 +158,6 @@ void Database::getBoolArray(
 
 }
 
-void Database::getScalar(
-   const std::string& key,
-   bool& scalar)
-{
-   scalar = getBool(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const bool scalar)
-{
-   putBool(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<bool>& array)
-{
-   array = getBoolArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<bool> array)
-{
-   putBoolArray(key, array);
-}
-
 /*
  *************************************************************************
  *
@@ -193,7 +167,8 @@ void Database::putArray(
  *************************************************************************
  */
 
-void Database::putDatabaseBox(
+void
+Database::putDatabaseBox(
    const std::string& key,
    const DatabaseBox& data)
 {
@@ -210,7 +185,8 @@ void Database::putDatabaseBox(
  *************************************************************************
  */
 
-void Database::putDatabaseBoxArray(
+void
+Database::putDatabaseBoxArray(
    const std::string& key,
    const Array<DatabaseBox>& data)
 {
@@ -237,7 +213,8 @@ void Database::putDatabaseBoxArray(
  ************************************************************************
  */
 
-DatabaseBox Database::getDatabaseBox(
+DatabaseBox
+Database::getDatabaseBox(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -259,7 +236,8 @@ DatabaseBox Database::getDatabaseBox(
  ************************************************************************
  */
 
-DatabaseBox Database::getDatabaseBoxWithDefault(
+DatabaseBox
+Database::getDatabaseBoxWithDefault(
    const std::string& key,
    const DatabaseBox& defaultvalue)
 {
@@ -275,7 +253,8 @@ DatabaseBox Database::getDatabaseBoxWithDefault(
 
 }
 
-void Database::getDatabaseBoxArray(
+void
+Database::getDatabaseBoxArray(
    const std::string& key,
    DatabaseBox* data,
    const int nelements)
@@ -311,7 +290,8 @@ void Database::getDatabaseBoxArray(
  *************************************************************************
  */
 
-void Database::putChar(
+void
+Database::putChar(
    const std::string& key,
    const char& data)
 {
@@ -330,7 +310,8 @@ void Database::putChar(
  *************************************************************************
  */
 
-void Database::putCharArray(
+void
+Database::putCharArray(
    const std::string& key,
    const Array<char>& data)
 {
@@ -357,7 +338,8 @@ void Database::putCharArray(
  ************************************************************************
  */
 
-char Database::getChar(
+char
+Database::getChar(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -379,7 +361,8 @@ char Database::getChar(
  ************************************************************************
  */
 
-char Database::getCharWithDefault(
+char
+Database::getCharWithDefault(
    const std::string& key,
    const char& defaultvalue)
 {
@@ -395,7 +378,8 @@ char Database::getCharWithDefault(
 
 }
 
-void Database::getCharArray(
+void
+Database::getCharArray(
    const std::string& key,
    char* data,
    const int nelements)
@@ -418,34 +402,6 @@ void Database::getCharArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   char& scalar)
-{
-   scalar = getChar(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const char scalar)
-{
-   putChar(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<char>& array)
-{
-   array = getCharArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<char> array)
-{
-   putCharArray(key, array);
-}
-
 /*
  * Complex
  */
@@ -459,7 +415,8 @@ void Database::putArray(
  *************************************************************************
  */
 
-void Database::putComplex(
+void
+Database::putComplex(
    const std::string& key,
    const dcomplex& data)
 {
@@ -477,7 +434,8 @@ void Database::putComplex(
  *************************************************************************
  */
 
-void Database::putComplexArray(
+void
+Database::putComplexArray(
    const std::string& key,
    const Array<dcomplex>& data)
 {
@@ -504,7 +462,8 @@ void Database::putComplexArray(
  ************************************************************************
  */
 
-dcomplex Database::getComplex(
+dcomplex
+Database::getComplex(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -526,7 +485,8 @@ dcomplex Database::getComplex(
  ************************************************************************
  */
 
-dcomplex Database::getComplexWithDefault(
+dcomplex
+Database::getComplexWithDefault(
    const std::string& key,
    const dcomplex& defaultvalue)
 {
@@ -544,7 +504,8 @@ dcomplex Database::getComplexWithDefault(
    return retval;
 }
 
-void Database::getComplexArray(
+void
+Database::getComplexArray(
    const std::string& key,
    dcomplex* data,
    const int nelements)
@@ -567,34 +528,6 @@ void Database::getComplexArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   dcomplex& scalar)
-{
-   scalar = getComplex(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const dcomplex scalar)
-{
-   putComplex(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<dcomplex>& array)
-{
-   array = getComplexArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<dcomplex> array)
-{
-   putComplexArray(key, array);
-}
-
 /*
  * Float
  */
@@ -608,7 +541,8 @@ void Database::putArray(
  *************************************************************************
  */
 
-void Database::putFloat(
+void
+Database::putFloat(
    const std::string& key,
    const float& data)
 {
@@ -626,7 +560,8 @@ void Database::putFloat(
  *************************************************************************
  */
 
-void Database::putFloatArray(
+void
+Database::putFloatArray(
    const std::string& key,
    const Array<float>& data)
 {
@@ -654,7 +589,8 @@ void Database::putFloatArray(
  ************************************************************************
  */
 
-float Database::getFloat(
+float
+Database::getFloat(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -676,7 +612,8 @@ float Database::getFloat(
  ************************************************************************
  */
 
-float Database::getFloatWithDefault(
+float
+Database::getFloatWithDefault(
    const std::string& key,
    const float& defaultvalue)
 {
@@ -692,7 +629,8 @@ float Database::getFloatWithDefault(
 
 }
 
-void Database::getFloatArray(
+void
+Database::getFloatArray(
    const std::string& key,
    float* data,
    const int nelements)
@@ -715,34 +653,6 @@ void Database::getFloatArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   float& scalar)
-{
-   scalar = getFloat(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const float scalar)
-{
-   putFloat(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<float>& array)
-{
-   array = getFloatArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<float> array)
-{
-   putFloatArray(key, array);
-}
-
 /*
  * Double
  */
@@ -756,7 +666,8 @@ void Database::putArray(
  *************************************************************************
  */
 
-void Database::putDouble(
+void
+Database::putDouble(
    const std::string& key,
    const double& data)
 {
@@ -774,7 +685,8 @@ void Database::putDouble(
  *************************************************************************
  */
 
-void Database::putDoubleArray(
+void
+Database::putDoubleArray(
    const std::string& key,
    const Array<double>& data)
 {
@@ -801,7 +713,8 @@ void Database::putDoubleArray(
  ************************************************************************
  */
 
-double Database::getDouble(
+double
+Database::getDouble(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -823,7 +736,8 @@ double Database::getDouble(
  ************************************************************************
  */
 
-double Database::getDoubleWithDefault(
+double
+Database::getDoubleWithDefault(
    const std::string& key,
    const double& defaultvalue)
 {
@@ -838,7 +752,8 @@ double Database::getDoubleWithDefault(
    }
 }
 
-void Database::getDoubleArray(
+void
+Database::getDoubleArray(
    const std::string& key,
    double* data,
    const int nelements)
@@ -861,34 +776,6 @@ void Database::getDoubleArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   double& scalar)
-{
-   scalar = getDouble(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const double scalar)
-{
-   putDouble(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<double>& array)
-{
-   array = getDoubleArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<double> array)
-{
-   putDoubleArray(key, array);
-}
-
 /*
  * Integer
  */
@@ -902,7 +789,8 @@ void Database::putArray(
  *************************************************************************
  */
 
-void Database::putInteger(
+void
+Database::putInteger(
    const std::string& key,
    const int& data)
 {
@@ -920,7 +808,8 @@ void Database::putInteger(
  *************************************************************************
  */
 
-void Database::putIntegerArray(
+void
+Database::putIntegerArray(
    const std::string& key,
    const Array<int>& data)
 {
@@ -947,7 +836,8 @@ void Database::putIntegerArray(
  ************************************************************************
  */
 
-int Database::getInteger(
+int
+Database::getInteger(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -969,7 +859,8 @@ int Database::getInteger(
  ************************************************************************
  */
 
-int Database::getIntegerWithDefault(
+int
+Database::getIntegerWithDefault(
    const std::string& key,
    const int& defaultvalue)
 {
@@ -985,7 +876,8 @@ int Database::getIntegerWithDefault(
 
 }
 
-void Database::getIntegerArray(
+void
+Database::getIntegerArray(
    const std::string& key,
    int* data,
    const int nelements)
@@ -1008,34 +900,6 @@ void Database::getIntegerArray(
    }
 }
 
-void Database::getScalar(
-   const std::string& key,
-   int& scalar)
-{
-   scalar = getInteger(key);
-}
-
-void Database::putScalar(
-   const std::string& key,
-   const int scalar)
-{
-   putInteger(key, scalar);
-}
-
-void Database::getArray(
-   const std::string& key,
-   Array<int>& array)
-{
-   array = getIntegerArray(key);
-}
-
-void Database::putArray(
-   const std::string& key,
-   const Array<int> array)
-{
-   putIntegerArray(key, array);
-}
-
 /*
  * String
  */
@@ -1049,7 +913,8 @@ void Database::putArray(
  *************************************************************************
  */
 
-void Database::putString(
+void
+Database::putString(
    const std::string& key,
    const std::string& data)
 {
@@ -1067,7 +932,8 @@ void Database::putString(
  *************************************************************************
  */
 
-void Database::putStringArray(
+void
+Database::putStringArray(
    const std::string& key,
    const Array<std::string>& data)
 {
@@ -1094,7 +960,8 @@ void Database::putStringArray(
  ************************************************************************
  */
 
-std::string Database::getString(
+std::string
+Database::getString(
    const std::string& key)
 {
    TBOX_ASSERT(!key.empty());
@@ -1116,7 +983,8 @@ std::string Database::getString(
  ************************************************************************
  */
 
-std::string Database::getStringWithDefault(
+std::string
+Database::getStringWithDefault(
    const std::string& key,
    const std::string& defaultvalue)
 {
@@ -1132,7 +1000,8 @@ std::string Database::getStringWithDefault(
 
 }
 
-void Database::getStringArray(
+void
+Database::getStringArray(
    const std::string& key,
    std::string* data,
    const int nelements)
@@ -1156,8 +1025,10 @@ void Database::getStringArray(
 
 }
 
-bool Database::isVector(
-   const std::string& key) {
+bool
+Database::isVector(
+   const std::string& key)
+{
    return isInteger(key + "_size");
 }
 

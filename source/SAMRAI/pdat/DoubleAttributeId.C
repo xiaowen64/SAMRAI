@@ -11,8 +11,42 @@
 
 #include "SAMRAI/pdat/DoubleAttributeId.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/DoubleAttributeId.I"
-#endif
+namespace SAMRAI {
+namespace pdat {
 
+/**********************************************************************
+ * c'tor
+ *********************************************************************/
+DoubleAttributeId::DoubleAttributeId(
+   int value):
+   d_val(value)
+{
+}
+
+/**********************************************************************
+ * DoubleAttributeId c'tor (private)
+ *********************************************************************/
+DoubleAttributeId::DoubleAttributeId():
+   d_val(-1)
+{
+}
+
+/**********************************************************************
+ * copy c'tor
+ *********************************************************************/
+DoubleAttributeId::DoubleAttributeId(
+   const DoubleAttributeId& other):
+   d_val(other.d_val)
+{
+}
+
+/**********************************************************************
+ * d'tor
+ *********************************************************************/
+DoubleAttributeId::~DoubleAttributeId()
+{
+}
+
+}
+}
 #endif

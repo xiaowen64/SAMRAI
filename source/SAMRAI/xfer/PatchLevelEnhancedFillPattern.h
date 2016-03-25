@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Level fill pattern for enhanced connectivity
  *
  ************************************************************************/
@@ -15,7 +15,6 @@
 
 #include "SAMRAI/xfer/PatchLevelFillPattern.h"
 #include "SAMRAI/hier/Connector.h"
-#include "SAMRAI/tbox/DescribedClass.h"
 
 namespace SAMRAI {
 namespace xfer {
@@ -83,6 +82,21 @@ public:
    needsToCommunicateDestinationFillBoxes() const;
 
    /*!
+    * @brief Virtual method to compute the destination fill boxes.
+    *
+    * Since needsToCommunicateDestinationFillBoxes() returns true, this
+    * method should never be called.  It is implemented here to satisfy
+    * the pure virtual interface from the base class.  An error will result
+    * if this is ever called.
+    */
+   void
+   computeDestinationFillBoxesOnSourceProc(
+      FillSet& dst_fill_boxes_on_src_proc,
+      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::Connector& src_to_dst,
+      const hier::IntVector& fill_ghost_width);
+
+   /*!
     * @brief Tell RefineSchedule not to communicate data directly from source
     * to destination level.
     *
@@ -137,7 +151,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/xfer/PatchLevelEnhancedFillPattern.I"
-#endif
 #endif

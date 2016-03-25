@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
@@ -16,7 +16,9 @@
 #include "SAMRAI/tbox/Complex.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <cstring>
 #include <iostream>
+#include <vector>
 
 namespace SAMRAI {
 namespace tbox {
@@ -24,9 +26,13 @@ namespace tbox {
 /*!
  * @brief Class to provide buffers for communication of data.
  *
- * MessageStream provides a fixed size message buffer that can
- * hold data of any type.  It is used by communication routines in the
- * Schedule class.
+ * MessageStream provides a message buffer that can hold data of any
+ * type.  It is used by communication routines in the Schedule class.
+ *
+ * TODO: Because this class supports both read and write modes, it has
+ * extra data and methods that don't make sense, depending on the
+ * mode.  It should be rewritten as two classes, like std::cin and
+ * std::cout are.  BTNG.
  *
  * @see tbox::Schedule
  */
@@ -44,16 +50,34 @@ public:
     * @brief Create a message stream of the specified size and mode
     *
     * @param[in] bytes   Number of bytes in the stream.
+    *
     * @param[in] mode    MessageStream::Read or MessageStream::Write.
+    *
+    * @param[in] data_to_read    Data for unpacking, should be num_bytes bytes long.
+    *   This is used when mode == MessageStream::Read, ignored in write mode.
+    *
+    * @param[in] deep_copy Whether to make deep copy of data_to_read.
+    * The default is to make a deep copy, which is safer but slower
+    * than a shallow (pointer) copy.  This is used when mode ==
+    * MessageStream::Read, ignored in write mode.  In shallow copy mode,
+    * you cannot call growBufferAsNeeded().
     */
-   explicit MessageStream(
+   MessageStream(
       const size_t bytes,
-      const StreamMode mode);
+      const StreamMode mode,
+      const void *data_to_read = NULL,
+      bool deep_copy = true);
 
    /*!
-    * Virtual destructor for a message stream.
+    * @brief Default constructor creates a message stream with a
+    * buffer that automatically grows as needed, for writing.
     */
-   virtual ~MessageStream();
+   MessageStream();
+
+   /*!
+    * Destructor for a message stream.
+    */
+   ~MessageStream();
 
    /*!
     * @brief Static method to get amount of message stream space needed to
@@ -80,35 +104,45 @@ public:
    /*!
     * @brief Return a pointer to the start of the message buffer.
     */
-   void *
-   getBufferStart();
+   const void *
+   getBufferStart() const
+   {
+      TBOX_ASSERT( d_buffer_access != NULL );
+      return static_cast<const void *>(d_buffer_access);
+   }
 
    /*!
     * @brief Return the current size of the buffer in bytes.
     */
    size_t
-   getCurrentSize() const;
+   getCurrentSize() const
+   {
+      return d_buffer_index;
+   }
 
    /*!
-    * @brief Return the current index into the buffer.
-    */
-   size_t
-   getCurrentIndex() const;
-
-   /*!
-    * @brief Set the current index into the buffer.  Further packing/unpacking
-    * will begin at this new location.
-    */
-   void
-   setCurrentIndex(
-      const size_t index);
-
-   /*!
-    * @brief Reset the index to the beginning of the buffer.  This is the same
-    * as setting the buffer index to zero via setCurrentIndex().
+    * @brief Tell a Write-mode stream to allocate more buffer
+    * as needed for data.
+    *
+    * It is an error to use this method for a Read-mode stream.
     */
    void
-   resetIndex();
+   growBufferAsNeeded()
+   {
+      TBOX_ASSERT( d_mode == Write );
+      d_grow_as_needed = true;
+      return;
+   }
+
+   /*!
+    * @brief Whether a Read-mode MessageStream has reached the end of
+    * its data.
+    */
+   bool endOfData() const
+   {
+      TBOX_ASSERT( d_mode == Read );
+      return d_buffer_index >= d_buffer_size;
+   }
 
    /*!
     * @brief Pack a single data item into message stream.
@@ -119,7 +153,14 @@ public:
    template<typename DATA_TYPE>
    MessageStream&
    operator << (
-      const DATA_TYPE& data);
+      const DATA_TYPE& data)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Write);
+      static const unsigned int nbytes =
+         MessageStream::getSizeof<DATA_TYPE>(1);
+      copyDataIn(static_cast<const void *>(&data), nbytes);
+      return *this;
+   }
 
    /*!
     * @brief Pack an array of data items into message stream.
@@ -132,7 +173,14 @@ public:
    void
    pack(
       const DATA_TYPE* data,
-      unsigned int size = 1);
+      unsigned int size = 1)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Write);
+      if (data && (size > 0)) {
+         const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
+         copyDataIn(static_cast<const void *>(data), nbytes);
+      }
+   }
 
    /*!
     * @brief Unpack a single data item from message stream.
@@ -143,7 +191,14 @@ public:
    template<typename DATA_TYPE>
    MessageStream&
    operator >> (
-      DATA_TYPE& data);
+      DATA_TYPE& data)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Read);
+      static const unsigned int nbytes =
+         MessageStream::getSizeof<DATA_TYPE>(1);
+      copyDataOut(static_cast<void *>(&data), nbytes);
+      return *this;
+   }
 
    /*!
     * @brief Unpack an array of data items from message stream.
@@ -157,27 +212,65 @@ public:
    void
    unpack(
       DATA_TYPE * data,
-      unsigned int size = 1);
+      unsigned int size = 1)
+   {
+      TBOX_ASSERT(d_mode == MessageStream::Read);
+      if (data && (size > 0)) {
+         const unsigned int nbytes = MessageStream::getSizeof<DATA_TYPE>(size);
+         copyDataOut(static_cast<void *>(data), nbytes);
+      }
+   }
 
    /*!
     * @brief Print out internal object data.
     *
     * @param[out] os  Output stream.
     */
-   virtual void
+   void
    printClassData(
       std::ostream& os) const;
 
 private:
+
    /*!
-    * @brief  Helper function to get pointer into buffer at current
-    * position and advance buffer position by given number of bytes.
+    * @brief Copy data into the stream, advancing the stream pointer.
     *
-    * @param[in]  nbytes
+    * @param[in]  data
+    * @param[in]  num_bytes
     */
-   void *
-   getPointerAndAdvanceCursor(
-      const size_t nbytes);
+   void copyDataIn(
+      const void *input_data,
+      const size_t num_bytes)
+      {
+         if ( !d_grow_as_needed ) {
+            TBOX_ASSERT(d_buffer_index + num_bytes <= d_buffer.capacity());
+         }
+         if ( num_bytes > 0 ) {
+            d_buffer.insert( d_buffer.end(),
+                             static_cast<const char*>(input_data),
+                             static_cast<const char*>(input_data) + num_bytes );
+            d_buffer_size = d_buffer.size();
+            d_buffer_index += num_bytes;
+            d_buffer_access = &d_buffer[0];
+         }
+         return;
+      }
+
+   /*!
+    * @brief Copy data out of the stream, advancing the stream pointer.
+    *
+    * @param[in]  output_data
+    * @param[in]  num_bytes
+    */
+   void copyDataOut(
+      void *output_data,
+      const size_t num_bytes)
+      {
+         TBOX_ASSERT( d_buffer_index + num_bytes <= d_buffer_size );
+         memcpy(output_data, &d_buffer_access[d_buffer_index], num_bytes);
+         d_buffer_index += num_bytes;
+         return;
+      }
 
    MessageStream(
       const MessageStream&);            // not implemented
@@ -191,14 +284,23 @@ private:
    const StreamMode d_mode;
 
    /*!
-    * Number of bytes allocated in the buffer.
+    * The buffer for the streamed data.
     */
-   size_t d_buffer_size;
+   std::vector<char> d_buffer;
 
    /*!
-    * Number of bytes currently being used in the buffer.
+    * @brief Pointer to either d_buffer space or, in shallow-copy Read
+    * mode, external memory.
     */
-   size_t d_current_size;
+   const char *d_buffer_access;
+
+   /*!
+    * @brief Number of bytes in the buffer.
+    *
+    * Equal to d_buffer.size() if using internal buffer.  Otherwixe,
+    * equal to external buffer size.
+    */
+   size_t d_buffer_size;
 
    /*!
     * Current index into the buffer used when traversing.
@@ -206,21 +308,13 @@ private:
    size_t d_buffer_index;
 
    /*!
-    * The buffer for the streamed data.
+    * @brief Whether to grow buffer as needed in a Write-mode stream.
     */
-   char* d_buffer;
+   bool d_grow_as_needed;
 
 };
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/MessageStream.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
-#include "SAMRAI/tbox/MessageStream_template_methods.C"
-#endif
 
 #endif

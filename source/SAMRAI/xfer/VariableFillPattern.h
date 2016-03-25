@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -16,9 +16,8 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -44,7 +43,7 @@ namespace xfer {
  * @see xfer::RefineSchedule
  */
 
-class VariableFillPattern:public tbox::DescribedClass
+class VariableFillPattern
 {
 public:
    /*!
@@ -77,9 +76,10 @@ public:
     * @param[in] transformation  the transformation from source to
     *                            destination index space.
     *
-    * @return                    Pointer to the calculated overlap object
+    * @return                    boost::shared_ptr to the calculated overlap
+    *                            object
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -107,9 +107,9 @@ public:
     * @param[in] patch_data_factory patch data factory for the data that is to be
     *                               filled
     *
-    * @return                Pointer to the calculated overlap object
+    * @return                boost::shared_ptr to the calculated overlap object
     */
-   virtual tbox::Pointer<hier::BoxOverlap>
+   virtual boost::shared_ptr<hier::BoxOverlap>
    computeFillBoxesOverlap(
       const hier::BoxContainer& fill_boxes,
       const hier::Box& patch_box,

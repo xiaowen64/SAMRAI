@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered integer data on
  *                a  mesh.
  *
@@ -16,9 +16,9 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/hier/CoarsenOperator.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -30,9 +30,6 @@ namespace pdat {
  * over a  mesh.  It is derived from the hier::CoarsenOperator base
  * class.  The numerical operations for theaveraging use FORTRAN numerical
  * routines.
- *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is node-centered integer, and the string is "CONSTANT_COARSEN".
  *
  * @see hier::CoarsenOperator
  */
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~NodeIntegerInjection();
-
-   /**
-    * Return true if the variable and name string match the node-centered
-    * constant averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of node-centered constant averaging is 0.

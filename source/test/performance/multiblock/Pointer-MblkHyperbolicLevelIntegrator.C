@@ -3,17 +3,17 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:
  *
  ************************************************************************/
 
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/Pointer.C"
 #include "MblkHyperbolicLevelIntegrator.h"
+
+#include <boost/shared_ptr.hpp>
 
 using namespace SAMRAI;
 
 #ifndef LACKS_EXPLICIT_TEMPLATE_INSTANTIATION
-template class tbox::Pointer<MblkHyperbolicLevelIntegrator>;
+template class boost::shared_ptr<MblkHyperbolicLevelIntegrator>;
 #endif

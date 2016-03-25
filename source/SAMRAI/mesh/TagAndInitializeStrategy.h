@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for params, tagging, init for gridding.
  *
  ************************************************************************/
@@ -17,7 +17,8 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace mesh {
@@ -123,14 +124,13 @@ namespace mesh {
  * @see mesh::GriddingAlgorithm
  */
 
-class TagAndInitializeStrategy:
-   public virtual tbox::DescribedClass
+class TagAndInitializeStrategy
 {
 public:
    /*!
     * Empty constructor for TagAndInitializeStrategy.
     */
-   explicit TagAndInitializeStrategy(
+   TagAndInitializeStrategy(
       const tbox::Dimension& dim,
       const std::string& object_name);
 
@@ -194,13 +194,13 @@ public:
     */
    virtual void
    initializeLevelData(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const tbox::Pointer<hier::PatchLevel> old_level =
-         tbox::Pointer<hier::PatchLevel>(NULL),
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
+         boost::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true) = 0;
 
    /*!
@@ -223,7 +223,7 @@ public:
     */
    virtual void
    resetHierarchyConfiguration(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level) = 0;
 
@@ -253,7 +253,7 @@ public:
     */
    virtual void
    tagCellsForRefinement(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
@@ -275,7 +275,7 @@ public:
     */
    virtual void
    preprocessErrorEstimation(
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double regrid_time,
       const double regrid_start_time,
@@ -329,19 +329,25 @@ public:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db);
 
    /*!
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_dim;
+   }
 
    /*!
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    const tbox::Dimension d_dim;
@@ -388,7 +394,4 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/mesh/TagAndInitializeStrategy.I"
-#endif
 #endif

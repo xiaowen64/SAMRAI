@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real cell-centered patch data.
  *
  ************************************************************************/
@@ -45,7 +45,8 @@ PatchCellDataNormOpsReal<TYPE>::PatchCellDataNormOpsReal(
 }
 
 template<class TYPE>
-void PatchCellDataNormOpsReal<TYPE>::operator = (
+void
+PatchCellDataNormOpsReal<TYPE>::operator = (
    const PatchCellDataNormOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -60,11 +61,12 @@ void PatchCellDataNormOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+int
+PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    const hier::Box ibox = box * data->getGhostBox();
@@ -81,12 +83,13 @@ int PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
  */
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
-   const tbox::Pointer<pdat::CellData<double> >& cvol,
+double
+PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<double> >& cvol,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!data.isNull() && !cvol.isNull());
+   TBOX_ASSERT(data && cvol);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    return d_array_ops.sumControlVolumes(data->getArrayData(),
@@ -95,12 +98,13 @@ double PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
 }
 
 template<class TYPE>
-void PatchCellDataNormOpsReal<TYPE>::abs(
-   tbox::Pointer<pdat::CellData<TYPE> >& dst,
-   const tbox::Pointer<pdat::CellData<TYPE> >& src,
+void
+PatchCellDataNormOpsReal<TYPE>::abs(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    d_array_ops.abs(dst->getArrayData(),
@@ -109,16 +113,17 @@ void PatchCellDataNormOpsReal<TYPE>::abs(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::L1Norm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+double
+PatchCellDataNormOpsReal<TYPE>::L1Norm(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    double retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.L1Norm(data->getArrayData(), box);
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
@@ -131,16 +136,17 @@ double PatchCellDataNormOpsReal<TYPE>::L1Norm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::L2Norm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+double
+PatchCellDataNormOpsReal<TYPE>::L2Norm(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    double retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.L2Norm(data->getArrayData(), box);
    } else {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
@@ -153,17 +159,18 @@ double PatchCellDataNormOpsReal<TYPE>::L2Norm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
-   const tbox::Pointer<pdat::CellData<TYPE> >& weight,
+double
+PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
+   TBOX_ASSERT(data && weight);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
 
    double retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.weightedL2Norm(data->getArrayData(),
             weight->getArrayData(),
             box);
@@ -180,16 +187,16 @@ double PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::RMSNorm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+double
+PatchCellDataNormOpsReal<TYPE>::RMSNorm(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-#endif
+   TBOX_ASSERT(data);
+
    double retval = L2Norm(data, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -198,17 +205,17 @@ double PatchCellDataNormOpsReal<TYPE>::RMSNorm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
-   const tbox::Pointer<pdat::CellData<TYPE> >& weight,
+double
+PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull() && !weight.isNull());
-#endif
+   TBOX_ASSERT(data && weight);
+
    double retval = weightedL2Norm(data, weight, box, cvol);
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
       retval /= sqrt(sumControlVolumes(data, cvol, box));
@@ -217,16 +224,16 @@ double PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
 }
 
 template<class TYPE>
-double PatchCellDataNormOpsReal<TYPE>::maxNorm(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+double
+PatchCellDataNormOpsReal<TYPE>::maxNorm(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-#endif
+   TBOX_ASSERT(data);
+
    double retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.maxNorm(data->getArrayData(), box);
    } else {
       retval = d_array_ops.maxNormWithControlVolume(data->getArrayData(),
@@ -237,17 +244,17 @@ double PatchCellDataNormOpsReal<TYPE>::maxNorm(
 }
 
 template<class TYPE>
-TYPE PatchCellDataNormOpsReal<TYPE>::dot(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data1,
-   const tbox::Pointer<pdat::CellData<TYPE> >& data2,
+TYPE
+PatchCellDataNormOpsReal<TYPE>::dot(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > cvol) const
+   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
-#endif
+   TBOX_ASSERT(data1 && data2);
+
    TYPE retval;
-   if (cvol.isNull()) {
+   if (!cvol) {
       retval = d_array_ops.dot(data1->getArrayData(),
             data2->getArrayData(),
             box);
@@ -262,14 +269,14 @@ TYPE PatchCellDataNormOpsReal<TYPE>::dot(
 }
 
 template<class TYPE>
-TYPE PatchCellDataNormOpsReal<TYPE>::integral(
-   const tbox::Pointer<pdat::CellData<TYPE> >& data,
+TYPE
+PatchCellDataNormOpsReal<TYPE>::integral(
+   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const tbox::Pointer<pdat::CellData<double> > vol) const
+   const boost::shared_ptr<pdat::CellData<double> >& vol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data.isNull());
-#endif
+   TBOX_ASSERT(data);
+
    TYPE retval = 0.0;
 
    retval = d_array_ops.integral(data->getArrayData(),

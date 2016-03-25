@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -14,14 +14,10 @@
 #include "SAMRAI/pdat/CellData.h"
 
 #include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainerConstIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
 #include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/CellData.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -47,7 +43,8 @@ const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
  */
 
 template<class TYPE>
-size_t CellData<TYPE>::getSizeOfData(
+size_t
+CellData<TYPE>::getSizeOfData(
    const hier::Box& box,
    int depth,
    const hier::IntVector& ghosts)
@@ -81,7 +78,7 @@ CellData<TYPE>::CellData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   d_data.initializeArray(this->getGhostBox(), depth);
+   d_data.initializeArray(getGhostBox(), depth);
 }
 
 template<class TYPE>
@@ -109,10 +106,76 @@ CellData<TYPE>::CellData(
 }
 
 template<class TYPE>
-void CellData<TYPE>::operator = (
+void
+CellData<TYPE>::operator = (
    const CellData<TYPE>& foo)
 {
    NULL_USE(foo);
+}
+
+template<class TYPE>
+int
+CellData<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+TYPE*
+CellData<TYPE>::getPointer(
+   int depth)
+{
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data.getPointer(depth);
+}
+
+template<class TYPE>
+const TYPE*
+CellData<TYPE>::getPointer(
+   int depth) const
+{
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data.getPointer(depth);
+}
+
+template<class TYPE>
+TYPE&
+CellData<TYPE>::operator () (
+   const CellIndex& i,
+   int depth)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data(i, depth);
+}
+
+template<class TYPE>
+const TYPE&
+CellData<TYPE>::operator () (
+   const CellIndex& i,
+   int depth) const
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
+   TBOX_ASSERT((depth >= 0) && (depth < d_depth));
+
+   return d_data(i, depth);
+}
+
+template<class TYPE>
+ArrayData<TYPE>&
+CellData<TYPE>::getArrayData()
+{
+   return d_data;
+}
+
+template<class TYPE>
+const ArrayData<TYPE>&
+CellData<TYPE>::getArrayData() const
+{
+   return d_data;
 }
 
 /*
@@ -125,7 +188,8 @@ void CellData<TYPE>::operator = (
  */
 
 template<class TYPE>
-void CellData<TYPE>::copy(
+void
+CellData<TYPE>::copy(
    const hier::PatchData& src)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_data, src);
@@ -143,7 +207,8 @@ void CellData<TYPE>::copy(
 }
 
 template<class TYPE>
-void CellData<TYPE>::copy2(
+void
+CellData<TYPE>::copy2(
    hier::PatchData& dst) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(d_data, dst);
@@ -168,7 +233,8 @@ void CellData<TYPE>::copy2(
  */
 
 template<class TYPE>
-void CellData<TYPE>::copy(
+void
+CellData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
@@ -185,7 +251,7 @@ void CellData<TYPE>::copy(
           hier::Transformation::NO_ROTATE) {
          d_data.copy(t_src->d_data,
             t_overlap->getDestinationBoxContainer(),
-            t_overlap->getSourceOffset());
+            t_overlap->getTransformation());
       } else {
          copyWithRotation(*t_src, *t_overlap);
       }
@@ -193,7 +259,8 @@ void CellData<TYPE>::copy(
 }
 
 template<class TYPE>
-void CellData<TYPE>::copy2(
+void
+CellData<TYPE>::copy2(
    hier::PatchData& dst,
    const hier::BoxOverlap& overlap) const
 {
@@ -209,14 +276,26 @@ void CellData<TYPE>::copy2(
 
       t_dst->d_data.copy(d_data,
          t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       t_dst->copyWithRotation(*this, *t_overlap);
    }
 }
 
 template<class TYPE>
-void CellData<TYPE>::copyWithRotation(
+void
+CellData<TYPE>::copyOnBox(
+   const CellData<TYPE>& src,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   const hier::Box cell_box = CellGeometry::toCellBox(box);
+   d_data.copy(src.getArrayData(), cell_box);
+}
+
+template<class TYPE>
+void
+CellData<TYPE>::copyWithRotation(
    const CellData<TYPE>& src,
    const CellOverlap& overlap)
 {
@@ -241,9 +320,9 @@ void CellData<TYPE>::copyWithRotation(
    hier::Transformation::calculateReverseShift(
       back_shift, shift, rotate);
 
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(rotatebox * overlap_box);
 
@@ -251,10 +330,12 @@ void CellData<TYPE>::copyWithRotation(
          const int depth = ((getDepth() < src.getDepth()) ?
                             getDepth() : src.getDepth());
 
-         for (CellData<double>::Iterator ci(copybox); ci; ci++) {
+         CellData<double>::iterator ciend(copybox, false);
+         for (CellData<double>::iterator ci(copybox, true);
+              ci != ciend; ++ci) {
 
-            const pdat::CellIndex& dst_index = ci();
-            pdat::CellIndex src_index(dst_index);
+            const CellIndex& dst_index = *ci;
+            CellIndex src_index(dst_index);
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
@@ -277,7 +358,8 @@ void CellData<TYPE>::copyWithRotation(
  */
 
 template<class TYPE>
-void CellData<TYPE>::copyDepth(
+void
+CellData<TYPE>::copyDepth(
    int dst_depth,
    const CellData<TYPE>& src,
    int src_depth)
@@ -300,13 +382,15 @@ void CellData<TYPE>::copyDepth(
  */
 
 template<class TYPE>
-bool CellData<TYPE>::canEstimateStreamSizeFromBox() const
+bool
+CellData<TYPE>::canEstimateStreamSizeFromBox() const
 {
    return ArrayData<TYPE>::canEstimateStreamSizeFromBox();
 }
 
 template<class TYPE>
-int CellData<TYPE>::getDataStreamSize(
+int
+CellData<TYPE>::getDataStreamSize(
    const hier::BoxOverlap& overlap) const
 {
    const CellOverlap* t_overlap =
@@ -328,7 +412,8 @@ int CellData<TYPE>::getDataStreamSize(
  */
 
 template<class TYPE>
-void CellData<TYPE>::packStream(
+void
+CellData<TYPE>::packStream(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap) const
 {
@@ -340,28 +425,15 @@ void CellData<TYPE>::packStream(
    if (t_overlap->getTransformation().getRotation() ==
        hier::Transformation::NO_ROTATE) {
       d_data.packStream(stream, t_overlap->getDestinationBoxContainer(),
-         t_overlap->getSourceOffset());
+         t_overlap->getTransformation());
    } else {
       packWithRotation(stream, *t_overlap);
    }
 }
 
 template<class TYPE>
-void CellData<TYPE>::unpackStream(
-   tbox::MessageStream& stream,
-   const hier::BoxOverlap& overlap)
-{
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&overlap);
-
-   TBOX_ASSERT(t_overlap != NULL);
-
-   d_data.unpackStream(stream, t_overlap->getDestinationBoxContainer(),
-      t_overlap->getSourceOffset());
-}
-
-template<class TYPE>
-void CellData<TYPE>::packWithRotation(
+void
+CellData<TYPE>::packWithRotation(
    tbox::MessageStream& stream,
    const CellOverlap& overlap) const
 {
@@ -392,18 +464,20 @@ void CellData<TYPE>::packWithRotation(
    tbox::Array<TYPE> buffer(size);
 
    int i = 0;
-   for (hier::BoxContainer::ConstIterator bi(overlap_boxes);
+   for (hier::BoxContainer::const_iterator bi(overlap_boxes);
         bi != overlap_boxes.end(); ++bi) {
-      const hier::Box& overlap_box = bi();
+      const hier::Box& overlap_box = *bi;
 
       const hier::Box copybox(rotatebox * overlap_box);
 
       if (!copybox.empty()) {
 
          for (int d = 0; d < depth; d++) {
-            for (CellData<double>::Iterator ci(copybox); ci; ci++) {
+            CellData<double>::iterator ciend(copybox, false);
+            for (CellData<double>::iterator ci(copybox, true);
+                 ci != ciend; ++ci) {
 
-               CellIndex src_index(ci());
+               CellIndex src_index(*ci);
                hier::Transformation::rotateIndex(src_index, back_rotate);
                src_index += back_shift;
 
@@ -417,6 +491,63 @@ void CellData<TYPE>::packWithRotation(
    stream.pack(buffer.getPointer(), size);
 }
 
+template<class TYPE>
+void
+CellData<TYPE>::unpackStream(
+   tbox::MessageStream& stream,
+   const hier::BoxOverlap& overlap)
+{
+   const CellOverlap* t_overlap =
+      dynamic_cast<const CellOverlap *>(&overlap);
+
+   TBOX_ASSERT(t_overlap != NULL);
+
+   d_data.unpackStream(stream, t_overlap->getDestinationBoxContainer(),
+      t_overlap->getSourceOffset());
+}
+
+template<class TYPE>
+void
+CellData<TYPE>::fill(
+   const TYPE& t,
+   int d)
+{
+
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   d_data.fill(t, d);
+}
+
+template<class TYPE>
+void
+CellData<TYPE>::fill(
+   const TYPE& t,
+   const hier::Box& box,
+   int d)
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   d_data.fill(t, box, d);
+}
+
+template<class TYPE>
+void
+CellData<TYPE>::fillAll(
+   const TYPE& t)
+{
+   d_data.fillAll(t);
+}
+
+template<class TYPE>
+void
+CellData<TYPE>::fillAll(
+   const TYPE& t,
+   const hier::Box& box)
+{
+   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   d_data.fillAll(t, box);
+}
+
 /*
  *************************************************************************
  *
@@ -427,7 +558,8 @@ void CellData<TYPE>::packWithRotation(
  */
 
 template<class TYPE>
-void CellData<TYPE>::print(
+void
+CellData<TYPE>::print(
    const hier::Box& box,
    std::ostream& os,
    int prec) const
@@ -441,7 +573,8 @@ void CellData<TYPE>::print(
 }
 
 template<class TYPE>
-void CellData<TYPE>::print(
+void
+CellData<TYPE>::print(
    const hier::Box& box,
    int depth,
    std::ostream& os,
@@ -452,9 +585,10 @@ void CellData<TYPE>::print(
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
    os.precision(prec);
-   for (CellIterator i(box); i; i++) {
-      os << "array" << i() << " = "
-         << d_data(i(), depth) << std::endl << std::flush;
+   CellIterator iend(box, false);
+   for (CellIterator i(box, true); i != iend; ++i) {
+      os << "array" << *i << " = "
+         << d_data(*i, depth) << std::endl << std::flush;
       os << std::flush;
    }
 }
@@ -470,11 +604,12 @@ void CellData<TYPE>::print(
  */
 
 template<class TYPE>
-void CellData<TYPE>::getSpecializedFromDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+CellData<TYPE>::getSpecializedFromDatabase(
+   const boost::shared_ptr<tbox::Database>& database)
 {
 
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    int ver = database->getInteger("PDAT_CELLDATA_VERSION");
    if (ver != PDAT_CELLDATA_VERSION) {
@@ -484,9 +619,7 @@ void CellData<TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   tbox::Pointer<tbox::Database> array_database;
-   array_database = database->getDatabase("d_data");
-   d_data.getFromDatabase(array_database);
+   d_data.getFromDatabase(database->getDatabase("d_data"));
 }
 
 /*
@@ -499,18 +632,17 @@ void CellData<TYPE>::getSpecializedFromDatabase(
  */
 
 template<class TYPE>
-void CellData<TYPE>::putSpecializedToDatabase(
-   tbox::Pointer<tbox::Database> database)
+void
+CellData<TYPE>::putSpecializedToDatabase(
+   const boost::shared_ptr<tbox::Database>& database) const
 {
-   TBOX_ASSERT(!database.isNull());
+   TBOX_ASSERT(database);
 
    database->putInteger("PDAT_CELLDATA_VERSION", PDAT_CELLDATA_VERSION);
 
    database->putInteger("d_depth", d_depth);
 
-   tbox::Pointer<tbox::Database> array_database;
-   array_database = database->putDatabase("d_data");
-   d_data.putToDatabase(array_database);
+   d_data.putUnregisteredToDatabase(database->putDatabase("d_data"));
 }
 
 }

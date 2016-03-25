@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for time interpolation during data refining
  *
  ************************************************************************/
@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
-#include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <typeinfo>
@@ -45,33 +44,8 @@ namespace xfer {
 double RefineTimeTransaction::s_time = 0.0;
 
 const RefineClasses::Data **
-RefineTimeTransaction::s_refine_items =
-   (const RefineClasses::Data **)NULL;
+RefineTimeTransaction::s_refine_items = (const RefineClasses::Data **)NULL;
 int RefineTimeTransaction::s_num_refine_items = 0;
-
-void RefineTimeTransaction::setTransactionTime(
-   const double time)
-{
-   s_time = time;
-}
-
-void RefineTimeTransaction::setRefineItems(
-   const RefineClasses::Data** refine_items,
-   int num_refine_items)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(refine_items != (const RefineClasses::Data **)NULL);
-   TBOX_ASSERT(num_refine_items >= 0);
-#endif
-   s_refine_items = refine_items;
-   s_num_refine_items = num_refine_items;
-}
-
-void RefineTimeTransaction::unsetRefineItems()
-{
-   s_refine_items = (const RefineClasses::Data **)NULL;
-   s_num_refine_items = 0;
-}
 
 /*
  *************************************************************************
@@ -82,24 +56,24 @@ void RefineTimeTransaction::unsetRefineItems()
  */
 
 RefineTimeTransaction::RefineTimeTransaction(
-   tbox::Pointer<hier::PatchLevel>& dst_level,
-   tbox::Pointer<hier::PatchLevel>& src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
    const hier::Box& box,
-   int refine_item_id):
-   d_dst_patch(0),
+   const int refine_item_id):
+   d_dst_patch(),
    d_dst_patch_rank(dst_mapped_box.getOwnerRank()),
-   d_src_patch(0),
+   d_src_patch(),
    d_src_patch_rank(src_mapped_box.getOwnerRank()),
    d_overlap(overlap),
    d_box(box),
    d_refine_item_id(refine_item_id)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
@@ -131,10 +105,11 @@ RefineTimeTransaction::~RefineTimeTransaction()
  *************************************************************************
  */
 
-bool RefineTimeTransaction::canEstimateIncomingMessageSize()
+bool
+RefineTimeTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (!d_src_patch.isNull()) {
+   if (d_src_patch) {
       can_estimate =
          d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
             d_src_told)
@@ -148,7 +123,8 @@ bool RefineTimeTransaction::canEstimateIncomingMessageSize()
    return can_estimate;
 }
 
-size_t RefineTimeTransaction::computeIncomingMessageSize()
+size_t
+RefineTimeTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->
@@ -157,7 +133,8 @@ size_t RefineTimeTransaction::computeIncomingMessageSize()
    return d_incoming_bytes;
 }
 
-size_t RefineTimeTransaction::computeOutgoingMessageSize()
+size_t
+RefineTimeTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->
@@ -166,7 +143,18 @@ size_t RefineTimeTransaction::computeOutgoingMessageSize()
    return d_outgoing_bytes;
 }
 
-void RefineTimeTransaction::packStream(
+int
+RefineTimeTransaction::getSourceProcessor() {
+   return d_src_patch_rank;
+}
+
+int
+RefineTimeTransaction::getDestinationProcessor() {
+   return d_dst_patch_rank;
+}
+
+void
+RefineTimeTransaction::packStream(
    tbox::MessageStream& stream)
 {
    hier::Box temporary_mapped_box(d_box.getDim());
@@ -176,7 +164,7 @@ void RefineTimeTransaction::packStream(
       temporary_mapped_box,
       d_src_patch->getPatchDescriptor());
 
-   tbox::Pointer<hier::PatchData> temporary_patch_data(
+   boost::shared_ptr<hier::PatchData> temporary_patch_data(
       d_src_patch->getPatchDescriptor()
       ->getPatchDataFactory(s_refine_items[d_refine_item_id]->
          d_src_told)
@@ -191,14 +179,16 @@ void RefineTimeTransaction::packStream(
    temporary_patch_data->packStream(stream, *d_overlap);
 }
 
-void RefineTimeTransaction::unpackStream(
+void
+RefineTimeTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
    ->unpackStream(stream, *d_overlap);
 }
 
-void RefineTimeTransaction::copyLocalData()
+void
+RefineTimeTransaction::copyLocalData()
 {
    /*
     * If there is no offset between the source and destination, then
@@ -226,11 +216,11 @@ void RefineTimeTransaction::copyLocalData()
          temporary_mapped_box,
          d_src_patch->getPatchDescriptor());
 
-      tbox::Pointer<hier::PatchData> temp =
+      boost::shared_ptr<hier::PatchData> temp(
          d_src_patch->getPatchDescriptor()
          ->getPatchDataFactory(s_refine_items[d_refine_item_id]->
             d_src_told)
-         ->allocate(temporary_patch);
+         ->allocate(temporary_patch));
 
       temp->setTime(s_time);
 
@@ -248,13 +238,14 @@ void RefineTimeTransaction::copyLocalData()
 
 }
 
-void RefineTimeTransaction::timeInterpolate(
-   const tbox::Pointer<hier::PatchData>& pd_dst,
-   const tbox::Pointer<hier::PatchData>& pd_old,
-   const tbox::Pointer<hier::PatchData>& pd_new)
+void
+RefineTimeTransaction::timeInterpolate(
+   const boost::shared_ptr<hier::PatchData>& pd_dst,
+   const boost::shared_ptr<hier::PatchData>& pd_old,
+   const boost::shared_ptr<hier::PatchData>& pd_new)
 {
-   TBOX_ASSERT(!pd_old.isNull());
-   TBOX_ASSERT(!pd_dst.isNull());
+   TBOX_ASSERT(pd_old);
+   TBOX_ASSERT(pd_dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*pd_dst, *pd_old);
    TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(pd_dst->getTime(), s_time));
 
@@ -263,7 +254,7 @@ void RefineTimeTransaction::timeInterpolate(
       d_optime->timeInterpolate(*pd_dst, d_box, *pd_old, *pd_old);
    } else {
 
-      TBOX_ASSERT(!pd_new.isNull());
+      TBOX_ASSERT(pd_new);
       TBOX_DIM_ASSERT_CHECK_ARGS2(*pd_dst, *pd_new);
       TBOX_ASSERT(pd_old->getTime() < s_time);
       TBOX_ASSERT(pd_new->getTime() >= s_time);
@@ -281,7 +272,8 @@ void RefineTimeTransaction::timeInterpolate(
  *************************************************************************
  */
 
-void RefineTimeTransaction::printClassData(
+void
+RefineTimeTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Refine Time Transaction" << std::endl;
@@ -306,9 +298,9 @@ void RefineTimeTransaction::printClassData(
    stream << "   incoming bytes:          " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:          " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_dst_patch.get() << std::endl;
    stream << "   source level:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_src_patch.get() << std::endl;
    stream << "   overlap:                 " << std::endl;
    d_overlap->print(stream);
 }

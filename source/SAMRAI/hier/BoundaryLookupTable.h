@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
@@ -24,7 +24,7 @@ namespace hier {
  *
  * Class BoundaryLookupTable is a singleton class that maintains
  * a table that organizes all of the possible boundary region cases
- * for a patch.  It is used primarily by the GridGeometry during the
+ * for a patch.  It is used primarily by the grid geometry during the
  * construction of physical boundary boxes for patches and by the
  * PatchGeometry class to determine box regions to be filled during
  * a physical boundary fill.
@@ -35,7 +35,7 @@ namespace hier {
  * a dimension-independent way.
  *
  * @see hier::BoundaryBox
- * @see hier::GridGeometry
+ * @see hier::BaseGridGeometry
  * @see hier::PatchGeometry
  */
 
@@ -55,7 +55,14 @@ public:
     */
    static BoundaryLookupTable *
    getLookupTable(
-      const tbox::Dimension& dim);
+      const tbox::Dimension& dim)
+   {
+     int idx = dim.getValue() - 1;
+      if (!s_lookup_table_instance[idx]) {
+         s_lookup_table_instance[idx] = new BoundaryLookupTable(dim);
+      }
+      return s_lookup_table_instance[idx];
+   }
 
    /*!
     * @brief Get array of active directions for specific boundary
@@ -75,7 +82,13 @@ public:
    const tbox::Array<int>&
    getDirections(
       int loc,
-      int codim) const;
+      int codim) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      int iloc = loc / (1 << codim);
+      return d_table[codim - 1][iloc];
+   }
 
    /*!
     * @brief Get array of maximum number of locations for each
@@ -91,7 +104,10 @@ public:
     *         codimension
     */
    const tbox::Array<int>&
-   getMaxLocationIndices() const;
+   getMaxLocationIndices() const
+   {
+      return d_max_li;
+   }
 
    /*!
     * @brief Determines if given boundary information indicates a
@@ -114,7 +130,13 @@ public:
    isLower(
       int loc,
       int codim,
-      int dim_index) const;
+      int dir_index) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((dir_index >= 0) && (dir_index < codim));
+      return !isUpper(loc, codim, dir_index);
+   }
 
    /*!
     * @brief Determines if given boundary information indicates a
@@ -137,7 +159,13 @@ public:
    isUpper(
       int loc,
       int codim,
-      int index) const;
+      int dir_index) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((dir_index >= 0) && (dir_index < codim));
+      return (loc % (1 << codim)) & (1 << (dir_index));
+   }
 
    /*!
     * @brief Get array of boundary direction IntVectors.
@@ -159,7 +187,11 @@ public:
     */
    const tbox::Array<IntVector>&
    getBoundaryDirections(
-      int codim) const;
+      int codim) const
+   {
+      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      return d_bdry_dirs[codim - 1];
+   }
 
 protected:
    /*!
@@ -173,7 +205,7 @@ protected:
     *
     * @param dim  Dimension
     */
-   BoundaryLookupTable(
+   explicit BoundaryLookupTable(
       const tbox::Dimension& dim);
 
    /*!
@@ -193,12 +225,13 @@ private:
     *
     * TODO:  Document the parameters.
     */
-   void buildTable(int* table,
-                   int codim,
-                   int ibeg,
-                   int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-                   int& lvl,
-                   int * & ptr);
+   void
+   buildTable(int* table,
+              int codim,
+              int ibeg,
+              int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
+              int& lvl,
+              int * & ptr);
 
    /*!
     * @brief Build table of direction IntVectors
@@ -253,7 +286,7 @@ private:
     * @brief Array to hold information about possible directions for each
     * codimension.
     */
-   tbox::Array<tbox::Array<hier::IntVector> > d_bdry_dirs;
+   tbox::Array<tbox::Array<IntVector> > d_bdry_dirs;
 
    static tbox::StartupShutdownManager::Handler
       s_finalize_handler;
@@ -262,9 +295,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryLookupTable.I"
-#endif
 
 #endif

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing coarsening data in equivalence classes.
  *
  ************************************************************************/
@@ -17,11 +17,6 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
-#include "SAMRAI/tbox/Utilities.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/xfer/CoarsenClasses.I"
-#endif
 
 #include <typeinfo>
 
@@ -65,50 +60,15 @@ CoarsenClasses::~CoarsenClasses()
 /*
  *************************************************************************
  *
- * Return representative item for given equivalence class (first in list)
- *
- *************************************************************************
- */
-
-const CoarsenClasses::Data&
-CoarsenClasses::getClassRepresentative(
-   int equiv_class_index) const
-{
-   TBOX_ASSERT((equiv_class_index >= 0) &&
-      (equiv_class_index < getNumberOfEquivalenceClasses()));
-   return d_coarsen_classes_data_items[
-             d_equivalence_class_indices[equiv_class_index].getFirstItem()];
-}
-
-/*
- *************************************************************************
- *
- * Return iterator for list of coarsen items for given equivalence class
- *
- *************************************************************************
- */
-
-tbox::List<int>::Iterator
-CoarsenClasses::getIterator(
-   int equiv_class_index)
-{
-   TBOX_ASSERT((equiv_class_index >= 0) &&
-      (equiv_class_index < getNumberOfEquivalenceClasses()));
-   return tbox::List<int>::
-          Iterator(d_equivalence_class_indices[equiv_class_index]);
-}
-
-/*
- *************************************************************************
- *
  * Insert a data item into the proper equivalence class.
  *
  *************************************************************************
  */
 
-void CoarsenClasses::insertEquivalenceClassItem(
+void
+CoarsenClasses::insertEquivalenceClassItem(
    CoarsenClasses::Data& data,
-   tbox::Pointer<hier::PatchDescriptor> descriptor)
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor)
 {
 
    if (!itemIsValid(data, descriptor)) {
@@ -135,7 +95,7 @@ void CoarsenClasses::insertEquivalenceClassItem(
 
       d_coarsen_classes_data_items[d_num_coarsen_items] = data;
 
-      d_equivalence_class_indices[eq_index].appendItem(d_num_coarsen_items);
+      d_equivalence_class_indices[eq_index].push_back(d_num_coarsen_items);
 
       d_num_coarsen_items++;
    }
@@ -156,15 +116,16 @@ void CoarsenClasses::insertEquivalenceClassItem(
  *************************************************************************
  */
 
-bool CoarsenClasses::itemIsValid(
+bool
+CoarsenClasses::itemIsValid(
    const CoarsenClasses::Data& data_item,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
 
    bool item_good = true;
 
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   boost::shared_ptr<hier::PatchDescriptor> pd(descriptor);
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -182,10 +143,10 @@ bool CoarsenClasses::itemIsValid(
          << "`Source' patch data id invalid (< 0!)" << std::endl);
    }
 
-   tbox::Pointer<hier::PatchDataFactory> dfact =
-      pd->getPatchDataFactory(dst_id);
-   tbox::Pointer<hier::PatchDataFactory> sfact =
-      pd->getPatchDataFactory(src_id);
+   boost::shared_ptr<hier::PatchDataFactory> dfact(
+      pd->getPatchDataFactory(dst_id));
+   boost::shared_ptr<hier::PatchDataFactory> sfact(
+      pd->getPatchDataFactory(src_id));
 
    if (item_good && !(sfact->validCopyTo(dfact))) {
       item_good = false;
@@ -195,8 +156,8 @@ bool CoarsenClasses::itemIsValid(
          << pd->mapIndexToName(dst_id) << std::endl);
    }
 
-   tbox::Pointer<hier::CoarsenOperator> coarsop = data_item.d_opcoarsen;
-   if (item_good && !coarsop.isNull()) {
+   boost::shared_ptr<hier::CoarsenOperator> coarsop(data_item.d_opcoarsen);
+   if (item_good && coarsop) {
       if (coarsop->getStencilWidth() > sfact->getGhostCellWidth()) {
          item_good = false;
          TBOX_ERROR("Bad data given to CoarsenClasses...\n"
@@ -231,17 +192,14 @@ bool CoarsenClasses::itemIsValid(
  *************************************************************************
  */
 
-bool CoarsenClasses::classesMatch(
-   tbox::Pointer<CoarsenClasses> test_classes,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+bool
+CoarsenClasses::classesMatch(
+   const boost::shared_ptr<CoarsenClasses>& test_classes,
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
+   NULL_USE(descriptor);
 
    bool items_match = true;
-
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
-      pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
-   }
 
    if (getNumberOfEquivalenceClasses() !=
        test_classes->getNumberOfEquivalenceClasses()) {
@@ -254,8 +212,7 @@ bool CoarsenClasses::classesMatch(
       while (items_match && eq_index < getNumberOfEquivalenceClasses()) {
 
          if (d_equivalence_class_indices[eq_index].size() !=
-             test_classes->
-             d_equivalence_class_indices[eq_index].size()) {
+             test_classes->d_equivalence_class_indices[eq_index].size()) {
 
             items_match = false;
 
@@ -289,15 +246,16 @@ bool CoarsenClasses::classesMatch(
  *************************************************************************
  */
 
-bool CoarsenClasses::itemsAreEquivalent(
+bool
+CoarsenClasses::itemsAreEquivalent(
    const CoarsenClasses::Data& data1,
    const CoarsenClasses::Data& data2,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
    bool equivalent = true;
 
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
+   boost::shared_ptr<hier::PatchDescriptor> pd(descriptor);
+   if (!pd) {
       pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
    }
 
@@ -309,15 +267,15 @@ bool CoarsenClasses::itemsAreEquivalent(
 
    equivalent &= (data1.d_gcw_to_coarsen == data2.d_gcw_to_coarsen);
 
-   equivalent &= (data1.d_opcoarsen.isNull() == data2.d_opcoarsen.isNull());
-   if (equivalent && !data1.d_opcoarsen.isNull()) {
+   equivalent &= (!data1.d_opcoarsen == !data2.d_opcoarsen);
+   if (equivalent && data1.d_opcoarsen) {
       equivalent &= (data1.d_opcoarsen->getStencilWidth() ==
                      data2.d_opcoarsen->getStencilWidth());
    }
 
-   equivalent &= (data1.d_var_fill_pattern.isNull() ==
-                  data2.d_var_fill_pattern.isNull());
-   if (equivalent && !data1.d_var_fill_pattern.isNull()) {
+   equivalent &= (!data1.d_var_fill_pattern ==
+                  !data2.d_var_fill_pattern);
+   if (equivalent && data1.d_var_fill_pattern) {
       equivalent &= (typeid(*(data1.d_var_fill_pattern)) ==
                      typeid(*(data2.d_var_fill_pattern)));
    }
@@ -328,29 +286,13 @@ bool CoarsenClasses::itemsAreEquivalent(
 /*
  *************************************************************************
  *
- * Increase the data items array to the specified size.
- *
- *************************************************************************
- */
-
-void CoarsenClasses::increaseCoarsenItemArraySize(
-   const int size,
-   const tbox::Dimension& dim)
-{
-   if (size > d_coarsen_classes_data_items.size()) {
-      d_coarsen_classes_data_items.resizeArray(size, Data(dim));
-   }
-}
-
-/*
- *************************************************************************
- *
  * Print the data in the coarsen item lists to the specified stream.
  *
  *************************************************************************
  */
 
-void CoarsenClasses::printClassData(
+void
+CoarsenClasses::printClassData(
    std::ostream& stream) const
 {
    stream << "CoarsenClasses::printClassData()\n";
@@ -358,13 +300,14 @@ void CoarsenClasses::printClassData(
    for (int i = 0; i < (int)d_equivalence_class_indices.size(); i++) {
       stream << "EQUIVALENCE CLASS # " << i << std::endl;
       int j = 0;
-      for (tbox::List<int>::Iterator
-           li(d_equivalence_class_indices[i]); li; li++) {
+      const std::list<int>& indices = d_equivalence_class_indices[i];
+      for (std::list<int>::const_iterator li(indices.begin());
+           li != indices.end(); li++) {
 
          stream << "Item # " << j << std::endl;
          stream << "-----------------------------\n";
 
-         printCoarsenItem(stream, d_coarsen_classes_data_items[li()]);
+         printCoarsenItem(stream, d_coarsen_classes_data_items[*li]);
 
          j++;
       }
@@ -373,7 +316,8 @@ void CoarsenClasses::printClassData(
 
 }
 
-void CoarsenClasses::printCoarsenItem(
+void
+CoarsenClasses::printCoarsenItem(
    std::ostream& stream,
    const CoarsenClasses::Data& data) const
 {
@@ -389,7 +333,7 @@ void CoarsenClasses::printCoarsenItem(
    stream << "tag:       "
           << data.d_tag << std::endl;
 
-   if (data.d_opcoarsen.isNull()) {
+   if (!data.d_opcoarsen) {
       stream << "NULL coarsening operator" << std::endl;
    } else {
       stream << "coarsen operator name:          "
@@ -414,20 +358,21 @@ void CoarsenClasses::printCoarsenItem(
  *************************************************************************
  */
 
-bool CoarsenClasses::patchDataMatch(
+bool
+CoarsenClasses::patchDataMatch(
    int item_id1,
    int item_id2,
-   tbox::Pointer<hier::PatchDescriptor> pd) const
+   const boost::shared_ptr<hier::PatchDescriptor>& pd) const
 {
 
    bool items_match = ((item_id1 >= 0) && (item_id2 >= 0));
 
    if (items_match) {
 
-      tbox::Pointer<hier::PatchDataFactory> pdf1 =
-         pd->getPatchDataFactory(item_id1);
-      tbox::Pointer<hier::PatchDataFactory> pdf2 =
-         pd->getPatchDataFactory(item_id2);
+      boost::shared_ptr<hier::PatchDataFactory> pdf1(
+         pd->getPatchDataFactory(item_id1));
+      boost::shared_ptr<hier::PatchDataFactory> pdf2(
+         pd->getPatchDataFactory(item_id2));
 
       items_match = (typeid(*pdf1) == typeid(*pdf2));
 
@@ -452,17 +397,14 @@ bool CoarsenClasses::patchDataMatch(
  *************************************************************************
  */
 
-int CoarsenClasses::getEquivalenceClassIndex(
+int
+CoarsenClasses::getEquivalenceClassIndex(
    const CoarsenClasses::Data& data,
-   tbox::Pointer<hier::PatchDescriptor> descriptor) const
+   const boost::shared_ptr<hier::PatchDescriptor>& descriptor) const
 {
+   NULL_USE(descriptor);
 
    int eq_index = -1;
-
-   tbox::Pointer<hier::PatchDescriptor> pd = descriptor;
-   if (pd.isNull()) {
-      pd = hier::VariableDatabase::getDatabase()->getPatchDescriptor();
-   }
 
    bool class_found = false;
    int check_index = 0;
@@ -482,6 +424,17 @@ int CoarsenClasses::getEquivalenceClassIndex(
 
    return eq_index;
 
+}
+
+/*
+ *************************************************************************
+ * Constructor
+ *************************************************************************
+ */
+CoarsenClasses::Data::Data(
+   tbox::Dimension dim):
+   d_gcw_to_coarsen(dim)
+{
 }
 
 }

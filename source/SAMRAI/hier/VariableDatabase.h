@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Singleton database class for managing variables and contexts.
  *
  ************************************************************************/
@@ -19,8 +19,8 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/Array.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 #include <iostream>
 
@@ -100,14 +100,14 @@ namespace hier {
  *    ...
  *
  *    // Get the singleton variable database.
- *    hier::VariableDatabase* var_db = hier::VariableDatabase.getDatabase();
+ *    VariableDatabase* var_db = VariableDatabase.getDatabase();
  *
  *    // Create the context (or access it if it exists already).
- *    tbox::Pointer<hier::VariableContext> current =
+ *    boost::shared_ptr<VariableContext> current =
  *       var_db->getContext("CURRENT");
  *
  *    // Define the variable.
- *    hier::Pointer<pdat::FaceVariable<double> > flux(
+ *    boost::shared_ptr<pdat::FaceVariable<double> > flux(
  *       new pdat::FaceVariable<double>(dim, "flux", 1));
  *
  *    // Register the Variable/VariableContext pair.
@@ -192,15 +192,13 @@ public:
    /*!
     * @brief Get the number of patch data indices registered with the database.
     */
-   virtual
-   int
+   virtual int
    getNumberOfRegisteredPatchDataIndices() const;
 
    /*!
     * @brief Get number of variable contexts registered with the database.
     */
-   virtual
-   int
+   virtual int
    getNumberOfRegisteredVariableContexts() const;
 
    /*!
@@ -208,8 +206,7 @@ public:
     *
     * This descriptor is shared by all patches in the hierarchy.
     */
-   virtual
-   tbox::Pointer<hier::PatchDescriptor>
+   virtual boost::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const;
 
    /*!
@@ -228,8 +225,7 @@ public:
     *
     * @return  Variable context.
     */
-   virtual
-   tbox::Pointer<hier::VariableContext>
+   virtual boost::shared_ptr<VariableContext>
    getContext(
       const std::string& context_name);
 
@@ -238,8 +234,7 @@ public:
     *
     * @param[in] context_name
     */
-   virtual
-   bool
+   virtual bool
    checkContextExists(
       const std::string& context_name) const;
 
@@ -252,22 +247,20 @@ public:
     * error will be logged and the program will abort.  This prevents
     * multiple Variables being associated with the same name.
     *
-    * @param[in] variable tbox::Pointer to variable.  When assertion checking
-    *                 is active, an assertion will result if the
+    * @param[in] variable boost::shared_ptr to variable.  When assertion
+    *                 checking is active, an assertion will result if the
     *                 variable pointer is null.
     */
-   virtual
-   void
+   virtual void
    addVariable(
-      const tbox::Pointer<hier::Variable> variable);
+      const boost::shared_ptr<Variable>& variable);
 
    /*!
     * @brief Remove the Variable from the database identified by @c name.
     *
     * @param[in] variable_name
     */
-   virtual
-   void
+   virtual void
    removeVariable(
       const std::string& variable_name);
 
@@ -279,8 +272,7 @@ public:
     * @return  Variable in the database with given name.
     *          If no such variable exists, a null pointer is returned.
     */
-   virtual
-   tbox::Pointer<hier::Variable>
+   virtual boost::shared_ptr<Variable>
    getVariable(
       const std::string& variable_name) const;
 
@@ -292,8 +284,7 @@ public:
     * @return  True if variable with name exists in database;
     *          otherwise, false.
     */
-   virtual
-   bool
+   virtual bool
    checkVariableExists(
       const std::string& variable_name) const;
 
@@ -311,8 +302,8 @@ public:
     * This function does not deallocate any patch data storage associated
     * with the new patch data index.
     *
-    * @param[in]  variable tbox::Pointer to @c Variable.  If the variable is
-    *             unknown to the database, then an invalid patch data index
+    * @param[in]  variable boost::shared_ptr to @c Variable.  If the variable
+    *             is unknown to the database, then an invalid patch data index
     *             (< 0) will be returned. When assertion checking is active,
     *             an assertion will result when the variable pointer is null.
     * @param[in]  old_id Integer patch data index currently associated with
@@ -324,10 +315,9 @@ public:
     * @return New integer patch data index. If new patch data not added,
     *         return value is an invalid (undefined) patch data index (< 0).
     */
-   virtual
-   int
+   virtual int
    registerClonedPatchDataIndex(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int old_id);
 
    /*!
@@ -356,7 +346,7 @@ public:
     *        routine registerInternalSAMRAIVariable() must be used for that
     *        case.
     * </ul>
-    * @param[in]  variable tbox::Pointer to hier::Variable.  When assertion
+    * @param[in]  variable boost::shared_ptr to Variable.  When assertion
     *                      checking is active, an assertion will result when
     *                      the variable pointer is null.
     * @param[in]  data_id  Optional integer patch data index to be added
@@ -370,10 +360,9 @@ public:
     * @return New integer patch data index.  If new patch data index not
     *         added, return value is an invalid patch data index (< 0).
     */
-   virtual
-   int
+   virtual int
    registerPatchDataIndex(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id = idUndefined());
 
    /*!
@@ -393,8 +382,7 @@ public:
     *                  an assertion will result when the patch data index
     *                  is invalid (i.e., < 0).
     */
-   virtual
-   void
+   virtual void
    removePatchDataIndex(
       int data_id);
 
@@ -402,7 +390,7 @@ public:
     * @brief Check whether the given variable is mapped to the given patch data
     * index in the database.
     *
-    * @param[in]  variable  tbox::Pointer to variable.  When assertion checking
+    * @param[in]  variable  boost::shared_ptr to variable.  When assertion checking
     *                   is active, an unrecoverable assertion will result if
     *                   the variable pointer is null.
     * @param[in]  data_id   Integer patch data index.  When assertion checking
@@ -413,19 +401,18 @@ public:
     * @return  Boolean true if the variable is mapped the given patch
     * data index; false otherwise.
     */
-   virtual
-   bool
+   virtual bool
    checkVariablePatchDataIndex(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id) const;
 
    /*!
     * @brief Check whether the given variable matches the patch data type
     * associated with the given patch data index in the database.
     *
-    * @param[in]  variable  tbox::Pointer to variable.  When assertion checking
-    *                   is active, an unrecoverable assertion will result if
-    *                   the variable pointer is null.
+    * @param[in]  variable  boost::shared_ptr to variable.  When assertion
+    *                   checking is active, an unrecoverable assertion will
+    *                   result if the variable pointer is null.
     * @param[in] data_id   Integer patch data index.  When assertion checking
     *                   is active, an unrecoverable assertion will result if
     *                   the value is an invalid identifier (either < 0 or
@@ -434,10 +421,9 @@ public:
     * @return  Boolean true if the type of the variable matches the type of
     *          the patch data at the given patch data index; false otherwise.
     */
-   virtual
-   bool
+   virtual bool
    checkVariablePatchDataIndexType(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id) const;
 
    /*!
@@ -469,12 +455,12 @@ public:
     * in this case.
     *
     *
-    * @param[in]  variable  tbox::Pointer to variable.  When assertion checking
-    *                   is active, an unrecoverable assertion will result if
-    *                   the variable pointer is null.
-    * @param[in] context    tbox::Pointer to variable context.  When assertion
-    *                   checking is active, an unrecoverable assertion
-    *                   will result if the context pointer is null.
+    * @param[in]  variable  boost::shared_ptr to variable.  When assertion
+    *                   checking is active, an unrecoverable assertion will
+    *                   result if the variable pointer is null.
+    * @param[in] context    boost::shared_ptr to variable context.  When
+    *                   assertion checking is active, an unrecoverable
+    *                   assertion will result if the context pointer is null.
     * @param[in] ghosts     Optional ghost width for patch data associated
     *                   with variable-context pair.  If the ghost width
     *                   is given, all entries of the vector must be >= 0.
@@ -484,14 +470,13 @@ public:
     *
     * @return Integer patch data index of variable-context pair in database.
     */
-   virtual
-   int
+   virtual int
    registerVariableAndContext(
-      const tbox::Pointer<hier::Variable> variable,
-      const tbox::Pointer<hier::VariableContext> context,
-      const hier::IntVector& ghosts // NOTE: old default (zero ghost width)
-                                    // does not work since dimension of
-                                    // variable and IntVector must match.
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context,
+      const IntVector& ghosts // NOTE: old default (zero ghost width)
+                              // does not work since dimension of
+                              // variable and IntVector must match.
       );
 
    /*!
@@ -509,22 +494,22 @@ public:
     * associated with the variable will not be returned.  See the other
     * map...() functions declared in this class.
     *
-    * @param[in]  variable  tbox::Pointer to variable.  When assertion checking
-    *                   is active, an unrecoverable assertion will result
-    *                   if the variable pointer is null.
-    * @param[in]  context   tbox::Pointer to variable context.  When assertion
-    *                   checking is active, an unrecoverable assertion
-    *                   will result if the variable context pointer is null.
+    * @param[in]  variable  boost::shared_ptr to variable.  When assertion
+    *                   checking is active, an unrecoverable assertion will
+    *                   result if the variable pointer is null.
+    * @param[in]  context   boost::shared_ptr to variable context.  When
+    *                   assertion checking is active, an unrecoverable
+    *                   assertion will result if the variable context pointer
+    *                   is null.
     *
     * @return Integer patch data index of variable-context pair in database.
     *         If the variable-context pair was not registered with the
     *         database, then an invalid data index (< 0) will be returned.
     */
-   virtual
-   int
+   virtual int
    mapVariableAndContextToIndex(
-      const tbox::Pointer<hier::Variable> variable,
-      const tbox::Pointer<hier::VariableContext> context) const;
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context) const;
 
    /*!
     * @brief Map patch data index to variable associated with the data, if
@@ -533,19 +518,18 @@ public:
     * @param[in]   index  Integer patch data index.  When assertion checking
     *                 is active, an unrecoverable assertion will if the index
     *                 is invalid (i.e., < 0).
-    * @param[out]   variable  tbox::Pointer to variable that maps to patch data
-    *                    index in database.  If there is no index in the
+    * @param[out]   variable  boost::shared_ptr to variable that maps to patch
+    *                    data index in database.  If there is no index in the
     *                    database matching the index input value, then the
     *                    variable pointer is set to null.
     *
     * @return  Boolean true if patch data index maps to variable in the
     *          database; otherwise false.
     */
-   virtual
-   bool
+   virtual bool
    mapIndexToVariable(
       const int index,
-      tbox::Pointer<hier::Variable>& variable) const;
+      boost::shared_ptr<Variable>& variable) const;
 
    /*!
     * @brief Map patch data index to variable-context pair associated with
@@ -562,21 +546,20 @@ public:
     * variables.
     *
     * @param[in]   index patch data index
-    * @param[out]   variable tbox::Pointer to variable set to matching variable
-    *          in database.  If no match is found, it is set to null.
-    * @param[out]   context  tbox::Pointer to variable context set to matching
-    *          variable context in database. If no match is found, it is
-    *          set to null.
+    * @param[out]   variable boost::shared_ptr to variable set to matching
+    *          variable in database.  If no match is found, it is set to null.
+    * @param[out]   context  boost::shared_ptr to variable context set to
+    *          matching variable context in database. If no match is found, it
+    *          is set to null.
     *
     * @return  Boolean true if patch data index maps to variable-context
     *          pair in the database; otherwise false.
     */
-   virtual
-   bool
+   virtual bool
    mapIndexToVariableAndContext(
       const int index,
-      tbox::Pointer<hier::Variable>& variable,
-      tbox::Pointer<hier::VariableContext>& context) const;
+      boost::shared_ptr<Variable>& variable,
+      boost::shared_ptr<VariableContext>& context) const;
 
    /*!
     * @brief Return copy of component selector that holds information about
@@ -587,8 +570,7 @@ public:
     *         selector will correspond to the patch data indices
     *         that have been registered for restart.
     */
-   virtual
-   hier::ComponentSelector
+   virtual ComponentSelector
    getPatchDataRestartTable() const;
 
    /*!
@@ -601,8 +583,7 @@ public:
     *         is registered for restart; otherwise false.
     *
     */
-   virtual
-   bool
+   virtual bool
    isPatchDataRegisteredForRestart(
       int index) const;
 
@@ -611,8 +592,7 @@ public:
     *
     * @param[in]  index  Integer patch data index to set.
     */
-   virtual
-   void
+   virtual void
    registerPatchDataForRestart(
       int index);
 
@@ -621,8 +601,7 @@ public:
     *
     * @param[in]  index  Integer patch data index to unset.
     */
-   virtual
-   void
+   virtual void
    unregisterPatchDataForRestart(
       int index);
 
@@ -667,9 +646,9 @@ public:
     * SAMRAI variables.
     *
     *
-    * @param[in]  variable  tbox::Pointer to variable.  When assertion checking
-    *                   is active, an unrecoverable assertion will result
-    *                   if the variable pointer is null.
+    * @param[in]  variable  boost::shared_ptr to variable.  When assertion
+    *                   checking is active, an unrecoverable assertion will
+    *                   result if the variable pointer is null.
     * @param[in] ghosts     Ghost width for patch data associated with the
     *                   variable.  All entries of the vector must be >= 0.
     *                   When assertion checking is active, an unrecoverable
@@ -678,11 +657,10 @@ public:
     * @return Integer patch data index of variable-ghost width pair
     * in database.
     */
-   virtual
-   int
+   virtual int
    registerInternalSAMRAIVariable(
-      const tbox::Pointer<hier::Variable> variable,
-      const hier::IntVector& ghosts);
+      const boost::shared_ptr<Variable>& variable,
+      const IntVector& ghosts);
 
    /*!
     * @brief Remove the given index from the variable database if it exists in
@@ -712,8 +690,7 @@ public:
     * @param[in]  data_id  Integer patch data identifier to be removed from
     *                  the database.
     */
-   virtual
-   void
+   virtual void
    removeInternalSAMRAIVariablePatchDataIndex(
       int data_id);
 
@@ -740,7 +717,9 @@ protected:
     * context identifier.  This routine is protected to allow subclasses
     * to be consistent with this database class.
     */
-   static int idUndefined() {
+   static int
+   idUndefined()
+   {
       return -1;
    }
 
@@ -761,7 +740,7 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      hier::VariableDatabase* subclass_instance);
+      VariableDatabase* subclass_instance);
 
 private:
    /*!
@@ -784,7 +763,7 @@ private:
 
    void
    addContext_Private(
-      const tbox::Pointer<hier::VariableContext> context);
+      const boost::shared_ptr<VariableContext>& context);
 
    /*
     * Private member function to add variable to database (either
@@ -797,7 +776,7 @@ private:
     */
    bool
    addVariable_Private(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       bool user_variable);
 
    /*
@@ -807,7 +786,7 @@ private:
     */
    void
    addVariablePatchDataIndexPairToDatabase_Private(
-      const tbox::Pointer<hier::Variable> variable,
+      const boost::shared_ptr<Variable>& variable,
       int data_id,
       bool user_variable);
 
@@ -818,9 +797,9 @@ private:
     */
    int
    registerVariableAndContext_Private(
-      const tbox::Pointer<hier::Variable> variable,
-      const tbox::Pointer<hier::VariableContext> context,
-      const hier::IntVector& ghosts,
+      const boost::shared_ptr<Variable>& variable,
+      const boost::shared_ptr<VariableContext>& context,
+      const IntVector& ghosts,
       bool user_variable);
 
    /*
@@ -839,9 +818,9 @@ private:
    /*
     * Data members that store variable, context, patch data index information.
     */
-   tbox::Pointer<hier::PatchDescriptor> d_patch_descriptor;
+   boost::shared_ptr<PatchDescriptor> d_patch_descriptor;
 
-   tbox::Pointer<hier::VariableContext> d_internal_SAMRAI_context;
+   boost::shared_ptr<VariableContext> d_internal_SAMRAI_context;
 
    int d_num_registered_patch_data_ids;
 
@@ -850,13 +829,13 @@ private:
     * d_contexts[ <context id> ]
     */
    int d_max_context_id;
-   tbox::Array<tbox::Pointer<hier::VariableContext> > d_contexts;
+   tbox::Array<boost::shared_ptr<VariableContext> > d_contexts;
 
    /*
     * Array of Variable pointers is indexed as d_variables[ <variable id> ]
     */
    int d_max_variable_id;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_variables;
+   tbox::Array<boost::shared_ptr<Variable> > d_variables;
 
    /*
     * Array of VariableContext to patch descriptor indices is indexed as
@@ -869,7 +848,7 @@ private:
     * d_index2variable_map[ <descriptor id> ]
     */
    int d_max_descriptor_id;
-   tbox::Array<tbox::Pointer<hier::Variable> > d_index2variable_map;
+   tbox::Array<boost::shared_ptr<Variable> > d_index2variable_map;
 
    /*
     * Array of user variable booleans is indexed as
@@ -883,7 +862,7 @@ private:
     * bit in position j corresponds to the patch data associated with
     * the j-th index of the patch descriptor object.
     */
-   hier::ComponentSelector d_patchdata_restart_table;
+   ComponentSelector d_patchdata_restart_table;
 
    static tbox::StartupShutdownManager::Handler
       s_shutdown_handler;
@@ -891,7 +870,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/VariableDatabase.I"
-#endif
+
 #endif

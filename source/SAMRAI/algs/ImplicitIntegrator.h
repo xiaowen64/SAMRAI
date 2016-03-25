@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Implicit time integration manager class.
  *
  ************************************************************************/
@@ -14,16 +14,15 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/algs/ImplicitEquationStrategy.h"
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/InputDatabase.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Serializable.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -87,10 +86,10 @@ public:
     */
    ImplicitIntegrator(
       const std::string& object_name,
-      tbox::Pointer<tbox::Database> input_db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       ImplicitEquationStrategy * implicit_equations,
       solv::NonlinearSolverStrategy * nonlinear_solver,
-      const tbox::Pointer<hier::PatchHierarchy> hierarchy);
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Empty destructor for ImplicitIntegrator
@@ -174,37 +173,55 @@ public:
     * Return initial integration time.
     */
    double
-   getInitialTime() const;
+   getInitialTime() const
+   {
+      return d_initial_time;
+   }
 
    /**
     * Return final integration time.
     */
    double
-   getFinalTime() const;
+   getFinalTime() const
+   {
+      return d_final_time;
+   }
 
    /**
     * Return current integration time.
     */
    double
-   getCurrentTime() const;
+   getCurrentTime() const
+   {
+      return d_current_time;
+   }
 
    /**
     * Return current timestep.
     */
    double
-   getCurrentDt() const;
+   getCurrentDt() const
+   {
+      return d_current_dt;
+   }
 
    /**
     * Return current integration step number.
     */
    int
-   getIntegratorStep() const;
+   getIntegratorStep() const
+   {
+      return d_integrator_step;
+   }
 
    /**
     * Return maximum number of integration steps.
     */
    int
-   getMaxIntegratorSteps() const;
+   getMaxIntegratorSteps() const
+   {
+      return d_max_integrator_steps;
+   }
 
    /**
     * Return true if the number of integration steps performed by the
@@ -212,7 +229,10 @@ public:
     * otherwise.
     */
    bool
-   stepsRemaining() const;
+   stepsRemaining() const
+   {
+      return d_integrator_step < d_max_integrator_steps;
+   }
 
    /**
     * Print out all members of integrator instance to given output stream.
@@ -228,13 +248,16 @@ public:
     */
    void
    putToDatabase(
-      tbox::Pointer<tbox::Database> db);
+      const boost::shared_ptr<tbox::Database>& db) const;
 
    /**
     * Returns the object name.
     */
    const std::string&
-   getObjectName() const;
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
    /*
@@ -251,7 +274,7 @@ private:
     */
    void
    getFromInput(
-      tbox::Pointer<tbox::Database> db,
+      const boost::shared_ptr<tbox::Database>& db,
       bool is_from_restart);
 
    /*
@@ -273,14 +296,14 @@ private:
     */
    ImplicitEquationStrategy * d_implicit_equations;
    solv::NonlinearSolverStrategy * d_nonlinear_solver;
-   tbox::Pointer<hier::PatchHierarchy> d_patch_hierarchy;
+   boost::shared_ptr<hier::PatchHierarchy> d_patch_hierarchy;
 
    int d_finest_level;
 
    /*
     * Solution vector advanced during the time integration process.
     */
-   tbox::Pointer<solv::SAMRAIVectorReal<double> > d_solution_vector;
+   boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
 
    /*
     * Data members representing integrator times, time increments,
@@ -307,7 +330,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/algs/ImplicitIntegrator.I"
-#endif
+
 #endif

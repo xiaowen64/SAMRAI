@@ -3,15 +3,15 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
 #ifndef included_hier_OverlapConnectorAlgorithm
 #define included_hier_OverlapConnectorAlgorithm
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
-#include "SAMRAI/hier/MultiblockBoxTree.h"
 
 #include <map>
 
@@ -38,7 +38,7 @@ public:
    /*!
     * @brief Constructor.
     */
-   explicit OverlapConnectorAlgorithm();
+   OverlapConnectorAlgorithm();
 
    /*!
     * @brief Destructor.
@@ -592,7 +592,6 @@ private:
       std::set<int>& incoming_ranks,
       std::set<int>& outgoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
-      tbox::AsyncCommStage::MemberVec& completed,
       NeighborSet& visible_west_nabrs,
       NeighborSet& visible_east_nabrs) const;
 
@@ -604,19 +603,21 @@ private:
    privateBridge_findOverlapsForOneProcess(
       const int curr_owner,
       NeighborSet& visible_base_nabrs,
-      NeighborSet::Iterator& base_ni,
+      NeighborSet::iterator& base_ni,
       std::vector<int>& send_mesg,
       const int remote_mapped_box_counter_index,
       Connector& bridging_connector,
       NeighborSet& referenced_head_nabrs,
-      const MultiblockBoxTree& head_rbbt) const;
+      const BoxContainer& head_rbbt) const;
 
    //! @brief Utility used in privateBridge()
    void
    privateBridge_unshiftOverlappingNeighbors(
       const Box& mapped_box,
-      std::vector<Box>& neighbors,
-      std::vector<Box>& scratch_space,
+      BoxContainer& neighbors,
+      BoxContainer& scratch_space,
+      //std::vector<Box>& neighbors,
+      //std::vector<Box>& scratch_space,
       const IntVector& neighbor_refinement_ratio) const;
 
    /*!
@@ -684,18 +685,18 @@ private:
     */
    static int s_operation_mpi_tag;
 
-   static tbox::Pointer<tbox::Timer> t_find_overlaps_rbbt;
+   static boost::shared_ptr<tbox::Timer> t_find_overlaps_rbbt;
 
-   static tbox::Pointer<tbox::Timer> t_bridge;
-   static tbox::Pointer<tbox::Timer> t_bridge_setup_comm;
-   static tbox::Pointer<tbox::Timer> t_bridge_remove_and_cache;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover_get_neighbors;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover_form_rbbt;
-   static tbox::Pointer<tbox::Timer> t_bridge_discover_find_overlaps;
-   static tbox::Pointer<tbox::Timer> t_bridge_share;
-   static tbox::Pointer<tbox::Timer> t_bridge_receive_and_unpack;
-   static tbox::Pointer<tbox::Timer> t_bridge_MPI_wait;
+   static boost::shared_ptr<tbox::Timer> t_bridge;
+   static boost::shared_ptr<tbox::Timer> t_bridge_setup_comm;
+   static boost::shared_ptr<tbox::Timer> t_bridge_remove_and_cache;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover_get_neighbors;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover_form_rbbt;
+   static boost::shared_ptr<tbox::Timer> t_bridge_discover_find_overlaps;
+   static boost::shared_ptr<tbox::Timer> t_bridge_share;
+   static boost::shared_ptr<tbox::Timer> t_bridge_receive_and_unpack;
+   static boost::shared_ptr<tbox::Timer> t_bridge_MPI_wait;
 
    bool d_sanity_check_method_preconditions;
    bool d_sanity_check_method_postconditions;

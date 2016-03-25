@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
@@ -12,7 +12,7 @@
 
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/hier/BoundaryBox.h"
-#include "SAMRAI/hier/BoxContainerIterator.h"
+#include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/geom/CartesianPatchGeometry.h"
 #include "SAMRAI/pdat/CellData.h"
 #include "SAMRAI/pdat/CellIndex.h"
@@ -81,21 +81,21 @@ using namespace algs;
 HierSumTest::HierSumTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   Pointer<Database> input_db
+   boost::shared_ptr<Database> input_db
 #ifdef HAVE_HDF5
    ,
-   Pointer<appu::VisItDataWriter> viz_writer
+   boost::shared_ptr<appu::VisItDataWriter> viz_writer
 #endif
    ):
+   d_object_name(object_name),
    d_dim(dim),
+   d_depth(1),
+   d_ucell_var(new CellVariable<double>(dim, "ucell", d_depth)),
+   d_unode_var(new NodeVariable<double>(dim, "unode", d_depth)),
+   d_uedge_var(new EdgeVariable<double>(dim, "uedge", d_depth)),
    d_node_ghosts(dim),
    d_edge_ghosts(dim)
 {
-
-   d_object_name = object_name;
-
-   d_depth = 1;
-
    /*
     * Initialize object with data read from given input databases.
     */
@@ -127,12 +127,10 @@ HierSumTest::HierSumTest(
     */
    VariableDatabase* variable_db = VariableDatabase::getDatabase();
 
-   d_ucell_var = new CellVariable<double>(dim, "ucell", d_depth);
-   d_unode_var = new NodeVariable<double>(dim, "unode", d_depth);
-   d_uedge_var = new EdgeVariable<double>(dim, "uedge", d_depth);
-
-   Pointer<VariableContext> cxt1 = variable_db->getContext("CONTEXT1");
-   Pointer<VariableContext> cxt2 = variable_db->getContext("CONTEXT2");
+   boost::shared_ptr<VariableContext> cxt1(
+      variable_db->getContext("CONTEXT1"));
+   boost::shared_ptr<VariableContext> cxt2(
+      variable_db->getContext("CONTEXT2"));
 
    IntVector one_ghost(dim, 1);
 
@@ -157,7 +155,7 @@ HierSumTest::HierSumTest(
    /*
     * Register u values to be written by the viz writer.
     */
-   if (!viz_writer.isNull()) {
+   if (viz_writer) {
       viz_writer->registerPlotQuantity("ucell::node", "SCALAR",
          d_ucell_node_id, 0);
       viz_writer->registerPlotQuantity("ucell::edge", "SCALAR",
@@ -179,7 +177,7 @@ HierSumTest::~HierSumTest()
  ************************************************************************/
 int
 HierSumTest::setInitialNodeValues(
-   const Pointer<PatchHierarchy> hierarchy)
+   const boost::shared_ptr<PatchHierarchy> hierarchy)
 {
    int fail_count = 0;
 
@@ -188,15 +186,19 @@ HierSumTest::setInitialNodeValues(
     */
    // loop over hierarchy levels
    for (int ln = 0; ln <= hierarchy->getFinestLevelNumber(); ln++) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       // loop over patches on level
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
-         Pointer<Patch> patch = *ip;
+      for (PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<Patch>& patch = *ip;
 
-         Pointer<NodeData<double> > unode = patch->getPatchData(d_unode_id);
-         Pointer<CellData<double> > ucell =
-            patch->getPatchData(d_ucell_node_id);
+         boost::shared_ptr<NodeData<double> > unode(
+            patch->getPatchData(d_unode_id),
+            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<CellData<double> > ucell(
+            patch->getPatchData(d_ucell_node_id),
+            boost::detail::dynamic_cast_tag());
 
          // output initial cell values
          int level_number = level->getLevelNumber();
@@ -208,8 +210,9 @@ HierSumTest::setInitialNodeValues(
          Box pbox = patch->getBox();
          double cell_val;
          int d;
-         for (NodeIterator ni(pbox); ni; ni++) {
-            NodeIndex node = ni();
+         NodeIterator niend(pbox, false);
+         for (NodeIterator ni(pbox, true); ni != niend; ++ni) {
+            NodeIndex node = *ni;
             for (d = 0; d < ucell->getDepth(); d++) {
 
                (*unode)(node, d) = 0.;
@@ -221,7 +224,7 @@ HierSumTest::setInitialNodeValues(
                if (d_dim == tbox::Dimension(2)) {
                   for (int j = 0; j <= 1; j++) {
                      for (int i = 0; i <= 1; i++) {
-                        CellIndex cell(ni());
+                        CellIndex cell(*ni);
                         cell(0) -= i;
                         cell(1) -= j;
                         cell_val = (*ucell)(cell, d);
@@ -233,7 +236,7 @@ HierSumTest::setInitialNodeValues(
                   for (int k = 0; k <= 1; k++) {
                      for (int j = 0; j <= 1; j++) {
                         for (int i = 0; i <= 1; i++) {
-                           CellIndex cell(ni());
+                           CellIndex cell(*ni);
                            cell(0) -= i;
                            cell(1) -= j;
                            cell(2) -= k;
@@ -264,26 +267,30 @@ HierSumTest::setInitialNodeValues(
       BoxContainer fine_overlap_shrunk = level->getBoxes();
       BoxContainer complement(fine_overlap_shrunk);
       if (level->getLevelNumber() != hierarchy->getFinestLevelNumber()) {
-         Pointer<PatchLevel> fine_level = hierarchy->getPatchLevel(ln + 1);
+         boost::shared_ptr<PatchLevel> fine_level(
+            hierarchy->getPatchLevel(ln + 1));
          BoxContainer fine_level_boxes = fine_level->getBoxes();
          fine_level_boxes.coarsen(fine_level->getRatioToCoarserLevel());
          complement.removeIntersections(fine_level_boxes);
          complement.grow(IntVector(d_dim, 1));
          fine_overlap_shrunk.removeIntersections(complement);
 
-         for (PatchLevel::Iterator ip(level); ip; ip++) {
-            Pointer<Patch> patch = *ip;
+         for (PatchLevel::iterator ip(level->begin());
+              ip != level->end(); ++ip) {
+            const boost::shared_ptr<Patch>& patch = *ip;
 
-            Pointer<NodeData<double> > unode =
-               patch->getPatchData(d_unode_id);
+            boost::shared_ptr<NodeData<double> > unode(
+               patch->getPatchData(d_unode_id),
+               boost::detail::dynamic_cast_tag());
 
-            for (BoxContainer::Iterator b = fine_overlap_shrunk.begin();
+            for (BoxContainer::iterator b = fine_overlap_shrunk.begin();
                  b != fine_overlap_shrunk.end(); ++b) {
-               Box fine_overlap = b();
+               Box fine_overlap = *b;
                Box patch_interior = patch->getBox();
                Box data_box = fine_overlap * patch_interior;
-               for (NodeIterator ni(data_box); ni; ni++) {
-                  NodeIndex node = ni();
+               NodeIterator niend(data_box, false);
+               for (NodeIterator ni(data_box, true); ni != niend; ++ni) {
+                  NodeIndex node = *ni;
                   for (int d = 0; d < unode->getDepth(); d++) {
                      double node_val = (*unode)(node, d);
                      if (tbox::MathUtilities<double>::equalEps(node_val,
@@ -296,11 +303,13 @@ HierSumTest::setInitialNodeValues(
          } // loop over patches
       } // if a finer level exists
 
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
-         Pointer<Patch> patch = *ip;
+      for (PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<Patch>& patch = *ip;
 
-         Pointer<NodeData<double> > unode =
-            patch->getPatchData(d_unode_id);
+         boost::shared_ptr<NodeData<double> > unode(
+            patch->getPatchData(d_unode_id),
+            boost::detail::dynamic_cast_tag());
 
          // output initial node values
          tbox::plog << "INITIAL Node values - Level: " << level->getLevelNumber()
@@ -320,7 +329,7 @@ HierSumTest::setInitialNodeValues(
  ************************************************************************/
 int
 HierSumTest::setInitialEdgeValues(
-   const Pointer<PatchLevel> level)
+   const boost::shared_ptr<PatchLevel> level)
 {
    int fail_count = 0;
 
@@ -332,12 +341,16 @@ HierSumTest::setInitialEdgeValues(
    /*
     * Set edge weight on patch interiors = sum(cell weights)
     */
-   for (PatchLevel::Iterator ip(level); ip; ip++) {
-      Pointer<Patch> patch = *ip;
+   for (PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
+      const boost::shared_ptr<Patch>& patch = *ip;
 
-      Pointer<EdgeData<double> > uedge = patch->getPatchData(d_uedge_id);
-      Pointer<CellData<double> > ucell =
-         patch->getPatchData(d_ucell_edge_id);
+      boost::shared_ptr<EdgeData<double> > uedge(
+         patch->getPatchData(d_uedge_id),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<CellData<double> > ucell(
+         patch->getPatchData(d_ucell_edge_id),
+         boost::detail::dynamic_cast_tag());
 
       // output initial cell values
       int level_number = level->getLevelNumber();
@@ -448,9 +461,9 @@ HierSumTest::setInitialEdgeValues(
  ************************************************************************/
 void
 HierSumTest::setupOuternodeSum(
-   const Pointer<PatchHierarchy> hierarchy)
+   const boost::shared_ptr<PatchHierarchy> hierarchy)
 {
-   d_node_sum_util = new PatchBoundaryNodeSum("Node Sum Util");
+   d_node_sum_util.reset(new PatchBoundaryNodeSum("Node Sum Util"));
 
    d_node_sum_util->registerSum(d_unode_id);
 
@@ -476,7 +489,7 @@ void
 HierSumTest::doOuternodeSum()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d_node_sum_util.isNull());
+   TBOX_ASSERT(d_node_sum_util);
 #endif
 
    bool fill_hanging_nodes = true;
@@ -491,15 +504,15 @@ HierSumTest::doOuternodeSum()
  ************************************************************************/
 void
 HierSumTest::setupOuteredgeSum(
-   const Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy> hierarchy,
    const int level_num)
 {
    if (level_num >= d_edge_sum_util.getSize()) {
       d_edge_sum_util.resizeArray(level_num + 1);
    }
 
-   d_edge_sum_util[level_num] =
-      new PatchBoundaryEdgeSum("Level Edge Sum Util");
+   d_edge_sum_util[level_num].reset(
+      new PatchBoundaryEdgeSum("Level Edge Sum Util"));
 
    d_edge_sum_util[level_num]->registerSum(d_uedge_id);
 
@@ -517,7 +530,7 @@ HierSumTest::doOuteredgeSum(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level_num < d_edge_sum_util.getSize());
-   TBOX_ASSERT(!d_edge_sum_util[level_num].isNull());
+   TBOX_ASSERT(d_edge_sum_util[level_num]);
 #endif
 
    d_edge_sum_util[level_num]->computeSum();
@@ -531,7 +544,7 @@ HierSumTest::doOuteredgeSum(
  ************************************************************************/
 
 int HierSumTest::checkNodeResult(
-   const Pointer<PatchHierarchy> hierarchy)
+   const boost::shared_ptr<PatchHierarchy> hierarchy)
 {
 
    int fail_count = 0;
@@ -548,13 +561,14 @@ int HierSumTest::checkNodeResult(
 
    // loop over hierarchy levels
    for (int ln = 0; ln <= hierarchy->getFinestLevelNumber(); ln++) {
-      Pointer<PatchLevel> level = hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       BoxContainer level_boxes_complement = level->getBoxes();
 
       // If a finer level exists, remove overlap boxes by computing complement
       if (level->getLevelNumber() != hierarchy->getFinestLevelNumber()) {
-         Pointer<PatchLevel> fine_level = hierarchy->getPatchLevel(ln + 1);
+         boost::shared_ptr<PatchLevel> fine_level(
+            hierarchy->getPatchLevel(ln + 1));
          BoxContainer fine_level_boxes = fine_level->getBoxes();
          fine_level_boxes.coarsen(fine_level->getRatioToCoarserLevel());
          level_boxes_complement.removeIntersections(fine_level_boxes);
@@ -562,16 +576,18 @@ int HierSumTest::checkNodeResult(
 
       // loop over patches on level
       bool all_correct = true;
-      for (PatchLevel::Iterator ip(level); ip; ip++) {
-         Pointer<Patch> patch = *ip;
+      for (PatchLevel::iterator ip(level->begin());
+           ip != level->end(); ++ip) {
+         const boost::shared_ptr<Patch>& patch = *ip;
 
-         Pointer<NodeData<double> > unode =
-            patch->getPatchData(d_unode_id);
+         boost::shared_ptr<NodeData<double> > unode(
+            patch->getPatchData(d_unode_id),
+            boost::detail::dynamic_cast_tag());
 
          // loop over Level complement boxlist
-         for (BoxContainer::Iterator b = level_boxes_complement.begin();
+         for (BoxContainer::iterator b = level_boxes_complement.begin();
               b != level_boxes_complement.end(); ++b) {
-            Box complement = b();
+            Box complement = *b;
 
             // intersect patch box with level box complement
             Box patch_interior = patch->getBox();
@@ -580,8 +596,9 @@ int HierSumTest::checkNodeResult(
             /*
              * Iterate over nodes and check correctness of result.
              */
-            for (NodeIterator i(data_box); i; i++) {
-               NodeIndex node = i();  // i,j
+            NodeIterator iend(data_box, false);
+            for (NodeIterator i(data_box, true); i != iend; ++i) {
+               NodeIndex node = *i;  // i,j
                for (int d = 0; d < unode->getDepth(); d++) {
 
                   bool node_correct = false;
@@ -594,7 +611,7 @@ int HierSumTest::checkNodeResult(
 
                   if (!node_correct) {
                      tbox::pout << "BAD NODE = " << node_val << " at index "
-                                << i()
+                                << *i
                                 << " in L" << ln << " " << patch->getBox()
                                 << " depth = " << d << " should be "
                                 << correct_val << endl;
@@ -622,8 +639,9 @@ int HierSumTest::checkNodeResult(
             << "\tare correct." << endl;
          }
 
-         Pointer<CellData<double> > ucell_node =
-            patch->getPatchData(d_ucell_node_id);
+         boost::shared_ptr<CellData<double> > ucell_node(
+            patch->getPatchData(d_ucell_node_id),
+            boost::detail::dynamic_cast_tag());
 
 #if (TESTING == 1)
          tbox::plog << "FINAL Cell values for NODE - Level: "
@@ -652,7 +670,7 @@ int HierSumTest::checkNodeResult(
  ************************************************************************/
 
 int HierSumTest::checkEdgeResult(
-   const Pointer<PatchLevel> level)
+   const boost::shared_ptr<PatchLevel> level)
 {
 
    int fail_count = 0;
@@ -668,11 +686,13 @@ int HierSumTest::checkEdgeResult(
    }
 
    // loop over patches on level
-   for (PatchLevel::Iterator ip(level); ip; ip++) {
-      Pointer<Patch> patch = *ip;
+   for (PatchLevel::iterator ip(level->begin());
+        ip != level->end(); ++ip) {
+      const boost::shared_ptr<Patch>& patch = *ip;
 
-      Pointer<EdgeData<double> > uedge =
-         patch->getPatchData(d_uedge_id);
+      boost::shared_ptr<EdgeData<double> > uedge(
+         patch->getPatchData(d_uedge_id),
+         boost::detail::dynamic_cast_tag());
 
       const Index ifirst(patch->getBox().lower());
       const Index ilast(patch->getBox().upper());
@@ -727,8 +747,9 @@ int HierSumTest::checkEdgeResult(
 
       } // loop over depth
 
-      Pointer<CellData<double> > ucell_edge =
-         patch->getPatchData(d_ucell_edge_id);
+      boost::shared_ptr<CellData<double> > ucell_edge(
+         patch->getPatchData(d_ucell_edge_id),
+         boost::detail::dynamic_cast_tag());
 
 #if (TESTING == 1)
       tbox::plog << "FINAL Cell values for EDGE - Level: "
@@ -759,19 +780,19 @@ int HierSumTest::checkEdgeResult(
  */
 
 void HierSumTest::initializeLevelData(
-   const tbox::Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const bool can_be_refined,
    const bool initial_time,
-   const tbox::Pointer<PatchLevel> old_level,
+   const boost::shared_ptr<PatchLevel>& old_level,
    const bool allocate_data)
 {
    NULL_USE(can_be_refined);
    NULL_USE(initial_time);
    NULL_USE(old_level);
 
-   Pointer<PatchHierarchy> local_hierarchy = hierarchy;
+   boost::shared_ptr<PatchHierarchy> local_hierarchy(hierarchy);
 
    /*
     * Set initial data on hierarchy level.
@@ -779,8 +800,8 @@ void HierSumTest::initializeLevelData(
     *   2. For NODE data only, set ucell = 0.0 on cells of L < LN that are
     *      covered by refined cells.
     */
-   Pointer<PatchLevel> level =
-      hierarchy->getPatchLevel(level_number);
+   boost::shared_ptr<PatchLevel> level(
+      hierarchy->getPatchLevel(level_number));
 
    /*
     * Allocate storage for cell and node data.
@@ -795,13 +816,16 @@ void HierSumTest::initializeLevelData(
    /*
     * Set edge/node values to zero initially.
     */
-   for (PatchLevel::Iterator p0(level); p0; p0++) {
-      Pointer<Patch> patch = *p0;
+   for (PatchLevel::iterator p0(level->begin());
+        p0 != level->end(); ++p0) {
+      const boost::shared_ptr<Patch>& patch = *p0;
 
-      Pointer<NodeData<double> > unode =
-         patch->getPatchData(d_unode_id);
-      Pointer<EdgeData<double> > uedge =
-         patch->getPatchData(d_uedge_id);
+      boost::shared_ptr<NodeData<double> > unode(
+         patch->getPatchData(d_unode_id),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<EdgeData<double> > uedge(
+         patch->getPatchData(d_uedge_id),
+         boost::detail::dynamic_cast_tag());
       unode->fillAll(0.0);
       uedge->fillAll(0.0);
    }
@@ -812,13 +836,16 @@ void HierSumTest::initializeLevelData(
     * based on overlap with neighboring patches but this will be
     * in the next step).
     */
-   for (PatchLevel::Iterator p0(level); p0; p0++) {
-      Pointer<Patch> patch = *p0;
+   for (PatchLevel::iterator p0(level->begin());
+        p0 != level->end(); ++p0) {
+      const boost::shared_ptr<Patch>& patch = *p0;
 
-      Pointer<CellData<double> > ucell_node =
-         patch->getPatchData(d_ucell_node_id);
-      Pointer<CellData<double> > ucell_edge =
-         patch->getPatchData(d_ucell_edge_id);
+      boost::shared_ptr<CellData<double> > ucell_node(
+         patch->getPatchData(d_ucell_node_id),
+         boost::detail::dynamic_cast_tag());
+      boost::shared_ptr<CellData<double> > ucell_edge(
+         patch->getPatchData(d_ucell_edge_id),
+         boost::detail::dynamic_cast_tag());
 
       ucell_node->fillAll(0.0, ucell_node->getGhostBox()); // ghost box
       ucell_node->fillAll(1.0, patch->getBox());          // interior patch box
@@ -827,8 +854,9 @@ void HierSumTest::initializeLevelData(
       ucell_edge->fillAll(1.0, patch->getBox());          // interior patch box
 
       // set cell values at physical boundary
-      const Pointer<CartesianPatchGeometry> patch_geom =
-         patch->getPatchGeometry();
+      const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
+         patch->getPatchGeometry(),
+         boost::detail::dynamic_cast_tag());
       const tbox::Array<BoundaryBox> node_bdry =
          patch_geom->getCodimensionBoundaries(d_dim.getValue());
       const tbox::Array<BoundaryBox> edge_bdry =
@@ -859,21 +887,23 @@ void HierSumTest::initializeLevelData(
        * For node data, set the cell weights to zero on coarser level
        * where there is overlap with fine level patches.
        */
-      Pointer<PatchLevel> coarser_level =
-         hierarchy->getPatchLevel(level_number - 1);
+      boost::shared_ptr<PatchLevel> coarser_level(
+         hierarchy->getPatchLevel(level_number - 1));
       BoxContainer fine_level_boxes = level->getBoxes();
 
       IntVector ratio(level->getRatioToCoarserLevel());
       fine_level_boxes.coarsen(ratio);
 
-      for (PatchLevel::Iterator p1(coarser_level); p1; p1++) {
-         Pointer<Patch> cpatch = *p1;
+      for (PatchLevel::iterator p1(coarser_level->begin());
+      p1 != coarser_level->end(); ++p1) {
+         const boost::shared_ptr<Patch>& cpatch = *p1;
 
-         Pointer<CellData<double> > ucell_node =
-            cpatch->getPatchData(d_ucell_node_id);
+         boost::shared_ptr<CellData<double> > ucell_node(
+            cpatch->getPatchData(d_ucell_node_id),
+            boost::detail::dynamic_cast_tag());
 
          Box cpbox = cpatch->getBox();
-         for (BoxContainer::Iterator fine_level_itr = fine_level_boxes.begin();
+         for (BoxContainer::iterator fine_level_itr = fine_level_boxes.begin();
               fine_level_itr != fine_level_boxes.end(); ++fine_level_itr) {
             Box setbox = cpbox * *fine_level_itr;
             if (!setbox.empty()) {
@@ -893,13 +923,14 @@ void HierSumTest::initializeLevelData(
        * coarse-fine boundaries.
        */
       IntVector max_ghosts(d_dim, 1);
-      CoarseFineBoundary cfbdry(*(Pointer<PatchHierarchy>)hierarchy,
+      CoarseFineBoundary cfbdry(*hierarchy,
                                 level_number,
                                 max_ghosts);
 
       level = hierarchy->getPatchLevel(level_number);
-      for (PatchLevel::Iterator p(level); p; p++) {
-         Pointer<Patch> patch = *p;
+      for (PatchLevel::iterator p(level->begin());
+           p != level->end(); ++p) {
+         const boost::shared_ptr<Patch>& patch = *p;
          Box pbox = patch->getBox();
          const GlobalId global_id = patch->getGlobalId();
 
@@ -930,13 +961,13 @@ void HierSumTest::initializeLevelData(
  */
 void
 HierSumTest::resetHierarchyConfiguration(
-   const Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level)
 {
-   (void)hierarchy;
-   (void)coarsest_level;
-   (void)finest_level;
+   NULL_USE(hierarchy);
+   NULL_USE(coarsest_level);
+   NULL_USE(finest_level);
 }
 
 /*
@@ -944,19 +975,19 @@ HierSumTest::resetHierarchyConfiguration(
  */
 void
 HierSumTest::applyGradientDetector(
-   const Pointer<PatchHierarchy> hierarchy,
+   const boost::shared_ptr<PatchHierarchy>& hierarchy,
    const int level_number,
    const double time,
    const int tag_index,
    const bool initial_time,
    const bool uses_richardson_extrapolation_too)
 {
-   (void)hierarchy;
-   (void)level_number;
-   (void)time;
-   (void)tag_index;
-   (void)initial_time;
-   (void)uses_richardson_extrapolation_too;
+   NULL_USE(hierarchy);
+   NULL_USE(level_number);
+   NULL_USE(time);
+   NULL_USE(tag_index);
+   NULL_USE(initial_time);
+   NULL_USE(uses_richardson_extrapolation_too);
 }
 
 /*
@@ -975,16 +1006,19 @@ HierSumTest::setBoundaryConditions(
    const int num_edge_bdry_boxes = edge_bdry.getSize();
    const int num_face_bdry_boxes = face_bdry.getSize();
 
-   const Pointer<CartesianPatchGeometry> patch_geom =
-      patch.getPatchGeometry();
+   const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
+      patch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    /*
-    * Pointer to data in ghost regions.
+    * boost::shared_ptr to data in ghost regions.
     */
-   Pointer<CellData<double> > ucell = patch.getPatchData(cell_data_id);
+   boost::shared_ptr<CellData<double> > ucell(
+      patch.getPatchData(cell_data_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!ucell.isNull());
+   TBOX_ASSERT(ucell);
 #endif
    IntVector ghost_cells(ucell->getGhostCellWidth());
    const Box pbox(patch.getBox());
@@ -1026,8 +1060,9 @@ HierSumTest::setBoundaryConditions(
          shifted_pbox.shift(shift);
          fill_box = fill_box * shifted_pbox;
 
-         for (CellIterator ci(fill_box); ci; ci++) {
-            CellIndex cell = ci();
+         CellIterator ciend(fill_box, false);
+         for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+            CellIndex cell = *ci;
             for (d = 0; d < ucell->getDepth(); d++) {
                (*ucell)(cell, d) = 1.0;
             }
@@ -1094,8 +1129,6 @@ HierSumTest::setBoundaryConditions(
          }
       }
       if (d_dim == tbox::Dimension(2)) {
-         // to avoid warnings of unused vars
-         (void)num_face_bdry_boxes;
 
          /*
           * location index:
@@ -1116,8 +1149,9 @@ HierSumTest::setBoundaryConditions(
       shifted_pbox.shift(shift);
       fill_box = fill_box * shifted_pbox;
 
-      for (CellIterator ci(fill_box); ci; ci++) {
-         CellIndex cell = ci();
+      CellIterator ciend(fill_box, false);
+      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIndex cell = *ci;
          for (d = 0; d < ucell->getDepth(); d++) {
             (*ucell)(cell, d) = 1.0;
          }
@@ -1132,8 +1166,9 @@ HierSumTest::setBoundaryConditions(
       Box fill_box = patch_geom->getBoundaryFillBox(node_bdry[i],
             pbox,
             ghost_cells);
-      for (CellIterator ci(fill_box); ci; ci++) {
-         CellIndex cell = ci();  //i,j
+      CellIterator ciend(fill_box, false);
+      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIndex cell = *ci;  //i,j
 
          for (d = 0; d < ucell->getDepth(); d++) {
             (*ucell)(cell, d) = 1.0;
@@ -1153,7 +1188,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
    const int cell_data_id)
 {
 
-   const Pointer<CartesianPatchGeometry> patch_geom = cpatch.getPatchGeometry();
+   const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
+      cpatch.getPatchGeometry(),
+      boost::detail::dynamic_cast_tag());
 
    /*
     * Get node and edge boundary boxes.
@@ -1171,12 +1208,14 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
    }
 
    /*
-    * Pointer to data in ghost regions.
+    * boost::shared_ptr to data in ghost regions.
     */
-   Pointer<CellData<double> > ucell = cpatch.getPatchData(cell_data_id);
+   boost::shared_ptr<CellData<double> > ucell(
+      cpatch.getPatchData(cell_data_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!ucell.isNull());
+   TBOX_ASSERT(ucell);
 #endif
    IntVector ghost_cells(ucell->getGhostCellWidth());
 
@@ -1200,8 +1239,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
           *    4,5 - Z lower,upper
           */
          int loc_indx = face_bdry[i_box].getLocationIndex();
-         for (CellIterator ci(fill_box); ci; ci++) {
-            CellIndex boundary_cell = ci();
+         CellIterator ciend(fill_box, false);
+         for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+            CellIndex boundary_cell = *ci;
             CellIndex interior = boundary_cell;
             if (loc_indx == 0) {
                interior(0) += 1;
@@ -1247,8 +1287,9 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
        *    2,3 - Ylo, Yhi
        */
       int loc_indx = edge_bdry[i].getLocationIndex();
-      for (CellIterator ci(fill_box); ci; ci++) {
-         CellIndex boundary_cell = ci();
+      CellIterator ciend(fill_box, false);
+      for (CellIterator ci(fill_box, true); ci != ciend; ++ci) {
+         CellIndex boundary_cell = *ci;
          CellIndex interior = boundary_cell;
          if (d_dim == tbox::Dimension(3)) {
             if (loc_indx == 0) {
@@ -1325,7 +1366,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
  */
 void
 HierSumTest::getFromInput(
-   Pointer<Database> input_db)
+   boost::shared_ptr<Database> input_db)
 {
    /*
     * Set number of ghosts for node and edge data.

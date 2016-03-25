@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real node-centered patch data.
  *
  ************************************************************************/
@@ -53,7 +53,8 @@ PatchNodeDataOpsReal<TYPE>::PatchNodeDataOpsReal(
 }
 
 template<class TYPE>
-void PatchNodeDataOpsReal<TYPE>::operator = (
+void
+PatchNodeDataOpsReal<TYPE>::operator = (
    const PatchNodeDataOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -68,32 +69,38 @@ void PatchNodeDataOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-void PatchNodeDataOpsReal<TYPE>::swapData(
-   tbox::Pointer<hier::Patch> patch,
+void
+PatchNodeDataOpsReal<TYPE>::swapData(
+   const boost::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
-   TBOX_ASSERT(!patch.isNull());
+   TBOX_ASSERT(patch);
 
-   tbox::Pointer<pdat::NodeData<TYPE> > d1 = patch->getPatchData(data1_id);
-   tbox::Pointer<pdat::NodeData<TYPE> > d2 = patch->getPatchData(data2_id);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!d1.isNull() && !d2.isNull());
+   boost::shared_ptr<pdat::NodeData<TYPE> > d1(
+      patch->getPatchData(data1_id),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<pdat::NodeData<TYPE> > d2(
+      patch->getPatchData(data2_id),
+      boost::detail::dynamic_cast_tag());
+
+   TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
    TBOX_ASSERT(d1->getBox().isSpatiallyEqual(d2->getBox()));
    TBOX_ASSERT(d1->getGhostBox().isSpatiallyEqual(d2->getGhostBox()));
-#endif
+
    patch->setPatchData(data1_id, d2);
    patch->setPatchData(data2_id, d1);
 }
 
 template<class TYPE>
-void PatchNodeDataOpsReal<TYPE>::printData(
-   const tbox::Pointer<pdat::NodeData<TYPE> >& data,
+void
+PatchNodeDataOpsReal<TYPE>::printData(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
-   TBOX_ASSERT(!data.isNull());
+   TBOX_ASSERT(data);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
 
    s << "Data box = " << box << std::endl;
@@ -102,12 +109,13 @@ void PatchNodeDataOpsReal<TYPE>::printData(
 }
 
 template<class TYPE>
-void PatchNodeDataOpsReal<TYPE>::copyData(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
-   const tbox::Pointer<pdat::NodeData<TYPE> >& src,
+void
+PatchNodeDataOpsReal<TYPE>::copyData(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& src,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
+   TBOX_ASSERT(dst && src);
    TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
 
    const hier::Box node_box = pdat::NodeGeometry::toNodeBox(box);
@@ -115,12 +123,13 @@ void PatchNodeDataOpsReal<TYPE>::copyData(
 }
 
 template<class TYPE>
-void PatchNodeDataOpsReal<TYPE>::setToScalar(
-   tbox::Pointer<pdat::NodeData<TYPE> >& dst,
+void
+PatchNodeDataOpsReal<TYPE>::setToScalar(
+   const boost::shared_ptr<pdat::NodeData<TYPE> >& dst,
    const TYPE& alpha,
    const hier::Box& box) const
 {
-   TBOX_ASSERT(!dst.isNull());
+   TBOX_ASSERT(dst);
    TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
 
    dst->fillAll(alpha, box);

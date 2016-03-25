@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Statistical characteristics of a BoxLevel.
  *
  ************************************************************************/
@@ -28,9 +28,16 @@ public:
    /*!
     * @brief Constructor.
     *
-    * @param[i] box_level
+    * Compute and store statistics for the given BoxLevel.  The
+    * statistics reflects the current BoxLevel state and can be
+    * printed out afterwards.  All processes in the BoxLevel's
+    * SAMRAI_MPI must call this constructor because it requires
+    * collective communication.
+    *
+    * @param[in] box_level BoxLevel to compute statistics for.
     */
-   explicit BoxLevelStatistics(const BoxLevel &box_level);
+   explicit BoxLevelStatistics(
+      const BoxLevel &box_level);
 
    /*!
     * @brief Print out local and globally reduced statistics on the
@@ -68,14 +75,17 @@ private:
    /*!
     * @brief Indices for statistical quantites.
     */
-   enum { HAS_ANY_BOX = 0,
-          NUMBER_OF_BOXES = 1,
-          LARGEST_DIMENSION = 2,
-          SMALLEST_DIMENSION = 3,
-          LARGEST_ASPECT_RATIO = 4,
-          SMALLEST_ASPECT_RATIO = 5,
-          SUM_SURFACE_AREA = 6,
-          SUM_NORMALIZED_SURFACE_AREA = 7,
+   enum { HAS_ANY_BOX,
+          NUMBER_OF_CELLS,
+          NUMBER_OF_BOXES,
+          MAX_BOX_VOL,
+          MIN_BOX_VOL,
+          MAX_BOX_LEN,
+          MIN_BOX_LEN,
+          MAX_ASPECT_RATIO,
+          SUM_ASPECT_RATIO,
+          SUM_SURFACE_AREA,
+          SUM_NORM_SURFACE_AREA,
           NUMBER_OF_QUANTITIES };
 
    /*
@@ -90,10 +100,27 @@ private:
       double d_values[NUMBER_OF_QUANTITIES];
    };
 
-   void computeLocalBoxLevelStatistics(StatisticalQuantities &sq) const;
+   void
+   computeLocalBoxLevelStatistics( const BoxLevel &box_level );
 
-   //! @brief BoxLevel to compute statistics for.
-   const BoxLevel &d_box_level;
+   void
+   reduceStatistics();
+
+   tbox::SAMRAI_MPI d_mpi;
+
+   const tbox::Dimension d_dim;
+
+   //! @brief Statistics of local process.
+   StatisticalQuantities d_sq;
+   //! @brief Global min of d_sq.
+   StatisticalQuantities d_sq_min;
+   //! @brief Global max of d_sq.
+   StatisticalQuantities d_sq_max;
+   //! @brief Global sum of d_sq.
+   StatisticalQuantities d_sq_sum;
+
+   int d_rank_of_min[NUMBER_OF_QUANTITIES];
+   int d_rank_of_max[NUMBER_OF_QUANTITIES];
 
    /*!
     * @brief Names of the quantities in StatisticalQuantities.
@@ -105,17 +132,12 @@ private:
     */
    static int s_longest_length;
 
-   static tbox::StartupShutdownManager::Handler
-      s_initialize_finalize_handler;
+   static tbox::StartupShutdownManager::Handler s_initialize_finalize_handler;
 
 
 };
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-// #include "SAMRAI/hier/BoxLevelStatistics.I"
-#endif
 
 #endif  // included_hier_BoxLevelStatistics

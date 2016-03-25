@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real face-centered data.
  *
  ************************************************************************/
@@ -47,7 +47,8 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::PatchFaceDataMiscellaneousOpsReal(
 }
 
 template<class TYPE>
-void PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
+void
+PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
    const PatchFaceDataMiscellaneousOpsReal<TYPE>& foo)
 {
    NULL_USE(foo);
@@ -62,20 +63,20 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
  */
 
 template<class TYPE>
-int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& data1,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& data2,
+int
+PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& data1,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& data2,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!data1.isNull() && !data2.isNull());
-#endif
-   const tbox::Dimension& dim(data1->getDim());
+   TBOX_ASSERT(data1 && data2);
+
+   int dimVal = data1->getDim().getValue();
 
    int retval = 1;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -85,7 +86,7 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
                   face_box));
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -100,20 +101,20 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 }
 
 template<class TYPE>
-void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+void
+PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
-#endif
-   const tbox::Dimension& dim(dst->getDim());
+   TBOX_ASSERT(dst && src);
 
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   int dimVal = dst->getDim().getValue();
+
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          d_array_ops.compareToScalar(dst->getArrayData(d),
             src->getArrayData(d),
@@ -121,7 +122,7 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
             face_box);
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
             src->getArrayData(d),
@@ -133,20 +134,20 @@ void PatchFaceDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 }
 
 template<class TYPE>
-int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   tbox::Pointer<pdat::FaceData<TYPE> >& dst,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& src,
+int
+PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& dst,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& src,
    const hier::Box& box,
-   const tbox::Pointer<pdat::FaceData<double> > cvol) const
+   const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!dst.isNull() && !src.isNull());
-#endif
-   const tbox::Dimension& dim(dst->getDim());
+   TBOX_ASSERT(dst && src);
+
+   int dimVal = dst->getDim().getValue();
 
    int retval = 1;
-   if (cvol.isNull()) {
-      for (int d = 0; d < dim.getValue(); d++) {
+   if (!cvol) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -156,7 +157,7 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
                   face_box));
       }
    } else {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<int>::Min(retval,
@@ -171,18 +172,18 @@ int PatchFaceDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 }
 
 template<class TYPE>
-TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& numer,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& denom,
+TYPE
+PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
-#endif
-   const tbox::Dimension& dim(numer->getDim());
+   TBOX_ASSERT(numer && denom);
+
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box face_box =
          pdat::FaceGeometry::toFaceBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
@@ -194,18 +195,18 @@ TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 }
 
 template<class TYPE>
-TYPE PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const tbox::Pointer<pdat::FaceData<TYPE> >& numer,
-   const tbox::Pointer<pdat::FaceData<TYPE> >& denom,
+TYPE
+PatchFaceDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& numer,
+   const boost::shared_ptr<pdat::FaceData<TYPE> >& denom,
    const hier::Box& box) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!numer.isNull() && !denom.isNull());
-#endif
-   const tbox::Dimension& dim(numer->getDim());
+   TBOX_ASSERT(numer && denom);
+
+   int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dimVal; d++) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),

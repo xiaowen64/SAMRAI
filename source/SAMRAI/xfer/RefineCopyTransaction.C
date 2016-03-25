@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for data copies during data refining
  *
  ************************************************************************/
@@ -28,36 +28,9 @@
 namespace SAMRAI {
 namespace xfer {
 
-/*
- *************************************************************************
- *
- * Initialization, set/unset functions for static array of refine items.
- *
- *************************************************************************
- */
-
-const RefineClasses::Data **
-RefineCopyTransaction::s_refine_items =
+const RefineClasses::Data ** RefineCopyTransaction::s_refine_items =
    (const RefineClasses::Data **)NULL;
 int RefineCopyTransaction::s_num_refine_items = 0;
-
-void RefineCopyTransaction::setRefineItems(
-   const RefineClasses::Data** refine_items,
-   int num_refine_items)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(refine_items != (const RefineClasses::Data **)NULL);
-   TBOX_ASSERT(num_refine_items >= 0);
-#endif
-   s_refine_items = refine_items;
-   s_num_refine_items = num_refine_items;
-}
-
-void RefineCopyTransaction::unsetRefineItems()
-{
-   s_refine_items = (const RefineClasses::Data **)NULL;
-   s_num_refine_items = 0;
-}
 
 /*
  *************************************************************************
@@ -68,24 +41,22 @@ void RefineCopyTransaction::unsetRefineItems()
  */
 
 RefineCopyTransaction::RefineCopyTransaction(
-   tbox::Pointer<hier::PatchLevel>& dst_level,
-   tbox::Pointer<hier::PatchLevel>& src_level,
-   tbox::Pointer<hier::BoxOverlap> overlap,
+   const boost::shared_ptr<hier::PatchLevel>& dst_level,
+   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_mapped_box,
    const hier::Box& src_mapped_box,
-   int refine_item_id):
-   d_dst_patch(0),
+   const int refine_item_id):
    d_dst_patch_rank(dst_mapped_box.getOwnerRank()),
-   d_src_patch(0),
    d_src_patch_rank(src_mapped_box.getOwnerRank()),
    d_overlap(overlap),
    d_refine_item_id(refine_item_id),
    d_incoming_bytes(0),
    d_outgoing_bytes(0)
 {
-   TBOX_ASSERT(!dst_level.isNull());
-   TBOX_ASSERT(!src_level.isNull());
-   TBOX_ASSERT(!overlap.isNull());
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
    TBOX_ASSERT(refine_item_id >= 0);
@@ -97,12 +68,10 @@ RefineCopyTransaction::RefineCopyTransaction(
    // Note: s_num_coarsen_items cannot be used at this point!
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId(),
-            dst_mapped_box.getBlockId());
+      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId());
    }
    if (d_src_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId(),
-            src_mapped_box.getBlockId());
+      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId());
    }
 }
 
@@ -118,10 +87,11 @@ RefineCopyTransaction::~RefineCopyTransaction()
  *************************************************************************
  */
 
-bool RefineCopyTransaction::canEstimateIncomingMessageSize()
+bool
+RefineCopyTransaction::canEstimateIncomingMessageSize()
 {
    bool can_estimate = false;
-   if (!d_src_patch.isNull()) {
+   if (d_src_patch) {
       can_estimate =
          d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
          ->canEstimateStreamSizeFromBox();
@@ -133,7 +103,8 @@ bool RefineCopyTransaction::canEstimateIncomingMessageSize()
    return can_estimate;
 }
 
-size_t RefineCopyTransaction::computeIncomingMessageSize()
+size_t
+RefineCopyTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
@@ -141,7 +112,8 @@ size_t RefineCopyTransaction::computeIncomingMessageSize()
    return d_incoming_bytes;
 }
 
-size_t RefineCopyTransaction::computeOutgoingMessageSize()
+size_t
+RefineCopyTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
@@ -149,21 +121,34 @@ size_t RefineCopyTransaction::computeOutgoingMessageSize()
    return d_outgoing_bytes;
 }
 
-void RefineCopyTransaction::packStream(
+int
+RefineCopyTransaction::getSourceProcessor() {
+   return d_src_patch_rank;
+}
+
+int
+RefineCopyTransaction::getDestinationProcessor() {
+   return d_dst_patch_rank;
+}
+
+void
+RefineCopyTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_patch->getPatchData(s_refine_items[d_refine_item_id]->d_src)
    ->packStream(stream, *d_overlap);
 }
 
-void RefineCopyTransaction::unpackStream(
+void
+RefineCopyTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch)
    ->unpackStream(stream, *d_overlap);
 }
 
-void RefineCopyTransaction::copyLocalData()
+void
+RefineCopyTransaction::copyLocalData()
 {
    hier::PatchData& dst_data =
       *d_dst_patch->getPatchData(s_refine_items[d_refine_item_id]->d_scratch);
@@ -182,7 +167,8 @@ void RefineCopyTransaction::copyLocalData()
  *************************************************************************
  */
 
-void RefineCopyTransaction::printClassData(
+void
+RefineCopyTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Refine Copy Transaction" << std::endl;
@@ -201,9 +187,9 @@ void RefineCopyTransaction::printClassData(
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination patch:           "
-          << (hier::Patch *)d_dst_patch << std::endl;
+          << d_dst_patch.get() << std::endl;
    stream << "   source patch:           "
-          << (hier::Patch *)d_src_patch << std::endl;
+          << d_src_patch.get() << std::endl;
    stream << "   overlap:                " << std::endl;
    d_overlap->print(stream);
 }

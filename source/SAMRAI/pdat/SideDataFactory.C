@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating side data objects
  *
  ************************************************************************/
@@ -19,9 +19,8 @@
 #include "SAMRAI/pdat/OutersideDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/pdat/SideDataFactory.I"
-#endif
+#include <boost/make_shared.hpp>
+
 namespace SAMRAI {
 namespace pdat {
 
@@ -48,10 +47,11 @@ SideDataFactory<TYPE>::SideDataFactory(
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(hier::IntVector::getOne(ghosts.getDim())),
-   d_mb_trans(NULL)
+   d_directions(hier::IntVector::getOne(ghosts.getDim()))
 {
-   (void)directions;
+#ifndef DEBUG_CHECK_ASSERTIONS
+   NULL_USE(directions);
+#endif
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
@@ -65,8 +65,7 @@ SideDataFactory<TYPE>::SideDataFactory(
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(ghosts.getDim(), 1),
-   d_mb_trans(NULL)
+   d_directions(ghosts.getDim(), 1)
 {
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
@@ -75,9 +74,6 @@ SideDataFactory<TYPE>::SideDataFactory(
 template<class TYPE>
 SideDataFactory<TYPE>::~SideDataFactory()
 {
-   if (d_mb_trans) {
-      delete d_mb_trans;
-   }
 }
 
 /*
@@ -89,17 +85,17 @@ SideDataFactory<TYPE>::~SideDataFactory()
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchDataFactory>
+boost::shared_ptr<hier::PatchDataFactory>
 SideDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
 
-   return tbox::Pointer<hier::PatchDataFactory>(new SideDataFactory<TYPE>(
-                                                   d_depth,
-                                                   ghosts,
-                                                   d_fine_boundary_represents_var,
-                                                   d_directions));
+   return boost::make_shared<SideDataFactory<TYPE> >(
+      d_depth,
+      ghosts,
+      d_fine_boundary_represents_var,
+      d_directions);
 }
 
 /*
@@ -111,18 +107,17 @@ SideDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::PatchData>
+boost::shared_ptr<hier::PatchData>
 SideDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
 
-   hier::PatchData* patchdata =
-      new SideData<TYPE>(patch.getBox(),
-                         d_depth,
-                         this->d_ghosts,
-                         d_directions);
-   return tbox::Pointer<hier::PatchData>(patchdata);
+   return boost::make_shared<SideData<TYPE> >(
+      patch.getBox(),
+      d_depth,
+      d_ghosts,
+      d_directions);
 }
 
 /*
@@ -134,16 +129,30 @@ SideDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-tbox::Pointer<hier::BoxGeometry>
+boost::shared_ptr<hier::BoxGeometry>
 SideDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
 
-   hier::BoxGeometry* boxgeometry = new SideGeometry(box,
-         this->d_ghosts,
-         d_directions);
-   return tbox::Pointer<hier::BoxGeometry>(boxgeometry);
+   return boost::make_shared<SideGeometry>(
+      box,
+      d_ghosts,
+      d_directions);
+}
+
+template<class TYPE>
+int
+SideDataFactory<TYPE>::getDepth() const
+{
+   return d_depth;
+}
+
+template<class TYPE>
+const hier::IntVector&
+SideDataFactory<TYPE>::getDirectionVector() const
+{
+   return d_directions;
 }
 
 /*
@@ -155,7 +164,8 @@ SideDataFactory<TYPE>::getBoxGeometry(
  */
 
 template<class TYPE>
-size_t SideDataFactory<TYPE>::getSizeOfMemory(
+size_t
+SideDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
@@ -163,7 +173,7 @@ size_t SideDataFactory<TYPE>::getSizeOfMemory(
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(SideData<TYPE>));
    const size_t data =
-      SideData<TYPE>::getSizeOfData(box, d_depth, this->d_ghosts, d_directions);
+      SideData<TYPE>::getSizeOfData(box, d_depth, d_ghosts, d_directions);
    return obj + data;
 }
 
@@ -177,8 +187,9 @@ size_t SideDataFactory<TYPE>::getSizeOfMemory(
  */
 
 template<class TYPE>
-bool SideDataFactory<TYPE>::validCopyTo(
-   const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const
+bool
+SideDataFactory<TYPE>::validCopyTo(
+   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
 
@@ -188,21 +199,58 @@ bool SideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      tbox::Pointer<SideDataFactory<TYPE> > sdf = dst_pdf;
-      if (!sdf.isNull()) {
+      boost::shared_ptr<SideDataFactory<TYPE> > sdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (sdf) {
          valid_copy = true;
       }
    }
 
    if (!valid_copy) {
-      tbox::Pointer<OutersideDataFactory<TYPE> > osdf = dst_pdf;
-      if (!osdf.isNull()) {
+      boost::shared_ptr<OutersideDataFactory<TYPE> > osdf(
+         dst_pdf,
+         boost::detail::dynamic_cast_tag());
+      if (osdf) {
          valid_copy = true;
       }
    }
 
    return valid_copy;
 }
+
+/*
+ *************************************************************************
+ *
+ * Return a boolean value indicating how data for the side quantity will be
+ * treated on coarse-fine interfaces.  This value is passed into the
+ * constructor.  See the FaceVariable<DIM> class header file for more
+ * information.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+SideDataFactory<TYPE>::fineBoundaryRepresentsVariable() const
+{
+   return d_fine_boundary_represents_var;
+}
+
+/*
+ *************************************************************************
+ *
+ * Return true since the side data index space extends beyond the interior
+ * of patches.  That is, side data lives on patch borders.
+ *
+ *************************************************************************
+ */
+template<class TYPE>
+bool
+SideDataFactory<TYPE>::dataLivesOnPatchBorder() const
+{
+   return true;
+}
+
 
 }
 }

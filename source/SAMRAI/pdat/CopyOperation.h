@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Copy operation on single array data elements templated on data type
  *
  ************************************************************************/
@@ -54,12 +54,6 @@ private:
 }
 }
 
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/CopyOperation.I"
-#endif
-
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/CopyOperation.C"
-#endif
 
 #endif

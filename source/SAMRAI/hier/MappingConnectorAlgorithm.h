@@ -3,13 +3,14 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Algorithms to work with maping Connectors.
  *
  ************************************************************************/
 #ifndef included_hier_MappingConnectorAlgorithm
 #define included_hier_MappingConnectorAlgorithm
 
+#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BaseConnectorAlgorithm.h"
 
 #include <map>
@@ -34,7 +35,7 @@ public:
     * The default constructor creates an uninitialized object in
     * distributed state.
     */
-   explicit MappingConnectorAlgorithm();
+   MappingConnectorAlgorithm();
 
    /*!
     * @brief Deallocate internal data.
@@ -276,9 +277,8 @@ public:
     *
     * @param[in,out] anchor_to_mapped Connector to be modified.  On input, this
     *   points to the BoxLevel being mapped.
-    * @param[in,out] mapped_to_anchor Reverse (transpose) of anchor_to_mapped.
+    * @param[in,out] old_to_new Reverse (transpose) of anchor_to_mapped.
     *   points to the BoxLevel being mapped.
-    * @param[in] new_to_old Reverse (transpose) of old_to_new.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
     */
@@ -404,7 +404,6 @@ private:
       std::set<int>& incoming_ranks,
       std::set<int>& outoing_ranks,
       tbox::AsyncCommPeer<int> all_comms[],
-      tbox::AsyncCommStage::MemberVec& completed,
       BoxContainer& visible_new_nabrs,
       BoxContainer& visible_anchor_nabrs,
       InvertedNeighborhoodSet& anchor_eto_old,
@@ -421,7 +420,7 @@ private:
    privateModify_findOverlapsForOneProcess(
       const int owner_rank,
       BoxContainer& visible_base_nabrs,
-      BoxContainer::Iterator& base_ni,
+      BoxContainer::iterator& base_ni,
       std::vector<int>& send_mesg,
       const int remote_box_counter_index,
       Connector& mapped_connector,
@@ -475,13 +474,13 @@ private:
     */
    static int s_operation_mpi_tag;
 
-   static tbox::Pointer<tbox::Timer> t_modify;
-   static tbox::Pointer<tbox::Timer> t_modify_setup_comm;
-   static tbox::Pointer<tbox::Timer> t_modify_remove_and_cache;
-   static tbox::Pointer<tbox::Timer> t_modify_discover_and_send;
-   static tbox::Pointer<tbox::Timer> t_modify_receive_and_unpack;
-   static tbox::Pointer<tbox::Timer> t_modify_MPI_wait;
-   static tbox::Pointer<tbox::Timer> t_modify_misc;
+   static boost::shared_ptr<tbox::Timer> t_modify;
+   static boost::shared_ptr<tbox::Timer> t_modify_setup_comm;
+   static boost::shared_ptr<tbox::Timer> t_modify_remove_and_cache;
+   static boost::shared_ptr<tbox::Timer> t_modify_discover_and_send;
+   static boost::shared_ptr<tbox::Timer> t_modify_receive_and_unpack;
+   static boost::shared_ptr<tbox::Timer> t_modify_MPI_wait;
+   static boost::shared_ptr<tbox::Timer> t_modify_misc;
 
    bool d_sanity_check_inputs;
    bool d_sanity_check_outputs;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to application-specific patch functions in support
  *                Method of Lines integration algorithm
  *
@@ -20,10 +20,11 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace algs {
@@ -52,7 +53,7 @@ public:
    /*!
     * Blank constructor for MethodOfLinesPatchStrategy.
     */
-   MethodOfLinesPatchStrategy(
+   explicit MethodOfLinesPatchStrategy(
       const tbox::Dimension& dim);
 
    /*!
@@ -116,14 +117,7 @@ public:
       const double regrid_time,
       const bool initial_error,
       const int tag_index,
-      const bool uses_richardson_extrapolation_too)
-   {
-      NULL_USE(patch);
-      NULL_USE(regrid_time);
-      NULL_USE(initial_error);
-      NULL_USE(tag_index);
-      NULL_USE(uses_richardson_extrapolation_too);
-   }
+      const bool uses_richardson_extrapolation_too) = 0;
 
    /*!
     * Set user-defined boundary conditions at the physical domain boundary.
@@ -139,10 +133,8 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual hier::IntVector getRefineOpStencilWidth() const
-   {
-      return hier::IntVector::getZero(d_dim);
-   }
+   virtual hier::IntVector
+   getRefineOpStencilWidth() const;
 
    /*!
     * Pre- and post-processing routines for implementing user-defined
@@ -172,40 +164,28 @@ public:
     * data corresponding to the d_scratch context on both coarse and
     * fine patches.
     */
-   virtual void preprocessRefine(
+   virtual void
+   preprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(fine_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    ///
-   virtual void postprocessRefine(
+   virtual void
+   postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(fine_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    /*!
     * Return maximum stencil width needed for user-defined
     * data coarsen operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual hier::IntVector getCoarsenOpStencilWidth() const
-   {
-      return hier::IntVector::getZero(d_dim);
-   }
+   virtual hier::IntVector
+   getCoarsenOpStencilWidth() const;
 
    /*!
     * Pre- and post-processing routines for implementing user-defined
@@ -234,30 +214,20 @@ public:
     * corresponding to the d_new context on both coarse and fine patches
     * for time-dependent quantities.
     */
-   virtual void preprocessCoarsen(
+   virtual void
+   preprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(coarse_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    ///
-   virtual void postprocessCoarsen(
+   virtual void
+   postprocessCoarsen(
       hier::Patch& coarse,
       const hier::Patch& fine,
       const hier::Box& coarse_box,
-      const hier::IntVector& ratio)
-   {
-      NULL_USE(fine);
-      NULL_USE(coarse);
-      NULL_USE(coarse_box);
-      NULL_USE(ratio);
-   }
+      const hier::IntVector& ratio) = 0;
 
    /*!
     * The method of lines integrator controls the context for the data to
@@ -267,7 +237,8 @@ public:
     *
     * Return pointer to data context with ghost cells.
     */
-   tbox::Pointer<hier::VariableContext> getInteriorWithGhostsContext() const
+   boost::shared_ptr<hier::VariableContext>
+   getInteriorWithGhostsContext() const
    {
       return d_interior_with_ghosts;
    }
@@ -275,7 +246,8 @@ public:
    /*!
     * Return pointer to data context with NO ghosts.
     */
-   tbox::Pointer<hier::VariableContext> getInteriorContext() const
+   boost::shared_ptr<hier::VariableContext>
+   getInteriorContext() const
    {
       return d_interior;
    }
@@ -283,8 +255,9 @@ public:
    /*!
     * Set pointer to data context with ghosts.
     */
-   void setInteriorWithGhostsContext(
-      tbox::Pointer<hier::VariableContext> context)
+   void
+   setInteriorWithGhostsContext(
+      const boost::shared_ptr<hier::VariableContext>& context)
    {
       d_interior_with_ghosts = context;
    }
@@ -292,23 +265,27 @@ public:
    /*!
     * Set pointer to data context with NO ghosts.
     */
-   void setInteriorContext(
-      tbox::Pointer<hier::VariableContext> context)
+   void
+   setInteriorContext(
+      const boost::shared_ptr<hier::VariableContext>& context)
    {
       d_interior = context;
    }
 
-   const tbox::Dimension& getDim() const {
+   const tbox::Dimension&
+   getDim() const
+   {
       return d_dim;
    }
 
 private:
    const tbox::Dimension d_dim;
 
-   tbox::Pointer<hier::VariableContext> d_interior_with_ghosts;
-   tbox::Pointer<hier::VariableContext> d_interior;
+   boost::shared_ptr<hier::VariableContext> d_interior_with_ghosts;
+   boost::shared_ptr<hier::VariableContext> d_interior;
 };
 
 }
 }
+
 #endif

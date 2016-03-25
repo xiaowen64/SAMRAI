@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   set geometry for multiblock domain
  *
  ************************************************************************/
@@ -34,13 +34,13 @@
 MblkGeometry::MblkGeometry(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   tbox::Pointer<tbox::Database> input_db,
+   boost::shared_ptr<tbox::Database> input_db,
    const int nblocks):
    d_dim(dim)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
    d_object_name = object_name;
@@ -108,13 +108,14 @@ bool MblkGeometry::getRefineBoxes(
  *************************************************************************
  */
 void MblkGeometry::getFromInput(
-   tbox::Pointer<tbox::Database> input_db)
+   boost::shared_ptr<tbox::Database> input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!input_db.isNull());
+   TBOX_ASSERT(input_db);
 #endif
 
-   tbox::Pointer<tbox::Database> db = input_db->getDatabase("MblkGeometry");
+   boost::shared_ptr<tbox::Database> db(
+      input_db->getDatabase("MblkGeometry"));
 
    d_geom_problem = db->getString("problem_type");
 
@@ -128,8 +129,8 @@ void MblkGeometry::getFromInput(
    //
    if (d_geom_problem == "CARTESIAN") {
 
-      tbox::Pointer<tbox::Database> cart_db =
-         db->getDatabase("CartesianGeometry");
+      boost::shared_ptr<tbox::Database> cart_db(
+         db->getDatabase("CartesianGeometry"));
 
       d_cart_xlo.resizeArray(d_nblocks);
       d_cart_xhi.resizeArray(d_nblocks);
@@ -173,8 +174,8 @@ void MblkGeometry::getFromInput(
    //
    if (d_geom_problem == "WEDGE") {
 
-      tbox::Pointer<tbox::Database> wedge_db =
-         db->getDatabase("WedgeGeometry");
+      boost::shared_ptr<tbox::Database> wedge_db(
+         db->getDatabase("WedgeGeometry"));
 
       d_wedge_rmin.resizeArray(d_nblocks);
       d_wedge_rmax.resizeArray(d_nblocks);
@@ -220,8 +221,8 @@ void MblkGeometry::getFromInput(
    //
    if (d_geom_problem == "TRILINEAR") {
 
-      tbox::Pointer<tbox::Database> tri_db =
-         db->getDatabase("TrilinearGeometry");
+      boost::shared_ptr<tbox::Database> tri_db(
+         db->getDatabase("TrilinearGeometry"));
 
       d_tri_mesh_filename = tri_db->getString("mesh_filename");
 
@@ -312,8 +313,8 @@ void MblkGeometry::getFromInput(
                                   << "only works in 3D." << std::endl);
       }
 
-      tbox::Pointer<tbox::Database> sshell_db =
-         db->getDatabase("ShellGeometry");
+      boost::shared_ptr<tbox::Database> sshell_db(
+         db->getDatabase("ShellGeometry"));
 
       d_sshell_rmin = sshell_db->getDouble("rmin");
       d_sshell_rmax = sshell_db->getDouble("rmax");
@@ -541,11 +542,12 @@ void MblkGeometry::buildCartesianGridOnPatch(
    //
    // get the coordinates array information
    //
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 #endif
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -614,11 +616,12 @@ void MblkGeometry::buildWedgeGridOnPatch(
       dx[2] = 0.0;
    }
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 #endif
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -685,11 +688,12 @@ void MblkGeometry::buildTrilinearGridOnPatch(
    double ny = (domain.upper(1) - domain.lower(1) + 1);
    double nz = (domain.upper(2) - domain.lower(2) + 1);
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 #endif
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -814,11 +818,12 @@ void MblkGeometry::buildSShellGridOnPatch(
       //patch.allocatePatchData(xyz_id);
    }
 
-   tbox::Pointer<pdat::NodeData<double> > xyz =
-      patch.getPatchData(xyz_id);
+   boost::shared_ptr<pdat::NodeData<double> > xyz(
+      patch.getPatchData(xyz_id),
+      boost::detail::dynamic_cast_tag());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!xyz.isNull());
+   TBOX_ASSERT(xyz);
 #endif
 
    if (d_dim == tbox::Dimension(3)) {

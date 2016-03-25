@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Performance input file for TreeLoadBalancer
  *
  ************************************************************************/
@@ -106,8 +106,9 @@ Main {
 }
 
 TreeLoadBalancer {
-  report_load_balance = TRUE // Reported in main
+  report_load_balance = FALSE // Reported in main
   n_root_cycles = -1
+  min_load_fraction_per_box = 0.03
   balance_penalty_wt = 1.0
   surface_penalty_wt = 1.0
   slender_penalty_wt = 1.0

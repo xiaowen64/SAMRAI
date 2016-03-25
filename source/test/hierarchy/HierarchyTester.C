@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch hierarchy refine/coarsen tests.
  *
  ************************************************************************/
@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
@@ -37,22 +37,19 @@ namespace SAMRAI {
 HierarchyTester::HierarchyTester(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   Pointer<Database> hier_test_db):
+   boost::shared_ptr<Database> hier_test_db):
    d_dim(dim),
    d_ratio(dim, 0)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!hier_test_db.isNull());
+   TBOX_ASSERT(hier_test_db);
 #endif
 
    d_object_name = object_name;
 
    d_do_refine_test = false;
    d_do_coarsen_test = false;
-
-   d_initial_patch_hierarchy.setNull();
-   d_test_patch_hierarchy.setNull();
 
    if (hier_test_db->keyExists("do_refine_test")) {
       d_do_refine_test = hier_test_db->getBool("do_refine_test");
@@ -97,8 +94,6 @@ HierarchyTester::HierarchyTester(
 
 HierarchyTester::~HierarchyTester()
 {
-   d_initial_patch_hierarchy.setNull();
-   d_test_patch_hierarchy.setNull();
 }
 
 /*
@@ -111,43 +106,46 @@ HierarchyTester::~HierarchyTester()
  */
 
 void HierarchyTester::setupInitialHierarchy(
-   Pointer<Database> main_input_db)
+   boost::shared_ptr<Database> main_input_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
-   Pointer<CartesianGridGeometry> grid_geometry(
+   boost::shared_ptr<CartesianGridGeometry> grid_geometry(
       new CartesianGridGeometry(
          d_dim,
          "CartesianGridGeometry",
          main_input_db->getDatabase("CartesianGridGeometry")));
 
-   d_initial_patch_hierarchy =
+   d_initial_patch_hierarchy.reset(
       new PatchHierarchy("InitialPatchHierarchy",
          grid_geometry,
-         main_input_db->getDatabase("PatchHierarchy"));
+         main_input_db->getDatabase("PatchHierarchy")));
 
-   Pointer<BergerRigoutsos> box_generator(new BergerRigoutsos(d_dim));
+   boost::shared_ptr<BergerRigoutsos> box_generator(
+      new BergerRigoutsos(d_dim));
 
-   Pointer<TreeLoadBalancer> load_balancer(
-      new TreeLoadBalancer(d_dim,
+   boost::shared_ptr<TreeLoadBalancer> load_balancer(
+      new TreeLoadBalancer(
+         d_dim,
          "TreeLoadBalancer",
          main_input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   Pointer<StandardTagAndInitialize> dummy_error_detector(
-      new StandardTagAndInitialize(d_dim,
+   boost::shared_ptr<StandardTagAndInitialize> dummy_error_detector(
+      new StandardTagAndInitialize(
+         d_dim,
          "StandardTagAndInitialize",
          this,
          main_input_db->getDatabase("StandardTagAndInitialize")));
 
-   d_gridding_algorithm =
+   d_gridding_algorithm.reset(
       new GriddingAlgorithm(d_initial_patch_hierarchy,
          "GriddingAlgorithm",
          main_input_db->getDatabase("GriddingAlgorithm"),
          dummy_error_detector,
          box_generator,
-         load_balancer);
+         load_balancer));
 
    d_gridding_algorithm->makeCoarsestLevel(
       0.0);                                       // dummy time
@@ -192,10 +190,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
     **************************************************************
     */
 
-   Pointer<GridGeometry> init_geometry =
-      d_initial_patch_hierarchy->getGridGeometry();
-   Pointer<GridGeometry> test_geometry =
-      d_test_patch_hierarchy->getGridGeometry();
+   boost::shared_ptr<BaseGridGeometry> init_geometry(
+      d_initial_patch_hierarchy->getGridGeometry());
+   boost::shared_ptr<BaseGridGeometry> test_geometry(
+      d_test_patch_hierarchy->getGridGeometry());
 
    hier::IntVector one_vector(d_dim, 1);
 
@@ -215,10 +213,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
    const int npdboxes = init_phys_domain.size();
 
    // Test #0b:
-   hier::BoxContainer::ConstIterator ipditr(init_phys_domain);
-   hier::BoxContainer::ConstIterator tpditr(test_phys_domain);
+   hier::BoxContainer::const_iterator ipditr(init_phys_domain);
+   hier::BoxContainer::const_iterator tpditr(test_phys_domain);
    if (d_do_refine_test) {
-      for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
+      for (int ib = 0; ib < npdboxes; ib++, ++ipditr, ++tpditr) {
          if (!Box::refine(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
@@ -229,7 +227,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
       }
    }
    if (d_do_coarsen_test) {
-      for (int ib = 0; ib < npdboxes; ib++, ipditr++, tpditr++) {
+      for (int ib = 0; ib < npdboxes; ib++, ++ipditr, ++tpditr) {
          if (!Box::coarsen(*ipditr, d_ratio).isSpatiallyEqual(*tpditr)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
@@ -268,10 +266,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
 
    for (int ln = 0; ln < nlevels; ln++) {
-      Pointer<PatchLevel> init_level =
-         d_initial_patch_hierarchy->getPatchLevel(ln);
-      Pointer<PatchLevel> test_level =
-         d_test_patch_hierarchy->getPatchLevel(ln);
+      boost::shared_ptr<PatchLevel> init_level(
+         d_initial_patch_hierarchy->getPatchLevel(ln));
+      boost::shared_ptr<PatchLevel> test_level(
+         d_test_patch_hierarchy->getPatchLevel(ln));
 
       // Test #2:
       if (init_level->getLevelNumber() !=
@@ -346,10 +344,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
       const int nboxes = init_domain.size();
 
       // Test #8:
-      hier::BoxContainer::ConstIterator iditr(init_domain);
-      hier::BoxContainer::ConstIterator tditr(test_domain);
+      hier::BoxContainer::const_iterator iditr(init_domain);
+      hier::BoxContainer::const_iterator tditr(test_domain);
       if (d_do_refine_test) {
-         for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
+         for (int ib = 0; ib < nboxes; ib++, ++iditr, ++tditr) {
             if (!Box::refine(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
@@ -360,7 +358,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
       }
       if (d_do_coarsen_test) {
-         for (int ib = 0; ib < nboxes; ib++, iditr++, tditr++) {
+         for (int ib = 0; ib < nboxes; ib++, ++iditr, ++tditr) {
             if (!Box::coarsen(*iditr, d_ratio).isSpatiallyEqual(*tditr)) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
@@ -397,7 +395,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
             test_connector_width,
             true /* exact width only */);
 
-      for (hier::PatchLevel::Iterator ip(test_level); ip; ip++) {
+      for (hier::PatchLevel::iterator ip(test_level->begin());
+           ip != test_level->end(); ++ip) {
          const BoxId& mapped_box_id = ip->getBox().getId();
          // Test #9:
          if (d_do_refine_test) {
@@ -455,10 +454,13 @@ int HierarchyTester::runHierarchyTestAndVerify()
        *  Tests 13-19 check local data for patches on each level.
        **************************************************************
        */
-      for (PatchLevel::Iterator tip(test_level); tip; tip++) {
+      for (PatchLevel::iterator tip(test_level->begin());
+           tip != test_level->end(); ++tip) {
          const BoxId& mapped_box_id = tip->getBox().getId();
-         Pointer<Patch> test_patch = test_level->getPatch(mapped_box_id);
-         Pointer<Patch> init_patch = init_level->getPatch(mapped_box_id);
+         boost::shared_ptr<Patch> test_patch(
+            test_level->getPatch(mapped_box_id));
+         boost::shared_ptr<Patch> init_patch(
+            init_level->getPatch(mapped_box_id));
 
          // Test #13:
          if (d_do_refine_test) {
@@ -529,10 +531,10 @@ int HierarchyTester::runHierarchyTestAndVerify()
           **************************************************************
           */
 
-         Pointer<PatchGeometry> init_patch_geom =
-            init_patch->getPatchGeometry();
-         Pointer<PatchGeometry> test_patch_geom =
-            test_patch->getPatchGeometry();
+         boost::shared_ptr<PatchGeometry> init_patch_geom(
+            init_patch->getPatchGeometry());
+         boost::shared_ptr<PatchGeometry> test_patch_geom(
+            test_patch->getPatchGeometry());
 
          // Test #18a:
          if (init_patch_geom->getRatio() !=

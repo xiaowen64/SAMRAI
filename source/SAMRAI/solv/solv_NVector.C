@@ -3,12 +3,11 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to C++ vector implementation for Sundials package.
  *
  ************************************************************************/
 
-#include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #ifdef HAVE_SUNDIALS
@@ -16,10 +15,13 @@
 #include "SAMRAI/solv/solv_NVector.h"
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 
+using namespace SAMRAI;
+using namespace solv;
+
 #define SABSVEC_CAST(v) \
-   (static_cast<SAMRAI::solv::SundialsAbstractVector *>(v \
-                                                        -> \
-                                                        content))
+   (static_cast<SundialsAbstractVector *>(v \
+                                          -> \
+                                          content))
 
 extern "C" {
 

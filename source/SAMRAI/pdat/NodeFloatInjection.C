@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered float data on
  *                a  mesh.
  *
@@ -73,31 +73,20 @@ NodeFloatInjection::~NodeFloatInjection()
 {
 }
 
-bool NodeFloatInjection::findCoarsenOperator(
-   const tbox::Pointer<hier::Variable>& var,
-   const std::string& op_name) const
-{
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
-
-   const tbox::Pointer<NodeVariable<float> > cast_var(var);
-   if (!cast_var.isNull() && (op_name == getOperatorName())) {
-      return true;
-   } else {
-      return false;
-   }
-}
-
-int NodeFloatInjection::getOperatorPriority() const
+int
+NodeFloatInjection::getOperatorPriority() const
 {
    return 0;
 }
 
 hier::IntVector
-NodeFloatInjection::getStencilWidth() const {
+NodeFloatInjection::getStencilWidth() const
+{
    return hier::IntVector::getZero(getDim());
 }
 
-void NodeFloatInjection::coarsen(
+void
+NodeFloatInjection::coarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
    const int dst_component,
@@ -105,13 +94,15 @@ void NodeFloatInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   tbox::Pointer<NodeData<float> >
-   fdata = fine.getPatchData(src_component);
-   tbox::Pointer<NodeData<float> >
-   cdata = coarse.getPatchData(dst_component);
+   boost::shared_ptr<NodeData<float> > fdata(
+      fine.getPatchData(src_component),
+      boost::detail::dynamic_cast_tag());
+   boost::shared_ptr<NodeData<float> > cdata(
+      coarse.getPatchData(dst_component),
+      boost::detail::dynamic_cast_tag());
 
-   TBOX_ASSERT(!fdata.isNull());
-   TBOX_ASSERT(!cdata.isNull());
+   TBOX_ASSERT(fdata);
+   TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
 

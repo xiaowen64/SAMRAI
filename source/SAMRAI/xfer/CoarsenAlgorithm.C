@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Coarsening algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -13,11 +13,13 @@
 
 #include "SAMRAI/xfer/CoarsenAlgorithm.h"
 
+#include "SAMRAI/xfer/BoxGeometryVariableFillPattern.h"
 #include "SAMRAI/xfer/StandardCoarsenTransactionFactory.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/VariableDatabase.h"
-#include "SAMRAI/tbox/Utilities.h"
+
+#include <boost/make_shared.hpp>
 
 namespace SAMRAI {
 namespace xfer {
@@ -36,7 +38,7 @@ CoarsenAlgorithm::CoarsenAlgorithm(
    const tbox::Dimension& dim,
    bool fill_coarse_data):
    d_dim(dim),
-   d_coarsen_classes(new xfer::CoarsenClasses(d_fill_coarse_data)),
+   d_coarsen_classes(boost::make_shared<CoarsenClasses>(d_fill_coarse_data)),
    d_fill_coarse_data(fill_coarse_data),
    d_schedule_created(false)
 {
@@ -62,15 +64,16 @@ CoarsenAlgorithm::~CoarsenAlgorithm()
  *************************************************************************
  */
 
-void CoarsenAlgorithm::registerCoarsen(
+void
+CoarsenAlgorithm::registerCoarsen(
    const int dst,
    const int src,
-   const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
+   const boost::shared_ptr<hier::CoarsenOperator>& opcoarsen,
    const hier::IntVector& gcw_to_coarsen,
-   tbox::Pointer<VariableFillPattern> var_fill_pattern)
+   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (!opcoarsen.isNull()) {
+   if (opcoarsen) {
       TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *opcoarsen);
    }
 #endif
@@ -83,7 +86,7 @@ void CoarsenAlgorithm::registerCoarsen(
          << std::endl);
    }
 
-   xfer::CoarsenClasses::Data data(d_dim);
+   CoarsenClasses::Data data(d_dim);
 
    data.d_dst = dst;
    data.d_src = src;
@@ -93,23 +96,13 @@ void CoarsenAlgorithm::registerCoarsen(
    data.d_gcw_to_coarsen = gcw_to_coarsen;
    data.d_opcoarsen = opcoarsen;
    data.d_tag = -1;
-   if (!(var_fill_pattern.isNull())) {
+   if (var_fill_pattern) {
       data.d_var_fill_pattern = var_fill_pattern;
    } else {
-      data.d_var_fill_pattern = new BoxGeometryVariableFillPattern();
+      data.d_var_fill_pattern.reset(new BoxGeometryVariableFillPattern());
    }
 
    d_coarsen_classes->insertEquivalenceClassItem(data);
-}
-
-void CoarsenAlgorithm::registerCoarsen(
-   const int dst,
-   const int src,
-   const tbox::Pointer<hier::CoarsenOperator> opcoarsen,
-   tbox::Pointer<VariableFillPattern> var_fill_pattern)
-{
-   registerCoarsen(dst, src, opcoarsen,
-      hier::IntVector::getZero(d_dim), var_fill_pattern);
 }
 
 /*
@@ -121,55 +114,39 @@ void CoarsenAlgorithm::registerCoarsen(
  *************************************************************************
  */
 
-tbox::Pointer<xfer::CoarsenSchedule>
+boost::shared_ptr<CoarsenSchedule>
 CoarsenAlgorithm::createSchedule(
-   tbox::Pointer<hier::PatchLevel> crse_level,
-   tbox::Pointer<hier::PatchLevel> fine_level,
-   xfer::CoarsenPatchStrategy* patch_strategy,
-   tbox::Pointer<xfer::CoarsenTransactionFactory> transaction_factory)
+   const boost::shared_ptr<hier::PatchLevel>& crse_level,
+   const boost::shared_ptr<hier::PatchLevel>& fine_level,
+   CoarsenPatchStrategy* patch_strategy,
+   const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory)
 {
    TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, *crse_level, *fine_level);
 
    d_schedule_created = true;
 
-   tbox::Pointer<xfer::CoarsenTransactionFactory> trans_factory =
-      transaction_factory;
+   boost::shared_ptr<CoarsenTransactionFactory> trans_factory(
+      transaction_factory);
 
-   if (trans_factory.isNull()) {
-      trans_factory = new xfer::StandardCoarsenTransactionFactory();
+   if (!trans_factory) {
+      trans_factory.reset(new StandardCoarsenTransactionFactory());
    }
 
-   return tbox::Pointer<xfer::CoarsenSchedule>(new xfer::CoarsenSchedule(
-                                                  crse_level,
-                                                  fine_level,
-                                                  d_coarsen_classes,
-                                                  trans_factory,
-                                                  patch_strategy,
-                                                  d_fill_coarse_data));
+   return boost::make_shared<CoarsenSchedule>(
+      crse_level,
+      fine_level,
+      d_coarsen_classes,
+      trans_factory,
+      patch_strategy,
+      d_fill_coarse_data);
 }
 
-/*
- **************************************************************************
- *
- * Reconfigure coarsen schedule to perform operations in this algorithm.
- *
- **************************************************************************
- */
-
-bool CoarsenAlgorithm::checkConsistency(
-   tbox::Pointer<xfer::CoarsenSchedule> schedule) const
-{
-   TBOX_ASSERT(!schedule.isNull());
-
-   return d_coarsen_classes->
-          classesMatch(schedule->getEquivalenceClasses());
-}
-
-void CoarsenAlgorithm::resetSchedule(
-   tbox::Pointer<xfer::CoarsenSchedule> schedule) const
+void
+CoarsenAlgorithm::resetSchedule(
+   const boost::shared_ptr<CoarsenSchedule>& schedule) const
 {
 
-   TBOX_ASSERT(!schedule.isNull());
+   TBOX_ASSERT(schedule);
 
    if (d_coarsen_classes->classesMatch(schedule->getEquivalenceClasses())) {
       schedule->reset(d_coarsen_classes);
@@ -189,7 +166,8 @@ void CoarsenAlgorithm::resetSchedule(
  *************************************************************************
  */
 
-void CoarsenAlgorithm::printClassData(
+void
+CoarsenAlgorithm::printClassData(
    std::ostream& stream) const
 {
    stream << "CoarsenAlgorithm::printClassData()" << std::endl;
@@ -197,19 +175,6 @@ void CoarsenAlgorithm::printClassData(
    stream << "d_fill_coarse_data = " << d_fill_coarse_data << std::endl;
 
    d_coarsen_classes->printClassData(stream);
-}
-
-/*
- *************************************************************************
- *
- * Return the dimension
- *
- *************************************************************************
- */
-
-const tbox::Dimension& CoarsenAlgorithm::getDim() const
-{
-   return d_dim;
 }
 
 }

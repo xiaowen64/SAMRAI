@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating outerside data objects
  *
  ************************************************************************/
@@ -18,7 +18,8 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Complex.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace pdat {
@@ -43,7 +44,7 @@ public:
     * The depth (number of components) gives the default for all of
     * the outerside data objects created with this factory.
     */
-   explicit OutersideDataFactory(
+   OutersideDataFactory(
       const tbox::Dimension& dim,
       const int depth);
 
@@ -62,7 +63,7 @@ public:
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual tbox::Pointer<hier::PatchDataFactory>
+   virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
       const hier::IntVector& ghosts);
 
@@ -71,7 +72,7 @@ public:
     * The default information about the object (e.g., depth) is taken from
     * the factory.
     */
-   virtual tbox::Pointer<hier::PatchData>
+   virtual boost::shared_ptr<hier::PatchData>
    allocate(
       const hier::Patch& patch) const;
 
@@ -80,7 +81,7 @@ public:
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
     */
-   virtual tbox::Pointer<hier::BoxGeometry>
+   virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
       const hier::Box& box) const;
 
@@ -100,21 +101,19 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Return a boolean true value indicating that fine data for the outerside quantity will
-    * take precedence on coarse-fine interfaces.  See the OutersideVariable<DIM> class
-    * header file for more information.
+    * Return a boolean true value indicating that fine data for the outerside
+    * quantity will take precedence on coarse-fine interfaces.  See the
+    * OutersideVariable<DIM> class header file for more information.
     */
-   bool fineBoundaryRepresentsVariable() const {
-      return true;
-   }
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
-    * Return true since the outerside data index space extends beyond the interior of
-    * patches.  That is, outerside data lives on patch borders.
+    * Return true since the outerside data index space extends beyond the
+    * interior of patches.  That is, outerside data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const {
-      return true;
-   }
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this OutersideDataFactory to the
@@ -123,7 +122,7 @@ public:
     */
    bool
    validCopyTo(
-      const tbox::Pointer<hier::PatchDataFactory>& dst_pdf) const;
+      const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const;
 
 private:
    int d_depth;
@@ -133,12 +132,7 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/pdat/OutersideDataFactory.I"
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/pdat/OutersideDataFactory.C"
-#endif
 
 #endif

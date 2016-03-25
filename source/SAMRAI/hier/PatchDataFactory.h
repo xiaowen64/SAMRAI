@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Factory abstract base class for creating patch data objects
  *
  ************************************************************************/
@@ -17,11 +17,14 @@
 #include "SAMRAI/hier/BoxGeometry.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchData.h"
-#include "SAMRAI/tbox/Pointer.h"
-#include "SAMRAI/tbox/DescribedClass.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace hier {
+
+class Patch;
+class MultiblockDataTranslator;
 
 /**
  * Class PatchDataFactory is an abstract base class used to allocate
@@ -37,7 +40,6 @@ namespace hier {
  * PDF is unknown to most of the framework; the PDF only defines enough
  * information to create the PD instance.  For example, to add a new type
  * of PD object MyPD (MyPatchData):
- * \begin{enumerate}
  * - Derive MyPDF from PDF and implement the abstract virtual
  *       function calls as appropriate for the concrete subclass;
  *       in particular, the allocate() function will return an instance
@@ -48,7 +50,6 @@ namespace hier {
  *       MyPDF to the patch descriptor list.
  * - Now whenever the PDF base class of MyPDF is asked to create
  *       a concrete class, it will create MyPD.
- * \end{enumerate}
  * The creation of concrete PD objects is managed through the allocate()
  * interfaces in PDF.
  *
@@ -65,10 +66,7 @@ namespace hier {
  * @see hier::PatchDescriptor
  */
 
-class Patch;
-class MultiblockDataTranslator;
-
-class PatchDataFactory:public tbox::DescribedClass
+class PatchDataFactory
 {
 public:
    /**
@@ -96,7 +94,7 @@ public:
     * @param ghosts ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual tbox::Pointer<PatchDataFactory>
+   virtual boost::shared_ptr<PatchDataFactory>
    cloneFactory(
       const IntVector& ghosts) = 0;
 
@@ -104,7 +102,7 @@ public:
     * @brief Abstract virtual function to allocate a concrete patch data object.
     *
     */
-   virtual tbox::Pointer<PatchData>
+   virtual boost::shared_ptr<PatchData>
    allocate(
       const Patch& patch) const = 0;
 
@@ -116,7 +114,7 @@ public:
     * The box geometry object will be used in the calculation
     * of box intersections for the computation of data dependencies.
     */
-   virtual tbox::Pointer<BoxGeometry>
+   virtual boost::shared_ptr<BoxGeometry>
    getBoxGeometry(
       const Box& box) const = 0;
 
@@ -128,7 +126,10 @@ public:
     * ghost width is specified in the clone method.
     */
    const IntVector&
-   getGhostCellWidth() const;
+   getGhostCellWidth() const
+   {
+      return d_ghosts;
+   }
 
    /**
     * @brief Abstract virtual function to compute the amount of memory needed to
@@ -172,7 +173,7 @@ public:
     */
    virtual bool
    validCopyTo(
-      const tbox::Pointer<PatchDataFactory>& dst_pdf) const = 0;
+      const boost::shared_ptr<PatchDataFactory>& dst_pdf) const = 0;
 
    virtual MultiblockDataTranslator *
    getMultiblockDataTranslator();
@@ -181,7 +182,10 @@ public:
     * Return the dimension of this object.
     */
    const tbox::Dimension&
-   getDim() const;
+   getDim() const
+   {
+      return d_ghosts.getDim();
+   }
 
 protected:
    IntVector d_ghosts;
@@ -199,7 +203,5 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/hier/PatchDataFactory.I"
-#endif
+
 #endif

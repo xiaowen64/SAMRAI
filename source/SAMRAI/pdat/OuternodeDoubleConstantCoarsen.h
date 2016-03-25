@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Constant averaging operator for node-centered double data on
  *                a  mesh.
  *
@@ -18,8 +18,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/tbox/Pointer.h"
 
+#include <boost/shared_ptr.hpp>
 #include <string>
 
 namespace SAMRAI {
@@ -34,9 +34,6 @@ namespace pdat {
  * It is derived from the hier::CoarsenOperator base class.
  * The numerical operations for the averaging use FORTRAN numerical
  * routines.
- *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is outernode-centered double, and the string is "CONSTANT_COARSEN".
  *
  * @see hier::CoarsenOperator
  */
@@ -55,18 +52,6 @@ public:
     * @brief Uninteresting virtual destructor.
     */
    virtual ~OuternodeDoubleConstantCoarsen();
-
-   /*!
-    * @brief Determine if object is for coarsening the specified
-    * hier_Variable type using the given descriptive operator name.
-    *
-    * @return True if the variable and name string match the outernode-centered
-    * constant averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /*!
     * @brief Give the operator priority.

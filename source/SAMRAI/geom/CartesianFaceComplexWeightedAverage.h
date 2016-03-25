@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for face-centered complex data on
  *                a Cartesian mesh.
  *
@@ -31,9 +31,6 @@ namespace geom {
  * a Cartesian mesh.  It is derived from the hier::CoarsenOperator base class.
  * The numerical operations for the averaging use FORTRAN numerical routines.
  *
- * The findCoarsenOperator() operator function returns true if the input
- * variable is face-centered complex, and the std::string is "CONSERVATIVE_COARSEN".
- *
  * @see hier::CoarsenOperator
  */
 
@@ -51,15 +48,6 @@ public:
     * Uninteresting virtual destructor.
     */
    virtual ~CartesianFaceComplexWeightedAverage();
-
-   /**
-    * Return true if the variable and name std::string match the face-centered
-    * complex weighted averaging; otherwise, return false.
-    */
-   bool
-   findCoarsenOperator(
-      const tbox::Pointer<hier::Variable>& var,
-      const std::string& op_name) const;
 
    /**
     * The priority of face-centered complex weighted averaging is 0.

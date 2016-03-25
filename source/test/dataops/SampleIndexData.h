@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Boundary cell struct for embedded boundary implementations
  *
  ************************************************************************/
@@ -18,8 +18,9 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Database.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/tbox/IOStream.h"
+
+#include <boost/shared_ptr.hpp>
 
 /**
  * The SampleClass struct holds some dummy data and methods.  It's intent
@@ -125,10 +126,10 @@ public:
     */
    void
    getFromDatabase(
-      tbox::Pointer<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& database);
    void
-   putToDatabase(
-      tbox::Pointer<tbox::Database>& database);
+   putUnregisteredToDatabase(
+      const boost::shared_ptr<tbox::Database>& database) const;
 
 private:
    /*

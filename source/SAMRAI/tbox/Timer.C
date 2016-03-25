@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -20,10 +20,6 @@
 extern "C" {
 #include "VT.h"
 }
-#endif
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/tbox/Timer.I"
 #endif
 
 namespace SAMRAI {
@@ -121,14 +117,16 @@ Timer::~Timer()
  ***************************************************************************
  */
 
-void Timer::start()
+void
+Timer::start()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
 
-      // Timer should not be running.  This would indicate two start calls being
-      // made before a stop.
-      TBOX_ASSERT(d_is_running == false);
+      if (d_is_running == true) {
+         TBOX_ERROR("Illegal attempt to start timer '" << d_name
+                    << "' when it is already started.");
+      }
       d_is_running = true;
 
       d_accesses++;
@@ -159,14 +157,16 @@ void Timer::start()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::stop()
+void
+Timer::stop()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
 
-      // Timer should be running.  This would indicate two stop calls being
-      // made before a start.
-      TBOX_ASSERT(d_is_running == true);
+      if (d_is_running == false) {
+         TBOX_ERROR("Illegal attempt to stop timer '" << d_name
+                    << "' when it is already stopped.");
+      }
       d_is_running = false;
 
       TimerManager::getManager()->stopTime(this);
@@ -192,12 +192,46 @@ void Timer::stop()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
+void
+Timer::startExclusive()
+{
+#ifdef ENABLE_SAMRAI_TIMERS
+   if (d_is_active) {
+
+      Clock::timestamp(d_user_start_exclusive,
+         d_system_start_exclusive,
+         d_wallclock_start_exclusive);
+
+   }
+#endif // ENABLE_SAMRAI_TIMERS
+}
+
+void
+Timer::stopExclusive()
+{
+#ifdef ENABLE_SAMRAI_TIMERS
+   if (d_is_active) {
+      Clock::timestamp(d_user_stop_exclusive,
+         d_system_stop_exclusive,
+         d_wallclock_stop_exclusive);
+
+      d_wallclock_exclusive +=
+         double(d_wallclock_stop_exclusive - d_wallclock_start_exclusive);
+      d_user_exclusive +=
+         double(d_user_stop_exclusive - d_user_start_exclusive);
+      d_system_exclusive +=
+         double(d_system_stop_exclusive - d_system_start_exclusive);
+   }
+#endif // ENABLE_SAMRAI_TIMERS
+}
+
 /*
  ***************************************************************************
  ***************************************************************************
  */
 
-void Timer::barrierAndStart()
+void
+Timer::barrierAndStart()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -208,7 +242,8 @@ void Timer::barrierAndStart()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::barrierAndStop()
+void
+Timer::barrierAndStop()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (d_is_active) {
@@ -219,7 +254,8 @@ void Timer::barrierAndStop()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::reset()
+void
+Timer::reset()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    d_user_total = 0.0;
@@ -234,6 +270,23 @@ void Timer::reset()
 
    d_concurrent_timers.clear();
 #endif // ENABLE_SAMRAI_TIMERS
+}
+
+bool
+Timer::isConcurrentTimer(
+   const Timer& timer) const
+{
+#ifdef ENABLE_SAMRAI_TIMERS
+   for (std::vector<const Timer *>::const_iterator i = d_concurrent_timers.begin();
+        i != d_concurrent_timers.end();
+        ++i) {
+      if (*i == &timer) {
+         return true;
+      }
+   }
+
+#endif // ENABLE_SAMRAI_TIMERS
+   return false;
 }
 
 /*
@@ -251,10 +304,11 @@ void Timer::reset()
  *
  ***************************************************************************
  */
-double Timer::computeLoadBalanceEfficiency()
+double
+Timer::computeLoadBalanceEfficiency()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double wall_time = d_wallclock_total;
    double sum = wall_time;
    if (mpi.getSize() > 1) {
@@ -274,10 +328,11 @@ double Timer::computeLoadBalanceEfficiency()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::computeMaxWallclock()
+void
+Timer::computeMaxWallclock()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    double wall_time = d_wallclock_total;
    if (mpi.getSize() > 1) {
       mpi.Allreduce(
@@ -290,11 +345,12 @@ void Timer::computeMaxWallclock()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::putToDatabase(
-   Pointer<Database> db)
+void
+Timer::putUnregisteredToDatabase(
+   const boost::shared_ptr<Database>& db) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    db->putInteger("TBOX_TIMER_VERSION",
       TBOX_TIMER_VERSION);
@@ -311,11 +367,12 @@ void Timer::putToDatabase(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void Timer::getFromRestart(
-   Pointer<Database> db)
+void
+Timer::getFromRestart(
+   const boost::shared_ptr<Database>& db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 
    int ver = db->getInteger("TBOX_TIMER_VERSION");
    if (ver != TBOX_TIMER_VERSION) {

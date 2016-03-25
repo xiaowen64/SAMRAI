@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between PETSc vector interface and SAMRAI vectors.
  *
  ************************************************************************/
@@ -34,7 +34,8 @@
 
 #include "SAMRAI/solv/PETScAbstractVectorReal.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
-#include "SAMRAI/tbox/Pointer.h"
+
+#include <boost/shared_ptr.hpp>
 
 namespace SAMRAI {
 namespace solv {
@@ -81,7 +82,7 @@ public:
     */
    static Vec
    createPETScVector(
-      tbox::Pointer<SAMRAIVectorReal<TYPE> > samrai_vec,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vec,
       MPI_Comm comm = PETSC_COMM_SELF);
 
    /**
@@ -97,7 +98,7 @@ public:
     * Return pointer to the SAMRAI vector object associated with the
     * given PETSc vector.
     */
-   static tbox::Pointer<SAMRAIVectorReal<TYPE> >
+   static boost::shared_ptr<SAMRAIVectorReal<TYPE> >
    getSAMRAIVector(
       Vec petsc_vec);
 
@@ -115,7 +116,7 @@ protected:
     * (i.e., clone) operation, but not otherwise.
     */
    PETSc_SAMRAIVectorReal(
-      tbox::Pointer<SAMRAIVectorReal<TYPE> > samrai_vector,
+      const boost::shared_ptr<SAMRAIVectorReal<TYPE> >& samrai_vector,
       bool vector_created_via_duplicate,
       MPI_Comm comm);
 
@@ -131,7 +132,7 @@ private:
    /*
     * Return SAMRAI vector owned by this SAMRAI_PETScVector object.
     */
-   tbox::Pointer<SAMRAIVectorReal<TYPE> >
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> >
    getSAMRAIVector();
 
    /*
@@ -363,7 +364,7 @@ private:
    /*
     * Vector data is maintained in SAMRAI vector structure.
     */
-   tbox::Pointer<SAMRAIVectorReal<TYPE> > d_samrai_vector;
+   boost::shared_ptr<SAMRAIVectorReal<TYPE> > d_samrai_vector;
 
    /*
     * Boolean flag to control whether SAMRAI vector is destroyed when
@@ -375,13 +376,8 @@ private:
 
 }
 }
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/solv/PETSc_SAMRAIVectorReal.I"
-#endif
-#endif
 
-#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
 #include "SAMRAI/solv/PETSc_SAMRAIVectorReal.C"
-#endif
 
+#endif
 #endif

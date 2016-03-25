@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
@@ -13,10 +13,6 @@
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-
-#ifndef SAMRAI_INLINE
-#include "SAMRAI/hier/BoundaryLookupTable.I"
-#endif
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -101,7 +97,8 @@ BoundaryLookupTable::~BoundaryLookupTable()
  *************************************************************************
  */
 
-void BoundaryLookupTable::buildTable(
+void
+BoundaryLookupTable::buildTable(
    int* table,
    int codim,
    int ibeg,
@@ -135,7 +132,8 @@ void BoundaryLookupTable::buildTable(
  *************************************************************************
  */
 
-void BoundaryLookupTable::buildBoundaryDirectionVectors()
+void
+BoundaryLookupTable::buildBoundaryDirectionVectors()
 {
 
    d_bdry_dirs.resizeArray(d_dim.getValue());
@@ -170,7 +168,8 @@ void BoundaryLookupTable::buildBoundaryDirectionVectors()
  *
  *************************************************************************
  */
-void BoundaryLookupTable::finalizeCallback()
+void
+BoundaryLookupTable::finalizeCallback()
 {
    for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
       if (s_lookup_table_instance[i]) {

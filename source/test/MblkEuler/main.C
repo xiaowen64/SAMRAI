@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Run multiblock Euler AMR
  *
  ************************************************************************/
@@ -28,10 +28,10 @@ using namespace std;
 #include "SAMRAI/tbox/InputManager.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
+#include "SAMRAI/geom/GridGeometry.h"
 
 // Headers for major algorithm/data structure objects
 
-#include "SAMRAI/geom/SAMRAITransferOperatorRegistry.h"
 #include "SAMRAI/mesh/BergerRigoutsos.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
@@ -47,10 +47,10 @@ using namespace SAMRAI;
 
 void
 setupHierarchy(
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    const tbox::Dimension& dim,
-   tbox::Pointer<hier::GridGeometry>& geometry,
-   tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy);
+   boost::shared_ptr<hier::BaseGridGeometry>& geometry,
+   boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy);
 
 //
 // ===================================== The main code =======================
@@ -111,7 +111,8 @@ int main(
    // Create input database and parse all data in input file.
    //
 
-   tbox::Pointer<tbox::Database> input_db(new tbox::InputDatabase("input_db"));
+   boost::shared_ptr<tbox::InputDatabase> input_db(
+      new tbox::InputDatabase("input_db"));
    tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
    tbox::plog << "---- done parsing input file" << endl << endl;
@@ -121,8 +122,8 @@ int main(
    // values accordingly.
    //
    if (input_db->keyExists("GlobalInputs")) {
-      tbox::Pointer<tbox::Database> global_db =
-         input_db->getDatabase("GlobalInputs");
+      boost::shared_ptr<tbox::Database> global_db(
+         input_db->getDatabase("GlobalInputs"));
 //      if (global_db->keyExists("tag_clustering_method")) {
 //       string tag_clustering_method =
 //          global_db->getString("tag_clustering_method");
@@ -141,7 +142,7 @@ int main(
    // proper restart information was given on command line, and the
    // restart interval is non-zero, create a restart database.
    //
-   tbox::Pointer<tbox::Database> main_db = input_db->getDatabase("Main");
+   boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
    const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -228,8 +229,8 @@ int main(
    //
    // CREATE THE MULTIBLOCK HIERARCHY
    //
-   tbox::Pointer<hier::PatchHierarchy> mblk_patch_hierarchy;
-   tbox::Pointer<hier::GridGeometry> geom;
+   boost::shared_ptr<hier::PatchHierarchy> mblk_patch_hierarchy;
+   boost::shared_ptr<hier::BaseGridGeometry> geom;
 
    setupHierarchy(input_db,
       dim,
@@ -247,7 +248,7 @@ int main(
    //
    // -------------------- the multiphase level operations --------------
    //
-   tbox::Pointer<MblkHyperbolicLevelIntegrator> mblk_hyp_level_integrator(
+   boost::shared_ptr<MblkHyperbolicLevelIntegrator> mblk_hyp_level_integrator(
       new MblkHyperbolicLevelIntegrator(
          "HyperbolicLevelIntegrator",
          dim,
@@ -260,23 +261,26 @@ int main(
    //
    // -------------------- the mesh refinement operations --------------
    //
-   tbox::Pointer<mesh::StandardTagAndInitialize> error_detector(
-      new mesh::StandardTagAndInitialize(dim,
+   boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
+      new mesh::StandardTagAndInitialize(
+         dim,
          "StandardTagAndInitialize",
-         mblk_hyp_level_integrator,
+         mblk_hyp_level_integrator.get(),
          input_db->getDatabase("StandardTagAndInitialize")));
 
-   tbox::Pointer<mesh::BergerRigoutsos> box_generator(new mesh::BergerRigoutsos(
-                                                         dim));
+   boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      new mesh::BergerRigoutsos(dim));
 
-   tbox::Pointer<mesh::TreeLoadBalancer> load_balancer(
-      new mesh::TreeLoadBalancer(dim, "TreeLoadBalancer", input_db->getDatabase(
-            "TreeLoadBalancer")));
+   boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+      new mesh::TreeLoadBalancer(
+         dim,
+         "TreeLoadBalancer",
+         input_db->getDatabase("TreeLoadBalancer")));
    load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-   tbox::Pointer<mesh::GriddingAlgorithm>
-   mblk_gridding_algorithm(
-      new mesh::GriddingAlgorithm(mblk_patch_hierarchy,
+   boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(
+      new mesh::GriddingAlgorithm(
+         mblk_patch_hierarchy,
          "GriddingAlgorithm",
          input_db->getDatabase("GriddingAlgorithm"),
          error_detector,
@@ -284,8 +288,9 @@ int main(
          load_balancer,
          load_balancer));
 
-   tbox::Pointer<algs::TimeRefinementIntegrator> time_integrator(
-      new algs::TimeRefinementIntegrator("TimeRefinementIntegrator",
+   boost::shared_ptr<algs::TimeRefinementIntegrator> time_integrator(
+      new algs::TimeRefinementIntegrator(
+         "TimeRefinementIntegrator",
          input_db->getDatabase("TimeRefinementIntegrator"),
          mblk_patch_hierarchy,
          mblk_hyp_level_integrator,
@@ -296,8 +301,9 @@ int main(
    // ----------------------------- Set up Visualization writer(s).
    //
    bool is_multiblock = true;
-   tbox::Pointer<appu::VisItDataWriter> visit_data_writer(
-      new appu::VisItDataWriter(dim,
+   boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+      new appu::VisItDataWriter(
+         dim,
          "MblkEuler VisIt Writer",
          visit_dump_dirname,
          visit_number_procs_per_file,
@@ -425,22 +431,22 @@ int main(
    // At conclusion of simulation, deallocate objects.
    //
 #ifdef HAVE_HDF5
-   visit_data_writer.setNull();
+   visit_data_writer.reset();
 #endif
-   time_integrator.setNull();
-   mblk_gridding_algorithm.setNull();
-   load_balancer.setNull();
-   box_generator.setNull();
-   error_detector.setNull();
-   mblk_hyp_level_integrator.setNull();
+   time_integrator.reset();
+   mblk_gridding_algorithm.reset();
+   load_balancer.reset();
+   box_generator.reset();
+   error_detector.reset();
+   mblk_hyp_level_integrator.reset();
 
    if (euler_model) delete euler_model;
 
-   mblk_patch_hierarchy.setNull();
-   geom.setNull();
+   mblk_patch_hierarchy.reset();
+   geom.reset();
 
-   input_db.setNull();
-   main_db.setNull();
+   input_db.reset();
+   main_db.reset();
 
    tbox::pout << "\nPASSED:  MblkEuler" << endl;
 
@@ -457,17 +463,17 @@ int main(
 // this function builds the skeleton grid geometry
 //
 void setupHierarchy(
-   tbox::Pointer<tbox::Database> main_input_db,
+   boost::shared_ptr<tbox::Database> main_input_db,
    const tbox::Dimension& dim,
-   tbox::Pointer<hier::GridGeometry>& geometry,
-   tbox::Pointer<hier::PatchHierarchy>& mblk_hierarchy)
+   boost::shared_ptr<hier::BaseGridGeometry>& geometry,
+   boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!main_input_db.isNull());
+   TBOX_ASSERT(main_input_db);
 #endif
 
-   tbox::Pointer<tbox::Database> mult_db =
-      main_input_db->getDatabase("PatchHierarchy");
+   boost::shared_ptr<tbox::Database> mult_db(
+      main_input_db->getDatabase("PatchHierarchy"));
 
    /*
     * Read the geometry information and build array of geometries
@@ -477,20 +483,21 @@ void setupHierarchy(
 
    sprintf(geom_name, "BlockGeometry");
    if (main_input_db->keyExists(geom_name)) {
-      geometry =
-         new hier::GridGeometry(
+      geometry.reset(
+         new geom::GridGeometry(
             dim,
             geom_name,
-            tbox::Pointer<hier::TransferOperatorRegistry>(
-               new geom::SAMRAITransferOperatorRegistry(dim)),
-            main_input_db->getDatabase(geom_name));
+            main_input_db->getDatabase(geom_name)));
    } else {
       TBOX_ERROR("main::setupHierarchy(): could not find entry `"
          << geom_name << "' in input.");
    }
 
-   mblk_hierarchy =
-      new hier::PatchHierarchy("PatchHierarchy",
-         geometry, mult_db, true);
+   mblk_hierarchy.reset(
+      new hier::PatchHierarchy(
+         "PatchHierarchy",
+         geometry,
+         mult_db,
+         true));
 
 }

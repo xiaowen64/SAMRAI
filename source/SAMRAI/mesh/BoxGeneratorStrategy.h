@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for box generation routines.
  *
  ************************************************************************/
@@ -13,8 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include "SAMRAI/tbox/DescribedClass.h"
-#include "SAMRAI/hier/GridGeometry.h"
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
@@ -29,7 +28,7 @@ namespace mesh {
  * @see hier::PatchLevel
  */
 
-class BoxGeneratorStrategy:public tbox::DescribedClass
+class BoxGeneratorStrategy
 {
 public:
    /**
@@ -50,7 +49,7 @@ public:
       hier::BoxLevel& new_mapped_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
-      const tbox::Pointer<hier::PatchLevel> tag_level,
+      const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_data_index,
       const int tag_val,
       const hier::Box& bound_box,
@@ -58,7 +57,8 @@ public:
       const double efficiency_tol,
       const double combine_tol,
       const hier::IntVector& max_gcw,
-      const hier::BlockId& block_id) const = 0;
+      const hier::BlockId& block_id,
+      const hier::LocalId& first_local_id) const = 0;
 
 private:
    // The following are not implemented:

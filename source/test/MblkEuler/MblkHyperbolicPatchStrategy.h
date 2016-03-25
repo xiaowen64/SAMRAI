@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -17,12 +17,13 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/tbox/Pointer.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithmStrategy.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+
+#include <boost/shared_ptr.hpp>
 
 /**
  * Class MblkHyperbolicPatchStrategy is an abstract base class defining the
@@ -201,7 +202,7 @@ public:
     */
    virtual void
    preprocessAdvanceLevelState(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -244,7 +245,7 @@ public:
     */
    virtual void
    postprocessAdvanceLevelState(
-      const tbox::Pointer<hier::PatchLevel>& level,
+      const boost::shared_ptr<hier::PatchLevel>& level,
       double current_time,
       double dt,
       bool first_step,
@@ -326,8 +327,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const tbox::Pointer<hier::VariableContext> coarsened_fine,
-      const tbox::Pointer<hier::VariableContext> advanced_coarse,
+      const boost::shared_ptr<hier::VariableContext> coarsened_fine,
+      const boost::shared_ptr<hier::VariableContext> advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -355,7 +356,7 @@ public:
       const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const tbox::Pointer<hier::GridGeometry>& grid_geometry) = 0;
+      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;
 
    /**
     * Return maximum stencil width needed for user-defined
@@ -368,7 +369,7 @@ public:
     */
    virtual hier::IntVector getRefineOpStencilWidth() const
    {
-      return hier::IntVector(SAMRAI::xfer::CoarsenPatchStrategy::getDim(), 0);
+      return hier::IntVector(xfer::CoarsenPatchStrategy::getDim(), 0);
    }
 
    /**
@@ -434,7 +435,7 @@ public:
     */
    virtual hier::IntVector getCoarsenOpStencilWidth() const
    {
-      return hier::IntVector(SAMRAI::xfer::CoarsenPatchStrategy::getDim(), 0);
+      return hier::IntVector(xfer::CoarsenPatchStrategy::getDim(), 0);
    }
 
    /**
@@ -491,7 +492,7 @@ public:
    /**
     * Return pointer to patch data context.
     */
-   tbox::Pointer<hier::VariableContext> getDataContext() const
+   boost::shared_ptr<hier::VariableContext> getDataContext() const
    {
       return d_data_context;
    }
@@ -503,7 +504,7 @@ public:
     * data on a patch on which to operate.
     */
    void setDataContext(
-      tbox::Pointer<hier::VariableContext> context)
+      boost::shared_ptr<hier::VariableContext> context)
    {
       d_data_context = context;
    }
@@ -513,11 +514,11 @@ public:
     */
    void clearDataContext()
    {
-      d_data_context.setNull();
+      d_data_context.reset();
    }
 
 private:
-   tbox::Pointer<hier::VariableContext> d_data_context;
+   boost::shared_ptr<hier::VariableContext> d_data_context;
 
    const tbox::Dimension d_dim;
 };

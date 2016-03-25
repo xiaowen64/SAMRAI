@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Class to manage different timer objects used throughout the
  *                library.
  *
@@ -18,6 +18,7 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <boost/make_shared.hpp>
 #include <string>
 
 #ifndef ENABLE_SAMRAI_TIMERS
@@ -37,8 +38,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-TimerManager * TimerManager::s_timer_manager_instance =
-   (TimerManager *)NULL;
+TimerManager * TimerManager::s_timer_manager_instance = (TimerManager *)NULL;
 
 int TimerManager::s_main_timer_identifier = -1;
 int TimerManager::s_inactive_timer_identifier = -9999;
@@ -59,8 +59,9 @@ TimerManager::s_finalize_handler(
  *************************************************************************
  */
 
-void TimerManager::createManager(
-   Pointer<Database> input_db)
+void
+TimerManager::createManager(
+   const boost::shared_ptr<Database>& input_db)
 {
    if (!s_timer_manager_instance) {
       s_timer_manager_instance = new TimerManager(input_db);
@@ -81,19 +82,21 @@ void TimerManager::createManager(
    }
 }
 
-TimerManager *TimerManager::getManager()
+TimerManager*
+TimerManager::getManager()
 {
    if (!s_timer_manager_instance) {
       TBOX_WARNING("TimerManager::getManager() is called before\n"
          << "createManager().  Creating the timer manager\n"
          << "(without using input database.)\n");
-      createManager(tbox::Pointer<SAMRAI::tbox::Database>(NULL));
+      createManager(boost::shared_ptr<Database>());
    }
 
    return s_timer_manager_instance;
 }
 
-void TimerManager::finalizeCallback()
+void
+TimerManager::finalizeCallback()
 {
    if (s_timer_manager_instance) {
       delete s_timer_manager_instance;
@@ -101,7 +104,8 @@ void TimerManager::finalizeCallback()
    }
 }
 
-void TimerManager::registerSingletonSubclassInstance(
+void
+TimerManager::registerSingletonSubclassInstance(
    TimerManager* subclass_instance)
 {
    if (!s_timer_manager_instance) {
@@ -122,45 +126,40 @@ void TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   Pointer<Database> input_db)
-{
+   const boost::shared_ptr<Database>& input_db) :
 #ifdef ENABLE_SAMRAI_TIMERS
+   d_timer_active_access_time(-9999.0),
+   d_timer_inactive_access_time(-9999.0),
+#ifdef HAVE_TAU
+   d_main_timer(new Timer("UNINSTRUMENTED PARTS")),
+#else
+   d_main_timer(new Timer("TOTAL RUN TIME")),
+#endif
+   d_length_package_names(0),
+   d_length_class_names(0),
+   d_length_class_method_names(0),
+   d_print_threshold(0.25),
+   d_print_exclusive(false),
+   d_print_total(true),
+   d_print_processor(true),
+   d_print_max(false),
+   d_print_summed(false),
+   d_print_user(false),
+   d_print_sys(false),
+   d_print_wall(true),
+   d_print_percentage(true),
+   d_print_concurrent(false),
+   d_print_timer_overhead(false)
+#endif
+{
    /*
     * Create a timer that measures overall solution time.  If the
     * application uses Tau, this timer will effectively measure
     * uninstrumented parts of the library.  Hence, use a different name
     * for the different cases to avoid confusion in the Tau analysis tool.
     */
-#ifdef HAVE_TAU
-   d_main_timer = new Timer("UNINSTRUMENTED PARTS");
-#else
-   d_main_timer = new Timer("TOTAL RUN TIME");
-#endif
-
-   d_exclusive_timer_stack.clearItems();
-
-   d_length_package_names = 0;
-   d_length_class_names = 0;
-   d_length_class_method_names = 0;
-
-   d_print_exclusive = false;
-   d_print_total = true;
-   d_print_processor = true;
-   d_print_max = false;
-   d_print_summed = false;
-   d_print_user = false;
-   d_print_sys = false;
-   d_print_wall = true;
-   d_print_percentage = true;
-   d_print_concurrent = false;
-   d_print_timer_overhead = false;
-
-   d_print_threshold = 0.25;
-
+#ifdef ENABLE_SAMRAI_TIMERS
    getFromInput(input_db);
-
-   d_timer_active_access_time = -9999.0;
-   d_timer_inactive_access_time = -9999.0;
 #endif
 }
 
@@ -168,16 +167,16 @@ TimerManager::~TimerManager()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    d_main_timer->stop();
-   d_main_timer.setNull();
+   d_main_timer.reset();
 
    d_timers.clear();
    d_inactive_timers.clear();
 
-   d_exclusive_timer_stack.clearItems();
+   d_exclusive_timer_stack.clear();
 
-   d_package_names.clearItems();
-   d_class_names.clearItems();
-   d_class_method_names.clearItems();
+   d_package_names.clear();
+   d_class_names.clear();
+   d_class_method_names.clear();
 #endif
 }
 
@@ -203,16 +202,17 @@ TimerManager::~TimerManager()
  *************************************************************************
  */
 
-bool TimerManager::checkTimerExistsInArray(
-   Pointer<Timer>& timer,
+bool
+TimerManager::checkTimerExistsInArray(
+   boost::shared_ptr<Timer>& timer,
    const std::string& name,
-   const std::vector<Pointer<Timer> >& timer_array) const
+   const std::vector<boost::shared_ptr<Timer> >& timer_array) const
 {
 
    bool timer_found = false;
 #ifdef ENABLE_SAMRAI_TIMERS
 
-   timer.setNull();
+   timer.reset();
    if (!name.empty()) {
       for (size_t i = 0; i < timer_array.size(); i++) {
          if (timer_array[i]->getName() == name) {
@@ -226,9 +226,11 @@ bool TimerManager::checkTimerExistsInArray(
    return timer_found;
 }
 
-void TimerManager::activateExistingTimers() {
+void
+TimerManager::activateExistingTimers() {
 #ifdef ENABLE_SAMRAI_TIMERS
-   std::vector<Pointer<Timer> >::iterator it = d_inactive_timers.begin();
+   std::vector<boost::shared_ptr<Timer> >::iterator it =
+      d_inactive_timers.begin();
    while (it != d_inactive_timers.end()) {
       bool timer_active = checkTimerInNameLists((*it)->getName());
       if (timer_active) {
@@ -242,13 +244,13 @@ void TimerManager::activateExistingTimers() {
 #endif
 }
 
-Pointer<Timer> TimerManager::getTimer(
+boost::shared_ptr<Timer>
+TimerManager::getTimer(
    const std::string& name,
    bool ignore_timer_input)
 {
-   Pointer<Timer> timer;
-
 #ifdef ENABLE_SAMRAI_TIMERS
+   boost::shared_ptr<Timer> timer;
 
    TBOX_ASSERT(!name.empty());
    bool timer_active = true;
@@ -271,7 +273,7 @@ Pointer<Timer> TimerManager::getTimer(
             d_timers.reserve(d_timers.size()
                + DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
          }
-         timer = new Timer(name);
+         timer.reset(new Timer(name));
          d_timers.push_back(timer);
       }
    } else {
@@ -282,7 +284,7 @@ Pointer<Timer> TimerManager::getTimer(
             d_inactive_timers.reserve(d_inactive_timers.size()
                + DEFAULT_NUMBER_OF_TIMERS_INCREMENT);
          }
-         timer = new Timer(name);
+         timer.reset(new Timer(name));
          timer->setActive(false);
          d_inactive_timers.push_back(timer);
       }
@@ -293,15 +295,16 @@ Pointer<Timer> TimerManager::getTimer(
    // since timers aren't active - and we need to still provide
    // pseudo-timer functionality (i.e., a valid timer), we'll
    // create one on the fly, but not track it.
-   timer = new Timer(name);
+   boost::shared_ptr<Timer> timer(boost::make_shared<Timer>(name));
    timer->setActive(false);
    return timer;
 
 #endif
 }
 
-bool TimerManager::checkTimerExists(
-   Pointer<Timer>& timer,
+bool
+TimerManager::checkTimerExists(
+   boost::shared_ptr<Timer>& timer,
    const std::string& name) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -334,14 +337,15 @@ bool TimerManager::checkTimerExists(
  *************************************************************************
  */
 
-bool TimerManager::checkTimerRunning(
+bool
+TimerManager::checkTimerRunning(
    const std::string& name) const
 {
    bool is_running = false;
 #ifdef ENABLE_SAMRAI_TIMERS
 
    TBOX_ASSERT(!name.empty());
-   Pointer<Timer> timer;
+   boost::shared_ptr<Timer> timer;
    if (checkTimerExistsInArray(timer, name, d_timers)) {
       is_running = timer->isRunning();
    }
@@ -349,7 +353,8 @@ bool TimerManager::checkTimerRunning(
    return is_running;
 }
 
-void TimerManager::resetAllTimers()
+void
+TimerManager::resetAllTimers()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    d_main_timer->stop();
@@ -373,7 +378,8 @@ void TimerManager::resetAllTimers()
  *************************************************************************
  */
 
-void TimerManager::startTime(
+void
+TimerManager::startTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -383,18 +389,17 @@ void TimerManager::startTime(
    }
 
    if (d_print_exclusive) {
-      if (!d_exclusive_timer_stack.isEmpty()) {
-         ((Timer *)d_exclusive_timer_stack.getFirstItem())->
-         stopExclusive();
+      if (!d_exclusive_timer_stack.empty()) {
+         ((Timer *)d_exclusive_timer_stack.front())->stopExclusive();
       }
       Timer* stack_timer = timer;
-      d_exclusive_timer_stack.addItem(stack_timer);
+      d_exclusive_timer_stack.push_front(stack_timer);
       stack_timer->startExclusive();
    }
 
    if (d_print_concurrent) {
       for (size_t i = 0; i < d_timers.size(); i++) {
-         if ((d_timers[i] != timer) && d_timers[i]->isRunning()) {
+         if ((d_timers[i].get() != timer) && d_timers[i]->isRunning()) {
             d_timers[i]->addConcurrentTimer(*d_timers[i]);
          }
       }
@@ -402,7 +407,8 @@ void TimerManager::startTime(
 #endif
 }
 
-void TimerManager::stopTime(
+void
+TimerManager::stopTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -410,11 +416,10 @@ void TimerManager::stopTime(
 
    if (d_print_exclusive) {
       timer->stopExclusive();
-      if (!d_exclusive_timer_stack.isEmpty()) {
-         d_exclusive_timer_stack.removeFirstItem();
-         if (!d_exclusive_timer_stack.isEmpty()) {
-            ((Timer *)d_exclusive_timer_stack.getFirstItem())->
-            startExclusive();
+      if (!d_exclusive_timer_stack.empty()) {
+         d_exclusive_timer_stack.pop_front();
+         if (!d_exclusive_timer_stack.empty()) {
+            ((Timer *)d_exclusive_timer_stack.front())->startExclusive();
          }
       }
    }
@@ -429,7 +434,8 @@ void TimerManager::stopTime(
  *************************************************************************
  */
 
-bool TimerManager::checkTimerInNameLists(
+bool
+TimerManager::checkTimerInNameLists(
    const std::string& copy)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -495,12 +501,15 @@ bool TimerManager::checkTimerInNameLists(
           */
          bool package_exists = false;
          string_length = package.size();
-         for (List<std::string>::Iterator i(d_package_names); i; i++) {
-            list_entry_length = i().size();
+         for (std::list<std::string>::iterator i = d_package_names.begin();
+              i != d_package_names.end(); i++) {
+            list_entry_length = i->size();
             if (string_length == list_entry_length) {
-               package_exists = (i() == package);
+               package_exists = (*i == package);
             }
-            if (package_exists) break;
+            if (package_exists) {
+               break;
+            }
          }
          will_use_timer = package_exists;
       }
@@ -567,12 +576,15 @@ bool TimerManager::checkTimerInNameLists(
           */
          string_length = nondim_class_name.size();
          bool class_exists = false;
-         for (List<std::string>::Iterator i(d_class_names); i; i++) {
-            list_entry_length = i().size();
+         for (std::list<std::string>::iterator i = d_class_names.begin();
+              i != d_class_names.end(); i++) {
+            list_entry_length = i->size();
             if (string_length == list_entry_length) {
-               class_exists = (i() == nondim_class_name);
+               class_exists = (*i == nondim_class_name);
             }
-            if (class_exists) break;
+            if (class_exists) {
+               break;
+            }
          }
 
          /*
@@ -580,12 +592,15 @@ bool TimerManager::checkTimerInNameLists(
           */
          string_length = class_name.size();
          if (is_dimensional && !class_exists) {
-            for (List<std::string>::Iterator i(d_class_names); i; i++) {
-               list_entry_length = i().size();
+            for (std::list<std::string>::iterator i = d_class_names.begin();
+                 i != d_class_names.end(); i++) {
+               list_entry_length = i->size();
                if (string_length == list_entry_length) {
-                  class_exists = (i() == class_name);
+                  class_exists = (*i == class_name);
                }
-               if (class_exists) break;
+               if (class_exists) {
+                  break;
+               }
             }
          }
          will_use_timer = class_exists;
@@ -640,12 +655,15 @@ bool TimerManager::checkTimerInNameLists(
           */
          bool class_method_exists = false;
          string_length = nondim_name.size();
-         for (List<std::string>::Iterator i(d_class_method_names); i; i++) {
-            list_entry_length = i().size();
+         for (std::list<std::string>::iterator i = d_class_method_names.begin();
+              i != d_class_method_names.end(); i++) {
+            list_entry_length = i->size();
             if (string_length == list_entry_length) {
-               class_method_exists = (i() == nondim_name);
+               class_method_exists = (*i == nondim_name);
             }
-            if (class_method_exists) break;
+            if (class_method_exists) {
+               break;
+            }
          }
 
          /*
@@ -653,12 +671,15 @@ bool TimerManager::checkTimerInNameLists(
           */
          if (is_dimensional && !class_method_exists) {
             string_length = name.size();
-            for (List<std::string>::Iterator i(d_class_method_names); i; i++) {
-               list_entry_length = i().size();
+            for (std::list<std::string>::iterator i = d_class_method_names.begin();
+                 i != d_class_method_names.end(); i++) {
+               list_entry_length = i->size();
                if (string_length == list_entry_length) {
-                  class_method_exists = (i() == name);
+                  class_method_exists = (*i == name);
                }
-               if (class_method_exists) break;
+               if (class_method_exists) {
+                  break;
+               }
             }
          }
 
@@ -684,11 +705,12 @@ bool TimerManager::checkTimerInNameLists(
  *************************************************************************
  */
 
-void TimerManager::print(
+void
+TimerManager::print(
    std::ostream& os)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
+   const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    /*
     * There are 18 possible timer values that users may wish to look at.
     * (i.e. User/sys/wallclock time, Total or Exclusive, for individual
@@ -1137,7 +1159,8 @@ void TimerManager::print(
 #endif
 }
 
-void TimerManager::printTable(
+void
+TimerManager::printTable(
    const std::string& table_title,
    const Array<std::string> column_titles,
    const Array<std::string> timer_names,
@@ -1286,7 +1309,8 @@ void TimerManager::printTable(
 #endif
 }
 
-void TimerManager::printTable(
+void
+TimerManager::printTable(
    const std::string& table_title,
    const Array<std::string> column_titles,
    const Array<std::string> timer_names,
@@ -1434,7 +1458,8 @@ void TimerManager::printTable(
 #endif
 }
 
-void TimerManager::printOverhead(
+void
+TimerManager::printOverhead(
    const Array<std::string> timer_names,
    const double timer_values[][18],
    std::ostream& os)
@@ -1575,7 +1600,8 @@ void TimerManager::printOverhead(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::printConcurrent(
+void
+TimerManager::printConcurrent(
    std::ostream& os)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -1649,7 +1675,8 @@ void TimerManager::printConcurrent(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::checkConsistencyAcrossProcessors()
+void
+TimerManager::checkConsistencyAcrossProcessors()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*
@@ -1761,7 +1788,8 @@ void TimerManager::checkConsistencyAcrossProcessors()
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::buildTimerArrays(
+void
+TimerManager::buildTimerArrays(
    double timer_values[][18],
    int max_processor_id[][2],
    Array<std::string> timer_names)
@@ -2012,7 +2040,8 @@ void TimerManager::buildTimerArrays(
  *
  *************************************************************************
  */
-void TimerManager::buildOrderedList(
+void
+TimerManager::buildOrderedList(
    const double timer_values[][18],
    const int column,
    int index[],
@@ -2044,7 +2073,8 @@ void TimerManager::buildOrderedList(
  *
  *************************************************************************
  */
-void TimerManager::quicksort(
+void
+TimerManager::quicksort(
    const Array<double>& a,
    int index[],
    int lo,
@@ -2092,7 +2122,8 @@ void TimerManager::quicksort(
  *
  *************************************************************************
  */
-int TimerManager::computePercentageInt(
+int
+TimerManager::computePercentageInt(
    const double frac,
    const double tot)
 {
@@ -2111,7 +2142,8 @@ int TimerManager::computePercentageInt(
    return perc;
 }
 
-double TimerManager::computePercentageDouble(
+double
+TimerManager::computePercentageDouble(
    const double frac,
    const double tot)
 {
@@ -2138,11 +2170,12 @@ double TimerManager::computePercentageDouble(
  *************************************************************************
  */
 
-void TimerManager::getFromInput(
-   Pointer<Database> input_db)
+void
+TimerManager::getFromInput(
+   const boost::shared_ptr<Database>& input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   if (!input_db.isNull()) {
+   if (input_db) {
 
       d_print_exclusive = input_db->getBoolWithDefault("print_exclusive",
             d_print_exclusive);
@@ -2190,15 +2223,16 @@ void TimerManager::getFromInput(
          std::string entry = timer_list[i];
          addTimerToNameLists(entry);
       }
-      d_length_package_names = d_package_names.getNumberOfItems();
-      d_length_class_names = d_class_names.getNumberOfItems();
-      d_length_class_method_names = d_class_method_names.getNumberOfItems();
+      d_length_package_names = static_cast<int>(d_package_names.size());
+      d_length_class_names = static_cast<int>(d_class_names.size());
+      d_length_class_method_names = static_cast<int>(d_class_method_names.size());
 
    }
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::addTimerToNameLists(
+void
+TimerManager::addTimerToNameLists(
    const std::string& name)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -2241,17 +2275,17 @@ void TimerManager::addTimerToNameLists(
       position = entry.find("*::*::*");  // if not found, "position" runs off
                                          // end of entry so pos > entry.size()
       if (position < entry.size()) {
-         d_package_names.addItem("algs");
-         d_package_names.addItem("apps");
-         d_package_names.addItem("appu");
-         d_package_names.addItem("geom");
-         d_package_names.addItem("hier");
-         d_package_names.addItem("math");
-         d_package_names.addItem("mesh");
-         d_package_names.addItem("pdat");
-         d_package_names.addItem("solv");
-         d_package_names.addItem("tbox");
-         d_package_names.addItem("xfer");
+         d_package_names.push_front("algs");
+         d_package_names.push_front("apps");
+         d_package_names.push_front("appu");
+         d_package_names.push_front("geom");
+         d_package_names.push_front("hier");
+         d_package_names.push_front("math");
+         d_package_names.push_front("mesh");
+         d_package_names.push_front("pdat");
+         d_package_names.push_front("solv");
+         d_package_names.push_front("tbox");
+         d_package_names.push_front("xfer");
          determined_entry = true;
       }
 
@@ -2263,7 +2297,7 @@ void TimerManager::addTimerToNameLists(
          position = entry.find("::*::*");
          if (position < entry.size()) {
             entry = entry.substr(0, position);
-            d_package_names.addItem(entry);
+            d_package_names.push_front(entry);
             determined_entry = true;
          }
       }
@@ -2275,7 +2309,7 @@ void TimerManager::addTimerToNameLists(
           */
          position = entry.find("::");
          if (position > entry.size()) {
-            d_class_names.addItem(entry);
+            d_class_names.push_front(entry);
             determined_entry = true;
          }
          if (!determined_entry) {    // Nested if #3
@@ -2309,7 +2343,7 @@ void TimerManager::addTimerToNameLists(
                if (position < entry.size()) {
                   entry = entry.substr(position + 2);
                }
-               d_class_names.addItem(entry);
+               d_class_names.push_front(entry);
                determined_entry = true;
             }
 
@@ -2330,7 +2364,7 @@ void TimerManager::addTimerToNameLists(
                    * There is no second "::".  Accept the entry as a class.
                    */
                   if (position > entry.size()) {
-                     d_class_names.addItem(entry);
+                     d_class_names.push_front(entry);
                      determined_entry = true;
                   } else {
 
@@ -2344,7 +2378,7 @@ void TimerManager::addTimerToNameLists(
                      substring = entry.substr(string_length - 1, string_length);
                      if (substring == "*") {
                         entry = entry.substr(0, string_length - 3);
-                        d_class_names.addItem(entry);
+                        d_class_names.push_front(entry);
                         determined_entry = true;
                      }
                   }
@@ -2378,7 +2412,7 @@ void TimerManager::addTimerToNameLists(
                         entry = entry.substr(position + 2);
                      }
                   }
-                  d_class_method_names.addItem(entry);
+                  d_class_method_names.push_front(entry);
 
                } // Nested if #5
 
@@ -2392,18 +2426,18 @@ void TimerManager::addTimerToNameLists(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-double TimerManager::computeOverheadConstantActiveOrInactive(
+double
+TimerManager::computeOverheadConstantActiveOrInactive(
    bool active)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   tbox::Pointer<tbox::Timer> outer_timer;
-   tbox::Pointer<tbox::Timer> inner_timer;
-
    std::string outer_name("TimerManger::Outer");
-   outer_timer = tbox::TimerManager::getManager()->getTimer(outer_name, true);
+   boost::shared_ptr<Timer> outer_timer(
+      TimerManager::getManager()->getTimer(outer_name, true));
 
    std::string inner_name("TimerMangerInner");
-   inner_timer = tbox::TimerManager::getManager()->getTimer(inner_name, active);
+   boost::shared_ptr<Timer> inner_timer(
+      TimerManager::getManager()->getTimer(inner_name, active));
 
    const int ntest = 1000;
    for (int i = 0; i < ntest; i++) {
@@ -2422,8 +2456,8 @@ double TimerManager::computeOverheadConstantActiveOrInactive(
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::computeOverheadConstants(
-   void)
+void
+TimerManager::computeOverheadConstants()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
 
@@ -2442,8 +2476,8 @@ void TimerManager::computeOverheadConstants(
 #endif  // ENABLE_SAMRAI_TIMERS
 }
 
-void TimerManager::clearArrays(
-   void)
+void
+TimerManager::clearArrays()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*
@@ -2453,15 +2487,15 @@ void TimerManager::clearArrays(
     * for the different cases to avoid confusion in the Tau analysis tool.
     */
 #ifdef HAVE_TAU
-   d_main_timer = new Timer("UNINSTRUMENTED PARTS");
+   d_main_timer.reset(new Timer("UNINSTRUMENTED PARTS"));
 #else
-   d_main_timer = new Timer("TOTAL RUN TIME");
+   d_main_timer.reset(new Timer("TOTAL RUN TIME"));
 #endif
 
    d_timers.clear();
    d_inactive_timers.clear();
 
-   d_exclusive_timer_stack.clearItems();
+   d_exclusive_timer_stack.clear();
 #endif // ENABLE_SAMRAI_TIMERS
 }
 

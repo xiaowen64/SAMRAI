@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
@@ -59,10 +59,10 @@ PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
  */
 
 void PatchMultiblockTestStrategy::readVariableInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
@@ -78,7 +78,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; i++) {
 
-      tbox::Pointer<tbox::Database> var_db = db->getDatabase(var_keys[i]);
+      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -127,10 +127,10 @@ void PatchMultiblockTestStrategy::readVariableInput(
 }
 
 void PatchMultiblockTestStrategy::readRefinementInput(
-   tbox::Pointer<tbox::Database> db)
+   boost::shared_ptr<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!db.isNull());
+   TBOX_ASSERT(db);
 #endif
 
    tbox::Array<string> box_keys = db->getAllKeys();
@@ -159,16 +159,17 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
    if (level_number < d_refine_level_boxes.getSize()) {
 
-      tbox::Pointer<pdat::CellData<int> > tags =
-         patch.getPatchData(tag_index);
+      boost::shared_ptr<pdat::CellData<int> > tags(
+         patch.getPatchData(tag_index),
+         boost::detail::dynamic_cast_tag());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(!tags.isNull());
+      TBOX_ASSERT(tags);
 #endif
       tags->fillAll(0);
 
       const hier::Box pbox = patch.getBox();
 
-      for (hier::BoxContainer::Iterator k(d_refine_level_boxes[level_number]);
+      for (hier::BoxContainer::iterator k(d_refine_level_boxes[level_number]);
            k != d_refine_level_boxes[level_number].end(); ++k) {
          tags->fill(1, *k * pbox, 0);
       }
@@ -191,63 +192,63 @@ void PatchMultiblockTestStrategy::setPhysicalBoundaryConditions(
    const double time,
    const hier::IntVector& gcw) const
 {
-   (void)patch;
-   (void)time;
-   (void)gcw;
+   NULL_USE(patch);
+   NULL_USE(time);
+   NULL_USE(gcw);
 }
 
 void PatchMultiblockTestStrategy::preprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   (void)fine;
-   (void)coarse;
-   (void)context;
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(context);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 }
 
 void PatchMultiblockTestStrategy::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   (void)fine;
-   (void)coarse;
-   (void)context;
-   (void)fine_box;
-   (void)ratio;
+   NULL_USE(fine);
+   NULL_USE(coarse);
+   NULL_USE(context);
+   NULL_USE(fine_box);
+   NULL_USE(ratio);
 }
 
 void PatchMultiblockTestStrategy::preprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   (void)coarse;
-   (void)fine;
-   (void)context;
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(context);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 }
 
 void PatchMultiblockTestStrategy::postprocessCoarsen(
    hier::Patch& coarse,
    const hier::Patch& fine,
-   const tbox::Pointer<hier::VariableContext>& context,
+   const boost::shared_ptr<hier::VariableContext>& context,
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   (void)coarse;
-   (void)fine;
-   (void)context;
-   (void)coarse_box;
-   (void)ratio;
+   NULL_USE(coarse);
+   NULL_USE(fine);
+   NULL_USE(context);
+   NULL_USE(coarse_box);
+   NULL_USE(ratio);
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2011 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
  * Description:   Dimension class for abstracting dimension
  *
  ************************************************************************/
@@ -13,22 +13,22 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
+#include "SAMRAI/tbox/Utilities.h"
+
 #include <iostream>
 #include <limits>
 
 /*
- * These forward declarations are obviously bad and creates a
- * dependency in the packages that violates the general nesting of
- * SAMRAI packages.  Was needed as IntVector needed the default ctor
- * in order to make the library work reasonable close to previous
- * versions and some performance issues would result if we did not
- * allow this.
+ * Forward declarations, which are questionable with respect to SAMRAI 
+ * package ordering.   These are needed since pdat::ArrayData and 
+ * hier::IntVector classes need to access private Dimension assignment
+ * constructor.
  *
- * It would be very good to come up with something better than this.
+ * It would be good to come up with an alternative to this.
  */
 namespace SAMRAI {
-namespace hier {
 
+namespace hier {
 class IntVector;
 }
 
@@ -68,8 +68,8 @@ public:
     * Constructor for Dimension, object is built using the specified dimension
     *
     * Note that the constructor is "explicit" thus making automatic
-    * type conversions from integers impossible.  This is intentionally to avoid
-    * unintended conversions.
+    * type conversions from integers impossible.  This is intentionally to
+    * avoid unintended conversions.
     *
     * When dimensional assertion checking is active an assert is
     * thrown when dim < 1 or dim > getMaxDimension() value specified when
@@ -94,7 +94,10 @@ public:
     *
     */
    bool
-   isValid() const;
+   isValid() const
+   {
+      return (d_dim != 0) && (d_dim <= Dimension::getMaxDimValue());
+   }
 
    /**
     * Returns true if Dimension is initialized (not set
@@ -102,49 +105,82 @@ public:
     *
     */
    bool
-   isInitialized() const;
+   isInitialized() const
+   {
+      return d_dim != Dimension::getInvalidDimValue();
+   }
 
    /**
     * Equality operator.
     */
    bool
    operator == (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim == rhs.d_dim;
+   }
 
    /**
     * Inequality operator.
     */
    bool
    operator != (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim != rhs.d_dim;
+   }
 
    /**
     * Greater than operator.
     */
    bool
    operator > (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim > rhs.d_dim;
+   }
 
    /**
     * Greater than or equal operator.
     */
    bool
    operator >= (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim >= rhs.d_dim;
+   }
 
    /**
     * Less than operator.
     */
    bool
    operator < (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim < rhs.d_dim;
+   }
 
    /**
     * Less than or equal operator.
     */
    bool
    operator <= (
-      const Dimension& rhs) const;
+      const Dimension& rhs) const
+   {
+      TBOX_DIM_ASSERT_CHECK_DIM(*this);
+      TBOX_DIM_ASSERT_CHECK_DIM(rhs);
+      return d_dim <= rhs.d_dim;
+   }
 
    /**
     * Returns the dimension of the Dimension as an unsigned short.
@@ -154,7 +190,9 @@ public:
     * used for comparisons, the Dimension comparison operations are
     * better suited for that purpose.
     */
-   unsigned short getValue() const {
+   unsigned short
+   getValue() const
+   {
       return d_dim;
    }
 
@@ -166,14 +204,17 @@ public:
     * is specified (the default is 3).  This method is typically used
     * to allocate arrays.
     *
-    *  double array[SAMRAI::tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+    *  double array[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
     *
     * The value must be >= 1 and < numeric_limits<unsigned short>::max()
     */
    static const unsigned short MAXIMUM_DIMENSION_VALUE =
       SAMRAI_MAXIMUM_DIMENSION;
    static unsigned short
-   getMaxDimValue();
+   getMaxDimValue()
+   {
+      return SAMRAI_MAXIMUM_DIMENSION;
+   }
 
    /**
     * Returns the maximum dimension for the currently compiled library
@@ -185,13 +226,21 @@ public:
     *
     */
    static const Dimension&
-   getMaxDimension();
+   getMaxDimension()
+   {
+      static Dimension dim(SAMRAI_MAXIMUM_DIMENSION);
+      return dim;
+   }
 
    /**
     * An invalid dimension value as a Dimension object.
     */
    static const Dimension&
-   getInvalidDimension();
+   getInvalidDimension()
+   {
+      static Dimension invalidDim(Dimension::getInvalidDimValue());
+      return invalidDim;
+   }
 
    /**
     * An invalid dimension value as an unsigned short.
@@ -201,7 +250,12 @@ public:
     *
     */
    static unsigned short
-   getInvalidDimValue();
+   getInvalidDimValue()
+   {
+      static unsigned short invalid =
+         std::numeric_limits<unsigned short>::max();
+      return invalid;
+   }
 
    /*
     * Classes that are friends of dimension in order to access th
@@ -213,9 +267,9 @@ public:
     * error prone.
     */
    template<class>
-   friend class::SAMRAI::pdat::ArrayData;
-   friend class::SAMRAI::hier::IntVector;
-   friend class::SAMRAI::tbox::DatabaseBox;
+   friend class pdat::ArrayData;
+   friend class hier::IntVector;
+   friend class DatabaseBox;
 
    /**
     * Output operator for debugging and error messages.
@@ -243,7 +297,11 @@ private:
     */
    Dimension&
    operator = (
-      const Dimension& rhs);
+      const Dimension& rhs)
+   {
+      d_dim = rhs.d_dim;
+      return *this;
+   }
 
    unsigned short d_dim;
 
@@ -252,9 +310,5 @@ private:
 
 }
 }
-
-#ifdef SAMRAI_INLINE
-#include "SAMRAI/tbox/Dimension.I"
-#endif
 
 #endif
