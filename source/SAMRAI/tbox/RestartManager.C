@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   An restart manager singleton class
  *
  ************************************************************************/
@@ -43,7 +43,7 @@ RestartManager::s_shutdown_handler(
  *************************************************************************
  */
 
-RestartManager*
+RestartManager *
 RestartManager::getManager()
 {
    if (!s_manager_instance) {
@@ -71,7 +71,7 @@ RestartManager::shutdownCallback()
  *************************************************************************
  */
 
-RestartManager::RestartManager() :
+RestartManager::RestartManager():
    d_database_root(boost::make_shared<NullDatabase>()),
 #ifdef HAVE_HDF5
    d_database_factory(boost::make_shared<HDFDatabaseFactory>()),
@@ -129,7 +129,7 @@ RestartManager::openRestartFile(
    if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> database(d_database_factory->allocate(
-         restart_filename));
+                                              restart_filename));
 
       if (!database->open(restart_filename)) {
          TBOX_ERROR(
@@ -200,7 +200,7 @@ RestartManager::registerRestartItem(
       d_restart_items_list.begin();
 
    bool found_item = false;
-   for ( ; !found_item && iter != d_restart_items_list.end(); iter++) {
+   for ( ; !found_item && iter != d_restart_items_list.end(); ++iter) {
       found_item = (iter->name == name);
    }
 
@@ -239,7 +239,7 @@ RestartManager::unregisterRestartItem(
    std::list<RestartManager::RestartItem>::iterator iter =
       d_restart_items_list.begin();
 
-   for ( ; iter != d_restart_items_list.end(); iter++) {
+   for ( ; iter != d_restart_items_list.end(); ++iter) {
       if (iter->name == name) {
          d_restart_items_list.erase(iter);
          break;
@@ -277,7 +277,7 @@ RestartManager::writeRestartFile(
    if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
-         restart_filename));
+                                                   restart_filename));
 
       new_restartDB->create(restart_filename);
 
@@ -308,7 +308,7 @@ RestartManager::writeRestartFile(
 
    std::list<RestartManager::RestartItem>::iterator i =
       d_restart_items_list.begin();
-   for ( ; i != d_restart_items_list.end(); i++) {
+   for ( ; i != d_restart_items_list.end(); ++i) {
       boost::shared_ptr<Database> obj_db(
          database->putDatabase(i->name));
       (i->obj)->putToRestart(obj_db);

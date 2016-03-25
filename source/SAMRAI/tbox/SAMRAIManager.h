@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI class to manage package startup and shutdown
  *
  ************************************************************************/
@@ -193,6 +193,18 @@ public:
       int maxnum);
 
 private:
+   // Unimplemented default constructor.
+   SAMRAIManager();
+
+   // Unimplemented copy constructor.
+   SAMRAIManager(
+      const SAMRAIManager& other);
+
+   // Unimplemented assignment operator.
+   SAMRAIManager&
+   operator = (
+      const SAMRAIManager& rhs);
+
    /*!
     * Flag indicating SAMRAIManager has been initialized.
     */

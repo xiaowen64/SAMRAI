@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated node centered patch data type
  *
  ************************************************************************/
@@ -78,7 +78,7 @@ NodeData<TYPE>::getArrayData() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 NodeData<TYPE>::getPointer(
    int depth)
 {
@@ -88,7 +88,7 @@ NodeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 NodeData<TYPE>::getPointer(
    int depth) const
 {
@@ -284,7 +284,7 @@ NodeData<TYPE>::copyWithRotation(
             NodeIndex src_index(dst_index);
             NodeGeometry::transform(src_index, back_trans);
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*d_data)(dst_index, d) = (*(src.d_data))(src_index, d);
             }
          }
@@ -422,7 +422,7 @@ NodeData<TYPE>::packWithRotation(
 
       if (!copybox.empty()) {
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             hier::Box::iterator ciend(copybox.end());
             for (hier::Box::iterator ci(copybox.begin()); ci != ciend; ++ci) {
 
@@ -430,7 +430,7 @@ NodeData<TYPE>::packWithRotation(
                NodeGeometry::transform(src_index, back_trans);
 
                buffer[i] = (*d_data)(src_index, d);
-               i++;
+               ++i;
             }
          }
       }
@@ -537,7 +537,7 @@ NodeData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       print(box, d, os, prec);
    }

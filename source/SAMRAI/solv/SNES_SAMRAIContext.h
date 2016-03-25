@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Wrapper for SNES solver for use in a SAMRAI-based application.
  *
  ************************************************************************/
@@ -1008,7 +1008,7 @@ private:
    {
       NULL_USE(snes);
       ((SNES_SAMRAIContext *)ctx)->getSNESFunctions()->
-         evaluateNonlinearFunction(x, f);
+      evaluateNonlinearFunction(x, f);
       return 0;
    }
 
@@ -1040,8 +1040,8 @@ private:
    {
       int ierr = 0;
       Vec current_solution;
-      void *ctx;
-      PCShellGetContext(pc,&ctx);
+      void* ctx;
+      PCShellGetContext(pc, &ctx);
       ierr = SNESGetSolution(((SNES_SAMRAIContext *)ctx)->getSNESSolver(),
             &current_solution);
       PETSC_SAMRAI_ERROR(ierr);
@@ -1055,8 +1055,8 @@ private:
       Vec xin,                                    // input vector
       Vec xout)                                   // output vector
    {
-      void *ctx;
-      PCShellGetContext(pc,&ctx);
+      void* ctx;
+      PCShellGetContext(pc, &ctx);
       return ((SNES_SAMRAIContext *)ctx)->
              getSNESFunctions()->applyPreconditioner(xin, xout);
    }

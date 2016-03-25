@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition support on cartesian grids.
  *
  ************************************************************************/
@@ -82,7 +82,8 @@ public:
       const double fill_time,
       const hier::IntVector& ghost_width_to_fill);
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const;
    virtual void
    preprocessRefineBoxes(
       hier::Patch& fine,

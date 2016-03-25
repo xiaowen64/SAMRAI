@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -38,8 +38,8 @@ namespace mesh {
  */
 
 class MultiblockGriddingTagger:
-      public xfer::RefinePatchStrategy,
-      public xfer::SingularityPatchStrategy
+   public xfer::RefinePatchStrategy,
+   public xfer::SingularityPatchStrategy
 {
 public:
    /*!
@@ -120,7 +120,7 @@ public:
     */
    virtual hier::IntVector
    getRefineOpStencilWidth(
-      const tbox::Dimension &dim ) const;
+      const tbox::Dimension& dim) const;
 
    /*!
     * Perform user-defined refining operations.  This member function
@@ -173,7 +173,6 @@ public:
       const hier::IntVector& ratio);
 
 private:
-
    /*
     * Patch data index for
     */

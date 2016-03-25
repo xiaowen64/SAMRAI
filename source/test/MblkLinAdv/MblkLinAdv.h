@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -509,11 +509,11 @@ private:
     * Operators to be used with GridGeometry
     */
    boost::shared_ptr<SkeletonCellDoubleConservativeLinearRefine>
-      d_cell_cons_linear_refine_op;
+   d_cell_cons_linear_refine_op;
    boost::shared_ptr<SkeletonCellDoubleWeightedAverage> d_cell_cons_coarsen_op;
    boost::shared_ptr<hier::TimeInterpolateOperator> d_cell_time_interp_op;
    boost::shared_ptr<SkeletonOutersideDoubleWeightedAverage>
-      d_side_cons_coarsen_op;
+   d_side_cons_coarsen_op;
 
 };
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating cell data objects
  *
  ************************************************************************/
@@ -88,9 +88,9 @@ CellDataFactory<TYPE>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<CellData<TYPE> >(
-      patch.getBox(),
-      d_depth,
-      d_ghosts);
+             patch.getBox(),
+             d_depth,
+             d_ghosts);
 }
 
 /*

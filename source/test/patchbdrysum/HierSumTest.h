@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   SAMRAI interface class for hierarchy node and edge sum test
  *
  ************************************************************************/
@@ -31,7 +31,7 @@
 #include "SAMRAI/algs/PatchBoundaryEdgeSum.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/VariableContext.h"
-#include "SAMRAI/appu/VisItDataWriter.h"\
+#include "SAMRAI/appu/VisItDataWriter.h" \
 
 #include "boost/shared_ptr.hpp"
 #include <vector>

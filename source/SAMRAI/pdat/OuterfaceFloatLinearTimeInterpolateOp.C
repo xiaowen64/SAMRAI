@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for float outerface patch data.
  *
  ************************************************************************/
@@ -42,7 +42,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat1d, LINTIMEINTOUTFACEFLOAT1D) (const 
    float *);
 // in lintimint2d.f:
 void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d0,
-              LINTIMEINTOUTFACEFLOAT2D0) (const int&, const int&,
+                     LINTIMEINTOUTFACEFLOAT2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -54,7 +54,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d0,
    const float *, const float *,
    float *);
 void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d1,
-              LINTIMEINTOUTFACEFLOAT2D1) (const int&, const int&,
+                     LINTIMEINTOUTFACEFLOAT2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -67,7 +67,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d1,
    float *);
 // in lintimint3d.f:
 void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d0,
-              LINTIMEINTOUTFACEFLOAT3D0) (const int&, const int&, const int&,
+                     LINTIMEINTOUTFACEFLOAT3D0) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -79,7 +79,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d0,
    const float *, const float *,
    float *);
 void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d1,
-              LINTIMEINTOUTFACEFLOAT3D1) (const int&, const int&, const int&,
+                     LINTIMEINTOUTFACEFLOAT3D1) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -91,7 +91,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d1,
    const float *, const float *,
    float *);
 void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d2,
-              LINTIMEINTOUTFACEFLOAT3D2) (const int&, const int&, const int&,
+                     LINTIMEINTOUTFACEFLOAT3D2) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -168,9 +168,9 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if (dim == tbox::Dimension(1)) {
             SAMRAI_F77_FUNC(lintimeintoutfacefloat1d,
                LINTIMEINTOUTFACEFLOAT1D) (ifirst(0), ilast(0),

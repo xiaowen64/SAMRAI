@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Load balance routines for uniform and non-uniform workloads.
  *
  ************************************************************************/
@@ -427,7 +427,7 @@ private:
    // dumb compilers.
    ChopAndPackLoadBalancer(
       const ChopAndPackLoadBalancer&);
-   void
+   ChopAndPackLoadBalancer&
    operator = (
       const ChopAndPackLoadBalancer&);
 
@@ -585,7 +585,7 @@ private:
    void
    exchangeBoxContainersAndWeightArrays(
       const hier::BoxContainer& box_list_in,
-      const std::vector<double>& weights_in,
+      std::vector<double>& weights_in,
       hier::BoxContainer& box_list_out,
       std::vector<double>& weights_out,
       const tbox::SAMRAI_MPI& mpi) const;
@@ -598,9 +598,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_data_id.size()) ?
-              d_workload_data_id[level_number] :
-              d_master_workload_data_id);
+      return level_number < static_cast<int>(d_workload_data_id.size()) ?
+             d_workload_data_id[level_number] :
+             d_master_workload_data_id;
    }
 
    double
@@ -608,9 +608,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_max_workload_factor.size()) ?
-              d_max_workload_factor[level_number] :
-              d_master_max_workload_factor);
+      return level_number < static_cast<int>(d_max_workload_factor.size()) ?
+             d_max_workload_factor[level_number] :
+             d_master_max_workload_factor;
    }
 
    double
@@ -618,9 +618,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_workload_tolerance.size()) ?
-              d_workload_tolerance[level_number] :
-              d_master_workload_tolerance);
+      return level_number < static_cast<int>(d_workload_tolerance.size()) ?
+             d_workload_tolerance[level_number] :
+             d_master_workload_tolerance;
    }
 
    std::string
@@ -628,9 +628,9 @@ private:
       int level_number) const
    {
       TBOX_ASSERT(level_number >= 0);
-      return (level_number < static_cast<int>(d_bin_pack_method.size()) ?
-              d_bin_pack_method[level_number] :
-              d_master_bin_pack_method);
+      return level_number < static_cast<int>(d_bin_pack_method.size()) ?
+             d_bin_pack_method[level_number] :
+             d_master_bin_pack_method;
    }
 
    /*!
@@ -696,6 +696,7 @@ private:
     */
    static boost::shared_ptr<tbox::Timer> t_load_balance_boxes;
    static boost::shared_ptr<tbox::Timer> t_load_balance_boxes_remove_intersection;
+   static boost::shared_ptr<tbox::Timer> t_get_global_boxes;
    static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes;
    static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_sort;
    static boost::shared_ptr<tbox::Timer> t_bin_pack_boxes_pack;

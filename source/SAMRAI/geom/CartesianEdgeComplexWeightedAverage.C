@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for edge-centered complex data on
  *                a Cartesian mesh.
  *
@@ -104,7 +104,7 @@ CartesianEdgeComplexWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianEdgeComplexWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianEdgeComplexWeightedAverage::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -150,7 +150,7 @@ CartesianEdgeComplexWeightedAverage::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartwgtavgedgecplx1d, CARTWGTAVGEDGECPLX1D) (ifirstc(0),
             ilastc(0),

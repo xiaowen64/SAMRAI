@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -69,21 +69,31 @@ OutersideGeometry::calculateOverlap(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
-   const SideGeometry* t_dst =
+   const SideGeometry* t_dst_side =
       dynamic_cast<const SideGeometry *>(&dst_geometry);
+   const OutersideGeometry* t_dst_oside =
+      dynamic_cast<const OutersideGeometry *>(&dst_geometry);
    const OutersideGeometry* t_src =
       dynamic_cast<const OutersideGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src != 0) && (t_dst != 0)) {
-      over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
+
+   if ((t_src != 0) && (t_dst_side != 0)) {
+      over = doOverlap(*t_dst_side, *t_src, src_mask, fill_box,
+            overwrite_interior,
+            transformation, dst_restrict_boxes);
+   } else if ((t_src != 0) && (t_dst_oside != 0)) {
+      over = doOverlap(*t_dst_oside, *t_src, src_mask, fill_box,
+            overwrite_interior,
             transformation, dst_restrict_boxes);
    } else if (retry) {
-      over = src_geometry.calculateOverlap(
-            dst_geometry, src_geometry, src_mask, fill_box,
-            overwrite_interior, transformation, false, dst_restrict_boxes);
+      over = src_geometry.calculateOverlap(dst_geometry, src_geometry,
+            src_mask, fill_box, overwrite_interior,
+            transformation, false,
+            dst_restrict_boxes);
    }
    return over;
+
 }
 
 /*
@@ -109,8 +119,8 @@ OutersideGeometry::doOverlap(
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
-#endif
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
+#endif
 
    const tbox::Dimension& dim(src_mask.getDim());
 
@@ -129,7 +139,7 @@ OutersideGeometry::doOverlap(
 
    // Compute the intersection (if any) for each of the side directions
 
-   const hier::IntVector one_vector(dim, 1);
+   const hier::IntVector& one_vector = hier::IntVector::getOne(dim);
 
    const hier::Box quick_check(
       hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
@@ -140,20 +150,22 @@ OutersideGeometry::doOverlap(
       hier::Box mask_shift(src_mask);
       transformation.transform(mask_shift);
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
-         const hier::Box msk_side(
-            SideGeometry::toSideBox(mask_shift, d));
          const hier::Box dst_side(
             SideGeometry::toSideBox(dst_ghost, d));
          const hier::Box src_side(
             SideGeometry::toSideBox(src_shift, d));
-         const hier::Box fill_side(
-            SideGeometry::toSideBox(fill_box, d));
 
          const hier::Box together(dst_side * src_side);
 
          if (!together.empty()) {
+
+            const hier::Box msk_side(
+               SideGeometry::toSideBox(mask_shift, d));
+
+            const hier::Box fill_side(
+               SideGeometry::toSideBox(fill_box, d));
 
             // Add lower side intersection (if any) to the box list
             hier::Box low_side(src_side);
@@ -173,7 +185,7 @@ OutersideGeometry::doOverlap(
                dst_boxes[d].pushBack(hig_overlap);
             }
 
-            // Take away the interior of over_write interior is not set
+            // Take away the interior if overwrite_interior is not set
             if (!overwrite_interior) {
                dst_boxes[d].removeIntersections(
                   SideGeometry::toSideBox(dst_geometry.getBox(), d));
@@ -202,6 +214,140 @@ OutersideGeometry::doOverlap(
 /*
  *************************************************************************
  *
+ * Compute the overlap between two outerside centered boxes.
+ * The algorithm is similar to the standard side intersection algorithm
+ * except we operate only on the boundaries of the source box.
+ *
+ *************************************************************************
+ */
+
+boost::shared_ptr<hier::BoxOverlap>
+OutersideGeometry::doOverlap(
+   const OutersideGeometry& dst_geometry,
+   const OutersideGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const hier::BoxContainer& dst_restrict_boxes)
+{
+
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
+   const hier::IntVector& src_offset = transformation.getOffset();
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
+#endif
+
+   const tbox::Dimension& dim(src_mask.getDim());
+
+   std::vector<hier::BoxContainer> dst_boxes(dim.getValue());
+
+   // Perform a quick-and-dirty intersection to see if the boxes might overlap
+
+   const hier::Box src_box(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_shift(src_box);
+   transformation.transform(src_shift);
+   const hier::Box dst_ghost(
+      hier::Box::grow(dst_geometry.getBox(), dst_geometry.getGhosts()));
+
+   // Compute the intersection (if any) for each of the side directions
+
+   const hier::IntVector& one_vector = hier::IntVector::getOne(dim);
+
+   const hier::Box quick_check(
+      hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
+         one_vector));
+
+   if (!quick_check.empty()) {
+
+      hier::Box mask_shift(src_mask);
+      transformation.transform(mask_shift);
+
+      for (int d = 0; d < dim.getValue(); ++d) {
+
+         const hier::Box dst_side(
+            SideGeometry::toSideBox(dst_geometry.getBox(), d));
+         const hier::Box src_side(
+            SideGeometry::toSideBox(src_shift, d));
+
+         const hier::Box together(dst_side * src_side);
+
+         if (!together.empty()) {
+
+            const hier::Box msk_side(
+               SideGeometry::toSideBox(mask_shift, d));
+
+            const hier::Box fill_side(
+               SideGeometry::toSideBox(fill_box, d));
+
+            hier::Box low_dst_side(dst_side);
+            low_dst_side.upper(d) = low_dst_side.lower(d);
+            hier::Box hig_dst_side(dst_side);
+            hig_dst_side.lower(d) = hig_dst_side.upper(d);
+
+            // Add lower side intersection (if any) to the box list
+            hier::Box low_src_side(src_side);
+            low_src_side.upper(d) = low_src_side.lower(d);
+
+            hier::Box low_low_overlap(low_src_side * msk_side
+                                      * low_dst_side * fill_side);
+            if (!low_low_overlap.empty()) {
+               dst_boxes[d].pushBack(low_low_overlap);
+            }
+
+            hier::Box low_hig_overlap(low_src_side * msk_side
+                                      * hig_dst_side * fill_side);
+            if (!low_hig_overlap.empty()) {
+               dst_boxes[d].pushBack(low_hig_overlap);
+            }
+
+            // Add upper side intersection (if any) to the box list
+            hier::Box hig_src_side(src_side);
+            hig_src_side.lower(d) = hig_src_side.upper(d);
+
+            hier::Box hig_low_overlap(hig_src_side * msk_side
+                                      * low_dst_side * fill_side);
+            if (!hig_low_overlap.empty()) {
+               dst_boxes[d].pushBack(hig_low_overlap);
+            }
+
+            hier::Box hig_hig_overlap(hig_src_side * msk_side
+                                      * hig_dst_side * fill_side);
+            if (!hig_hig_overlap.empty()) {
+               dst_boxes[d].pushBack(hig_hig_overlap);
+            }
+
+            // Take away the interior if overwrite_interior is not set
+            if (!overwrite_interior) {
+               dst_boxes[d].removeIntersections(
+                  SideGeometry::toSideBox(dst_geometry.getBox(), d));
+            }
+
+         }  // if (!together.empty())
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+            hier::BoxContainer side_restrict_boxes;
+            for (hier::BoxContainer::const_iterator b = dst_restrict_boxes.begin();
+                 b != dst_restrict_boxes.end(); ++b) {
+               side_restrict_boxes.pushBack(SideGeometry::toSideBox(*b, d));
+            }
+            dst_boxes[d].intersectBoxes(side_restrict_boxes);
+         }
+
+         dst_boxes[d].coalesce();
+
+      }  // loop over dim
+
+   } // if (!quick_check.empty())
+
+   // Create the side overlap data object using the boxes and source shift
+
+   return boost::make_shared<SideOverlap>(dst_boxes, transformation);
+
+}
+
+/*
+ *************************************************************************
+ *
  * Set up a SideOverlap oject using the given boxes and offset
  *
  *************************************************************************
@@ -216,7 +362,7 @@ OutersideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }

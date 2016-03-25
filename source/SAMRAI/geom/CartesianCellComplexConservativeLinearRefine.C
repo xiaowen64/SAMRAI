@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                omplex data on a Cartesian mesh.
  *
@@ -89,7 +89,7 @@ CartesianCellComplexConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellComplexConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianCellComplexConservativeLinearRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }
@@ -170,7 +170,7 @@ CartesianCellComplexConservativeLinearRefine::refine(
    std::vector<dcomplex> diff0(cgbox.numberCells(0) + 1);
    pdat::CellData<dcomplex> slope0(cgbox, 1, tmp_ghosts);
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartclinrefcellcplx1d, CARTCLINREFCELLCPLX1D) (ifirstc(0),
             ilastc(0),

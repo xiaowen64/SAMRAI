@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Staged peer-to-peer communication.
  *
  ************************************************************************/
@@ -60,7 +60,6 @@ class AsyncCommPeer:public AsyncCommStage::Member
 {
 
 private:
-
    //! @brief Operations users would want to do.
    enum BaseOp { undefined,
                  send,
@@ -270,6 +269,10 @@ public:
     * @param buffer
     * @param size
     *
+    * @param automatic_push_to_completion_queue Whether to automatically
+    * push this member onto the completion queue of its stage (where you
+    * can retrieve it using the stage's popFromCompletionQueue() method.
+    *
     * @return Whether operation is completed.
     *
     * @pre getNextTaskOp() == none
@@ -277,7 +280,8 @@ public:
    bool
    beginSend(
       const TYPE* buffer,
-      int size);
+      int size,
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Check the current broadcast communication and complete
@@ -285,12 +289,15 @@ public:
     *
     * If no communication is in progress, this call does nothing.
     *
+    * @param automatic_push_to_completion_queue See beginSend().
+    *
     * @return Whether operation is completed.
     *
     * @pre getBaseOp() == send
     */
    bool
-   checkSend();
+   checkSend(
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Begin a receive communication.
@@ -306,6 +313,8 @@ public:
     * The actual length of data received by the last receive operation
     * is returned by getRecvSize().
     *
+    * @param automatic_push_to_completion_queue See beginSend().
+    *
     * @return Whether operation is completed.
     *
     * @internal Once everthing is working, we should implement a
@@ -317,7 +326,8 @@ public:
     * @pre getNextTaskOp() == none
     */
    bool
-   beginRecv();
+   beginRecv(
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Check the current receive communication and complete the
@@ -325,10 +335,13 @@ public:
     *
     * @return Whether operation is completed.
     *
+    * @param automatic_push_to_completion_queue See beginSend().
+    *
     * @pre getBaseOp() == recv
     */
    bool
-   checkRecv();
+   checkRecv(
+      bool automatic_push_to_completion_queue = false);
 
    /*!
     * @brief Return the size of received data.
@@ -386,8 +399,21 @@ public:
    void
    completeCurrentOperation();
 
-   //@}
+   /*!
+    * @brief Whether the current (or last) operation was a send.
+    */
+   bool isSender() {
+      return d_base_op == send;
+   }
 
+   /*!
+    * @brief Whether the current (or last) operation was a receive.
+    */
+   bool isReceiver() {
+      return d_base_op == recv;
+   }
+
+   //@}
 
    //@{
    //! @name Timers for MPI calls
@@ -403,7 +429,7 @@ public:
     */
    void
    setSendTimer(
-      const boost::shared_ptr<Timer> &send_timer );
+      const boost::shared_ptr<Timer>& send_timer);
 
    /*!
     * @brief Set the receive-timer.
@@ -416,7 +442,7 @@ public:
     */
    void
    setRecvTimer(
-      const boost::shared_ptr<Timer> &recv_timer );
+      const boost::shared_ptr<Timer>& recv_timer);
 
    /*!
     * @brief Set the wait-timer.
@@ -433,7 +459,7 @@ public:
     */
    void
    setWaitTimer(
-      const boost::shared_ptr<Timer> &wait_timer );
+      const boost::shared_ptr<Timer>& wait_timer);
 
    //@}
 

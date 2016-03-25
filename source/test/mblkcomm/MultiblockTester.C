@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -49,7 +49,7 @@ MultiblockTester::MultiblockTester(
    d_fake_time(0.0),
    d_fake_cycle(0),
    d_source(
-     hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
+      hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
    d_destination(
       hier::VariableDatabase::getDatabase()->getContext("DESTINATION")),
    d_refine_scratch(
@@ -255,13 +255,10 @@ void MultiblockTester::resetRefineSchedule(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
 
-
    d_reset_refine_algorithm.resetSchedule(d_refine_schedule[level_number]);
-
 
    d_is_reset = true;
 }
-
 
 /*
  *************************************************************************
@@ -302,7 +299,7 @@ bool MultiblockTester::verifyCommunicationResults() const
       d_data_test_strategy->setDataContext(d_destination);
    }
    for (int ln = 0;
-        ln <= d_patch_hierarchy->getFinestLevelNumber(); ln++) {
+        ln <= d_patch_hierarchy->getFinestLevelNumber(); ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(
          d_patch_hierarchy->getPatchLevel(ln));
 
@@ -481,7 +478,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    d_data_test_strategy->setDataContext(save_context);
 }
 
-hier::IntVector MultiblockTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+hier::IntVector MultiblockTester::getRefineOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector(dim, 0);
 }
@@ -524,7 +521,7 @@ void MultiblockTester::setupHierarchy(
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim,
-                                main_input_db->getDatabase("BergerRigoutsos")));
+         main_input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(d_dim,
@@ -547,7 +544,7 @@ void MultiblockTester::setupHierarchy(
    gridding_alg->makeCoarsestLevel(d_fake_time);
 
    bool initial_cycle = true;
-   for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ln++) {
+   for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ++ln) {
       gridding_alg->makeFinerLevel(
          fake_tag_buffer,
          initial_cycle,
@@ -559,7 +556,7 @@ void MultiblockTester::setupHierarchy(
    tbox::plog << "\n\nHierarchy:\n";
    d_patch_hierarchy->recursivePrint(tbox::plog, "", 2);
 
-   for (int ln = 1; ln < d_patch_hierarchy->getNumberOfLevels(); ln++) {
+   for (int ln = 1; ln < d_patch_hierarchy->getNumberOfLevels(); ++ln) {
       hier::CoarseFineBoundary cf_bndry(*d_patch_hierarchy, ln,
                                         hier::IntVector::getOne(d_dim));
    }

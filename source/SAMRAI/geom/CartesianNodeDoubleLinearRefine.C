@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Linear refine operator for node-centered double data on
  *                a Cartesian mesh.
  *
@@ -82,7 +82,7 @@ CartesianNodeDoubleLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianNodeDoubleLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianNodeDoubleLinearRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -160,7 +160,7 @@ CartesianNodeDoubleLinearRefine::refine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {
          SAMRAI_F77_FUNC(cartlinrefnodedoub1d, CARTLINREFNODEDOUB1D) (ifirstc(0),
             ilastc(0),

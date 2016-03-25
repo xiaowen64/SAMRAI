@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Class to test usage of boundary utilities
  *
  ************************************************************************/
@@ -68,7 +68,7 @@ public:
     * They are not needed for this example since we only have one level
     * in the hierarchy.
     */
-   hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+   hier::IntVector getRefineOpStencilWidth(const tbox::Dimension& dim) const {
       return hier::IntVector(dim, 0);
    }
 

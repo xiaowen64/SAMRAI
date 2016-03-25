@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -858,7 +858,7 @@ private:
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> >
-      d_mblk_bdry_sched_advance;
+   d_mblk_bdry_sched_advance;
 
    /*
     * The "advance new" schedule can be used twice during a time integration
@@ -877,7 +877,7 @@ private:
     */
    boost::shared_ptr<xfer::RefineAlgorithm> d_mblk_bdry_fill_advance_new;
    std::vector<boost::shared_ptr<xfer::RefineSchedule> >
-      d_mblk_bdry_sched_advance_new;
+   d_mblk_bdry_sched_advance_new;
 
    /*
     * The "advance old" algorithm is used to fill ghosts using time

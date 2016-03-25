@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for edge-centered
  *                double data on a Cartesian mesh.
  *
@@ -122,7 +122,7 @@ CartesianEdgeDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianEdgeDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianEdgeDoubleConservativeLinearRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }
@@ -172,7 +172,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -181,7 +181,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
          hier::Box fine_box(*b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
                fine_box.upper(i) -= 1;
             }
@@ -197,7 +197,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
          std::vector<double> diff0(cgbox.numberCells(0) + 2);
          pdat::EdgeData<double> slope0(cgbox, 1, tmp_ghosts);
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
                SAMRAI_F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (
                   ifirstc(0), ilastc(0),

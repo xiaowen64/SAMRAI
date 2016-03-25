@@ -36,11 +36,10 @@ class RankTreeStrategy
 {
 
 public:
-
    /*!
     * @brief Constructor.
     */
-   RankTreeStrategy() {};
+   RankTreeStrategy();
 
    /*!
     * @brief Destructor.
@@ -60,20 +59,22 @@ public:
     */
    virtual void
    setupTree(
-      const RankGroup &rank_group,
+      const RankGroup& rank_group,
       int my_rank) = 0;
 
    /*!
     * @brief Access the rank used in initialization.
     */
-   virtual int getRank() const = 0;
+   virtual int
+   getRank() const = 0;
 
    /*!
     * @brief Access the parent rank.
     *
     * @returns parent rank or getInvalidRank() if is root of the tree.
     */
-   virtual int getParentRank() const = 0;
+   virtual int
+   getParentRank() const = 0;
 
    /*!
     * @brief Access a child rank.
@@ -84,13 +85,15 @@ public:
     * @return Child's rank, or getInvalidRank() if child_number
     * is outside [0, getNumberOfChildren()).
     */
-   virtual int getChildRank(
+   virtual int
+   getChildRank(
       unsigned int child_number) const = 0;
 
    /*!
     * @brief Return the number of children.
     */
-   virtual unsigned int getNumberOfChildren() const = 0;
+   virtual unsigned int
+   getNumberOfChildren() const = 0;
 
    /*!
     * @brief Return the child number.
@@ -98,13 +101,15 @@ public:
     * Return child number or invalidChildNumber() if is root of the
     * tree.
     */
-   virtual unsigned int getChildNumber() const = 0;
+   virtual unsigned int
+   getChildNumber() const = 0;
 
    /*!
     * @brief Return the degree of the tree (the maximum number of
     * children each node may have).
     */
-   virtual unsigned int getDegree() const = 0;
+   virtual unsigned int
+   getDegree() const = 0;
 
    /*!
     * @brief Return the generation number.
@@ -112,12 +117,14 @@ public:
     * The generation number starts at zero, at the root, and increases
     * by one each generation.
     */
-   virtual unsigned int getGenerationNumber() const = 0;
+   virtual unsigned int
+   getGenerationNumber() const = 0;
 
    /*!
     * @brief Return the rank of the root of the tree.
     */
-   virtual int getRootRank() const = 0;
+   virtual int
+   getRootRank() const = 0;
 
    /*!
     * @brief Return whether the local process is the root of its tree.
@@ -147,6 +154,14 @@ public:
    }
 
 private:
+   // Unimplemented copy constructor.
+   RankTreeStrategy(
+      const RankTreeStrategy& other);
+
+   // Unimplemented assignment opperator.
+   RankTreeStrategy&
+   operator = (
+      const RankTreeStrategy& rhs);
 
    static const int s_invalid_rank;
    static const unsigned int s_invalid_child_number;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -102,9 +102,9 @@ Box::Box(
 Box::Box(
    const tbox::DatabaseBox& box):
    d_lo(tbox::Dimension(static_cast<unsigned short>(box.getDimVal())),
-      tbox::MathUtilities<int>::getMax()),
+        tbox::MathUtilities<int>::getMax()),
    d_hi(tbox::Dimension(static_cast<unsigned short>(box.getDimVal())),
-      tbox::MathUtilities<int>::getMin()),
+        tbox::MathUtilities<int>::getMin()),
    d_id(GlobalId(), PeriodicId::zero()),
    d_id_locked(false)
 {
@@ -112,6 +112,33 @@ Box::Box(
 #ifdef BOX_TELEMETRY
    // Increment the cumulative constructed count, active box count and reset
    // the high water mark of active boxes if necessary.
+   ++s_cumulative_constructed_ct;
+   ++s_active_ct;
+   if (s_active_ct > s_high_water) {
+      s_high_water = s_active_ct;
+   }
+#endif
+}
+
+Box::Box(
+   const Index& lower,
+   const Index& upper,
+   const BlockId& block_id,
+   const LocalId& local_id,
+   const int owner_rank,
+   const PeriodicId& periodic_id):
+   d_lo(lower),
+   d_hi(upper),
+   d_block_id(block_id),
+   d_id(local_id, owner_rank, periodic_id),
+   d_id_locked(false)
+{
+   TBOX_ASSERT(periodic_id.isValid());
+   TBOX_ASSERT(periodic_id.getPeriodicValue() <
+      PeriodicShiftCatalog::getCatalog(d_lo.getDim())->getNumberOfShifts());
+#ifdef BOX_TELEMETRY
+   // Increment the cumulative constructed count, active box count and
+   // reset the high water mark of active boxes if necessary.
    ++s_cumulative_constructed_ct;
    ++s_active_ct;
    if (s_active_ct > s_high_water) {
@@ -393,10 +420,10 @@ Box::index(
 
    int remainder = offset;
 
-   for (int d = getDim().getValue() - 1; d > -1; d--) {
+   for (int d = getDim().getValue() - 1; d > -1; --d) {
       /* Compute the stride for indexing */
       int stride = 1;
-      for (int stride_dim = 0; stride_dim < d; stride_dim++) {
+      for (int stride_dim = 0; stride_dim < d; ++stride_dim) {
          stride *= n[stride_dim];
       }
 
@@ -449,7 +476,7 @@ Box::operator * (
          both.setEmpty();
       } else {
          TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
-      } 
+      }
    } else {
       both.d_lo.max(box.d_lo);
       both.d_hi.min(box.d_hi);
@@ -474,7 +501,7 @@ Box::operator *= (
       d_lo.max(box.d_lo);
       d_hi.min(box.d_hi);
    }
- 
+
    return *this;
 }
 
@@ -508,11 +535,11 @@ Box::intersects(
       if (empty() || box.empty()) {
          return false;
       } else {
-         TBOX_ERROR("Attempted intersection of Boxes from different blocks."); 
+         TBOX_ERROR("Attempted intersection of Boxes from different blocks.");
       }
    }
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (tbox::MathUtilities<int>::Max(d_lo(i), box.d_lo(i)) >
           tbox::MathUtilities<int>::Min(d_hi(i), box.d_hi(i))) {
          return false;
@@ -554,7 +581,7 @@ Box::operator += (
          d_hi.max(box.d_hi);
       } else {
          TBOX_ERROR("Attempted bounding box of Boxes from different blocks.");
-      } 
+      }
    }
    return *this;
 }
@@ -598,7 +625,7 @@ Box::refine(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
 
    bool negative_ratio = false;
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (ratio(d) < 0) {
          negative_ratio = true;
          break;
@@ -609,7 +636,7 @@ Box::refine(
       d_lo *= ratio;
       d_hi = d_hi * ratio + (ratio - 1);
    } else {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          if (ratio(i) > 0) {
             d_lo(i) *= ratio(i);
             d_hi(i) = d_hi(i) * ratio(i) + (ratio(i) - 1);
@@ -635,7 +662,7 @@ Box::longestDirection() const
    int max = upper(0) - lower(0);
    int dim = 0;
 
-   for (int i = 1; i < getDim().getValue(); i++)
+   for (int i = 1; i < getDim().getValue(); ++i)
       if ((upper(i) - lower(i)) > max) {
          max = upper(i) - lower(i);
          dim = i;
@@ -658,7 +685,7 @@ Box::DatabaseBox_from_Box() const
 
    new_Box.setDim(getDim());
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       new_Box.lower(i) = d_lo(i);
       new_Box.upper(i) = d_hi(i);
    }
@@ -670,7 +697,7 @@ void
 Box::set_Box_from_DatabaseBox(
    const tbox::DatabaseBox& box)
 {
-   for (int i = 0; i < box.getDimVal(); i++) {
+   for (int i = 0; i < box.getDimVal(); ++i) {
       d_lo(i) = box.lower(i);
       d_hi(i) = box.upper(i);
    }
@@ -681,7 +708,7 @@ Box::putToIntBuffer(
    int* buffer) const
 {
    buffer[0] = d_block_id.getBlockValue();
-   buffer++;
+   ++buffer;
 
    d_id.putToIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
@@ -699,7 +726,7 @@ Box::getFromIntBuffer(
    const int* buffer)
 {
    d_block_id = BlockId(buffer[0]);
-   buffer++; 
+   ++buffer;
 
    d_id.getFromIntBuffer(buffer);
    buffer += BoxId::commBufferSize();
@@ -714,26 +741,24 @@ Box::getFromIntBuffer(
 
 void
 Box::putToMessageStream(
-   tbox::MessageStream &msg) const
+   tbox::MessageStream& msg) const
 {
    msg << d_block_id.getBlockValue();
    d_id.putToMessageStream(msg);
-   msg.pack( &d_lo[0], d_lo.getDim().getValue() );
-   msg.pack( &d_hi[0], d_hi.getDim().getValue() );
-   return;
+   msg.pack(&d_lo[0], d_lo.getDim().getValue());
+   msg.pack(&d_hi[0], d_hi.getDim().getValue());
 }
 
 void
 Box::getFromMessageStream(
-   tbox::MessageStream &msg)
+   tbox::MessageStream& msg)
 {
    int tmpi;
    msg >> tmpi;
    d_block_id = BlockId(tmpi);
    d_id.getFromMessageStream(msg);
-   msg.unpack( &d_lo[0], d_lo.getDim().getValue() );
-   msg.unpack( &d_hi[0], d_hi.getDim().getValue() );
-   return;
+   msg.unpack(&d_lo[0], d_lo.getDim().getValue());
+   msg.unpack(&d_hi[0], d_hi.getDim().getValue());
 }
 
 /*
@@ -803,20 +828,20 @@ Box::coalesceIntervals(
          return retval;
       }
    } else {
-      for (int id = 0; id < dim; id++) {
+      for (int id = 0; id < dim; ++id) {
          if ((lo1[id] == lo2[id]) && (hi1[id] == hi2[id])) {
             int id2;
             int low1[SAMRAI::MAX_DIM_VAL];
             int high1[SAMRAI::MAX_DIM_VAL];
             int low2[SAMRAI::MAX_DIM_VAL];
             int high2[SAMRAI::MAX_DIM_VAL];
-            for (id2 = 0; id2 < id; id2++) {
+            for (id2 = 0; id2 < id; ++id2) {
                low1[id2] = lo1[id2];
                high1[id2] = hi1[id2];
                low2[id2] = lo2[id2];
                high2[id2] = hi2[id2];
             }
-            for (id2 = id + 1; id2 < dim; id2++) {
+            for (id2 = id + 1; id2 < dim; ++id2) {
                int id1 = id2 - 1;
                low1[id1] = lo1[id2];
                high1[id1] = hi1[id2];
@@ -863,7 +888,7 @@ Box::coalesceWith(
       const int* box_hi = &box.upper()[0];
       int me_lo[SAMRAI::MAX_DIM_VAL];
       int me_hi[SAMRAI::MAX_DIM_VAL];
-      for (id = 0; id < getDim().getValue(); id++) {
+      for (id = 0; id < getDim().getValue(); ++id) {
          me_lo[id] = d_lo(id);
          me_hi[id] = d_hi(id);
       }
@@ -875,7 +900,7 @@ Box::coalesceWith(
          id = 0;
          while (retval && (id < getDim().getValue())) {
             retval = ((me_lo[id] <= box_lo[id]) && (me_hi[id] >= box_hi[id]));
-            id++;
+            ++id;
          }
          if (!retval) { // me doesn't contain box; check other way around...
             retval = true;
@@ -883,7 +908,7 @@ Box::coalesceWith(
             while (retval && (id < getDim().getValue())) {
                retval = ((box_lo[id] <= me_lo[id])
                          && (box_hi[id] >= me_hi[id]));
-               id++;
+               ++id;
             }
          }
       }
@@ -921,7 +946,7 @@ Box::rotateAboutAxis(
    Index tmp_lo(dim);
    Index tmp_hi(dim);
 
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_lo = d_lo;
       tmp_hi = d_hi;
       d_lo(a) = tmp_lo(b);
@@ -947,7 +972,7 @@ Box::rotate(
       return;
 
    TBOX_ASSERT(getDim().getValue() == 1 || getDim().getValue() == 2 ||
-               getDim().getValue() == 3);
+      getDim().getValue() == 3);
 
    if (getDim().getValue() == 1) {
       int rotation_number = static_cast<int>(rotation_ident);
@@ -960,13 +985,12 @@ Box::rotate(
          d_lo(0) = -tmp_hi(0) - 1;
          d_hi(0) = -tmp_lo(0) - 1;
       }
-   }
-   else if (getDim().getValue() == 2) {
+   } else if (getDim().getValue() == 2) {
       int rotation_number = static_cast<int>(rotation_ident);
       if (rotation_number > 3) {
          TBOX_ERROR("Box::rotate invalid 2D RotationIdentifier.");
       }
-      for (int j = 0; j < rotation_number; j++) {
+      for (int j = 0; j < rotation_number; ++j) {
          Index tmp_lo(d_lo);
          Index tmp_hi(d_hi);
 
@@ -1110,8 +1134,8 @@ BoxIterator::BoxIterator(
    d_box(box)
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(d_box.getDim().getValue() - 1) + 1;
    }
 }
 

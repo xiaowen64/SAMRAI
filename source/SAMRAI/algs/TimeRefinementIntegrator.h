@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -189,7 +189,7 @@ namespace algs {
  * @see mesh::GriddingAlgorithmStrategy
  */
 
-class TimeRefinementIntegrator :
+class TimeRefinementIntegrator:
    public tbox::Serializable
 {
 public:
@@ -350,8 +350,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return !d_level_0_advanced;
-      }
-      else {
+      } else {
          return d_step_level[level_number] < d_max_steps_level[level_number];
       }
    }
@@ -424,8 +423,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return d_level_0_advanced ? 1 : 0;
-      }
-      else {
+      } else {
          return d_step_level[level_number];
       }
    }
@@ -445,8 +443,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return 1;
-      }
-      else {
+      } else {
          return d_max_steps_level[level_number];
       }
    }
@@ -493,8 +490,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return !d_level_0_advanced;
-      }
-      else {
+      } else {
          return d_step_level[level_number] <= 0;
       }
    }
@@ -514,8 +510,7 @@ public:
          (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
       if (level_number == 0) {
          return d_level_0_advanced;
-      }
-      else {
+      } else {
          return d_step_level[level_number] >= d_max_steps_level[level_number];
       }
    }
@@ -532,7 +527,7 @@ public:
    {
       TBOX_ASSERT(!d_use_refined_timestepping);
       int array_size = static_cast<int>(d_regrid_interval.size());
-      for (int i = 0; i < array_size; i++) {
+      for (int i = 0; i < array_size; ++i) {
          d_regrid_interval[i] = regrid_interval;
       }
    }
@@ -760,7 +755,7 @@ private:
    // The following are not implemented:
    TimeRefinementIntegrator(
       const TimeRefinementIntegrator&);
-   void
+   TimeRefinementIntegrator&
    operator = (
       const TimeRefinementIntegrator&);
 

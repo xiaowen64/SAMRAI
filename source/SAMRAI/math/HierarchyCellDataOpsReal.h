@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real cell data on multiple levels.
  *
  ************************************************************************/
@@ -625,10 +625,10 @@ public:
 private:
    // The following are not implemented
    HierarchyCellDataOpsReal(
-      const HierarchyCellDataOpsReal<TYPE>&);
-   void
+      const HierarchyCellDataOpsReal&);
+   HierarchyCellDataOpsReal&
    operator = (
-      const HierarchyCellDataOpsReal<TYPE>&);
+      const HierarchyCellDataOpsReal&);
 
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;

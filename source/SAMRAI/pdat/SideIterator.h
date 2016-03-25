@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator for side centered patch data types
  *
  ************************************************************************/
@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the side index corresponding to the iterator
     * position in the box.
     */
-   const SideIndex*
+   const SideIndex *
    operator -> () const
    {
       return &d_index;
@@ -125,8 +125,14 @@ public:
    }
 
 private:
-   friend SideIterator SideGeometry::begin(const hier::Box& box, int axis);
-   friend SideIterator SideGeometry::end(const hier::Box& box, int axis);
+   friend SideIterator
+   SideGeometry::begin(
+      const hier::Box& box,
+      int axis);
+   friend SideIterator
+   SideGeometry::end(
+      const hier::Box& box,
+      int axis);
 
    /**
     * Constructor for the side iterator.  The iterator will enumerate

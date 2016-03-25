@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Class to manage different timer objects used throughout the
  *                library.
  *
@@ -82,7 +82,7 @@ TimerManager::createManager(
    }
 }
 
-TimerManager*
+TimerManager *
 TimerManager::getManager()
 {
    if (!s_timer_manager_instance) {
@@ -126,7 +126,7 @@ TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   const boost::shared_ptr<Database>& input_db) :
+   const boost::shared_ptr<Database>& input_db):
 #ifdef ENABLE_SAMRAI_TIMERS
    d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),
@@ -214,7 +214,7 @@ TimerManager::checkTimerExistsInArray(
 
    timer.reset();
    if (!name.empty()) {
-      for (size_t i = 0; i < timer_array.size(); i++) {
+      for (size_t i = 0; i < timer_array.size(); ++i) {
          if (timer_array[i]->getName() == name) {
             timer_found = true;
             timer = timer_array[i];
@@ -361,10 +361,10 @@ TimerManager::resetAllTimers()
    d_main_timer->reset();
    d_main_timer->start();
 
-   for (size_t i = 0; i < d_timers.size(); i++) {
+   for (size_t i = 0; i < d_timers.size(); ++i) {
       d_timers[i]->reset();
    }
-   for (size_t j = 0; j < d_inactive_timers.size(); j++) {
+   for (size_t j = 0; j < d_inactive_timers.size(); ++j) {
       d_inactive_timers[j]->reset();
    }
 #endif
@@ -398,7 +398,7 @@ TimerManager::startTime(
    }
 
    if (d_print_concurrent) {
-      for (size_t i = 0; i < d_timers.size(); i++) {
+      for (size_t i = 0; i < d_timers.size(); ++i) {
          if ((d_timers[i].get() != timer) && d_timers[i]->isRunning()) {
             d_timers[i]->addConcurrentTimer(*d_timers[i]);
          }
@@ -479,11 +479,11 @@ TimerManager::checkTimerInNameLists(
       int occurrences = 0;
       position = name.find("::");
       if (position < name.size()) {
-         occurrences++;
+         ++occurrences;
          std::string substring = name.substr(position + 2);
          position = substring.find("::");
          if (position < substring.size()) {
-            occurrences++;
+            ++occurrences;
          }
       }
 
@@ -502,7 +502,7 @@ TimerManager::checkTimerInNameLists(
          bool package_exists = false;
          string_length = package.size();
          for (std::list<std::string>::iterator i = d_package_names.begin();
-              i != d_package_names.end(); i++) {
+              i != d_package_names.end(); ++i) {
             list_entry_length = i->size();
             if (string_length == list_entry_length) {
                package_exists = (*i == package);
@@ -524,11 +524,11 @@ TimerManager::checkTimerInNameLists(
       int occurrences = 0;
       position = name.find("::");
       if (position < name.size()) {
-         occurrences++;
+         ++occurrences;
          std::string substring = name.substr(position + 2);
          position = substring.find("::");
          if (position < substring.size()) {
-            occurrences++;
+            ++occurrences;
          }
       }
       if (occurrences >= 2) {
@@ -577,7 +577,7 @@ TimerManager::checkTimerInNameLists(
          string_length = nondim_class_name.size();
          bool class_exists = false;
          for (std::list<std::string>::iterator i = d_class_names.begin();
-              i != d_class_names.end(); i++) {
+              i != d_class_names.end(); ++i) {
             list_entry_length = i->size();
             if (string_length == list_entry_length) {
                class_exists = (*i == nondim_class_name);
@@ -593,7 +593,7 @@ TimerManager::checkTimerInNameLists(
          string_length = class_name.size();
          if (is_dimensional && !class_exists) {
             for (std::list<std::string>::iterator i = d_class_names.begin();
-                 i != d_class_names.end(); i++) {
+                 i != d_class_names.end(); ++i) {
                list_entry_length = i->size();
                if (string_length == list_entry_length) {
                   class_exists = (*i == class_name);
@@ -656,7 +656,7 @@ TimerManager::checkTimerInNameLists(
          bool class_method_exists = false;
          string_length = nondim_name.size();
          for (std::list<std::string>::iterator i = d_class_method_names.begin();
-              i != d_class_method_names.end(); i++) {
+              i != d_class_method_names.end(); ++i) {
             list_entry_length = i->size();
             if (string_length == list_entry_length) {
                class_method_exists = (*i == nondim_name);
@@ -672,7 +672,7 @@ TimerManager::checkTimerInNameLists(
          if (is_dimensional && !class_method_exists) {
             string_length = name.size();
             for (std::list<std::string>::iterator i = d_class_method_names.begin();
-                 i != d_class_method_names.end(); i++) {
+                 i != d_class_method_names.end(); ++i) {
                list_entry_length = i->size();
                if (string_length == list_entry_length) {
                   class_method_exists = (*i == name);
@@ -831,12 +831,12 @@ TimerManager::print(
          column_titles[2] = "";
       }
 
-      for (k = 0; k < 2; k++) {
+      for (k = 0; k < 2; ++k) {
 
          if ((k == 0 && d_print_exclusive) ||
              (k == 1 && d_print_total)) {
 
-            for (j = 0; j < 3; j++) {
+            for (j = 0; j < 3; ++j) {
 
                if ((j == 0 && d_print_processor) ||
                    (j == 1 && d_print_summed) ||
@@ -944,7 +944,7 @@ TimerManager::print(
 
    if (case2) {
 
-      for (k = 0; k < 2; k++) {
+      for (k = 0; k < 2; ++k) {
 
          if ((k == 0 && d_print_exclusive) ||
              (k == 1 && d_print_total)) {
@@ -1191,7 +1191,7 @@ TimerManager::printTable(
     * Determine maximum name length for formatting
     */
    int maxlen = 10;
-   for (unsigned int n = 0; n < d_timers.size() + 1; n++) {
+   for (unsigned int n = 0; n < d_timers.size() + 1; ++n) {
       i = static_cast<int>(timer_names[n].size());
       if (i > maxlen) maxlen = i;
    }
@@ -1213,7 +1213,7 @@ TimerManager::printTable(
    } else {
       os << ascii_line
          << std::setw(maxlen + 3) << "Timer Name" << ' ';
-      for (i = 0; i < 3; i++) {
+      for (i = 0; i < 3; ++i) {
          if (!column_titles[i].empty()) {
             os << std::setw(15) << column_titles[i].c_str() << "  ";
          }
@@ -1227,7 +1227,7 @@ TimerManager::printTable(
     * - that orders these values.
     */
    int last_nonzero_column = 0;
-   for (i = 0; i < 3; i++) {
+   for (i = 0; i < 3; ++i) {
       if (!column_titles[i].empty()) {
          last_nonzero_column = column_ids[i];
       }
@@ -1248,7 +1248,7 @@ TimerManager::printTable(
     * Now output the rows of the table.
     */
 
-   for (size_t k = 0; k < d_timers.size() + 1; k++) {
+   for (size_t k = 0; k < d_timers.size() + 1; ++k) {
       int n = ordered_list[k];
 
       /*
@@ -1265,7 +1265,7 @@ TimerManager::printTable(
          /*
           * Print column values
           */
-         for (i = 0; i < 3; i++) {
+         for (i = 0; i < 3; ++i) {
 
             /*
              * Print column values only title is non-null (i.e. not "")
@@ -1341,7 +1341,7 @@ TimerManager::printTable(
     * Determine maximum name length for formatting
     */
    int maxlen = 10;
-   for (unsigned int n = 0; n < d_timers.size() + 1; n++) {
+   for (unsigned int n = 0; n < d_timers.size() + 1; ++n) {
       i = static_cast<int>(timer_names[n].size());
       if (i > maxlen) maxlen = i;
    }
@@ -1350,7 +1350,7 @@ TimerManager::printTable(
     * Print table header
     */
    os << std::setw(maxlen + 3) << "Timer Name" << ' ';
-   for (i = 0; i < 4; i++) {
+   for (i = 0; i < 4; ++i) {
       if (!column_titles[i].empty()) {
          os << std::setw(15) << column_titles[i].c_str() << "  ";
       }
@@ -1363,7 +1363,7 @@ TimerManager::printTable(
     * - that orders these values.
     */
    int last_nonzero_column = 0;
-   for (i = 0; i < 3; i++) {
+   for (i = 0; i < 3; ++i) {
       if (!column_titles[i].empty()) {
          last_nonzero_column = column_ids[i];
       }
@@ -1383,7 +1383,7 @@ TimerManager::printTable(
    /*
     * Now output the rows of the table.
     */
-   for (size_t j = 0; j < d_timers.size() + 1; j++) {
+   for (size_t j = 0; j < d_timers.size() + 1; ++j) {
       unsigned int n = ordered_list[j];
 
       /*
@@ -1400,7 +1400,7 @@ TimerManager::printTable(
          /*
           * Print columns.
           */
-         for (i = 0; i < 4; i++) {
+         for (i = 0; i < 4; ++i) {
 
             /*
              * Print column values only title is non-null (i.e. not "")
@@ -1483,7 +1483,7 @@ TimerManager::printOverhead(
     * Determine maximum name length for formatting
     */
    int maxlen = 10;
-   for (unsigned int n = 0; n < d_timers.size(); n++) {
+   for (unsigned int n = 0; n < d_timers.size(); ++n) {
       int i = static_cast<int>(timer_names[n].size());
       if (i > maxlen) maxlen = i;
    }
@@ -1501,7 +1501,7 @@ TimerManager::printOverhead(
     * Total cost includes inactive timer costs.
     */
    int total_inactive_accesses = 0;
-   for (size_t i = 0; i < d_inactive_timers.size(); i++) {
+   for (size_t i = 0; i < d_inactive_timers.size(); ++i) {
       total_inactive_accesses += d_inactive_timers[i]->getNumberAccesses();
    }
 
@@ -1509,7 +1509,7 @@ TimerManager::printOverhead(
    double total_est_cost = est_cost;
 
    int total_accesses = 0;
-   for (size_t n = 0; n < d_timers.size(); n++) {
+   for (size_t n = 0; n < d_timers.size(); ++n) {
       total_accesses += d_timers[n]->getNumberAccesses();
    }
    est_cost = d_timer_active_access_time * total_accesses;
@@ -1546,7 +1546,7 @@ TimerManager::printOverhead(
     * add up the total cost and print it at the end...
     */
 
-   for (unsigned int n = 0; n < d_timers.size(); n++) {
+   for (unsigned int n = 0; n < d_timers.size(); ++n) {
 
       num_accesses = d_timers[n]->getNumberAccesses();
       est_cost = d_timer_active_access_time * num_accesses;
@@ -1618,7 +1618,7 @@ TimerManager::printConcurrent(
     * Determine maximum name length for formatting
     */
    int maxlen = 10;
-   for (size_t n = 0; n < d_timers.size(); n++) {
+   for (size_t n = 0; n < d_timers.size(); ++n) {
       int i = int((d_timers[n]->getName()).size());
       if (i > maxlen) maxlen = i;
 
@@ -1635,14 +1635,14 @@ TimerManager::printConcurrent(
     * Output the rows of the table.
     */
 
-   for (size_t n = 0; n < d_timers.size(); n++) {
+   for (size_t n = 0; n < d_timers.size(); ++n) {
 
       os << std::setw(maxlen + 3) << d_timers[n]->getName().c_str();
 
       int count = 0;
-      for (size_t i = 0; i < d_timers.size(); i++) {
+      for (size_t i = 0; i < d_timers.size(); ++i) {
          if (d_timers[n]->isConcurrentTimer(*d_timers[i])) {
-            count++;
+            ++count;
          }
       }
       if (count == 0) {
@@ -1656,7 +1656,7 @@ TimerManager::printConcurrent(
           * line or subsequent lines.
           */
          count = 0;
-         for (size_t j = 0; j < d_timers.size(); j++) {
+         for (size_t j = 0; j < d_timers.size(); ++j) {
             if (d_timers[n]->isConcurrentTimer(*d_timers[j])) {
                if (count == 0) {
                   os << std::setw(25) << d_timers[j]->getName().c_str()
@@ -1665,7 +1665,7 @@ TimerManager::printConcurrent(
                   os << std::setw(maxlen + 3) << " "
                      << d_timers[j]->getName().c_str() << std::endl;
                }
-               count++;
+               ++count;
             }
          }
       }
@@ -1744,7 +1744,7 @@ TimerManager::checkConsistencyAcrossProcessors()
       ++inconsistency_count;
    }
 
-   for (unsigned int i = 0; i < d_timers.size(); i++) {
+   for (unsigned int i = 0; i < d_timers.size(); ++i) {
       if (max_timer_lengths[i] != int(d_timers[i]->getName().size())) {
          TBOX_WARNING("Timer[" << i << "]: " << d_timers[i]->getName()
                                << "\nis not consistent across all processors."
@@ -1808,11 +1808,11 @@ TimerManager::buildTimerArrays(
    /*
     * Initialize arrays
     */
-   for (unsigned int n = 0; n < d_timers.size() + 1; n++) {
+   for (unsigned int n = 0; n < d_timers.size() + 1; ++n) {
       timer_names[n] = "";
       max_processor_id[n][0] = 0;
       max_processor_id[n][1] = 0;
-      for (int i = 0; i < 18; i++) {
+      for (int i = 0; i < 18; ++i) {
          timer_values[n][i] = 0.;
       }
    }
@@ -1820,7 +1820,7 @@ TimerManager::buildTimerArrays(
    /*
     * Build arrays.
     */
-   for (unsigned int n = 0; n < d_timers.size(); n++) {
+   for (unsigned int n = 0; n < d_timers.size(); ++n) {
       timer_names[n] = d_timers[n]->getName();
 
       /*
@@ -1845,8 +1845,8 @@ TimerManager::buildTimerArrays(
        *    m = 17 :  max total wall time
        */
 
-      for (int k = 0; k < 2; k++) {
-         for (int j = 0; j < 3; j++) {
+      for (int k = 0; k < 2; ++k) {
+         for (int j = 0; j < 3; ++j) {
 
             if ((k == 0 && d_print_exclusive) ||
                 (k == 1 && d_print_total)) {
@@ -2052,7 +2052,7 @@ TimerManager::buildOrderedList(
     * initialize the arrays
     */
    std::vector<double> timer_vals(array_size);
-   for (int i = 0; i < array_size; i++) {
+   for (int i = 0; i < array_size; ++i) {
       index[i] = i;
       timer_vals[i] = timer_values[i][column];
    }
@@ -2216,7 +2216,7 @@ TimerManager::getFromInput(
        *  the input file entry to the d_package_names,
        *  d_class_names, and d_class_method_names lists.
        */
-      for (int i = 0; i < static_cast<int>(timer_list.size()); i++) {
+      for (int i = 0; i < static_cast<int>(timer_list.size()); ++i) {
          std::string entry = timer_list[i];
          addTimerToNameLists(entry);
       }
@@ -2437,7 +2437,7 @@ TimerManager::computeOverheadConstantActiveOrInactive(
       TimerManager::getManager()->getTimer(inner_name, active));
 
    const int ntest = 1000;
-   for (int i = 0; i < ntest; i++) {
+   for (int i = 0; i < ntest; ++i) {
       outer_timer->start();
       inner_timer->start();
       inner_timer->stop();

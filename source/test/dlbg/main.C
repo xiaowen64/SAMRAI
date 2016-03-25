@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Test program for asynchronous BR implementation
  *
  ************************************************************************/
@@ -258,7 +258,7 @@ int main(
             input_db->getDatabase("GriddingAlgorithm"),
             tag_and_initializer,
             new_br,
-         tree_load_balancer));
+            tree_load_balancer));
       tbox::plog << "Gridding algorithm:" << std::endl;
       gridding_algorithm->printClassData(tbox::plog);
 
@@ -300,7 +300,7 @@ int main(
       t_generate_mesh->start();
       gridding_algorithm->makeCoarsestLevel(0.0);
       bool done = false;
-      for (ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done; ln++) {
+      for (ln = 0; patch_hierarchy->levelCanBeRefined(ln) && !done; ++ln) {
          tbox::plog << "Adding finer levels with ln = " << ln << std::endl;
          boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));

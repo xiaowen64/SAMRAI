@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer cell data on multiple levels.
  *
  ************************************************************************/
@@ -383,7 +383,7 @@ private:
    // The following are not implemented
    HierarchyCellDataOpsInteger(
       const HierarchyCellDataOpsInteger&);
-   void
+   HierarchyCellDataOpsInteger&
    operator = (
       const HierarchyCellDataOpsInteger&);
 

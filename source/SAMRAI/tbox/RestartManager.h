@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   An restart manager singleton class
  *
  ************************************************************************/
@@ -137,7 +137,7 @@ public:
    bool
    hasRootDatabase()
    {
-      return d_database_root;
+      return d_database_root.get();
    }
 
    /**
@@ -174,7 +174,7 @@ public:
    bool
    hasDatabaseFactory()
    {
-      return d_database_factory;
+      return d_database_factory.get();
    }
 
    /**
@@ -270,9 +270,18 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      RestartManager* subclass_instance);
+      RestartManager * subclass_instance);
 
 private:
+   // Unimplemented copy constructor.
+   RestartManager(
+      const RestartManager& other);
+
+   // Unimplemented assignment operator.
+   RestartManager&
+   operator = (
+      const RestartManager& rhs);
+
    /**
     * Write all objects registered to as restart objects to the
     * restart database.

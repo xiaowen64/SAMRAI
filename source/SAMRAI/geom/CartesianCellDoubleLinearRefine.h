@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Linear refine operator for cell-centered double data on
  *                a Cartesian mesh.
  *
@@ -60,7 +60,8 @@ public:
     * of ones.  That is, its stencil extends one cell outside the fine box.
     */
    hier::IntVector
-   getStencilWidth( const tbox::Dimension &dim ) const;
+   getStencilWidth(
+      const tbox::Dimension& dim) const;
 
    /**
     * Refine the source component on the coarse patch to the destination

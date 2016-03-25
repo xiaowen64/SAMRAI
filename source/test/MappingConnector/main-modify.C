@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Test program for performance of tree search algorithm.
  *
  ************************************************************************/
@@ -334,7 +334,7 @@ void breakUpBoxes(
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
       box_level.refineBoxes(box_level,
          refinement_ratio,
-         box_level.getRefinementRatio()*refinement_ratio);
+         box_level.getRefinementRatio() * refinement_ratio);
       box_level.finalize();
    }
 
@@ -392,12 +392,12 @@ void alterAndGenerateMapping(
    const hier::BoxContainer boxes_b(box_level_b.getBoxes());
 
    box_level_c.reset(new hier::BoxLevel(box_level_b.getRefinementRatio(),
-      box_level_b.getGridGeometry(),
-      box_level_b.getMPI()));
+         box_level_b.getGridGeometry(),
+         box_level_b.getMPI()));
 
    b_to_c.reset(new hier::MappingConnector(box_level_b,
-      *box_level_c,
-      hier::IntVector::getZero(dim)));
+         *box_level_c,
+         hier::IntVector::getZero(dim)));
    hier::MappingConnector* c_to_b =
       new hier::MappingConnector(*box_level_c,
          box_level_b,

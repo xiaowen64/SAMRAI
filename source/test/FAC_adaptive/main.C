@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Program for poisson solver on adaptive grid using FAC
  *
  ************************************************************************/
@@ -148,7 +148,7 @@ int main(
        */
       /*
        * Create a grid geometry required for the patchHierarchy object.
-          */
+       */
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
@@ -166,7 +166,7 @@ int main(
        * Create the problem-specific object implementing the required
        * SAMRAI virtual functions.
        */
- 
+
       std::string adaptive_poisson_name = "AdaptivePoisson";
       std::string fac_ops_name =
          adaptive_poisson_name + ":scalar poisson operator";
@@ -210,12 +210,12 @@ int main(
             boost::shared_ptr<tbox::Database>()));
 
       AdaptivePoisson adaptive_poisson(adaptive_poisson_name,
-         dim,
-         fac_ops,
-         fac_precond,
-         *(input_db->getDatabase("AdaptivePoisson")),
-         &tbox::pout,
-         &tbox::plog);
+                                       dim,
+                                       fac_ops,
+                                       fac_precond,
+                                       *(input_db->getDatabase("AdaptivePoisson")),
+                                       &tbox::pout,
+                                       &tbox::plog);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer

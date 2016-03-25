@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -43,6 +43,10 @@ using namespace std;
 
 #include "MblkHyperbolicLevelIntegrator.h"
 #include "MblkLinAdv.h"
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 // Classes for run-time plotting and autotesting.
 
@@ -171,7 +175,7 @@ int main(
    /*
     * Run problem twice to test startup/shutdown process for multi-block problems.
     */
-   for (int run = 0; run < 2; run++) {
+   for (int run = 0; run < 2; ++run) {
 
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -257,6 +261,14 @@ int main(
       } else {
          tbox::PIO::logOnlyNodeZero(log_file_name);
       }
+
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
       int viz_dump_interval = 0;
       if (main_db->keyExists("viz_dump_interval")) {
@@ -386,7 +398,7 @@ int main(
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim,
-         input_db->getDatabase("BergerRigoutsos")));
+            input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(

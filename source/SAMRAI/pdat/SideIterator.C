@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator for side centered patch data types
  *
  ************************************************************************/
@@ -21,8 +21,8 @@ SideIterator::SideIterator(
    d_box(SideGeometry::toSideBox(box, axis))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(d_box.getDim().getValue() - 1) + 1;
    }
 }
 
@@ -40,11 +40,11 @@ SideIterator::~SideIterator()
 SideIterator&
 SideIterator::operator ++ ()
 {
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -57,11 +57,11 @@ SideIterator::operator ++ (
    int)
 {
    SideIterator tmp = *this;
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }

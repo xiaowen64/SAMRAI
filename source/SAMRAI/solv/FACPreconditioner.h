@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -56,7 +56,7 @@ namespace solv {
  * -# After solving, get solver statistics by viewing the log information
  *    and calling getNumberOfIterations(), getResidualNorm() functions
  *    if desired.
- * 
+ *
  * <b> Input Parameters </b>
  *
  * <b> Definitions: </b>
@@ -78,7 +78,7 @@ namespace solv {
  *     <th>default</th>
  *     <th>range</th>
  *     <th>opt/req</th>
-       <th>behavior on restart</th>
+ *     <th>behavior on restart</th>
  *   </tr>
  *   <tr>
  *     <td>max_cycles</td>
@@ -466,7 +466,7 @@ private:
    //! @name Functions not implemented:
    FACPreconditioner(
       const FACPreconditioner&);
-   void
+   FACPreconditioner&
    operator = (
       const FACPreconditioner&);
    //@}

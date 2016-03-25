@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -210,7 +210,7 @@ private:
 
    FaceGeometry(
       const FaceGeometry&);             // not implemented
-   void
+   FaceGeometry&
    operator = (
       const FaceGeometry&);                     // not implemented
 

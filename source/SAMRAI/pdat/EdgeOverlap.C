@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -23,7 +23,7 @@ EdgeOverlap::EdgeOverlap(
    const tbox::Dimension dim(transformation.getOffset().getDim());
    d_dst_boxes.resize(boxes.size());
 
-   for (int d = 0; d < static_cast<int>(boxes.size()); d++) {
+   for (int d = 0; d < static_cast<int>(boxes.size()); ++d) {
       d_dst_boxes[d] = boxes[d];
       if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
    }
@@ -54,7 +54,7 @@ EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 {
    TBOX_ASSERT(src_boxes.isEmpty());
    TBOX_ASSERT(axis_direction >= 0 &&
-               axis_direction < static_cast<int>(d_dst_boxes.size()));
+      axis_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[axis_direction];
    int transform_direction = axis_direction;
@@ -65,15 +65,15 @@ EdgeOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
            bi != src_boxes.end(); ++bi) {
          transform_direction = axis_direction;
          EdgeGeometry::transform(*bi,
-                                 transform_direction,
-                                 inverse_transform);
+            transform_direction,
+            inverse_transform);
       }
    }
 
    axis_direction = transform_direction;
 
    TBOX_ASSERT(axis_direction >= 0 &&
-               axis_direction < static_cast<int>(d_dst_boxes.size()));
+      axis_direction < static_cast<int>(d_dst_boxes.size()));
 
 }
 

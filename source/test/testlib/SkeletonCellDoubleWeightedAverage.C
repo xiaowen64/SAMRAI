@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for cell-centered double data on
  *                a Skeleton mesh.
  *
@@ -72,7 +72,7 @@ int SkeletonCellDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-SkeletonCellDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const {
+SkeletonCellDoubleWeightedAverage::getStencilWidth(const tbox::Dimension& dim) const {
    return hier::IntVector(dim, 0);
 }
 
@@ -114,7 +114,7 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
    getDx(clev_num, cdx);
    getDx(flev_num, fdx);
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (
             ifirstc(0), ilastc(0),
@@ -163,7 +163,7 @@ void SkeletonCellDoubleWeightedAverage::setDx(
    if (level_number >= static_cast<int>(d_dx.size())) {
       d_dx.resize(level_number + 1);
       d_dx[level_number].resize(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -173,7 +173,7 @@ void SkeletonCellDoubleWeightedAverage::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       dx[i] = d_dx[level_number][i];
    }
 }

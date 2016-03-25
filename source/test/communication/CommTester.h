@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Manager class for patch data communication tests.
  *
  ************************************************************************/
@@ -195,7 +195,8 @@ public:
       const hier::IntVector& gcw);
 
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const;
 
    void
    preprocessRefine(
@@ -212,7 +213,8 @@ public:
       const hier::IntVector& ratio);
 
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
+   getCoarsenOpStencilWidth(
+      const tbox::Dimension& dim) const;
 
    void
    preprocessCoarsen(

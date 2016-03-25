@@ -3,28 +3,19 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
 #include "SAMRAI/hier/BoundaryLookupTable.h"
-#include "SAMRAI/hier/Box.h"
-#include "SAMRAI/hier/BoxContainer.h"
-#include "SAMRAI/hier/BoxContainerSingleBlockIterator.h"
-#include "SAMRAI/hier/BoxLevel.h"
 #include "SAMRAI/hier/BoxTree.h"
-#include "SAMRAI/hier/IntVector.h"
-#include "SAMRAI/hier/Patch.h"
-#include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
-#include "SAMRAI/tbox/SAMRAI_MPI.h"
+#include "SAMRAI/hier/SingularityFinder.h"
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
-#include "SAMRAI/tbox/TimerManager.h"
-#include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/shared_ptr.hpp"
@@ -62,6 +53,7 @@ boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_boundary_boxes;
 boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_data_on_patches;
 boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_compute_boundary_boxes_on_level;
 boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
+boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_adjust_multiblock_patch_level_boundaries;
 
 /*
  *************************************************************************
@@ -146,7 +138,7 @@ BaseGridGeometry::BaseGridGeometry(
 BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
    BoxContainer& domain,
-   const boost::shared_ptr<TransferOperatorRegistry>& op_reg) :
+   const boost::shared_ptr<TransferOperatorRegistry>& op_reg):
    d_transfer_operator_registry(op_reg),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
@@ -220,9 +212,9 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
    TBOX_ASSERT(ghost_width >= IntVector::getZero(ghost_width.getDim()));
 #ifdef DEBUG_CHECK_ASSERTIONS
    int num_per_dirs = 0;
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       if (periodic_shift(i)) {
-         num_per_dirs++;
+         ++num_per_dirs;
       }
    }
    if (num_per_dirs > 0) {
@@ -265,11 +257,11 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
             ghost_width, periodic_shift);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-         for (int j = 0; j < d_dim.getValue(); j++) {
+         for (int j = 0; j < d_dim.getValue(); ++j) {
             iter = (boundaries.find(patch_id));
             TBOX_ASSERT(iter != boundaries.end());
             for (int k = 0;
-                 k < static_cast<int>(((*iter).second)[j].size()); k++) {
+                 k < static_cast<int>(((*iter).second)[j].size()); ++k) {
                TBOX_ASSERT(checkBoundaryBox(((*iter).second)[j][k], *patch,
                      domain[block_num], num_per_dirs, ghost_width));
             }
@@ -305,7 +297,7 @@ BaseGridGeometry::findPatchesTouchingBoundaries(
    t_touching_boundaries_init->stop();
 
    BoxContainer tmp_refined_periodic_domain_tree;
-   if ( level.getRatioToLevelZero() != IntVector::getOne(level.getDim()) ) {
+   if (level.getRatioToLevelZero() != IntVector::getOne(level.getDim())) {
       tmp_refined_periodic_domain_tree = d_domain_with_images;
       tmp_refined_periodic_domain_tree.refine(level.getRatioToLevelZero());
       tmp_refined_periodic_domain_tree.makeTree(this);
@@ -340,7 +332,7 @@ BaseGridGeometry::findPatchesTouchingBoundaries(
          tmp_refined_periodic_domain_tree.isEmpty() ?
          d_physical_domain :
          //d_domain_search_tree :
-         tmp_refined_periodic_domain_tree );
+         tmp_refined_periodic_domain_tree);
    }
    t_touching_boundaries_loop->stop();
    t_find_patches_touching_boundaries->stop();
@@ -351,7 +343,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
    TwoDimBool& touches_regular_bdry,
    TwoDimBool& touches_periodic_bdry,
    const Box& box,
-   const IntVector &refinement_ratio,
+   const IntVector& refinement_ratio,
    const BoxContainer& refined_periodic_domain_tree) const
 {
 
@@ -363,7 +355,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
    BoxContainer bdry_list(box);
    bdry_list.grow(IntVector::getOne(d_dim));
    bdry_list.removeIntersections(refinement_ratio,
-                                 refined_periodic_domain_tree);
+      refined_periodic_domain_tree);
    const bool touches_any_boundary = !bdry_list.isEmpty();
 
    if (!touches_any_boundary) {
@@ -373,7 +365,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
       }
    } else {
       bool bdry_located = false;
-      for (int nd = 0; nd < d_dim.getValue(); nd++) {
+      for (int nd = 0; nd < d_dim.getValue(); ++nd) {
          BoxContainer lower_list(bdry_list);
          BoxContainer upper_list(bdry_list);
 
@@ -409,7 +401,7 @@ BaseGridGeometry::computeBoxTouchingBoundaries(
        * concave corner of an L-shaped domain.
        */
       if (!bdry_located) {
-         for (int nd = 0; nd < d_dim.getValue(); nd++) {
+         for (int nd = 0; nd < d_dim.getValue(); ++nd) {
             touches_periodic_bdry(nd, 0) = touches_periodic_bdry(nd, 1) = false;
 
             bool lower_side = false;
@@ -459,7 +451,7 @@ BaseGridGeometry::setGeometryOnPatches(
    TBOX_ASSERT(ratio_to_level_zero != IntVector::getZero(d_dim));
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_dim.getValue() > 1) {
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -557,11 +549,11 @@ BaseGridGeometry::setGeometryDataOnPatch(
     * all components not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (dim > tbox::Dimension(1)) {
-      for (i = 0; i < dim.getValue(); i++) {
+      for (i = 0; i < dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -620,7 +612,7 @@ BaseGridGeometry::getFromRestart()
    BoxContainer domain;
    LocalId local_id(0);
 
-   for (int b = 0; b < d_number_blocks; b++) {
+   for (int b = 0; b < d_number_blocks; ++b) {
       domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
       std::vector<tbox::DatabaseBox> db_box_vector =
          db->getDatabaseBoxVector(domain_name);
@@ -663,14 +655,15 @@ BaseGridGeometry::getFromRestart()
             BlockId nbr_end_block(neighbor_db->getInteger("end_block"));
             bool nbr_is_singularity = neighbor_db->getBool("d_is_singularity");
             Transformation nbr_transformation(nbr_rotation_ident,
-               nbr_offset,
-               nbr_begin_block,
-               nbr_end_block);
+                                              nbr_offset,
+                                              nbr_begin_block,
+                                              nbr_end_block);
             Neighbor block_nbr(nbr_block_id,
-               nbr_transformed_domain,
-               nbr_transformation);
+                               nbr_transformed_domain,
+                               nbr_transformation);
             block_nbr.setSingularity(nbr_is_singularity);
-            d_block_neighbors[b].push_front(block_nbr);
+            std::pair<BlockId, Neighbor> nbr_pair(nbr_block_id, block_nbr);
+            d_block_neighbors[b].insert(nbr_pair);
          }
       }
    }
@@ -679,7 +672,7 @@ BaseGridGeometry::getFromRestart()
    d_has_enhanced_connectivity = db->getInteger("d_has_enhanced_connectivity");
 
    d_number_of_block_singularities =
-      db->getInteger("d_number_of_block_singularities"); 
+      db->getInteger("d_number_of_block_singularities");
 
    IntVector periodic_shift(dim);
    int* temp_shift = &periodic_shift[0];
@@ -728,11 +721,11 @@ BaseGridGeometry::getFromInput(
       BoxContainer domain;
       LocalId local_id(0);
 
-      for (int b = 0; b < d_number_blocks; b++) {
+      for (int b = 0; b < d_number_blocks; ++b) {
 
          domain_name = "domain_boxes_" + tbox::Utilities::intToString(b);
 
-         BoxContainer block_domain_boxes; 
+         BoxContainer block_domain_boxes;
          if (input_db->keyExists(domain_name)) {
             std::vector<tbox::DatabaseBox> db_box_vector =
                input_db->getDatabaseBoxVector(domain_name);
@@ -774,7 +767,7 @@ BaseGridGeometry::getFromInput(
       IntVector per_bc(dim, 0);
       if (input_db->keyExists("periodic_dimension")) {
          input_db->getIntegerArray("periodic_dimension", pbc, dim.getValue());
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             per_bc(i) = ((pbc[i] == 0) ? 0 : 1);
          }
       }
@@ -790,8 +783,7 @@ BaseGridGeometry::getFromInput(
       setPhysicalDomain(domain, d_number_blocks);
 
       readBlockDataFromInput(input_db);
-   }
-   else if (input_db) {
+   } else if (input_db) {
       bool read_on_restart =
          input_db->getBoolWithDefault("read_on_restart", false);
       int num_keys = static_cast<int>(input_db->getAllKeys().size());
@@ -825,7 +817,7 @@ BaseGridGeometry::putToRestart(
 
    restart_db->putInteger("num_blocks", d_number_blocks);
 
-   for (int b = 0; b < d_number_blocks; b++) {
+   for (int b = 0; b < d_number_blocks; ++b) {
 
       std::string domain_name =
          "domain_boxes_" + tbox::Utilities::intToString(b);
@@ -850,24 +842,25 @@ BaseGridGeometry::putToRestart(
          neighbors_db->putInteger("num_neighbors",
             static_cast<int>(d_block_neighbors[b].size()));
          int count = 0;
-         for (std::list<Neighbor>::const_iterator ni = d_block_neighbors[b].begin();
+         for (std::map<BlockId, Neighbor>::const_iterator ni = d_block_neighbors[b].begin();
               ni != d_block_neighbors[b].end(); ++ni) {
+            const Neighbor& neighbor = ni->second;
             std::string neighbor_db_name =
                "neighbor_" + tbox::Utilities::intToString(count);
             boost::shared_ptr<tbox::Database> neighbor_db =
                neighbors_db->putDatabase(neighbor_db_name);
             neighbor_db->putInteger("nbr_block_id",
-               ni->getBlockId().getBlockValue());
-            ni->getTransformedDomain().putToRestart(neighbor_db);
+               neighbor.getBlockId().getBlockValue());
+            neighbor.getTransformedDomain().putToRestart(neighbor_db);
             neighbor_db->putInteger("rotation_identifier",
-               ni->getTransformation().getRotation());
-            ni->getTransformation().getOffset().putToRestart(*neighbor_db,
+               neighbor.getTransformation().getRotation());
+            neighbor.getTransformation().getOffset().putToRestart(*neighbor_db,
                "offset");
             neighbor_db->putInteger("begin_block",
-               ni->getTransformation().getBeginBlock().getBlockValue());
+               neighbor.getTransformation().getBeginBlock().getBlockValue());
             neighbor_db->putInteger("end_block",
-               ni->getTransformation().getEndBlock().getBlockValue());
-            neighbor_db->putBool("d_is_singularity", ni->isSingularity());
+               neighbor.getTransformation().getEndBlock().getBlockValue());
+            neighbor_db->putBool("d_is_singularity", neighbor.isSingularity());
             ++count;
          }
       }
@@ -907,9 +900,9 @@ BaseGridGeometry::computeShiftsForBox(
 
    int num_periodic_dirs = 0;
 
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       if (periodic_shift(i) != 0) {
-         num_periodic_dirs++;
+         ++num_periodic_dirs;
       }
    }
 
@@ -926,16 +919,16 @@ BaseGridGeometry::computeShiftsForBox(
       const std::vector<int>& location_index_max =
          blut->getMaxLocationIndices();
 
-      for (int d = 0; d < num_periodic_dirs; d++) {
+      for (int d = 0; d < num_periodic_dirs; ++d) {
 
          const int codim = d + 1;
 
-         for (int loc = 0; loc < location_index_max[d]; loc++) {
+         for (int loc = 0; loc < location_index_max[d]; ++loc) {
 
             const std::vector<int>& dirs = blut->getDirections(loc, codim);
 
             bool need_to_test = true;
-            for (int k = 0; k < static_cast<int>(dirs.size()); k++) {
+            for (int k = 0; k < static_cast<int>(dirs.size()); ++k) {
                if (periodic_shift(dirs[k]) == 0) {
                   need_to_test = false;
                   break;
@@ -948,7 +941,7 @@ BaseGridGeometry::computeShiftsForBox(
                IntVector border_shift(d_dim, 0);
 
                std::vector<bool> is_upper(codim);
-               for (int j = 0; j < codim; j++) {
+               for (int j = 0; j < codim; ++j) {
                   if (blut->isUpper(loc, codim, j)) {
                      border.lower(dirs[j]) = box.upper(dirs[j]);
                      border.upper(dirs[j]) = box.upper(dirs[j]);
@@ -988,7 +981,7 @@ BaseGridGeometry::computeShiftsForBox(
                   } else {
 
                      bool shift_to_add = true;
-                     for (int c = 0; c < codim; c++) {
+                     for (int c = 0; c < codim; ++c) {
 
                         if (is_upper[c]) {
                            if (border.upper(dirs[c]) <=
@@ -1008,7 +1001,7 @@ BaseGridGeometry::computeShiftsForBox(
 
                      if (shift_to_add) {
                         IntVector new_shift(d_dim, 0);
-                        for (int b = 0; b < codim; b++) {
+                        for (int b = 0; b < codim; ++b) {
                            if (is_upper[b]) {
                               new_shift(dirs[b]) =
                                  -domain_bound_box.numberCells(dirs[b]);
@@ -1052,12 +1045,12 @@ BaseGridGeometry::getBoundaryBoxes(
    const Index ilast = box.upper();
 
    int num_per_dirs = 0;
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
       num_per_dirs += (periodic_shift(d) ? 1 : 0);
    }
 
    if (num_per_dirs == d_dim.getValue()) {
-      for (int k = 0; k < d_dim.getValue(); k++) {
+      for (int k = 0; k < d_dim.getValue(); ++k) {
          patch_boundaries[k].clear();
       }
    } else {
@@ -1069,7 +1062,7 @@ BaseGridGeometry::getBoundaryBoxes(
       if (num_per_dirs != 0) {
          per_domain_boxes = domain_boxes;
          per_domain_boxes.grow(periodic_shift);
-         if (per_domain_boxes.size() > 10) { 
+         if (per_domain_boxes.size() > 10) {
             per_domain_boxes.makeTree(0);
          }
       }
@@ -1081,15 +1074,15 @@ BaseGridGeometry::getBoundaryBoxes(
          blut->getMaxLocationIndices();
       std::vector<BoxContainer> codim_boxlist(d_dim.getValue());
 
-      for (int d = 0; d < d_dim.getValue() - num_per_dirs; d++) {
+      for (int d = 0; d < d_dim.getValue() - num_per_dirs; ++d) {
 
          int codim = d + 1;
 
-         for (int loc = 0; loc < location_index_max[d]; loc++) {
+         for (int loc = 0; loc < location_index_max[d]; ++loc) {
             const std::vector<int>& dirs = blut->getDirections(loc, codim);
 
             bool all_is_per = true;
-            for (int p = 0; p < codim; p++) {
+            for (int p = 0; p < codim; ++p) {
                if (periodic_shift(dirs[p]) == 0) {
                   all_is_per = false;
                }
@@ -1099,7 +1092,7 @@ BaseGridGeometry::getBoundaryBoxes(
                Box border(box);
                IntVector border_shift(d_dim, 0);
 
-               for (int i = 0; i < codim; i++) {
+               for (int i = 0; i < codim; ++i) {
                   if (blut->isUpper(loc, codim, i)) {
                      border.lower(dirs[i]) = box.upper(dirs[i]);
                      border.upper(dirs[i]) = box.upper(dirs[i]);
@@ -1112,9 +1105,9 @@ BaseGridGeometry::getBoundaryBoxes(
                }
 
                // grow in non-dirs directions
-               for (int j = 0; j < d_dim.getValue(); j++) {
+               for (int j = 0; j < d_dim.getValue(); ++j) {
                   bool dir_used = false;
-                  for (int du = 0; du < codim; du++) {
+                  for (int du = 0; du < codim; ++du) {
                      if (dirs[du] == j) {
                         dir_used = true;
                         break;
@@ -1145,9 +1138,9 @@ BaseGridGeometry::getBoundaryBoxes(
                } else {
                   border_list.removeIntersections(domain_boxes);
                }
- 
+
                if (!border_list.isEmpty()) {
-                  for (int bd = 0; bd < d; bd++) {
+                  for (int bd = 0; bd < d; ++bd) {
                      border_list.removeIntersections(codim_boxlist[bd]);
 
                      if (border_list.isEmpty()) {
@@ -1200,11 +1193,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1224,7 +1217,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
@@ -1260,11 +1253,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1284,7 +1277,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) {
             coarsen = true;
          }
@@ -1321,11 +1314,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1339,7 +1332,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
@@ -1365,11 +1358,11 @@ BaseGridGeometry::computePhysicalDomain(
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       TBOX_ASSERT(ratio_to_level_zero(i) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (i = 0; i < d_dim.getValue(); i++) {
+      for (i = 0; i < d_dim.getValue(); ++i) {
          TBOX_ASSERT((ratio_to_level_zero(i)
                       * ratio_to_level_zero((i + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(i) == 1)
@@ -1383,7 +1376,7 @@ BaseGridGeometry::computePhysicalDomain(
    if (ratio_to_level_zero != IntVector::getOne(d_dim)) {
       bool coarsen = false;
       IntVector tmp_rat = ratio_to_level_zero;
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          if (ratio_to_level_zero(id) < 0) coarsen = true;
          tmp_rat(id) = abs(ratio_to_level_zero(id));
       }
@@ -1420,9 +1413,9 @@ BaseGridGeometry::setPhysicalDomain(
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (BoxContainer::const_iterator itr = domain.begin(); itr != domain.end();
         ++itr) {
-      TBOX_ASSERT(itr->getBlockId().isValid());       
-      TBOX_ASSERT(itr->getBlockId().getBlockValue() < number_blocks);       
-   } 
+      TBOX_ASSERT(itr->getBlockId().isValid());
+      TBOX_ASSERT(itr->getBlockId().getBlockValue() < number_blocks);
+   }
 #endif
 
    d_physical_domain.clear();
@@ -1431,7 +1424,7 @@ BaseGridGeometry::setPhysicalDomain(
    d_number_blocks = number_blocks;
    LocalId local_id(0);
 
-   for (int b = 0; b < number_blocks; b++) {
+   for (int b = 0; b < number_blocks; ++b) {
       BlockId block_id(b);
 
       BoxContainer block_domain(domain, block_id);
@@ -1454,13 +1447,13 @@ BaseGridGeometry::setPhysicalDomain(
    }
 
    if (d_physical_domain.size() == 1 &&
-       d_periodic_shift != IntVector::getZero(d_dim) ) {
+       d_periodic_shift != IntVector::getZero(d_dim)) {
 
       /*
        * If necessary, reset periodic shift amounts using the new
        * bounding box.
        */
-      for (int id = 0; id < d_dim.getValue(); id++) {
+      for (int id = 0; id < d_dim.getValue(); ++id) {
          d_periodic_shift(id) = ((d_periodic_shift(id) == 0) ? 0 : 1);
       }
 
@@ -1474,7 +1467,7 @@ BaseGridGeometry::setPhysicalDomain(
 
             Box bounding_box(d_physical_domain.getBoundingBox());
 
-            for (int id = 0; id < d_dim.getValue(); id++) {
+            for (int id = 0; id < d_dim.getValue(); ++id) {
                d_periodic_shift(id) *= bounding_box.numberCells(id);
             }
 
@@ -1512,31 +1505,29 @@ BaseGridGeometry::resetDomainBoxContainer()
 
    if (is_periodic) {
 
-      PeriodicShiftCatalog::initializeShiftsByIndexDirections(d_periodic_shift);
-      const PeriodicShiftCatalog* periodic_shift_catalog =
+      PeriodicShiftCatalog* periodic_shift_catalog =
          PeriodicShiftCatalog::getCatalog(d_dim);
+      periodic_shift_catalog->initializeShiftsByIndexDirections(d_periodic_shift);
 
-      const IntVector &one_vector(IntVector::getOne(d_dim));
+      const IntVector& one_vector(IntVector::getOne(d_dim));
 
-      for ( BoxContainer::const_iterator ni = d_physical_domain.begin();
-            ni!=d_physical_domain.end(); ++ni ) {
+      for (BoxContainer::const_iterator ni = d_physical_domain.begin();
+           ni != d_physical_domain.end(); ++ni) {
 
-         const Box &real_box = *ni;
+         const Box& real_box = *ni;
          TBOX_ASSERT(real_box.getPeriodicId() == periodic_shift_catalog->getZeroShiftNumber());
 
-         for ( int ishift=1; ishift<periodic_shift_catalog->getNumberOfShifts();
-               ++ishift ) {
-            const Box image_box( real_box, PeriodicId(ishift), one_vector );
+         for (int ishift = 1; ishift < periodic_shift_catalog->getNumberOfShifts();
+              ++ishift) {
+            const Box image_box(real_box, PeriodicId(ishift), one_vector);
             d_domain_with_images.pushBack(image_box);
          }
 
       }
    }
    d_domain_with_images.makeTree(this);
-  
+
 }
-
-
 
 /*
  *************************************************************************
@@ -1587,11 +1578,11 @@ BaseGridGeometry::getPeriodicShift(
     * all components not equal to 1 must have the same sign.
     */
    int k;
-   for (k = 0; k < d_dim.getValue(); k++) {
+   for (k = 0; k < d_dim.getValue(); ++k) {
       TBOX_ASSERT(ratio_to_level_zero(k) != 0);
    }
    if (d_dim.getValue() > 1) {
-      for (k = 0; k < d_dim.getValue(); k++) {
+      for (k = 0; k < d_dim.getValue(); ++k) {
          TBOX_ASSERT((ratio_to_level_zero(k)
                       * ratio_to_level_zero((k + 1) % d_dim.getValue()) > 0)
             || (ratio_to_level_zero(k) == 1)
@@ -1601,7 +1592,7 @@ BaseGridGeometry::getPeriodicShift(
 #endif
 
    IntVector periodic_shift(d_dim);
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       if (ratio_to_level_zero(i) > 0) {
          periodic_shift(i) = d_periodic_shift(i) * ratio_to_level_zero(i);
       } else {
@@ -1641,7 +1632,7 @@ BaseGridGeometry::checkPeriodicValidity(
    domain_box.grow(grow_direction);
    int i;
    Index min_index(d_dim, 0), max_index(d_dim, 0);
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       //set min/max of the bounding box
       min_index(i) = domain_box.lower(i);
       max_index(i) = domain_box.upper(i);
@@ -1655,7 +1646,7 @@ BaseGridGeometry::checkPeriodicValidity(
     * lower index of the box matches the bounding box min.  If
     * not, this direction is not a valid periodic direction.
     */
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       BoxContainer dup_domain2(domain);
       IntVector grow_one(d_dim, 0);
       grow_one(i) = 1;
@@ -1677,7 +1668,7 @@ BaseGridGeometry::checkPeriodicValidity(
       }
    }
 
-   for (i = 0; i < d_dim.getValue(); i++) {
+   for (i = 0; i < d_dim.getValue(); ++i) {
       if ((valid_direction(i) == 0) &&
           (d_periodic_shift(i) != 0)) {
          is_valid = false;
@@ -1719,7 +1710,7 @@ BaseGridGeometry::checkBoundaryBox(
     */
    IntVector box_size(d_dim);
 
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       box_size(i) = bbox.numberCells(i);
    }
 
@@ -1740,10 +1731,10 @@ BaseGridGeometry::checkBoundaryBox(
    if (!grow_patch_box.isSpatiallyEqual((grow_patch_box + bbox))) {
       bool valid_box = false;
       grow_patch_box = patch_box;
-      for (int j = 0; j < d_dim.getValue(); j++) {
+      for (int j = 0; j < d_dim.getValue(); ++j) {
          if (num_per_dirs == 0) {
 
-            for (int k = 1; k < d_dim.getValue(); k++) {
+            for (int k = 1; k < d_dim.getValue(); ++k) {
 
                grow_patch_box.grow((j + k) % d_dim.getValue(),
                   max_data_ghost_width((j + k) % d_dim.getValue()));
@@ -1752,7 +1743,7 @@ BaseGridGeometry::checkBoundaryBox(
 
          } else {
 
-            for (int k = 1; k < d_dim.getValue(); k++) {
+            for (int k = 1; k < d_dim.getValue(); ++k) {
 
                grow_patch_box.grow((j + k) % d_dim.getValue(),
                   2 * max_data_ghost_width((j + k) % d_dim.getValue()));
@@ -1801,7 +1792,7 @@ BaseGridGeometry::readBlockDataFromInput(
    std::string sing_name;
    std::string neighbor_name;
 
-   for (int bn = 0; true; bn++) {
+   for (int bn = 0; true; ++bn) {
       neighbor_name = "BlockNeighbors" + tbox::Utilities::intToString(bn);
 
       if (!input_db->keyExists(neighbor_name)) {
@@ -1830,7 +1821,7 @@ BaseGridGeometry::readBlockDataFromInput(
          Index b_index(d_dim);
          Index a_index(d_dim);
 
-         for (int p = 0; p < d_dim.getValue(); p++) {
+         for (int p = 0; p < d_dim.getValue(); ++p) {
             b_index(p) = b_array[p];
             a_index(p) = a_array[p];
          }
@@ -1856,31 +1847,12 @@ BaseGridGeometry::readBlockDataFromInput(
     * set of integers are the block numbers for the blocks touching that
     * singularity.
     */
-   std::vector<std::set<int> > singularity_blocks;
-
-   for (d_number_of_block_singularities = 0; true;
-        ++d_number_of_block_singularities) {
-
-      sing_name = "Singularity" +
-         tbox::Utilities::intToString(d_number_of_block_singularities);
-
-      if (!input_db->keyExists(sing_name)) {
-         break;
-      }
-
-      singularity_blocks.resize(d_number_of_block_singularities+1);
-
-      boost::shared_ptr<tbox::Database> sing_db(
-         input_db->getDatabase(sing_name));
-
-      std::vector<int> blocks = sing_db->getIntegerVector("blocks");
-
-      for (int i = 0; i < static_cast<int>(blocks.size()); i++) {
-
-         singularity_blocks[d_number_of_block_singularities].insert(blocks[i]);
-
-      }
+   std::set<std::set<BlockId> > singularity_blocks;
+   if (d_number_blocks > 1) {
+      findSingularities(singularity_blocks);
    }
+   d_number_of_block_singularities =
+      static_cast<int>(singularity_blocks.size());
 
    if (d_number_blocks == 1 && d_number_of_block_singularities > 0) {
       TBOX_ERROR("BaseGridGeometry::readBlockDataFromInput() error...\n"
@@ -1894,39 +1866,41 @@ BaseGridGeometry::readBlockDataFromInput(
        * Process the singularites to determine if they are enhanced or
        * reduced connectivity, then compute and store needed internal data
        * for each case.
-       */ 
-      for (int si = 0; si < d_number_of_block_singularities; ++si) {
+       */
+      for (std::set<std::set<BlockId> >::iterator
+           si = singularity_blocks.begin();
+           si != singularity_blocks.end(); ++si) {
 
-         for (std::set<int>::iterator sbi = singularity_blocks[si].begin();
-              sbi != singularity_blocks[si].end(); ++sbi) {
+         for (std::set<BlockId>::iterator sbi = si->begin();
+              sbi != si->end(); ++sbi) {
 
-            const int& cur_block = *sbi;
-            BlockId cur_block_id(cur_block);
+            const BlockId& cur_block_id = *sbi;
+            const int& cur_block = cur_block_id.getBlockValue();
             BoxContainer cur_grow(d_physical_domain, cur_block_id);
             cur_grow.unorder();
             cur_grow.grow(hier::IntVector::getOne(d_dim));
             cur_grow.simplify();
 
-            std::list<Neighbor>& nbr_list =
+            std::map<BlockId, Neighbor>& nbr_map =
                d_block_neighbors[cur_block];
 
             /*
-             * nbr_ghost_buffer will contain buffers of width 1 covering the 
+             * nbr_ghost_buffer will contain buffers of width 1 covering the
              * space immediately across the block boundary with each
              * neighboring block.  The Boxes representing these buffers
              * are all transformed to the index spce of the current block.
              */
             std::map<BlockId, BoxContainer> nbr_ghost_buffer;
 
-            for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-                 nei != nbr_list.end(); nei++) {
+            for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
+                 nei != nbr_map.end(); ++nei) {
 
-               const hier::BlockId& nbr_blk = nei->getBlockId();
+               const hier::BlockId& nbr_blk = nei->second.getBlockId();
 
-               if (singularity_blocks[si].find(nbr_blk.getBlockValue()) !=
-                   singularity_blocks[si].end()) {
+               if (si->find(nbr_blk) != si->end()) {
 
-                  BoxContainer transformed_domain(nei->getTransformedDomain());
+                  BoxContainer transformed_domain(
+                     nei->second.getTransformedDomain());
                   transformed_domain.unorder();
                   transformed_domain.intersectBoxes(cur_grow);
 
@@ -1942,9 +1916,9 @@ BaseGridGeometry::readBlockDataFromInput(
              * region.  Those neighbors are enhanced connectivity neighbors
              * at this singularity.
              */
-            std::set<int> encon_nbrs; 
+            std::set<int> encon_nbrs;
             for (std::map<BlockId, BoxContainer>::iterator ng_itr =
-                 nbr_ghost_buffer.begin();
+                    nbr_ghost_buffer.begin();
                  ng_itr != nbr_ghost_buffer.end(); ++ng_itr) {
 
                const BoxContainer& ghost_buf = ng_itr->second;
@@ -1963,27 +1937,27 @@ BaseGridGeometry::readBlockDataFromInput(
                         encon_nbrs.insert(other->first.getBlockValue());
                      }
                   }
-               } 
+               }
             }
 
             /*
              * If neighboring blocks have been identified as enhanced
              * connectivity neighbors, set the flag in the Neighbor objects.
-             */ 
+             */
             if (!encon_nbrs.empty()) {
 
                d_has_enhanced_connectivity = true;
                d_singularity[cur_block].coalesce();
 
-               for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-                    nei != nbr_list.end(); nei++) {
+               for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
+                    nei != nbr_map.end(); ++nei) {
 
-                  const hier::BlockId& nbr_blk = nei->getBlockId();
+                  const hier::BlockId& nbr_blk = nei->second.getBlockId();
                   if (encon_nbrs.find(nbr_blk.getBlockValue()) !=
                       encon_nbrs.end()) {
 
-                     nei->setSingularity(true);
-                
+                     nei->second.setSingularity(true);
+
                   }
                }
 
@@ -2010,26 +1984,25 @@ BaseGridGeometry::readBlockDataFromInput(
                   cdn->upper() += IntVector::getOne(d_dim);
                }
 
-               for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-                    nei != nbr_list.end(); nei++) {
+               for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
+                    nei != nbr_map.end(); ++nei) {
 
-                  const hier::BlockId& nbr_blk = nei->getBlockId();
+                  const hier::BlockId& nbr_blk = nei->second.getBlockId();
 
-                  if (singularity_blocks[si].find(nbr_blk.getBlockValue()) !=
-                      singularity_blocks[si].end()) {
+                  if (si->find(nbr_blk) != si->end()) {
 
                      BoxContainer nbr_block_nodal(
-                        nei->getTransformedDomain());
+                        nei->second.getTransformedDomain());
                      for (BoxContainer::iterator nbn = nbr_block_nodal.begin();
                           nbn != nbr_block_nodal.end(); ++nbn) {
                         nbn->upper() += IntVector::getOne(d_dim);
                      }
 
                      cur_domain_nodal.intersectBoxes(nbr_block_nodal);
-                  } 
+                  }
                }
                cur_domain_nodal.coalesce();
-               TBOX_ASSERT(cur_domain_nodal.size() <= 1); 
+               TBOX_ASSERT(cur_domain_nodal.size() <= 1);
 
                /*
                 * cur_domain_nodal now contains a node-centered box that
@@ -2037,14 +2010,14 @@ BaseGridGeometry::readBlockDataFromInput(
                 * convert that box to a cell-centered box located immediately
                 * outside the current block's domain.
                 */
-               if (!cur_domain_nodal.isEmpty()) { 
+               if (!cur_domain_nodal.isEmpty()) {
 
                   const Box& sing_node_box = *(cur_domain_nodal.begin());
                   Box sing_box(d_dim);
-                  sing_box.setBlockId(cur_block_id); 
+                  sing_box.setBlockId(cur_block_id);
 
                   int sing_size = sing_node_box.size();
- 
+
                   if (sing_size == 1) {
 
                      /*
@@ -2060,19 +2033,19 @@ BaseGridGeometry::readBlockDataFromInput(
                      bool use_box = true;
 
                      for (BoxContainer::iterator cd = cur_domain.begin();
-                          cd != cur_domain_nodal.end(); ++cd) {
+                          cd != cur_domain.end(); ++cd) {
 
                         const hier::Box& domain_box = *cd;
 
                         for (int d = 0; d < d_dim.getValue(); ++d) {
 
                            if (sing_node(d) == domain_box.lower(d)) {
-                              sing_box.lower()(d) = sing_node(d) - 1;
-                              sing_box.upper()(d) = sing_node(d) - 1;
+                              sing_box.lower() (d) = sing_node(d) - 1;
+                              sing_box.upper() (d) = sing_node(d) - 1;
                               found_corner[d] = true;
-                           } else if (sing_node(d) == domain_box.upper(d)+1) {
-                              sing_box.lower()(d) = sing_node(d);
-                              sing_box.upper()(d) = sing_node(d);
+                           } else if (sing_node(d) == domain_box.upper(d) + 1) {
+                              sing_box.lower() (d) = sing_node(d);
+                              sing_box.upper() (d) = sing_node(d);
                               found_corner[d] = true;
                            }
                         }
@@ -2109,13 +2082,13 @@ BaseGridGeometry::readBlockDataFromInput(
                      if (num_width_one != 2) {
                         TBOX_ERROR("BaseGridGeometry::readBlockDataFromInput error...\n"
                            << "  object name = " << d_object_name
-                           << " The computed singularity boundary for " 
+                           << " The computed singularity boundary for "
                            << sing_name << " is neither a point nor a line.  "
                            << " The user should verify that the input for "
                            << " the blocks at this singulary is correct."
                            << std::endl);
                         TBOX_ERROR("The computed singularity boundary between ");
-                     } 
+                     }
 
                      const hier::Index& sing_node = sing_node_box.lower();
 
@@ -2135,17 +2108,17 @@ BaseGridGeometry::readBlockDataFromInput(
 
                            if (d != long_dir) {
                               if (sing_node(d) == domain_box.lower(d)) {
-                                 sing_box.lower()(d) = sing_node(d) - 1;
-                                 sing_box.upper()(d) = sing_node(d) - 1;
+                                 sing_box.lower() (d) = sing_node(d) - 1;
+                                 sing_box.upper() (d) = sing_node(d) - 1;
                                  found_corner[d] = true;
-                              } else if (sing_node(d) == domain_box.upper(d)+1) {
-                                 sing_box.lower()(d) = sing_node(d);
-                                 sing_box.upper()(d) = sing_node(d);
+                              } else if (sing_node(d) == domain_box.upper(d) + 1) {
+                                 sing_box.lower() (d) = sing_node(d);
+                                 sing_box.upper() (d) = sing_node(d);
                                  found_corner[d] = true;
                               }
                            } else {
-                              sing_box.lower()(d) = sing_node_box.lower()(d);
-                              sing_box.upper()(d) = sing_node_box.upper()(d)-1;
+                              sing_box.lower() (d) = sing_node_box.lower() (d);
+                              sing_box.upper() (d) = sing_node_box.upper() (d) - 1;
                            }
                         }
 
@@ -2180,11 +2153,11 @@ BaseGridGeometry::getDomainOutsideBlock(
    BoxContainer& domain_outside_block,
    const BlockId& block_id) const
 {
-   const std::list<Neighbor>& nbr_list =
+   const std::map<BlockId, Neighbor>& nbr_map =
       d_block_neighbors[block_id.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator nei = nbr_list.begin();
-        nei != nbr_list.end(); nei++) {
-      BoxContainer transformed_domain(nei->getTransformedDomain()); 
+   for (std::map<BlockId, Neighbor>::const_iterator nei = nbr_map.begin();
+        nei != nbr_map.end(); ++nei) {
+      BoxContainer transformed_domain(nei->second.getTransformedDomain());
       domain_outside_block.spliceFront(transformed_domain);
    }
 }
@@ -2259,9 +2232,376 @@ BaseGridGeometry::registerNeighbors(
    Neighbor neighbor_of_a(block_b, b_domain_in_a_space,
                           transformation);
 
-   d_block_neighbors[a].push_front(neighbor_of_a);
-   d_block_neighbors[b].push_front(neighbor_of_b);
+   std::pair<BlockId, Neighbor> nbr_of_a_pair(block_b, neighbor_of_a);
+   d_block_neighbors[a].insert(nbr_of_a_pair);
+   std::pair<BlockId, Neighbor> nbr_of_b_pair(block_a, neighbor_of_b);
+   d_block_neighbors[b].insert(nbr_of_b_pair);
+}
 
+/*
+ * ************************************************************************
+ *
+ * Find singularities
+ *
+ * ************************************************************************
+ */
+
+void BaseGridGeometry::findSingularities(
+   std::set<std::set<BlockId> >& singularity_blocks)
+{
+   TBOX_ASSERT(d_number_blocks > 1);
+   TBOX_ASSERT(singularity_blocks.empty());
+
+   BoxContainer chopped_domain;
+   chopDomain(chopped_domain);
+
+   chopped_domain.makeTree(this);
+
+   std::map<BoxId, std::map<BoxId, int> > face_neighbors;
+
+   for (BoxContainer::iterator b_itr = chopped_domain.begin();
+        b_itr != chopped_domain.end(); ++b_itr) {
+
+      const Box& base_box = *b_itr;
+      const BlockId& base_block = base_box.getBlockId();
+      const BoxId& base_id = base_box.getBoxId();
+
+      hier::Box grow_base(base_box);
+      grow_base.grow(IntVector::getOne(d_dim));
+
+      std::vector<const Box *> nbr_boxes;
+      chopped_domain.findOverlapBoxes(nbr_boxes, grow_base, IntVector::getOne(d_dim));
+
+      const std::map<BlockId, Neighbor>& nbrs_of_base =
+         d_block_neighbors[base_block.getBlockValue()];
+
+      for (std::vector<const Box *>::const_iterator n_itr = nbr_boxes.begin();
+           n_itr != nbr_boxes.end(); ++n_itr) {
+
+         const Box& nbr_box = **n_itr;
+         const BoxId& nbr_id = nbr_box.getBoxId();
+
+         if (nbr_id <= base_id) {
+            continue;
+         }
+
+         const BlockId& nbr_block = nbr_box.getBlockId();
+         if (base_block != nbr_block &&
+             nbrs_of_base.find(nbr_block) == nbrs_of_base.end()) {
+            continue;
+         }
+
+         if (face_neighbors[base_id].find(nbr_id) !=
+             face_neighbors[base_id].end()) {
+            TBOX_ASSERT(face_neighbors[nbr_id].find(base_id) !=
+               face_neighbors[nbr_id].end());
+
+            continue;
+         }
+
+         Box base_node_box(base_box);
+         base_node_box.upper() += IntVector::getOne(d_dim);
+
+         Box transformed_nbr_box(nbr_box);
+         if (nbr_block != base_block) {
+            transformBox(transformed_nbr_box,
+               IntVector::getOne(d_dim),
+               base_block,
+               nbr_block);
+         }
+
+         Box& nbr_node_box = transformed_nbr_box;
+         nbr_node_box.upper() += hier::IntVector::getOne(d_dim);
+
+         hier::Box face_box(base_node_box * nbr_node_box);
+
+         bool is_face = false;
+         int face_num = -1;
+
+         if (!face_box.empty()) {
+            hier::IntVector box_size(face_box.numberCells());
+
+            int num_width_one = 0;
+            int normal_dir = -1;
+            for (int d = 0; d < d_dim.getValue(); ++d) {
+               if (box_size[d] == 1) {
+                  ++num_width_one;
+                  normal_dir = d;
+               }
+            }
+
+            if (num_width_one == 1) {
+               is_face = true;
+               if (face_box.lower() (normal_dir) ==
+                   base_node_box.lower() (normal_dir)) {
+                  face_num = 2 * normal_dir;
+               } else {
+                  face_num = 2 * normal_dir + 1;
+               }
+            }
+         }
+
+         if (is_face) {
+            TBOX_ASSERT(face_num >= 0);
+            face_neighbors[base_id].insert(std::make_pair(nbr_id, face_num));
+
+            Box transformed_base_box(base_box);
+            if (nbr_block != base_block) {
+               transformBox(transformed_base_box,
+                  IntVector::getOne(d_dim),
+                  nbr_block,
+                  base_block);
+            }
+
+            transformed_base_box.upper() += hier::IntVector::getOne(d_dim);
+
+            nbr_node_box = nbr_box;
+            nbr_node_box.upper() += hier::IntVector::getOne(d_dim);
+
+            face_box = transformed_base_box * nbr_node_box;
+
+            if (!face_box.empty()) {
+               hier::IntVector box_size(face_box.numberCells());
+               face_num = -1;
+               int num_width_one = 0;
+               int normal_dir = -1;
+
+               for (int d = 0; d < d_dim.getValue(); ++d) {
+                  if (box_size[d] == 1) {
+                     ++num_width_one;
+                     normal_dir = d;
+                  }
+               }
+
+               if (num_width_one == 1) {
+                  is_face = true;
+                  if (face_box.lower() (normal_dir) ==
+                      nbr_node_box.lower() (normal_dir)) {
+                     face_num = 2 * normal_dir;
+                  } else {
+                     face_num = 2 * normal_dir + 1;
+                  }
+               } else {
+                  TBOX_ERROR(
+                     "BaseGridGeometry::findSingularities: Face found on one side of block boundary but not the other.");
+               }
+
+               face_neighbors[nbr_id].insert(std::make_pair(base_id, face_num));
+            }
+         }
+      }
+   }
+
+   if (!face_neighbors.empty()) {
+      if (d_singularity_finder.get() == 0) {
+         d_singularity_finder.reset(new SingularityFinder(d_dim));
+      }
+      d_singularity_finder->findSingularities(singularity_blocks,
+         chopped_domain,
+         *this,
+         face_neighbors);
+   }
+}
+
+/*
+ * ************************************************************************
+ *
+ * Chop domain to eliminate T-junctions.
+ *
+ * ************************************************************************
+ */
+
+void
+BaseGridGeometry::chopDomain(
+   BoxContainer& chopped_domain)
+{
+   TBOX_ASSERT(chopped_domain.isEmpty());
+
+   chopped_domain = d_physical_domain;
+   chopped_domain.order();
+
+   std::map<BoxId, std::set<BoxId> > dont_chop;
+   std::map<BoxId, std::set<BoxId> > neighbors;
+
+   bool breaking_needed = true;
+   bool chopped = false;
+   while (breaking_needed) {
+      for (int b = 0; b < d_number_blocks; ++b) {
+         hier::BlockId base_block(b);
+
+         const std::map<BlockId, Neighbor>& nbrs_of_base = d_block_neighbors[b];
+
+         BoxContainerSingleBlockIterator bi(chopped_domain.begin(base_block));
+
+         chopped = false;
+         for ( ; bi != chopped_domain.end(base_block); ++bi) {
+
+            const Box& base_box = *bi;
+            const BoxId& base_id = base_box.getBoxId();
+            Box base_node_box(base_box);
+            base_node_box.upper() += IntVector::getOne(d_dim);
+            IntVector base_node_size(base_node_box.numberCells());
+
+            BoxContainerSingleBlockIterator si(
+               chopped_domain.begin(base_block));
+
+            for ( ; si != chopped_domain.end(base_block); ++si) {
+               const BoxId& other_id = si->getBoxId();
+               if (base_id != other_id) {
+                  if (dont_chop[base_id].find(other_id) == dont_chop[base_id].end()) {
+                     Box nbr_node_box(*si);
+                     nbr_node_box.upper() += IntVector::getOne(d_dim);
+
+                     Box intersect(base_node_box * nbr_node_box);
+                     if (!intersect.empty()) {
+                        neighbors[base_id].insert(other_id);
+                        neighbors[other_id].insert(base_id);
+                        IntVector intersect_size(intersect.numberCells());
+                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                           if (intersect_size[d] != 1) {
+                              if (intersect_size[d] != base_node_size[d]) {
+                                 bool chop_low;
+                                 int chop;
+                                 if (base_box.lower() (d) != si->lower() (d)) {
+                                    chop = std::max<int>(base_box.lower(d),
+                                                         si->lower(d));
+                                    chop_low = true;
+                                 } else {
+                                    chop = std::min<int>(base_box.upper(d),
+                                                         si->upper(d));
+                                    chop_low = false;
+                                 }
+
+                                 BoxContainer::iterator box_itr =
+                                    chopped_domain.find(base_box);
+
+                                 LocalId local_id(chopped_domain.size());
+                                 Box new_box(base_box, local_id, 0);
+                                 if (chop_low == true) {
+                                    new_box.lower() (d) = chop;
+                                    box_itr->upper() (d) = chop - 1;
+                                 } else {
+                                    new_box.upper() (d) = chop;
+                                    box_itr->lower() (d) = chop + 1;
+                                 }
+                                 chopped_domain.insert(chopped_domain.end(),
+                                    new_box);
+                                 chopped = true;
+
+                                 dont_chop[base_id].clear();
+                                 for (std::set<BoxId>::iterator nn_itr =
+                                         neighbors[base_id].begin();
+                                      nn_itr != neighbors[base_id].end();
+                                      ++nn_itr) {
+
+                                    dont_chop[*nn_itr].erase(base_id);
+                                 }
+                                 break;
+                              }
+                           }
+                        }
+                     }
+                  }
+                  if (chopped) {
+                     break;
+                  } else {
+                     dont_chop[base_id].insert(other_id);
+                  }
+               }
+            }
+            if (chopped) break;
+
+            for (std::map<BlockId, Neighbor>::const_iterator
+                 itr = nbrs_of_base.begin();
+                 itr != nbrs_of_base.end(); ++itr) {
+
+               const hier::BlockId& nbr_block = itr->second.getBlockId();
+
+               BoxContainerSingleBlockIterator ni(
+                  chopped_domain.begin(nbr_block));
+
+               for ( ; ni != chopped_domain.end(nbr_block); ++ni) {
+
+                  const BoxId& other_id = ni->getBoxId();
+                  std::set<BoxId>& nochop = dont_chop[base_id];
+                  if (nochop.find(other_id) == nochop.end()) {
+
+                     Box nbr_box(*ni);
+                     transformBox(nbr_box,
+                        IntVector::getOne(d_dim),
+                        base_block,
+                        nbr_block);
+                     Box nbr_node_box(nbr_box);
+                     nbr_node_box.upper() += IntVector::getOne(d_dim);
+
+                     Box intersect(base_node_box * nbr_node_box);
+                     if (!intersect.empty()) {
+                        neighbors[base_id].insert(other_id);
+                        neighbors[other_id].insert(base_id);
+                        IntVector intersect_size(intersect.numberCells());
+                        for (int d = 0; d < d_dim.getValue(); ++d) {
+                           if (intersect_size[d] != 1) {
+                              if (intersect_size[d] != base_node_size[d]) {
+                                 bool chop_low;
+                                 int chop;
+                                 if (base_box.lower() (d) != nbr_box.lower() (d)) {
+                                    chop = std::max<int>(base_box.lower(d),
+                                                         nbr_box.lower(d));
+                                    chop_low = true;
+                                 } else {
+                                    chop = std::min<int>(base_box.upper(d),
+                                                         nbr_box.upper(d));
+                                    chop_low = false;
+                                 }
+
+                                 BoxContainer::iterator box_itr =
+                                    chopped_domain.find(base_box);
+
+                                 LocalId local_id(chopped_domain.size());
+                                 Box new_box(base_box, local_id, 0);
+                                 if (chop_low == true) {
+                                    new_box.lower() (d) = chop;
+                                    box_itr->upper() (d) = chop - 1;
+                                 } else {
+                                    new_box.upper() (d) = chop;
+                                    box_itr->lower() (d) = chop + 1;
+                                 }
+
+                                 chopped_domain.insert(chopped_domain.end(),
+                                    new_box);
+                                 chopped = true;
+
+                                 nochop.clear();
+                                 for (std::set<BoxId>::iterator nn_itr =
+                                         neighbors[base_id].begin();
+                                      nn_itr != neighbors[base_id].end();
+                                      ++nn_itr) {
+
+                                    dont_chop[*nn_itr].erase(base_id);
+                                 }
+                                 break;
+                              }
+                           }
+                        }
+                     }
+                  }
+
+                  if (chopped) {
+                     break;
+                  } else {
+                     nochop.insert(other_id);
+                  }
+               }
+               if (chopped) break;
+            }
+            if (chopped) break;
+         }
+         if (chopped) break;
+      }
+      if (!chopped) {
+         breaking_needed = false;
+      }
+   }
 }
 
 /*
@@ -2281,17 +2621,16 @@ BaseGridGeometry::transformBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, box, ratio);
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[output_block.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == input_block) {
-         IntVector refined_shift = (ni->getShift()) * (ratio);
-         box.rotate(ni->getRotationIdentifier());
-         box.shift(refined_shift);
-         box.setBlockId(output_block);
-         return true;
-      }
+   int out_blk = output_block.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[out_blk].find(input_block);
+   if (itr != d_block_neighbors[out_blk].end()) {
+      const Neighbor& neighbor = itr->second;
+      IntVector refined_shift = (neighbor.getShift()) * (ratio);
+      box.rotate(neighbor.getRotationIdentifier());
+      box.shift(refined_shift);
+      box.setBlockId(output_block);
+      return true;
    }
    return false;
 }
@@ -2313,20 +2652,19 @@ BaseGridGeometry::transformBoxContainer(
    const BlockId& output_block,
    const BlockId& input_block) const
 {
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[output_block.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == input_block) {
-         IntVector refined_shift = (ni->getShift()) * (ratio);
-         boxes.rotate(ni->getRotationIdentifier());
-         boxes.shift(refined_shift);
-         for (BoxContainer::iterator itr = boxes.begin(); itr != boxes.end();
-              ++itr) {
-            itr->setBlockId(output_block);
-         }
-         return true;
+   int out_blk = output_block.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[out_blk].find(input_block);
+   if (itr != d_block_neighbors[out_blk].end()) {
+      const Neighbor& neighbor = itr->second;
+      IntVector refined_shift = (neighbor.getShift()) * (ratio);
+      boxes.rotate(neighbor.getRotationIdentifier());
+      boxes.shift(refined_shift);
+      for (BoxContainer::iterator itr = boxes.begin(); itr != boxes.end();
+           ++itr) {
+         itr->setBlockId(output_block);
       }
+      return true;
    }
    return false;
 }
@@ -2346,14 +2684,11 @@ BaseGridGeometry::getTransformedBlock(
    const BlockId& base_block,
    const BlockId& transformed_block)
 {
-   std::list<Neighbor>& nbr_list =
-      d_block_neighbors[base_block.getBlockValue()];
-   for (std::list<Neighbor>::iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == transformed_block) {
-         block = ni->getTransformedDomain();
-         break;
-      }
+   int base_blk = base_block.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[base_blk].find(transformed_block);
+   if (itr != d_block_neighbors[base_blk].end()) {
+      block = itr->second.getTransformedDomain();
    }
 }
 
@@ -2375,12 +2710,14 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
    if (d_number_blocks > 1) {
 
+      t_adjust_multiblock_patch_level_boundaries->start();
+
       const BoxContainer& d_boxes =
          patch_level.getBoxLevel()->getBoxes();
 
       IntVector gcw(patch_level.getPatchDescriptor()->getMaxGhostWidth(d_dim));
 
-      for (int nb = 0; nb < d_number_blocks; nb++) {
+      for (int nb = 0; nb < d_number_blocks; ++nb) {
 
          const BlockId block_id(nb);
 
@@ -2389,17 +2726,17 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
 
          BoxContainer pseudo_domain;
 
-         std::list<Neighbor>& nbr_list = d_block_neighbors[nb];
-         for (std::list<Neighbor>::iterator nei = nbr_list.begin();
-              nei != nbr_list.end(); nei++) {
-            BoxContainer transformed_domain(nei->getTransformedDomain());
+         std::map<BlockId, Neighbor>& nbr_map = d_block_neighbors[nb];
+         for (std::map<BlockId, Neighbor>::iterator nei = nbr_map.begin();
+              nei != nbr_map.end(); ++nei) {
+            BoxContainer transformed_domain(nei->second.getTransformedDomain());
             pseudo_domain.spliceFront(transformed_domain);
          }
 
          pseudo_domain.refine(patch_level.getRatioToLevelZero());
 
          BoxContainer physical_domain(patch_level.getPhysicalDomain(block_id));
-         BoxContainer sing_boxes(singularity); 
+         BoxContainer sing_boxes(singularity);
          pseudo_domain.spliceFront(physical_domain);
          pseudo_domain.spliceFront(sing_boxes);
          pseudo_domain.coalesce();
@@ -2415,6 +2752,8 @@ BaseGridGeometry::adjustMultiblockPatchLevelBoundaries(
                singularity);
          }
       }
+
+      t_adjust_multiblock_patch_level_boundaries->stop();
    }
 }
 
@@ -2452,14 +2791,14 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
 
       std::vector<BoundaryBox> codim_boundaries[SAMRAI::MAX_DIM_VAL];
       std::list<int> boundaries_in_sing[SAMRAI::MAX_DIM_VAL];
-      for (int codim = 2; codim <= d_dim.getValue(); codim++) {
+      for (int codim = 2; codim <= d_dim.getValue(); ++codim) {
 
          codim_boundaries[codim - 1] =
             patch.getPatchGeometry()->getCodimensionBoundaries(codim);
 
          int num_boxes = static_cast<int>(codim_boundaries[codim - 1].size());
 
-         for (int n = 0; n < num_boxes; n++) {
+         for (int n = 0; n < num_boxes; ++n) {
             Box border_box(codim_boundaries[codim - 1][n].getBox());
             BoxContainer sing_test_list(singularity);
             sing_test_list.intersectBoxes(border_box);
@@ -2469,15 +2808,15 @@ BaseGridGeometry::adjustBoundaryBoxesOnPatch(
          }
       }
 
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          if (!boundaries_in_sing[i].empty()) {
             int old_size = static_cast<int>(boundaries[i].size());
             int nb = 0;
             for (std::list<int>::iterator b = boundaries_in_sing[i].begin();
-                 b != boundaries_in_sing[i].end(); b++) {
+                 b != boundaries_in_sing[i].end(); ++b) {
                boundaries[i].push_back(codim_boundaries[i][*b]);
                boundaries[i][old_size + nb].setIsMultiblockSingularity(true);
-               nb++;
+               ++nb;
             }
          }
          patch.getPatchGeometry()->setCodimensionBoundaries(boundaries[i],
@@ -2501,14 +2840,11 @@ BaseGridGeometry::getRotationIdentifier(
    TBOX_ASSERT(areNeighbors(dst, src));
 
    Transformation::RotationIdentifier rotate = Transformation::NO_ROTATE;
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[dst.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == src.getBlockValue()) {
-         rotate = ni->getTransformation().getRotation();
-         break;
-      }
+   int dst_blk = dst.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[dst_blk].find(src);
+   if (itr != d_block_neighbors[dst_blk].end()) {
+      rotate = itr->second.getTransformation().getRotation();
    }
 
    return rotate;
@@ -2526,13 +2862,11 @@ BaseGridGeometry::getOffset(
 {
    TBOX_ASSERT(areNeighbors(dst, src));
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[dst.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == src.getBlockValue()) {
-         return ni->getTransformation().getOffset();
-      }
+   int dst_blk = dst.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[dst_blk].find(src);
+   if (itr != d_block_neighbors[dst_blk].end()) {
+      return itr->second.getTransformation().getOffset();
    }
 
    return IntVector::getOne(d_dim);
@@ -2550,14 +2884,11 @@ BaseGridGeometry::areNeighbors(
 {
    bool are_neighbors = false;
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[block_a.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == block_b.getBlockValue()) {
-         are_neighbors = true;
-         break;
-      }
+   int a_blk = block_a.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[a_blk].find(block_b);
+   if (itr != d_block_neighbors[a_blk].end()) {
+      are_neighbors = true;
    }
 
    return are_neighbors;
@@ -2575,15 +2906,12 @@ BaseGridGeometry::areSingularityNeighbors(
 {
    bool are_sing_neighbors = false;
 
-   const std::list<Neighbor>& nbr_list =
-      d_block_neighbors[block_a.getBlockValue()];
-   for (std::list<Neighbor>::const_iterator ni = nbr_list.begin();
-        ni != nbr_list.end(); ni++) {
-      if (ni->getBlockId() == block_b.getBlockValue()) {
-         if (ni->isSingularity()) {
-            are_sing_neighbors = true;
-            break;
-         }
+   int a_blk = block_a.getBlockValue();
+   std::map<BlockId, Neighbor>::const_iterator itr =
+      d_block_neighbors[a_blk].find(block_b);
+   if (itr != d_block_neighbors[a_blk].end()) {
+      if (itr->second.isSingularity()) {
+         are_sing_neighbors = true;
       }
    }
 
@@ -2624,13 +2952,13 @@ BaseGridGeometry::printClassData(
       stream << "   Block " << bn << '\n';
 
       const BlockId block_id(bn);
-      const std::list<Neighbor>& block_neighbors(getNeighbors(block_id));
+      const std::map<BlockId, Neighbor>& block_neighbors(getNeighbors(block_id));
 
       const BoxContainer& singularity_boxlist(getSingularityBoxContainer(block_id));
 
-      for (std::list<Neighbor>::const_iterator li = block_neighbors.begin();
-           li != block_neighbors.end(); li++) {
-         const Neighbor& neighbor(*li);
+      for (std::map<BlockId, Neighbor>::const_iterator li = block_neighbors.begin();
+           li != block_neighbors.end(); ++li) {
+         const Neighbor& neighbor(li->second);
          stream << "      neighbor block " << neighbor.getBlockId() << ':';
          stream << " singularity = " << neighbor.isSingularity() << '\n';
       }
@@ -2655,28 +2983,22 @@ BaseGridGeometry::initializeCallback()
 {
    t_find_patches_touching_boundaries = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::findPatchesTouchingBoundaries()");
-   TBOX_ASSERT(t_find_patches_touching_boundaries);
    t_touching_boundaries_init = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::...TouchingBoundaries()_init");
-   TBOX_ASSERT(t_touching_boundaries_init);
    t_touching_boundaries_loop = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::...TouchingBoundaries()_loop");
-   TBOX_ASSERT(t_touching_boundaries_loop);
    t_set_geometry_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::setGeometryOnPatches()");
-   TBOX_ASSERT(t_set_geometry_on_patches);
    t_set_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::setBoundaryBoxes()");
-   TBOX_ASSERT(t_set_boundary_boxes);
    t_set_geometry_data_on_patches = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::set_geometry_data_on_patches");
-   TBOX_ASSERT(t_set_geometry_data_on_patches);
    t_compute_boundary_boxes_on_level = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::computeBoundaryBoxesOnLevel()");
-   TBOX_ASSERT(t_compute_boundary_boxes_on_level);
    t_get_boundary_boxes = tbox::TimerManager::getManager()->
       getTimer("hier::BaseGridGeometry::getBoundaryBoxes()");
-   TBOX_ASSERT(t_get_boundary_boxes);
+   t_adjust_multiblock_patch_level_boundaries = tbox::TimerManager::getManager()->
+      getTimer("hier::BaseGridGeometry::adjustMultiblockPatchLevelBoundaries()");
 }
 
 /*

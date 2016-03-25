@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   SphericalShellGenerator class declaration
  *
  ************************************************************************/
@@ -61,15 +61,16 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       /*! Input database */
-      const boost::shared_ptr<tbox::Database> &database = boost::shared_ptr<tbox::Database>() );
+      const boost::shared_ptr<tbox::Database>& database = boost::shared_ptr<tbox::Database>());
 
    ~SphericalShellGenerator();
 
    /*!
     * @brief Set tas on the tag level.
     */
-   virtual void setTags(
-      bool &exact_tagging,
+   virtual void
+   setTags(
+      bool& exact_tagging,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id);
@@ -77,7 +78,6 @@ public:
    //@{ @name SAMRAI::mesh::StandardTagAndInitStrategy virtuals
 
 public:
-
    /*!
     * @brief Set the domain, possibly scaling up the specifications.
     *
@@ -90,16 +90,16 @@ public:
     * of autoscale_base_nprocs.
     */
    void setDomain(
-      hier::BoxContainer &domain,
+      hier::BoxContainer & domain,
       double xlo[],
       double xhi[],
       int autoscale_base_nprocs,
-      const tbox::SAMRAI_MPI &mpi);
+      const tbox::SAMRAI_MPI & mpi);
 
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy> &new_hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       /*! Coarsest level */ const int coarsest_level,
       /*! Finest level */ const int finest_level);
 
@@ -111,13 +111,13 @@ public:
       const double init_data_time,
       const bool initial_time,
       const bool allocate_data)
-      {
-         NULL_USE(patch);
-         NULL_USE(init_data_time);
-         NULL_USE(initial_time);
-         NULL_USE(allocate_data);
-         TBOX_ERROR("Should not be here.");
-      }
+   {
+      NULL_USE(patch);
+      NULL_USE(init_data_time);
+      NULL_USE(initial_time);
+      NULL_USE(allocate_data);
+      TBOX_ERROR("Should not be here.");
+   }
 
    bool
    packDerivedDataIntoDoubleBuffer(
@@ -128,7 +128,6 @@ public:
       int depth_index) const;
 
 public:
-
 #ifdef HAVE_HDF5
    /*!
     * @brief Tell a VisIt plotter which data to write for this class.
@@ -139,11 +138,11 @@ public:
 #endif
 
 private:
-
-   void tagShells(
-      pdat::CellData<int> &tag_data,
-      const geom::CartesianPatchGeometry &patch_geom,
-      const std::vector<double> &buffer_distance ) const;
+   void
+   tagShells(
+      pdat::CellData<int>& tag_data,
+      const geom::CartesianPatchGeometry& patch_geom,
+      const std::vector<double>& buffer_distance) const;
 
    std::string d_name;
 
@@ -168,7 +167,7 @@ private:
    /*!
     * @brief Buffer distances for generating tags.
     */
-   std::vector<std::vector<double> >  d_buffer_distance;
+   std::vector<std::vector<double> > d_buffer_distance;
 
    /*!
     * @brief Whether to allocate data on the mesh.

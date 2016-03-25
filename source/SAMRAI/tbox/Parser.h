@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
@@ -76,7 +76,7 @@ public:
    int
    parse(
       const std::string& filename,
-      FILE * fstream,
+      FILE* fstream,
       const boost::shared_ptr<Database>& database);
 
    /**
@@ -225,7 +225,7 @@ public:
 private:
    Parser(
       const Parser&);           // not implemented
-   void
+   Parser&
    operator = (
       const Parser&);           // not implemented
 

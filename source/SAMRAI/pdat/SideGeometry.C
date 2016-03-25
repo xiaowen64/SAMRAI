@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -126,7 +126,7 @@ SideGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -146,13 +146,13 @@ SideGeometry::computeDestinationBoxes(
    const hier::IntVector one_vector(dim, 1);
 
    const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) *
-      hier::Box::grow(dst_ghost, one_vector));
+      hier::Box::grow(src_shift, one_vector)
+      * hier::Box::grow(dst_ghost, one_vector));
 
    if (!quick_check.empty()) {
 
       const hier::IntVector& dirs = src_geometry.getDirectionVector();
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          if (dirs(d)) {
             const hier::Box dst_side(toSideBox(dst_ghost, d));
             const hier::Box src_side(toSideBox(src_shift, d));
@@ -234,7 +234,7 @@ SideGeometry::doOverlap(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes)
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
    TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
@@ -275,7 +275,7 @@ SideGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box side_box(SideGeometry::toSideBox(*b, d));
          dst_boxes[d].pushBack(side_box);
       }
@@ -461,9 +461,9 @@ SideGeometry::transform(
 
    const int normal_direction = index.getAxis();
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (i != normal_direction && index(i) >= 0) {
-         index(i)++;
+         ++index(i);
       }
    }
 
@@ -476,7 +476,7 @@ SideGeometry::transform(
       if (rotation_num) {
 
          SideIndex tmp_index(dim);
-         for (int r = 0; r < rotation_num; r++) {
+         for (int r = 0; r < rotation_num; ++r) {
             tmp_index = index;
             index(0) = tmp_index(1);
             index(1) = -tmp_index(0);
@@ -606,9 +606,9 @@ SideGeometry::transform(
       new_normal_direction = index.getAxis();
    }
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (i != new_normal_direction && index(i) > 0) {
-         index(i)--;
+         --index(i);
       }
    }
 
@@ -617,15 +617,15 @@ SideGeometry::transform(
 
 void
 SideGeometry::rotateAboutAxis(SideIndex& index,
-   const int axis,
-   const int num_rotations)
+                              const int axis,
+                              const int num_rotations)
 {
    const tbox::Dimension& dim = index.getDim();
    const int a = (axis + 1) % dim.getValue();
    const int b = (axis + 2) % dim.getValue();
 
    SideIndex tmp_index(dim);
-   for (int j = 0; j < num_rotations; j++) {
+   for (int j = 0; j < num_rotations; ++j) {
       tmp_index = index;
       index(a) = tmp_index(b);
       index(b) = -tmp_index(a);
@@ -633,7 +633,7 @@ SideGeometry::rotateAboutAxis(SideIndex& index,
 
    int new_normal_direction = index.getAxis();
    if (new_normal_direction != axis) {
-      for (int j = 0; j < num_rotations; j++) {
+      for (int j = 0; j < num_rotations; ++j) {
          new_normal_direction = new_normal_direction == a ? b : a;
       }
    }

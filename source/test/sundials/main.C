@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for testing Sundials/SAMRAI interface.
  *
  ************************************************************************/
@@ -245,7 +245,7 @@ int main(
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim,
-         input_db->getDatabase("BergerRigoutsos")));
+            input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
@@ -269,14 +269,14 @@ int main(
       gridding_algorithm->makeCoarsestLevel(init_time);
 
       std::vector<int> tag_buffer_array(hierarchy->getMaxNumberOfLevels());
-      for (int il = 0; il < hierarchy->getMaxNumberOfLevels(); il++) {
+      for (int il = 0; il < hierarchy->getMaxNumberOfLevels(); ++il) {
          tag_buffer_array[il] = 1;
       }
 
       bool done = false;
       bool initial_cycle = true;
       for (int ln = 0; hierarchy->levelCanBeRefined(ln) && !done;
-           ln++) {
+           ++ln) {
          gridding_algorithm->makeFinerLevel(
             tag_buffer_array[ln],
             initial_cycle,
@@ -353,7 +353,7 @@ int main(
          tbox::pout << "Initial solution vector y() at initial time: " << endl;
          int ln;
          tbox::pout << "y(" << init_time << "): " << endl;
-         for (ln = 0; ln < init_hierarchy->getNumberOfLevels(); ln++) {
+         for (ln = 0; ln < init_hierarchy->getNumberOfLevels(); ++ln) {
             boost::shared_ptr<hier::PatchLevel> level(
                init_hierarchy->getPatchLevel(ln));
             tbox::plog << "level = " << ln << endl;
@@ -392,7 +392,7 @@ int main(
 
       double final_time = init_time;
       int interval;
-      for (interval = 1; interval <= num_print_intervals; interval++) {
+      for (interval = 1; interval <= num_print_intervals; ++interval) {
 
          /*
           * Set time interval
@@ -434,7 +434,7 @@ int main(
             tbox::plog << "y(" << final_time << "): " << endl << endl;
             t_log_dump->start();
             for (int ln = 0; ln < result_hierarchy->getNumberOfLevels();
-                 ln++) {
+                 ++ln) {
                boost::shared_ptr<hier::PatchLevel> level(
                   result_hierarchy->getPatchLevel(ln));
                tbox::plog << "level = " << ln << endl;
@@ -514,7 +514,7 @@ int main(
                     << "  L1 Norm  \t"
                     << "  L2 Norm  " << endl;
 
-         for (interval = 0; interval < num_print_intervals; interval++) {
+         for (interval = 0; interval < num_print_intervals; ++interval) {
             tbox::pout.precision(18);
             tbox::pout << "  " << time[interval] << "  \t";
             tbox::pout.precision(6);

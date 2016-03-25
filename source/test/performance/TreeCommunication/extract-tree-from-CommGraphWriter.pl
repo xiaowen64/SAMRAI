@@ -34,7 +34,7 @@ All log files must have the same nproc.
     The dot filename.  If omitted, generate a name ending in '.dot'
     from the log file.  To output to stdout, use '-'.
 
-  --records=<#[,#...]>
+  --record=<#[,#...]>
     Comma-separated list of record numbers to extract.
     If omitted, extract all records.
 

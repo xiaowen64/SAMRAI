@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -117,13 +117,13 @@ SparseData<BOX_GEOMETRY>::Attributes::add(
 * non-modifying operations
 **********************************************************************/
 template<typename BOX_GEOMETRY>
-const double*
+const double *
 SparseData<BOX_GEOMETRY>::Attributes::getDoubleAttributes() const {
    return &d_dbl_attrs[0];
 }
 
 template<typename BOX_GEOMETRY>
-const int*
+const int *
 SparseData<BOX_GEOMETRY>::Attributes::getIntAttributes() const {
    return &d_int_attrs[0];
 }
@@ -733,45 +733,55 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
 
    // number of double node item attributes
    TBOX_ASSERT(restart_db->getInteger("dbl_attr_item_count") ==
-               d_dbl_attr_size);
+      d_dbl_attr_size);
 
    // get the registered double keys and their associated id.
-   std::string* keys = new std::string[d_dbl_attr_size];
-   int* ids = new int[d_dbl_attr_size];
+   std::string* keys = 0;
+   int* ids = 0;
+   if (d_dbl_attr_size > 0) {
+      keys = new std::string[d_dbl_attr_size];
+      ids = new int[d_dbl_attr_size];
+   }
    restart_db->getStringArray("sparse_data_dbl_keys", keys, d_dbl_attr_size);
    restart_db->getIntegerArray("sparse_data_dbl_ids", ids, d_dbl_attr_size);
 
    d_dbl_names.clear();
    for (int i = 0; i < d_dbl_attr_size; ++i) {
       d_dbl_names.insert(
-         std::make_pair<std::string, DoubleAttributeId>(
-            keys[i], DoubleAttributeId(ids[i])));
+         std::make_pair(keys[i], DoubleAttributeId(ids[i])));
    }
 
-   delete[] keys;
-   delete[] ids;
+   if (d_dbl_attr_size > 0) {
+      delete[] keys;
+      keys = 0;
+      delete[] ids;
+      ids = 0;
+   }
 
    // number of double node item attributes
    TBOX_ASSERT(restart_db->getInteger("int_attr_item_count") ==
-               d_int_attr_size);
+      d_int_attr_size);
 
    // get the registered integer keys and their associated id.
-   keys = new std::string[d_int_attr_size];
-   ids = new int[d_int_attr_size];
+   if (d_int_attr_size > 0) {
+      keys = new std::string[d_int_attr_size];
+      ids = new int[d_int_attr_size];
+   }
    restart_db->getStringArray("sparse_data_int_keys", keys, d_int_attr_size);
    restart_db->getIntegerArray("sparse_data_int_ids", ids, d_int_attr_size);
 
    d_int_names.clear();
    for (int i = 0; i < d_int_attr_size; ++i) {
       d_int_names.insert(
-         std::make_pair<std::string, IntegerAttributeId>(
-            keys[i], IntegerAttributeId(ids[i])));
+         std::make_pair(keys[i], IntegerAttributeId(ids[i])));
    }
 
-   delete[] keys;
-   keys = 0;
-   delete[] ids;
-   ids = 0;
+   if (d_int_attr_size > 0) {
+      delete[] keys;
+      keys = 0;
+      delete[] ids;
+      ids = 0;
+   }
 
    // get the data for each node in this sparse data object
    for (int curr_item = 0; curr_item < count; ++curr_item) {
@@ -842,8 +852,8 @@ SparseData<BOX_GEOMETRY>::getFromRestart(
       } // if (restart_db->isDatabase(...
       else {
          TBOX_ERROR("SparseData::getFromRestart error...\n"
-         << " : Restart database missing data for attribute index "
-         << index_keyword << std::endl);
+            << " : Restart database missing data for attribute index "
+            << index_keyword << std::endl);
       }
    } // for (int curr_item = ...
 }
@@ -869,8 +879,12 @@ SparseData<BOX_GEOMETRY>::putToRestart(
    restart_db->putInteger("dbl_attr_item_count", d_dbl_attr_size);
 
    // record the keys for the attributes
-   std::string* keys = new std::string[d_dbl_attr_size];
-   int* ids = new int[d_dbl_attr_size];
+   std::string* keys = 0;
+   int* ids = 0;
+   if (d_dbl_attr_size > 0) {
+      keys = new std::string[d_dbl_attr_size];
+      ids = new int[d_dbl_attr_size];
+   }
    typename DoubleAttrNameMap::const_iterator
    dbl_name_iter = d_dbl_names.begin();
 
@@ -882,14 +896,20 @@ SparseData<BOX_GEOMETRY>::putToRestart(
    restart_db->putStringArray("sparse_data_dbl_keys", keys, d_dbl_attr_size);
    restart_db->putIntegerArray("sparse_data_dbl_ids", ids, d_dbl_attr_size);
 
-   delete[] keys;
-   delete[] ids;
+   if (d_dbl_attr_size > 0) {
+      delete[] keys;
+      keys = 0;
+      delete[] ids;
+      ids = 0;
+   }
 
    // record the keys for the attributes
    restart_db->putInteger("int_attr_item_count", d_int_attr_size);
 
-   keys = new std::string[d_int_attr_size];
-   ids = new int[d_int_attr_size];
+   if (d_int_attr_size > 0) {
+      keys = new std::string[d_int_attr_size];
+      ids = new int[d_int_attr_size];
+   }
    typename IntAttrNameMap::const_iterator int_name_iter = d_int_names.begin();
 
    for (int i = 0; i < d_int_attr_size; ++i, ++int_name_iter) {
@@ -900,10 +920,12 @@ SparseData<BOX_GEOMETRY>::putToRestart(
    restart_db->putStringArray("sparse_data_int_keys", keys, d_int_attr_size);
    restart_db->putIntegerArray("sparse_data_int_ids", ids, d_int_attr_size);
 
-   delete[] keys;
-   keys = 0;
-   delete[] ids;
-   ids = 0;
+   if (d_int_attr_size > 0) {
+      delete[] keys;
+      keys = 0;
+      delete[] ids;
+      ids = 0;
+   }
 
    // record the actual data for each element
    int curr_item(0);
@@ -1220,8 +1242,8 @@ SparseData<BOX_GEOMETRY>::operator != (
 }
 
 template<typename BOX_GEOMETRY>
-typename SparseData<BOX_GEOMETRY>::AttributeList&
-SparseData<BOX_GEOMETRY>::_get(
+typename SparseData<BOX_GEOMETRY>::AttributeList
+& SparseData<BOX_GEOMETRY>::_get(
    const hier::Index & index) const
 {
    typename SparseData<BOX_GEOMETRY>::AttributeList * list = 0;

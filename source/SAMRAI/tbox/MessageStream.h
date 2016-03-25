@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Fixed-size message buffer used in interprocessor communication
  *
  ************************************************************************/
@@ -69,7 +69,7 @@ public:
    MessageStream(
       const size_t num_bytes,
       const StreamMode mode,
-      const void *data_to_read = 0,
+      const void* data_to_read = 0,
       bool deep_copy = true);
 
    /*!
@@ -107,14 +107,15 @@ public:
 
    /*!
     * @brief Return a pointer to the start of the message buffer.
-    *
-    * @pre hasBufferAccess()
     */
    const void *
    getBufferStart() const
    {
-      TBOX_ASSERT(hasBufferAccess());
-      return static_cast<const void *>(d_buffer_access);
+      if (d_mode == Read) {
+         return static_cast<const void *>(d_read_buffer);
+      } else {
+         return &d_write_buffer[0];
+      }
    }
 
    /*!
@@ -139,13 +140,6 @@ public:
    {
       TBOX_ASSERT(writeMode());
       d_grow_as_needed = true;
-      return;
-   }
-
-   bool
-   hasBufferAccess() const
-   {
-      return d_buffer_access != 0;
    }
 
    /*!
@@ -203,6 +197,23 @@ public:
    }
 
    /*!
+    * @brief Pack content of another data stream into this one.
+    *
+    * @param[in] other  The other data stream.
+    *
+    * @pre writeMode()
+    */
+   void
+   pack(
+      const MessageStream& other)
+   {
+      TBOX_ASSERT(writeMode());
+      if (other.getCurrentSize() > 0) {
+         copyDataIn(other.getBufferStart(), other.getCurrentSize());
+      }
+   }
+
+   /*!
     * @brief Unpack a single data item from message stream.
     *
     * @param[out] data  Single item of type DATA_TYPE that will be
@@ -235,7 +246,7 @@ public:
    template<typename DATA_TYPE>
    void
    unpack(
-      DATA_TYPE * data,
+      DATA_TYPE* data,
       unsigned int size = 1)
    {
       TBOX_ASSERT(readMode());
@@ -288,7 +299,7 @@ public:
    canCopyIn(
       size_t num_bytes) const
    {
-      return d_buffer_index + num_bytes <= d_buffer.capacity();
+      return d_buffer_index + num_bytes <= d_write_buffer.capacity();
    }
 
    /*!
@@ -302,7 +313,6 @@ public:
    }
 
 private:
-
    /*!
     * @brief Copy data into the stream, advancing the stream pointer.
     *
@@ -312,21 +322,19 @@ private:
     * @pre growAsNeeded() || canCopyIn(num_bytes)
     */
    void copyDataIn(
-      const void *input_data,
+      const void* input_data,
       const size_t num_bytes)
    {
-      if ( !growAsNeeded() ) {
+      if (!growAsNeeded()) {
          TBOX_ASSERT(canCopyIn(num_bytes));
       }
-      if ( num_bytes > 0 ) {
-         d_buffer.insert( d_buffer.end(),
-                          static_cast<const char*>(input_data),
-                          static_cast<const char*>(input_data) + num_bytes );
-         d_buffer_size = d_buffer.size();
+      if (num_bytes > 0) {
+         d_write_buffer.insert(d_write_buffer.end(),
+            static_cast<const char *>(input_data),
+            static_cast<const char *>(input_data) + num_bytes);
+         d_buffer_size = d_write_buffer.size();
          d_buffer_index += num_bytes;
-         d_buffer_access = &d_buffer[0];
       }
-      return;
    }
 
    /*!
@@ -338,18 +346,17 @@ private:
     * @pre canCopyOut(num_bytes)
     */
    void copyDataOut(
-      void *output_data,
+      void* output_data,
       const size_t num_bytes)
    {
       TBOX_ASSERT(canCopyOut(num_bytes));
-      memcpy(output_data, &d_buffer_access[d_buffer_index], num_bytes);
+      memcpy(output_data, &d_read_buffer[d_buffer_index], num_bytes);
       d_buffer_index += num_bytes;
-      return;
    }
 
    MessageStream(
       const MessageStream&);            // not implemented
-   void
+   MessageStream&
    operator = (
       const MessageStream&);            // not implemented
 
@@ -359,21 +366,22 @@ private:
    const StreamMode d_mode;
 
    /*!
-    * The buffer for the streamed data.
+    * The buffer for the streamed data to be written.
     */
-   std::vector<char> d_buffer;
+   std::vector<char> d_write_buffer;
 
    /*!
-    * @brief Pointer to either d_buffer space or, in shallow-copy Read
-    * mode, external memory.
+    * @brief Pointer to the externally supplied memory to read from in
+    * shallow-copy Read mode, or the internal copy of the externally supplied
+    * memory to read from in deep-copy Read mode.
     */
-   const char *d_buffer_access;
+   const char* d_read_buffer;
 
    /*!
     * @brief Number of bytes in the buffer.
     *
-    * Equal to d_buffer.size() if using internal buffer.  Otherwise,
-    * equal to external buffer size.
+    * Equal to d_write_buffer.size() in write mode, size of supplied external
+    * buffer size in read mode.
     */
    size_t d_buffer_size;
 
@@ -386,6 +394,12 @@ private:
     * @brief Whether to grow buffer as needed in a Write-mode stream.
     */
    bool d_grow_as_needed;
+
+   /*!
+    * @brief True if d_read_buffer is a deep copy (locally allocated copy) of
+    * externally supplied memory.
+    */
+   bool d_deep_copy_read;
 
 };
 

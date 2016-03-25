@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Simple structure for managing refinement data in equivalence classes.
  *
  ************************************************************************/
@@ -163,7 +163,7 @@ public:
       TBOX_ASSERT((equiv_class_index >= 0) &&
          (equiv_class_index < getNumberOfEquivalenceClasses()));
       return d_refine_classes_data_items[
-         d_equivalence_class_indices[equiv_class_index].front()];
+                d_equivalence_class_indices[equiv_class_index].front()];
    }
 
    /*!
@@ -406,7 +406,7 @@ public:
 private:
    RefineClasses(
       const RefineClasses&);            // not implemented
-   void
+   RefineClasses&
    operator = (
       const RefineClasses&);                     // not implemented
 

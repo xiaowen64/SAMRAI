@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Default fill pattern class
  *
  ************************************************************************/
@@ -96,7 +96,7 @@ public:
     * @param[in] fill_boxes  list representing the all of the space on a patch
     *                        or its ghost region that may be filled by a
     *                        refine operator (cell-centered representation)
-    * @param[in] node_fill_boxes node-centered representation of fill_boxes  
+    * @param[in] node_fill_boxes node-centered representation of fill_boxes
     * @param[in] patch_box   box representing the patch where a refine operator
     *                        will fill data.  (cell-centered representation)
     * @param[in] data_box    box representing the full extent of the region
@@ -137,7 +137,7 @@ public:
 private:
    BoxGeometryVariableFillPattern(
       const BoxGeometryVariableFillPattern&);    // not implemented
-   void
+   BoxGeometryVariableFillPattern&
    operator = (
       const BoxGeometryVariableFillPattern&);    // not implemented
 

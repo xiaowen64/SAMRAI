@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer node data on multiple levels.
  *
  ************************************************************************/
@@ -384,7 +384,7 @@ private:
    // The following are not implemented
    HierarchyNodeDataOpsInteger(
       const HierarchyNodeDataOpsInteger&);
-   void
+   HierarchyNodeDataOpsInteger&
    operator = (
       const HierarchyNodeDataOpsInteger&);
 

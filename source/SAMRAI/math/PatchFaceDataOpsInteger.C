@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer face-centered patch data.
  *
  ************************************************************************/
@@ -31,8 +31,8 @@ PatchFaceDataOpsInteger::~PatchFaceDataOpsInteger()
 
 int
 PatchFaceDataOpsInteger::numberOfEntries(
-      const boost::shared_ptr<pdat::FaceData<int> >& data,
-      const hier::Box& box) const
+   const boost::shared_ptr<pdat::FaceData<int> >& data,
+   const hier::Box& box) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -41,7 +41,7 @@ PatchFaceDataOpsInteger::numberOfEntries(
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
    const int data_depth = data->getDepth();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       retval += ((pdat::FaceGeometry::toFaceBox(ibox, d).size()) * data_depth);
    }
    return retval;
@@ -81,9 +81,9 @@ PatchFaceDataOpsInteger::swapData(
 
 void
 PatchFaceDataOpsInteger::printData(
-      const boost::shared_ptr<pdat::FaceData<int> >& data,
-      const hier::Box& box,
-      std::ostream& s) const
+   const boost::shared_ptr<pdat::FaceData<int> >& data,
+   const hier::Box& box,
+   std::ostream& s) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -103,7 +103,7 @@ PatchFaceDataOpsInteger::copyData(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       dst->getArrayData(d).copy(src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));
    }
@@ -119,7 +119,7 @@ PatchFaceDataOpsInteger::abs(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Box geometry information for outeredge centered objects
  *
  ************************************************************************/
@@ -435,7 +435,7 @@ OuteredgeGeometry::setUpOverlap(
 
    for (hier::BoxContainer::const_iterator b = boxes.begin();
         b != boxes.end(); ++b) {
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          hier::Box edge_box(EdgeGeometry::toEdgeBox(*b, d));
          dst_boxes[d].pushBack(edge_box);
       }

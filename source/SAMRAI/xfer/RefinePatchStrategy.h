@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -13,10 +13,12 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/Box.h"
+#include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Utilities.h"
+#include "SAMRAI/xfer/RefineClasses.h"
 
 #include <set>
 
@@ -122,7 +124,8 @@ public:
     * zero.
     */
    virtual hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getRefineOpStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /*!
     * @brief Perform user-defined patch data refinement operations.
@@ -231,6 +234,62 @@ public:
            b != fine_boxes.end(); ++b) {
          postprocessRefine(fine, coarse, *b, ratio);
       }
+   }
+
+   /*!
+    * @brief Perform user-defined patch data pre-refinement operations
+    * on a PatchLevel.
+    *
+    * This member function is called before standard refine operations
+    * (expressed using concrete subclasses of the RefineOperator base class).
+    *
+    * @param[out] fine_level     Fine patch level containing destination data.
+    * @param[in] coarse_level    Coarse patch level containing source data.
+    * @param[in] coarse_to_fine      Connector coarse to fine
+    * @param[in] coarse_to_unfilled  Connector coarse to level representing
+    *                                boxes that need to be filled.
+    * @param[in] overlaps
+    * @param[in] refine_items
+    */
+   virtual void
+   preprocessRefineLevel(
+      hier::PatchLevel& fine_level,
+      const hier::PatchLevel& coarse_level,
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled,
+      const std::vector<std::vector<boost::shared_ptr<hier::BoxOverlap> > >& overlaps,
+      const RefineClasses::Data** refine_items) {
+      NULL_USE(fine_level);
+      NULL_USE(coarse_level);
+      NULL_USE(coarse_to_fine);
+      NULL_USE(coarse_to_unfilled);
+      NULL_USE(overlaps);
+      NULL_USE(refine_items);
+   }
+
+   /*!
+    * @brief Perform user-defined patch data post-refinement
+    * operations on a PatchLevel.
+    *
+    * This member function is called after standard refine operations
+    * (expressed using concrete subclasses of the RefineOperator base class).
+    *
+    * @param[out] fine_level     Fine patch level containing destination data.
+    * @param[in] coarse_level    Coarse patch level containing source data.
+    * @param[in] coarse_to_fine      Connector coarse to fine
+    * @param[in] coarse_to_unfilled  Connector coarse to level representing
+    *                                boxes that need to be filled.
+    */
+   virtual void
+   postprocessRefineLevel(
+      hier::PatchLevel& fine_level,
+      const hier::PatchLevel& coarse_level,
+      const hier::Connector& coarse_to_fine,
+      const hier::Connector& coarse_to_unfilled) {
+      NULL_USE(fine_level);
+      NULL_USE(coarse_level);
+      NULL_USE(coarse_to_fine);
+      NULL_USE(coarse_to_unfilled);
    }
 
 private:

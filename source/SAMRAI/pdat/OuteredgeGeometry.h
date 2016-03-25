@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Box geometry information for edge centered objects
  *
  ************************************************************************/
@@ -88,7 +88,7 @@ public:
     * boundaries of the source box geometry and the destination box geometry.
     *
     * @pre getBox().getDim() == src_mask.getDim()
-    * @pre 
+    * @pre
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -159,7 +159,7 @@ private:
 
    OuteredgeGeometry(
       const OuteredgeGeometry&);               // not implemented
-   void
+   OuteredgeGeometry&
    operator = (
       const OuteredgeGeometry&);                // not implemented
 

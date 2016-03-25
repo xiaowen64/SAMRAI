@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
@@ -36,33 +36,6 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
 /*
  *************************************************************************
  *
- * Set/unset information for transactions managed by this factory class.
- *
- *************************************************************************
- */
-
-void
-OuteredgeSumTransactionFactory::setRefineItems(
-   const xfer::RefineClasses::Data*const* refine_items,
-   int num_refine_items)
-{
-   OuteredgeSumTransaction::setRefineItems(refine_items,
-      num_refine_items);
-   d_refine_items = refine_items;
-   d_number_refine_items = num_refine_items;
-}
-
-void
-OuteredgeSumTransactionFactory::unsetRefineItems()
-{
-   OuteredgeSumTransaction::unsetRefineItems();
-   d_refine_items = 0;
-   d_number_refine_items = 0;
-}
-
-/*
- *************************************************************************
- *
  * Allocate outeredge sum transaction object.
  *
  *************************************************************************
@@ -75,7 +48,8 @@ OuteredgeSumTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
-   int ritem_id,
+   const xfer::RefineClasses::Data** refine_data,
+   int item_id,
    const hier::Box& box,
    bool use_time_interpolation) const
 {
@@ -87,15 +61,17 @@ OuteredgeSumTransactionFactory::allocate(
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
-   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT(item_id >= 0);
+   TBOX_ASSERT(refine_data[item_id] != 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return boost::make_shared<OuteredgeSumTransaction>(dst_level,
-      src_level,
-      overlap,
-      dst_node,
-      src_node,
-      ritem_id);
+                                                      src_level,
+                                                      overlap,
+                                                      dst_node,
+                                                      src_node,
+                                                      refine_data,
+                                                      item_id);
 }
 
 boost::shared_ptr<tbox::Transaction>
@@ -105,14 +81,16 @@ OuteredgeSumTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
-   int ritem_id) const
+   const xfer::RefineClasses::Data** refine_data,
+   int item_id) const
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
-   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT(item_id >= 0);
+   TBOX_ASSERT(refine_data[item_id] != 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return allocate(dst_level,
@@ -120,7 +98,8 @@ OuteredgeSumTransactionFactory::allocate(
       overlap,
       dst_node,
       src_node,
-      ritem_id,
+      refine_data,
+      item_id,
       hier::Box::getEmptyBox(dst_level->getDim()),
       false);
 }

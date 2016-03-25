@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating face data objects
  *
  ************************************************************************/
@@ -119,13 +119,15 @@ public:
     * constructor.  See the FaceVariable<TYPE> class header file for more
     * information.
     */
-   bool fineBoundaryRepresentsVariable() const;
+   bool
+   fineBoundaryRepresentsVariable() const;
 
    /**
     * Return true since the face data index space extends beyond the interior
     * of patches.  That is, face data lives on patch borders.
     */
-   bool dataLivesOnPatchBorder() const;
+   bool
+   dataLivesOnPatchBorder() const;
 
    /**
     * Return whether it is valid to copy this FaceDataFactory to the

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Basic templated edge-centered patch data operations.
  *
  ************************************************************************/
@@ -50,7 +50,7 @@ PatchEdgeDataBasicOps<TYPE>::scale(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.scale(dst->getArrayData(d),
          alpha, src->getArrayData(d),
@@ -71,7 +71,7 @@ PatchEdgeDataBasicOps<TYPE>::addScalar(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.addScalar(dst->getArrayData(d),
          src->getArrayData(d), alpha,
@@ -92,7 +92,7 @@ PatchEdgeDataBasicOps<TYPE>::add(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.add(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -113,7 +113,7 @@ PatchEdgeDataBasicOps<TYPE>::subtract(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.subtract(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -134,7 +134,7 @@ PatchEdgeDataBasicOps<TYPE>::multiply(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.multiply(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -155,7 +155,7 @@ PatchEdgeDataBasicOps<TYPE>::divide(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.divide(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -175,7 +175,7 @@ PatchEdgeDataBasicOps<TYPE>::reciprocal(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.reciprocal(dst->getArrayData(d),
          src->getArrayData(d),
@@ -198,7 +198,7 @@ PatchEdgeDataBasicOps<TYPE>::linearSum(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.linearSum(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -221,7 +221,7 @@ PatchEdgeDataBasicOps<TYPE>::axpy(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.axpy(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -244,7 +244,7 @@ PatchEdgeDataBasicOps<TYPE>::axmy(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.axmy(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -266,7 +266,7 @@ PatchEdgeDataBasicOps<TYPE>::setRandomValues(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       d_array_ops.setRandomValues(dst->getArrayData(d),
          width, low, edge_box);
@@ -285,7 +285,7 @@ PatchEdgeDataBasicOps<TYPE>::min(
    int dimVal = box.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       minval = tbox::MathUtilities<TYPE>::Min(
             minval, d_array_ops.min(data->getArrayData(d), edge_box));
@@ -305,7 +305,7 @@ PatchEdgeDataBasicOps<TYPE>::max(
    int dimVal = box.getDim().getValue();
 
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
       maxval = tbox::MathUtilities<TYPE>::Max(
             maxval, d_array_ops.max(data->getArrayData(d), edge_box));

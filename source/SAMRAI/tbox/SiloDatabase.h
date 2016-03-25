@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A database structure that stores Silo format data.
  *
  ************************************************************************/
@@ -114,7 +114,7 @@ public:
     *
     * @pre !key.empty()
     */
-   virtual int
+   virtual size_t
    getArraySize(
       const std::string& key);
 
@@ -174,7 +174,7 @@ public:
    putBoolArray(
       const std::string& key,
       const bool * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a boolean entry from the database with the specified key
@@ -213,7 +213,7 @@ public:
    putDatabaseBoxArray(
       const std::string& key,
       const DatabaseBox * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a box entry from the database with the specified key
@@ -248,7 +248,7 @@ public:
    putCharArray(
       const std::string& key,
       const char * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a character entry from the database with the specified key
@@ -284,7 +284,7 @@ public:
    putComplexArray(
       const std::string& key,
       const dcomplex * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a complex entry from the database with the specified key
@@ -320,7 +320,7 @@ public:
    putDoubleArray(
       const std::string& key,
       const double * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a double entry from the database with the specified key
@@ -356,7 +356,7 @@ public:
    putFloatArray(
       const std::string& key,
       const float * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a float entry from the database with the specified key
@@ -392,7 +392,7 @@ public:
    putIntegerArray(
       const std::string& key,
       const int * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get an integer entry from the database with the specified key
@@ -428,7 +428,7 @@ public:
    putStringArray(
       const std::string& key,
       const std::string * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Get a string entry from the database with the specified key
@@ -511,7 +511,7 @@ public:
     */
    virtual bool
    attachToFile(
-      DBfile * file,
+      DBfile* file,
       const std::string& directory);
 
    /**
@@ -550,11 +550,12 @@ public:
    using Database::getStringArray;
 
 private:
+   SiloDatabase();                      // not implemented
    SiloDatabase(
       const SiloDatabase&);             // not implemented
-   void
+   SiloDatabase&
    operator = (
-      const SiloDatabase&);                 // not implemented
+      const SiloDatabase&);             // not implemented
 
    bool
    isSiloType(
@@ -570,7 +571,7 @@ private:
    putSiloSimpleType(
       const std::string& key,
       const void* data,
-      const int nelements,
+      const size_t nelements,
       const int simple_type);
 
    bool

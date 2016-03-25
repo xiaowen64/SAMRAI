@@ -1,7 +1,7 @@
 c
 c  File:        algs_upfluxsum3d.m4
 c  Package:     SAMRAI algorithms
-c  Copyright:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2014 Lawrence Livermore National Security, LLC
 c  Revision:    $LastChangedRevision$
 c  Description: F77 routines for updating 3d flux sums from fluxes.
 c

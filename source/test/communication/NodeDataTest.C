@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -127,11 +127,11 @@ void NodeDataTest::registerVariables(
 
    d_variables.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::NodeVariable<double>(d_dim,
-                                        d_variable_src_name[i],
-                                        d_variable_depth[i]));
+            d_variable_src_name[i],
+            d_variable_depth[i]));
 
       if (d_do_refine) {
          commtest->registerVariable(d_variables[i],
@@ -192,7 +192,7 @@ void NodeDataTest::setLinearData(
          z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
@@ -237,7 +237,7 @@ void NodeDataTest::setPeriodicData(
          val *= tmpf;
       }
       val = val + 20.0; // Shift function range to [1,3] to avoid bad floating point compares.
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          (*data)(*ni, d) = val;
       }
 
@@ -261,7 +261,7 @@ void NodeDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
@@ -280,7 +280,7 @@ void NodeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
@@ -328,7 +328,7 @@ void NodeDataTest::checkPatchInteriorData(
    pdat::NodeIterator niend(pdat::NodeGeometry::end(interior));
    for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(interior));
         ni != niend; ++ni) {
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ni, d),
                   (*correct_data)(*ni, d)))) {
             tbox::perr << "FAILED: -- patch interior not properly filled"
@@ -362,15 +362,15 @@ void NodeDataTest::setPhysicalBoundaryConditions(
    std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
    const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
    const std::vector<hier::BoundaryBox>& face_bdry =
       d_dim == tbox::Dimension(3) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
@@ -383,7 +383,7 @@ void NodeDataTest::setPhysicalBoundaryConditions(
       /*
        * Set node boundary data.
        */
-      for (int ni = 0; ni < num_node_bdry_boxes; ni++) {
+      for (int ni = 0; ni < num_node_bdry_boxes; ++ni) {
 
          hier::Box fill_box = pgeom->getBoundaryFillBox(node_bdry[ni],
                patch.getBox(),
@@ -400,7 +400,7 @@ void NodeDataTest::setPhysicalBoundaryConditions(
          /*
           * Set edge boundary data.
           */
-         for (int ei = 0; ei < num_edge_bdry_boxes; ei++) {
+         for (int ei = 0; ei < num_edge_bdry_boxes; ++ei) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(edge_bdry[ei],
                   patch.getBox(),
@@ -418,7 +418,7 @@ void NodeDataTest::setPhysicalBoundaryConditions(
          /*
           * Set face boundary data.
           */
-         for (int fi = 0; fi < num_face_bdry_boxes; fi++) {
+         for (int fi = 0; fi < num_face_bdry_boxes; ++fi) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(face_bdry[fi],
                   patch.getBox(),
@@ -464,7 +464,7 @@ bool NodeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(periodic_shift.getDim(), 0);
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -490,7 +490,7 @@ bool NodeDataTest::verifyResults(
          }
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
@@ -503,7 +503,7 @@ bool NodeDataTest::verifyResults(
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
               ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                double result = (*node_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."

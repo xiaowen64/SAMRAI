@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Box representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -87,7 +87,7 @@ public:
       const BlockId& block_id);
 
    /*!
-    * @brief Copy constructor 
+    * @brief Copy constructor
     */
    Box(
       const Box& box);
@@ -97,6 +97,36 @@ public:
     */
    explicit Box(
       const tbox::DatabaseBox& box);
+
+   /*!
+    * @brief Initializing constructor.
+    *
+    * @param[in] lower
+    *
+    * @param[in] upper
+    *
+    * @param[in] block_id
+    *
+    * @param[in] local_id
+    *
+    * @param[in] owner_rank
+    *
+    * @param[in] periodic_id Describes the periodic shift.  If
+    * periodic_id is non-zero, specify the Box in the position shifted
+    * according to the @c periodic_id.  The default argument for @c
+    * periodic_id corresponds to the zero-shift.
+    *
+    * @pre periodic_id.isValid()
+    * @pre periodic_id.getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts()
+    */
+   Box(
+      const Index& lower,
+      const Index& upper,
+      const BlockId& block_id,
+      const LocalId& local_id,
+      const int owner_rank,
+      const PeriodicId& periodic_id = PeriodicId::zero());
 
    /*!
     * @brief Initializing constructor.
@@ -227,7 +257,7 @@ public:
       const int owner_rank,
       const PeriodicId& periodic_id = PeriodicId::zero())
    {
-      if ( &box != this ) {
+      if (&box != this) {
          d_lo = box.d_lo;
          d_hi = box.d_hi;
          d_block_id = box.d_block_id;
@@ -235,7 +265,8 @@ public:
       if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
       } else {
-         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
+         TBOX_ERROR(
+            "Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
       }
    }
 
@@ -295,6 +326,13 @@ public:
    getBlockId() const
    {
       return d_block_id;
+   }
+
+   //! @brief Set the LocalId.
+   void
+   setLocalId(const LocalId& local_id)
+   {
+      return d_id.initialize(local_id, d_id.getOwnerRank(), d_id.getPeriodicId());
    }
 
    //! @brief Get the LocalId.
@@ -419,7 +457,7 @@ public:
     */
    void
    putToMessageStream(
-      tbox::MessageStream &msg) const;
+      tbox::MessageStream& msg) const;
 
    /*!
     * @brief Set attributes according to data in MessageStream.
@@ -430,7 +468,7 @@ public:
     */
    void
    getFromMessageStream(
-      tbox::MessageStream &msg);
+      tbox::MessageStream& msg);
 
    //@}
 
@@ -556,7 +594,7 @@ public:
    bool
    isEmpty() const
    {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          if (d_hi(i) < d_lo(i)) {
             return true;
          }
@@ -595,7 +633,7 @@ public:
 
    /*!
     * @brief Calculate the number of indices represented by the box.
-    * 
+    *
     * If the box is empty, then the number of index points within the box is
     * zero.
     */
@@ -605,7 +643,7 @@ public:
       int mysize = 0;
       if (!empty()) {
          mysize = 1;
-         for (int i = 0; i < getDim().getValue(); i++) {
+         for (int i = 0; i < getDim().getValue(); ++i) {
             mysize *= (d_hi(i) - d_lo(i) + 1);
          }
       }
@@ -630,7 +668,7 @@ public:
       const Index& p) const
    {
       int myoffset = 0;
-      for (int i = getDim().getValue() - 1; i > 0; i--) {
+      for (int i = getDim().getValue() - 1; i > 0; --i) {
          myoffset = (d_hi(i - 1) - d_lo(i - 1) + 1) * (p(i) - d_lo(i) + myoffset);
       }
       myoffset += p(0) - d_lo(0);
@@ -673,7 +711,7 @@ public:
    contains(
       const Index& p) const
    {
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          if ((p(i) < d_lo(i)) || (p(i) > d_hi(i))) {
             return false;
          }
@@ -711,6 +749,11 @@ public:
       {
          return b1.isSpatiallyEqual(b2);
       }
+      bool
+      operator () (const Box* b1, const Box* b2) const
+      {
+         return b1->isSpatiallyEqual(*b2);
+      }
    };
 
    /*!
@@ -739,12 +782,13 @@ public:
     * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    Box
-   &operator *= (
+   &
+   operator *= (
       const Box& box);
 
    /*!
     * @brief Box intersection.
-    * 
+    *
     * Calculate the intersection of the index spaces of two boxes.  The
     * intersection with an empty box always yields an empty box.
     *
@@ -812,7 +856,7 @@ public:
    /*!
     * @brief Return true if this box can be coalesced with the argument box,
     * and set this box to the union of the boxes.
-    * 
+    *
     * Otherwise, return false and leave boxes as is.  Two boxes may be
     * coalesced if their union is a box (recall that index set union is not
     * closed over boxes).  If one box is empty and the other is non-empty, then
@@ -1069,7 +1113,7 @@ public:
       const IntVector& ratio)
    {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
-      for (int i = 0; i < getDim().getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); ++i) {
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
       }
@@ -1323,7 +1367,6 @@ private:
       const int axis,
       const int num_rotations);
 
-
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -1387,7 +1430,7 @@ private:
 
 class BoxIterator
 {
-friend class Box;
+   friend class Box;
 
 public:
    /**
@@ -1427,7 +1470,7 @@ public:
     * Return a pointer to the current index in the box.  This operation is
     * undefined if the iterator is past the last Index in the box.
     */
-   const Index*
+   const Index *
    operator -> () const
    {
       return &d_index;
@@ -1441,11 +1484,11 @@ public:
       int)
    {
       BoxIterator tmp = *this;
-      d_index(0)++;
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
+      ++d_index(0);
+      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
-            d_index(i + 1)++;
+            ++d_index(i + 1);
          } else
             break;
       }
@@ -1458,11 +1501,11 @@ public:
    BoxIterator&
    operator ++ ()
    {
-      d_index(0)++;
-      for (int i = 0; i < (d_index.getDim().getValue() - 1); i++) {
+      ++d_index(0);
+      for (int i = 0; i < (d_index.getDim().getValue() - 1); ++i) {
          if (d_index(i) > d_box.upper(i)) {
             d_index(i) = d_box.lower(i);
-            d_index(i + 1)++;
+            ++d_index(i + 1);
          } else
             break;
       }
@@ -1511,6 +1554,5 @@ private:
 
 }
 }
-
 
 #endif

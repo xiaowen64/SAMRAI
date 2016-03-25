@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory for create standard copy transactions
  *                for coarsen schedules.
  *
@@ -36,33 +36,6 @@ StandardCoarsenTransactionFactory::~StandardCoarsenTransactionFactory()
 /*
  *************************************************************************
  *
- * Set/unset information for transactions managed by this factory class.
- *
- *************************************************************************
- */
-
-void
-StandardCoarsenTransactionFactory::setCoarsenItems(
-   const CoarsenClasses::Data** coarsen_items,
-   int num_coarsen_items)
-{
-   CoarsenCopyTransaction::setCoarsenItems(coarsen_items,
-      num_coarsen_items);
-   d_coarsen_items = coarsen_items;
-   d_num_coarsen_items = num_coarsen_items;
-}
-
-void
-StandardCoarsenTransactionFactory::unsetCoarsenItems()
-{
-   CoarsenCopyTransaction::unsetCoarsenItems();
-   d_coarsen_items = 0;
-   d_num_coarsen_items = 0;
-}
-
-/*
- *************************************************************************
- *
  * Allocate appropriate transaction object.
  *
  *************************************************************************
@@ -75,7 +48,8 @@ StandardCoarsenTransactionFactory::allocate(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
-   int citem_id) const
+   const CoarsenClasses::Data** coarsen_data,
+   int item_id) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
       *src_level,
@@ -83,12 +57,13 @@ StandardCoarsenTransactionFactory::allocate(
       src_box);
 
    return boost::make_shared<CoarsenCopyTransaction>(
-      dst_level,
-      src_level,
-      overlap,
-      dst_box,
-      src_box,
-      citem_id);
+             dst_level,
+             src_level,
+             overlap,
+             dst_box,
+             src_box,
+             coarsen_data,
+             item_id);
 }
 
 }

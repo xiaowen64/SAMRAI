@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -25,6 +25,7 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/InputDatabase.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/tbox/RestartManager.h"
@@ -136,7 +137,7 @@ int main(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_domain_itr = coarse_domain.begin();
-      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_domain_itr) {
+      for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_domain_itr) {
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_domain_itr,
@@ -149,7 +150,7 @@ int main(
       }
 
       hier::BoxContainer::iterator fine_domain_itr = fine_domain.begin();
-      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_domain_itr) {
+      for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_domain_itr) {
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_domain_itr,
@@ -170,8 +171,10 @@ int main(
        */
       hier::VariableDatabase* variable_db =
          hier::VariableDatabase::getDatabase();
+      hier::PatchDataRestartManager* pdrm =
+         hier::PatchDataRestartManager::getManager();
       boost::shared_ptr<hier::VariableContext> cxt(
-            variable_db->getContext("dummy"));
+         variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
 
       typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
@@ -193,8 +196,8 @@ int main(
             data2, cxt, no_ghosts);
 
       // set us up for restart.
-      variable_db->registerPatchDataForRestart(data_id1);
-      variable_db->registerPatchDataForRestart(data_id2);
+      pdrm->registerPatchDataForRestart(data_id1);
+      pdrm->registerPatchDataForRestart(data_id2);
 
       for (int i = 0; i < 2; ++i) {
          // allocate "sample" data
@@ -205,7 +208,7 @@ int main(
       /*
        * Loop over hierarchy levels and populate data.
        */
-      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
@@ -344,7 +347,7 @@ checkIterators(
    int num_failures(0);
 #ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::iterator ip(level->begin());
@@ -358,7 +361,7 @@ checkIterators(
 
          // Test #1a: check empty.  This should be false.
          if (sample->empty()) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - sparse data structure reports empty. "
             << std::endl;
@@ -374,17 +377,17 @@ checkIterators(
                // check element access.
                for (int i = 0; i < DSIZE; ++i) {
                   if (it[pdat::DoubleAttributeId(i)] != i) {
-                     num_failures++;
+                     ++num_failures;
                   }
                }
 
                for (int j = 0; j < ISIZE; ++j) {
                   if (it[pdat::IntegerAttributeId(j)] != j) {
-                     num_failures++;
+                     ++num_failures;
                   }
                }
             } // for (; it != ... (attribute iterator)
-         } // for (; ic; ic++) ... (cell iterator)
+         } // for (; ic; ++ic) ... (cell iterator)
       } // for (hier::PatchLevel::iterator...
    } // hierarchy iteration
 #endif
@@ -409,7 +412,7 @@ bool checkCopyOps(
 
 #ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
@@ -429,7 +432,7 @@ bool checkCopyOps(
 
          int edit = copiedTo->size() / 2;
          LSparseData::iterator ct_it(copiedTo.get());
-         for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, edit--) {
+         for ( ; ct_it != copiedTo->end() && edit > 0; ++ct_it, --edit) {
          }
 
          while (ct_it != copiedTo->end()) {
@@ -486,7 +489,7 @@ bool checkRemoveOps(
 #ifdef HAVE_BOOST_HEADERS
    typedef pdat::SparseData<pdat::CellGeometry> LSparseData;
    int num_failures(0);
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (hier::PatchLevel::iterator ip(level->begin());
@@ -522,7 +525,7 @@ bool checkRemoveOps(
          sample->clear();
 
          if (!sample->empty()) {
-            num_failures++;
+            ++num_failures;
             remove_passed = false;
             tbox::perr << "sample size is " << sample->size() << std::endl;
          }

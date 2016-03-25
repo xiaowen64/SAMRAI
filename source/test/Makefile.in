@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   makefile for testing parts of SAMRAI library 
 ##
 #########################################################################
@@ -40,7 +40,7 @@ SUBDIRS = \
    patchbdrysum \
    dataops \
    hypre \
-   FAC_nonadaptive \
+   FAC_staticrefinement \
    FAC_adaptive \
    vector \
    sundials \
@@ -78,7 +78,7 @@ check3d:
 
 checkcompile:
 	@echo "Starting " $@ " in source/test at `date`"
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
 	@echo "Completed " $@ " in source/test at `date`"
 
 checktest:
@@ -100,11 +100,15 @@ perf:
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
 
 everything:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checkcompile); done
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checkcompile) || exit 1; done
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) checktest); done
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) examples); done
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) perf); done
 
 clean:
+	$(RM) $(REPORT)
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+checkclean:
 	$(RM) $(REPORT)
 	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

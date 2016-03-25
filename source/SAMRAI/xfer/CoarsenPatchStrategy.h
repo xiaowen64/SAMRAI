@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for coarsening AMR data.
  *
  ************************************************************************/
@@ -88,7 +88,8 @@ public:
     * zero.
     */
    virtual hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getCoarsenOpStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /*!
     * @brief Perform user-defined patch data coarsening operations.

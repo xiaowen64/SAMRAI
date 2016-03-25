@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for side-centered
  *                float data on a Cartesian mesh.
  *
@@ -121,7 +121,7 @@ CartesianSideFloatConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianSideFloatConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianSideFloatConservativeLinearRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }
@@ -176,7 +176,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -198,7 +198,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
          pdat::SideData<float> slope0(cgbox, 1, tmp_ghosts,
                                       directions);
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if ((dim == tbox::Dimension(1))) {
                if (directions(axis)) {
                   SAMRAI_F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (

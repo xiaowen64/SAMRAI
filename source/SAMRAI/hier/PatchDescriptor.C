@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -48,7 +48,7 @@ PatchDescriptor::PatchDescriptor():
    d_max_number_registered_components = 0;
    d_names.resize(max_num_patch_data_components_allowed);
    d_factories.resize(max_num_patch_data_components_allowed);
-   for (int i = 0; i < max_num_patch_data_components_allowed; i++) {
+   for (int i = 0; i < max_num_patch_data_components_allowed; ++i) {
       d_free_indices.push_back(i);
    }
    for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
@@ -164,7 +164,7 @@ PatchDescriptor::mapNameToIndex(
       if (name == d_names[id]) {
          ret_index = id;
       }
-      id++;
+      ++id;
    }
    return ret_index;
 }
@@ -189,7 +189,7 @@ PatchDescriptor::printClassData(
           << d_max_number_registered_components << std::endl;
    stream << "\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
           << std::endl;
-   for (int i = 0; i < d_max_number_registered_components; i++) {
+   for (int i = 0; i < d_max_number_registered_components; ++i) {
       stream << "Patch Data Index=" << i << std::endl;
       if (d_factories[i]) {
          stream << "   Patch Data Factory Name = "
@@ -216,7 +216,7 @@ PatchDescriptor::getMaxGhostWidth(
    const tbox::Dimension& dim) const
 {
    IntVector max_gcw(d_min_gcw[dim.getValue() - 1]);
-   for (int i = 0; i < d_max_number_registered_components; i++) {
+   for (int i = 0; i < d_max_number_registered_components; ++i) {
       if (d_factories[i] && (d_factories[i]->getDim() == dim)) {
          max_gcw.max(d_factories[i]->getGhostCellWidth());
       }

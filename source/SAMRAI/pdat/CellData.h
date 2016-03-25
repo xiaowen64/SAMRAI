@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -333,7 +333,7 @@ public:
       const hier::BoxOverlap& overlap);
 
    /*!
-    * @brief Unpack data from stream and add into this patch data object 
+    * @brief Unpack data from stream and add into this patch data object
     * over the specified box overlap region.  The overlap must be an
     * CellOverlap of the same DIM.
     */
@@ -463,12 +463,12 @@ private:
 
    // Unimplemented copy constructor
    CellData(
-      const CellData<TYPE>&);
+      const CellData&);
 
    // Unimplemented assignment operator
-   void
+   CellData
    operator = (
-      const CellData<TYPE>&);
+      const CellData&);
 
    void
    copyWithRotation(
@@ -483,6 +483,8 @@ private:
    int d_depth;
 
    boost::shared_ptr<ArrayData<TYPE> > d_data;
+
+   static boost::shared_ptr<tbox::Timer> t_copy;
 
 };
 

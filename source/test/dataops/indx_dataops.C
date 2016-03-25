@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program to test index data operations
  *
  ************************************************************************/
@@ -86,7 +86,7 @@ int main(
       hier::Index flo1(dim);
       hier::Index fhi1(dim);
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
          clo0(i) = 0;
          flo0(i) = 4;
@@ -154,7 +154,7 @@ int main(
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0->getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
@@ -166,7 +166,7 @@ int main(
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1->getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
@@ -205,7 +205,7 @@ int main(
        */
       int counter = 0;
       std::ostream& os = tbox::plog;
-      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+      for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
 
@@ -221,7 +221,7 @@ int main(
 
             // access sample data from patch
             boost::shared_ptr<pdat::IndexData<SampleIndexData,
-                              pdat::CellGeometry> > sample(
+                                              pdat::CellGeometry> > sample(
                BOOST_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
                           hier::PatchData>(
                   patch->getPatchData(data_id)));

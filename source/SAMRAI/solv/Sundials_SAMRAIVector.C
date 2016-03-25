@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   "Glue code" between SAMRAI vector object and Sundials vector.
  *
  ************************************************************************/
@@ -24,7 +24,7 @@ namespace solv {
  *************************************************************************
  */
 
-SundialsAbstractVector*
+SundialsAbstractVector *
 Sundials_SAMRAIVector::createSundialsVector(
    const boost::shared_ptr<SAMRAIVectorReal<double> >& samrai_vec)
 {
@@ -89,7 +89,7 @@ Sundials_SAMRAIVector::~Sundials_SAMRAIVector()
  *************************************************************************
  */
 
-SundialsAbstractVector*
+SundialsAbstractVector *
 Sundials_SAMRAIVector::makeNewVector()
 {
    Sundials_SAMRAIVector* out_vec =

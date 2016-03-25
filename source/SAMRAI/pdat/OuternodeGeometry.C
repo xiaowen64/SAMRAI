@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -147,7 +147,7 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_src_node_box = src_node_box;
          for (int dh = d + 1; dh < dim.getValue(); ++dh) {
@@ -164,7 +164,7 @@ OuternodeGeometry::doOverlap(
          low_node_box.upper(d) = low_node_box.lower(d);
 
          hier::Box low_overlap(low_node_box * msk_node_box * dst_node_box
-            * fill_node_box);
+                               * fill_node_box);
          if (!low_overlap.empty()) {
             dst_boxes.pushBack(low_overlap);
          }
@@ -174,7 +174,7 @@ OuternodeGeometry::doOverlap(
          hig_node_box.lower(d) = hig_node_box.upper(d);
 
          hier::Box hig_overlap(hig_node_box * msk_node_box * dst_node_box
-            * fill_node_box);
+                               * fill_node_box);
          if (!hig_overlap.empty()) {
             dst_boxes.pushBack(hig_overlap);
          }
@@ -254,7 +254,7 @@ OuternodeGeometry::doOverlap(
       const hier::Box fill_node_box(
          NodeGeometry::toNodeBox(fill_box));
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
 
          hier::Box trimmed_dst_node_box(dst_node_box * fill_node_box);
          for (int dh = d + 1; dh < dim.getValue(); ++dh) {

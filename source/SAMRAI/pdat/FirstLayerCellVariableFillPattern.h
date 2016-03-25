@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   1Z fill pattern class
  *
  ************************************************************************/
@@ -128,7 +128,7 @@ public:
 private:
    FirstLayerCellVariableFillPattern(
       const FirstLayerCellVariableFillPattern&);    // not implemented
-   void
+   FirstLayerCellVariableFillPattern&
    operator = (
       const FirstLayerCellVariableFillPattern&);    // not implemented
 

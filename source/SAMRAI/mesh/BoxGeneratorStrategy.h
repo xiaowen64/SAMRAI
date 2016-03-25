@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for box generation routines.
  *
  ************************************************************************/
@@ -74,7 +74,7 @@ private:
    // The following are not implemented:
    BoxGeneratorStrategy(
       const BoxGeneratorStrategy&);
-   void
+   BoxGeneratorStrategy&
    operator = (
       const BoxGeneratorStrategy&);
 

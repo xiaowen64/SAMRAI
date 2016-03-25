@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Interface to patch routines for hyperbolic integration scheme.
  *
  ************************************************************************/
@@ -354,7 +354,7 @@ public:
     * dummy implementation here so that users may ignore it when
     * inheriting from this class.
     */
-   virtual hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+   virtual hier::IntVector getRefineOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }
@@ -420,7 +420,7 @@ public:
     * dummy implementation here so that users may ignore it when
     * inheriting from this class.
     */
-   virtual hier::IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+   virtual hier::IntVector getCoarsenOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }

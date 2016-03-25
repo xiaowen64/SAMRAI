@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated outerface centered patch data type
  *
  ************************************************************************/
@@ -567,16 +567,16 @@ private:
 
    // Unimplemented copy constructor
    OuterfaceData(
-      const OuterfaceData<TYPE>&);
+      const OuterfaceData&);
 
    // Unimplemented assignment operator
-   void
+   OuterfaceData&
    operator = (
-      const OuterfaceData<TYPE>&);
+      const OuterfaceData&);
 
    int d_depth;
 
-   boost::shared_ptr<ArrayData<TYPE> > d_data [SAMRAI::MAX_DIM_VAL][2];
+   boost::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL][2];
 };
 
 }

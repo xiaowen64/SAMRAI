@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
@@ -321,7 +321,7 @@ public:
     *
     * @param[out] remainder  The non-intersecting parts of input level
     * @param[out] input_to_remainder  Overlap connector with width zero
-    * @param[in] input_to_takeaway    Overlap connector, may have any width 
+    * @param[in] input_to_takeaway    Overlap connector, may have any width
     *
     * @pre  input_to_takeaway is a complete overlap connector
     * @post input_to_remainder.isLocal()
@@ -415,6 +415,8 @@ public:
     * @brief Given a mapping from an original BoxLevel to parts
     * to be removed (rejected), construct the remainder BoxLevel
     * and the mapping from the original to a remainder.
+    *
+    * This method does no communication.
     *
     * @see MappingConnectorAlgorithm.
     *
@@ -572,7 +574,6 @@ private:
    static void
    initializeCallback();
 
-
    //@{
    //! @name Timer data for this class.
 
@@ -624,10 +625,9 @@ private:
 
    //@}
 
-
    bool d_sanity_check_precond;
    bool d_sanity_check_postcond;
- 
+
    static tbox::StartupShutdownManager::Handler s_initialize_handler;
 
 };

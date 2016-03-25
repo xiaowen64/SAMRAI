@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Abstract base class for spatial coarsening operators.
  *
  ************************************************************************/
@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
+#include "SAMRAI/tbox/OpenMPUtilities.h"
 
 #include "boost/shared_ptr.hpp"
 #include <string>
@@ -73,7 +74,8 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   CoarsenOperator(const std::string& name);
+   CoarsenOperator(
+      const std::string& name);
 
    /**
     * The virtual destructor for the coarsening operator does
@@ -108,7 +110,8 @@ public:
     * zero.
     */
    virtual IntVector
-   getStencilWidth( const tbox::Dimension &dim ) const = 0;
+   getStencilWidth(
+      const tbox::Dimension& dim) const = 0;
 
    /**
     * Coarsen the source component on the fine patch to the destination
@@ -139,7 +142,7 @@ public:
 private:
    CoarsenOperator(
       const CoarsenOperator&);                  // not implemented
-   void
+   CoarsenOperator&
    operator = (
       const CoarsenOperator&);                  // not implemented
 
@@ -156,11 +159,7 @@ private:
     */
    void
    registerInLookupTable(
-      const std::string& name)
-   {
-      s_lookup_table.insert(
-         std::pair<std::string, CoarsenOperator *>(name, this));
-   }
+      const std::string& name);
 
    /*!
     * @brief Remove the operator with the given name.
@@ -171,17 +170,21 @@ private:
       const std::string& name);
 
    /*!
+    * @brief Method registered with ShutdownRegister to initialize statics.
+    */
+   static void
+   initializeCallback();
+
+   /*!
     * @brief Method registered with ShutdownRegister to cleanup statics.
     */
    static void
-   finalizeCallback()
-   {
-      s_lookup_table.clear();
-   }
+   finalizeCallback();
 
    const std::string d_name;
 
    static std::multimap<std::string, CoarsenOperator *> s_lookup_table;
+   static TBOX_omp_lock_t l_lookup_table;
 
    static tbox::StartupShutdownManager::Handler s_finalize_handler;
 

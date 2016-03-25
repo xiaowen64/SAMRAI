@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating Cartesian 3d boundary data
  *
  ************************************************************************/
@@ -369,7 +369,7 @@ public:
     *         (bcase == BdryCond::ZFLOW) || (bcase == BdryCond::XREFLECT) ||
     *         (bcase == BdryCond::YREFLECT) || (bcase == BdryCond::XREFLECT) ||
     *         (bcase == BdryCond::XDIRICHLET) ||
-    *         (bcase == BdryCond::YDIRICHLET) || 
+    *         (bcase == BdryCond::YDIRICHLET) ||
     *         (bcase == BdryCond::ZDIRICHLET) ||
     *         (bcase == BdryCond::XNEUMANN) || (bcase == BdryCond::YNEUMANN) ||
     *         (bcase == BdryCond::ZNEUMANN)))

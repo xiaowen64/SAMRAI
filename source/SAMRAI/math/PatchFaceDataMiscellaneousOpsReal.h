@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real face-centered data.
  *
  ************************************************************************/
@@ -158,10 +158,10 @@ public:
 private:
    // The following are not implemented:
    PatchFaceDataMiscellaneousOpsReal(
-      const PatchFaceDataMiscellaneousOpsReal<TYPE>&);
-   void
+      const PatchFaceDataMiscellaneousOpsReal&);
+   PatchFaceDataMiscellaneousOpsReal&
    operator = (
-      const PatchFaceDataMiscellaneousOpsReal<TYPE>&);
+      const PatchFaceDataMiscellaneousOpsReal&);
 
    ArrayDataMiscellaneousOpsReal<TYPE> d_array_ops;
 };

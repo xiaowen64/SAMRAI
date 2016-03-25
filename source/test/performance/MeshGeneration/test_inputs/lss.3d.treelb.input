@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
@@ -37,7 +37,7 @@ Main {
    // Box generator types: BergerRigoutsos or TileClustering
    box_generator_type = "BergerRigoutsos"
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer or TilePartitioner
+   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer or CascadePartitioner
    load_balancer_type = "TreeLoadBalancer"
 
    // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, or BreadthFirstTree.
@@ -45,6 +45,8 @@ Main {
 
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE, TRUE
+
+   write_comm_graph = FALSE
 
    // Mesh generator: SphericalShellGenerator, SinusoidalFrontGenerator, or ShrunkenLevelGenerator.
    mesh_generator_name = "SphericalShellGenerator"
@@ -63,11 +65,13 @@ Main {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
+  tile_size = 4, 4, 4
+  allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
-  box_size = 4, 4, 4
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
   DEV_print_steps = FALSE
+  DEV_debug_checks = TRUE
 }
 
 
@@ -90,29 +94,10 @@ BergerRigoutsos {
 }
 
 
-// Used if load_balancer_type is TilePartitioner.  Refer to mesh::TilePartitioner for input.
-TilePartitioner {
-  box_size = 12, 12, 12
-  DEV_print_steps = FALSE
-
-  TreeLoadBalancer {
-    flexible_load_tolerance = 0.03
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = FALSE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = FALSE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 // Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
 TreeLoadBalancer {
   flexible_load_tolerance = 0.03
+  DEV_voucher_mode = FALSE
   DEV_report_load_balance = TRUE // Reported in main
   DEV_balance_penalty_wt = 1.0
   DEV_surface_penalty_wt = 1.0

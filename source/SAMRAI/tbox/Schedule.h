@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -243,7 +243,7 @@ public:
     *
     * @param [in] flag
     */
-   void setDeterministicUnpackOrderingFlag( bool flag )
+   void setDeterministicUnpackOrderingFlag(bool flag)
    {
       d_unpack_in_deterministic_order = flag;
    }
@@ -293,7 +293,9 @@ private:
    void
    deallocateCommunicationObjects()
    {
-      delete[] d_coms;
+      if (d_coms) {
+         delete[] d_coms;
+      }
       d_coms = 0;
    }
 
@@ -310,7 +312,7 @@ private:
 
    Schedule(
       const Schedule&);                 // not implemented
-   void
+   Schedule&
    operator = (
       const Schedule&);                 // not implemented
 
@@ -422,6 +424,7 @@ private:
       boost::shared_ptr<Timer> t_post_sends;
       boost::shared_ptr<Timer> t_process_incoming_messages;
       boost::shared_ptr<Timer> t_MPI_wait;
+      boost::shared_ptr<Timer> t_pack_stream;
       boost::shared_ptr<Timer> t_unpack_stream;
       boost::shared_ptr<Timer> t_local_copies;
    };

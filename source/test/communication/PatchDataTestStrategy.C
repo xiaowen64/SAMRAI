@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
@@ -78,7 +78,7 @@ void PatchDataTestStrategy::readVariableInput(
    d_variable_coarsen_op.resize(nkeys);
    d_variable_refine_op.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
 
       boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management in AMR hierarchy
  *
  ************************************************************************/
@@ -33,8 +33,9 @@ namespace SAMRAI {
 namespace hier {
 
 class BoxLevel;
-class PatchLevel;
 class BoxTree;
+class PatchLevel;
+class SingularityFinder;
 
 /*!
  * @brief Class BaseGridGeometry manages the index space that determines the
@@ -60,8 +61,6 @@ class BoxTree;
 class BaseGridGeometry:
    public tbox::Serializable
 {
-   friend class TransferOperatorRegistry;
-
 public:
    typedef  PatchGeometry::TwoDimBool TwoDimBool;
 
@@ -155,7 +154,7 @@ public:
       TwoDimBool& touches_regular_bdry,
       TwoDimBool& touches_periodic_bdry,
       const Box& box,
-      const IntVector &refinement_ratio,
+      const IntVector& refinement_ratio,
       const BoxContainer& refined_periodic_domain_tree) const;
 
    /*!
@@ -362,7 +361,7 @@ public:
     * @return The domain description as a search tree with periodic
     * images (if any).
     */
-   const BoxContainer& 
+   const BoxContainer&
    getPeriodicDomainSearchTree() const
    {
       return d_domain_with_images;
@@ -443,7 +442,7 @@ public:
     * @return The max stencil width of all transfer operators.
     */
    IntVector
-   getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
+   getMaxTransferOpStencilWidth(const tbox::Dimension& dim)
    {
       return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
@@ -494,7 +493,7 @@ public:
     * @param[in]        touches_regular_bdry Array storing which patches touch
     *                   non-periodic boundaries.
     *
-    * @pre (getDim() == patch.getDim()) && 
+    * @pre (getDim() == patch.getDim()) &&
     *      (getDim() == ratio_to_level_zero.getDim()) &&
     *      (getDim() == touches_regular_bdry.getDim())
     */
@@ -842,7 +841,7 @@ public:
       /*!
        * @brief Set the flag telling if that the neighboring blocks
        * touch each other at an enhanced connectivity singularity.
-       */ 
+       */
       void
       setSingularity(bool is_singularity)
       {
@@ -904,6 +903,44 @@ private:
       const BlockId& block_b,
       const Transformation::RotationIdentifier rotation_b_to_a,
       const IntVector& shift_b_to_a);
+
+   /*!
+    * @brief find the blocks that touch singularities.
+    *
+    * @param[out] singularity_blocks Container to hold the singularity
+    *                                information. Each singularity is
+    *                                represented by a member of the outer set,
+    *                                while the inner set holds all BlockIds
+    *                                for the blocks that touch a particular
+    *                                singularity.
+    *
+    * @pre singularity_blocks.empty()
+    * @pre d_number_blocks > 1
+    */
+   void
+   findSingularities(
+      std::set<std::set<BlockId> >& singularity_blocks);
+
+   /*
+    * @brief Chop the physical domain of this geometry into a container
+    * that has no T-junctions at adjacent faces
+    *
+    * A T-junction occurs when a face one Box in the physical touches the faces
+    * of more than one other Box.  This method creates a representation of the
+    * domain that has chopped the physical domain Boxes such that there are
+    * no T-junctions.
+    *
+    * If the physical domain has no T-junctions, then the output chopped_domain
+    * will be a simple copy of the physical domain.
+    *
+    * @param[out] chopped_domain  Container to hold chopped representation of
+    *                             the domain.
+    *
+    * @pre chopped_domain.isEmpty();
+    */
+   void
+   chopDomain(
+      BoxContainer& chopped_domain);
 
    /*!
     * @brief Get a BoxContainer that contains all of the index space of all other
@@ -1026,14 +1063,14 @@ private:
       const BlockId& transformed_block);
 
    /*!
-    * @brief Return a list of Neighbor objects describing all of the neighbors
-    * of the block indicated by the block_id.
+    * @brief Return a map containing Neighbor objects describing all of the
+    * neighbors of the block indicated by the block_id.
     *
-    * @return The list of neighbors
+    * @return The map holding the neighbors
     *
     * @param[in] block_id
     */
-   const std::list<Neighbor>&
+   const std::map<BlockId, Neighbor>&
    getNeighbors(
       const BlockId& block_id) const
    {
@@ -1056,7 +1093,7 @@ private:
       const BlockId& block_id) const
    {
       return static_cast<int>(
-         d_block_neighbors[block_id.getBlockValue()].size());
+                d_block_neighbors[block_id.getBlockValue()].size());
    }
 
    /*!
@@ -1355,11 +1392,13 @@ private:
     */
    int d_number_of_block_singularities;
 
+   boost::shared_ptr<SingularityFinder> d_singularity_finder;
+
    /*!
     * @brief Associated with each block is a list of Neighbors that
     * it shares a block boundary with.
     */
-   std::vector<std::list<Neighbor> > d_block_neighbors;
+   std::vector<std::map<BlockId, Neighbor> > d_block_neighbors;
 
    /*!
     * @brief An array of BoxContainers defining the singularities of a multiblock
@@ -1382,6 +1421,7 @@ private:
    static boost::shared_ptr<tbox::Timer> t_set_geometry_data_on_patches;
    static boost::shared_ptr<tbox::Timer> t_compute_boundary_boxes_on_level;
    static boost::shared_ptr<tbox::Timer> t_get_boundary_boxes;
+   static boost::shared_ptr<tbox::Timer> t_adjust_multiblock_patch_level_boundaries;
 
    /*
     * Static initialization and cleanup handler.

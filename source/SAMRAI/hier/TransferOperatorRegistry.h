@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Singleton registry for all transfer operators.
  *
  ************************************************************************/
@@ -31,8 +31,6 @@ END_BOOST_WARNING_SUPPRESSION
 
 namespace SAMRAI {
 namespace hier {
-
-class BaseGridGeometry;
 
 /*!
  * @brief Class TransferOperatorRegistry is intended to serve as the registry
@@ -199,7 +197,8 @@ public:
     * @see hier::CoarsenOperator::getMaxCoarsenOpStencilWidth().
     */
    IntVector
-   getMaxTransferOpStencilWidth( const tbox::Dimension &dim );
+   getMaxTransferOpStencilWidth(
+      const tbox::Dimension& dim);
 
    /*!
     * @brief Set a minimum value on the value returned by
@@ -259,7 +258,8 @@ private:
     * (see addCoarsenOperator() function).
     */
    boost::unordered_map<std::string, boost::unordered_map<std::string,
-      boost::shared_ptr<CoarsenOperator> > > d_coarsen_operators;
+                                                          boost::shared_ptr<CoarsenOperator> > >
+   d_coarsen_operators;
 
    /*
     * The hash map of spatial refinement operators is maintained to lookup
@@ -270,7 +270,8 @@ private:
     * (see addRefineOperator() function).
     */
    boost::unordered_map<std::string, boost::unordered_map<std::string,
-      boost::shared_ptr<RefineOperator> > > d_refine_operators;
+                                                          boost::shared_ptr<RefineOperator> > >
+   d_refine_operators;
 
    /*
     * The hash map of time interpolation operators is maintained to lookup
@@ -281,7 +282,8 @@ private:
     * any time (see addTimeInterpolateOperator() function).
     */
    boost::unordered_map<std::string, boost::unordered_map<std::string,
-      boost::shared_ptr<TimeInterpolateOperator> > > d_time_operators;
+                                                          boost::shared_ptr<TimeInterpolateOperator> > >
+   d_time_operators;
 
    /*!
     * @brief Value set by setMinTransferOpStencilWidth().

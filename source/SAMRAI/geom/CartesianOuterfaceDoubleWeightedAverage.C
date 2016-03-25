@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerface double data on
  *                a Cartesian mesh.
  *
@@ -111,7 +111,7 @@ CartesianOuterfaceDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianOuterfaceDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
+CartesianOuterfaceDoubleWeightedAverage::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -157,9 +157,9 @@ CartesianOuterfaceDoubleWeightedAverage::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if ((dim == tbox::Dimension(1))) {
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d,
                CARTWGTAVGOUTFACEDOUB1D) (ifirstc(0), ilastc(0),

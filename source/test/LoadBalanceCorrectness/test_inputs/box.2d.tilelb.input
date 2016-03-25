@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Load balance correctness test input file.
  *
  ************************************************************************/
@@ -20,11 +20,11 @@ Main {
 
    baseline_dirname = "test_inputs"
 
-   baseline_action = "COMPARE" // "GENERATE" or "COMPARE"
+   baseline_action = "COMPARE" // "GENERATE" or "COMPARE" or "NONE"
 
    write_visit = TRUE
 
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    domain_boxes = [(0,0),(49,49)]
    x_lo = 0.0, 0.0
@@ -38,7 +38,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "TreeLoadBalancer"
 
    mesh_generator_name = "ShrunkenLevelGenerator"
 
@@ -52,9 +52,12 @@ Main {
 
 
 TileClustering {
-  box_size = 10, 10
+  tile_size = 10, 10
+  allow_remote_tile_extent = TRUE
+  coalesce_boxes = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 
@@ -68,34 +71,18 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 10, 10
-
-  TreeLoadBalancer {
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = TRUE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
-}
-
-
 TreeLoadBalancer {
-  DEV_report_load_balance = TRUE // Reported in main
-
+  tile_size = 10, 10
   // Debugging options
   DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+  DEV_check_connectivity = FALSE
   DEV_print_steps = FALSE
-  DEV_print_swap_steps = FALSE
-  DEV_print_break_steps = FALSE
+  DEV_print_swap_steps = TRUE
+  DEV_print_break_steps = TRUE
   DEV_print_edge_steps = FALSE
   DEV_summarize_map = TRUE
 }
+
 
 TimerManager {
 //   print_exclusive      = TRUE

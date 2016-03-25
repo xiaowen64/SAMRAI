@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A simple array template class
  *
  ************************************************************************/
@@ -37,7 +37,7 @@ const typename Array<TYPE>::DoNotInitialize Array<TYPE>::UNINITIALIZED;
  */
 
 template<class TYPE>
-Array<TYPE>::Array() :
+Array<TYPE>::Array():
    d_objects(0),
    d_counter(0),
    d_elements(0)
@@ -46,7 +46,7 @@ Array<TYPE>::Array() :
 
 template<class TYPE>
 Array<TYPE>::Array(
-   const Array<TYPE>& rhs) :
+   const Array<TYPE>& rhs):
    d_objects(rhs.d_objects),
    d_counter(rhs.d_counter),
    d_elements(rhs.d_elements)
@@ -67,7 +67,7 @@ Array<TYPE>::Array(
       d_counter = new ReferenceCounter;
       d_elements = n;
 
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          void* p = &d_objects[i];
          (void)new (p)TYPE(default_value);
       }
@@ -132,11 +132,13 @@ Array<TYPE>::resizeArray(
    if (n != d_elements) {
       Array<TYPE> array(n, default_value);
       const int s = (d_elements < n ? d_elements : n);
-      for (int i = 0; i < s; i++) {
+      for (int i = 0; i < s; ++i) {
          array.d_objects[i] = d_objects[i];
       }
 
-      this->operator = (array);
+      this->
+      operator = (
+         array);
    }
 }
 
@@ -155,13 +157,13 @@ Array<TYPE>::erase(
             malloc(sizeof(TYPE) * new_d_elements));
 
       /* copy lower part of array */
-      for (int j = 0; j < position; j++) {
+      for (int j = 0; j < position; ++j) {
          void* p = &new_d_objects[j];
          (void)new (p)TYPE(d_objects[j]);
       }
 
       /* copy upper part of array */
-      for (int j = position + 1; j < d_elements; j++) {
+      for (int j = position + 1; j < d_elements; ++j) {
          void* p = &new_d_objects[j - 1];
          (void)new (p)TYPE(d_objects[j]);
       }
@@ -190,7 +192,7 @@ void
 Array<TYPE>::deleteObjects()
 {
    if (d_objects) {
-      for (int i = 0; i < d_elements; i++) {
+      for (int i = 0; i < d_elements; ++i) {
          d_objects[i].~TYPE();
       }
       free(reinterpret_cast<char *>(d_objects));
@@ -261,7 +263,7 @@ Array<TYPE>::empty() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 Array<TYPE>::getPointer(
    const int i)
 {
@@ -271,7 +273,7 @@ Array<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 Array<TYPE>::getPointer(
    const int i) const
 {

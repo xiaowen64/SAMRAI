@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   GriddingAlgorihtm's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -42,9 +42,9 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
    std::vector<hier::IntVector>& fine_connector_widths,
    const hier::PatchHierarchy& patch_hierarchy) const
 {
-   if ( !d_tag_to_cluster_width.empty() ) {
-      TBOX_ASSERT( static_cast<int>(d_tag_to_cluster_width.size()) >=
-                   patch_hierarchy.getMaxNumberOfLevels()-1 );
+   if (!d_tag_to_cluster_width.empty()) {
+      TBOX_ASSERT(static_cast<int>(d_tag_to_cluster_width.size()) >=
+         patch_hierarchy.getMaxNumberOfLevels() - 1);
    }
 
    const tbox::Dimension& dim(patch_hierarchy.getDim());
@@ -87,14 +87,14 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
        * Must be big enough for GriddingAlgorithm::computeProperNestingData().
        */
       self_connector_widths[ln].max(
-         hier::IntVector(dim,patch_hierarchy.getProperNestingBuffer(ln)));
+         hier::IntVector(dim, patch_hierarchy.getProperNestingBuffer(ln)));
 
       /*
        * Must be big enough for GriddingAlgorithm to guarantee that
        * tag--->cluster width is at least d_tag_to_cluster_width[ln]
        * when bridging cluster<==>tag<==>tag.
        */
-      if ( !d_tag_to_cluster_width.empty() ) {
+      if (!d_tag_to_cluster_width.empty()) {
          self_connector_widths[ln].max(d_tag_to_cluster_width[ln]);
       }
    }
@@ -197,15 +197,13 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
    coarse_to_coarse_width.max(max_ghost_width_at_coarse);
 }
 
-
-
 /*
  **************************************************************************
  **************************************************************************
  */
 void
 GriddingAlgorithmConnectorWidthRequestor::setTagToClusterWidth(
-      std::vector<hier::IntVector> &tag_to_cluster_width)
+   std::vector<hier::IntVector>& tag_to_cluster_width)
 {
    d_tag_to_cluster_width = tag_to_cluster_width;
 }

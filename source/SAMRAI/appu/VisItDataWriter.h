@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Writes data files for visualization by VisIt
  *
  ************************************************************************/
@@ -1320,7 +1320,7 @@ private:
    initializeCallback()
    {
       t_write_plot_data = tbox::TimerManager::getManager()->getTimer(
-         "appu:VisItDataWriter::writePlotData()");
+            "appu:VisItDataWriter::writePlotData()");
    }
 
    /*!

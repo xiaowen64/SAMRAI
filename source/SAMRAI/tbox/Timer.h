@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -131,8 +131,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_system_total / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -144,8 +146,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_user_total / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -157,8 +161,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_wallclock_total;
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -170,8 +176,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_max_wallclock;
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -183,8 +191,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_system_exclusive / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -196,8 +206,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_user_exclusive / Clock::getClockCycle();
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -209,8 +221,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_wallclock_exclusive;
+
 #else
       return 0.0;
+
 #endif
    }
 
@@ -222,8 +236,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_is_active;
+
 #else
       return false;
+
 #endif
    }
 
@@ -235,8 +251,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_is_running;
+
 #else
       return false;
+
 #endif
    }
 
@@ -249,8 +267,10 @@ public:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       return d_accesses;
+
 #else
       return 0;
+
 #endif
    }
 
@@ -327,6 +347,18 @@ protected:
       const Timer& timer) const;
 
 private:
+   // Unimplemented default constructor.
+   Timer();
+
+   // Unimplemented copy constructor.
+   Timer(
+      const Timer& other);
+
+   // Unimplemented assignment operator.
+   Timer&
+   operator = (
+      const Timer& rhs);
+
    /*
     * Class name, id, and concurrent timer flag.
     */

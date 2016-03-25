@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Basic templated side-centered patch data operations.
  *
  ************************************************************************/
@@ -255,10 +255,10 @@ public:
 private:
    // The following are not implemented:
    PatchSideDataBasicOps(
-      const PatchSideDataBasicOps<TYPE>&);
-   void
+      const PatchSideDataBasicOps&);
+   PatchSideDataBasicOps&
    operator = (
-      const PatchSideDataBasicOps<TYPE>&);
+      const PatchSideDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 };

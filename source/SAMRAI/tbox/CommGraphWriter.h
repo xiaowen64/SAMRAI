@@ -42,20 +42,32 @@ public:
    virtual ~CommGraphWriter();
 
    /*!
+    * @brief Set whether to write full graph.
+    *
+    * Writing full graph is unscalable, but can be done at large scales
+    * if you have enough computing time and memory.  Writing full graph
+    * is on by default.
+    */
+   void setWriteFullGraph(bool write_full_graph) {
+      d_write_full_graph = write_full_graph;
+   }
+
+   /*!
     * @brief Add a graph record.
     *
     * @param[in] mpi Where the graph data is distributed.
     *
-    * @param[in] number_of_edges
+    * @param[in] number_of_edge_types
     *
-    * @param[in] number_of_node_values
+    * @param[in] number_of_node_value_types
     *
     * @return Index of the record.
     */
-   size_t addRecord(
-      const SAMRAI_MPI &mpi,
-      size_t number_of_edges,
-      size_t number_of_node_values );
+   size_t
+   addRecord(
+      const SAMRAI_MPI& mpi,
+      size_t number_of_edge_types,
+      size_t number_of_node_value_types);
 
    /*!
     * @brief Get the current number of records.
@@ -66,8 +78,7 @@ public:
       return d_records.size();
    }
 
-   enum EdgeDirection { FROM=0, TO=1};
-
+   enum EdgeDirection { FROM = 0, TO = 1 };
 
    /*!
     * @brief Set an edge in the current record.
@@ -75,13 +86,13 @@ public:
     * The label only matters on the root process.  Other processes do
     * nothing in this method.
     */
-   void setEdgeInCurrentRecord(
-      size_t edge_index,
-      const std::string &edge_label,
+   void
+   setEdgeInCurrentRecord(
+      size_t edge_type_index,
+      const std::string& edge_label,
       double edge_value,
       EdgeDirection edge_direction,
-      int other_node );
-
+      int other_node);
 
    /*!
     * @brief Set a node value in the current record.
@@ -89,23 +100,35 @@ public:
     * The label only matters on the root process.  Other processes do
     * nothing in this method.
     */
-   void setNodeValueInCurrentRecord(
-      size_t nodevalue_index,
-      const std::string &nodevalue_label,
-      double node_value );
-
+   void
+   setNodeValueInCurrentRecord(
+      size_t nodevalue_type_index,
+      const std::string& nodevalue_label,
+      double node_value);
 
    /*!
     * @brief Gather data onto the root process and write out text file.
     */
-   void writeGraphToTextStream(
+   void
+   writeGraphToTextStream(
       size_t record_number,
-      std::ostream &os ) const;
+      std::ostream& os) const;
 
 private:
+   // Unimplemented copy constructor.
+   CommGraphWriter(
+      const CommGraphWriter& other);
+
+   // Unimplemented assignment operator.
+   CommGraphWriter&
+   operator = (
+      const CommGraphWriter& rhs);
 
    struct Edge {
-      Edge() : d_value(-1.0), d_dir(TO), d_other_node(-1) {}
+      Edge():d_value(0.0),
+         d_dir(TO),
+         d_other_node(-1) {
+      }
       double d_value;
       EdgeDirection d_dir;
       int d_other_node;
@@ -113,20 +136,34 @@ private:
    };
 
    struct NodeValue {
-      NodeValue() : d_value(0.0) {}
+      NodeValue():d_value(0.0) {
+      }
       double d_value;
       std::string d_label;
    };
 
    struct Record {
-      Record() : d_mpi(MPI_COMM_NULL) {}
+      Record():d_mpi(MPI_COMM_NULL) {
+      }
       SAMRAI_MPI d_mpi;
       std::vector<Edge> d_edges;
       std::vector<NodeValue> d_node_values;
    };
 
+   void
+   writeGraphSummaryToTextStream(
+      size_t record_number,
+      std::ostream& os) const;
+
+   void
+   writeFullGraphToTextStream(
+      size_t record_number,
+      std::ostream& os) const;
+
    int d_root_rank;
    std::vector<Record> d_records;
+
+   bool d_write_full_graph;
 
 };
 

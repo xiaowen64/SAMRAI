@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
@@ -35,7 +35,7 @@ const int KINSOL_SAMRAIContext::SOLV_KINSOL_SAMRAI_CONTEXT_VERSION = 1;
 KINSOL_SAMRAIContext::KINSOL_SAMRAIContext(
    const std::string& object_name,
    KINSOLAbstractFunctions* my_functions,
-   const boost::shared_ptr<tbox::Database>& input_db) :
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_object_name(object_name),
    d_KINSOL_solver(new KINSOLSolver(object_name, my_functions, 0, 0)),
    d_solution_vector(0),
@@ -227,8 +227,7 @@ KINSOL_SAMRAIContext::getFromInput(
             input_db->getBoolWithDefault("uses_jac_times_vector", false);
          d_KINSOL_solver->setJacobianTimesVector(
             (d_uses_jac_times_vector == false) ? 0 : 1);
-      }
-      else {
+      } else {
          bool read_on_restart =
             input_db->getBoolWithDefault("read_on_restart", false);
          if (!read_on_restart) {
@@ -298,7 +297,7 @@ KINSOL_SAMRAIContext::getFromInput(
             d_residual_monitoring_constant);
 
          d_no_min_eps = input_db->getBoolWithDefault("no_min_eps",
-            d_no_min_eps);
+               d_no_min_eps);
          d_KINSOL_solver->setNoMinEps(d_no_min_eps);
 
          if (input_db->keyExists("eisenstat_walker_params")) {
@@ -546,7 +545,6 @@ KINSOL_SAMRAIContext::printClassData(
    os << "d_KINSOL_print_flag = " << d_KINSOL_print_flag << std::endl;
 
 }
-
 
 }
 }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -134,7 +134,7 @@ public:
 private:
    VariableFillPattern(
       const VariableFillPattern&);                     // not implemented
-   void
+   VariableFillPattern&
    operator = (
       const VariableFillPattern&);                     // not implemented
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Wrapper class for KINSOL solver function calls and data
  *
  ************************************************************************/
@@ -696,7 +696,7 @@ private:
       int success = 0;
       // SGS why no error condition?
       ((KINSOLSolver *)my_solver)->getKINSOLFunctions()->
-         evaluateNonlinearFunction(SABSVEC_CAST(soln), SABSVEC_CAST(fval));
+      evaluateNonlinearFunction(SABSVEC_CAST(soln), SABSVEC_CAST(fval));
       return success;
    }
 

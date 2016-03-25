@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   KINSOL solver for use within a SAMRAI-based application.
  *
  ************************************************************************/
@@ -379,7 +379,7 @@ public:
    void
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db,
-       bool is_from_restart);
+      bool is_from_restart);
 
    /**
     * Retrieve solver parameters from restart database matching object name.

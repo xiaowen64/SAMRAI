@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -23,7 +23,7 @@ FaceOverlap::FaceOverlap(
    const tbox::Dimension& dim = d_transformation.getOffset().getDim();
    d_dst_boxes.resize(boxes.size());
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       d_dst_boxes[d] = boxes[d];
       if (!d_dst_boxes[d].isEmpty()) d_is_overlap_empty = false;
    }
@@ -55,7 +55,7 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
 {
    TBOX_ASSERT(src_boxes.isEmpty());
    TBOX_ASSERT(normal_direction >= 0 &&
-               normal_direction < static_cast<int>(d_dst_boxes.size()));
+      normal_direction < static_cast<int>(d_dst_boxes.size()));
 
    src_boxes = d_dst_boxes[normal_direction];
    int transform_normal = normal_direction;
@@ -72,7 +72,7 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
             inverse_transform.getOffset();
          for (int d = 0; d < dim.getValue(); ++d) {
             face_inverse_offset[d] =
-               inverse_offset[(normal_direction+d)%dim.getValue()];
+               inverse_offset[(normal_direction + d) % dim.getValue()];
          }
       }
 
@@ -84,15 +84,15 @@ FaceOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes,
          } else {
             transform_normal = normal_direction;
             FaceGeometry::transform(*bi,
-                                    transform_normal,
-                                    inverse_transform);
+               transform_normal,
+               inverse_transform);
          }
       }
    }
 
    normal_direction = transform_normal;
    TBOX_ASSERT(normal_direction >= 0 &&
-               normal_direction < static_cast<int>(d_dst_boxes.size()));
+      normal_direction < static_cast<int>(d_dst_boxes.size()));
 
 }
 

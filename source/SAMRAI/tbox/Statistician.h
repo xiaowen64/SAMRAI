@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Singleton manager class for statistic objects.
  *
  ************************************************************************/
@@ -872,7 +872,7 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      Statistician* subclass_instance);
+      Statistician * subclass_instance);
 
    /**
     * During finalize() check statistic information on all processors
@@ -909,6 +909,15 @@ protected:
       const std::string& name) const;
 
 private:
+   // Unimplemented copy constructor.
+   Statistician(
+      const Statistician& other);
+
+   // Unimplemented assignment operator.
+   Statistician&
+   operator = (
+      const Statistician& rhs);
+
    /*!
     * @brief Get global-reduction statistics without depending on an
     * MPI gather, which is slow and does not scale.
@@ -1132,6 +1141,18 @@ public:
    }
 
 private:
+   // Unimplemented default constructor.
+   StatisticRestartDatabase();
+
+   // Unimplemented default constructor.
+   StatisticRestartDatabase(
+      const StatisticRestartDatabase& other);
+
+   // Unimplemented assignment operator.
+   StatisticRestartDatabase&
+   operator = (
+      const StatisticRestartDatabase& rhs);
+
    std::string d_object_name;
 
    /*

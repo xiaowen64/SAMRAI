@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Communication transaction for summing outeredge data
  *
  ************************************************************************/
@@ -30,17 +30,6 @@ namespace algs {
 /*
  *************************************************************************
  *
- * Initialization, set/unset functions for static array of refine items.
- *
- *************************************************************************
- */
-
-const xfer::RefineClasses::Data *const* OuteredgeSumTransaction::s_refine_items = 0;
-int OuteredgeSumTransaction::s_num_refine_items = 0;
-
-/*
- *************************************************************************
- *
  * Constructor sets state of transaction.
  *
  *************************************************************************
@@ -52,13 +41,15 @@ OuteredgeSumTransaction::OuteredgeSumTransaction(
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
-   int refine_item_id):
+   const xfer::RefineClasses::Data** refine_data,
+   int item_id):
    d_dst_level(dst_level),
    d_src_level(src_level),
    d_overlap(overlap),
    d_dst_node(dst_node),
    d_src_node(src_node),
-   d_refine_item_id(refine_item_id),
+   d_refine_data(refine_data),
+   d_item_id(item_id),
    d_incoming_bytes(0),
    d_outgoing_bytes(0)
 {
@@ -67,8 +58,8 @@ OuteredgeSumTransaction::OuteredgeSumTransaction(
    TBOX_ASSERT(overlap);
    TBOX_ASSERT(dst_node.getLocalId() >= 0);
    TBOX_ASSERT(src_node.getLocalId() >= 0);
-   TBOX_ASSERT(refine_item_id >= 0);
-   // Note: s_num_refine_items cannot be used at this point!
+   TBOX_ASSERT(item_id >= 0);
+   TBOX_ASSERT(refine_data[item_id] != 0);
 
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 }
@@ -92,14 +83,12 @@ OuteredgeSumTransaction::canEstimateIncomingMessageSize()
    if (d_src_node.getOwnerRank() == d_src_level->getBoxLevel()->getMPI().getRank()) {
       can_estimate =
          d_src_level->getPatch(d_src_node.getGlobalId())
-         ->getPatchData(s_refine_items[d_refine_item_id]->
-            d_src)
+         ->getPatchData(d_refine_data[d_item_id]->d_src)
          ->canEstimateStreamSizeFromBox();
    } else {
       can_estimate =
          d_dst_level->getPatch(d_dst_node.getGlobalId())
-         ->getPatchData(s_refine_items[d_refine_item_id]->
-            d_scratch)
+         ->getPatchData(d_refine_data[d_item_id]->d_scratch)
          ->canEstimateStreamSizeFromBox();
    }
    return can_estimate;
@@ -110,8 +99,7 @@ OuteredgeSumTransaction::computeIncomingMessageSize()
 {
    d_incoming_bytes =
       d_dst_level->getPatch(d_dst_node.getGlobalId())
-      ->getPatchData(s_refine_items[d_refine_item_id]->
-         d_scratch)
+      ->getPatchData(d_refine_data[d_item_id]->d_scratch)
       ->getDataStreamSize(*d_overlap);
    return d_incoming_bytes;
 }
@@ -121,8 +109,7 @@ OuteredgeSumTransaction::computeOutgoingMessageSize()
 {
    d_outgoing_bytes =
       d_src_level->getPatch(d_src_node.getGlobalId())
-      ->getPatchData(s_refine_items[d_refine_item_id]->
-         d_src)
+      ->getPatchData(d_refine_data[d_item_id]->d_src)
       ->getDataStreamSize(*d_overlap);
    return d_outgoing_bytes;
 }
@@ -144,8 +131,8 @@ OuteredgeSumTransaction::packStream(
    tbox::MessageStream& stream)
 {
    d_src_level->getPatch(d_src_node.getGlobalId())->
-     getPatchData(s_refine_items[d_refine_item_id]->d_src)->
-        packStream(stream, *d_overlap);
+   getPatchData(d_refine_data[d_item_id]->d_src)->
+   packStream(stream, *d_overlap);
 }
 
 void
@@ -155,7 +142,7 @@ OuteredgeSumTransaction::unpackStream(
    boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
       BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
-         getPatchData(s_refine_items[d_refine_item_id]->d_scratch)));
+         getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(oedge_dst_data);
 
    oedge_dst_data->unpackStreamAndSum(stream, *d_overlap);
@@ -167,13 +154,13 @@ OuteredgeSumTransaction::copyLocalData()
    boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
       BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
-         getPatchData(s_refine_items[d_refine_item_id]->d_scratch)));
+         getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(oedge_dst_data);
 
    boost::shared_ptr<pdat::OuteredgeData<double> > oedge_src_data(
       BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_src_level->getPatch(d_src_node.getGlobalId())->
-         getPatchData(s_refine_items[d_refine_item_id]->d_src)));
+         getPatchData(d_refine_data[d_item_id]->d_src)));
    TBOX_ASSERT(oedge_src_data);
 
    oedge_dst_data->sum(*oedge_src_data, *d_overlap);
@@ -192,17 +179,15 @@ OuteredgeSumTransaction::printClassData(
    std::ostream& stream) const
 {
    stream << "Outeredge Sum Transaction" << std::endl;
-   stream << "   refine item array:        "
-          << (xfer::RefineClasses::Data **)s_refine_items
+   stream << "   refine item:        "
+          << (xfer::RefineClasses::Data *)d_refine_data[d_item_id]
           << std::endl;
-   stream << "   num refine items:       " << s_num_refine_items << std::endl;
    stream << "   destination node:       " << d_dst_node << std::endl;
    stream << "   source node:            " << d_src_node << std::endl;
-   stream << "   refine item id:         " << d_refine_item_id << std::endl;
    stream << "   destination patch data: "
-          << s_refine_items[d_refine_item_id]->d_scratch << std::endl;
+          << d_refine_data[d_item_id]->d_scratch << std::endl;
    stream << "   source patch data:      "
-          << s_refine_items[d_refine_item_id]->d_src << std::endl;
+          << d_refine_data[d_item_id]->d_src << std::endl;
    stream << "   incoming bytes:         " << d_incoming_bytes << std::endl;
    stream << "   outgoing bytes:         " << d_outgoing_bytes << std::endl;
    stream << "   destination level:           "

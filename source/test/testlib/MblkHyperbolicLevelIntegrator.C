@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -17,6 +17,7 @@
 using namespace std;
 
 #include "SAMRAI/tbox/RestartManager.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/pdat/FaceVariable.h"
 #include "SAMRAI/pdat/OuterfaceVariable.h"
@@ -164,46 +165,48 @@ MblkHyperbolicLevelIntegrator::MblkHyperbolicLevelIntegrator(
    d_have_flux_on_level_zero(false),
    d_distinguish_mpi_reduction_costs(false),
    t_advance_bdry_fill_comm(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_comm")),
+                            getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_comm")),
    t_error_bdry_fill_create(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_create")),
+                            getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_create")),
    t_error_bdry_fill_comm(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_comm")),
+                          getTimer("algs::MblkHyperbolicLevelIntegrator::error_bdry_fill_comm")),
    t_mpi_reductions(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::mpi_reductions")),
+                    getTimer("algs::MblkHyperbolicLevelIntegrator::mpi_reductions")),
    t_initialize_level_data(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::initializeLevelData()")),
+                           getTimer("algs::MblkHyperbolicLevelIntegrator::initializeLevelData()")),
    t_fill_new_level_create(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_create")),
+                           getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_create")),
    t_fill_new_level_comm(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_comm")),
+                         getTimer("algs::MblkHyperbolicLevelIntegrator::fill_new_level_comm")),
    t_advance_bdry_fill_create(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_create")),
+                              getTimer(
+                                 "algs::MblkHyperbolicLevelIntegrator::advance_bdry_fill_create")),
    t_new_advance_bdry_fill_create(tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_create")),
+                                  getTimer(
+                                     "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_create")),
    t_apply_gradient_detector(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::applyGradientDetector()")),
+                             getTimer(
+                                "algs::MblkHyperbolicLevelIntegrator::applyGradientDetector()")),
    t_coarsen_rich_extrap(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_rich_extrap")),
+                         getTimer("algs::MblkHyperbolicLevelIntegrator::coarsen_rich_extrap")),
    t_get_level_dt(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()")),
+                  getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()")),
    t_get_level_dt_sync(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()_sync")),
+                       getTimer("algs::MblkHyperbolicLevelIntegrator::getLevelDt()_sync")),
    t_advance_level(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()")),
+                   getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()")),
    t_new_advance_bdry_fill_comm(tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_comm")),
+                                getTimer(
+                                   "algs::MblkHyperbolicLevelIntegrator::new_advance_bdry_fill_comm")),
    t_patch_num_kernel(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::patch_numerical_kernels")),
+                      getTimer("algs::MblkHyperbolicLevelIntegrator::patch_numerical_kernels")),
    t_advance_level_sync(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()_sync")),
+                        getTimer("algs::MblkHyperbolicLevelIntegrator::advanceLevel()_sync")),
    t_std_level_sync(tbox::TimerManager::getManager()->
-      getTimer(
-         "algs::MblkHyperbolicLevelIntegrator::standardLevelSynchronization()")),
+                    getTimer(
+                       "algs::MblkHyperbolicLevelIntegrator::standardLevelSynchronization()")),
    t_sync_new_levels(tbox::TimerManager::getManager()->
-      getTimer("algs::MblkHyperbolicLevelIntegrator::synchronizeNewLevels()"))
+                     getTimer("algs::MblkHyperbolicLevelIntegrator::synchronizeNewLevels()"))
 {
    NULL_USE(mblk_hierarchy);
 
@@ -334,7 +337,7 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
 
             (*mi)->setPatchData(old_indx, (*mi)->getPatchData(cur_indx));
 
-            time_dep_var++;
+            ++time_dep_var;
          }
       }
 
@@ -386,7 +389,7 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
    TBOX_ASSERT((coarsest_level >= 0) &&
       (coarsest_level <= finest_level) &&
       (finest_level <= hierarchy->getFinestLevelNumber()));
-   for (int ln0 = 0; ln0 <= finest_level; ln0++) {
+   for (int ln0 = 0; ln0 <= finest_level; ++ln0) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #else
@@ -398,7 +401,7 @@ MblkHyperbolicLevelIntegrator::resetHierarchyConfiguration(
    d_mblk_bdry_sched_advance.resize(finest_hiera_level + 1);
    d_mblk_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
-   for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
       boost::shared_ptr<hier::PatchLevel> mblk_level(
          hierarchy->getPatchLevel(ln));
 
@@ -803,7 +806,7 @@ MblkHyperbolicLevelIntegrator::getMaxFinerLevelDt(
 {
    NULL_USE(finer_level_number);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int id = 0; id < d_dim.getValue(); id++) {
+   for (int id = 0; id < d_dim.getValue(); ++id) {
       TBOX_ASSERT(ratio(id) > 0);
    }
 #endif
@@ -948,7 +951,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    double level_local_patches = 0.;
    // to count total gridcells on level
    //hier::BoxList boxes = level->getBoxes();
-   //for (hier::BoxList::Iterator i(boxes); i; i++) {
+   //for (hier::BoxList::Iterator i(boxes); i; ++i) {
    //   level_gridcells += itr().size();
    //}
    // to count gridcells on this processor
@@ -1222,7 +1225,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
    const double old_time)
 {
    std::vector<double> old_times(finest_level - coarsest_level + 1);
-   for (int i = coarsest_level; i <= finest_level; i++) {
+   for (int i = coarsest_level; i <= finest_level; ++i) {
       old_times[i] = old_time;
    }
    standardLevelSynchronization(hierarchy, coarsest_level, finest_level,
@@ -1243,7 +1246,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
       && (finest_level <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(static_cast<int>(old_times.size()) >= finest_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln = coarsest_level; ln < finest_level; ln++) {
+   for (int ln = coarsest_level; ln < finest_level; ++ln) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
       TBOX_ASSERT(sync_time >= old_times[ln]);
    }
@@ -1252,7 +1255,7 @@ MblkHyperbolicLevelIntegrator::standardLevelSynchronization(
 
    t_std_level_sync->start();
 
-   for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
+   for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
       const int coarse_ln = fine_ln - 1;
 
       TBOX_ASSERT(sync_time >= old_times[coarse_ln]);
@@ -1317,7 +1320,7 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln = coarsest_level; ln <= finest_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_level; ++ln) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
    }
 #endif
@@ -1335,7 +1338,7 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
 
       d_patch_strategy->setDataContext(d_current);
 
-      for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
+      for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
          const int coarse_ln = fine_ln - 1;
 
          boost::shared_ptr<hier::PatchLevel> fine_level(
@@ -1429,9 +1432,9 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     */
 
    boost::shared_ptr<xfer::CoarsenSchedule> sched;
-   if (d_do_coarsening) { 
+   if (d_do_coarsening) {
       t_coarsen_fluxsum_create->start();
-         sched = d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
+      sched = d_mblk_coarsen_fluxsum->createSchedule(mblk_coarse_level,
             mblk_fine_level,
             0);
       t_coarsen_fluxsum_create->stop();
@@ -1494,7 +1497,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
       t_coarsen_sync_comm->start();
       sched->coarsenData();
       t_coarsen_sync_comm->stop();
-   
+
       d_patch_strategy->clearDataContext();
    }
 }
@@ -1564,7 +1567,7 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
          (*mi)->deallocatePatchData(new_indx);
 
-         time_dep_var++;
+         ++time_dep_var;
 
       }
 
@@ -1715,7 +1718,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
+         hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
          /*
@@ -1804,7 +1807,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
+         hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
          /*
@@ -1853,7 +1856,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
+         hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
          d_mblk_fill_new_level->registerRefine(
@@ -2066,7 +2069,7 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
                   fsum_data->fillAll(0.0);
                }
 
-               fs_var++;
+               ++fs_var;
             }
          } // loop over patches
 
@@ -2167,9 +2170,9 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                flux_ghosts = sflux_data->getGhostCellWidth();
             }
 
-            for (int d = 0; d < ddepth; d++) {
+            for (int d = 0; d < ddepth; ++d) {
                // loop over lower and upper parts of outer face/side arrays
-               for (int ifs = 0; ifs < 2; ifs++) {
+               for (int ifs = 0; ifs < 2; ++ifs) {
                   if (d_flux_is_face) {
                      if (d_dim == tbox::Dimension(2)) {
                         SAMRAI_F77_FUNC(upfluxsumface2d0, UPFLUXSUMFACE2D0) (
@@ -2266,8 +2269,8 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                }  // loop over lower and upper sides/faces
             }  // loop over depth
 
-            flux_var++;
-            fluxsum_var++;
+            ++flux_var;
+            ++fluxsum_var;
 
          }  // loop over flux variables
 
@@ -2310,7 +2313,7 @@ void MblkHyperbolicLevelIntegrator::copyTimeDependentData(
          TBOX_ASSERT(dst_data);
 
          dst_data->copy(*src_data);
-         time_dep_var++;
+         ++time_dep_var;
       }
 
    }

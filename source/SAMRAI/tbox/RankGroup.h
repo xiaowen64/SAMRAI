@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A class to manage a group of processor ranks
  *
  ************************************************************************/
@@ -87,9 +87,22 @@ public:
          SAMRAI_MPI(SAMRAI_MPI::getSAMRAIWorld()));
 
    /*!
+    * Copy constructor.
+    */
+   RankGroup(
+      const RankGroup& other);
+
+   /*!
     * Destructor
     */
    ~RankGroup();
+
+   /*!
+    * Assignment operator.
+    */
+   RankGroup&
+   operator = (
+      const RankGroup& rhs);
 
    /*!
     * Returns true if the RankGroup contains ranks for all available

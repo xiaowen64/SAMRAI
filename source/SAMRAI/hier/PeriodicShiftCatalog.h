@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility for cataloging periodic shift directions.
  *
  ************************************************************************/
@@ -49,7 +49,7 @@ public:
     *
     * @param[in] dim Get the catalog for this dimension.
     */
-   static const PeriodicShiftCatalog *
+   static PeriodicShiftCatalog *
    getCatalog(
       const tbox::Dimension& dim);
 
@@ -171,11 +171,8 @@ public:
     *
     * @param[in] shift_distance_along_index_directions The periodic
     * shift distance in each index direction.
-    *
-    * TODO: possible refactor?  This method should probably be changed
-    * to a regular member method, for conformity to other singletons.
     */
-   static void
+   void
    initializeShiftsByIndexDirections(
       const IntVector& shift_distance_along_index_directions);
 

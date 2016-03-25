@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory class for creating edge data objects
  *
  ************************************************************************/
@@ -67,9 +67,9 @@ EdgeDataFactory<TYPE>::cloneFactory(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
    return boost::make_shared<EdgeDataFactory<TYPE> >(
-      d_depth,
-      ghosts,
-      d_fine_boundary_represents_var);
+             d_depth,
+             ghosts,
+             d_fine_boundary_represents_var);
 }
 
 /*
@@ -88,9 +88,9 @@ EdgeDataFactory<TYPE>::allocate(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<EdgeData<TYPE> >(
-      patch.getBox(),
-      d_depth,
-      d_ghosts);
+             patch.getBox(),
+             d_depth,
+             d_ghosts);
 }
 
 /*

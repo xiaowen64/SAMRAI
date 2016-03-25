@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for integer node-centered patch data.
  *
  ************************************************************************/
@@ -68,8 +68,8 @@ public:
    {
       TBOX_ASSERT(data);
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
-      return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox()).size()) *
-          data->getDepth();
+      return (pdat::NodeGeometry::toNodeBox(box * data->getGhostBox()).size())
+             * data->getDepth();
    }
 
    /**
@@ -160,7 +160,7 @@ private:
    // The following are not implemented:
    PatchNodeDataOpsInteger(
       const PatchNodeDataOpsInteger&);
-   void
+   PatchNodeDataOpsInteger&
    operator = (
       const PatchNodeDataOpsInteger&);
 

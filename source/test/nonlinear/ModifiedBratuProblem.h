@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Class containing numerical routines for modified Bratu problem
  *
  ************************************************************************/
@@ -341,7 +341,7 @@ public:
       NULL_USE(ratio);
    }
 
-   hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+   hier::IntVector getRefineOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }
@@ -381,7 +381,7 @@ public:
       NULL_USE(ratio);
    }
 
-   hier::IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
+   hier::IntVector getCoarsenOpStencilWidth(const tbox::Dimension& dim) const
    {
       return hier::IntVector(dim, 0);
    }

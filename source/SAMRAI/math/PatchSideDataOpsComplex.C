@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex side-centered patch data.
  *
  ************************************************************************/
@@ -80,7 +80,7 @@ PatchSideDataOpsComplex::copyData(
 
    int dimVal = box.getDim().getValue();
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          dst->getArrayData(d).copy(src->getArrayData(d),
             pdat::SideGeometry::toSideBox(box, d));

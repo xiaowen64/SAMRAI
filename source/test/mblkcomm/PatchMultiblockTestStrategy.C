@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Base class for patch data test operations.
  *
  ************************************************************************/
@@ -74,7 +74,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
    d_variable_dst_ghosts.resize(nkeys, hier::IntVector(d_dim, 0));
    d_variable_refine_op.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
 
       boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
@@ -127,7 +127,7 @@ void PatchMultiblockTestStrategy::readRefinementInput(
    int nkeys = static_cast<int>(box_keys.size());
 
    d_refine_level_boxes.resize(nkeys);
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       std::vector<tbox::DatabaseBox> db_box_vector =
          db->getDatabaseBoxVector(box_keys[i]);
       d_refine_level_boxes[i] = db_box_vector;
@@ -172,7 +172,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 /*
  *************************************************************************
  *
- * Blank physical boundary and pre/postprocess 
+ * Blank physical boundary and pre/postprocess
  * so tester isn't required to implement them when not needed.
  *
  *************************************************************************
@@ -215,4 +215,3 @@ void PatchMultiblockTestStrategy::postprocessRefine(
    NULL_USE(fine_box);
    NULL_USE(ratio);
 }
-

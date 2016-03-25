@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator over real Boxes in a BoxContainer.
  *
  ************************************************************************/
@@ -16,7 +16,6 @@
 
 namespace SAMRAI {
 namespace hier {
-
 
 /*
  * TODO: Do we really need a separate class for this?  Couldn't we just
@@ -45,7 +44,7 @@ namespace hier {
  */
 class RealBoxConstIterator
 {
-friend class BoxContainer;
+   friend class BoxContainer;
 
 public:
    /*!

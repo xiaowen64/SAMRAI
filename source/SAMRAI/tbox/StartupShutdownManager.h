@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Manager for startup and shutdown routines to be called at program start and exit
  *
  ************************************************************************/
@@ -65,6 +65,11 @@ public:
    {
 
 public:
+      /*!
+       * @brief Default constructor.
+       */
+      AbstractHandler();
+
       /*!
        * @brief Virtual destructor since class has virtual methods.
        */
@@ -139,6 +144,16 @@ public:
        */
       virtual bool
       hasFinalize() = 0;
+
+private:
+      // Unimplemented copy constructor.
+      AbstractHandler(
+         const AbstractHandler& other);
+
+      // Unimplemented assignment operator.
+      AbstractHandler&
+      operator = (
+         const AbstractHandler& rhs);
    };
 
    /*!
@@ -211,10 +226,10 @@ public:
        *
        */
       Handler(
-         void(*initialize)(),
-         void(*startup)(),
-         void(*shutdown)(),
-         void(*finalize)(),
+         void(* initialize)(),
+         void(* startup)(),
+         void(* shutdown)(),
+         void(* finalize)(),
          unsigned char priority);
 
       /*!
@@ -277,12 +292,17 @@ public:
       hasFinalize();
 
 private:
-      /*!
-       * @brief Default constructor is private.
-       *
-       * TODO:  Should this be unimplemented?
-       */
+      // Unimplemented default constructor.
       Handler();
+
+      // Unimplemented copy constructor.
+      Handler(
+         const Handler& other);
+
+      // Unimplemented assignment operator.
+      Handler&
+      operator = (
+         const Handler& rhs);
 
       /*!
        * @brief Initialize function.
@@ -343,7 +363,7 @@ private:
     */
    static void
    registerHandler(
-      AbstractHandler* handler);
+      AbstractHandler * handler);
 
    /*!
     * @brief Invoke the registered initialization handlers.
@@ -400,6 +420,18 @@ private:
    static const unsigned char priorityVariables = 100;
 
 private:
+   // Unimplemented default constructor.
+   StartupShutdownManager();
+
+   // Unimplemented copy constructor.
+   StartupShutdownManager(
+      const StartupShutdownManager& other);
+
+   // Unimplemented default constructor.
+   StartupShutdownManager&
+   operator = (
+      const StartupShutdownManager& rhs);
+
    /*!
     * @brief Sets up the StartupShutdownManager singleton.
     */
@@ -417,6 +449,20 @@ public:
        * @brief Constructor.
        */
       ListElement();
+
+      // Unimplemented copy constructor.
+      ListElement(
+         const ListElement& other);
+
+      // Unimplemented assignment operator.
+      ListElement&
+      operator = (
+         const ListElement& rhs);
+
+      /*!
+       * @brief Destructor.
+       */
+      ~ListElement();
 
       /*!
        * @brief A registered handler being stored in a list.

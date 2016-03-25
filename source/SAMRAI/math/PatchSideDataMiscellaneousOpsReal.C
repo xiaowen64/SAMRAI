@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated miscellaneous operations for real side-centered data.
  *
  ************************************************************************/
@@ -53,7 +53,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 
    const hier::IntVector& directions = data1->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -68,7 +68,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -100,7 +100,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 
    const hier::IntVector& directions = dst->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             d_array_ops.compareToScalar(dst->getArrayData(d),
@@ -113,7 +113,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::compareToScalar(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             d_array_ops.compareToScalarWithControlVolume(dst->getArrayData(d),
@@ -142,7 +142,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
    const hier::IntVector& directions = dst->getDirectionVector();
    int retval = 1;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -157,7 +157,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::testReciprocal(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -185,7 +185,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box side_box =
          pdat::SideGeometry::toSideBox(box, d);
       TYPE dirval = d_array_ops.maxPointwiseDivide(numer->getArrayData(d),
@@ -208,7 +208,7 @@ PatchSideDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
    int dimVal = numer->getDim().getValue();
 
    TYPE retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
       TYPE dirval = d_array_ops.minPointwiseDivide(numer->getArrayData(d),
             denom->getArrayData(d),

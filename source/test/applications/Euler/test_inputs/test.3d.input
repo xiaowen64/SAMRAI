@@ -1,10 +1,10 @@
 /*************************************************************************
  *
- * This file is part of the SAMRAI distribution.  For full copyright 
- * information, see COPYRIGHT and COPYING.LESSER. 
+ * This file is part of the SAMRAI distribution.  For full copyright
+ * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   Input file for SAMRAI Euler example problem (3d box) 
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Description:   Input file for SAMRAI Euler example problem (3d box)
  *
  ************************************************************************/
 
@@ -262,6 +262,8 @@ PatchHierarchy {
 
 // Refer to mesh::GriddingAlgorithm for input
 GriddingAlgorithm {
+   DEV_log_metadata_statistics = TRUE
+   DEV_barrier_and_time = TRUE
 }
 
 // Refer to mesh::BergerRigoutsos for input

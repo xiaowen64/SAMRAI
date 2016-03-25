@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Abstract factory class for creating patch level objects
  *
  ************************************************************************/
@@ -111,12 +111,6 @@ public:
     * @brief Allocate a patch level using the data from the database to
     * initialize it.
     *
-    * The component_selector argument is used to specify which patch data
-    * components to allocate and read in from the database.
-    * @note
-    * If desired, pass a ComponentSelector with all bits set to false to
-    * indicate that no patch data components are read/allocated.
-    *
     * Redefine this function to change the method for creating
     * patch levels from a database.
     *
@@ -125,7 +119,6 @@ public:
     * @param[in]  database
     * @param[in]  grid_geometry
     * @param[in]  descriptor
-    * @param[in]  component_selector
     * @param[in]  factory @b Default: a boost::shared_ptr to the standard
     *             PatchFactory
     * @param[in]  defer_boundary_box_creation @b Default: false
@@ -135,7 +128,6 @@ public:
       const boost::shared_ptr<tbox::Database>& database,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const ComponentSelector& component_selector,
       const boost::shared_ptr<PatchFactory>& factory =
          boost::shared_ptr<PatchFactory>(),
       const bool defer_boundary_box_creation = false) const;
@@ -146,7 +138,7 @@ private:
     */
    PatchLevelFactory(
       const PatchLevelFactory&);
-   void
+   PatchLevelFactory&
    operator = (
       const PatchLevelFactory&);
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Abstract fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -60,13 +60,13 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
    TBOX_ASSERT_OBJDIM_EQUALITY2(dst_box_level, fill_ghost_width);
 
    fill_box_level.reset(new hier::BoxLevel(
-      dst_box_level.getRefinementRatio(),
-      dst_box_level.getGridGeometry(),
-      dst_box_level.getMPI()));
+         dst_box_level.getRefinementRatio(),
+         dst_box_level.getGridGeometry(),
+         dst_box_level.getMPI()));
 
    dst_to_fill.reset(new hier::Connector(dst_box_level,
-                                         *fill_box_level,
-                                         fill_ghost_width));
+         *fill_box_level,
+         fill_ghost_width));
 
    boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
       dst_box_level.getGridGeometry());
@@ -81,7 +81,7 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
       hier::BoxContainer fill_boxes(
          hier::Box::grow(dst_box, fill_ghost_width));
 
-      const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
+      const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(dst_box.getBlockId());
 
       hier::BoxContainer constructed_fill_boxes;
@@ -90,13 +90,13 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
          dst_to_fill->findLocal(dst_box_id);
       bool has_base_box = base_box_itr != dst_to_fill->end();
 
-      for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator ni =
-           neighbors.begin();
-           ni != neighbors.end(); ni++) {
+      for (std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::const_iterator ni =
+              neighbors.begin();
+           ni != neighbors.end(); ++ni) {
 
-         if (ni->isSingularity()) {
+         if (ni->second.isSingularity()) {
 
-            hier::BoxContainer encon_boxes(ni->getTransformedDomain());
+            hier::BoxContainer encon_boxes(ni->second.getTransformedDomain());
             encon_boxes.refine(dst_box_level.getRefinementRatio());
             encon_boxes.intersectBoxes(fill_boxes);
             encon_boxes.removeIntersections(constructed_fill_boxes);
@@ -105,11 +105,11 @@ PatchLevelEnhancedFillPattern::computeFillBoxesAndNeighborhoodSets(
 
                if (!has_base_box) {
                   base_box_itr = dst_to_fill->makeEmptyLocalNeighborhood(
-                     dst_box_id);
+                        dst_box_id);
                   has_base_box = true;
                }
                for (hier::BoxContainer::iterator ei = encon_boxes.begin();
-                    ei != encon_boxes.end(); ei++) {
+                    ei != encon_boxes.end(); ++ei) {
 
                   hier::Box fill_box(
                      *ei,

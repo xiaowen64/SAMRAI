@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Linear Advection example problem.
  *
  ************************************************************************/
@@ -46,7 +46,7 @@ using namespace std;
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
 #include "SAMRAI/mesh/ChopAndPackLoadBalancer.h"
 #include "SAMRAI/mesh/TreeLoadBalancer.h"
-#include "SAMRAI/mesh/TilePartitioner.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
@@ -268,9 +268,7 @@ int main(
       if (!case_name.empty()) {
          base_name_ext = base_name_ext + '-' + case_name;
       }
-      base_name_ext = base_name_ext + '-' + tbox::Utilities::intToString(
-            mpi.getSize(),
-            5);
+      base_name_ext = base_name_ext + '-' + tbox::Utilities::nodeToString(mpi.getSize());
 
       /*
        * Logging.
@@ -390,7 +388,6 @@ int main(
             hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-
       // Set up the clustering.
 
       const std::string clustering_type =
@@ -398,7 +395,7 @@ int main(
 
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator;
 
-      if ( clustering_type == "BergerRigoutsos" ) {
+      if (clustering_type == "BergerRigoutsos") {
 
          boost::shared_ptr<Database> abr_db(
             input_db->getDatabase("BergerRigoutsos"));
@@ -406,8 +403,7 @@ int main(
             new mesh::BergerRigoutsos(dim, abr_db));
          box_generator = berger_rigoutsos;
 
-      }
-      else if ( clustering_type == "TileClustering" ) {
+      } else if (clustering_type == "TileClustering") {
 
          boost::shared_ptr<Database> tc_db(
             input_db->getDatabase("TileClustering"));
@@ -417,9 +413,6 @@ int main(
 
       }
 
-
-
-
       // Set up the load balancer.
 
       boost::shared_ptr<mesh::LoadBalanceStrategy> load_balancer;
@@ -428,7 +421,7 @@ int main(
       const std::string load_balancer_type =
          main_db->getStringWithDefault("load_balancer_type", "TreeLoadBalancer");
 
-      if ( load_balancer_type == "TreeLoadBalancer" ) {
+      if (load_balancer_type == "TreeLoadBalancer") {
 
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
             new mesh::TreeLoadBalancer(
@@ -448,8 +441,25 @@ int main(
 
          load_balancer = tree_load_balancer;
          load_balancer0 = tree_load_balancer0;
-      }
-      else if ( load_balancer_type == "ChopAndPackLoadBalancer" ) {
+      } else if (load_balancer_type == "CascadePartitioner") {
+
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner0(
+            new mesh::CascadePartitioner(
+               dim,
+               "mesh::CascadePartitioner0",
+               input_db->getDatabase("CascadePartitioner")));
+         cascade_partitioner0->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
+
+         load_balancer = cascade_partitioner;
+         load_balancer0 = cascade_partitioner0;
+      } else if (load_balancer_type == "ChopAndPackLoadBalancer") {
 
          boost::shared_ptr<mesh::ChopAndPackLoadBalancer> cap_load_balancer(
             new mesh::ChopAndPackLoadBalancer(
@@ -460,24 +470,6 @@ int main(
          load_balancer = cap_load_balancer;
          load_balancer0 = cap_load_balancer;
       }
-      else if ( load_balancer_type == "TilePartitioner" ) {
-
-         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer(
-            new mesh::TilePartitioner(
-               dim,
-               "mesh::TilePartitioner",
-               input_db->getDatabase("TilePartitioner")));
-
-         boost::shared_ptr<mesh::TilePartitioner> tile_load_balancer0(
-            new mesh::TilePartitioner(
-               dim,
-               "mesh::TilePartitioner0",
-               input_db->getDatabase("TilePartitioner")));
-
-         load_balancer = tile_load_balancer;
-         load_balancer0 = tile_load_balancer0;
-      }
-
 
       boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
@@ -630,7 +622,7 @@ int main(
       gridding_algorithm->printStatistics(tbox::plog);
 #endif
 
-      if ( load_balancer_type == "TreeLoadBalancer" ) {
+      if (load_balancer_type == "TreeLoadBalancer") {
          /*
           * Output load balancing results for TreeLoadBalancer.
           */
@@ -641,16 +633,16 @@ int main(
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
       }
-      else if ( load_balancer_type == "TilePartitioner" ) {
+      if (load_balancer_type == "CascadePartitioner") {
          /*
-          * Output load balancing results for TilePartitioner.
+          * Output load balancing results for CascadePartitioner.
           */
-         boost::shared_ptr<mesh::TilePartitioner> tile_partitioner(
-            BOOST_CAST<mesh::TilePartitioner, mesh::LoadBalanceStrategy>(
+         boost::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
+            BOOST_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
                load_balancer));
-         TBOX_ASSERT(tile_partitioner);
+         TBOX_ASSERT(cascade_partitioner);
          tbox::plog << "\n\nLoad balancing results:\n";
-         tile_partitioner->printStatistics(tbox::plog);
+         cascade_partitioner->printStatistics(tbox::plog);
       }
 
       /*

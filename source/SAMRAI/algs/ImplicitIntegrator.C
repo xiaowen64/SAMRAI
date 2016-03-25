@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Implicit time integration manager class for nonlinear problems.
  *
  ************************************************************************/
@@ -40,7 +40,7 @@ ImplicitIntegrator::ImplicitIntegrator(
    const boost::shared_ptr<tbox::Database>& input_db,
    ImplicitEquationStrategy* implicit_equations,
    solv::NonlinearSolverStrategy* nonlinear_solver,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy) :
+   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy):
    d_object_name(object_name),
    d_implicit_equations(implicit_equations),
    d_nonlinear_solver(nonlinear_solver),
@@ -101,8 +101,8 @@ ImplicitIntegrator::initialize()
 
    d_solution_vector.reset(
       new solv::SAMRAIVectorReal<double>("solution_vector",
-                                         d_patch_hierarchy,
-                                         0, d_finest_level));
+         d_patch_hierarchy,
+         0, d_finest_level));
 
    d_implicit_equations->setupSolutionVector(d_solution_vector);
 
@@ -245,7 +245,7 @@ ImplicitIntegrator::updateSolution()
 {
    d_current_time += d_current_dt;
    d_old_dt = d_current_dt;
-   d_integrator_step++;
+   ++d_integrator_step;
 
    d_implicit_equations->updateSolution(d_current_time);
 

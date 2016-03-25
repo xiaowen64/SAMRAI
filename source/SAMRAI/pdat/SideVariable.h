@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -69,7 +69,7 @@ public:
     * all coordinate directions.
     *
     * Constructs a SideVariable the same as the first constructor, except
-    * there is no directions argument, meaning that data is expected to 
+    * there is no directions argument, meaning that data is expected to
     * exist on the sides in all coordinate directions.
     */
    SideVariable(
@@ -126,12 +126,12 @@ private:
 
    // Unimplemented copy constructor
    SideVariable(
-      const SideVariable<TYPE>&);
+      const SideVariable&);
 
    // Unimplemented assignment operator
-   void
+   SideVariable&
    operator = (
-      const SideVariable<TYPE>&);
+      const SideVariable&);
 
 };
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Refine algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -254,7 +254,7 @@ public:
    boost::shared_ptr<RefineSchedule>
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& level,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
 
@@ -271,7 +271,7 @@ public:
    createSchedule(
       const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
       const boost::shared_ptr<hier::PatchLevel>& level,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
 
@@ -324,7 +324,7 @@ public:
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -350,7 +350,7 @@ public:
       const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -430,7 +430,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -458,7 +458,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -556,7 +556,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -587,7 +587,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const int next_coarser_level,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
-      RefinePatchStrategy * patch_strategy = 0,
+      RefinePatchStrategy* patch_strategy = 0,
       bool use_time_interpolation = false,
       const boost::shared_ptr<RefineTransactionFactory>& transaction_factory =
          boost::shared_ptr<RefineTransactionFactory>());
@@ -674,7 +674,7 @@ public:
 private:
    RefineAlgorithm(
       const RefineAlgorithm&);                  // not implemented
-   void
+   RefineAlgorithm&
    operator = (
       const RefineAlgorithm&);                  // not implemented
 

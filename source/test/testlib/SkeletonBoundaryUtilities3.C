@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 3D Skeleton boundary data
  *
  ************************************************************************/
@@ -213,7 +213,7 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
          ghost_fill_width);
    const std::vector<hier::BoundaryBox>& face_bdry =
       pgeom->getCodimensionBoundaries(Bdry::FACE3D);
-   for (int i = 0; i < static_cast<int>(face_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(face_bdry.size()); ++i) {
       TBOX_ASSERT(face_bdry[i].getBoundaryType() == Bdry::FACE3D);
 
       int bface_loc = face_bdry[i].getLocationIndex();
@@ -270,7 +270,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_3D_EDGES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -292,7 +292,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
 
    const std::vector<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE3D);
-   for (int i = 0; i < static_cast<int>(edge_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(edge_bdry.size()); ++i) {
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE3D);
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
@@ -349,7 +349,7 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_3D_NODES);
    TBOX_ASSERT(static_cast<int>(bdry_face_values.size()) ==
-               NUM_3D_FACES * (vardata->getDepth()));
+      NUM_3D_FACES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
@@ -371,7 +371,7 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE3D);
-   for (int i = 0; i < static_cast<int>(node_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(node_bdry.size()); ++i) {
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE3D);
 
       int bnode_loc = node_bdry[i].getLocationIndex();
@@ -740,10 +740,10 @@ int SkeletonBoundaryUtilities3::checkBdryData(
         ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
       pdat::CellIndex check = *ic;
-      for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
+      for (int p = 0; p < gbox_to_check.numberCells(idir); ++p) {
          double offcheckval = checkval + dxfact * (p + 1);
          if ((*vardata)(check, depth) != offcheckval) {
-            num_bad_values++;
+            ++num_bad_values;
             TBOX_WARNING("Bad " << bdry_type_str
                                 << " boundary value for " << varname
                                 << " found in cell " << check
@@ -774,13 +774,13 @@ void SkeletonBoundaryUtilities3::read3dBdryFaces(
    TBOX_ASSERT(static_cast<int>(face_conds.size()) == NUM_3D_FACES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 3; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 3; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 3) { // face boundary input required
 
-      for (int s = 0; s < NUM_3D_FACES; s++) {
+      for (int s = 0; s < NUM_3D_FACES; ++s) {
 
          string bdry_loc_str;
          switch (s) {
@@ -876,13 +876,13 @@ void SkeletonBoundaryUtilities3::read3dBdryEdges(
    TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_3D_EDGES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 3; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 3; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 2) {  // edge boundary input required
 
-      for (int s = 0; s < NUM_3D_EDGES; s++) {
+      for (int s = 0; s < NUM_3D_EDGES; ++s) {
 
          string bdry_loc_str;
          switch (s) {
@@ -1220,13 +1220,13 @@ void SkeletonBoundaryUtilities3::read3dBdryNodes(
    TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_3D_NODES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 3; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 3; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 1) { // node boundary data required
 
-      for (int s = 0; s < NUM_3D_NODES; s++) {
+      for (int s = 0; s < NUM_3D_NODES; ++s) {
 
          string bdry_loc_str;
          switch (s) {

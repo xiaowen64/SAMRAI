@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Vector class for real data on SAMRAI hierarchy.
  *
  ************************************************************************/
@@ -665,10 +665,10 @@ private:
 
    // The following are not implemented
    SAMRAIVectorReal(
-      const SAMRAIVectorReal<TYPE>&);
-   void
+      const SAMRAIVectorReal&);
+   SAMRAIVectorReal&
    operator = (
-      const SAMRAIVectorReal<TYPE>&);
+      const SAMRAIVectorReal&);
 
    /*
     * Private member function to set number of vector components.  This
@@ -706,15 +706,15 @@ private:
 
    // shared data operations for variaous array-based types...
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_cell_ops[SAMRAI::MAX_DIM_VAL];
+   s_cell_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_edge_ops[SAMRAI::MAX_DIM_VAL];
+   s_edge_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_face_ops[SAMRAI::MAX_DIM_VAL];
+   s_face_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_node_ops[SAMRAI::MAX_DIM_VAL];
+   s_node_ops[SAMRAI::MAX_DIM_VAL];
    static boost::shared_ptr<math::HierarchyDataOpsReal<TYPE> >
-      s_side_ops[SAMRAI::MAX_DIM_VAL];
+   s_side_ops[SAMRAI::MAX_DIM_VAL];
 
    std::string d_vector_name;
 

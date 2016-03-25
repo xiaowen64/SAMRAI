@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility functions for error reporting, file manipulation, etc.
  *
  ************************************************************************/
@@ -49,7 +49,7 @@ typedef int mode_t;
  */
 #define NULL_USE(variable)                               \
    do {                                                  \
-      if (0) { char* temp = (char *)&variable; temp++; } \
+      if (0) { char* temp = (char *)&variable; ++temp; } \
    } while (0)
 
 /*!
@@ -411,6 +411,23 @@ struct Utilities {
    static std::string
    intToString(
       int num,
+      int min_width = 1);
+
+   /*!
+    * Convert a size_t to a string.
+    *
+    * The returned string is padded with zeros as needed so that it
+    * contains at least the number of characters indicated by the
+    * minimum width argument.  When the number is positive, the
+    * string is padded on the left. When the number is negative,
+    * the '-' sign appears first, followed by the integer value
+    * padded on the left with zeros.  For example, the statement
+    * intToString(12, 5) returns "00012" and the statement
+    * intToString(-12, 5) returns "-0012".
+    */
+   static std::string
+   sizetToString(
+      size_t num,
       int min_width = 1);
 
    /*!

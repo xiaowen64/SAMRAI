@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Time integration manager for AMR with local time stepping.
  *
  ************************************************************************/
@@ -99,7 +99,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
 
    int level_number;
 
-   for (level_number = 0; level_number < max_levels; level_number++) {
+   for (level_number = 0; level_number < max_levels; ++level_number) {
       d_regrid_interval[level_number] = tbox::MathUtilities<int>::getMax();
       d_level_old_old_time[level_number] =
          tbox::MathUtilities<double>::getSignalingNaN();
@@ -122,7 +122,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
    if (d_use_refined_timestepping) {
       if (max_levels > 1) {
 
-         for (level_number = 1; level_number < max_levels; level_number++) {
+         for (level_number = 1; level_number < max_levels; ++level_number) {
             const hier::IntVector ratio(d_patch_hierarchy->
                                         getRatioToCoarserLevel(level_number));
 
@@ -144,7 +144,7 @@ TimeRefinementIntegrator::TimeRefinementIntegrator(
          d_regrid_interval[0] = d_regrid_interval[1];
 
       } else {
-         for (level_number = 0; level_number < max_levels; level_number++) {
+         for (level_number = 0; level_number < max_levels; ++level_number) {
             d_regrid_interval[level_number] = 1;
          }
       }
@@ -507,7 +507,7 @@ TimeRefinementIntegrator::initializeSynchronizedTimesteppingLevelData(
    }
    d_dt_max_level[level_number] = d_dt_actual_level[level_number] = d_dt;
 
-   for (int i = 0; i < level_number; i++) {
+   for (int i = 0; i < level_number; ++i) {
       if (d_dt_max_level[i] > d_dt_max_level[level_number]) {
          d_dt_max_level[i] = d_dt_actual_level[i] =
                d_dt_max_level[level_number];
@@ -666,8 +666,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
    if (level_number > 0) {
       d_step_level[level_number] = 0;
       d_max_steps_level[level_number] = 1;
-   }
-   else {
+   } else {
       d_level_0_advanced = false;
       d_hierarchy_advanced = false;
    }
@@ -781,9 +780,8 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
 
       if (level_number == 0) {
          d_level_0_advanced = true;
-      }
-      else {
-         d_step_level[level_number]++;
+      } else {
+         ++d_step_level[level_number];
       }
 
       if (d_patch_hierarchy->finerLevelExists(level_number)) {
@@ -792,7 +790,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
       }
 
       if (level_number == 0) {
-         d_step_level[level_number]++;
+         ++d_step_level[level_number];
          d_hierarchy_advanced = true;
       }
 
@@ -904,7 +902,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                      d_patch_hierarchy->levelCanBeRefined(finest_level_number));
                }
             } else {
-               for (int ln = level_number; ln <= finest_level_number; ln++) {
+               for (int ln = level_number; ln <= finest_level_number; ++ln) {
                   d_refine_level_integrator->resetTimeDependentData(
                      d_patch_hierarchy->getPatchLevel(ln),
                      d_level_sim_time[ln],
@@ -936,7 +934,7 @@ TimeRefinementIntegrator::advanceRecursivelyForRefinedTimestepping(
                int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
                regrid_start_time.resize(max_levels);
                int array_size = static_cast<int>(regrid_start_time.size());
-               for (int i = 0; i < array_size; i++) {
+               for (int i = 0; i < array_size; ++i) {
                   regrid_start_time[i] = 0.;
                }
 
@@ -1046,7 +1044,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
    d_hierarchy_advanced = false;
 
    int level_num;
-   for (level_num = 0; level_num <= finest_level_number; level_num++) {
+   for (level_num = 0; level_num <= finest_level_number; ++level_num) {
 
       boost::shared_ptr<hier::PatchLevel> patch_level(
          d_patch_hierarchy->getPatchLevel(level_num));
@@ -1093,12 +1091,12 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
 
    dt_new = tbox::MathUtilities<double>::Min(dt_new, d_grow_dt * dt);
 
-   for (level_num = 0; level_num <= finest_level_number; level_num++) {
+   for (level_num = 0; level_num <= finest_level_number; ++level_num) {
       d_dt_max_level[level_num] = d_dt_actual_level[level_num] = dt_new;
    }
 
    d_integrator_time += dt;
-   d_step_level[0]++;
+   ++d_step_level[0];
    d_hierarchy_advanced = true;
 
    int coarse_level_number = 0;
@@ -1109,8 +1107,8 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
       tbox::plog << "\nSynchronizing levels " << coarse_level_number
                  << " to " << finest_level_number << std::endl;
 #endif
-      std::vector<double> old_times(finest_level_number+1,
-                                    d_integrator_time-dt);
+      std::vector<double> old_times(finest_level_number + 1,
+                                    d_integrator_time - dt);
 
       d_refine_level_integrator->standardLevelSynchronization(
          d_patch_hierarchy,
@@ -1125,7 +1123,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
     * array.  This information may be used during the re-gridding
     * process, if time integration is used during error estimation.
     */
-   for (level_num = 0; level_num <= finest_level_number; level_num++) {
+   for (level_num = 0; level_num <= finest_level_number; ++level_num) {
       d_level_old_old_time[level_num] = d_level_old_time[level_num];
       d_level_old_time[level_num] = d_level_sim_time[level_num];
    }
@@ -1142,7 +1140,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
        * reset the time dependent data on all the levels to
        * prepare for the next advance.
        */
-      for (int ln = 0; ln <= finest_level_number; ln++) {
+      for (int ln = 0; ln <= finest_level_number; ++ln) {
          d_refine_level_integrator->resetTimeDependentData(
             d_patch_hierarchy->getPatchLevel(ln),
             d_integrator_time,
@@ -1177,7 +1175,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
                d_patch_hierarchy->levelCanBeRefined(finest_level_number));
          }
       } else {
-         for (int ln = 0; ln <= finest_level_number; ln++) {
+         for (int ln = 0; ln <= finest_level_number; ++ln) {
             d_refine_level_integrator->resetTimeDependentData(
                d_patch_hierarchy->getPatchLevel(ln),
                d_integrator_time,
@@ -1208,7 +1206,7 @@ TimeRefinementIntegrator::advanceForSynchronizedTimestepping(
          int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
          regrid_start_time.resize(max_levels);
          int array_size = static_cast<int>(regrid_start_time.size());
-         for (int i = 0; i < array_size; i++) {
+         for (int i = 0; i < array_size; ++i) {
             regrid_start_time[i] = 0.;
          }
 
@@ -1326,7 +1324,7 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
 
       if (time_remaining - dt_temp >
           sqrt(tbox::MathUtilities<double>::getEpsilon()) * time_remaining) {
-         number_steps_remaining++;
+         ++number_steps_remaining;
       }
 
       if (level_number > 0) {
@@ -1351,7 +1349,7 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
             d_max_steps_level[level_number] / d_regrid_interval[level_number];
 
          if (d_max_steps_level[level_number]
-             % d_regrid_interval[level_number]) number_regrids++;
+             % d_regrid_interval[level_number]) ++number_regrids;
 
          d_max_steps_level[level_number] =
             number_regrids * d_regrid_interval[level_number];
@@ -1378,8 +1376,7 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
 
       if (level_number == 0) {
          d_dt_actual_level[level_number] = time_remaining;
-      }
-      else {
+      } else {
          d_dt_actual_level[level_number] =
             time_remaining / double(d_max_steps_level[level_number]
                                     - d_step_level[level_number]);
@@ -1390,9 +1387,8 @@ TimeRefinementIntegrator::findNextDtAndStepsRemaining(
    }
 
    if (level_number == 0) {
-     return true;
-   }
-   else {
+      return true;
+   } else {
       return (d_max_steps_level[level_number]
               - d_step_level[level_number]) <= 1;
    }
@@ -1426,12 +1422,10 @@ TimeRefinementIntegrator::atRegridPoint(
       // step number.
       if (d_hierarchy_advanced) {
          step_number = d_step_level[0];
-      }
-      else {
+      } else {
          step_number = d_step_level[0] + 1;
       }
-   }
-   else {
+   } else {
       step_number = d_step_level[level_number];
    }
 
@@ -1489,7 +1483,7 @@ TimeRefinementIntegrator::printClassData(
       << d_gridding_algorithm.get() << std::endl;
 
    const int max_levels = d_patch_hierarchy->getMaxNumberOfLevels();
-   for (int level_number = 0; level_number < max_levels; level_number++) {
+   for (int level_number = 0; level_number < max_levels; ++level_number) {
       printDataForLevel(os, level_number);
    }
 }
@@ -1589,8 +1583,7 @@ TimeRefinementIntegrator::getFromInput(
             INPUT_RANGE_ERROR("regrid_interval");
          }
          setRegridInterval(regrid_interval);
-      }
-      else if (input_db->keyExists("regrid_interval")) {
+      } else if (input_db->keyExists("regrid_interval")) {
          TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
             << "regrid_interval input parameter not applicable with\n"
             << "refined timestepping and will be ignored." << std::endl);
@@ -1631,7 +1624,7 @@ TimeRefinementIntegrator::getFromInput(
          d_tag_buffer.resize(d_patch_hierarchy->getMaxNumberOfLevels());
          for (level_number = 0;
               level_number < d_patch_hierarchy->getMaxNumberOfLevels();
-              level_number++) {
+              ++level_number) {
             d_tag_buffer[level_number] = d_regrid_interval[level_number];
          }
 
@@ -1656,8 +1649,7 @@ TimeRefinementIntegrator::getFromInput(
                   << "regrid_interval must be >=1." << std::endl);
             }
             setRegridInterval(regrid_interval);
-         }
-         else if (input_db->keyExists("regrid_interval")) {
+         } else if (input_db->keyExists("regrid_interval")) {
             TBOX_WARNING("TimeRefinementIntegrator::getFromInput() warning...\n"
                << "regrid_interval input parameter not applicable with\n"
                << "refined timestepping and will be ignored." << std::endl);
@@ -1689,8 +1681,7 @@ TimeRefinementIntegrator::getFromInput(
          if (d_max_steps_level[0] < 0) {
             TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
                << "max_integrator_steps must be >= 0." << std::endl);
-         }
-         else if (d_max_steps_level[0] < d_step_level[0]) {
+         } else if (d_max_steps_level[0] < d_step_level[0]) {
             TBOX_ERROR("TimeRefinementIntegrator::getFromInput() error...\n"
                << "max_integrator_steps must be >= current integrator step."
                << std::endl);

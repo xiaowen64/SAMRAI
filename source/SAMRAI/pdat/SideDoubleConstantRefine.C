@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for side-centered double data on
  *                a  mesh.
  *
@@ -107,7 +107,7 @@ SideDoubleConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-SideDoubleConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+SideDoubleConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -152,7 +152,7 @@ SideDoubleConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -169,7 +169,7 @@ SideDoubleConstantRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if (dim == tbox::Dimension(1)) {
                if (directions(axis)) {
                   SAMRAI_F77_FUNC(conrefsidedoub1d, CONREFSIDEDOUB1D) (

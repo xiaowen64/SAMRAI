@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Basic templated side-centered patch data operations.
  *
  ************************************************************************/
@@ -52,7 +52,7 @@ PatchSideDataBasicOps<TYPE>::scale(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.scale(dst->getArrayData(d),
@@ -77,7 +77,7 @@ PatchSideDataBasicOps<TYPE>::addScalar(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.addScalar(dst->getArrayData(d),
@@ -103,7 +103,7 @@ PatchSideDataBasicOps<TYPE>::add(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.add(dst->getArrayData(d),
@@ -129,7 +129,7 @@ PatchSideDataBasicOps<TYPE>::subtract(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.subtract(dst->getArrayData(d),
@@ -155,7 +155,7 @@ PatchSideDataBasicOps<TYPE>::multiply(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.multiply(dst->getArrayData(d),
@@ -181,7 +181,7 @@ PatchSideDataBasicOps<TYPE>::divide(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.divide(dst->getArrayData(d),
@@ -205,7 +205,7 @@ PatchSideDataBasicOps<TYPE>::reciprocal(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.reciprocal(dst->getArrayData(d),
@@ -233,7 +233,7 @@ PatchSideDataBasicOps<TYPE>::linearSum(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.linearSum(dst->getArrayData(d),
@@ -261,7 +261,7 @@ PatchSideDataBasicOps<TYPE>::axpy(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.axpy(dst->getArrayData(d),
@@ -289,7 +289,7 @@ PatchSideDataBasicOps<TYPE>::axmy(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.axmy(dst->getArrayData(d),
@@ -314,7 +314,7 @@ PatchSideDataBasicOps<TYPE>::setRandomValues(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.setRandomValues(dst->getArrayData(d),
@@ -336,7 +336,7 @@ PatchSideDataBasicOps<TYPE>::min(
 
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
    const hier::IntVector& directions = data->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          minval = tbox::MathUtilities<TYPE>::Min(
@@ -359,7 +359,7 @@ PatchSideDataBasicOps<TYPE>::max(
 
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
    const hier::IntVector& directions = data->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          maxval = tbox::MathUtilities<TYPE>::Max(

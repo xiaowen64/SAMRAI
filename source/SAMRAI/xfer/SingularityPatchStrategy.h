@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -17,12 +17,12 @@
 namespace SAMRAI {
 
 namespace hier {
-   class Box;
-   class Connector;
-   class BaseGridGeometry;
-   class BoundaryBox;
-   class Patch;
-   class PatchLevel;
+class Box;
+class Connector;
+class BaseGridGeometry;
+class BoundaryBox;
+class Patch;
+class PatchLevel;
 }
 
 namespace xfer {
@@ -47,7 +47,6 @@ namespace xfer {
 class SingularityPatchStrategy
 {
 public:
-
    /*!
     * @brief Constructor.
     */

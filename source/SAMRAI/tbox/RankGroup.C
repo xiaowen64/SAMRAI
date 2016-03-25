@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A class to manage groups of processor ranks
  *
  ************************************************************************/
@@ -105,7 +105,7 @@ RankGroup::RankGroup(
     * Check that each entry in the array has a unique value and is increasing
     * order
     */
-   for (int i = 0; i < static_cast<int>(rank_group.size()); i++) {
+   for (int i = 0; i < static_cast<int>(rank_group.size()); ++i) {
       TBOX_ASSERT(rank_group[i] >= 0);
       TBOX_ASSERT(rank_group[i] < nodes);
       if (i > 0) {
@@ -125,12 +125,44 @@ RankGroup::RankGroup(
 
 /*
  ***********************************************************************
+ * Copy constructor.
+ ***********************************************************************
+ */
+RankGroup::RankGroup(
+   const RankGroup& other):
+   d_min(other.d_min),
+   d_max(other.d_max),
+   d_ranks(other.d_ranks),
+   d_storage(other.d_storage),
+   d_samrai_mpi(other.d_samrai_mpi)
+{
+}
+
+/*
+ ***********************************************************************
  * Destructor
  ***********************************************************************
  */
 
 RankGroup::~RankGroup()
 {
+}
+
+/*
+ ***********************************************************************
+ * Assignment operator.
+ ***********************************************************************
+ */
+RankGroup&
+RankGroup::operator = (
+   const RankGroup& rhs)
+{
+   d_min = rhs.d_min;
+   d_max = rhs.d_max;
+   d_ranks = rhs.d_ranks;
+   d_storage = rhs.d_storage;
+   d_samrai_mpi = rhs.d_samrai_mpi;
+   return *this;
 }
 
 /*

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   All-to-one and one-to-all communication using a tree.
  *
  ************************************************************************/
@@ -370,7 +370,7 @@ AsyncCommGroup::checkBcast()
                   << "mpi_communicator = " << d_mpi.getCommunicator()
                   << "mpi_tag = " << d_mpi_tag);
             }
-            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
+            TBOX_ASSERT((req[0] == MPI_REQUEST_NULL) == (flag == 1));
             if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                int count = -1;
@@ -447,7 +447,7 @@ AsyncCommGroup::checkBcast()
                      << "mpi_communicator = " << d_mpi.getCommunicator()
                      << "mpi_tag = " << d_mpi_tag);
                }
-               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
+               TBOX_ASSERT((req[ic] == MPI_REQUEST_NULL) == (flag == 1));
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
                if (req[ic] == MPI_REQUEST_NULL) {
                   plog << "tag-" << d_mpi_tag
@@ -655,7 +655,7 @@ AsyncCommGroup::checkGather()
                      << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
-               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
+               TBOX_ASSERT((req[ic] == MPI_REQUEST_NULL) == (flag == 1));
 #ifdef DEBUG_CHECK_ASSERTIONS
                if (flag == 1) {
                   TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
@@ -762,7 +762,7 @@ AsyncCommGroup::checkGather()
                   << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
-            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
+            TBOX_ASSERT((req[0] == MPI_REQUEST_NULL) == (flag == 1));
          }
          if (req[0] != MPI_REQUEST_NULL) {
             d_next_task_op = send_check;
@@ -976,7 +976,7 @@ AsyncCommGroup::checkReduce()
                      << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                      << "mpi_tag = " << d_mpi_tag << '\n');
                }
-               TBOX_ASSERT( (req[ic] == MPI_REQUEST_NULL) == (flag == 1) );
+               TBOX_ASSERT((req[ic] == MPI_REQUEST_NULL) == (flag == 1));
                if (flag == 1) {
 #ifdef DEBUG_CHECK_ASSERTIONS
                   TBOX_ASSERT(d_mpi_status.MPI_TAG == d_mpi_tag);
@@ -1083,7 +1083,7 @@ AsyncCommGroup::checkReduce()
                   << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
                   << "mpi_tag = " << d_mpi_tag << '\n');
             }
-            TBOX_ASSERT( (req[0] == MPI_REQUEST_NULL) == (flag == 1) );
+            TBOX_ASSERT((req[0] == MPI_REQUEST_NULL) == (flag == 1));
          }
          if (req[0] != MPI_REQUEST_NULL) {
 #ifdef AsyncCommGroup_DEBUG_OUTPUT
@@ -1156,10 +1156,10 @@ AsyncCommGroup::setGroupAndRootIndex(
 {
    if (getNextTaskOp() != none) {
       TBOX_ERROR("AsyncCommGroup::setGroupAndRootIndex:\n"
-                 <<"Changing group while a communication is occuring can\n"
-                 << "corrupt data and so is disallowed.\n"
-                 << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
-                 << "mpi_tag = " << d_mpi_tag << '\n');
+         << "Changing group while a communication is occuring can\n"
+         << "corrupt data and so is disallowed.\n"
+         << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
+         << "mpi_tag = " << d_mpi_tag << '\n');
    }
 
    d_mpi = mpi;
@@ -1180,10 +1180,10 @@ AsyncCommGroup::setGroupAndRootIndex(
    // Set d_group_ranks and do some sanity checks.
    if (d_group_size > d_mpi.getSize()) {
       TBOX_ERROR("AsyncCommGroup::setGroupAndRootIndex:\n"
-                 << "Group size (" << d_group_size << ") must not be greater than the size of\n"
-                 << "the MPI communicator group (" << d_mpi.getSize() << ").\n"
-                 << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
-                 << "mpi_tag = " << d_mpi_tag << '\n');
+         << "Group size (" << d_group_size << ") must not be greater than the size of\n"
+         << "the MPI communicator group (" << d_mpi.getSize() << ").\n"
+         << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
+         << "mpi_tag = " << d_mpi_tag << '\n');
 
    }
    TBOX_ASSERT(d_group_size > 0);
@@ -1215,10 +1215,10 @@ AsyncCommGroup::setGroupAndRootIndex(
    }
    if (dup != 1) {
       TBOX_ERROR("AsyncCommGroup::setGroupAndRootIndex:\n"
-                 << "The local process must appear exactly once in the group.\n"
-                 << "It appeared " << dup << " times.\n"
-                 << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
-                 << "mpi_tag = " << d_mpi_tag << '\n');
+         << "The local process must appear exactly once in the group.\n"
+         << "It appeared " << dup << " times.\n"
+         << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
+         << "mpi_tag = " << d_mpi_tag << '\n');
    }
 #endif
 

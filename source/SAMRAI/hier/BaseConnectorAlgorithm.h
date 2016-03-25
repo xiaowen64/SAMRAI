@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Algorithms to work with maping Connectors.
  *
  ************************************************************************/
@@ -68,7 +68,7 @@ protected:
       Connector& new_base_to_new_head,
       Connector* new_head_to_new_base,
       const std::set<int>& incoming_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommPeer<int>* all_comms,
       tbox::AsyncCommStage& comm_stage,
       const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
       bool print_steps) const;

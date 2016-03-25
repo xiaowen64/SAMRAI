@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Special iterator for BoxContainer.
  *
  ************************************************************************/
@@ -20,8 +20,7 @@ BoxContainerSingleOwnerIterator::BoxContainerSingleOwnerIterator(
    d_owner_rank(owner_rank),
    d_iter(begin ? d_boxes->begin() : d_boxes->end())
 {
-   if (begin)
-   {
+   if (begin) {
       while (d_iter != d_boxes->end() &&
              d_iter->getOwnerRank() != d_owner_rank) {
          ++d_iter;

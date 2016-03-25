@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Linear time interp operator for complex outerface data.
  *
  ************************************************************************/
@@ -43,7 +43,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacecmplx1d, LINTIMEINTOUTFACECMPLX1D) (const 
    dcomplex *);
 // in lintimint2d.f:
 void SAMRAI_F77_FUNC(lintimeintoutfacecmplx2d0,
-              LINTIMEINTOUTFACECMPLX2D0) (const int&, const int&,
+                     LINTIMEINTOUTFACECMPLX2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -55,7 +55,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacecmplx2d0,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 void SAMRAI_F77_FUNC(lintimeintoutfacecmplx2d1,
-              LINTIMEINTOUTFACECMPLX2D1) (const int&, const int&,
+                     LINTIMEINTOUTFACECMPLX2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -68,7 +68,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacecmplx2d1,
    dcomplex *);
 // in lintimint3d.f:
 void SAMRAI_F77_FUNC(lintimeintoutfacecmplx3d0,
-              LINTIMEINTOUTFACECMPLX3D0) (const int&, const int&, const int&,
+                     LINTIMEINTOUTFACECMPLX3D0) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -80,7 +80,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacecmplx3d0,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 void SAMRAI_F77_FUNC(lintimeintoutfacecmplx3d1,
-              LINTIMEINTOUTFACECMPLX3D1) (const int&, const int&, const int&,
+                     LINTIMEINTOUTFACECMPLX3D1) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -92,7 +92,7 @@ void SAMRAI_F77_FUNC(lintimeintoutfacecmplx3d1,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 void SAMRAI_F77_FUNC(lintimeintoutfacecmplx3d2,
-              LINTIMEINTOUTFACECMPLX3D2) (const int&, const int&, const int&,
+                     LINTIMEINTOUTFACECMPLX3D2) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -171,9 +171,9 @@ OuterfaceComplexLinearTimeInterpolateOp::timeInterpolate(
       tfrac = 0.0;
    }
 
-   for (int d = 0; d < dst_dat->getDepth(); d++) {
+   for (int d = 0; d < dst_dat->getDepth(); ++d) {
       // loop over lower and upper outerface arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if (dim == tbox::Dimension(1)) {
             SAMRAI_F77_FUNC(lintimeintoutfacecmplx1d,
                LINTIMEINTOUTFACECMPLX1D) (ifirst(0), ilast(0),

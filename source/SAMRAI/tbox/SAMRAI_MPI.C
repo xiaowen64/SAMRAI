@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
@@ -83,6 +83,19 @@ SAMRAI_MPI::SAMRAI_MPI(
       d_size = 1;
 #endif
    }
+}
+
+/*
+ **************************************************************************
+ * Copy constructor.
+ **************************************************************************
+ */
+SAMRAI_MPI::SAMRAI_MPI(
+   const SAMRAI_MPI& other):
+   d_comm(other.d_comm),
+   d_rank(other.d_rank),
+   d_size(other.d_size)
+{
 }
 
 /*
@@ -287,13 +300,14 @@ SAMRAI_MPI::Comm_size(
    if (!s_mpi_is_initialized) {
       TBOX_ERROR("SAMRAI_MPI::Comm_size is a no-op without run-time MPI!");
    }
-   int rval = MPI_SUCCESS;
 #ifdef HAVE_MPI
    return MPI_Comm_size(comm, size);
+
 #else
    *size = 1;
+   return MPI_SUCCESS;
+
 #endif
-   return rval;
 }
 
 /*
@@ -391,6 +405,29 @@ SAMRAI_MPI::Get_count(
 #ifdef HAVE_MPI
    else {
       rval = MPI_Get_count(status, datatype, count);
+   }
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Request_free(
+   Request* request)
+{
+#ifndef HAVE_MPI
+   NULL_USE(request);
+#endif
+   int rval = MPI_SUCCESS;
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Get_count is a no-op without run-time MPI!");
+   }
+#ifdef HAVE_MPI
+   else {
+      rval = MPI_Request_free(request);
    }
 #endif
    return rval;
@@ -1148,6 +1185,44 @@ SAMRAI_MPI::Send(
 
 /*
  *****************************************************************************
+ *****************************************************************************
+ */
+int
+SAMRAI_MPI::Sendrecv(
+   void* sendbuf, int sendcount, Datatype sendtype, int dest, int sendtag,
+   void* recvbuf, int recvcount, Datatype recvtype, int source, int recvtag,
+   Status* status) const
+{
+#ifndef HAVE_MPI
+   NULL_USE(sendbuf);
+   NULL_USE(sendcount);
+   NULL_USE(sendtype);
+   NULL_USE(dest);
+   NULL_USE(sendtag);
+   NULL_USE(recvbuf);
+   NULL_USE(recvcount);
+   NULL_USE(recvtype);
+   NULL_USE(source);
+   NULL_USE(recvtag);
+   NULL_USE(status);
+#endif
+   int rval = MPI_SUCCESS;
+   if (!s_mpi_is_initialized) {
+      TBOX_ERROR("SAMRAI_MPI::Send is a no-op without run-time MPI!");
+   }
+#ifdef HAVE_MPI
+   else {
+      rval = MPI_Sendrecv(
+            sendbuf, sendcount, sendtype, dest, sendtag,
+            recvbuf, recvcount, recvtype, source, recvtag,
+            d_comm, status);
+   }
+#endif
+   return rval;
+}
+
+/*
+ *****************************************************************************
  *
  * Methods named like MPI's native interfaces (without the MPI_ prefix)
  * are wrappers for the native interfaces.  The SAMRAI_MPI versions
@@ -1398,40 +1473,40 @@ SAMRAI_MPI::parallelPrefixSum(
    Status send_stat, recv_stat;
    int mpi_err = MPI_SUCCESS;
 
-   for ( int distance=1; distance < d_size; distance *= 2 ) {
+   for (int distance = 1; distance < d_size; distance *= 2) {
 
       const int recv_from = d_rank - distance;
       const int send_to = d_rank + distance;
 
-      if ( recv_from >= 0 ) {
-         mpi_err = Irecv( &recv_scr[0], count, MPI_INT, recv_from, tag, &recv_req );
-         if ( mpi_err != MPI_SUCCESS ) {
+      if (recv_from >= 0) {
+         mpi_err = Irecv(&recv_scr[0], count, MPI_INT, recv_from, tag, &recv_req);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
       }
 
-      if (send_to < d_size ) {
+      if (send_to < d_size) {
          send_scr.clear();
-         send_scr.insert( send_scr.end(), x, x+count );
-         mpi_err = Isend( &send_scr[0], count, MPI_INT, send_to, tag, &send_req );
-         if ( mpi_err != MPI_SUCCESS ) {
+         send_scr.insert(send_scr.end(), x, x + count);
+         mpi_err = Isend(&send_scr[0], count, MPI_INT, send_to, tag, &send_req);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
       }
 
-      if ( recv_from >= 0 ) {
-         mpi_err = Wait( &recv_req, &recv_stat );
-         if ( mpi_err != MPI_SUCCESS ) {
+      if (recv_from >= 0) {
+         mpi_err = Wait(&recv_req, &recv_stat);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
-         for ( int i=0; i<count; ++i ) {
+         for (int i = 0; i < count; ++i) {
             x[i] += recv_scr[i];
          }
       }
 
-      if ( send_to < d_size ) {
-         mpi_err = Wait( &send_req, &send_stat );
-         if ( mpi_err != MPI_SUCCESS ) {
+      if (send_to < d_size) {
+         mpi_err = Wait(&send_req, &send_stat);
+         if (mpi_err != MPI_SUCCESS) {
             return mpi_err;
          }
       }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Interface to application-specific patch functions in support
  *                Method of Lines integration algorithm
  *
@@ -111,7 +111,8 @@ public:
     * Using a user-specified gradient detection scheme, determine cells which
     * have high gradients and, consequently, should be refined.
     */
-   virtual void tagGradientDetectorCells(
+   virtual void
+   tagGradientDetectorCells(
       hier::Patch& patch,
       const double regrid_time,
       const bool initial_error,
@@ -171,7 +172,6 @@ public:
    }
 
 private:
-
    boost::shared_ptr<hier::VariableContext> d_interior_with_ghosts;
    boost::shared_ptr<hier::VariableContext> d_interior;
 };

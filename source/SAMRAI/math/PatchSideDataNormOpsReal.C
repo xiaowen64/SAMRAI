@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real side-centered patch data.
  *
  ************************************************************************/
@@ -53,7 +53,7 @@ PatchSideDataNormOpsReal<TYPE>::numberOfEntries(
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
    const hier::IntVector& directions = data->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box dbox = pdat::SideGeometry::toSideBox(ibox, d);
          retval += (dbox.size() * data->getDepth());
@@ -87,7 +87,7 @@ PatchSideDataNormOpsReal<TYPE>::sumControlVolumes(
 
    int dimVal = data->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
@@ -112,7 +112,7 @@ PatchSideDataNormOpsReal<TYPE>::abs(
    int dimVal = dst->getDim().getValue();
 
    const hier::IntVector& directions = dst->getDirectionVector();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          d_array_ops.abs(dst->getArrayData(d),
@@ -137,7 +137,7 @@ PatchSideDataNormOpsReal<TYPE>::L1Norm(
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.L1Norm(data->getArrayData(d), side_box);
@@ -148,7 +148,7 @@ PatchSideDataNormOpsReal<TYPE>::L1Norm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
@@ -175,7 +175,7 @@ PatchSideDataNormOpsReal<TYPE>::L2Norm(
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.L2Norm(data->getArrayData(d), side_box);
@@ -187,7 +187,7 @@ PatchSideDataNormOpsReal<TYPE>::L2Norm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.L2NormWithControlVolume(
@@ -221,7 +221,7 @@ PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
       hier::IntVector::min(directions, weight->getDirectionVector()));
 
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
@@ -235,7 +235,7 @@ PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             double aval = d_array_ops.weightedL2NormWithControlVolume(
@@ -307,7 +307,7 @@ PatchSideDataNormOpsReal<TYPE>::maxNorm(
    double retval = 0.0;
    const hier::IntVector& directions = data->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -320,7 +320,7 @@ PatchSideDataNormOpsReal<TYPE>::maxNorm(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box =
                pdat::SideGeometry::toSideBox(box, d);
@@ -351,7 +351,7 @@ PatchSideDataNormOpsReal<TYPE>::dot(
    TYPE retval = 0.0;
    const hier::IntVector& directions = data1->getDirectionVector();
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.dot(data1->getArrayData(d),
@@ -364,7 +364,7 @@ PatchSideDataNormOpsReal<TYPE>::dot(
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          if (directions(d)) {
             const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
             retval += d_array_ops.dotWithControlVolume(
@@ -397,7 +397,7 @@ PatchSideDataNormOpsReal<TYPE>::integral(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, vol->getDirectionVector()));
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       if (directions(d)) {
          const hier::Box side_box = pdat::SideGeometry::toSideBox(box, d);
          retval += d_array_ops.integral(

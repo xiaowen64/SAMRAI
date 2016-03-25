@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for objects to be serialized
  *
  ************************************************************************/
@@ -57,6 +57,16 @@ public:
    virtual void
    putToRestart(
       const boost::shared_ptr<Database>& restart_db) const = 0;
+
+private:
+   // Unimplemented copy constructor.
+   Serializable(
+      const Serializable& other);
+
+   // Unimplemented default constructor.
+   Serializable&
+   operator = (
+      const Serializable& rhs);
 
 };
 

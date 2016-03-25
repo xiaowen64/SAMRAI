@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   makefile dependencies
 ##
 #########################################################################
@@ -48,15 +48,14 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
+
+${FILE_0}: ${DEPENDS_0}
 
 FILE_1=ArrayDataAccess.o
 DEPENDS_1:=\
@@ -97,16 +96,15 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataAccess.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+${FILE_1}: ${DEPENDS_1}
 
 FILE_2=ArrayDataIterator.o
 DEPENDS_2:=\
@@ -134,12 +132,11 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h ArrayDataIterator.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+
+${FILE_2}: ${DEPENDS_2}
 
 FILE_3=ArrayDataOperationUtilities.o
 DEPENDS_3:=\
@@ -179,15 +176,14 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	ArrayDataOperationUtilities.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+${FILE_3}: ${DEPENDS_3}
 
 FILE_4=CellComplexConstantRefine.o
 DEPENDS_4:=\
@@ -241,14 +237,16 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CellComplexConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -258,9 +256,9 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+
+${FILE_4}: ${DEPENDS_4}
 
 FILE_5=CellComplexLinearTimeInterpolateOp.o
 DEPENDS_5:=\
@@ -316,12 +314,13 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CellComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -331,9 +330,9 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
+
+${FILE_5}: ${DEPENDS_5}
 
 FILE_6=CellData.o
 DEPENDS_6:=\
@@ -376,20 +375,21 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_6:X.o=${NDIM}.o}: ${DEPENDS_6}
+
+${FILE_6}: ${DEPENDS_6}
 
 FILE_7=CellDataFactory.o
 DEPENDS_7:=\
@@ -443,11 +443,12 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -455,9 +456,9 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_7:X.o=${NDIM}.o}: ${DEPENDS_7}
+
+${FILE_7}: ${DEPENDS_7}
 
 FILE_8=CellDoubleConstantRefine.o
 DEPENDS_8:=\
@@ -511,14 +512,16 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CellDoubleConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -528,9 +531,9 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_8:X.o=${NDIM}.o}: ${DEPENDS_8}
+
+${FILE_8}: ${DEPENDS_8}
 
 FILE_9=CellDoubleLinearTimeInterpolateOp.o
 DEPENDS_9:=\
@@ -586,12 +589,13 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CellDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -601,9 +605,9 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_9:X.o=${NDIM}.o}: ${DEPENDS_9}
+
+${FILE_9}: ${DEPENDS_9}
 
 FILE_10=CellFloatConstantRefine.o
 DEPENDS_10:=\
@@ -657,13 +661,15 @@ DEPENDS_10:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellFloatConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -673,9 +679,9 @@ DEPENDS_10 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_10:X.o=${NDIM}.o}: ${DEPENDS_10}
+
+${FILE_10}: ${DEPENDS_10}
 
 FILE_11=CellFloatLinearTimeInterpolateOp.o
 DEPENDS_11:=\
@@ -731,12 +737,13 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CellFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -746,9 +753,9 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_11:X.o=${NDIM}.o}: ${DEPENDS_11}
+
+${FILE_11}: ${DEPENDS_11}
 
 FILE_12=CellGeometry.o
 DEPENDS_12:=\
@@ -786,12 +793,11 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_12 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_12:X.o=${NDIM}.o}: ${DEPENDS_12}
+
+${FILE_12}: ${DEPENDS_12}
 
 FILE_13=CellIndex.o
 DEPENDS_13:=\
@@ -810,12 +816,11 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellIndex.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_13 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_13:X.o=${NDIM}.o}: ${DEPENDS_13}
+
+${FILE_13}: ${DEPENDS_13}
 
 FILE_14=CellIntegerConstantRefine.o
 DEPENDS_14:=\
@@ -869,14 +874,16 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	CellIntegerConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -886,9 +893,9 @@ DEPENDS_14 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_14:X.o=${NDIM}.o}: ${DEPENDS_14}
+
+${FILE_14}: ${DEPENDS_14}
 
 FILE_15=CellIterator.o
 DEPENDS_15:=\
@@ -926,12 +933,11 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellIterator.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_15 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_15:X.o=${NDIM}.o}: ${DEPENDS_15}
+
+${FILE_15}: ${DEPENDS_15}
 
 FILE_16=CellOverlap.o
 DEPENDS_16:=\
@@ -965,12 +971,11 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellOverlap.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_16 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_16:X.o=${NDIM}.o}: ${DEPENDS_16}
+
+${FILE_16}: ${DEPENDS_16}
 
 FILE_17=CellVariable.o
 DEPENDS_17:=\
@@ -1025,11 +1030,12 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CellVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1038,9 +1044,9 @@ DEPENDS_17 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_17:X.o=${NDIM}.o}: ${DEPENDS_17}
+
+${FILE_17}: ${DEPENDS_17}
 
 FILE_18=CopyOperation.o
 DEPENDS_18:=\
@@ -1048,12 +1054,11 @@ DEPENDS_18:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.h CopyOperation.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_18 +=\
 	
-endif
 
-${FILE_18:X.o=${NDIM}.o}: ${DEPENDS_18}
+
+${FILE_18}: ${DEPENDS_18}
 
 FILE_19=DoubleAttributeId.o
 DEPENDS_19:=\
@@ -1061,12 +1066,11 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/DoubleAttributeId.h			\
 	DoubleAttributeId.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_19 +=\
 	
-endif
 
-${FILE_19:X.o=${NDIM}.o}: ${DEPENDS_19}
+
+${FILE_19}: ${DEPENDS_19}
 
 FILE_20=EdgeComplexConstantRefine.o
 DEPENDS_20:=\
@@ -1123,6 +1127,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1130,7 +1135,6 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	EdgeComplexConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1142,9 +1146,9 @@ DEPENDS_20 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_20:X.o=${NDIM}.o}: ${DEPENDS_20}
+
+${FILE_20}: ${DEPENDS_20}
 
 FILE_21=EdgeComplexLinearTimeInterpolateOp.o
 DEPENDS_21:=\
@@ -1208,7 +1212,6 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	EdgeComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1220,9 +1223,9 @@ DEPENDS_21 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_21:X.o=${NDIM}.o}: ${DEPENDS_21}
+
+${FILE_21}: ${DEPENDS_21}
 
 FILE_22=EdgeData.o
 DEPENDS_22:=\
@@ -1269,16 +1272,15 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_22 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_22:X.o=${NDIM}.o}: ${DEPENDS_22}
+
+${FILE_22}: ${DEPENDS_22}
 
 FILE_23=EdgeDataFactory.o
 DEPENDS_23:=\
@@ -1339,7 +1341,6 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1349,9 +1350,9 @@ DEPENDS_23 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_23:X.o=${NDIM}.o}: ${DEPENDS_23}
+
+${FILE_23}: ${DEPENDS_23}
 
 FILE_24=EdgeDoubleConstantRefine.o
 DEPENDS_24:=\
@@ -1408,6 +1409,7 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1415,7 +1417,6 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	EdgeDoubleConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1427,9 +1428,9 @@ DEPENDS_24 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_24:X.o=${NDIM}.o}: ${DEPENDS_24}
+
+${FILE_24}: ${DEPENDS_24}
 
 FILE_25=EdgeDoubleLinearTimeInterpolateOp.o
 DEPENDS_25:=\
@@ -1493,7 +1494,6 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	EdgeDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1505,9 +1505,9 @@ DEPENDS_25 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_25:X.o=${NDIM}.o}: ${DEPENDS_25}
+
+${FILE_25}: ${DEPENDS_25}
 
 FILE_26=EdgeFloatConstantRefine.o
 DEPENDS_26:=\
@@ -1564,13 +1564,13 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeFloatConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1582,9 +1582,9 @@ DEPENDS_26 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_26:X.o=${NDIM}.o}: ${DEPENDS_26}
+
+${FILE_26}: ${DEPENDS_26}
 
 FILE_27=EdgeFloatLinearTimeInterpolateOp.o
 DEPENDS_27:=\
@@ -1648,7 +1648,6 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	EdgeFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1660,9 +1659,9 @@ DEPENDS_27 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_27:X.o=${NDIM}.o}: ${DEPENDS_27}
+
+${FILE_27}: ${DEPENDS_27}
 
 FILE_28=EdgeGeometry.o
 DEPENDS_28:=\
@@ -1700,12 +1699,11 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_28 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_28:X.o=${NDIM}.o}: ${DEPENDS_28}
+
+${FILE_28}: ${DEPENDS_28}
 
 FILE_29=EdgeIndex.o
 DEPENDS_29:=\
@@ -1724,12 +1722,11 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeIndex.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_29 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_29:X.o=${NDIM}.o}: ${DEPENDS_29}
+
+${FILE_29}: ${DEPENDS_29}
 
 FILE_30=EdgeIntegerConstantRefine.o
 DEPENDS_30:=\
@@ -1786,6 +1783,7 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -1793,7 +1791,6 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	EdgeIntegerConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1805,9 +1802,9 @@ DEPENDS_30 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_30:X.o=${NDIM}.o}: ${DEPENDS_30}
+
+${FILE_30}: ${DEPENDS_30}
 
 FILE_31=EdgeIterator.o
 DEPENDS_31:=\
@@ -1845,12 +1842,11 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeIterator.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_31 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_31:X.o=${NDIM}.o}: ${DEPENDS_31}
+
+${FILE_31}: ${DEPENDS_31}
 
 FILE_32=EdgeOverlap.o
 DEPENDS_32:=\
@@ -1887,12 +1883,11 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeOverlap.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_32 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_32:X.o=${NDIM}.o}: ${DEPENDS_32}
+
+${FILE_32}: ${DEPENDS_32}
 
 FILE_33=EdgeVariable.o
 DEPENDS_33:=\
@@ -1954,7 +1949,6 @@ DEPENDS_33:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h EdgeVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -1965,9 +1959,9 @@ DEPENDS_33 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_33:X.o=${NDIM}.o}: ${DEPENDS_33}
+
+${FILE_33}: ${DEPENDS_33}
 
 FILE_34=FaceComplexConstantRefine.o
 DEPENDS_34:=\
@@ -2024,6 +2018,7 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2031,7 +2026,6 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	FaceComplexConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2043,9 +2037,9 @@ DEPENDS_34 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_34:X.o=${NDIM}.o}: ${DEPENDS_34}
+
+${FILE_34}: ${DEPENDS_34}
 
 FILE_35=FaceComplexLinearTimeInterpolateOp.o
 DEPENDS_35:=\
@@ -2109,7 +2103,6 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	FaceComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2121,9 +2114,9 @@ DEPENDS_35 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_35:X.o=${NDIM}.o}: ${DEPENDS_35}
+
+${FILE_35}: ${DEPENDS_35}
 
 FILE_36=FaceData.o
 DEPENDS_36:=\
@@ -2170,16 +2163,15 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_36 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_36:X.o=${NDIM}.o}: ${DEPENDS_36}
+
+${FILE_36}: ${DEPENDS_36}
 
 FILE_37=FaceDataFactory.o
 DEPENDS_37:=\
@@ -2240,7 +2232,6 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2250,9 +2241,9 @@ DEPENDS_37 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_37:X.o=${NDIM}.o}: ${DEPENDS_37}
+
+${FILE_37}: ${DEPENDS_37}
 
 FILE_38=FaceDoubleConstantRefine.o
 DEPENDS_38:=\
@@ -2309,6 +2300,7 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2316,7 +2308,6 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	FaceDoubleConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2328,9 +2319,9 @@ DEPENDS_38 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_38:X.o=${NDIM}.o}: ${DEPENDS_38}
+
+${FILE_38}: ${DEPENDS_38}
 
 FILE_39=FaceDoubleLinearTimeInterpolateOp.o
 DEPENDS_39:=\
@@ -2394,7 +2385,6 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	FaceDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2406,9 +2396,9 @@ DEPENDS_39 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_39:X.o=${NDIM}.o}: ${DEPENDS_39}
+
+${FILE_39}: ${DEPENDS_39}
 
 FILE_40=FaceFloatConstantRefine.o
 DEPENDS_40:=\
@@ -2465,13 +2455,13 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceFloatConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2483,9 +2473,9 @@ DEPENDS_40 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_40:X.o=${NDIM}.o}: ${DEPENDS_40}
+
+${FILE_40}: ${DEPENDS_40}
 
 FILE_41=FaceFloatLinearTimeInterpolateOp.o
 DEPENDS_41:=\
@@ -2549,7 +2539,6 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	FaceFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2561,9 +2550,9 @@ DEPENDS_41 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_41:X.o=${NDIM}.o}: ${DEPENDS_41}
+
+${FILE_41}: ${DEPENDS_41}
 
 FILE_42=FaceGeometry.o
 DEPENDS_42:=\
@@ -2601,12 +2590,11 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_42 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_42:X.o=${NDIM}.o}: ${DEPENDS_42}
+
+${FILE_42}: ${DEPENDS_42}
 
 FILE_43=FaceIndex.o
 DEPENDS_43:=\
@@ -2625,12 +2613,11 @@ DEPENDS_43:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceIndex.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_43 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_43:X.o=${NDIM}.o}: ${DEPENDS_43}
+
+${FILE_43}: ${DEPENDS_43}
 
 FILE_44=FaceIntegerConstantRefine.o
 DEPENDS_44:=\
@@ -2687,6 +2674,7 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -2694,7 +2682,6 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	FaceIntegerConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2706,9 +2693,9 @@ DEPENDS_44 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_44:X.o=${NDIM}.o}: ${DEPENDS_44}
+
+${FILE_44}: ${DEPENDS_44}
 
 FILE_45=FaceIterator.o
 DEPENDS_45:=\
@@ -2746,12 +2733,11 @@ DEPENDS_45:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceIterator.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_45 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_45:X.o=${NDIM}.o}: ${DEPENDS_45}
+
+${FILE_45}: ${DEPENDS_45}
 
 FILE_46=FaceOverlap.o
 DEPENDS_46:=\
@@ -2788,12 +2774,11 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceOverlap.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_46 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_46:X.o=${NDIM}.o}: ${DEPENDS_46}
+
+${FILE_46}: ${DEPENDS_46}
 
 FILE_47=FaceVariable.o
 DEPENDS_47:=\
@@ -2855,7 +2840,6 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h FaceVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -2866,9 +2850,9 @@ DEPENDS_47 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_47:X.o=${NDIM}.o}: ${DEPENDS_47}
+
+${FILE_47}: ${DEPENDS_47}
 
 FILE_48=FirstLayerCellNoCornersVariableFillPattern.o
 DEPENDS_48:=\
@@ -2910,12 +2894,11 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FirstLayerCellNoCornersVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_48 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_48:X.o=${NDIM}.o}: ${DEPENDS_48}
+
+${FILE_48}: ${DEPENDS_48}
 
 FILE_49=FirstLayerCellVariableFillPattern.o
 DEPENDS_49:=\
@@ -2957,12 +2940,11 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FirstLayerCellVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_49 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_49:X.o=${NDIM}.o}: ${DEPENDS_49}
+
+${FILE_49}: ${DEPENDS_49}
 
 FILE_50=FirstLayerEdgeVariableFillPattern.o
 DEPENDS_50:=\
@@ -3004,12 +2986,11 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FirstLayerEdgeVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_50 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_50:X.o=${NDIM}.o}: ${DEPENDS_50}
+
+${FILE_50}: ${DEPENDS_50}
 
 FILE_51=FirstLayerNodeVariableFillPattern.o
 DEPENDS_51:=\
@@ -3051,12 +3032,11 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FirstLayerNodeVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_51 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_51:X.o=${NDIM}.o}: ${DEPENDS_51}
+
+${FILE_51}: ${DEPENDS_51}
 
 FILE_52=FirstLayerSideVariableFillPattern.o
 DEPENDS_52:=\
@@ -3098,12 +3078,11 @@ DEPENDS_52:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	FirstLayerSideVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_52 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_52:X.o=${NDIM}.o}: ${DEPENDS_52}
+
+${FILE_52}: ${DEPENDS_52}
 
 FILE_53=IndexData.o
 DEPENDS_53:=\
@@ -3139,12 +3118,11 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h IndexData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_53 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_53:X.o=${NDIM}.o}: ${DEPENDS_53}
+
+${FILE_53}: ${DEPENDS_53}
 
 FILE_54=IndexDataFactory.o
 DEPENDS_54:=\
@@ -3193,13 +3171,12 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h IndexDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_54 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_54:X.o=${NDIM}.o}: ${DEPENDS_54}
+
+${FILE_54}: ${DEPENDS_54}
 
 FILE_55=IndexVariable.o
 DEPENDS_55:=\
@@ -3249,14 +3226,13 @@ DEPENDS_55:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h IndexVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_55 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IndexDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_55:X.o=${NDIM}.o}: ${DEPENDS_55}
+
+${FILE_55}: ${DEPENDS_55}
 
 FILE_56=IntegerAttributeId.o
 DEPENDS_56:=\
@@ -3264,12 +3240,11 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/IntegerAttributeId.h			\
 	IntegerAttributeId.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_56 +=\
 	
-endif
 
-${FILE_56:X.o=${NDIM}.o}: ${DEPENDS_56}
+
+${FILE_56}: ${DEPENDS_56}
 
 FILE_57=NodeComplexInjection.o
 DEPENDS_57:=\
@@ -3326,13 +3301,13 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeComplexInjection.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_57 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3344,9 +3319,9 @@ DEPENDS_57 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_57:X.o=${NDIM}.o}: ${DEPENDS_57}
+
+${FILE_57}: ${DEPENDS_57}
 
 FILE_58=NodeComplexLinearTimeInterpolateOp.o
 DEPENDS_58:=\
@@ -3410,7 +3385,6 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	NodeComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_58 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3422,9 +3396,9 @@ DEPENDS_58 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_58:X.o=${NDIM}.o}: ${DEPENDS_58}
+
+${FILE_58}: ${DEPENDS_58}
 
 FILE_59=NodeData.o
 DEPENDS_59:=\
@@ -3471,16 +3445,15 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_59 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_59:X.o=${NDIM}.o}: ${DEPENDS_59}
+
+${FILE_59}: ${DEPENDS_59}
 
 FILE_60=NodeDataFactory.o
 DEPENDS_60:=\
@@ -3541,7 +3514,6 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_60 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3551,9 +3523,9 @@ DEPENDS_60 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_60:X.o=${NDIM}.o}: ${DEPENDS_60}
+
+${FILE_60}: ${DEPENDS_60}
 
 FILE_61=NodeDoubleInjection.o
 DEPENDS_61:=\
@@ -3610,13 +3582,13 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeDoubleInjection.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_61 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3628,9 +3600,9 @@ DEPENDS_61 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_61:X.o=${NDIM}.o}: ${DEPENDS_61}
+
+${FILE_61}: ${DEPENDS_61}
 
 FILE_62=NodeDoubleLinearTimeInterpolateOp.o
 DEPENDS_62:=\
@@ -3694,7 +3666,6 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	NodeDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_62 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3706,9 +3677,9 @@ DEPENDS_62 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_62:X.o=${NDIM}.o}: ${DEPENDS_62}
+
+${FILE_62}: ${DEPENDS_62}
 
 FILE_63=NodeFloatInjection.o
 DEPENDS_63:=\
@@ -3765,13 +3736,13 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeFloatInjection.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_63 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3783,9 +3754,9 @@ DEPENDS_63 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_63:X.o=${NDIM}.o}: ${DEPENDS_63}
+
+${FILE_63}: ${DEPENDS_63}
 
 FILE_64=NodeFloatLinearTimeInterpolateOp.o
 DEPENDS_64:=\
@@ -3849,7 +3820,6 @@ DEPENDS_64:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	NodeFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_64 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -3861,9 +3831,9 @@ DEPENDS_64 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_64:X.o=${NDIM}.o}: ${DEPENDS_64}
+
+${FILE_64}: ${DEPENDS_64}
 
 FILE_65=NodeGeometry.o
 DEPENDS_65:=\
@@ -3901,12 +3871,11 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_65 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_65:X.o=${NDIM}.o}: ${DEPENDS_65}
+
+${FILE_65}: ${DEPENDS_65}
 
 FILE_66=NodeIndex.o
 DEPENDS_66:=\
@@ -3925,12 +3894,11 @@ DEPENDS_66:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeIndex.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_66 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_66:X.o=${NDIM}.o}: ${DEPENDS_66}
+
+${FILE_66}: ${DEPENDS_66}
 
 FILE_67=NodeIntegerInjection.o
 DEPENDS_67:=\
@@ -3987,13 +3955,13 @@ DEPENDS_67:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeIntegerInjection.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_67 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4005,9 +3973,9 @@ DEPENDS_67 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_67:X.o=${NDIM}.o}: ${DEPENDS_67}
+
+${FILE_67}: ${DEPENDS_67}
 
 FILE_68=NodeIterator.o
 DEPENDS_68:=\
@@ -4045,12 +4013,11 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeIterator.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_68 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_68:X.o=${NDIM}.o}: ${DEPENDS_68}
+
+${FILE_68}: ${DEPENDS_68}
 
 FILE_69=NodeOverlap.o
 DEPENDS_69:=\
@@ -4084,12 +4051,11 @@ DEPENDS_69:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeOverlap.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_69 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_69:X.o=${NDIM}.o}: ${DEPENDS_69}
+
+${FILE_69}: ${DEPENDS_69}
 
 FILE_70=NodeVariable.o
 DEPENDS_70:=\
@@ -4151,7 +4117,6 @@ DEPENDS_70:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h NodeVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_70 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4162,9 +4127,9 @@ DEPENDS_70 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_70:X.o=${NDIM}.o}: ${DEPENDS_70}
+
+${FILE_70}: ${DEPENDS_70}
 
 FILE_71=OuteredgeData.o
 DEPENDS_71:=\
@@ -4213,7 +4178,6 @@ DEPENDS_71:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuteredgeData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_71 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4221,9 +4185,9 @@ DEPENDS_71 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/EdgeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_71:X.o=${NDIM}.o}: ${DEPENDS_71}
+
+${FILE_71}: ${DEPENDS_71}
 
 FILE_72=OuteredgeDataFactory.o
 DEPENDS_72:=\
@@ -4284,7 +4248,6 @@ DEPENDS_72:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuteredgeDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_72 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4294,9 +4257,9 @@ DEPENDS_72 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_72:X.o=${NDIM}.o}: ${DEPENDS_72}
+
+${FILE_72}: ${DEPENDS_72}
 
 FILE_73=OuteredgeGeometry.o
 DEPENDS_73:=\
@@ -4334,12 +4297,11 @@ DEPENDS_73:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuteredgeGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_73 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_73:X.o=${NDIM}.o}: ${DEPENDS_73}
+
+${FILE_73}: ${DEPENDS_73}
 
 FILE_74=OuteredgeVariable.o
 DEPENDS_74:=\
@@ -4401,7 +4363,6 @@ DEPENDS_74:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuteredgeVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_74 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4412,9 +4373,9 @@ DEPENDS_74 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuteredgeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_74:X.o=${NDIM}.o}: ${DEPENDS_74}
+
+${FILE_74}: ${DEPENDS_74}
 
 FILE_75=OuterfaceComplexConstantRefine.o
 DEPENDS_75:=\
@@ -4471,6 +4432,7 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4478,7 +4440,6 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceComplexConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_75 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4490,9 +4451,9 @@ DEPENDS_75 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_75:X.o=${NDIM}.o}: ${DEPENDS_75}
+
+${FILE_75}: ${DEPENDS_75}
 
 FILE_76=OuterfaceComplexLinearTimeInterpolateOp.o
 DEPENDS_76:=\
@@ -4556,7 +4517,6 @@ DEPENDS_76:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_76 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4568,9 +4528,9 @@ DEPENDS_76 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_76:X.o=${NDIM}.o}: ${DEPENDS_76}
+
+${FILE_76}: ${DEPENDS_76}
 
 FILE_77=OuterfaceData.o
 DEPENDS_77:=\
@@ -4618,7 +4578,6 @@ DEPENDS_77:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuterfaceData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_77 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4626,9 +4585,9 @@ DEPENDS_77 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/FaceData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_77:X.o=${NDIM}.o}: ${DEPENDS_77}
+
+${FILE_77}: ${DEPENDS_77}
 
 FILE_78=OuterfaceDataFactory.o
 DEPENDS_78:=\
@@ -4689,7 +4648,6 @@ DEPENDS_78:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuterfaceDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_78 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4699,9 +4657,9 @@ DEPENDS_78 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_78:X.o=${NDIM}.o}: ${DEPENDS_78}
+
+${FILE_78}: ${DEPENDS_78}
 
 FILE_79=OuterfaceDoubleConstantRefine.o
 DEPENDS_79:=\
@@ -4758,6 +4716,7 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4765,7 +4724,6 @@ DEPENDS_79:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceDoubleConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_79 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4777,9 +4735,9 @@ DEPENDS_79 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_79:X.o=${NDIM}.o}: ${DEPENDS_79}
+
+${FILE_79}: ${DEPENDS_79}
 
 FILE_80=OuterfaceDoubleLinearTimeInterpolateOp.o
 DEPENDS_80:=\
@@ -4843,7 +4801,6 @@ DEPENDS_80:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_80 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4855,9 +4812,9 @@ DEPENDS_80 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_80:X.o=${NDIM}.o}: ${DEPENDS_80}
+
+${FILE_80}: ${DEPENDS_80}
 
 FILE_81=OuterfaceFloatConstantRefine.o
 DEPENDS_81:=\
@@ -4914,6 +4871,7 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -4921,7 +4879,6 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceFloatConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_81 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -4933,9 +4890,9 @@ DEPENDS_81 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_81:X.o=${NDIM}.o}: ${DEPENDS_81}
+
+${FILE_81}: ${DEPENDS_81}
 
 FILE_82=OuterfaceFloatLinearTimeInterpolateOp.o
 DEPENDS_82:=\
@@ -4999,7 +4956,6 @@ DEPENDS_82:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_82 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5011,9 +4967,9 @@ DEPENDS_82 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_82:X.o=${NDIM}.o}: ${DEPENDS_82}
+
+${FILE_82}: ${DEPENDS_82}
 
 FILE_83=OuterfaceGeometry.o
 DEPENDS_83:=\
@@ -5051,12 +5007,11 @@ DEPENDS_83:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuterfaceGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_83 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_83:X.o=${NDIM}.o}: ${DEPENDS_83}
+
+${FILE_83}: ${DEPENDS_83}
 
 FILE_84=OuterfaceIntegerConstantRefine.o
 DEPENDS_84:=\
@@ -5113,6 +5068,7 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -5120,7 +5076,6 @@ DEPENDS_84:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuterfaceIntegerConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_84 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5132,9 +5087,9 @@ DEPENDS_84 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_84:X.o=${NDIM}.o}: ${DEPENDS_84}
+
+${FILE_84}: ${DEPENDS_84}
 
 FILE_85=OuterfaceVariable.o
 DEPENDS_85:=\
@@ -5196,7 +5151,6 @@ DEPENDS_85:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuterfaceVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_85 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5207,9 +5161,9 @@ DEPENDS_85 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuterfaceDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_85:X.o=${NDIM}.o}: ${DEPENDS_85}
+
+${FILE_85}: ${DEPENDS_85}
 
 FILE_86=OuternodeData.o
 DEPENDS_86:=\
@@ -5257,7 +5211,6 @@ DEPENDS_86:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuternodeData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_86 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5265,9 +5218,9 @@ DEPENDS_86 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/NodeData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_86:X.o=${NDIM}.o}: ${DEPENDS_86}
+
+${FILE_86}: ${DEPENDS_86}
 
 FILE_87=OuternodeDataFactory.o
 DEPENDS_87:=\
@@ -5328,7 +5281,6 @@ DEPENDS_87:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuternodeDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_87 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5338,9 +5290,9 @@ DEPENDS_87 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeData.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_87:X.o=${NDIM}.o}: ${DEPENDS_87}
+
+${FILE_87}: ${DEPENDS_87}
 
 FILE_88=OuternodeDoubleInjection.o
 DEPENDS_88:=\
@@ -5397,6 +5349,7 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -5404,7 +5357,6 @@ DEPENDS_88:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OuternodeDoubleInjection.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_88 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5416,9 +5368,9 @@ DEPENDS_88 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_88:X.o=${NDIM}.o}: ${DEPENDS_88}
+
+${FILE_88}: ${DEPENDS_88}
 
 FILE_89=OuternodeGeometry.o
 DEPENDS_89:=\
@@ -5456,12 +5408,11 @@ DEPENDS_89:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuternodeGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_89 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_89:X.o=${NDIM}.o}: ${DEPENDS_89}
+
+${FILE_89}: ${DEPENDS_89}
 
 FILE_90=OuternodeVariable.o
 DEPENDS_90:=\
@@ -5523,7 +5474,6 @@ DEPENDS_90:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OuternodeVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_90 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5534,9 +5484,9 @@ DEPENDS_90 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/OuternodeDataFactory.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_90:X.o=${NDIM}.o}: ${DEPENDS_90}
+
+${FILE_90}: ${DEPENDS_90}
 
 FILE_91=OutersideComplexLinearTimeInterpolateOp.o
 DEPENDS_91:=\
@@ -5600,7 +5550,6 @@ DEPENDS_91:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OutersideComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_91 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5612,9 +5561,9 @@ DEPENDS_91 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_91:X.o=${NDIM}.o}: ${DEPENDS_91}
+
+${FILE_91}: ${DEPENDS_91}
 
 FILE_92=OutersideData.o
 DEPENDS_92:=\
@@ -5662,7 +5611,6 @@ DEPENDS_92:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OutersideData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_92 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5670,9 +5618,9 @@ DEPENDS_92 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_92:X.o=${NDIM}.o}: ${DEPENDS_92}
+
+${FILE_92}: ${DEPENDS_92}
 
 FILE_93=OutersideDataFactory.o
 DEPENDS_93:=\
@@ -5733,7 +5681,6 @@ DEPENDS_93:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OutersideDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_93 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5743,9 +5690,9 @@ DEPENDS_93 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_93:X.o=${NDIM}.o}: ${DEPENDS_93}
+
+${FILE_93}: ${DEPENDS_93}
 
 FILE_94=OutersideDoubleLinearTimeInterpolateOp.o
 DEPENDS_94:=\
@@ -5809,7 +5756,6 @@ DEPENDS_94:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OutersideDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_94 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5821,9 +5767,9 @@ DEPENDS_94 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_94:X.o=${NDIM}.o}: ${DEPENDS_94}
+
+${FILE_94}: ${DEPENDS_94}
 
 FILE_95=OutersideFloatLinearTimeInterpolateOp.o
 DEPENDS_95:=\
@@ -5887,7 +5833,6 @@ DEPENDS_95:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	OutersideFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_95 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -5899,9 +5844,9 @@ DEPENDS_95 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_95:X.o=${NDIM}.o}: ${DEPENDS_95}
+
+${FILE_95}: ${DEPENDS_95}
 
 FILE_96=OutersideGeometry.o
 DEPENDS_96:=\
@@ -5939,12 +5884,11 @@ DEPENDS_96:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OutersideGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_96 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_96:X.o=${NDIM}.o}: ${DEPENDS_96}
+
+${FILE_96}: ${DEPENDS_96}
 
 FILE_97=OutersideVariable.o
 DEPENDS_97:=\
@@ -6006,7 +5950,6 @@ DEPENDS_97:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h OutersideVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_97 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6017,9 +5960,9 @@ DEPENDS_97 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_97:X.o=${NDIM}.o}: ${DEPENDS_97}
+
+${FILE_97}: ${DEPENDS_97}
 
 FILE_98=SecondLayerNodeNoCornersVariableFillPattern.o
 DEPENDS_98:=\
@@ -6061,12 +6004,11 @@ DEPENDS_98:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	SecondLayerNodeNoCornersVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_98 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_98:X.o=${NDIM}.o}: ${DEPENDS_98}
+
+${FILE_98}: ${DEPENDS_98}
 
 FILE_99=SecondLayerNodeVariableFillPattern.o
 DEPENDS_99:=\
@@ -6108,12 +6050,11 @@ DEPENDS_99:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
 	SecondLayerNodeVariableFillPattern.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_99 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_99:X.o=${NDIM}.o}: ${DEPENDS_99}
+
+${FILE_99}: ${DEPENDS_99}
 
 FILE_100=SideComplexConstantRefine.o
 DEPENDS_100:=\
@@ -6170,6 +6111,7 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6177,7 +6119,6 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SideComplexConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_100 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6189,9 +6130,9 @@ DEPENDS_100 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_100:X.o=${NDIM}.o}: ${DEPENDS_100}
+
+${FILE_100}: ${DEPENDS_100}
 
 FILE_101=SideComplexLinearTimeInterpolateOp.o
 DEPENDS_101:=\
@@ -6255,7 +6196,6 @@ DEPENDS_101:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SideComplexLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_101 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6267,9 +6207,9 @@ DEPENDS_101 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_101:X.o=${NDIM}.o}: ${DEPENDS_101}
+
+${FILE_101}: ${DEPENDS_101}
 
 FILE_102=SideData.o
 DEPENDS_102:=\
@@ -6316,16 +6256,15 @@ DEPENDS_102:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_102 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CopyOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_102:X.o=${NDIM}.o}: ${DEPENDS_102}
+
+${FILE_102}: ${DEPENDS_102}
 
 FILE_103=SideDataFactory.o
 DEPENDS_103:=\
@@ -6386,7 +6325,6 @@ DEPENDS_103:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_103 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6396,9 +6334,9 @@ DEPENDS_103 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_103:X.o=${NDIM}.o}: ${DEPENDS_103}
+
+${FILE_103}: ${DEPENDS_103}
 
 FILE_104=SideDoubleConstantRefine.o
 DEPENDS_104:=\
@@ -6455,6 +6393,7 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6462,7 +6401,6 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SideDoubleConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_104 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6474,9 +6412,9 @@ DEPENDS_104 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_104:X.o=${NDIM}.o}: ${DEPENDS_104}
+
+${FILE_104}: ${DEPENDS_104}
 
 FILE_105=SideDoubleLinearTimeInterpolateOp.o
 DEPENDS_105:=\
@@ -6540,7 +6478,6 @@ DEPENDS_105:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SideDoubleLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_105 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6552,9 +6489,9 @@ DEPENDS_105 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_105:X.o=${NDIM}.o}: ${DEPENDS_105}
+
+${FILE_105}: ${DEPENDS_105}
 
 FILE_106=SideFloatConstantRefine.o
 DEPENDS_106:=\
@@ -6611,13 +6548,13 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideFloatConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_106 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6629,9 +6566,9 @@ DEPENDS_106 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_106:X.o=${NDIM}.o}: ${DEPENDS_106}
+
+${FILE_106}: ${DEPENDS_106}
 
 FILE_107=SideFloatLinearTimeInterpolateOp.o
 DEPENDS_107:=\
@@ -6695,7 +6632,6 @@ DEPENDS_107:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SideFloatLinearTimeInterpolateOp.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_107 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6707,9 +6643,9 @@ DEPENDS_107 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_107:X.o=${NDIM}.o}: ${DEPENDS_107}
+
+${FILE_107}: ${DEPENDS_107}
 
 FILE_108=SideGeometry.o
 DEPENDS_108:=\
@@ -6747,12 +6683,11 @@ DEPENDS_108:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideGeometry.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_108 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_108:X.o=${NDIM}.o}: ${DEPENDS_108}
+
+${FILE_108}: ${DEPENDS_108}
 
 FILE_109=SideIndex.o
 DEPENDS_109:=\
@@ -6771,12 +6706,11 @@ DEPENDS_109:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideIndex.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_109 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_109:X.o=${NDIM}.o}: ${DEPENDS_109}
+
+${FILE_109}: ${DEPENDS_109}
 
 FILE_110=SideIntegerConstantRefine.o
 DEPENDS_110:=\
@@ -6833,6 +6767,7 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MemoryUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MessageStream.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/OpenMPUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/PIO.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
@@ -6840,7 +6775,6 @@ DEPENDS_110:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	SideIntegerConstantRefine.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_110 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -6852,9 +6786,9 @@ DEPENDS_110 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideVariable.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_110:X.o=${NDIM}.o}: ${DEPENDS_110}
+
+${FILE_110}: ${DEPENDS_110}
 
 FILE_111=SideIterator.o
 DEPENDS_111:=\
@@ -6892,12 +6826,11 @@ DEPENDS_111:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideIterator.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_111 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_111:X.o=${NDIM}.o}: ${DEPENDS_111}
+
+${FILE_111}: ${DEPENDS_111}
 
 FILE_112=SideOverlap.o
 DEPENDS_112:=\
@@ -6934,12 +6867,11 @@ DEPENDS_112:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideOverlap.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_112 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_112:X.o=${NDIM}.o}: ${DEPENDS_112}
+
+${FILE_112}: ${DEPENDS_112}
 
 FILE_113=SideVariable.o
 DEPENDS_113:=\
@@ -7001,7 +6933,6 @@ DEPENDS_113:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SideVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_113 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
@@ -7012,9 +6943,9 @@ DEPENDS_113 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SideDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_113:X.o=${NDIM}.o}: ${DEPENDS_113}
+
+${FILE_113}: ${DEPENDS_113}
 
 FILE_114=SparseData.o
 DEPENDS_114:=\
@@ -7053,12 +6984,11 @@ DEPENDS_114:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SparseData.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_114 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_114:X.o=${NDIM}.o}: ${DEPENDS_114}
+
+${FILE_114}: ${DEPENDS_114}
 
 FILE_115=SparseDataFactory.o
 DEPENDS_115:=\
@@ -7110,13 +7040,12 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SparseDataFactory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_115 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SparseData.C				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_115:X.o=${NDIM}.o}: ${DEPENDS_115}
+
+${FILE_115}: ${DEPENDS_115}
 
 FILE_116=SparseDataVariable.o
 DEPENDS_116:=\
@@ -7169,14 +7098,13 @@ DEPENDS_116:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h SparseDataVariable.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_116 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SparseData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SparseDataFactory.C			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_116:X.o=${NDIM}.o}: ${DEPENDS_116}
+
+${FILE_116}: ${DEPENDS_116}
 
 FILE_117=SumOperation.o
 DEPENDS_117:=\
@@ -7184,10 +7112,9 @@ DEPENDS_117:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.C			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/SumOperation.h SumOperation.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_117 +=\
 	
-endif
 
-${FILE_117:X.o=${NDIM}.o}: ${DEPENDS_117}
+
+${FILE_117}: ${DEPENDS_117}
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   SinusoidalFrontGenerator class implementation
  *
  ************************************************************************/
@@ -25,12 +25,10 @@
 
 using namespace SAMRAI;
 
-
-
 SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database> &database):
+   const boost::shared_ptr<tbox::Database>& database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
@@ -41,7 +39,6 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
    std::vector<double> init_disp;
    std::vector<double> velocity;
    std::vector<double> period;
-
 
    // Parameters set by database, with defaults.
    boost::shared_ptr<tbox::Database> sft_db; // SinusoidalFrontGenerator database.
@@ -67,28 +64,27 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
        * Input parameters to determine whether to tag by buffering
        * fronts, and by how much.
        */
-      const std::string bname( "buffer_distance_" );
-      for ( int ln=0; ; ++ln ) {
-         const std::string lnstr( tbox::Utilities::intToString(ln) );
+      const std::string bname("buffer_distance_");
+      for (int ln = 0; ; ++ln) {
+         const std::string lnstr(tbox::Utilities::intToString(ln));
 
          const std::string bnameln = bname + lnstr;
 
          std::vector<double> tmpa;
 
-         if ( database->isDouble(bnameln) ) {
+         if (database->isDouble(bnameln)) {
             tmpa = database->getDoubleVector(bnameln);
-            if ( static_cast<int>(tmpa.size()) != dim.getValue() ) {
+            if (static_cast<int>(tmpa.size()) != dim.getValue()) {
                TBOX_ERROR(bnameln << " input parameter must have " << dim << " values");
             }
          }
 
-         if ( !tmpa.empty() ) {
+         if (!tmpa.empty()) {
             d_buffer_distance.resize(d_buffer_distance.size() + 1);
-            d_buffer_distance.back().insert( d_buffer_distance.back().end(),
-                                             &tmpa[0],
-                                             &tmpa[0]+static_cast<int>(tmpa.size()) );
-         }
-         else {
+            d_buffer_distance.back().insert(d_buffer_distance.back().end(),
+               &tmpa[0],
+               &tmpa[0] + static_cast<int>(tmpa.size()));
+         } else {
             break;
          }
 
@@ -116,26 +112,21 @@ SinusoidalFrontGenerator::SinusoidalFrontGenerator(
       getTimer("apps::SinusoidalFrontGenerator::copy");
 }
 
-
-
 SinusoidalFrontGenerator::~SinusoidalFrontGenerator()
 {
 }
-
-
-
 
 /*
  ***********************************************************************
  ***********************************************************************
  */
 void SinusoidalFrontGenerator::setTags(
-   bool &exact_tagging,
+   bool& exact_tagging,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
-   int tag_data_id )
+   int tag_data_id)
 {
-   const boost::shared_ptr<hier::PatchLevel> &tag_level(
+   const boost::shared_ptr<hier::PatchLevel>& tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
    resetHierarchyConfiguration(hierarchy, 0, 1);
@@ -161,57 +152,53 @@ void SinusoidalFrontGenerator::setTags(
          d_buffer_distance[tag_ln],
          patch_geom->getXLower(),
          patch_geom->getDx(),
-         0.0 );
+         0.0);
 
    }
 
    exact_tagging = false;
-
-   return;
 }
 
-
-
 void SinusoidalFrontGenerator::setDomain(
-   hier::BoxContainer &domain,
+   hier::BoxContainer& domain,
    double xlo[],
    double xhi[],
    int autoscale_base_nprocs,
-   const tbox::SAMRAI_MPI &mpi)
+   const tbox::SAMRAI_MPI& mpi)
 {
-   TBOX_ASSERT( autoscale_base_nprocs <= mpi.getSize() );
-   TBOX_ASSERT( !domain.isEmpty() );
+   TBOX_ASSERT(autoscale_base_nprocs <= mpi.getSize());
+   TBOX_ASSERT(!domain.isEmpty());
 
    hier::BoxContainer::const_iterator ii = domain.begin();
    ii->getDim();
-   const tbox::Dimension &dim = domain.begin()->getDim();
+   const tbox::Dimension& dim = domain.begin()->getDim();
 
    int doubling_dir = 1;
    while (autoscale_base_nprocs < mpi.getSize()) {
-      for ( hier::BoxContainer::iterator bi=domain.begin();
-            bi!=domain.end(); ++bi ) {
-         hier::Box &input_box = *bi;
-         input_box.upper()(doubling_dir) += input_box.numberCells(doubling_dir);
+      for (hier::BoxContainer::iterator bi = domain.begin();
+           bi != domain.end(); ++bi) {
+         hier::Box& input_box = *bi;
+         input_box.upper() (doubling_dir) += input_box.numberCells(doubling_dir);
       }
       xhi[doubling_dir] += xhi[doubling_dir] - xlo[doubling_dir];
-      doubling_dir = (doubling_dir + 1)%dim.getValue();
+      doubling_dir = (doubling_dir + 1) % dim.getValue();
       autoscale_base_nprocs *= 2;
       tbox::plog << "autoscale_base_nprocs = " << autoscale_base_nprocs << std::endl
                  << domain.format("IB: ", 2) << std::endl;
    }
 
-   if ( autoscale_base_nprocs != mpi.getSize() ) {
+   if (autoscale_base_nprocs != mpi.getSize()) {
       TBOX_ERROR("If autoscale_base_nprocs (" << autoscale_base_nprocs << ") is given,\n"
-                 <<"number of processes (" << mpi.getSize() << ") must be\n"
-                 <<"a power-of-2 times the value of autoscale_base_nprocs.");
+                                              << "number of processes (" << mpi.getSize()
+                                              << ") must be\n"
+                                              <<
+         "a power-of-2 times the value of autoscale_base_nprocs.");
    }
 
 }
 
-
-
 void SinusoidalFrontGenerator::resetHierarchyConfiguration(
-   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy> &new_hierarchy,
+   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ const int coarsest_level,
    /*! Finest level */ const int finest_level)
 {
@@ -221,8 +208,6 @@ void SinusoidalFrontGenerator::resetHierarchyConfiguration(
    d_hierarchy = new_hierarchy;
    TBOX_ASSERT(d_hierarchy);
 }
-
-
 
 /*
  * Compute the solution data for a patch.
@@ -253,10 +238,9 @@ void SinusoidalFrontGenerator::computePatchData(
 
    const double* dx = patch_geom->getDx();
 
-   computeFrontsData( dist_data, tag_data, d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time );
+   computeFrontsData(dist_data, tag_data,
+      d_buffer_distance[patch.getPatchLevelNumber()], xlo, dx, time);
 }
-
-
 
 /*
  * Compute the various data due to the fronts.
@@ -264,23 +248,23 @@ void SinusoidalFrontGenerator::computePatchData(
 void SinusoidalFrontGenerator::computeFrontsData(
    pdat::NodeData<double>* dist_data,
    pdat::CellData<int>* tag_data,
-   const std::vector<double> &buffer_distance,
+   const std::vector<double>& buffer_distance,
    const double xlo[],
    const double dx[],
-   const double time ) const
+   const double time) const
 {
-   const tbox::Dimension &dim(tag_data->getDim());
+   const tbox::Dimension& dim(tag_data->getDim());
 
    t_setup->start();
 
-   if ( dist_data != 0 && tag_data != 0 ) {
-      TBOX_ASSERT( dist_data->getBox().isSpatiallyEqual(tag_data->getBox()) );
+   if (dist_data != 0 && tag_data != 0) {
+      TBOX_ASSERT(dist_data->getBox().isSpatiallyEqual(tag_data->getBox()));
    }
 
    // Compute the buffer in terms of cells.
    hier::IntVector buffer_cells(dim);
-   for ( int i=0; i<dim.getValue(); ++i ) {
-      buffer_cells(i) = static_cast<int>(0.5 + buffer_distance[i]/dx[i]);
+   for (int i = 0; i < dim.getValue(); ++i) {
+      buffer_cells(i) = static_cast<int>(0.5 + buffer_distance[i] / dx[i]);
    }
 
    const hier::Box& pbox = tag_data->getBox();
@@ -306,7 +290,6 @@ void SinusoidalFrontGenerator::computeFrontsData(
 
    t_setup->stop();
 
-
    /*
     * Initialize node x-distances from front.
     */
@@ -319,21 +302,21 @@ void SinusoidalFrontGenerator::computeFrontsData(
    front_box.upper(0) = front_box.lower(0) = pbox.lower(0);
    pdat::ArrayData<double> front_x(front_box, 1);
    pdat::ArrayData<int>::iterator aiend(front_x.getBox(), false);
-   for ( pdat::ArrayData<int>::iterator ai(front_x.getBox(), true);
-         ai != aiend; ++ai ) {
+   for (pdat::ArrayData<int>::iterator ai(front_x.getBox(), true);
+        ai != aiend; ++ai) {
 
-      const hier::Index &index = *ai;
-      double y=0.0, siny=0.0, z=0.0, sinz=1.0;
+      const hier::Index& index = *ai;
+      double y = 0.0, siny = 0.0, z = 0.0, sinz = 1.0;
 
-      y = xlo[1] + dx[1]*(index(1) - pbox.lower()[1]);
+      y = xlo[1] + dx[1] * (index(1) - pbox.lower()[1]);
       siny = sin(wave_number[1] * (y + d_init_disp[1] - d_velocity[1] * time));
 
-      if ( dim.getValue() > 2 ) {
-         z = xlo[2] + dx[2]*(index(2) - front_box.lower()[2]);
+      if (dim.getValue() > 2) {
+         z = xlo[2] + dx[2] * (index(2) - front_box.lower()[2]);
          sinz = sin(wave_number[2] * (z + d_init_disp[2] - d_velocity[2] * time));
       }
 
-      front_x(index,0) = d_amplitude * siny * sinz + d_init_disp[0];
+      front_x(index, 0) = d_amplitude * siny * sinz + d_init_disp[0];
       // tbox::plog << "front_x" << index << " = " << front_x(index,0) << std::endl;
    }
    t_node_pos->stop();
@@ -344,49 +327,50 @@ void SinusoidalFrontGenerator::computeFrontsData(
    tmp_tag.fill(0);
    hier::BlockId blk0(0);
    pdat::CellData<int>::iterator ciend(pdat::CellGeometry::end(tmp_tag.getGhostBox()));
-   for ( pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tmp_tag.getGhostBox()));
-         ci != ciend; ++ci ) {
+   for (pdat::CellData<int>::iterator ci(pdat::CellGeometry::begin(tmp_tag.getGhostBox()));
+        ci != ciend; ++ci) {
 
-      const pdat::CellIndex &cell_index = *ci;
+      const pdat::CellIndex& cell_index = *ci;
       const hier::Box cell_box(cell_index, cell_index, blk0);
 
-      double min_distance_to_front =  tbox::MathUtilities<double>::getMax();
+      double min_distance_to_front = tbox::MathUtilities<double>::getMax();
       double max_distance_to_front = -tbox::MathUtilities<double>::getMax();
       // tbox::plog << "initial distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
       pdat::NodeIterator niend(pdat::NodeGeometry::end(cell_box));
-      for ( pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box)); ni != niend; ++ni ) {
+      for (pdat::NodeIterator ni(pdat::NodeGeometry::begin(cell_box)); ni != niend; ++ni) {
 
-         const pdat::NodeIndex &node_index = *ni;
+         const pdat::NodeIndex& node_index = *ni;
          hier::Index front_index = node_index;
          front_index(0) = pbox.lower(0);
 
-         double node_x = xlo[0] + dx[0]*( node_index(0) - pbox.lower()(0) );
+         double node_x = xlo[0] + dx[0] * (node_index(0) - pbox.lower() (0));
 
-         double distance_to_front = node_x - front_x(front_index,0);
-         min_distance_to_front = tbox::MathUtilities<double>::Min(min_distance_to_front, distance_to_front);
-         max_distance_to_front = tbox::MathUtilities<double>::Max(max_distance_to_front, distance_to_front);
+         double distance_to_front = node_x - front_x(front_index, 0);
+         min_distance_to_front = tbox::MathUtilities<double>::Min(min_distance_to_front,
+               distance_to_front);
+         max_distance_to_front = tbox::MathUtilities<double>::Max(max_distance_to_front,
+               distance_to_front);
          // tbox::plog << "cell_index = " << cell_index << "   node_index = " << node_index << "   node_x = " << node_x << "   front_index = " << front_index << "   front_x = " << front_x(front_index,0) << "   distance to front(" << node_x << ") = " << distance_to_front << std::endl;
 
       }
       // tbox::plog << "distances to front: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
-      while ( min_distance_to_front < -0.5*d_period[0] ) {
+      while (min_distance_to_front < -0.5 * d_period[0]) {
          min_distance_to_front += d_period[0];
          max_distance_to_front += d_period[0];
       }
-      while ( max_distance_to_front >  0.5*d_period[0] ) {
+      while (max_distance_to_front > 0.5 * d_period[0]) {
          min_distance_to_front -= d_period[0];
          max_distance_to_front -= d_period[0];
       }
       // tbox::plog << "shifted ..........: " << min_distance_to_front << " .. " << max_distance_to_front << std::endl;
-      if ( min_distance_to_front < 0 && max_distance_to_front > 0 ) {
+      if (min_distance_to_front < 0 && max_distance_to_front > 0) {
          // This cell has nodes on both sides of the front.  Tag it and the buffer_cells around it.
          hier::Box cell_and_buffer(cell_index, cell_index, blk0);
          cell_and_buffer.grow(buffer_cells);
-         tmp_tag.fill(1,cell_and_buffer);
+         tmp_tag.fill(1, cell_and_buffer);
       }
 
    }
-
 
    /*
     * Initialize distance data.
@@ -394,7 +378,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
    if (dist_data != 0) {
       t_distance->start();
 
-      pdat::NodeData<double> &dist_to_front(*dist_data);
+      pdat::NodeData<double>& dist_to_front(*dist_data);
       pdat::NodeData<double>::iterator ni(pdat::NodeGeometry::begin(dist_to_front.getGhostBox()));
       pdat::NodeData<double>::iterator niend(pdat::NodeGeometry::end(dist_to_front.getGhostBox()));
       for ( ; ni != niend; ++ni) {
@@ -402,7 +386,7 @@ void SinusoidalFrontGenerator::computeFrontsData(
          pdat::NodeIndex front_index(index);
          front_index(0) = 0;
          dist_to_front(index) = xlo[0] + (index(0) - pbox.lower(0)) * dx[0]
-            - front_x(front_index,0);
+            - front_x(front_index, 0);
       }
       // dist_to_front.print(dist_to_front.getBox(),0,plog);
 
@@ -413,8 +397,6 @@ void SinusoidalFrontGenerator::computeFrontsData(
    tag_data->copy(tmp_tag);
    t_copy->stop();
 }
-
-
 
 bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    double* buffer,

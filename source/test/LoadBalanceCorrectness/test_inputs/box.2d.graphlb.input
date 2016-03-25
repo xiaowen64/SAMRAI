@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Load balance correctness test input file.
  *
  ************************************************************************/
@@ -24,7 +24,7 @@ Main {
 
    write_visit = TRUE
 
-   log_all_nodes = FALSE
+   log_all_nodes = TRUE
 
    domain_boxes = [(0,0),(49,49)]
    x_lo = 0.0, 0.0
@@ -38,7 +38,7 @@ Main {
 
    box_generator_type = "TileClustering"
 
-   load_balancer_type = "TilePartitioner"
+   load_balancer_type = "GraphLoadBalancer"
 
    mesh_generator_name = "ShrunkenLevelGenerator"
 
@@ -52,9 +52,10 @@ Main {
 
 
 TileClustering {
-  box_size = 10, 10
+  tile_size = 10, 10
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 
@@ -68,13 +69,10 @@ BergerRigoutsos {
 }
 
 
-TilePartitioner {
-  box_size = 10, 10
-  internal_load_balancer = "GraphLoadBalancer"
-  GraphLoadBalancer {
-     target_box_size = 30, 30
-     coalesce_boxes = TRUE
-  }
+GraphLoadBalancer {
+  tile_size = 10, 10
+  target_box_size = 30, 30
+  coalesce_boxes = TRUE
 }
 
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -113,7 +113,7 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
       const boost::shared_ptr<CoarsenClasses>& coarsen_classes,
       const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory,
-      CoarsenPatchStrategy * patch_strategy,
+      CoarsenPatchStrategy* patch_strategy,
       bool fill_coarse_data);
 
    /*!
@@ -121,7 +121,7 @@ public:
     * storage.
     */
    ~CoarsenSchedule();
- 
+
    /*!
     * @brief Read static data from input database.
     */
@@ -174,7 +174,9 @@ public:
     *
     * @param [in] flag
     */
-   void setDeterministicUnpackOrderingFlag( bool flag );
+   void
+   setDeterministicUnpackOrderingFlag(
+      bool flag);
 
    /*!
     * @brief Static function to set box intersection algorithm to use during
@@ -206,7 +208,7 @@ public:
 private:
    CoarsenSchedule(
       const CoarsenSchedule&);              // not implemented
-   void
+   CoarsenSchedule&
    operator = (
       const CoarsenSchedule&);              // not implemented
 
@@ -416,7 +418,7 @@ private:
     * @brief Shared debug checking flag.
     */
    static bool s_extra_debug;
- 
+
    /*!
     * @brief Flag indicating if any RefineSchedule has read the input database
     * for static data.
@@ -456,7 +458,6 @@ private:
     * coarsening operations.
     */
    CoarsenPatchStrategy* d_coarsen_patch_strategy;
-//   RefinePatchStrategy* d_refine_patch_strategy;
 
    /*!
     * @brief Factory object used to create data transactions when schedule is

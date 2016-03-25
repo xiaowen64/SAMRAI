@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Description:   (c) 1997-2014 Lawrence Livermore National Security, LLC
  *                Description:   Simple class used for autotesting.
  *
  ************************************************************************/
@@ -118,11 +118,11 @@ private:
    std::vector<int> d_test_patch_boxes_at_steps;
    //!@brief checkHierarchyBoxes() at d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count].
    int d_test_patch_boxes_step_count;
-   //!@brief File containing "correct" results used by checkHierarchyBoxes().
-   std::string d_test_patch_boxes_filename;
-   //!@brief Whether to write file d_test_patch_boxes_filename.
+   //!@brief Base name of files used in the run and regression test.
+   std::string d_base_name;
+   //!@brief Whether to write file of boxes for regression check.
    bool d_write_patch_boxes;
-   //!@brief Whether to read file d_test_patch_boxes_filename.
+   //!@brief Whether to read file of boxes for regression check.
    bool d_read_patch_boxes;
 
 #ifdef HAVE_HDF5

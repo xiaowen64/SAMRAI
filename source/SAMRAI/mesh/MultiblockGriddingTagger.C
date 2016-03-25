@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface to user routines for refining AMR data.
  *
  ************************************************************************/
@@ -48,7 +48,7 @@ MultiblockGriddingTagger::~MultiblockGriddingTagger()
 }
 
 hier::IntVector
-MultiblockGriddingTagger::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
+MultiblockGriddingTagger::getRefineOpStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getOne(dim);
 }
@@ -85,7 +85,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 {
    NULL_USE(fill_time);
 
-   const tbox::Dimension &dim = patch.getDim();
+   const tbox::Dimension& dim = patch.getDim();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
@@ -99,12 +99,12 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
 
       const std::vector<hier::BoundaryBox>& bbox =
          pgeom->getCodimensionBoundaries(d + 1);
 
-      for (int b = 0; b < static_cast<int>(bbox.size()); b++) {
+      for (int b = 0; b < static_cast<int>(bbox.size()); ++b) {
          if (!bbox[b].getIsMultiblockSingularity()) {
             hier::Box fill_box = pgeom->getBoundaryFillBox(bbox[b],
                   patch.getBox(),
@@ -148,7 +148,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
    if (grid_geometry->hasEnhancedConnectivity()) {
 
-      const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
+      const std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>& neighbors =
          grid_geometry->getNeighbors(patch_blk_id);
 
       hier::Connector::ConstNeighborhoodIterator ni =
@@ -168,14 +168,11 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                hier::Transformation::NO_ROTATE;
             hier::IntVector offset(dim);
 
-            for (std::list<hier::BaseGridGeometry::Neighbor>::const_iterator
-                 nbri = neighbors.begin(); nbri != neighbors.end(); nbri++) {
-
-               if (nbri->getBlockId() == encon_blk_id) {
-                  rotation = nbri->getRotationIdentifier();
-                  offset = nbri->getShift();
-                  break;
-               }
+            std::map<hier::BlockId, hier::BaseGridGeometry::Neighbor>::
+            const_iterator itr = neighbors.find(encon_blk_id);
+            if (itr != neighbors.end()) {
+               rotation = itr->second.getRotationIdentifier();
+               offset = itr->second.getShift();
             }
 
             offset *= patch.getPatchGeometry()->getRatio();

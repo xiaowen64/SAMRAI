@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -63,8 +63,8 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getNode()
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
    const IndexData<TYPE, BOX_GEOMETRY>& index_data,
-   bool begin) :
-   d_index_data(const_cast<IndexData<TYPE, BOX_GEOMETRY>*>(&index_data)),
+   bool begin):
+   d_index_data(const_cast<IndexData<TYPE, BOX_GEOMETRY> *>(&index_data)),
    d_node(begin ? d_index_data->d_list_head : 0)
 {
 }
@@ -72,7 +72,7 @@ IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
    IndexData<TYPE, BOX_GEOMETRY>* index_data,
-   IndexDataNode<TYPE, BOX_GEOMETRY>* node) :
+   IndexDataNode<TYPE, BOX_GEOMETRY>* node):
    d_index_data(index_data),
    d_node(node)
 {
@@ -80,7 +80,7 @@ IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
 
 template<class TYPE, class BOX_GEOMETRY>
 IndexIterator<TYPE, BOX_GEOMETRY>::IndexIterator(
-   const IndexIterator<TYPE, BOX_GEOMETRY>& iter) :
+   const IndexIterator<TYPE, BOX_GEOMETRY>& iter):
    d_index_data(iter.d_index_data),
    d_node(iter.d_node)
 {
@@ -123,14 +123,14 @@ IndexIterator<TYPE, BOX_GEOMETRY>::getIndex() const
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-TYPE*
+TYPE *
 IndexIterator<TYPE, BOX_GEOMETRY>::operator -> ()
 {
    return d_node->d_item;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-const TYPE*
+const TYPE *
 IndexIterator<TYPE, BOX_GEOMETRY>::operator -> () const
 {
    return d_node->d_item;
@@ -366,7 +366,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getDataStreamSize(
            index != indexend; ++index) {
          TYPE* item = getItem(*index);
          if (item) {
-            num_items++;
+            ++num_items;
             bytes += item->getDataStreamSize();
          }
       }
@@ -405,7 +405,7 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
       for (typename IndexData<TYPE, BOX_GEOMETRY>::iterator s(*this, true);
            s != send; ++s) {
          if (box.contains(s.getNode().d_index)) {
-            num_items++;
+            ++num_items;
          }
       }
    }
@@ -424,7 +424,7 @@ IndexData<TYPE, BOX_GEOMETRY>::packStream(
             TBOX_ASSERT(item != 0);
 
             int index_buf[SAMRAI::MAX_DIM_VAL];
-            for (int i = 0; i < d_dim.getValue(); i++) {
+            for (int i = 0; i < d_dim.getValue(); ++i) {
                index_buf[i] = t.getNode().d_index(i);
             }
             stream.pack(index_buf, d_dim.getValue());
@@ -455,18 +455,23 @@ IndexData<TYPE, BOX_GEOMETRY>::unpackStream(
    }
 
    int i;
-   TYPE* items = new TYPE[num_items];
-   for (i = 0; i < num_items; i++) {
+   TYPE* items = 0;
+   if (num_items > 0) {
+      items = new TYPE[num_items];
+   }
+   for (i = 0; i < num_items; ++i) {
       int index_buf[SAMRAI::MAX_DIM_VAL];
       stream.unpack(index_buf, d_dim.getValue());
       hier::Index index(d_dim);
-      for (int j = 0; j < d_dim.getValue(); j++) {
+      for (int j = 0; j < d_dim.getValue(); ++j) {
          index(j) = index_buf[j];
       }
       (items + i)->unpackStream(stream, t_overlap->getSourceOffset());
       addItem(index + (t_overlap->getSourceOffset()), items[i]);
    }
-   delete[] items;
+   if (items) {
+      delete[] items;
+   }
 }
 
 /*
@@ -730,7 +735,7 @@ IndexData<TYPE, BOX_GEOMETRY>::addItemToList(
 
    d_data[offset] = new_node;
 
-   d_number_items++;
+   ++d_number_items;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -760,7 +765,7 @@ IndexData<TYPE, BOX_GEOMETRY>::appendItemToList(
 
    d_data[offset] = new_node;
 
-   d_number_items++;
+   ++d_number_items;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -786,7 +791,7 @@ IndexData<TYPE, BOX_GEOMETRY>::removeNodeFromList(
 
    d_data[node->d_offset] = 0;
 
-   d_number_items--;
+   --d_number_items;
 }
 
 template<class TYPE, class BOX_GEOMETRY>
@@ -911,7 +916,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
          std::vector<int> index_array =
             item_db->getIntegerVector(index_keyword);
          hier::Index index(d_dim);
-         for (int j = 0; j < d_dim.getValue(); j++) {
+         for (int j = 0; j < d_dim.getValue(); ++j) {
             index(j) = index_array[j];
          }
 
@@ -924,7 +929,7 @@ IndexData<TYPE, BOX_GEOMETRY>::getFromRestart(
          item_found = false;
       }
 
-      item_count++;
+      ++item_count;
 
    } while (item_found);
 
@@ -959,7 +964,7 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
             6);
       hier::Index index = s.getNode().d_index;
       std::vector<int> index_array(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          index_array[i] = index(i);
       }
 
@@ -974,12 +979,12 @@ IndexData<TYPE, BOX_GEOMETRY>::putToRestart(
 
       item->putToRestart(item_db);
 
-      item_count++;
+      ++item_count;
    }
 }
 
 template<class TYPE, class BOX_GEOMETRY>
-TYPE*
+TYPE *
 IndexData<TYPE, BOX_GEOMETRY>::getItem(
    const hier::Index& index) const
 {

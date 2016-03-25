@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utilities class to access common POSIX constants and math ops
  *
  ************************************************************************/
@@ -109,7 +109,7 @@ public:
     */
    static void
    setArrayToSignalingNaN(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -158,7 +158,7 @@ public:
     */
    static void
    setArrayToMax(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -189,7 +189,7 @@ public:
     */
    static void
    setArrayToMin(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -221,7 +221,7 @@ public:
     */
    static void
    setArrayToEpsilon(
-      TYPE* array,
+      TYPE * array,
       int n = 1);
 
    /*!
@@ -293,6 +293,18 @@ public:
       const TYPE& width);
 
 private:
+   // Unimplemented default constructor.
+   MathUtilities();
+
+   // Unimplemented copy constructor.
+   MathUtilities(
+      const MathUtilities& other);
+
+   // Unimplemented assignment operator.
+   MathUtilities&
+   operator = (
+      const MathUtilities& rhs);
+
    static TYPE s_zero;
    static TYPE s_one;
 };

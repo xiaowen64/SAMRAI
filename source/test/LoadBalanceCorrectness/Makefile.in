@@ -3,15 +3,15 @@
 ## This file is part of the SAMRAI distribution.  For full copyright
 ## information, see COPYRIGHT and COPYING.LESSER.
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   Test program for performance of load balancers.
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/LoadBalanceCorrectness
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 OBJECT        = ../../..
 REPORT        = $(OBJECT)/report.xml
 TESTINCLUDE   = $(SAMRAI)/source/test/testlib
@@ -24,18 +24,18 @@ include $(OBJECT)/config/Makefile.config
 
 CPPFLAGS_EXTRA= -I$(TESTINCLUDE)  -DTESTING=1
 
-NUM_TESTS = 24
+NUM_TESTS = 32
 
 TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 CXX_OBJS      = main-lbcorrectness.o
 
-INPUTS2D = box.2d.treelb.input box.2d.tilelb.input box.2d.graphlb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input lss.2d.graphlb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input front.2d.graphlb.input 
-INPUTS3D = box.3d.treelb.input box.3d.tilelb.input box.3d.graphlb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input lss.3d.graphlb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input front.3d.graphlb.input 
+INPUTS2D = box.2d.cascade.input box.2d.tilecascade.input lss.2d.cascade.input lss.2d.tilecascade.input box.2d.treelb.input box.2d.tilelb.input box.2d.graphlb.input box.2d.caplb.input lss.2d.caplb.input lss.2d.treelb.input lss.2d.tilelb.input lss.2d.graphlb.input front.2d.caplb.input front.2d.treelb.input front.2d.tilelb.input front.2d.graphlb.input
+INPUTS3D = box.3d.cascade.input box.3d.tilecascade.input lss.3d.cascade.input lss.3d.tilecascade.input box.3d.treelb.input box.3d.tilelb.input box.3d.graphlb.input box.3d.caplb.input lss.3d.caplb.input lss.3d.treelb.input lss.3d.tilelb.input lss.3d.graphlb.input front.3d.caplb.input front.3d.treelb.input front.3d.tilelb.input front.3d.graphlb.input
 
 main:	$(CXX_OBJS) $(LIBSAMRAI) $(TESTLIB)
-	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1 
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI) $(LDLIBS) -o $@
 
@@ -81,16 +81,16 @@ examples:
 perf:
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main *visit
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

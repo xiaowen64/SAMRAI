@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Example demonstrating use of CVODE vectors.
  *
  ************************************************************************/
@@ -289,7 +289,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getRefineOpStencilWidth( const Dimension &dim ) const
+   virtual IntVector getRefineOpStencilWidth(const Dimension& dim) const
    {
       return IntVector(dim, 0);
    }
@@ -333,7 +333,7 @@ public:
     * data interpolation operations.  Default is to return
     * zero, assuming no user-defined operations provided.
     */
-   virtual IntVector getCoarsenOpStencilWidth( const Dimension &dim ) const
+   virtual IntVector getCoarsenOpStencilWidth(const Dimension& dim) const
    {
       return IntVector(dim, 0);
    }

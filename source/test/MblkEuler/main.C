@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Run multiblock Euler AMR
  *
  ************************************************************************/
@@ -43,6 +43,10 @@ using namespace std;
 
 #include "MblkHyperbolicLevelIntegrator.h"
 #include "MblkEuler.h"
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 using namespace SAMRAI;
 
@@ -103,6 +107,14 @@ int main(
    } else {
       tbox::PIO::logOnlyNodeZero(log_file_name);
    }
+
+#ifdef _OPENMP
+   tbox::plog << "Compiled with OpenMP version " << _OPENMP
+              << ".  Running with " << omp_get_max_threads() << " threads."
+              << std::endl;
+#else
+   tbox::plog << "Compiled without OpenMP.\n";
+#endif
 
    tbox::plog << "input_filename       = " << input_filename << endl;
    tbox::plog << "restart_read_dirname = " << restart_read_dirname << endl;
@@ -268,8 +280,8 @@ int main(
          input_db->getDatabase("StandardTagAndInitialize")));
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
-     new mesh::BergerRigoutsos(dim,
-     input_db->getDatabase("BergerRigoutsos")));
+      new mesh::BergerRigoutsos(dim,
+         input_db->getDatabase("BergerRigoutsos")));
 
    boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
       new mesh::TreeLoadBalancer(

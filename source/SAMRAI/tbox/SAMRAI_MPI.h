@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
@@ -137,6 +137,7 @@ public:
       int MPI_TAG;
       int MPI_ERROR;
    };
+
 #endif
 
    // Obsolete and should be removed.
@@ -198,6 +199,12 @@ public:
     */
    explicit SAMRAI_MPI(
       const Comm& comm);
+
+   /*!
+    * @brief Copy constructor.
+    */
+   SAMRAI_MPI(
+      const SAMRAI_MPI& other);
 
    /*!
     * @brief Get the local process rank from the last time the
@@ -270,7 +277,7 @@ public:
     *
     * @param[in] rhs
     */
-   const SAMRAI_MPI&
+   SAMRAI_MPI&
    operator = (
       const SAMRAI_MPI& rhs)
    {
@@ -348,6 +355,10 @@ public:
       Status* status,
       Datatype datatype,
       int* count);
+
+   static int
+   Request_free(
+      Request* request);
 
    static int
    Test(
@@ -559,6 +570,20 @@ public:
       Datatype datatype,
       int dest,
       int tag) const;
+
+   int
+   Sendrecv(
+      void* sendbuf,
+      int sendcount,
+      Datatype sendtype,
+      int dest,
+      int sendtag,
+      void* recvbuf,
+      int recvcount,
+      Datatype recvtype,
+      int source,
+      int recvtag,
+      Status* status) const;
 
    //@}
 
@@ -792,6 +817,9 @@ public:
    finalize();
 
 private:
+   // Unimplemented default constructor.
+   SAMRAI_MPI();
+
    //@{
 
    /*!

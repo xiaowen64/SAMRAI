@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Robin boundary condition problem-dependent interfaces
  *
  ************************************************************************/
@@ -106,7 +106,7 @@ public:
     * @pre !acoef_data || (d_dim == acoef_data->getDim())
     * @pre !bcoef_data || (d_dim == bcoef_data->getDim())
     * @pre !gcoef_data || (d_dim == gcoef_data->getDim())
-    * @pre !gcoef_data || (d_ghost_data_id != -1) 
+    * @pre !gcoef_data || (d_ghost_data_id != -1)
     */
    void
    setBcCoefs(

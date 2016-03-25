@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program to test node-centered patch data ops
  *
  ************************************************************************/
@@ -102,7 +102,7 @@ int main(
       hier::Index flo1(dim);
       hier::Index fhi1(dim);
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
          clo0(i) = 0;
          flo0(i) = 4;
@@ -166,11 +166,11 @@ int main(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
-      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
+      for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0->getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
@@ -178,11 +178,11 @@ int main(
       }
 
       hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
-      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
+      for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_itr) {
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1->getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
@@ -220,11 +220,11 @@ int main(
             nwgt, dummy, no_ghosts);
 
       // allocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          level->allocatePatchData(nwgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             level->allocatePatchData(nvindx[iv]);
          }
       }
@@ -247,7 +247,7 @@ int main(
       // Initialize control volume data for node-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
@@ -259,7 +259,7 @@ int main(
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double node_vol = dx[0];
-            for (int i = 1; i < dim.getValue(); i++) {
+            for (int i = 1; i < dim.getValue(); ++i) {
                node_vol *= dx[i];
             }
             boost::shared_ptr<pdat::NodeData<double> > data(
@@ -281,18 +281,18 @@ int main(
 
                   if (patch->getLocalId() == 0) {
                      // bottom boundaries
-                     for (ic = plo0; ic < phi0; ic++) {
+                     for (ic = plo0; ic < phi0; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(ic, plo1),
-                                pdat::NodeIndex::LowerRight);
+                              pdat::NodeIndex::LowerRight);
                         (*data)(ni) *= 0.5;
                      }
                      // left and right boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic),
-                                pdat::NodeIndex::UpperLeft);
+                              pdat::NodeIndex::UpperLeft);
                         (*data)(ni) *= 0.5;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic),
-                                pdat::NodeIndex::UpperRight);
+                              pdat::NodeIndex::UpperRight);
                         (*data)(ni) *= 0.5;
                      }
                      // corner boundaries
@@ -302,21 +302,21 @@ int main(
                                 pdat::NodeIndex::LowerRight)) *= 0.25;
                   } else {
                      // top and bottom boundaries
-                     for (ic = plo0; ic < phi0; ic++) {
+                     for (ic = plo0; ic < phi0; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(ic, phi1),
-                                pdat::NodeIndex::UpperRight);
+                              pdat::NodeIndex::UpperRight);
                         (*data)(ni) *= 0.5;
                         ni = pdat::NodeIndex(hier::Index(ic, plo1),
-                                pdat::NodeIndex::LowerRight);
+                              pdat::NodeIndex::LowerRight);
                         (*data)(ni) = 0.0;
                      }
                      // left and right boundaries
-                     for (ic = plo1; ic < phi1; ic++) {
+                     for (ic = plo1; ic < phi1; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic),
-                                pdat::NodeIndex::UpperLeft);
+                              pdat::NodeIndex::UpperLeft);
                         (*data)(ni) *= 0.5;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic),
-                                pdat::NodeIndex::UpperRight);
+                              pdat::NodeIndex::UpperRight);
                         (*data)(ni) *= 0.5;
                      }
                      // corner boundaries
@@ -332,18 +332,18 @@ int main(
                } else {
                   if (patch->getLocalId() == 0) {
                      // top and bottom coarse-fine boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(ic, plo1),
-                                pdat::NodeIndex::LowerRight);
+                              pdat::NodeIndex::LowerRight);
                         (*data)(ni) *= 1.5;
                         ni = pdat::NodeIndex(hier::Index(ic, phi1),
-                                pdat::NodeIndex::UpperRight);
+                              pdat::NodeIndex::UpperRight);
                         (*data)(ni) *= 1.5;
                      }
                      // left coarse-fine boundaries
-                     for (ic = plo1; ic < phi1; ic++) {
+                     for (ic = plo1; ic < phi1; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic),
-                                pdat::NodeIndex::UpperLeft);
+                              pdat::NodeIndex::UpperLeft);
                         (*data)(ni) *= 1.5;
                      }
                      // coarse-fine corner boundaries
@@ -353,18 +353,18 @@ int main(
                                 pdat::NodeIndex::UpperLeft)) *= 2.25;
                   } else {
                      // top and bottom coarse-fine boundaries
-                     for (ic = plo0; ic < phi0; ic++) {
+                     for (ic = plo0; ic < phi0; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(ic, plo1),
-                                pdat::NodeIndex::LowerRight);
+                              pdat::NodeIndex::LowerRight);
                         (*data)(ni) *= 1.5;
                         ni = pdat::NodeIndex(hier::Index(ic, phi1),
-                                pdat::NodeIndex::UpperRight);
+                              pdat::NodeIndex::UpperRight);
                         (*data)(ni) *= 1.5;
                      }
                      // right coarse-fine boundaries
-                     for (ic = plo1; ic < phi1; ic++) {
+                     for (ic = plo1; ic < phi1; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(phi0, ic),
-                                pdat::NodeIndex::UpperRight);
+                              pdat::NodeIndex::UpperRight);
                         (*data)(ni) *= 1.5;
                      }
                      // coarse-fine corner boundaries
@@ -373,15 +373,14 @@ int main(
                      (*data)(pdat::NodeIndex(hier::Index(phi0, phi1),
                                 pdat::NodeIndex::UpperRight)) *= 2.25;
                      // shared left boundaries
-                     for (ic = plo1; ic <= phi1 + 1; ic++) {
+                     for (ic = plo1; ic <= phi1 + 1; ++ic) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic),
-                                pdat::NodeIndex::LowerLeft);
+                              pdat::NodeIndex::LowerLeft);
                         (*data)(ni) = 0;
                      }
                   }
                }
-            }
-            else {
+            } else {
                int plo0 = patch->getBox().lower(0);
                int phi0 = patch->getBox().upper(0);
                int plo1 = patch->getBox().lower(1);
@@ -395,66 +394,66 @@ int main(
 
                   if (patch->getLocalId() == 0) {
                      // front and back face boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic1 = plo1; ic1 <= phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::NodeIndex::UUL);
+                                 pdat::NodeIndex::UUL);
                            (*data)(ni) *= 0.5;
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 0.5;
                         }
                      }
                      // bottom face boundary
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::NodeIndex::ULU);
+                                 pdat::NodeIndex::ULU);
                            (*data)(ni) *= 0.5;
                         }
                      }
                      // left and right face boundaries
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::NodeIndex::LUU);
+                                 pdat::NodeIndex::LUU);
                            (*data)(ni) *= 0.5;
                            ni = pdat::NodeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 0.5;
                         }
                      }
                      // lower front and back edge boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::NodeIndex::ULL);
+                              pdat::NodeIndex::ULL);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) *= 0.25;
                      }
                      // lower left and right edge boundaries
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         ni = pdat::NodeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::NodeIndex::LLU);
+                              pdat::NodeIndex::LLU);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) *= 0.25;
                      }
                      // left and right front and back edge boundaries
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::NodeIndex::LUL);
+                              pdat::NodeIndex::LUL);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::NodeIndex::UUL);
+                              pdat::NodeIndex::UUL);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::NodeIndex::LUU);
+                              pdat::NodeIndex::LUU);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 0.25;
                      }
                      // corner boundaries
@@ -468,78 +467,78 @@ int main(
                                 pdat::NodeIndex::ULU)) *= 0.125;
                   } else {
                      // front and back face boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::NodeIndex::UUL);
+                                 pdat::NodeIndex::UUL);
                            (*data)(ni) *= 0.5;
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 0.5;
                         }
                      }
                      // top face boundary
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 0.5;
                         }
                      }
                      // left and right face boundaries
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::NodeIndex::LUU);
+                                 pdat::NodeIndex::LUU);
                            (*data)(ni) *= 0.5;
                            ni = pdat::NodeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 0.5;
                         }
                      }
                      // upper and lower front and back edge boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         ni = pdat::NodeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::NodeIndex::UUL);
+                              pdat::NodeIndex::UUL);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::NodeIndex::ULL);
+                              pdat::NodeIndex::ULL);
                         (*data)(ni) = 0.0;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) = 0.0;
                      }
                      // upper and lower left and right edge boundaries
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         ni = pdat::NodeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::NodeIndex::LUU);
+                              pdat::NodeIndex::LUU);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::NodeIndex::LLU);
+                              pdat::NodeIndex::LLU);
                         (*data)(ni) = 0.0;
                         ni = pdat::NodeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) = 0.0;
                      }
                      // front and back left and right edge boundaries
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::NodeIndex::LUL);
+                              pdat::NodeIndex::LUL);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::NodeIndex::UUL);
+                              pdat::NodeIndex::UUL);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::NodeIndex::LUU);
+                              pdat::NodeIndex::LUU);
                         (*data)(ni) *= 0.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 0.25;
                      }
                      // corner boundaries
@@ -560,10 +559,10 @@ int main(
                      (*data)(pdat::NodeIndex(hier::Index(phi0, phi1, phi2),
                                 pdat::NodeIndex::UUU)) *= 0.125;
                      // bottom face boundary
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::NodeIndex::ULU);
+                                 pdat::NodeIndex::ULU);
                            (*data)(ni) = 0.0;
                         }
                      }
@@ -571,66 +570,66 @@ int main(
                } else {
                   if (patch->getLocalId() == 0) {
                      // front and back coarse-fine face boundaries
-                     for (ic0 = plo0; ic0 <= phi0; ic0++){
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::NodeIndex::UUL);
+                                 pdat::NodeIndex::UUL);
                            (*data)(ni) *= 1.5;
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 1.5;
                         }
                      }
                      // top and bottom coarse-fine face boundaries
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::NodeIndex::ULU);
+                                 pdat::NodeIndex::ULU);
                            (*data)(ni) *= 1.5;
                            ni = pdat::NodeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 1.5;
                         }
                      }
                      // left coarse-fine face boundary
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::NodeIndex::LUU);
+                                 pdat::NodeIndex::LUU);
                            (*data)(ni) *= 1.5;
                         }
                      }
                      // upper and lower front and back edge boundaries
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         ni = pdat::NodeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::NodeIndex::UUL);
+                              pdat::NodeIndex::UUL);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::NodeIndex::ULL);
+                              pdat::NodeIndex::ULL);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) *= 2.25;
                      }
                      // upper and lower left edge boundaries
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         ni = pdat::NodeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::NodeIndex::LUU);
+                              pdat::NodeIndex::LUU);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::NodeIndex::LLU);
+                              pdat::NodeIndex::LLU);
                         (*data)(ni) *= 2.25;
                      }
                      // front and back left edge boundaries
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         ni = pdat::NodeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::NodeIndex::LUL);
+                              pdat::NodeIndex::LUL);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::NodeIndex::LUU);
+                              pdat::NodeIndex::LUU);
                         (*data)(ni) *= 2.25;
                      }
                      // coarse-fine corner boundaries
@@ -644,66 +643,66 @@ int main(
                                 pdat::NodeIndex::LUU)) *= 3.375;
                   } else {
                      // front and back coarse-fine face boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++){
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::NodeIndex::UUL);
+                                 pdat::NodeIndex::UUL);
                            (*data)(ni) *= 1.5;
                            ni = pdat::NodeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 1.5;
                         }
                      }
                      // top and bottom coarse-fine face boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::NodeIndex::ULU);
+                                 pdat::NodeIndex::ULU);
                            (*data)(ni) *= 1.5;
                            ni = pdat::NodeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::NodeIndex::UUU);
+                                 pdat::NodeIndex::UUU);
                            (*data)(ni) *= 1.5;
                         }
                      }
                      // right coarse-fine face boundaries
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::NodeIndex::LUU);
+                                 pdat::NodeIndex::LUU);
                            (*data)(ni) *= 1.5;
                         }
                      }
                      // upper and lower front and back edge boundaries
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         ni = pdat::NodeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::NodeIndex::UUL);
+                              pdat::NodeIndex::UUL);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::NodeIndex::ULL);
+                              pdat::NodeIndex::ULL);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) *= 2.25;
                      }
                      // upper and lower right edge boundaries
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         ni = pdat::NodeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::NodeIndex::ULU);
+                              pdat::NodeIndex::ULU);
                         (*data)(ni) *= 2.25;
                      }
                      // front and back right edge boundaries
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         ni = pdat::NodeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::NodeIndex::UUL);
+                              pdat::NodeIndex::UUL);
                         (*data)(ni) *= 2.25;
                         ni = pdat::NodeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::NodeIndex::UUU);
+                              pdat::NodeIndex::UUU);
                         (*data)(ni) *= 2.25;
                      }
                      // coarse-fine corner boundaries
@@ -716,10 +715,10 @@ int main(
                      (*data)(pdat::NodeIndex(hier::Index(phi0, phi1, phi2),
                                 pdat::NodeIndex::UUU)) *= 3.375;
                      // shared left boundaries
-                     for (ic1 = plo1; ic1 <= phi1 + 1; ic1++) {
-                        for (ic2 = plo2; ic2 <= phi2 + 1; ic2++) {
+                     for (ic1 = plo1; ic1 <= phi1 + 1; ++ic1) {
+                        for (ic2 = plo2; ic2 <= phi2 + 1; ++ic2) {
                            ni = pdat::NodeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::NodeIndex::LLL);
+                                 pdat::NodeIndex::LLL);
                            (*data)(ni) = 0;
                         }
                      }
@@ -735,7 +734,7 @@ int main(
       // Expected: cwgt = 0.01 on coarse (except where finer patch exists) and
       // 0.0025 on fine level
 /*   bool vol_test_passed = true;
- *   for (ln = 0; ln < 2; ln++) {
+ *   for (ln = 0; ln < 2; ++ln) {
  *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::NodeData<double> > cvdata = patch->getPatchData(cwgt_id);
@@ -765,7 +764,7 @@ int main(
  *   }
  *   }
  *   if (!vol_test_passed) {
- *   num_failures++;
+ *   ++num_failures;
  *   tbox::perr << "FAILED: - Test #1a: Check control volume data set properly" << std::endl;
  *   cwgt_ops->printData(cwgt_id, tbox::plog);
  *   }
@@ -780,7 +779,7 @@ int main(
       // Expected: norm = 0.5
       double norm = node_ops->sumControlVolumes(nvindx[0], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(norm, 0.5)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #1b: math::HierarchyNodeDataOpsReal::sumControlVolumes()\n"
          << "Expected value = 0.5 , Computed value = "
@@ -794,12 +793,11 @@ int main(
          int compare;
          if (dim.getValue() == 2) {
             compare = 121;
-         }
-         else {
+         } else {
             compare = 1001;
          }
          if (num_data_points != compare) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #2: math::HierarchyNodeDataOpsReal::numberOfEntries()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -812,7 +810,7 @@ int main(
       double val0 = double(2.0);
       node_ops->setToScalar(nvindx[0], val0);
       if (!doubleDataSameAsValue(nvindx[0], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3a: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
@@ -824,7 +822,7 @@ int main(
       node_ops->setToScalar(nvindx[1], 4.0);
       double val1 = 4.0;
       if (!doubleDataSameAsValue(nvindx[1], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3b: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
@@ -835,7 +833,7 @@ int main(
       // Expected: v2 = v1 = (4.0)
       node_ops->copyData(nvindx[2], nvindx[1]);
       if (!doubleDataSameAsValue(nvindx[2], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #4: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v2 = " << val1 << std::endl;
@@ -846,14 +844,14 @@ int main(
       // Expected: v0 = (4.0), v1 = (2.0)
       node_ops->swapData(nvindx[0], nvindx[1]);
       if (!doubleDataSameAsValue(nvindx[0], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5a: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val1 << std::endl;
          node_ops->printData(nvindx[0], tbox::plog);
       }
       if (!doubleDataSameAsValue(nvindx[1], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5b: math::HierarchyNodeDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val0 << std::endl;
@@ -865,7 +863,7 @@ int main(
       node_ops->scale(nvindx[2], 0.25, nvindx[2]);
       double val_scale = 1.0;
       if (!doubleDataSameAsValue(nvindx[2], val_scale, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #6: math::HierarchyNodeDataOpsReal::scale()\n"
          << "Expected: v2 = " << val_scale << std::endl;
@@ -877,7 +875,7 @@ int main(
       node_ops->add(nvindx[3], nvindx[0], nvindx[1]);
       double val_add = 6.0;
       if (!doubleDataSameAsValue(nvindx[3], val_add, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #7: math::HierarchyNodeDataOpsReal::add()\n"
          << "Expected: v3 = " << val_add << std::endl;
@@ -892,7 +890,7 @@ int main(
       node_ops->subtract(nvindx[1], nvindx[3], nvindx[0]);
       double val_sub = 6.0;
       if (!doubleDataSameAsValue(nvindx[1], val_sub, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #8: math::HierarchyNodeDataOpsReal::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
@@ -904,7 +902,7 @@ int main(
       node_ops->addScalar(nvindx[1], nvindx[1], 0.0);
       double val_addScalar = 6.0;
       if (!doubleDataSameAsValue(nvindx[1], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9a: math::HierarchyNodeDataOpsReal::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
@@ -916,7 +914,7 @@ int main(
       node_ops->addScalar(nvindx[2], nvindx[2], 0.0);
       val_addScalar = 1.0;
       if (!doubleDataSameAsValue(nvindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9b: math::HierarchyNodeDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -928,7 +926,7 @@ int main(
       node_ops->addScalar(nvindx[2], nvindx[2], 3.0);
       val_addScalar = 4.0;
       if (!doubleDataSameAsValue(nvindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9c: math::HierarchyNodeDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -943,7 +941,7 @@ int main(
       node_ops->multiply(nvindx[1], nvindx[3], nvindx[1]);
       double val_mult = 3.0;
       if (!doubleDataSameAsValue(nvindx[1], val_mult, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #10: math::HierarchyNodeDataOpsReal::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
@@ -955,7 +953,7 @@ int main(
       node_ops->divide(nvindx[0], nvindx[2], nvindx[1]);
       double val_div = 1.333333333333333;
       if (!doubleDataSameAsValue(nvindx[0], val_div, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #11: math::HierarchyNodeDataOpsReal::divide()\n"
          << "Expected: v0 = " << val_div << std::endl;
@@ -967,7 +965,7 @@ int main(
       node_ops->reciprocal(nvindx[1], nvindx[1]);
       double val_rec = 0.33333333333333;
       if (!doubleDataSameAsValue(nvindx[1], val_rec, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #12: math::HierarchyNodeDataOpsReal::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
@@ -979,7 +977,7 @@ int main(
       node_ops->abs(nvindx[3], nvindx[2]);
       double val_abs = 4.0;
       if (!doubleDataSameAsValue(nvindx[3], val_abs, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #13: math::HierarchyNodeDataOpsReal::abs()\n"
          << "Expected: v3 = " << val_abs << std::endl;
@@ -1008,8 +1006,7 @@ int main(
             if (patch->getBox().contains(index1)) {
                (*ndata)(pdat::NodeIndex(index1, pdat::NodeIndex::UpperRight), 0) = -1000.0;
             }
-         }
-         else {
+         } else {
             if (patch->getBox().contains(index0)) {
                (*ndata)(pdat::NodeIndex(index0, pdat::NodeIndex::LLL), 0) = 100.0;
             }
@@ -1035,8 +1032,7 @@ int main(
          if (dim.getValue() == 2) {
             corner0 = pdat::NodeIndex::LowerLeft;
             corner1 = pdat::NodeIndex::UpperRight;
-         }
-         else {
+         } else {
             corner0 = pdat::NodeIndex::LLL;
             corner1 = pdat::NodeIndex::UUU;
          }
@@ -1070,7 +1066,7 @@ int main(
          }
       }
       if (!bogus_value_test_passed) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #14:  Place some bogus values on coarse level"
          << std::endl;
@@ -1084,12 +1080,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1640.00;
-         }
-         else {
+         } else {
             compare = 5680.00;
          }
          if (!tbox::MathUtilities<double>::equalEps(bogus_l1_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #15: math::HierarchyNodeDataOpsReal::L1Norm()"
             << " - w/o control weight\n"
@@ -1102,7 +1097,7 @@ int main(
       // Expected:  correct_l1_norm = 2.0
       double correct_l1_norm = node_ops->L1Norm(nvindx[2], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(correct_l1_norm, 2.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #16: math::HierarchyNodeDataOpsReal::L1Norm()"
          << " - w/control weight\n"
@@ -1114,7 +1109,7 @@ int main(
       // Expected:  l2_norm = 2.8284271
       double l2_norm = node_ops->L2Norm(nvindx[2], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(l2_norm, 2.82842712475)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #17: math::HierarchyNodeDataOpsReal::L2Norm()\n"
          << "Expected value = 2.82842712475, Computed value = "
@@ -1125,7 +1120,7 @@ int main(
       // Expected:  bogus_max_norm = 1000.0
       double bogus_max_norm = node_ops->maxNorm(nvindx[2]);
       if (!tbox::MathUtilities<double>::equalEps(bogus_max_norm, 1000.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #18: math::HierarchyNodeDataOpsReal::maxNorm()"
          << " - w/o control weight\n"
@@ -1137,7 +1132,7 @@ int main(
       // Expected:  max_norm = 4.0
       double max_norm = node_ops->maxNorm(nvindx[2], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(max_norm, 4.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #19: math::HierarchyNodeDataOpsReal::maxNorm()"
          << " - w/control weight\n"
@@ -1155,7 +1150,7 @@ int main(
       double val_linearSum = 5.0;
       node_ops->linearSum(nvindx[3], 2.0, nvindx[1], 0.00, nvindx[0]);
       if (!doubleDataSameAsValue(nvindx[3], val_linearSum, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #20: math::HierarchyNodeDataOpsReal::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
@@ -1167,7 +1162,7 @@ int main(
       node_ops->axmy(nvindx[3], 3.0, nvindx[1], nvindx[0]);
       double val_axmy = 6.5;
       if (!doubleDataSameAsValue(nvindx[3], val_axmy, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #21: math::HierarchyNodeDataOpsReal::axmy()\n"
          << "Expected: v3 = " << val_axmy << std::endl;
@@ -1178,7 +1173,7 @@ int main(
       // Expected:  cdot = 8.75
       double cdot = node_ops->dot(nvindx[2], nvindx[1], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #22a: math::HierarchyNodeDataOpsReal::dot() - (ind2) * (ind1)\n"
          << "Expected Value = 8.75, Computed Value = "
@@ -1189,7 +1184,7 @@ int main(
       // Expected:  cdot = 8.75
       cdot = node_ops->dot(nvindx[1], nvindx[2], nwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(cdot, 8.75)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #22a: math::HierarchyNodeDataOpsReal::dot() - (ind1) * (ind2)\n"
          << "Expected Value = 8.75, Computed Value = "
@@ -1197,14 +1192,14 @@ int main(
       }
 
       // deallocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->deallocatePatchData(nwgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->deallocatePatchData(nvindx[iv]);
          }
       }
 
-      for (iv = 0; iv < NVARS; iv++) {
+      for (iv = 0; iv < NVARS; ++iv) {
          nvar[iv].reset();
       }
       nwgt.reset();
@@ -1240,7 +1235,7 @@ doubleDataSameAsValue(
 
    int ln;
    boost::shared_ptr<hier::Patch> patch;
-   for (ln = 0; ln < 2; ln++) {
+   for (ln = 0; ln < 2; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {

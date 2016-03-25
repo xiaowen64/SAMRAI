@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with overlap Connectors.
  *
  ************************************************************************/
@@ -32,7 +32,7 @@ namespace hier {
  * OverlapConnectorAlgorithm objects create, check and operate on overlap
  * Connectors.
  */
-class OverlapConnectorAlgorithm : public BaseConnectorAlgorithm
+class OverlapConnectorAlgorithm:public BaseConnectorAlgorithm
 {
 
 public:
@@ -447,6 +447,22 @@ public:
    }
 
    /*!
+    * @brief When @c print_steps is true, print what the code is
+    * doing.
+    *
+    * @note Step printing may be expensive and and is meant mainly for
+    * debugging.
+    *
+    * @param[in] print_steps
+    */
+   void
+   setPrintSteps(
+      bool print_steps)
+   {
+      d_print_steps = print_steps;
+   }
+
+   /*!
     * @brief Setup names of timers.
     *
     * By default, timers are named
@@ -556,7 +572,7 @@ private:
       Connector* east_to_west,
       const std::set<int>& incoming_ranks,
       const std::set<int>& outgoing_ranks,
-      tbox::AsyncCommPeer<int> all_comms[],
+      tbox::AsyncCommPeer<int>* all_comms,
       NeighborSet& visible_west_nabrs,
       NeighborSet& visible_east_nabrs) const;
 
@@ -653,7 +669,6 @@ private:
     */
    static int s_operation_mpi_tag;
 
-
    //@{
    //! @name Timer data for this class.
 
@@ -707,6 +722,7 @@ private:
 
    //@}
 
+   bool d_print_steps;
    bool d_barrier_before_communication;
    bool d_sanity_check_method_preconditions;
    bool d_sanity_check_method_postconditions;

@@ -177,7 +177,7 @@
 //
 // File:	$URL$
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2013 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2014 Lawrence Livermore National Security, LLC
 
 // Description:	Yacc grammar description for the input database
 //
@@ -259,7 +259,7 @@ static void to_complex(KeyData*);
 static KeyData* binary_op(KeyData*, KeyData*, const int);
 static KeyData* compare_op(KeyData*, KeyData*, const int);
 static KeyData* eval_function(KeyData*, const string&);
-static KeyData* lookup_variable(const string&, const int, const bool);
+static KeyData* lookup_variable(const string&, const size_t, const bool);
 
 
 
@@ -2866,7 +2866,7 @@ static KeyData* eval_function(KeyData* arg, const string& func)
  */
 
 static KeyData* lookup_variable(
-   const string& key, const int index, const bool is_array)
+   const string& key, const size_t index, const bool is_array)
 {
    KeyData* result = new KeyData;
    result->d_node_type  = KEY_INTEGER;
@@ -2888,7 +2888,7 @@ static KeyData* lookup_variable(
       tmp += key;
       tmp += "'' is not a scalar value";
       parser->error(tmp);
-   } else if ((index < 0) || (index >= db->getArraySize(key))) {
+   } else if (index >= db->getArraySize(key)) {
       ostrstream oss;
       oss << index;
       string tmp("Variable ``");

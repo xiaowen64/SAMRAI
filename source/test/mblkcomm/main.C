@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
@@ -33,6 +33,10 @@
 #include "SideMultiblockTest.h"
 
 #include "boost/shared_ptr.hpp"
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 using namespace SAMRAI;
 
@@ -219,6 +223,14 @@ int main(
          tbox::PIO::logOnlyNodeZero(log_file_name);
       }
 
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
+
       int ntimes_run = 1;
       if (main_db->keyExists("ntimes_run")) {
          ntimes_run = main_db->getInteger("ntimes_run");
@@ -348,13 +360,13 @@ int main(
 
       int nlevels = patch_hierarchy->getNumberOfLevels();
 
-      for (int n = 0; n < ntimes_run; n++) {
+      for (int n = 0; n < ntimes_run; ++n) {
 
          /*
           * Create communication schedules for data refine tests.
           */
          refine_create_time->start();
-         for (int i = 0; i < nlevels; i++) {
+         for (int i = 0; i < nlevels; ++i) {
             comm_tester->createRefineSchedule(i);
          }
          refine_create_time->stop();
@@ -363,7 +375,7 @@ int main(
           * Perform refine data communication operations.
           */
          refine_comm_time->start();
-         for (int j = 0; j < nlevels; j++) {
+         for (int j = 0; j < nlevels; ++j) {
             comm_tester->performRefineOperations(j);
          }
          refine_comm_time->stop();

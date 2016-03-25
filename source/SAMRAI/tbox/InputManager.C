@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   An input manager singleton class that parses input files
  *
  ************************************************************************/
@@ -42,7 +42,7 @@ StartupShutdownManager::Handler InputManager::s_finalize_handler(
  *************************************************************************
  */
 
-InputManager*
+InputManager *
 InputManager::getManager()
 {
    if (!s_manager_instance) {

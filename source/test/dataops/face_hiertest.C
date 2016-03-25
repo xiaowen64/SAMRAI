@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program to test face-centered patch data ops
  *
  ************************************************************************/
@@ -104,7 +104,7 @@ int main(
       hier::Index flo1(dim);
       hier::Index fhi1(dim);
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
          clo0(i) = 0;
          flo0(i) = 4;
@@ -168,11 +168,11 @@ int main(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
-      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
+      for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0->getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
@@ -180,11 +180,11 @@ int main(
       }
 
       hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
-      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
+      for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_itr) {
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1->getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
@@ -222,9 +222,9 @@ int main(
             fwgt, dummy, no_ghosts);
 
       // allocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->allocatePatchData(fwgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->allocatePatchData(fvindx[iv]);
          }
       }
@@ -247,13 +247,13 @@ int main(
       // Initialize control volume data for face-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry>pgeom(
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
                BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
@@ -262,7 +262,7 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                face_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::FaceData<double> >data(
+            boost::shared_ptr<pdat::FaceData<double> > data(
                BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
@@ -281,108 +281,107 @@ int main(
 
                   if (patch->getLocalId() == 0) {
                      // bottom face boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right face boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 0.5;
                         int array_up[2] = { phi0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                   } else {
                      // top and bottom face boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) = 0.0;
                         int array_up[2] = { ic, phi1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right face boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 0.5;
                         int array_up[2] = { phi0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                   }
                } else {
                   if (patch->getLocalId() == 0) {
                      // top and bottom coarse-fine face boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 1.5;
                         int array_up[2] = { ic, phi1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                      // left coarse-fine face boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 1.5;
                      }
                   } else {
                      // top and bottom coarse-fine face boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         int array_lo[2] = { ic, plo1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) *= 1.5;
                         int array_up[2] = { ic, phi1 };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::Y,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::Y,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                      // left and right coarse-fine face boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         int array_lo[2] = { plo0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_lo),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Lower);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Lower);
                         (*data)(fi) = 0.0;
                         int array_up[2] = { phi0, ic };
                         fi = pdat::FaceIndex(hier::Index(dim, array_up),
-                                pdat::FaceIndex::X,
-                                pdat::FaceIndex::Upper);
+                              pdat::FaceIndex::X,
+                              pdat::FaceIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                   }
                }
-            }
-            else {
+            } else {
                int plo0 = patch->getBox().lower(0);
                int phi0 = patch->getBox().upper(0);
                int plo1 = patch->getBox().lower(1);
@@ -396,180 +395,177 @@ int main(
 
                   if (patch->getLocalId() == 0) {
                      // front and back boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
                         }
                      }
                      // bottom boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
                         }
                      }
                      // left and right boundary faces
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
-                           int array_right[3] = {phi0, ic1, ic2};
+                           int array_right[3] = { phi0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_right),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                  }
-                  else {
+                  } else {
                      // front and back boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
                         }
                      }
                      // top and bottom boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_top[3] = {ic0, phi1, ic2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_top[3] = { ic0, phi1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_top),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) = 0.0;
                         }
                      }
                      // left and right boundary faces
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 0.5;
-                           int array_right[3] = {phi0, ic1, ic2};
+                           int array_right[3] = { phi0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_right),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 0.5;
                         }
                      }
                   }
-               }
-               else {
+               } else {
                   if (patch->getLocalId() == 0) {
                      // front and back boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // top and bottom boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_top[3] = {ic0, phi1, ic2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_top[3] = { ic0, phi1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_top),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // left boundary faces
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                  }
-                  else {
+                  } else {
                      // front and back boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                           int array_front[3] = {ic0, ic1, phi2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                           int array_front[3] = { ic0, ic1, phi2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_front),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_back[3] = {ic0, ic1, plo2};
+                           int array_back[3] = { ic0, ic1, plo2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_back),
-                                   pdat::FaceIndex::Z,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Z,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // top and bottom boundary faces
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_top[3] = {ic0, phi1, ic2};
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_top[3] = { ic0, phi1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_top),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
-                           int array_bottom[3] = {ic0, plo1, ic2};
+                           int array_bottom[3] = { ic0, plo1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_bottom),
-                                   pdat::FaceIndex::Y,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::Y,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) *= 1.5;
                         }
                      }
                      // left and right boundary faces
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
-                        for (ic2 = plo2; ic2 <= phi2; ic2++) {
-                           int array_left[3] = {plo0, ic1, ic2};
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
+                        for (ic2 = plo2; ic2 <= phi2; ++ic2) {
+                           int array_left[3] = { plo0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_left),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Lower);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Lower);
                            (*data)(fi) = 0.0;
-                           int array_right[3] = {phi0, ic1, ic2};
+                           int array_right[3] = { phi0, ic1, ic2 };
                            fi = pdat::FaceIndex(hier::Index(dim, array_right),
-                                   pdat::FaceIndex::X,
-                                   pdat::FaceIndex::Upper);
+                                 pdat::FaceIndex::X,
+                                 pdat::FaceIndex::Upper);
                            (*data)(fi) *= 1.5;
                         }
                      }
@@ -585,7 +581,7 @@ int main(
       // Expected: cwgt = 0.01 on coarse (except where finer patch exists) and
       // 0.0025 on fine level
 /*   bool vol_test_passed = true;
- *   for (ln = 0; ln < 2; ln++) {
+ *   for (ln = 0; ln < 2; ++ln) {
  *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::FaceData<double> > cvdata(
@@ -619,7 +615,7 @@ int main(
  *   }
  *   }
  *   if (!vol_test_passed) {
- *   num_failures++;
+ *   ++num_failures;
  *   tbox::perr << "FAILED: - Test #1a: Check control volume data set properly" << std::endl;
  *   cwgt_ops->printData(cwgt_id, tbox::plog);
  *   }
@@ -636,12 +632,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1.0;
-         }
-         else {
+         } else {
             compare = 1.5;
          }
          if (!tbox::MathUtilities<double>::equalEps(norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #1b: math::HierarchyFaceDataOpsReal::sumControlVolumes()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -656,12 +651,11 @@ int main(
          int compare;
          if (dim.getValue() == 2) {
             compare = 209;
-         }
-         else {
+         } else {
             compare = 2276;
          }
          if (num_data_points != compare) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #2: math::HierarchyFaceDataOpsReal::numberOfEntries()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -674,7 +668,7 @@ int main(
       double val0 = double(2.0);
       face_ops->setToScalar(fvindx[0], val0);
       if (!doubleDataSameAsValue(fvindx[0], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3a: math::HierarchyFaceDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
@@ -686,7 +680,7 @@ int main(
       face_ops->setToScalar(fvindx[1], 4.0);
       double val1 = double(4.0);
       if (!doubleDataSameAsValue(fvindx[1], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3b: math::HierarchyFaceDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
@@ -697,7 +691,7 @@ int main(
       // Expected: v2 = v1 = (4.0)
       face_ops->copyData(fvindx[2], fvindx[1]);
       if (!doubleDataSameAsValue(fvindx[2], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #4: math::HierarchyFaceDataOpsReal::copyData()\n"
          << "Expected: v2 = " << val1 << std::endl;
@@ -708,14 +702,14 @@ int main(
       // Expected: v0 = (4.0), v1 = (2.0)
       face_ops->swapData(fvindx[0], fvindx[1]);
       if (!doubleDataSameAsValue(fvindx[0], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5a: math::HierarchyFaceDataOpsReal::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          face_ops->printData(fvindx[0], tbox::plog);
       }
       if (!doubleDataSameAsValue(fvindx[1], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5b: math::HierarchyFaceDataOpsReal::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
@@ -727,7 +721,7 @@ int main(
       face_ops->scale(fvindx[2], 0.25, fvindx[2]);
       double val_scale = 1.0;
       if (!doubleDataSameAsValue(fvindx[2], val_scale, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #6: math::HierarchyFaceDataOpsReal::swapData()\n"
          << "Expected: v2 = " << val_scale << std::endl;
@@ -739,7 +733,7 @@ int main(
       face_ops->add(fvindx[3], fvindx[0], fvindx[1]);
       double val_add = 6.0;
       if (!doubleDataSameAsValue(fvindx[3], val_add, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #7: math::HierarchyFaceDataOpsReal::add()\n"
          << "Expected: v3 = " << val_add << std::endl;
@@ -754,7 +748,7 @@ int main(
       face_ops->subtract(fvindx[1], fvindx[3], fvindx[0]);
       double val_sub = 6.0;
       if (!doubleDataSameAsValue(fvindx[1], val_sub, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #8: math::HierarchyFaceDataOpsReal::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
@@ -766,7 +760,7 @@ int main(
       face_ops->addScalar(fvindx[1], fvindx[1], 0.0);
       double val_addScalar = 6.0;
       if (!doubleDataSameAsValue(fvindx[1], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9a: math::HierarchyFaceDataOpsReal::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
@@ -778,7 +772,7 @@ int main(
       face_ops->addScalar(fvindx[2], fvindx[2], 0.0);
       val_addScalar = 1.0;
       if (!doubleDataSameAsValue(fvindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9b: math::HierarchyFaceDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -790,7 +784,7 @@ int main(
       face_ops->addScalar(fvindx[2], fvindx[2], 3.0);
       val_addScalar = 4.0;
       if (!doubleDataSameAsValue(fvindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9c: math::HierarchyFaceDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -805,7 +799,7 @@ int main(
       face_ops->multiply(fvindx[1], fvindx[3], fvindx[1]);
       double val_mult = 3.0;
       if (!doubleDataSameAsValue(fvindx[1], val_mult, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #10: math::HierarchyFaceDataOpsReal::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
@@ -817,7 +811,7 @@ int main(
       face_ops->divide(fvindx[0], fvindx[2], fvindx[1]);
       double val_div = 1.3333333333333;
       if (!doubleDataSameAsValue(fvindx[0], val_div, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #11: math::HierarchyFaceDataOpsReal::divide()\n"
          << "Expected: v0 = " << val_div << std::endl;
@@ -829,7 +823,7 @@ int main(
       face_ops->reciprocal(fvindx[1], fvindx[1]);
       double val_rec = 0.3333333333333;
       if (!doubleDataSameAsValue(fvindx[1], val_rec, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #12: math::HierarchyFaceDataOpsReal::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
@@ -841,7 +835,7 @@ int main(
       face_ops->abs(fvindx[3], fvindx[2]);
       double val_abs = 4.0;
       if (!doubleDataSameAsValue(fvindx[3], val_abs, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #13: math::HierarchyFaceDataOpsReal::abs()\n"
          << "Expected: v3 = " << val_abs << std::endl;
@@ -949,7 +943,7 @@ int main(
          }
       }
       if (!bogus_value_test_passed) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #14:  Place some bogus values on coarse level"
          << std::endl;
@@ -963,12 +957,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1984.0;
-         }
-         else {
+         } else {
             compare = 10660.0;
          }
          if (!tbox::MathUtilities<double>::equalEps(bogus_l1_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #15: math::HierarchyFaceDataOpsReal::L1Norm()"
             << " - w/o control weight\n"
@@ -984,12 +977,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 4.0;
-         }
-         else {
+         } else {
             compare = 6.0;
          }
          if (!tbox::MathUtilities<double>::equalEps(correct_l1_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #16: math::HierarchyFaceDataOpsReal::L1Norm()"
             << " - w/control weight\n"
@@ -1005,12 +997,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 4.0;
-         }
-         else {
+         } else {
             compare = 4.89897948557;
          }
          if (!tbox::MathUtilities<double>::equalEps(l2_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #17: math::HierarchyFaceDataOpsReal::L2Norm()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -1022,7 +1013,7 @@ int main(
       // Expected:  bogus_max_norm = 1000.0
       double bogus_max_norm = face_ops->maxNorm(fvindx[2]);
       if (!tbox::MathUtilities<double>::equalEps(bogus_max_norm, 1000.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #18: math::HierarchyFaceDataOpsReal::L1Norm()"
          << " - w/o control weight\n"
@@ -1034,7 +1025,7 @@ int main(
       // Expected:  max_norm = 4.0
       double max_norm = face_ops->maxNorm(fvindx[2], fwgt_id);
       if (!tbox::MathUtilities<double>::equalEps(max_norm, 4.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #19: math::HierarchyFaceDataOpsReal::L1Norm()"
          << " - w/control weight\n"
@@ -1052,7 +1043,7 @@ int main(
       face_ops->linearSum(fvindx[3], 2.0, fvindx[1], 0.0, fvindx[0]);
       double val_linearSum = 5.0;
       if (!doubleDataSameAsValue(fvindx[3], val_linearSum, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #20: math::HierarchyFaceDataOpsReal::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
@@ -1064,7 +1055,7 @@ int main(
       face_ops->axmy(fvindx[3], 3.0, fvindx[1], fvindx[0]);
       double val_axmy = 6.5;
       if (!doubleDataSameAsValue(fvindx[3], val_axmy, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #21: math::HierarchyFaceDataOpsReal::axmy()\n"
          << "Expected: v3 = " << val_axmy << std::endl;
@@ -1078,12 +1069,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 17.5;
-         }
-         else {
+         } else {
             compare = 26.25;
          }
          if (!tbox::MathUtilities<double>::equalEps(cdot, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #22a: math::HierarchyFaceDataOpsReal::dot() - (ind2) * (ind1)\n"
             << "Expected Value = " << compare << ", Computed Value = "
@@ -1098,12 +1088,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 17.5;
-         }
-         else {
+         } else {
             compare = 26.25;
          }
          if (!tbox::MathUtilities<double>::equalEps(cdot, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #22b: math::HierarchyFaceDataOpsReal::dot() - (ind1) * (ind2)\n"
             << "Expected Value = " << compare << ", Computed Value = "
@@ -1112,14 +1101,14 @@ int main(
       }
 
       // deallocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->deallocatePatchData(fwgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->deallocatePatchData(fvindx[iv]);
          }
       }
 
-      for (iv = 0; iv < NVARS; iv++) {
+      for (iv = 0; iv < NVARS; ++iv) {
          fvar[iv].reset();
       }
       fwgt.reset();
@@ -1155,7 +1144,7 @@ doubleDataSameAsValue(
 
    int ln;
    boost::shared_ptr<hier::Patch> patch;
-   for (ln = 0; ln < 2; ln++) {
+   for (ln = 0; ln < 2; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {

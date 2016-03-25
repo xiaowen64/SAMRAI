@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Algorithms for working with mapping Connectors.
  *
  ************************************************************************/
@@ -56,7 +56,9 @@ BaseConnectorAlgorithm::setupCommunication(
    comm_stage.setCommunicationWaitTimer(mpi_wait_timer);
    const int n_comm = static_cast<int>(
          incoming_ranks.size() + outgoing_ranks.size());
-   all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+   if (n_comm > 0) {
+      all_comms = new tbox::AsyncCommPeer<int>[n_comm];
+   }
 
    const int tag0 = ++operation_mpi_tag;
    const int tag1 = ++operation_mpi_tag;
@@ -127,7 +129,7 @@ BaseConnectorAlgorithm::packReferencedNeighbors(
     * that have been referenced.
     */
    const int offset = send_mesg[idx_offset_to_ref] =
-      static_cast<int>(send_mesg.size());
+         static_cast<int>(send_mesg.size());
    const int n_referenced_nabrs = static_cast<int>(
          referenced_new_head_nabrs.size() + referenced_new_base_nabrs.size());
    const int reference_section_size =
@@ -173,7 +175,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
    Connector& new_base_to_new_head,
    Connector* new_head_to_new_base,
    const std::set<int>& incoming_ranks,
-   tbox::AsyncCommPeer<int> all_comms[],
+   tbox::AsyncCommPeer<int>* all_comms,
    tbox::AsyncCommStage& comm_stage,
    const boost::shared_ptr<tbox::Timer>& receive_and_unpack_timer,
    bool print_steps) const
@@ -182,8 +184,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
    /*
     * Receive and unpack messages.
     */
-   while ( comm_stage.numberOfCompletedMembers() > 0 ||
-           comm_stage.advanceSome() ) {
+   while (comm_stage.hasCompletedMembers() || comm_stage.advanceSome()) {
 
       tbox::AsyncCommPeer<int>* peer =
          CPP_CAST<tbox::AsyncCommPeer<int> *>(comm_stage.popCompletionQueue());
@@ -201,8 +202,7 @@ BaseConnectorAlgorithm::receiveAndUnpack(
             new_base_to_new_head,
             new_head_to_new_base,
             print_steps);
-      }
-      else {
+      } else {
          // Sent to this peer.  No follow-up needed.
          if (print_steps) {
             tbox::plog << "Sent to " << peer->getPeerRank() << std::endl;
@@ -285,8 +285,8 @@ BaseConnectorAlgorithm::unpackDiscoveryMessage(
                        << std::endl;
          }
          TBOX_ASSERT(new_base_to_new_head.hasLocalNeighbor(
-            affected_nbrhd,
-            box_gone));
+               affected_nbrhd,
+               box_gone));
          new_base_to_new_head.eraseNeighbor(box_gone, affected_nbrhd);
       }
       TBOX_ASSERT(ptr != ptr_end);

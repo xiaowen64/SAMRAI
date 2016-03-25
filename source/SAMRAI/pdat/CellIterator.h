@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator for cell centered patch data types
  *
  ************************************************************************/
@@ -81,7 +81,7 @@ public:
     * Extract a pointer to the cell index corresponding to the iterator
     * position in the box.
     */
-   const CellIndex*
+   const CellIndex *
    operator -> () const
    {
       return &d_index;
@@ -125,8 +125,12 @@ public:
    }
 
 private:
-   friend CellIterator CellGeometry::begin(const hier::Box& box);
-   friend CellIterator CellGeometry::end(const hier::Box& box);
+   friend CellIterator
+   CellGeometry::begin(
+      const hier::Box& box);
+   friend CellIterator
+   CellGeometry::end(
+      const hier::Box& box);
 
    /**
     * Constructor for the cell iterator.  The iterator will enumerate

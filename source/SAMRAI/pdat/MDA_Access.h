@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Light-weight array class
  *
  ************************************************************************/
@@ -109,8 +109,8 @@ public:
     * it is for the constructor taking final indices instead of sizes.
     */
    MDA_IndexRange(
-      /*! Array sizes                   */const size_t* sz = ((size_t *)0),
-      /*! Array starting indices        */const index_t* st = ((index_t *)0))
+      /*! Array sizes                   */ const size_t* sz = ((size_t *)0),
+      /*! Array starting indices        */ const index_t* st = ((index_t *)0))
    {
       dir_t i;
       if (st) {
@@ -145,8 +145,8 @@ public:
     * If @c sf is @c NULL, sizes are set to zero.
     */
    MDA_IndexRange(
-      /*! Array of initial indices      */const index_t* si,
-      /*! Array of final indices        */const index_t* sf)
+      /*! Array of initial indices      */ const index_t* si,
+      /*! Array of final indices        */ const index_t* sf)
    {
       index_t i;
       if (si) {
@@ -1215,7 +1215,7 @@ public:
       index_t i1,
       index_t i2,
       index_t i3) const
-    {
+   {
       return d_ptr[d_order.offset(i0, i1, i2, i3)];
    }
 
@@ -1405,7 +1405,8 @@ public:
    /*!
     * @brief Assign value from an object of the non-const version.
     */
-   const MDA_AccessConst& operator = (
+   const MDA_AccessConst&
+   operator = (
       const MDA_Access<MDA_TYPE, MDA_DIM, OrderType>& r) {
       (MDA_Access<MDA_TYPE, MDA_DIM, OrderType>&)(*this) = r;
       return *this;

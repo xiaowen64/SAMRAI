@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator for edge centered patch data types
  *
  ************************************************************************/
@@ -20,8 +20,8 @@ EdgeIterator::EdgeIterator(
    d_box(EdgeGeometry::toEdgeBox(box, axis))
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(d_box.getDim().getValue() - 1) + 1;
    }
 }
 
@@ -39,11 +39,11 @@ EdgeIterator::~EdgeIterator()
 EdgeIterator&
 EdgeIterator::operator ++ ()
 {
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -56,11 +56,11 @@ EdgeIterator::operator ++ (
    int)
 {
    EdgeIterator tmp = *this;
-   d_index(0)++;
-   for (int i = 0; i < d_box.getDim().getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < d_box.getDim().getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }

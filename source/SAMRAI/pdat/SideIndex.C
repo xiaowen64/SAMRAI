@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -47,7 +47,7 @@ SideIndex::toCell(
 
    hier::Index index(dim);
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       index(i) = (*this)(i);
    }
 

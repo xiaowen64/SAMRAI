@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -661,7 +661,7 @@ private:
    int d_Ak0_id;
 
    static boost::shared_ptr<pdat::OutersideVariable<double> >
-     s_Ak0_var[SAMRAI::MAX_DIM_VAL];
+   s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Depth of the solution variable.

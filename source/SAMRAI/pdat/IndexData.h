@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -521,12 +521,12 @@ private:
 
    // Unimplemented copy constructor
    IndexData(
-      const IndexData<TYPE, BOX_GEOMETRY>&);
+      const IndexData&);
 
    // Unimplemented assignment operator
-   void
+   IndexData&
    operator = (
-      const IndexData<TYPE, BOX_GEOMETRY>&);
+      const IndexData&);
 
    const tbox::Dimension d_dim;
 
@@ -641,14 +641,14 @@ public:
    /**
     * Return a pointer to the current item in the irregular index set.
     */
-   TYPE*
+   TYPE *
    operator -> ();
 
    /**
     * Return a const pointer to the current item in the irregular
     * index set.
     */
-   const TYPE*
+   const TYPE *
    operator -> () const;
 
    /**
@@ -706,7 +706,8 @@ private:
       IndexData<TYPE, BOX_GEOMETRY>* index_data,
       IndexDataNode<TYPE, BOX_GEOMETRY>* node);
 
-   IndexDataNode<TYPE, BOX_GEOMETRY>& getNode();
+   IndexDataNode<TYPE, BOX_GEOMETRY>&
+   getNode();
 
    IndexData<TYPE, BOX_GEOMETRY>* d_index_data;
 

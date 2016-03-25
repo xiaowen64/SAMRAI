@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real face-centered patch data.
  *
  ************************************************************************/
@@ -50,7 +50,7 @@ PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
 
    int retval = 0;
    const hier::Box ibox = box * data->getGhostBox();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box dbox = pdat::FaceGeometry::toFaceBox(ibox, d);
       retval += (dbox.size() * data->getDepth());
    }
@@ -77,7 +77,7 @@ PatchFaceDataNormOpsReal<TYPE>::sumControlVolumes(
    int dimVal = data->getDim().getValue();
 
    double retval = 0.0;
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       retval += d_array_ops.sumControlVolumes(data->getArrayData(d),
             cvol->getArrayData(d),
@@ -98,7 +98,7 @@ PatchFaceDataNormOpsReal<TYPE>::abs(
 
    int dimVal = box.getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.abs(dst->getArrayData(d),
          src->getArrayData(d),
@@ -120,14 +120,14 @@ PatchFaceDataNormOpsReal<TYPE>::L1Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1Norm(data->getArrayData(d), face_box);
       }
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.L1NormWithControlVolume(data->getArrayData(d),
                cvol->getArrayData(d),
@@ -151,7 +151,7 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2Norm(data->getArrayData(d), face_box);
          retval += aval * aval;
@@ -159,7 +159,7 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.L2NormWithControlVolume(
                data->getArrayData(d),
@@ -186,7 +186,7 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2Norm(data->getArrayData(d),
                weight->getArrayData(d),
@@ -196,7 +196,7 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
    } else {
       TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          double aval = d_array_ops.weightedL2NormWithControlVolume(
                data->getArrayData(d),
@@ -259,14 +259,14 @@ PatchFaceDataNormOpsReal<TYPE>::maxNorm(
 
    double retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
                d_array_ops.maxNorm(data->getArrayData(d), face_box));
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box =
             pdat::FaceGeometry::toFaceBox(box, d);
          retval = tbox::MathUtilities<double>::Max(retval,
@@ -293,14 +293,14 @@ PatchFaceDataNormOpsReal<TYPE>::dot(
 
    TYPE retval = 0.0;
    if (!cvol) {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dot(data1->getArrayData(d),
                data2->getArrayData(d),
                face_box);
       }
    } else {
-      for (int d = 0; d < dimVal; d++) {
+      for (int d = 0; d < dimVal; ++d) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
          retval += d_array_ops.dotWithControlVolume(
                data1->getArrayData(d),
@@ -325,7 +325,7 @@ PatchFaceDataNormOpsReal<TYPE>::integral(
 
    TYPE retval = 0.0;
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       retval += d_array_ops.integral(data->getArrayData(d),
             vol->getArrayData(d),

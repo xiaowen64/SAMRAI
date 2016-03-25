@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated edge centered patch data type
  *
  ************************************************************************/
@@ -47,7 +47,7 @@ EdgeData<TYPE>::EdgeData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::Box edge_box =
          EdgeGeometry::toEdgeBox(getGhostBox(), d);
       d_data[d].reset(new ArrayData<TYPE>(edge_box, depth));
@@ -67,7 +67,7 @@ EdgeData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 EdgeData<TYPE>::getPointer(
    int axis,
    int depth)
@@ -79,7 +79,7 @@ EdgeData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 EdgeData<TYPE>::getPointer(
    int axis,
    int depth) const
@@ -162,7 +162,7 @@ EdgeData<TYPE>::copy(
    if (t_src == 0) {
       src.copy2(*this);
    } else {
-      for (int d = 0; d < getDim().getValue(); d++) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::Box box = d_data[d]->getBox() * t_src->d_data[d]->getBox();
          if (!box.empty()) {
             d_data[d]->copy(*(t_src->d_data[d]), box);
@@ -182,7 +182,7 @@ EdgeData<TYPE>::copy2(
 
    TBOX_ASSERT(t_dst != 0);
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::Box box = d_data[d]->getBox() * t_dst->d_data[d]->getBox();
       if (!box.empty()) {
          t_dst->d_data[d]->copy(*(d_data[d]), box);
@@ -219,7 +219,7 @@ EdgeData<TYPE>::copy(
 
          const hier::Transformation& transformation =
             t_overlap->getTransformation();
-         for (int d = 0; d < getDim().getValue(); d++) {
+         for (int d = 0; d < getDim().getValue(); ++d) {
             const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
             d_data[d]->copy(*(t_src->d_data[d]), box_list, transformation);
          }
@@ -247,7 +247,7 @@ EdgeData<TYPE>::copy2(
        hier::Transformation::NO_ROTATE) {
 
       const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-      for (int d = 0; d < getDim().getValue(); d++) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
          t_dst->d_data[d]->copy(*(d_data[d]), box_list, src_offset);
       }
@@ -264,7 +264,7 @@ EdgeData<TYPE>::copyOnBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
-   for (int axis = 0; axis < getDim().getValue(); axis++) {
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
       const hier::Box edge_box = EdgeGeometry::toEdgeBox(box, axis);
       d_data[axis]->copy(src.getArrayData(axis), edge_box);
    }
@@ -301,8 +301,7 @@ EdgeData<TYPE>::copyWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       hier::Box edge_rotatebox(EdgeGeometry::toEdgeBox(rotatebox, i));
@@ -325,7 +324,7 @@ EdgeData<TYPE>::copyWithRotation(
                EdgeIndex src_index(dst_index);
                EdgeGeometry::transform(src_index, back_trans);
 
-               for (int d = 0; d < depth; d++) {
+               for (int d = 0; d < depth; ++d) {
                   (*this)(dst_index, d) = src(src_index, d);
                }
             }
@@ -352,7 +351,7 @@ EdgeData<TYPE>::copyDepth(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::Box box = d_data[d]->getBox() * src.d_data[d]->getBox();
       if (!box.empty()) {
          d_data[d]->copyDepth(dst_depth, *(src.d_data[d]), src_depth, box);
@@ -388,7 +387,7 @@ EdgeData<TYPE>::getDataStreamSize(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
    int size = 0;
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       size += d_data[d]->getDataStreamSize(
             t_overlap->getDestinationBoxContainer(d),
             offset);
@@ -419,7 +418,7 @@ EdgeData<TYPE>::packStream(
        hier::Transformation::NO_ROTATE) {
 
       const hier::Transformation& transformation = t_overlap->getTransformation();
-      for (int d = 0; d < getDim().getValue(); d++) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
          if (!boxes.isEmpty()) {
             d_data[d]->packStream(stream, boxes, transformation);
@@ -462,7 +461,7 @@ EdgeData<TYPE>::packWithRotation(
 
    const int depth = getDepth();
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
       const int size = depth * overlap_boxes.getTotalSizeOfBoxes();
@@ -479,7 +478,7 @@ EdgeData<TYPE>::packWithRotation(
 
          if (!copybox.empty()) {
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
 
                hier::Box::iterator ciend(copybox.end());
                for (hier::Box::iterator ci(copybox.begin());
@@ -490,7 +489,7 @@ EdgeData<TYPE>::packWithRotation(
                   EdgeGeometry::transform(src_index, back_trans);
 
                   buffer[buf_count] = (*this)(src_index, d);
-                  buf_count++;
+                  ++buf_count;
                }
             }
          }
@@ -510,7 +509,7 @@ EdgeData<TYPE>::unpackStream(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
       if (!boxes.isEmpty()) {
          d_data[d]->unpackStream(stream, boxes, offset);
@@ -539,7 +538,7 @@ EdgeData<TYPE>::getSizeOfData(
 
    size_t size = 0;
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
-   for (int d = 0; d < box.getDim().getValue(); d++) {
+   for (int d = 0; d < box.getDim().getValue(); ++d) {
       const hier::Box edge_box = EdgeGeometry::toEdgeBox(ghost_box, d);
       size += ArrayData<TYPE>::getSizeOfData(edge_box, depth);
    }
@@ -562,7 +561,7 @@ EdgeData<TYPE>::fill(
 {
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       d_data[i]->fill(t, d);
    }
 }
@@ -578,7 +577,7 @@ EdgeData<TYPE>::fill(
 
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       d_data[i]->fill(t, EdgeGeometry::toEdgeBox(box, i), d);
    }
 }
@@ -588,7 +587,7 @@ void
 EdgeData<TYPE>::fillAll(
    const TYPE& t)
 {
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       d_data[i]->fillAll(t);
    }
 }
@@ -601,7 +600,7 @@ EdgeData<TYPE>::fillAll(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       d_data[i]->fillAll(t, EdgeGeometry::toEdgeBox(box, i));
    }
 }
@@ -622,7 +621,7 @@ EdgeData<TYPE>::print(
    std::ostream& os,
    int prec) const
 {
-   for (int axis = 0; axis < getDim().getValue(); axis++) {
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array axis = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
@@ -639,7 +638,7 @@ EdgeData<TYPE>::print(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((depth >= 0) && (depth < d_depth));
 
-   for (int axis = 0; axis < getDim().getValue(); axis++) {
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array axis = " << axis << std::endl;
       printAxis(axis, box, depth, os, prec);
    }
@@ -656,7 +655,7 @@ EdgeData<TYPE>::printAxis(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT((axis >= 0) && (axis < getDim().getValue()));
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       printAxis(axis, box, d, os, prec);
    }
@@ -711,7 +710,7 @@ EdgeData<TYPE>::getFromRestart(
    d_depth = restart_db->getInteger("d_depth");
 
    boost::shared_ptr<tbox::Database> array_database;
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = restart_db->getDatabase(array_name);
       d_data[i]->getFromRestart(array_database);
@@ -741,7 +740,7 @@ EdgeData<TYPE>::putToRestart(
    restart_db->putInteger("d_depth", d_depth);
 
    boost::shared_ptr<tbox::Database> array_database;
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = restart_db->putDatabase(array_name);
       d_data[i]->putToRestart(array_database);

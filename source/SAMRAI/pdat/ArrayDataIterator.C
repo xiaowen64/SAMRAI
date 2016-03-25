@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator for array patch data types
  *
  ************************************************************************/
@@ -19,8 +19,8 @@ ArrayDataIterator::ArrayDataIterator(
    d_box(box)
 {
    if (!d_box.empty() && !begin) {
-      d_index(d_box.getDim().getValue()-1) =
-         d_box.upper(d_box.getDim().getValue()-1) + 1;
+      d_index(d_box.getDim().getValue() - 1) =
+         d_box.upper(d_box.getDim().getValue() - 1) + 1;
    }
 }
 
@@ -39,11 +39,11 @@ ArrayDataIterator&
 ArrayDataIterator::operator ++ ()
 {
    const tbox::Dimension& dim(d_box.getDim());
-   d_index(0)++;
-   for (int i = 0; i < dim.getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < dim.getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }
@@ -57,11 +57,11 @@ ArrayDataIterator::operator ++ (
 {
    ArrayDataIterator tmp = *this;
    const tbox::Dimension& dim(d_box.getDim());
-   d_index(0)++;
-   for (int i = 0; i < dim.getValue() - 1; i++) {
+   ++d_index(0);
+   for (int i = 0; i < dim.getValue() - 1; ++i) {
       if (d_index(i) > d_box.upper(i)) {
          d_index(i) = d_box.lower(i);
-         d_index(i + 1)++;
+         ++d_index(i + 1);
       } else {
          break;
       }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated outernode centered patch data type
  *
  ************************************************************************/
@@ -637,13 +637,13 @@ private:
    static const int PDAT_OUTERNODEDATA_VERSION;
 
    // Unimplemented copy constructor
-   OuternodeData<TYPE>(
-      const OuternodeData<TYPE>&);
+   OuternodeData(
+      const OuternodeData&);
 
    // Unimplemented assignment operator
-   void
+   OuternodeData&
    operator = (
-      const OuternodeData<TYPE>&);
+      const OuternodeData&);
 
    //@
    //! @name Internal implementations of data copy operations.

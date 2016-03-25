@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   High-level solver (wrapper) for scalar poisson equation.
  *
  ************************************************************************/
@@ -26,8 +26,8 @@ namespace solv {
  */
 
 bool CellPoissonFACSolver::s_initialized = 0;
-int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL] = {0};
-int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = {0};
+int CellPoissonFACSolver::s_weight_id[SAMRAI::MAX_DIM_VAL] = { 0 };
+int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = { 0 };
 
 /*
  *************************************************************************
@@ -104,7 +104,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
             hier::IntVector::getZero(d_dim));
    }
 
-   s_instance_counter[d_dim.getValue() - 1]++;
+   ++s_instance_counter[d_dim.getValue() - 1];
 }
 
 /*
@@ -118,7 +118,7 @@ CellPoissonFACSolver::CellPoissonFACSolver(
 
 CellPoissonFACSolver::~CellPoissonFACSolver()
 {
-   s_instance_counter[d_dim.getValue() - 1]--;
+   --s_instance_counter[d_dim.getValue() - 1];
 
    deallocateSolverState();
 
@@ -401,10 +401,10 @@ CellPoissonFACSolver::createVectorWrappers(
    boost::shared_ptr<hier::Variable> variable;
 
    if (!d_uv || d_uv->getComponentDescriptorIndex(0) != u) {
-     d_uv.reset(new SAMRAIVectorReal<double>(d_object_name + "::uv",
-                                             d_hierarchy,
-                                             d_ln_min,
-                                             d_ln_max));
+      d_uv.reset(new SAMRAIVectorReal<double>(d_object_name + "::uv",
+            d_hierarchy,
+            d_ln_min,
+            d_ln_max));
       vdb.mapIndexToVariable(u, variable);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!variable) {
@@ -420,9 +420,9 @@ CellPoissonFACSolver::createVectorWrappers(
 
    if (!d_fv || d_fv->getComponentDescriptorIndex(0) != f) {
       d_fv.reset(new SAMRAIVectorReal<double>(d_object_name + "::fv",
-                                              d_hierarchy,
-                                              d_ln_min,
-                                              d_ln_max));
+            d_hierarchy,
+            d_ln_min,
+            d_ln_max));
       vdb.mapIndexToVariable(f, variable);
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (!variable) {

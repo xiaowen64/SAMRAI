@@ -3,13 +3,14 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility functions for logging
  *
  ************************************************************************/
 
 #include "SAMRAI/tbox/Logger.h"
 #include "SAMRAI/tbox/PIO.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 namespace SAMRAI {
 namespace tbox {
@@ -134,7 +135,7 @@ Logger::finalizeCallback()
    }
 }
 
-Logger*
+Logger *
 Logger::getInstance()
 {
    if (s_instance == 0) {
@@ -142,6 +143,24 @@ Logger::getInstance()
    }
 
    return s_instance;
+}
+
+Logger::Appender::Appender()
+{
+}
+
+Logger::Appender::Appender(
+   const Appender& other)
+{
+   NULL_USE(other);
+}
+
+Logger::Appender&
+Logger::Appender::operator = (
+   const Appender& rhs)
+{
+   NULL_USE(rhs);
+   return *this;
 }
 
 Logger::Appender::~Appender()

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Level solver for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -98,7 +98,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
    if (boundary_type == "Dirichlet") {
       d_flux_id = -1;
       d_flag_id = -1;
-      for (k = 0; k < 2 * d_dim.getValue(); k++) {
+      for (k = 0; k < 2 * d_dim.getValue(); ++k) {
          d_bdry_types[k] = DIRICHLET;
       }
    } else if (boundary_type == "Neumann") {
@@ -110,7 +110,7 @@ SimpleCellRobinBcCoefs::setBoundaries(
                           << ") for Neumann boundary condition.\n");
       }
 #endif
-      for (k = 0; k < 2 * d_dim.getValue(); k++) {
+      for (k = 0; k < 2 * d_dim.getValue(); ++k) {
          d_bdry_types[k] = NEUMANN;
       }
       d_flux_id = fluxes;
@@ -133,11 +133,11 @@ SimpleCellRobinBcCoefs::setBoundaries(
       d_flux_id = fluxes;
       d_flag_id = flags;
       if (bdry_types != 0) {
-         for (k = 0; k < 2 * d_dim.getValue(); k++) {
+         for (k = 0; k < 2 * d_dim.getValue(); ++k) {
             d_bdry_types[k] = bdry_types[k];
          }
       } else {
-         for (k = 0; k < 2 * d_dim.getValue(); k++) {
+         for (k = 0; k < 2 * d_dim.getValue(); ++k) {
             d_bdry_types[k] = MIXED;
          }
       }
@@ -250,7 +250,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                      << d_flux_id << ") does not exist.");
          }
          flux_data_ptr =
-            BOOST_CAST<pdat::OuterfaceData<double>,hier::PatchData>(patch_data);
+            BOOST_CAST<pdat::OuterfaceData<double>, hier::PatchData>(patch_data);
          TBOX_ASSERT(flux_data_ptr);
          if (d_diffusion_coef_id != -1) {
             patch_data = patch.getPatchData(d_diffusion_coef_id);
@@ -273,7 +273,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
                                      << d_flag_id << ") does not exist.");
          }
          flag_data_ptr = BOOST_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
-            patch.getPatchData(d_flag_id));
+               patch.getPatchData(d_flag_id));
          TBOX_ASSERT(flag_data_ptr);
       }
    }
@@ -376,7 +376,7 @@ SimpleCellRobinBcCoefs::setBcCoefs(
       const int axis = location_index / 2;
       const int face = location_index % 2;
       flag_data_ptr = BOOST_CAST<pdat::OuterfaceData<int>, hier::PatchData>(
-         patch.getPatchData(d_flag_id));
+            patch.getPatchData(d_flag_id));
       TBOX_ASSERT(flag_data_ptr);
       pdat::OuterfaceData<int>& flag_data(*flag_data_ptr);
       hier::Index offset_to_inside(d_dim, 0);
@@ -560,7 +560,7 @@ SimpleCellRobinBcCoefs::cacheDirichletData(
                patch.getPatchData(dirichlet_data_id)));
          boost::shared_ptr<geom::CartesianPatchGeometry> pg(
             BOOST_CAST<geom::CartesianPatchGeometry,
-               hier::PatchGeometry>(patch.getPatchGeometry()));
+                       hier::PatchGeometry>(patch.getPatchGeometry()));
 
          TBOX_ASSERT(cell_data);
          TBOX_ASSERT(pg);

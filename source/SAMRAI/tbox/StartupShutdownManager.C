@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Registry of shutdown routines to be called at program exit
  *
  ************************************************************************/
@@ -69,7 +69,7 @@ StartupShutdownManager::registerHandler(
       s_manager_list_last[priority]->next = item;
    }
    s_manager_list_last[priority] = item;
-   s_num_manager_items[priority]++;
+   ++s_num_manager_items[priority];
 }
 
 void
@@ -146,7 +146,7 @@ StartupShutdownManager::shutdown()
 
       for (int priority = s_number_of_priorities - 1;
            priority > -1;
-           priority--) {
+           --priority) {
          ListElement* item = s_manager_list[priority];
          while (item) {
             if (item->handler) {
@@ -165,7 +165,7 @@ StartupShutdownManager::shutdown()
 void
 StartupShutdownManager::setupSingleton()
 {
-   for (int priority = s_number_of_priorities - 1; priority > -1; priority--) {
+   for (int priority = s_number_of_priorities - 1; priority > -1; --priority) {
       s_manager_list[priority] = 0;
       s_manager_list_last[priority] = 0;
       s_num_manager_items[priority] = 0;
@@ -189,7 +189,7 @@ StartupShutdownManager::finalize()
 
       for (int priority = s_number_of_priorities - 1;
            priority > -1;
-           priority--) {
+           --priority) {
          ListElement* item = s_manager_list[priority];
          while (item) {
             if (item->handler) {
@@ -216,11 +216,11 @@ StartupShutdownManager::finalize()
    s_initialized = false;
 }
 
-StartupShutdownManager::AbstractHandler::~AbstractHandler()
+StartupShutdownManager::AbstractHandler::AbstractHandler()
 {
 }
 
-StartupShutdownManager::Handler::Handler()
+StartupShutdownManager::AbstractHandler::~AbstractHandler()
 {
 }
 
@@ -308,6 +308,10 @@ StartupShutdownManager::Handler::hasFinalize()
 StartupShutdownManager::ListElement::ListElement():
    handler(0),
    next(0)
+{
+}
+
+StartupShutdownManager::ListElement::~ListElement()
 {
 }
 

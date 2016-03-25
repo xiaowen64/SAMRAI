@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -125,11 +125,11 @@ Timer::start()
 
       if (d_is_running == true) {
          TBOX_ERROR("Illegal attempt to start timer '" << d_name
-                    << "' when it is already started.");
+                                                       << "' when it is already started.");
       }
       d_is_running = true;
 
-      d_accesses++;
+      ++d_accesses;
 
       Clock::timestamp(d_user_start_total,
          d_system_start_total,
@@ -165,7 +165,7 @@ Timer::stop()
 
       if (d_is_running == false) {
          TBOX_ERROR("Illegal attempt to stop timer '" << d_name
-                    << "' when it is already stopped.");
+                                                      << "' when it is already stopped.");
       }
       d_is_running = false;
 

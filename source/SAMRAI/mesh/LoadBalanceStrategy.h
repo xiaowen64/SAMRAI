@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for box load balancing routines.
  *
  ************************************************************************/
@@ -117,7 +117,7 @@ public:
    virtual void
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
-      hier::Connector* balance_to_anchor,
+      hier::Connector * balance_to_anchor,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
@@ -158,7 +158,7 @@ private:
    LoadBalanceStrategy(
       const LoadBalanceStrategy&);
 
-   void
+   LoadBalanceStrategy&
    operator = (
       const LoadBalanceStrategy&);
 

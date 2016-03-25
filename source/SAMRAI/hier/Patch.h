@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Patch container class for patch data objects
  *
  ************************************************************************/
@@ -456,7 +456,7 @@ public:
     * @brief Get the patch data items from the restart database.
     *
     * Patch state is read in from the database and all patch
-    * data objects specified in the component_selector are created.
+    * data objects specified in the PatchDataRestartManager are created.
     *
     * The class version and restart file version must be equal.
     *
@@ -465,37 +465,33 @@ public:
     * expected, and that the patch_number read in from the database
     * matches the patch number assigned to this Patch.
     * @note
-    * A warning will be printed to the log file if
-    * some patch data components that were requested through the
-    * component_selector are not found in the database.
+    * A warning will be printed to the log file if some patch data components
+    * that were requested through the PatchDataRestartManager are not found in
+    * the database.
     *
     * @param[in]  restart_db
-    * @param[in]  component_selector
     *
     * @pre restart_db
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& component_selector);
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write patch data and other patch information to the restart
     * database.
     *
     * Class version number and the state of the patch object are written.
-    * Patch data objects specified in the component selector are also written.
+    * Patch data objects specified in the PatchDataRestartManager are also
+    * written.
     *
     * @param[in]  restart_db
-    * @param[in]  patchdata_write_table The ComponentSelector specifying the
-    *             patch data components to write.
     *
     * @pre restart_db
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& patchdata_write_table) const;
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Print a patch (for debugging).
@@ -556,7 +552,7 @@ private:
     */
    Patch(
       const Patch&);
-   void
+   Patch&
    operator = (
       const Patch&);
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:
  *
  ************************************************************************/
@@ -130,7 +130,7 @@ CVODEModel::CVODEModel(
          IntVector(d_dim, 1));
 #ifdef USE_FAC_PRECONDITIONER
    d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion",
-      hier::IntVector::getOne(d_dim), 1));
+         hier::IntVector::getOne(d_dim), 1));
 
    d_diff_id = variable_db->registerVariableAndContext(d_diff_var,
          d_cur_cxt,
@@ -162,30 +162,29 @@ CVODEModel::CVODEModel(
     */
    if (d_dim == Dimension(2)) {
       d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_2D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resize(NUM_2D_NODES);
 
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_2D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
 
       d_bdry_edge_val.resize(NUM_2D_EDGES);
       MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_val);
-   }
-   else if (d_dim == Dimension(3)) {
+   } else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
+      for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resize(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_3D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
@@ -193,7 +192,7 @@ CVODEModel::CVODEModel(
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resize(NUM_3D_NODES);
 
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_3D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
@@ -234,14 +233,13 @@ CVODEModel::CVODEModel(
     *  bdry_types holds a flag where 0 = dirichlet, 1 = neumann
     */
    if (d_dim == Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_edge_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
          if (d_scalar_bdry_edge_conds[i] == BdryCond::NEUMANN) d_bdry_types[i] = 1;
       }
-   }
-   else if (d_dim == Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+   } else if (d_dim == Dimension(3)) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_face_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
          if (d_scalar_bdry_face_conds[i] == BdryCond::NEUMANN) d_bdry_types[i] = 1;
@@ -255,13 +253,13 @@ CVODEModel::CVODEModel(
     * so we reset them to BdryCond::FLOW.
     */
    if (d_dim == Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_2D_NODES; i++) {
+      for (int i = 0; i < NUM_2D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -275,15 +273,14 @@ CVODEModel::CVODEModel(
                   i, d_scalar_bdry_node_conds[i]);
          }
       }
-   }
-   else if (d_dim == Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+   } else if (d_dim == Dimension(3)) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
+      for (int i = 0; i < NUM_3D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::XFLOW;
          }
@@ -301,7 +298,7 @@ CVODEModel::CVODEModel(
          }
       }
 
-      for (int i = 0; i < NUM_3D_NODES; i++) {
+      for (int i = 0; i < NUM_3D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -472,8 +469,7 @@ CVODEModel::setPhysicalBoundaryConditions(
          d_scalar_bdry_node_conds,
          d_bdry_edge_val);
 
-   }
-   else if (d_dim == Dimension(3)) {
+   } else if (d_dim == Dimension(3)) {
 
       /*
        *  Set boundary conditions for cells corresponding to patch faces.
@@ -618,14 +614,15 @@ CVODEModel::evaluateRHSFunction(
    boost::shared_ptr<RefineAlgorithm> bdry_fill_alg(
       new RefineAlgorithm());
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
-      lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
+                                               lookupRefineOperator(d_soln_var,
+                                                  "CONSERVATIVE_LINEAR_REFINE"));
    bdry_fill_alg->registerRefine(d_soln_scr_id,  // dest
       y_samvect->
       getComponentDescriptorIndex(0),                            // src
       d_soln_scr_id,                            // scratch
       refine_op);
 
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
       if (!level->checkAllocated(d_soln_scr_id)) {
          level->allocatePatchData(d_soln_scr_id);
@@ -645,7 +642,7 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Step through the levels and compute rhs
     */
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (PatchLevel::iterator ip(level->begin()); ip != level->end(); ++ip) {
@@ -709,7 +706,7 @@ CVODEModel::evaluateRHSFunction(
    /*
     * Deallocate scratch space.
     */
-   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (int ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       hierarchy->getPatchLevel(ln)->deallocatePatchData(d_soln_scr_id);
    }
 
@@ -718,7 +715,7 @@ CVODEModel::evaluateRHSFunction(
     * evaluations.
     */
    d_current_soln_time = time;
-   d_number_rhs_eval++;
+   ++d_number_rhs_eval;
 
    return 0;
 }
@@ -746,9 +743,9 @@ int CVODEModel::CVSpgmrPrecondSet(
    SundialsAbstractVector* vtemp3)
 {
 #ifndef USE_FAC_PRECONDITIONER
-  NULL_USE(t);
-  NULL_USE(y);
-  NULL_USE(gamma);
+   NULL_USE(t);
+   NULL_USE(y);
+   NULL_USE(gamma);
 #endif
    NULL_USE(fy);
    NULL_USE(jok);
@@ -775,7 +772,8 @@ int CVODEModel::CVSpgmrPrecondSet(
     */
    RefineAlgorithm fill_soln_vector_bounds;
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
-      lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
+                                               lookupRefineOperator(d_soln_var,
+                                                  "CONSERVATIVE_LINEAR_REFINE"));
    fill_soln_vector_bounds.registerRefine(d_soln_scr_id,
       y_samvect->getComponentDescriptorIndex(0),
       d_soln_scr_id,
@@ -787,7 +785,8 @@ int CVODEModel::CVSpgmrPrecondSet(
     */
    CoarsenAlgorithm fill_soln_interior_on_coarser(d_dim);
    boost::shared_ptr<CoarsenOperator> coarsen_op(d_grid_geometry->
-      lookupCoarsenOperator(d_soln_var, "CONSERVATIVE_COARSEN"));
+                                                 lookupCoarsenOperator(d_soln_var,
+                                                    "CONSERVATIVE_COARSEN"));
 
    fill_soln_interior_on_coarser.registerCoarsen(y_indx,
       y_indx,
@@ -798,7 +797,7 @@ int CVODEModel::CVSpgmrPrecondSet(
     */
    for (int amr_level = hierarchy->getFinestLevelNumber();
         amr_level >= 0;
-        amr_level--) {
+        --amr_level) {
       boost::shared_ptr<PatchLevel> level(
          hierarchy->getPatchLevel(amr_level));
 
@@ -879,8 +878,7 @@ int CVODEModel::CVSpgmrPrecondSet(
                   neuf_data->getPointer(0, 1), // x upper
                   neuf_data->getPointer(1, 0), // y lower
                   neuf_data->getPointer(1, 1)); // y upper
-            }
-            else if (d_dim == Dimension(3)) {
+            } else if (d_dim == Dimension(3)) {
                SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
                   ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
@@ -924,7 +922,7 @@ int CVODEModel::CVSpgmrPrecondSet(
    /*
     * increment counter for number of precond setup calls
     */
-   d_number_precond_setup++;
+   ++d_number_precond_setup;
 
 #endif
    /*
@@ -998,7 +996,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
     */
    RefineAlgorithm fill_z_vector_bounds;
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
-      lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
+                                               lookupRefineOperator(d_soln_var,
+                                                  "CONSERVATIVE_LINEAR_REFINE"));
    fill_z_vector_bounds.registerRefine(d_soln_scr_id,
       z_indx,
       d_soln_scr_id,
@@ -1009,7 +1008,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * solution scratch context.
     */
    int ln;
-   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       if (!level->checkAllocated(d_soln_scr_id)) {
@@ -1120,7 +1119,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
    * into the z vector.
    *
    ******************************************************************/
-   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; ln--) {
+   for (ln = hierarchy->getFinestLevelNumber(); ln >= 0; --ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       for (PatchLevel::iterator p(level->begin()); p != level->end(); ++p) {
@@ -1158,7 +1157,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
    /*
     * Increment counter for number of precond solves
     */
-   d_number_precond_solve++;
+   ++d_number_precond_solve;
 
    return ret_val;
 
@@ -1203,7 +1202,7 @@ CVODEModel::setupSolutionVector(
 
    const int nlevels = hierarchy->getNumberOfLevels();
 
-   for (int ln = 0; ln < nlevels; ln++) {
+   for (int ln = 0; ln < nlevels; ++ln) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
       TBOX_ASSERT(level);
       level->allocatePatchData(d_diff_id);
@@ -1315,8 +1314,8 @@ CVODEModel::getFromInput(
    IntVector periodic(d_grid_geometry->getPeriodicShift(IntVector(d_dim,
                             1)));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (input_db->keyExists("Boundary_data")) {
@@ -1329,8 +1328,7 @@ CVODEModel::getFromInput(
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
-      }
-      else if (d_dim == Dimension(3)) {
+      } else if (d_dim == Dimension(3)) {
          CartesianBoundaryUtilities3::getFromInput(this,
             boundary_db,
             d_scalar_bdry_face_conds,
@@ -1377,8 +1375,7 @@ void CVODEModel::putToRestart(
 
    if (d_dim == Dimension(2)) {
       restart_db->putDoubleVector("d_bdry_edge_val", d_bdry_edge_val);
-   }
-   else if (d_dim == Dimension(3)) {
+   } else if (d_dim == Dimension(3)) {
       restart_db->putIntegerVector("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
       restart_db->putDoubleVector("d_bdry_face_val", d_bdry_face_val);
@@ -1419,8 +1416,7 @@ void CVODEModel::getFromRestart()
 
    if (d_dim == Dimension(2)) {
       d_bdry_edge_val = db->getDoubleVector("d_bdry_edge_val");
-   }
-   else if (d_dim == Dimension(3)) {
+   } else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds =
          db->getIntegerVector("d_scalar_bdry_face_conds");
 
@@ -1450,8 +1446,7 @@ void CVODEModel::readDirichletBoundaryDataEntry(
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
-   }
-   else if (d_dim == Dimension(3)) {
+   } else if (d_dim == Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1472,8 +1467,7 @@ void CVODEModel::readNeumannBoundaryDataEntry(
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
-   }
-   else if (d_dim == Dimension(3)) {
+   } else if (d_dim == Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1526,7 +1520,7 @@ void CVODEModel::printClassData(
 
    os << "Boundary Condition data..." << endl;
    if (d_dim == Dimension(2)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
@@ -1535,15 +1529,14 @@ void CVODEModel::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
             << d_node_bdry_edge[j] << endl;
       }
-   }
-   else if (d_dim == Dimension(3)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); j++) {
+   } else if (d_dim == Dimension(3)) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
@@ -1552,14 +1545,14 @@ void CVODEModel::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
@@ -47,11 +47,10 @@ namespace tbox {
  * subtree is composed nodes with contiguous natural ordering.  This
  * again benefits communication.
  */
-   class BalancedDepthFirstTree : public RankTreeStrategy
+class BalancedDepthFirstTree:public RankTreeStrategy
 {
 
 public:
-
    /*!
     * @brief Constructor.
     */
@@ -95,7 +94,7 @@ public:
     */
    void
    setupTree(
-      const RankGroup &rank_group,
+      const RankGroup& rank_group,
       int my_rank);
 
    /*!
@@ -120,8 +119,8 @@ public:
     */
    int
    getChildRank(unsigned int child_number) const {
-      return ( child_number < d_num_children ) ?
-         d_children[child_number] : getInvalidRank();
+      return (child_number < d_num_children) ?
+             d_children[child_number] : getInvalidRank();
    }
 
    /*!
@@ -181,11 +180,19 @@ public:
     */
    void
    setLeftLeafSwitching(bool do_left_leaf_switch) {
-      TBOX_ASSERT( d_rank == getInvalidRank() );
+      TBOX_ASSERT(d_rank == getInvalidRank());
       d_do_left_leaf_switch = do_left_leaf_switch;
    }
 
 private:
+   // Unimplemented copy constructor.
+   BalancedDepthFirstTree(
+      const BalancedDepthFirstTree& other);
+
+   // Unimplemented assignment operator.
+   BalancedDepthFirstTree&
+   operator = (
+      const BalancedDepthFirstTree& rhs);
 
    /*!
     * @brief Set up the tree.

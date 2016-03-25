@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Weighted averaging operator for outerside double data on
  *                a Skeleton mesh.
  *
@@ -103,7 +103,7 @@ int SkeletonOutersideDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-SkeletonOutersideDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const {
+SkeletonOutersideDoubleWeightedAverage::getStencilWidth(const tbox::Dimension& dim) const {
    return hier::IntVector(dim, 0);
 }
 
@@ -150,9 +150,9 @@ void SkeletonOutersideDoubleWeightedAverage::coarsen(
    getDx(clev_num, cdx);
    getDx(flev_num, fdx);
 
-   for (int d = 0; d < cdata->getDepth(); d++) {
+   for (int d = 0; d < cdata->getDepth(); ++d) {
       // loop over lower and upper outerside arrays
-      for (int i = 0; i < 2; i++) {
+      for (int i = 0; i < 2; ++i) {
          if (d_dim == tbox::Dimension(1)) {
             SAMRAI_F77_FUNC(cartwgtavgoutfacedoub1d, CARTWGTAVGOUTFACEDOUB1D) (
                ifirstc(0), ilastc(0),
@@ -236,7 +236,7 @@ void SkeletonOutersideDoubleWeightedAverage::setDx(
    }
    if (static_cast<int>(d_dx[level_number].size()) < d_dim.getValue()) {
       d_dx[level_number].resize(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -246,7 +246,7 @@ void SkeletonOutersideDoubleWeightedAverage::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       dx[i] = d_dx[level_number][i];
    }
 }

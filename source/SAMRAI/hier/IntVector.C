@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A n-dimensional integer vector
  *
  ************************************************************************/
@@ -97,7 +97,7 @@ operator >> (
 {
    while (s.get() != '(') ;
 
-   for (int i = 0; i < rhs.getDim().getValue(); i++) {
+   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
       s >> rhs(i);
       if (i < rhs.getDim().getValue() - 1)
          while (s.get() != ',') ;
@@ -114,7 +114,7 @@ std::ostream& operator << (
 {
    s << '(';
 
-   for (int i = 0; i < rhs.getDim().getValue(); i++) {
+   for (int i = 0; i < rhs.getDim().getValue(); ++i) {
       s << rhs(i);
       if (i < rhs.getDim().getValue() - 1)
          s << ",";
@@ -153,11 +153,11 @@ IntVector::sortIntVector(
 {
    const IntVector num_cells = values;
 
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < d_dim.getValue(); ++d) {
       d_vector[d] = d;
    }
-   for (int d0 = 0; d0 < d_dim.getValue() - 1; d0++) {
-      for (int d1 = d0 + 1; d1 < d_dim.getValue(); d1++) {
+   for (int d0 = 0; d0 < d_dim.getValue() - 1; ++d0) {
+      for (int d1 = d0 + 1; d1 < d_dim.getValue(); ++d1) {
          if (values(d_vector[d0]) > values(d_vector[d1])) {
             int tmp_d = d_vector[d0];
             d_vector[d0] = d_vector[d1];
@@ -166,7 +166,7 @@ IntVector::sortIntVector(
       }
    }
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int d = 0; d < d_dim.getValue() - 1; d++) {
+   for (int d = 0; d < d_dim.getValue() - 1; ++d) {
       TBOX_ASSERT(values(d_vector[d]) <= values(d_vector[d + 1]));
    }
 #endif

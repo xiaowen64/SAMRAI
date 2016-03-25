@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Class to record statistics during program execution.
  *
  ************************************************************************/
@@ -60,8 +60,7 @@ Statistic::Statistic(
 
    if (stat_type == "PROC_STAT") {
       d_stat_type = PROC_STAT;
-   }
-   else if (stat_type == "PATCH_STAT") {
+   } else if (stat_type == "PATCH_STAT") {
       d_stat_type = PATCH_STAT;
    }
 
@@ -120,7 +119,7 @@ Statistic::recordProcStat(
       d_seq_counter = seq_num;
       d_proc_array[d_seq_counter].value = value;
    }
-   d_seq_counter++;
+   ++d_seq_counter;
 }
 
 void
@@ -168,7 +167,7 @@ Statistic::recordPatchStat(
          d_patch_array[seq_num].patch_records;
       bool found_patch_id = false;
       std::list<Statistic::PatchStatRecord>::iterator ir = records.begin();
-      for ( ; ir != records.end(); ir++) {
+      for ( ; ir != records.end(); ++ir) {
          if (ir->patch_id == patch_num) {
             ir->value = value;
             found_patch_id = true;
@@ -179,7 +178,7 @@ Statistic::recordPatchStat(
          patchitem_record.value = value;
          patchitem_record.patch_id = patch_num;
          d_patch_array[seq_num].patch_records.push_back(patchitem_record);
-         d_total_patch_entries++;
+         ++d_total_patch_entries;
       }
 
    }
@@ -189,7 +188,7 @@ Statistic::recordPatchStat(
       patchitem_record.value = value;
       patchitem_record.patch_id = patch_num;
       d_patch_array[seq_num].patch_records.push_back(patchitem_record);
-      d_total_patch_entries++;
+      ++d_total_patch_entries;
       d_seq_counter = seq_num + 1;
    }
 
@@ -259,7 +258,7 @@ Statistic::packStream(
    int is = 0;
    if (d_stat_type == PROC_STAT) {
 
-      for (is = 0; is < d_seq_counter; is++) {
+      for (is = 0; is < d_seq_counter; ++is) {
          ddata[is] = d_proc_array[is].value;
       }
 
@@ -268,16 +267,16 @@ Statistic::packStream(
       int mark = 4 + d_seq_counter;
       int isr = 0;
 
-      for (is = 0; is < d_seq_counter; is++) {
+      for (is = 0; is < d_seq_counter; ++is) {
          std::list<Statistic::PatchStatRecord>& lrec =
             d_patch_array[is].patch_records;
          idata[4 + is] = static_cast<int>(lrec.size());
 
          std::list<Statistic::PatchStatRecord>::iterator ilr = lrec.begin();
-         for ( ; ilr != lrec.end(); ilr++) {
+         for ( ; ilr != lrec.end(); ++ilr) {
             idata[mark + isr] = ilr->patch_id;
             ddata[isr] = ilr->value;
-            isr++;
+            ++isr;
          }
       }
    }
@@ -328,7 +327,7 @@ Statistic::unpackStream(
 
       if (seq_len > 0) {
          stream.unpack(&ddata[0], seq_len);
-         for (is = 0; is < seq_len; is++) {
+         for (is = 0; is < seq_len; ++is) {
             recordProcStat(ddata[is], is);
          }
       }
@@ -340,7 +339,7 @@ Statistic::unpackStream(
          stream.unpack(&inum_patches_data[0], seq_len);
 
          int total_seq_items = 0;
-         for (is = 0; is < seq_len; is++) {
+         for (is = 0; is < seq_len; ++is) {
             total_seq_items += inum_patches_data[is];
          }
 
@@ -351,10 +350,10 @@ Statistic::unpackStream(
          stream.unpack(&ddata[0], total_seq_items);
 
          int isr = 0;
-         for (is = 0; is < seq_len; is++) {
-            for (int ipsr = 0; ipsr < inum_patches_data[is]; ipsr++) {
+         for (is = 0; is < seq_len; ++is) {
+            for (int ipsr = 0; ipsr < inum_patches_data[is]; ++ipsr) {
                recordPatchStat(ipatch_num_data[isr], ddata[isr], is);
-               isr++;
+               ++isr;
             }
          }
       }
@@ -379,20 +378,20 @@ Statistic::printClassData(
 
    int is = 0;
    if (d_stat_type == PROC_STAT) {
-      for (is = 0; is < d_seq_counter; is++) {
+      for (is = 0; is < d_seq_counter; ++is) {
          stream << "     sequence[" << is
                 << "] : value = " << d_proc_array[is].value << std::endl;
       }
    } else {
-      for (is = 0; is < d_seq_counter; is++) {
+      for (is = 0; is < d_seq_counter; ++is) {
          stream << "     sequence[" << is
                 << "]" << std::endl;
 
-         const std::list<Statistic::PatchStatRecord>& psrl = 
+         const std::list<Statistic::PatchStatRecord>& psrl =
             d_patch_array[is].patch_records;
          std::list<Statistic::PatchStatRecord>::const_iterator ilr =
             psrl.begin();
-         for ( ; ilr != psrl.end(); ilr++) {
+         for ( ; ilr != psrl.end(); ++ilr) {
             stream << "        patch # = " << ilr->patch_id
                    << " : value = " << ilr->value << std::endl;
          }
@@ -417,7 +416,7 @@ Statistic::checkArraySizes(
          int old_array_size = d_proc_stat_array_size;
          d_proc_stat_array_size += ARRAY_INCREMENT;
          d_proc_array.resize(d_proc_stat_array_size);
-         for (int i = old_array_size; i < d_proc_stat_array_size; i++) {
+         for (int i = old_array_size; i < d_proc_stat_array_size; ++i) {
             d_proc_array[i].value = s_empty_seq_tag_entry;
          }
 
@@ -454,7 +453,7 @@ Statistic::putToRestart(
 
    if (d_stat_type == PROC_STAT) {
       std::vector<double> ddata(d_seq_counter);
-      for (i = 0; i < d_seq_counter; i++) {
+      for (i = 0; i < d_seq_counter; ++i) {
          ddata[i] = d_proc_array[i].value;
       }
 
@@ -471,16 +470,16 @@ Statistic::putToRestart(
       int il = 0;
       int mark = d_seq_counter;
 
-      for (i = 0; i < d_seq_counter; i++) {
+      for (i = 0; i < d_seq_counter; ++i) {
          const std::list<Statistic::PatchStatRecord>& records =
             d_patch_array[i].patch_records;
          idata[i] = static_cast<int>(records.size());  // # patches at seq num
          std::list<Statistic::PatchStatRecord>::const_iterator ir =
             records.begin();
-         for ( ; ir != records.end(); ir++) {
+         for ( ; ir != records.end(); ++ir) {
             idata[mark + il] = ir->patch_id;
             ddata[il] = ir->value;
-            il++;
+            ++il;
          }
       }
 
@@ -519,7 +518,7 @@ Statistic::getFromRestart(
    if (d_stat_type == PROC_STAT) {
       if (seq_entries > 0) {
          std::vector<double> ddata = restart_db->getDoubleVector("ddata");
-         for (i = 0; i < seq_entries; i++) {
+         for (i = 0; i < seq_entries; ++i) {
             recordProcStat(ddata[i], i);
          }
       }
@@ -530,7 +529,7 @@ Statistic::getFromRestart(
          std::vector<int> idata = restart_db->getIntegerVector("idata");
 
          std::vector<int> inum_patches(seq_entries);
-         for (i = 0; i < seq_entries; i++) {
+         for (i = 0; i < seq_entries; ++i) {
             inum_patches[i] = idata[i];
          }
 
@@ -539,12 +538,12 @@ Statistic::getFromRestart(
 
             int il = 0;
             int mark = seq_entries;
-            for (i = 0; i < seq_entries; i++) {
-               for (int ipsr = 0; ipsr < inum_patches[i]; ipsr++) {
+            for (i = 0; i < seq_entries; ++i) {
+               for (int ipsr = 0; ipsr < inum_patches[i]; ++ipsr) {
                   int patch_num = idata[mark + il];
                   double val = ddata[il];
                   recordPatchStat(patch_num, val, i);
-                  il++;
+                  ++il;
                }
             }
          }

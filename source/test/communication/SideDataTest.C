@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for side-centered patch data
  *
  ************************************************************************/
@@ -100,7 +100,7 @@ void SideDataTest::readTestInput(
    d_test_direction.resize(nkeys, hier::IntVector::getZero(d_dim));
    d_use_fine_value_at_interface.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       boost::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
@@ -156,7 +156,7 @@ void SideDataTest::registerVariables(
 
    d_variables.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables[i].reset(
          new pdat::SideVariable<double>(
             d_dim,
@@ -225,22 +225,22 @@ void SideDataTest::setConservativeData(
        *    u2(i,j,k) = (i + j)/ncells
        */
 
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          if (directions(axis)) {
             pdat::CellIterator ciend(pdat::CellGeometry::end(sbox));
             for (pdat::CellIterator ci(pdat::CellGeometry::begin(sbox));
                  ci != ciend; ++ci) {
                double value = 0.0;
-               for (i = 0; i < d_dim.getValue(); i++) {
+               for (i = 0; i < d_dim.getValue(); ++i) {
                   if (i != axis) {
                      value += (double)((*ci)(i));
                   }
                }
                value /= ncells;
                for (int side = pdat::SideIndex::Lower;
-                    side <= pdat::SideIndex::Upper; side++) {
+                    side <= pdat::SideIndex::Upper; ++side) {
                   pdat::SideIndex si(*ci, axis, side);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -269,15 +269,15 @@ void SideDataTest::setConservativeData(
 
       int coarse_ncells = ncells;
       double* delta = new double[max_ratio * d_dim.getValue()];
-      for (j = 0; j < d_dim.getValue(); j++) {
+      for (j = 0; j < d_dim.getValue(); ++j) {
          coarse_ncells /= ratio(j);
          double coarse_dx = dx[j] * ratio(j);
-         for (i = 0; i < ratio(j); i++) {
+         for (i = 0; i < ratio(j); ++i) {
             delta[j * max_ratio + i] = (i + 0.5) * dx[j] - coarse_dx * 0.5;
          }
       }
 
-      for (int axis = 0; axis < d_dim.getValue(); axis++) {
+      for (int axis = 0; axis < d_dim.getValue(); ++axis) {
          if (directions(axis)) {
             hier::IntVector ci(ratio.getDim());
             hier::IntVector del(ratio.getDim());
@@ -285,7 +285,7 @@ void SideDataTest::setConservativeData(
             for (pdat::CellIterator fi(pdat::CellGeometry::begin(sbox));
                  fi != fiend; ++fi) {
                double value = 0.0;
-               for (i = 0; i < d_dim.getValue(); i++) {
+               for (i = 0; i < d_dim.getValue(); ++i) {
                   if (i != axis) {
                      int findx = (*fi)(i);
                      ci(i) = ((findx < 0) ? (findx + 1) / ratio(i) - 1
@@ -297,16 +297,16 @@ void SideDataTest::setConservativeData(
                }
                value /= coarse_ncells;
 
-               for (j = 0; j < d_dim.getValue(); j++) {
+               for (j = 0; j < d_dim.getValue(); ++j) {
                   if (j != axis) {
                      value += ci(j) * del(j);
                   }
                }
 
                for (int side = pdat::SideIndex::Lower;
-                    side <= pdat::SideIndex::Upper; side++) {
+                    side <= pdat::SideIndex::Upper; ++side) {
                   pdat::SideIndex si(*fi, axis, side);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*data)(si, d) = value;
                   }
                }
@@ -336,7 +336,7 @@ void SideDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
@@ -354,7 +354,7 @@ void SideDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
@@ -402,13 +402,13 @@ void SideDataTest::checkPatchInteriorData(
 
    const hier::IntVector& directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(interior.lower(), axis, 0);
          pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
          for (pdat::SideIterator si(pdat::SideGeometry::begin(interior, axis));
               si != siend; ++si) {
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                if (!(tbox::MathUtilities<double>::equalEps((*data)(*si, d),
                         (*correct_data)(*si, d)))) {
                   tbox::perr << "FAILED: -- patch interior not properly filled"
@@ -446,15 +446,15 @@ void SideDataTest::setPhysicalBoundaryConditions(
    std::vector<hier::BoundaryBox> empty_vector(0, hier::BoundaryBox(d_dim));
    const std::vector<hier::BoundaryBox>& edge_bdry =
       d_dim > tbox::Dimension(1) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 1) : empty_vector;
    const int num_edge_bdry_boxes = static_cast<int>(edge_bdry.size());
 
    const std::vector<hier::BoundaryBox>& face_bdry =
       d_dim == tbox::Dimension(3) ?
-         pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
+      pgeom->getCodimensionBoundaries(d_dim.getValue() - 2) : empty_vector;
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
-   for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
@@ -467,7 +467,7 @@ void SideDataTest::setPhysicalBoundaryConditions(
       /*
        * Set node boundary data.
        */
-      for (int ni = 0; ni < num_node_bdry_boxes; ni++) {
+      for (int ni = 0; ni < num_node_bdry_boxes; ++ni) {
 
          hier::Box fill_box = pgeom->getBoundaryFillBox(node_bdry[ni],
                patch.getBox(),
@@ -484,7 +484,7 @@ void SideDataTest::setPhysicalBoundaryConditions(
          /*
           * Set edge boundary data.
           */
-         for (int ei = 0; ei < num_edge_bdry_boxes; ei++) {
+         for (int ei = 0; ei < num_edge_bdry_boxes; ++ei) {
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(edge_bdry[ei],
                   patch.getBox(),
@@ -502,7 +502,7 @@ void SideDataTest::setPhysicalBoundaryConditions(
          /*
           * Set face boundary data.
           */
-         for (int fi = 0; fi < num_face_bdry_boxes; fi++) {
+         for (int fi = 0; fi < num_face_bdry_boxes; ++fi) {
             hier::Box fbox(face_bdry[fi].getBox());
 
             hier::Box fill_box = pgeom->getBoundaryFillBox(face_bdry[fi],
@@ -542,7 +542,7 @@ void SideDataTest::setLinearData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
@@ -575,7 +575,7 @@ void SideDataTest::setLinearData(
                }
             }
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*data)(*ei,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             }
@@ -613,7 +613,7 @@ void SideDataTest::setPeriodicData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator siend(pdat::SideGeometry::end(sbox, axis));
@@ -628,7 +628,7 @@ void SideDataTest::setPeriodicData(
                val *= tmpf;
             }
             val = val + 2.0; // Shift function range to [1,3] to avoid bad floating point compares.
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*data)(*si, d) = val;
             }
 
@@ -667,7 +667,7 @@ bool SideDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(periodic_shift.getDim(), 0);
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -691,7 +691,7 @@ bool SideDataTest::verifyResults(
             patch, hierarchy, level_number);
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
@@ -702,13 +702,13 @@ bool SideDataTest::verifyResults(
 
          hier::IntVector directions(side_data->getDirectionVector());
 
-         for (int id = 0; id < d_dim.getValue(); id++) {
+         for (int id = 0; id < d_dim.getValue(); ++id) {
             if (directions(id)) {
                pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
                for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
                     si != siend; ++si) {
                   double correct = (*solution)(*si);
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      double result = (*side_data)(*si, d);
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {

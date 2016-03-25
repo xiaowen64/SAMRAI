@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Concrete factory for create standard copy transactions
  *                for coarsen schedules.
  *
@@ -46,22 +46,6 @@ public:
    virtual ~StandardCoarsenTransactionFactory();
 
    /*!
-    * @brief Set the array of CoarsenClass::Data items used by the
-    * transactions.
-    */
-   virtual void
-   setCoarsenItems(
-      const CoarsenClasses::Data ** coarsen_items,
-      int num_coarsen_items);
-
-   /*!
-    * @brief Clear the array of CoarsenClass::Data items used by the
-    * transactions.
-    */
-   virtual void
-   unsetCoarsenItems();
-
-   /*!
     * @brief Allocate a CoarsenCopyTransaction object.
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
@@ -70,7 +54,8 @@ public:
     *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
-    * @param citem_id       Integer index of CoarsenClass::Data item associated
+    * @param coarsen_data   Pointer to array of coarsen data items
+    * @param item_id        Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     *
     * @pre (dst_level->getDim() == src_level->getDim()) &&
@@ -84,18 +69,16 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
-      int citem_id) const;
+      const CoarsenClasses::Data ** coarsen_data,
+      int item_id) const;
 
 private:
    // The following two functions are not implemented
    StandardCoarsenTransactionFactory(
       const StandardCoarsenTransactionFactory&);
-   void
+   StandardCoarsenTransactionFactory&
    operator = (
       const StandardCoarsenTransactionFactory&);
-
-   const CoarsenClasses::Data** d_coarsen_items;
-   int d_num_coarsen_items;
 
 };
 

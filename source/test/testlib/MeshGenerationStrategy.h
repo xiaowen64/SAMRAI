@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy class for MeshGeneration performance tests.
  *
  ************************************************************************/
@@ -46,9 +46,11 @@ public:
    /*!
     * @brief Constructor.
     */
-   MeshGenerationStrategy() {};
+   MeshGenerationStrategy() {
+   }
 
-   virtual ~MeshGenerationStrategy() {};
+   virtual ~MeshGenerationStrategy() {
+   }
 
    /*!
     * @brief Set tag on the tag level.
@@ -57,8 +59,9 @@ public:
     * the clustering to match the tags exactly.  Exact clustering
     * match means using clustering efficiency of 1.0.
     */
-   virtual void setTags(
-      bool &exact_tagging,
+   virtual void
+   setTags(
+      bool& exact_tagging,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id) = 0;
@@ -66,7 +69,6 @@ public:
    //@{ @name SAMRAI::mesh::StandardTagAndInitStrategy virtuals
 
 public:
-
    /*!
     * @brief Set the domain, possibly scaling up the specifications.
     *
@@ -93,11 +95,11 @@ public:
     * @param [i] mpi
     */
    virtual void setDomain(
-      hier::BoxContainer &domain,
+      hier::BoxContainer & domain,
       double xlo[],
       double xhi[],
       int autoscale_base_nprocs,
-      const tbox::SAMRAI_MPI &mpi) = 0;
+      const tbox::SAMRAI_MPI & mpi) = 0;
 
    /*!
     * @brief Allocate and initialize data for a new level
@@ -113,7 +115,7 @@ public:
    void
    initializeLevelData(
       /*! Hierarchy to initialize */
-      const boost::shared_ptr<hier::PatchHierarchy> &hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Level to initialize */
       const int level_number,
       const double init_data_time,
@@ -121,45 +123,45 @@ public:
       /*! Whether level is being introduced for the first time */
       const bool initial_time,
       /*! Level to copy data from */
-      const boost::shared_ptr<hier::PatchLevel> &old_level =
+      const boost::shared_ptr<hier::PatchLevel>& old_level =
          boost::shared_ptr<hier::PatchLevel>(),
       /*! Whether data on new patch needs to be allocated */
       const bool allocate_data = true)
-      {
-         NULL_USE(hierarchy);
-         NULL_USE(level_number);
-         NULL_USE(init_data_time);
-         NULL_USE(can_be_refined);
-         NULL_USE(initial_time);
-         NULL_USE(old_level);
-         NULL_USE(allocate_data);
-         TBOX_ERROR("Should not be here");
-      }
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(init_data_time);
+      NULL_USE(can_be_refined);
+      NULL_USE(initial_time);
+      NULL_USE(old_level);
+      NULL_USE(allocate_data);
+      TBOX_ERROR("Should not be here");
+   }
 
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy> &new_hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       /*! Coarsest level */ int coarsest_level,
       /*! Finest level */ int finest_level) = 0;
 
    void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy> &hierarchy,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,
       const bool initial_time,
       const bool uses_richardson_extrapolation)
-      {
-         NULL_USE(hierarchy);
-         NULL_USE(level_number);
-         NULL_USE(error_data_time);
-         NULL_USE(tag_index);
-         NULL_USE(initial_time);
-         NULL_USE(uses_richardson_extrapolation);
-         TBOX_ERROR("Should not be here");
-      }
+   {
+      NULL_USE(hierarchy);
+      NULL_USE(level_number);
+      NULL_USE(error_data_time);
+      NULL_USE(tag_index);
+      NULL_USE(initial_time);
+      NULL_USE(uses_richardson_extrapolation);
+      TBOX_ERROR("Should not be here");
+   }
 
    //@}
 
@@ -177,18 +179,17 @@ public:
       const hier::Box& region,
       const std::string& variable_name,
       int depth_index) const
-      {
-         NULL_USE(buffer);
-         NULL_USE(patch);
-         NULL_USE(region);
-         NULL_USE(variable_name);
-         NULL_USE(depth_index);
-         TBOX_ERROR("Should not be here");
-         return false;
-      }
+   {
+      NULL_USE(buffer);
+      NULL_USE(patch);
+      NULL_USE(region);
+      NULL_USE(variable_name);
+      NULL_USE(depth_index);
+      TBOX_ERROR("Should not be here");
+      return false;
+   }
 
 private:
-
 };
 
 #endif  // MeshGenerationStrategy

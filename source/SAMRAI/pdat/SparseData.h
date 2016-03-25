@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   pdat
  *
  ************************************************************************/
@@ -600,8 +600,8 @@ public:
       **********************************************************************/
       void
       add(
-         const double* dvals,
-         const int* ivals);
+         const double * dvals,
+         const int * ivals);
       void
       add(
          const std::vector<double>& dvals,
@@ -610,9 +610,9 @@ public:
       /**********************************************************************
       * non-modifying operations
       **********************************************************************/
-      const double*
+      const double *
       getDoubleAttributes() const;
-      const int*
+      const int *
       getIntAttributes() const;
 
       /**********************************************************************

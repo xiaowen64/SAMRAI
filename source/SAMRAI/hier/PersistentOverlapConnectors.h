@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Manager of Connectors incident from a common BoxLevel.
  *
  ************************************************************************/
@@ -21,8 +21,7 @@ namespace hier {
 /*!
  * @brief Action to take when Connectors between BoxLevels are not found.
  */
-enum ConnectorNotFoundAction
-{
+enum ConnectorNotFoundAction {
    CONNECTOR_ERROR,                 // If the Connector is not found then error
    CONNECTOR_CREATE,                // If the Connector is not found silently
                                     // create it
@@ -94,7 +93,6 @@ class PersistentOverlapConnectors
 {
 
 public:
-
    /*!
     * @brief Set whether to create empty neighbor containers when a
     * base Box has no neighbor.
@@ -105,7 +103,8 @@ public:
     * The default is false.
     */
    static void
-   setCreateEmptyNeighborContainers( bool create_empty_neighbor_containers );
+   setCreateEmptyNeighborContainers(
+      bool create_empty_neighbor_containers);
 
 private:
    /*!
@@ -395,6 +394,11 @@ private:
     * See input parameter implicit_connector_creation_rule.
     */
    static char s_implicit_connector_creation_rule;
+
+   /*
+    * @brief Count of how many times we have done implicit global searches.
+    */
+   static size_t s_num_implicit_global_searches;
 
 };
 

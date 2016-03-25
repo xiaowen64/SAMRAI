@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Set of distributed box-graph relationships from one BoxLevel
  *                to another describing Box mappings.
  *
@@ -23,7 +23,7 @@ namespace hier {
  * BoxLevels.
  */
 
-class MappingConnector: public Connector
+class MappingConnector:public Connector
 {
 public:
    /*!
@@ -37,7 +37,7 @@ public:
     * @see setHead()
     * @see setWidth()
     */
-   MappingConnector(
+   explicit MappingConnector(
       const tbox::Dimension& dim);
 
    /*!
@@ -109,14 +109,24 @@ public:
     * base neighbor.  This is because all relationships must be incident from a
     * real (unshifted) Box.
     */
-   MappingConnector*
+   MappingConnector *
    createLocalTranspose() const;
+
+   /*!
+    * @brief Create and return this MappingConnector's transpose.
+    *
+    * Similar to createLocalTranspose(), but this method allows
+    * non-local edges.  Global data is required, so this method
+    * is not scalable.
+    */
+   virtual MappingConnector *
+   createTranspose() const;
 
    /*!
     * @brief Types of mappings for use in findMappingErrors() and
     *        assertMappingValidity().
     */
-   enum MappingType {LOCAL, NOT_LOCAL, UNKNOWN};
+   enum MappingType { LOCAL, NOT_LOCAL, UNKNOWN };
 
    /*!
     * @brief Check if the MappingConnector has a valid mapping.

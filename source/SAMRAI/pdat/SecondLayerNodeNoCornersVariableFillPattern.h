@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Second layer node fill pattern class
  *
  ************************************************************************/
@@ -133,7 +133,7 @@ public:
 private:
    SecondLayerNodeNoCornersVariableFillPattern(
       const SecondLayerNodeNoCornersVariableFillPattern&);  // not implemented
-   void
+   SecondLayerNodeNoCornersVariableFillPattern&
    operator = (
       const SecondLayerNodeNoCornersVariableFillPattern&);  // not implemented
 

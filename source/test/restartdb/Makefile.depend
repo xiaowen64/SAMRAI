@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   makefile dependencies
 ##
 #########################################################################
@@ -32,12 +32,11 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.C		\
 	database_tests.h database_values.h
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
-endif
 
-${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
+
+${FILE_0}: ${DEPENDS_0}
 
 FILE_1=mainHDF5.o
 DEPENDS_1:=\
@@ -59,12 +58,11 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainHDF5.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_1 +=\
 	
-endif
 
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+${FILE_1}: ${DEPENDS_1}
 
 FILE_2=mainHDF5AppFileOpen.o
 DEPENDS_2:=\
@@ -86,12 +84,11 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainHDF5AppFileOpen.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_2 +=\
 	
-endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+
+${FILE_2}: ${DEPENDS_2}
 
 FILE_3=mainMemory.o
 DEPENDS_3:=\
@@ -113,12 +110,11 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainMemory.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_3 +=\
 	
-endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+${FILE_3}: ${DEPENDS_3}
 
 FILE_4=mainSilo.o
 DEPENDS_4:=\
@@ -140,12 +136,11 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainSilo.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
 	
-endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+
+${FILE_4}: ${DEPENDS_4}
 
 FILE_5=mainSiloAppFileOpen.o
 DEPENDS_5:=\
@@ -167,10 +162,9 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h database_tests.h		\
 	mainSiloAppFileOpen.C
 
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
 	
-endif
 
-${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
+
+${FILE_5}: ${DEPENDS_5}
 

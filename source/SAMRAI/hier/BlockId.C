@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Block identifier in multiblock domain.
  *
  ************************************************************************/
@@ -15,7 +15,9 @@
 namespace SAMRAI {
 namespace hier {
 
-const BlockId BlockId::s_invalid_id(tbox::MathUtilities<int>::getMax());
+const BlockId
+BlockId::s_invalid_id(
+   tbox::MathUtilities<int>::getMax());
 const BlockId BlockId::s_zero_id(0);
 
 /*

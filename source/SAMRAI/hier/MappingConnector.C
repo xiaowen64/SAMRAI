@@ -3,12 +3,13 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed
  *                box graph.
  *
  ************************************************************************/
 #include "SAMRAI/hier/MappingConnector.h"
+#include "SAMRAI/hier/BoxLevelConnectorUtils.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -30,7 +31,7 @@ namespace hier {
  */
 
 MappingConnector::MappingConnector(
-   const tbox::Dimension& dim): Connector(dim)
+   const tbox::Dimension& dim):Connector(dim)
 {
 }
 
@@ -41,7 +42,7 @@ MappingConnector::MappingConnector(
 
 MappingConnector::MappingConnector(
    const tbox::Dimension& dim,
-   tbox::Database& restart_db): Connector(dim, restart_db)
+   tbox::Database& restart_db):Connector(dim, restart_db)
 {
 }
 
@@ -51,7 +52,7 @@ MappingConnector::MappingConnector(
  */
 
 MappingConnector::MappingConnector(
-   const MappingConnector& other): Connector(other)
+   const MappingConnector& other):Connector(other)
 {
 }
 
@@ -66,9 +67,9 @@ MappingConnector::MappingConnector(
    const IntVector& base_width,
    const BoxLevel::ParallelState parallel_state):
    Connector(base_box_level,
-      head_box_level,
-      base_width,
-      parallel_state)
+             head_box_level,
+             base_width,
+             parallel_state)
 {
 }
 
@@ -89,7 +90,7 @@ MappingConnector&
 MappingConnector::operator = (
    const MappingConnector& rhs)
 {
-   Connector::operator=(rhs);
+   Connector::operator = (rhs);
    return *this;
 }
 
@@ -98,7 +99,7 @@ MappingConnector::operator = (
  ***********************************************************************
  */
 
-MappingConnector*
+MappingConnector *
 MappingConnector::createLocalTranspose() const
 {
    const IntVector transpose_gcw = convertHeadWidthToBase(
@@ -107,9 +108,28 @@ MappingConnector::createLocalTranspose() const
          getConnectorWidth());
 
    MappingConnector* transpose = new MappingConnector(getHead(),
-      getBase(),
-      transpose_gcw);
+         getBase(),
+         transpose_gcw);
    doLocalTransposeWork(transpose);
+   return transpose;
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+
+MappingConnector *
+MappingConnector::createTranspose() const
+{
+   MappingConnector* transpose =
+      new MappingConnector(getHead(),
+         getBase(),
+         convertHeadWidthToBase(getBase().getRefinementRatio(),
+            getHead().getRefinementRatio(),
+            getConnectorWidth()));
+
+   doTransposeWork(transpose);
    return transpose;
 }
 
@@ -240,22 +260,9 @@ MappingConnector::findMappingErrors(
       } else {
          const Box& old_box = *(getBase().getBoxStrict(gid));
 
-         Box grown_box(old_box);
-         grown_box.grow(getConnectorWidth());
-
          for (Connector::ConstNeighborIterator ni = begin(ei);
               ni != end(ei); ++ni) {
             const Box& nabr = *ni;
-
-            if (!grown_box.contains(nabr)) {
-               ++error_count;
-               tbox::perr << "MappingConnector::findMappingErrors("
-                          << error_count
-                          << "): old box " << old_box
-                          << " grown by " << getConnectorWidth()
-                          << " to " << grown_box << " does not contain neighbor "
-                          << nabr << std::endl;
-            }
 
             if (!new_box_level.hasBox(nabr)) {
                ++error_count;
@@ -273,7 +280,7 @@ MappingConnector::findMappingErrors(
                              << error_count
                              << "): old box " << old_box
                              << " mapped to neighbor " << nabr
-                             << " inconsistent new box "
+                             << ", which is inconsistent with head box "
                              << head_box << std::endl;
                }
             }
@@ -281,6 +288,34 @@ MappingConnector::findMappingErrors(
          }
       }
    }
+
+   /*
+    * After-boxes should nest in before-boxes grown by the mapping
+    * width.
+    */
+
+   BoxLevelConnectorUtils blcu;
+   boost::shared_ptr<BoxLevel> bad_parts;
+   boost::shared_ptr<MappingConnector> pre_to_bad;
+   const Connector* transpose = createTranspose();
+   blcu.computeExternalParts(bad_parts,
+      pre_to_bad,
+      *transpose,
+      getConnectorWidth());
+
+   if (pre_to_bad->getLocalNumberOfRelationships() > 0) {
+      tbox::perr << "MappingConnector::findMappingErrors() found bad nesting.\n"
+                 << "Valid maps' head must nest in base, grown by\n"
+                 << "the mapping Connector width.\n"
+                 << "mapped boxes and their bad parts:\n"
+                 << pre_to_bad->format()
+                 << "mapping:\n" << format()
+                 << "transpose mapping:\n" << transpose->format()
+                 << std::endl;
+      error_count += pre_to_bad->getLocalNumberOfRelationships();
+   }
+
+   delete transpose;
 
    return error_count;
 }

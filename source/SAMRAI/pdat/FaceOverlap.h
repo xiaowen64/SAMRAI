@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -87,9 +87,9 @@ public:
     * @post normal_direction >= 0 && normal_direction < d_dst_boxes.size()
     */
    virtual void
-   getSourceBoxContainer(hier::BoxContainer& src_boxes,
-                         int& normal_direction) const;
-
+   getSourceBoxContainer(
+      hier::BoxContainer& src_boxes,
+      int& normal_direction) const;
 
    /**
     * Return the offset between the destination and source index spaces.

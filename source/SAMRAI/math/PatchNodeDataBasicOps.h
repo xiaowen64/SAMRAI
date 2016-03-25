@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Basic templated node-centered patch data operations.
  *
  ************************************************************************/
@@ -238,10 +238,10 @@ public:
 private:
    // The following are not implemented:
    PatchNodeDataBasicOps(
-      const PatchNodeDataBasicOps<TYPE>&);
-   void
+      const PatchNodeDataBasicOps&);
+   PatchNodeDataBasicOps&
    operator = (
-      const PatchNodeDataBasicOps<TYPE>&);
+      const PatchNodeDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 };

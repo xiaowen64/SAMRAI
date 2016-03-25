@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program restart-redistribute tool.
  *
  ************************************************************************/
@@ -242,8 +242,7 @@ int main(
    if (num_output_files > num_input_files) {
       smaller = num_input_files;
       larger = num_output_files;
-   }
-   else {
+   } else {
       smaller = num_output_files;
       larger = num_input_files;
    }

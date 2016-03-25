@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated side centered patch data type
  *
  ************************************************************************/
@@ -580,12 +580,12 @@ private:
 
    // Unimplemented copy constructor
    SideData(
-      const SideData<TYPE>&);
+      const SideData&);
 
    // Unimplemented assignment operator
-   void
+   SideData&
    operator = (
-      const SideData<TYPE>&);
+      const SideData&);
 
    void
    copyWithRotation(
@@ -600,7 +600,7 @@ private:
    int d_depth;
    hier::IntVector d_directions;
 
-   boost::shared_ptr<ArrayData<TYPE> > d_data [SAMRAI::MAX_DIM_VAL];
+   boost::shared_ptr<ArrayData<TYPE> > d_data[SAMRAI::MAX_DIM_VAL];
 };
 
 }

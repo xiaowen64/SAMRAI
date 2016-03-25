@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Singleton timer manager class.
  *
  ************************************************************************/
@@ -354,7 +354,7 @@ protected:
     */
    void
    registerSingletonSubclassInstance(
-      TimerManager* subclass_instance);
+      TimerManager * subclass_instance);
 
    /*!
     * Mark given timer as running in timer database.
@@ -366,7 +366,7 @@ protected:
     */
    void
    startTime(
-      Timer* timer);
+      Timer * timer);
 
    /*!
     * Mark given timer as not running in timer database.
@@ -378,9 +378,21 @@ protected:
     */
    void
    stopTime(
-      Timer* timer);
+      Timer * timer);
 
 private:
+   // Unimplemented default constructor.
+   TimerManager();
+
+   // Unimplemented copy constructor.
+   TimerManager(
+      const TimerManager& other);
+
+   // Unimplemented assignment operator.
+   TimerManager&
+   operator = (
+      const TimerManager& rhs);
+
    /**
     * Based on the values a user specified in the input database control
     * activate any existing timers that have already been registered.
@@ -460,7 +472,7 @@ private:
    buildTimerArrays(
       double timer_values[][18],
       int max_processor_id[][2],
-      std::vector<std::string>& timer_names);
+      std::vector<std::string>&timer_names);
 
    /*
     * Build an ordered list array, organizing timers largest to smallest.
@@ -510,8 +522,8 @@ private:
     */
    static void
    quicksort(const std::vector<double>&a,
-      int index[],
-      int lo, int hi);
+             int index[],
+             int lo, int hi);
 
    /*
     * Simple methods to compute percentages, given two doubles.

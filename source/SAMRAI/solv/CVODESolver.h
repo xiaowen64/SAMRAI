@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Wrapper class for CVODE solver function calls and data
  *
  ************************************************************************/
@@ -348,8 +348,7 @@ public:
       if (log_fname != d_cvode_log_file_name) {
          if (log_fname.empty()) {
             d_cvode_log_file_name = "cvode.log";
-         }
-         else {
+         } else {
             d_cvode_log_file_name = log_fname;
          }
          d_CVODE_needs_initialization = true;
@@ -1274,7 +1273,7 @@ private:
       void* my_solver)
    {
       return ((CVODESolver *)my_solver)->getCVODEFunctions()->
-              evaluateRHSFunction(t, SABSVEC_CAST(y), SABSVEC_CAST(y_dot));
+             evaluateRHSFunction(t, SABSVEC_CAST(y), SABSVEC_CAST(y_dot));
    }
 
    /*

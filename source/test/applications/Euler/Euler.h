@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in Euler equation ex.
  *
  ************************************************************************/
@@ -31,7 +31,6 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/MessageStream.h"
-
 
 #include "boost/shared_ptr.hpp"
 #include <string>
@@ -234,7 +233,7 @@ public:
     * Return stencil width of conservative linear interpolation operations.
     */
    hier::IntVector
-   getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+   getRefineOpStencilWidth(const tbox::Dimension& dim) const {
       return hier::IntVector::getOne(dim);
    }
 
@@ -277,7 +276,7 @@ public:
     * Return stencil width of conservative averaging operations.
     */
    hier::IntVector
-   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const {
+   getCoarsenOpStencilWidth(const tbox::Dimension& dim) const {
       return hier::IntVector::getZero(dim);
    }
 

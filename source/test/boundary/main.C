@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Example program to demonstrate boundary utilities.
  *
  ************************************************************************/
@@ -168,7 +168,7 @@ int main(
       hier::BoxContainer::const_iterator domain_boxes = domain.begin();
       int rank = mpi.getRank();
       int size = mpi.getSize();
-      for (hier::LocalId ib(0); ib < boxes.size(); ib++, ++domain_boxes) {
+      for (hier::LocalId ib(0); ib < boxes.size(); ++ib, ++domain_boxes) {
          if (ib % size == rank) {
             layer0->addBox(hier::Box(*domain_boxes, ib, rank));
          }

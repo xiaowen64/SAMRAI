@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility for building efficient communication tree.
  *
  ************************************************************************/
@@ -23,70 +23,64 @@
 namespace SAMRAI {
 namespace tbox {
 
-
 /*
-****************************************************************
-****************************************************************
-*/
-BalancedDepthFirstTree::BalancedDepthFirstTree()
-   : d_rank(getInvalidRank()),
-     d_parent(getInvalidRank()),
-     d_root_rank(getInvalidRank()),
-     d_num_children(0),
-     d_do_left_leaf_switch(true)
+ ****************************************************************
+ ****************************************************************
+ */
+BalancedDepthFirstTree::BalancedDepthFirstTree():
+   d_rank(getInvalidRank()),
+   d_parent(getInvalidRank()),
+   d_root_rank(getInvalidRank()),
+   d_num_children(0),
+   d_do_left_leaf_switch(true)
 {
 }
 
 /*
-****************************************************************
-****************************************************************
-*/
+ ****************************************************************
+ ****************************************************************
+ */
 BalancedDepthFirstTree::BalancedDepthFirstTree(
    int first_rank,
    int last_rank,
    int my_rank,
-   bool do_left_leaf_switch)
-   : d_rank(getInvalidRank()),
-     d_parent(getInvalidRank()),
-     d_root_rank(getInvalidRank()),
-     d_num_children(0),
-     d_do_left_leaf_switch(do_left_leaf_switch)
+   bool do_left_leaf_switch):
+   d_rank(getInvalidRank()),
+   d_parent(getInvalidRank()),
+   d_root_rank(getInvalidRank()),
+   d_num_children(0),
+   d_do_left_leaf_switch(do_left_leaf_switch)
 {
    setupTreeForContiguousRanks(first_rank, last_rank, my_rank);
 }
 
 /*
-****************************************************************
-****************************************************************
-*/
+ ****************************************************************
+ ****************************************************************
+ */
 BalancedDepthFirstTree::~BalancedDepthFirstTree()
 {
 }
 
-
-
 /*
-****************************************************************
-* Set up the tree from a RankGroup.
-****************************************************************
-*/
+ ****************************************************************
+ * Set up the tree from a RankGroup.
+ ****************************************************************
+ */
 void
 BalancedDepthFirstTree::setupTree(
-   const RankGroup &rank_group,
+   const RankGroup& rank_group,
    int my_rank)
 {
-   TBOX_ASSERT( rank_group.isMember(my_rank) );
-   setupTreeForContiguousRanks( 0, rank_group.size()-1, rank_group.getMapIndex(my_rank) );
-   return;
+   TBOX_ASSERT(rank_group.isMember(my_rank));
+   setupTreeForContiguousRanks(0, rank_group.size() - 1, rank_group.getMapIndex(my_rank));
 }
 
-
-
 /*
-****************************************************************
-* Set up the tree for contiguous ranks.
-****************************************************************
-*/
+ ****************************************************************
+ * Set up the tree for contiguous ranks.
+ ****************************************************************
+ */
 void
 BalancedDepthFirstTree::setupTreeForContiguousRanks(
    int first_rank,
@@ -196,7 +190,7 @@ BalancedDepthFirstTree::setupTreeForContiguousRanks(
             // This is a right child in a left-leaf switchable.
             d_parent = d_parent + 1;
          }
-         if ( last_rank - first_rank + 1 == 3 ) {
+         if (last_rank - first_rank + 1 == 3) {
             // Special case of exactly 3 ranks allows the root be switched.
             d_root_rank = first_rank + 1;
          }
@@ -229,8 +223,6 @@ BalancedDepthFirstTree::setupTreeForContiguousRanks(
    }
 
 }
-
-
 
 }
 }

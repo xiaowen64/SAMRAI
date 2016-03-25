@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for outerside-centered patch data
  *
  ************************************************************************/
@@ -104,7 +104,7 @@ void OutersideDataTest::readTestInput(
 
    d_use_fine_value_at_interface.resize(nkeys);
 
-   for (int i = 0; i < nkeys; i++) {
+   for (int i = 0; i < nkeys; ++i) {
       boost::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
@@ -154,20 +154,27 @@ void OutersideDataTest::registerVariables(
    d_variables_src.resize(nvars);
    d_variables_dst.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
          new pdat::OutersideVariable<double>(
             d_dim,
             d_variable_src_name[i],
             d_variable_depth[i]));
-      d_variables_dst[i].reset(
-         new pdat::SideVariable<double>(
-            d_dim,
-            d_variable_dst_name[i],
-            hier::IntVector::getOne(d_dim),
-            d_variable_depth[i],
-            d_use_fine_value_at_interface[i]));
-
+      if (i % 2 == 0) {
+         d_variables_dst[i].reset(
+            new pdat::SideVariable<double>(
+               d_dim,
+               d_variable_dst_name[i],
+               hier::IntVector::getOne(d_dim),
+               d_variable_depth[i],
+               d_use_fine_value_at_interface[i]));
+      } else {
+         d_variables_dst[i].reset(
+            new pdat::OutersideVariable<double>(
+               d_dim,
+               d_variable_dst_name[i],
+               d_variable_depth[i]));
+      }
       if (d_do_refine) {
          commtest->registerVariable(d_variables_src[i],
             d_variables_dst[i],
@@ -204,7 +211,7 @@ void OutersideDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -231,7 +238,7 @@ void OutersideDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -272,7 +279,7 @@ void OutersideDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       const pdat::SideIndex loweri(interior.lower(), axis, 0);
       pdat::SideIterator siend(pdat::SideGeometry::end(interior, axis));
       for (pdat::SideIterator si(pdat::SideGeometry::begin(interior, axis));
@@ -305,7 +312,7 @@ void OutersideDataTest::checkPatchInteriorData(
          }
 
          double value;
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
 
             if (!(tbox::MathUtilities<double>::equalEps((*data)(*si,
@@ -351,7 +358,7 @@ void OutersideDataTest::setLinearData(
 
    hier::IntVector directions(data->getDirectionVector());
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
       if (directions(axis)) {
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          pdat::SideIterator eiend(pdat::SideGeometry::end(sbox, axis));
@@ -384,7 +391,7 @@ void OutersideDataTest::setLinearData(
                }
             }
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*data)(*ei,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             }
@@ -413,8 +420,8 @@ void OutersideDataTest::setLinearData(
 
    const int depth = data->getDepth();
 
-   for (int axis = 0; axis < d_dim.getValue(); axis++) {
-      for (int s = 0; s < 2; s++) {
+   for (int axis = 0; axis < d_dim.getValue(); ++axis) {
+      for (int s = 0; s < 2; ++s) {
          const hier::Box databox = data->getArrayData(axis, s).getBox();
          const pdat::SideIndex loweri(patch.getBox().lower(), axis, 0);
          hier::Box::iterator biend(databox.end());
@@ -448,7 +455,7 @@ void OutersideDataTest::setLinearData(
 
             double value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             pdat::SideIndex si(*bi, axis, 0);
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*data)(si, s, d) = value;
             }
          }
@@ -480,7 +487,7 @@ bool OutersideDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -498,29 +505,84 @@ bool OutersideDataTest::verifyResults(
          setLinearData(solution, tbox, patch); //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
-         boost::shared_ptr<pdat::SideData<double> > side_data(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
-               patch.getPatchData(d_variables_dst[i], getDataContext())));
-         TBOX_ASSERT(side_data);
-         int depth = side_data->getDepth();
-         hier::Box dbox = side_data->getGhostBox();
+         if (i % 2 == 0) {
+            boost::shared_ptr<pdat::SideData<double> > side_data(
+               BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+                  patch.getPatchData(d_variables_dst[i], getDataContext())));
+            TBOX_ASSERT(side_data);
+            int depth = side_data->getDepth();
+            hier::Box dbox = side_data->getGhostBox();
 
-         hier::IntVector directions(side_data->getDirectionVector());
+            hier::IntVector directions(side_data->getDirectionVector());
 
-         for (int id = 0; id < d_dim.getValue(); id++) {
-            if (directions(id)) {
-               pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
-               for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
-                    si != siend; ++si) {
-                  double correct = (*solution)(*si);
-                  for (int d = 0; d < depth; d++) {
-                     double result = (*side_data)(*si, d);
+            for (int id = 0; id < d_dim.getValue(); ++id) {
+               if (directions(id)) {
+                  pdat::SideIterator siend(pdat::SideGeometry::end(dbox, id));
+                  for (pdat::SideIterator si(pdat::SideGeometry::begin(dbox, id));
+                       si != siend; ++si) {
+                     double correct = (*solution)(*si);
+                     for (int d = 0; d < depth; ++d) {
+                        double result = (*side_data)(*si, d);
+                        if (!tbox::MathUtilities<double>::equalEps(correct,
+                               result)) {
+                           tbox::perr << "Test FAILED: ...."
+                                      << " : side_data index = " << *si << endl;
+                           tbox::perr << "    hier::Variable = "
+                                      << d_variable_src_name[i]
+                                      << " : depth index = " << d << endl;
+                           tbox::perr << "    result = " << result
+                                      << " : correct = " << correct << endl;
+                           test_failed = true;
+                        }
+                     }
+                  }
+               }
+            }
+         } else {
+            boost::shared_ptr<pdat::OutersideData<double> > oside_data(
+               BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                  patch.getPatchData(d_variables_dst[i], getDataContext())));
+            TBOX_ASSERT(oside_data);
+            int depth = oside_data->getDepth();
+            hier::Box dbox = oside_data->getGhostBox();
+
+            for (int id = 0; id < d_dim.getValue(); ++id) {
+               hier::Box dbox_lo(dbox);
+               dbox_lo.upper(id) = dbox_lo.lower(id);
+               hier::BoxIterator loend(dbox_lo.end());
+               for (hier::BoxIterator si(dbox_lo.begin()); si != loend; ++si) {
+                  pdat::SideIndex sndx(*si, id, 0);
+                  double correct = (*solution)(sndx);
+                  for (int d = 0; d < depth; ++d) {
+                     double result = (*oside_data)(sndx, 0, d);
                      if (!tbox::MathUtilities<double>::equalEps(correct,
                             result)) {
                         tbox::perr << "Test FAILED: ...."
-                                   << " : side_data index = " << *si << endl;
+                                   << " : oside_data index = " << sndx << endl;
+                        tbox::perr << "    hier::Variable = "
+                                   << d_variable_src_name[i]
+                                   << " : depth index = " << d << endl;
+                        tbox::perr << "    result = " << result
+                                   << " : correct = " << correct << endl;
+                        test_failed = true;
+                     }
+                  }
+               }
+
+               hier::Box dbox_hi(dbox);
+               dbox_hi.lower(id) = dbox_hi.upper(id);
+               hier::BoxIterator hiend(dbox_hi.end());
+               for (hier::BoxIterator si(dbox_hi.begin()); si != hiend; ++si) {
+                  pdat::SideIndex sndx(*si, id, 1);
+                  double correct = (*solution)(sndx);
+                  for (int d = 0; d < depth; ++d) {
+                     double result = (*oside_data)(sndx, 1, d);
+                     if (!tbox::MathUtilities<double>::equalEps(correct,
+                            result)) {
+                        tbox::perr << "Test FAILED: ...."
+                                   << " : oside_data index = " << sndx << endl;
                         tbox::perr << "    hier::Variable = "
                                    << d_variable_src_name[i]
                                    << " : depth index = " << d << endl;

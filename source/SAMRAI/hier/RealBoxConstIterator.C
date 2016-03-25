@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Iterator over real Boxes in a BoxContainer.
  *
  ************************************************************************/
@@ -18,8 +18,7 @@ RealBoxConstIterator::RealBoxConstIterator(
    d_boxes(&boxes),
    d_ni(begin ? d_boxes->begin() : d_boxes->end())
 {
-   if (begin)
-   {
+   if (begin) {
       while (d_ni != d_boxes->end() && d_ni->isPeriodicImage()) {
          ++d_ni;
       }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Fill pattern class to provide interface for stencils
  *
  ************************************************************************/
@@ -188,8 +188,8 @@ SecondLayerNodeVariableFillPattern::computeFillBoxesOverlap(
    overlap_boxes.coalesce();
 
    return boost::make_shared<NodeOverlap>(
-      overlap_boxes,
-      hier::Transformation(hier::IntVector::getZero(dim)));
+             overlap_boxes,
+             hier::Transformation(hier::IntVector::getZero(dim)));
 }
 
 }

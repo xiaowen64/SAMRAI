@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory for creating outeredge sum transaction objects
  *
  ************************************************************************/
@@ -45,22 +45,6 @@ public:
    virtual ~OuteredgeSumTransactionFactory();
 
    /*!
-    * @brief Set the array of xfer::RefineClasses::Data items used by the
-    * transactions.
-    */
-   void
-   setRefineItems(
-      const xfer::RefineClasses::Data *const* refine_items,
-      int num_refine_items);
-
-   /*!
-    * @brief Clear the array of xfer::RefineClasses::Data items used by the
-    * transactions.
-    */
-   void
-   unsetRefineItems();
-
-   /*!
     * @brief Allocate an OuteredgeSumTransaction object.
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
@@ -69,7 +53,8 @@ public:
     *                       patches.
     * @param dst_node       Destination Box in destination patch level.
     * @param src_node       Source Box in source patch level.
-    * @param ritem_id       Integer index of xfer::RefineClasses::Data item
+    * @param refine_data    Pointer to array of refine data items
+    * @param item_id        Integer index of xfer::RefineClasses::Data item
     *                       associated with transaction.
     * @param box            Optional const reference to box defining region of
     *                       refine transaction.  Use next method if not
@@ -83,7 +68,7 @@ public:
     * @pre overlap
     * @pre dst_node.getLocalId() >= 0
     * @pre src_node.getLocalId() >= 0
-    * @pre ritem_id >= 0
+    * @pre item_id >= 0
     * @pre (dst_level->getDim() == src_level->getDim()) &&
     *      (dst_level->getDim() == dst_node.getDim()) &&
     *      (dst_level->getDim() == src_node.getDim())
@@ -95,7 +80,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      int ritem_id,
+      const xfer::RefineClasses::Data ** refine_data,
+      int item_id,
       const hier::Box& box,
       bool use_time_interpolation = false) const;
 
@@ -122,7 +108,8 @@ public:
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_node,
       const hier::Box& src_node,
-      int ritem_id) const;
+      const xfer::RefineClasses::Data ** refine_data,
+      int item_id) const;
 
    /*!
     * @brief Function to initialize scratch space data for the sum transactions
@@ -148,12 +135,9 @@ private:
    // The following two functions are not implemented
    OuteredgeSumTransactionFactory(
       const OuteredgeSumTransactionFactory&);
-   void
+   OuteredgeSumTransactionFactory&
    operator = (
       const OuteredgeSumTransactionFactory&);
-
-   const xfer::RefineClasses::Data*const* d_refine_items;
-   int d_number_refine_items;
 
 };
 

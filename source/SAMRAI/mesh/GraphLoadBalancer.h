@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Scalable load balancer using tree algorithm.
  *
  ************************************************************************/
@@ -34,10 +34,6 @@
 
 namespace SAMRAI {
 namespace mesh {
-
-
-
-
 
 /*!
  * @brief A graph-based load balance using PT-Scotch to partition patches
@@ -75,6 +71,10 @@ namespace mesh {
  *   boxes. This option can be invoked to spatially merge those boxes where
  *   possible.
  *
+ *   - \b tile_size
+ *   Tile size when using tile mode.  Tile mode restricts box cuts
+ *   to tile boundaries.  Default is 1, which is equivalent to no restriction.
+ *
  * <b> Details: </b> <br>
  * <table>
  *   <tr>
@@ -98,6 +98,14 @@ namespace mesh {
  *     <td>bool</td>
  *     <td>true</td>
  *     <td>true/false</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart. Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>tile_size</td>
+ *     <td>IntVector</td>
+ *     <td>1</td>
+ *     <td>1-</td>
  *     <td>opt</td>
  *     <td>Not written to restart. Value in input db used.</td>
  *   </tr>
@@ -217,9 +225,8 @@ public:
    }
 
 private:
-
    /*!
-    * @brief Struct to store state of a box before and after communication. 
+    * @brief Struct to store state of a box before and after communication.
     */
 
    struct BoxInTransit {
@@ -231,8 +238,8 @@ private:
        *
        * @param[in] dim
        */
-      BoxInTransit(const tbox::Dimension& dim);
-
+      explicit BoxInTransit(
+         const tbox::Dimension& dim);
 
       /*!
        * @brief Construct new object having the history an existing
@@ -242,7 +249,7 @@ private:
        *
        * @param[in] box         Provides spatial coordinates for new box
        *
-       * @param[in] rank        Rank of new box 
+       * @param[in] rank        Rank of new box
        *
        * @param[in] local_id    LocalId for new box
        */
@@ -256,9 +263,10 @@ private:
        * @brief Assignment operator
        *
        * @param[in] other
-       */      
-      const BoxInTransit&
-      operator = (const BoxInTransit& other)
+       */
+      BoxInTransit&
+      operator = (
+         const BoxInTransit& other)
       {
          d_box = other.d_box;
          d_orig_box = other.d_orig_box;
@@ -300,7 +308,7 @@ private:
        */
       void
       putToMessageStream(
-         tbox::MessageStream &msg) const;
+         tbox::MessageStream& msg) const;
 
       /*!
        * @brief Set attributes according to data in a MessageStream.
@@ -309,7 +317,7 @@ private:
        */
       void
       getFromMessageStream(
-         tbox::MessageStream &msg);
+         tbox::MessageStream& msg);
 
       hier::Box d_box;
       hier::Box d_orig_box;
@@ -337,7 +345,7 @@ private:
    renumberBoxes(
       hier::BoxLevel& balance_box_level,
       hier::Connector& anchor_to_balance,
-      const hier::MappingConnectorAlgorithm &mca) const;
+      const hier::MappingConnectorAlgorithm& mca) const;
 
    /*!
     * @brief Chop Boxes in a box_level.
@@ -353,7 +361,8 @@ private:
     * @param[in] mca MappingConnectorAlgorithm with timer set
     * in the calling context.
     */
-   void chopBoxes(
+   void
+   chopBoxes(
       hier::BoxLevel& box_level,
       hier::Connector* anchor_to_level,
       const hier::IntVector& max_size) const;
@@ -371,10 +380,11 @@ private:
     * @param[in] mca MappingConnectorAlgorithm with timer set
     * in the calling context.
     */
-   void coalesceBoxLevel(
+   void
+   coalesceBoxLevel(
       hier::BoxLevel& box_level,
       hier::Connector& anchor_to_level,
-      const hier::MappingConnectorAlgorithm &mca) const;
+      const hier::MappingConnectorAlgorithm& mca) const;
 
    /*!
     * @brief Set up the asynchronous communication objects for communicating
@@ -395,12 +405,13 @@ private:
     * @param [in] my_rank
     * @param [in] mpi
     */
-   void setupAsyncCommObjects(
+   void
+   setupAsyncCommObjects(
       tbox::AsyncCommStage& send_stage,
-      std::map<int, tbox::AsyncCommPeer<char>* >& send_comms,
+      std::map<int, tbox::AsyncCommPeer<char> *>& send_comms,
       std::set<int>& send_procs,
       tbox::AsyncCommStage& recv_stage,
-      std::map<int, tbox::AsyncCommPeer<char>* >& recv_comms,
+      std::map<int, tbox::AsyncCommPeer<char> *>& recv_comms,
       const int* old_partition,
       const int* new_partition,
       const int num_boxes,
@@ -414,7 +425,6 @@ private:
    getFromInput(
       const boost::shared_ptr<tbox::Database>& input_db);
 
-
    tbox::Dimension d_dim;
 
    std::string d_object_name;
@@ -422,6 +432,12 @@ private:
    hier::IntVector d_target_box_size;
 
    bool d_coalesce_boxes;
+
+   /*!
+    * @brief Tile size, when restricting cuts to tile boundaries,
+    * Set to 1 when not restricting.
+    */
+   hier::IntVector d_tile_size;
 
    mutable hier::IntVector d_min_size;
    mutable hier::IntVector d_cut_factor;

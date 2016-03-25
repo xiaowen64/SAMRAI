@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated side centered patch data type
  *
  ************************************************************************/
@@ -51,7 +51,7 @@ SideData<TYPE>::SideData(
 
    const tbox::Dimension& dim(box.getDim());
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
          d_data[d].reset(new ArrayData<TYPE>(side, depth));
@@ -76,7 +76,7 @@ SideData<TYPE>::SideData(
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(d_directions.min() >= 0);
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       const hier::Box side = SideGeometry::toSideBox(getGhostBox(), d);
       d_data[d].reset(new ArrayData<TYPE>(side, depth));
    }
@@ -102,7 +102,7 @@ SideData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 SideData<TYPE>::getPointer(
    int side_normal,
    int depth)
@@ -115,7 +115,7 @@ SideData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 SideData<TYPE>::getPointer(
    int side_normal,
    int depth) const
@@ -207,7 +207,7 @@ SideData<TYPE>::copy(
 
       TBOX_ASSERT(t_src->getDirectionVector() == d_directions);
 
-      for (int d = 0; d < getDim().getValue(); d++) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
          if (d_directions(d)) {
             const hier::Box box =
                d_data[d]->getBox() * t_src->d_data[d]->getBox();
@@ -231,7 +231,7 @@ SideData<TYPE>::copy2(
    TBOX_ASSERT(t_dst != 0);
    TBOX_ASSERT(t_dst->getDirectionVector() == d_directions);
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::Box box = d_data[d]->getBox() * t_dst->d_data[d]->getBox();
          if (!box.empty()) {
@@ -268,10 +268,10 @@ SideData<TYPE>::copy(
       TBOX_ASSERT(t_src->getDirectionVector() == d_directions);
 
       const hier::Transformation& transformation =
-         t_overlap->getTransformation();         
+         t_overlap->getTransformation();
       if (transformation.getRotation() == hier::Transformation::NO_ROTATE) {
 
-         for (int d = 0; d < getDim().getValue(); d++) {
+         for (int d = 0; d < getDim().getValue(); ++d) {
             if (d_directions(d)) {
                const hier::BoxContainer& box_list =
                   t_overlap->getDestinationBoxContainer(d);
@@ -303,7 +303,7 @@ SideData<TYPE>::copy2(
        hier::Transformation::NO_ROTATE) {
 
       const hier::IntVector& src_offset = t_overlap->getSourceOffset();
-      for (int d = 0; d < getDim().getValue(); d++) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
          if (d_directions(d)) {
             const hier::BoxContainer& box_list = t_overlap->getDestinationBoxContainer(d);
             t_dst->d_data[d]->copy(*(d_data[d]), box_list, src_offset);
@@ -322,7 +322,7 @@ SideData<TYPE>::copyOnBox(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
-   for (int axis = 0; axis < getDim().getValue(); axis++) {
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
       const hier::Box side_box = SideGeometry::toSideBox(box, axis);
       d_data[axis]->copy(src.getArrayData(axis), side_box);
    }
@@ -359,7 +359,7 @@ SideData<TYPE>::copyWithRotation(
                                    rotatebox.getBlockId(),
                                    getBox().getBlockId());
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
@@ -384,7 +384,7 @@ SideData<TYPE>::copyWithRotation(
                   SideIndex src_index(dst_index);
                   SideGeometry::transform(src_index, back_trans);
 
-                  for (int d = 0; d < depth; d++) {
+                  for (int d = 0; d < depth; ++d) {
                      (*this)(dst_index, d) = src(src_index, d);
                   }
                }
@@ -413,7 +413,7 @@ SideData<TYPE>::copyDepth(
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, src);
    TBOX_ASSERT(src.d_directions == d_directions);
 
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::Box box = d_data[d]->getBox() * src.d_data[d]->getBox();
          if (!box.empty()) {
@@ -451,7 +451,7 @@ SideData<TYPE>::getDataStreamSize(
    const hier::IntVector& offset = t_overlap->getSourceOffset();
 
    int size = 0;
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          size +=
             d_data[d]->getDataStreamSize(
@@ -485,7 +485,7 @@ SideData<TYPE>::packStream(
        hier::Transformation::NO_ROTATE) {
 
       const hier::Transformation& transformation = t_overlap->getTransformation();
-      for (int d = 0; d < getDim().getValue(); d++) {
+      for (int d = 0; d < getDim().getValue(); ++d) {
          if (d_directions(d)) {
             const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
             if (!boxes.isEmpty()) {
@@ -530,7 +530,7 @@ SideData<TYPE>::packWithRotation(
 
    const int depth = getDepth();
 
-   for (int i = 0; i < dim.getValue(); i++) {
+   for (int i = 0; i < dim.getValue(); ++i) {
       if (d_directions(i)) {
          const hier::BoxContainer& overlap_boxes = overlap.getDestinationBoxContainer(i);
 
@@ -548,7 +548,7 @@ SideData<TYPE>::packWithRotation(
 
             if (!copybox.empty()) {
 
-               for (int d = 0; d < depth; d++) {
+               for (int d = 0; d < depth; ++d) {
 
                   hier::Box::iterator ciend(copybox.end());
                   for (hier::Box::iterator ci(copybox.begin());
@@ -559,7 +559,7 @@ SideData<TYPE>::packWithRotation(
                      SideGeometry::transform(src_index, back_trans);
 
                      buffer[buf_count] = (*this)(src_index, d);
-                     buf_count++;
+                     ++buf_count;
                   }
                }
             }
@@ -580,7 +580,7 @@ SideData<TYPE>::unpackStream(
    TBOX_ASSERT(t_overlap != 0);
 
    const hier::IntVector& offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < getDim().getValue(); d++) {
+   for (int d = 0; d < getDim().getValue(); ++d) {
       if (d_directions(d)) {
          const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(d);
          if (!boxes.isEmpty()) {
@@ -613,7 +613,7 @@ SideData<TYPE>::getSizeOfData(
 
    size_t size = 0;
    const hier::Box ghost_box = hier::Box::grow(box, ghosts);
-   for (int d = 0; d < box.getDim().getValue(); d++) {
+   for (int d = 0; d < box.getDim().getValue(); ++d) {
       if (directions(d)) {
          const hier::Box side_box = SideGeometry::toSideBox(ghost_box, d);
          size += ArrayData<TYPE>::getSizeOfData(side_box, depth);
@@ -638,7 +638,7 @@ SideData<TYPE>::fill(
 {
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          d_data[i]->fill(t, d);
       }
@@ -655,7 +655,7 @@ SideData<TYPE>::fill(
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          d_data[i]->fill(t, SideGeometry::toSideBox(box, i), d);
       }
@@ -667,7 +667,7 @@ void
 SideData<TYPE>::fillAll(
    const TYPE& t)
 {
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          d_data[i]->fillAll(t);
       }
@@ -682,7 +682,7 @@ SideData<TYPE>::fillAll(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          d_data[i]->fillAll(t, SideGeometry::toSideBox(box, i));
       }
@@ -707,7 +707,7 @@ SideData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
 
-   for (int axis = 0; axis < getDim().getValue(); axis++) {
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array side normal = " << axis << std::endl;
       printAxis(axis, box, os, prec);
    }
@@ -724,7 +724,7 @@ SideData<TYPE>::print(
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   for (int axis = 0; axis < getDim().getValue(); axis++) {
+   for (int axis = 0; axis < getDim().getValue(); ++axis) {
       os << "Array side normal = " << axis << std::endl;
       printAxis(axis, box, d, os, prec);
    }
@@ -741,7 +741,7 @@ SideData<TYPE>::printAxis(
    TBOX_ASSERT_OBJDIM_EQUALITY2(d_directions, box);
    TBOX_ASSERT((side_normal >= 0) && (side_normal < getDim().getValue()));
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       printAxis(side_normal, box, d, os, prec);
    }
@@ -802,7 +802,7 @@ SideData<TYPE>::getFromRestart(
    d_depth = restart_db->getInteger("d_depth");
 
    boost::shared_ptr<tbox::Database> array_database;
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);
          array_database = restart_db->getDatabase(array_name);
@@ -834,7 +834,7 @@ SideData<TYPE>::putToRestart(
    restart_db->putInteger("d_depth", d_depth);
 
    boost::shared_ptr<tbox::Database> array_database;
-   for (int i = 0; i < getDim().getValue(); i++) {
+   for (int i = 0; i < getDim().getValue(); ++i) {
       if (d_directions(i)) {
          std::string array_name = "d_data" + tbox::Utilities::intToString(i);
          array_database = restart_db->putDatabase(array_name);

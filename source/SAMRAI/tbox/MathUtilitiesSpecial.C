@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   MathUtilities routines to set up handlers and get
  *                signaling NaNs
  *
@@ -149,7 +149,7 @@ dcomplex
 MathUtilities<dcomplex>::getSignalingNaN()
 {
    return dcomplex(std::numeric_limits<double>::signaling_NaN(),
-                   std::numeric_limits<double>::signaling_NaN());
+      std::numeric_limits<double>::signaling_NaN());
 }
 
 template<>
@@ -333,8 +333,12 @@ round_internal(
    }
 }
 
-template float round_internal<float>(float x);
-template double round_internal<double>(double x);
+template float round_internal<float
+                              >(
+   float x);
+template double round_internal<double
+                               >(
+   double x);
 
 template<>
 float

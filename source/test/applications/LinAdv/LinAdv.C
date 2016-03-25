@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -48,6 +48,7 @@ using namespace std;
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
 //integer constants for boundary conditions
@@ -149,7 +150,7 @@ LinAdv::LinAdv(
    tbox::MathUtilities<double>::setVectorToSignalingNaN(d_center);
 
    // SINE problem
-   for (int k = 0; k < d_dim.getValue(); k++) d_frequency[k] = 0.;
+   for (int k = 0; k < d_dim.getValue(); ++k) d_frequency[k] = 0.;
 
    /*
     * Defaults for boundary conditions. Set to bogus values
@@ -158,14 +159,14 @@ LinAdv::LinAdv(
 
    if (d_dim == tbox::Dimension(2)) {
       d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_2D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resize(NUM_2D_NODES);
 
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_2D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
@@ -175,13 +176,13 @@ LinAdv::LinAdv(
    }
    if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
+      for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resize(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_3D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
@@ -189,7 +190,7 @@ LinAdv::LinAdv(
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resize(NUM_3D_NODES);
 
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_3D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
@@ -239,13 +240,13 @@ LinAdv::LinAdv(
     * so we reset them to FLOW.
     */
    if (d_dim == tbox::Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_2D_NODES; i++) {
+      for (int i = 0; i < NUM_2D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -261,13 +262,13 @@ LinAdv::LinAdv(
       }
    }
    if (d_dim == tbox::Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
+      for (int i = 0; i < NUM_3D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::XFLOW;
          }
@@ -285,7 +286,7 @@ LinAdv::LinAdv(
          }
       }
 
-      for (int i = 0; i < NUM_3D_NODES; i++) {
+      for (int i = 0; i < NUM_3D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -393,6 +394,8 @@ void LinAdv::setupLoadBalancer(
    const hier::IntVector& zero_vec = hier::IntVector::getZero(d_dim);
 
    hier::VariableDatabase* vardb = hier::VariableDatabase::getDatabase();
+   hier::PatchDataRestartManager* pdrm =
+      hier::PatchDataRestartManager::getManager();
 
    if (d_use_nonuniform_workload && gridding_algorithm) {
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
@@ -409,7 +412,7 @@ void LinAdv::setupLoadBalancer(
                vardb->getContext("WORKLOAD"),
                zero_vec);
          load_balancer->setWorkloadPatchDataIndex(d_workload_data_id);
-         vardb->registerPatchDataForRestart(d_workload_data_id);
+         pdrm->registerPatchDataForRestart(d_workload_data_id);
       } else {
          TBOX_WARNING(
             d_object_name << ": "
@@ -499,7 +502,7 @@ void LinAdv::initializeDataOnPatch(
          const double* domain_xlo = d_grid_geometry->getXLower();
          const double* domain_xhi = d_grid_geometry->getXUpper();
          std::vector<double> domain_length(d_dim.getValue());
-         for (int i = 0; i < d_dim.getValue(); i++) {
+         for (int i = 0; i < d_dim.getValue(); ++i) {
             domain_length[i] = domain_xhi[i] - domain_xlo[i];
          }
 
@@ -723,7 +726,7 @@ void LinAdv::computeFluxesOnPatch(
           * Prepare temporary data for characteristic tracing.
           */
          int Mcells = 0;
-         for (int k = 0; k < d_dim.getValue(); k++) {
+         for (int k = 0; k < d_dim.getValue(); ++k) {
             Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
          }
 
@@ -901,7 +904,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); k++) {
+      for (int k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1223,7 +1226,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        * Prepare temporary data for characteristic tracing.
        */
       int Mcells = 0;
-      for (int k = 0; k < d_dim.getValue(); k++) {
+      for (int k = 0; k < d_dim.getValue(); ++k) {
          Mcells = tbox::MathUtilities<int>::Max(Mcells, pbox.numberCells(k));
       }
 
@@ -1279,7 +1282,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 
    } //  if (d_godunov_order > 1) ...
 
-   for (int idir = 0; idir < d_dim.getValue(); idir++) {
+   for (int idir = 0; idir < d_dim.getValue(); ++idir) {
 
       /*
        *    Approximate traces at cell centers (in idir direction) - denoted
@@ -1454,7 +1457,7 @@ void LinAdv::boundaryReset(
    int bdry_case = 0;
    int bside;
 
-   for (idir = 0; idir < d_dim.getValue(); idir++) {
+   for (idir = 0; idir < d_dim.getValue(); ++idir) {
       ibfirst(idir) = ifirst(idir) - 1;
       iblast(idir) = ifirst(idir) - 1;
       bdrybox.pushBack(hier::Box(ibfirst, iblast, hier::BlockId(0)));
@@ -1465,7 +1468,7 @@ void LinAdv::boundaryReset(
    }
 
    hier::BoxContainer::iterator ib = bdrybox.begin();
-   for (idir = 0; idir < d_dim.getValue(); idir++) {
+   for (idir = 0; idir < d_dim.getValue(); ++idir) {
       bside = 2 * idir;
       if (d_dim == tbox::Dimension(2)) {
          bdry_case = d_scalar_bdry_edge_conds[bside];
@@ -1683,7 +1686,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
     * the level.
     */
    for (int ncrit = 0;
-        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > coarsened_fine_var;
@@ -1734,7 +1737,7 @@ void LinAdv::tagRichardsonExtrapolationCells(
             const double* xdomainhi = d_grid_geometry->getXUpper();
             double max_length = 0.;
             double max_wave_speed = 0.;
-            for (int idir = 0; idir < d_dim.getValue(); idir++) {
+            for (int idir = 0; idir < d_dim.getValue(); ++idir) {
                double length = xdomainhi[idir] - xdomainlo[idir];
                if (length > max_length) max_length = length;
 
@@ -1894,7 +1897,7 @@ void LinAdv::tagGradientDetectorCells(
     * the level.
     */
    for (int ncrit = 0;
-        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > var(
@@ -2117,7 +2120,7 @@ void LinAdv::printClassData(
 
    os << "Parameters for numerical method ..." << endl;
    os << "   d_advection_velocity = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_advection_velocity[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
    os << endl;
    os << "   d_godunov_order = " << d_godunov_order << endl;
    os << "   d_corner_transport = " << d_corner_transport << endl;
@@ -2130,25 +2133,25 @@ void LinAdv::printClassData(
 
    os << "       d_radius = " << d_radius << endl;
    os << "       d_center = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_center[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
    os << endl;
    os << "       d_uval_inside = " << d_uval_inside << endl;
    os << "       d_uval_outside = " << d_uval_outside << endl;
 
    os << "       d_number_of_intervals = " << d_number_of_intervals << endl;
    os << "       d_front_position = ";
-   for (k = 0; k < d_number_of_intervals - 1; k++) {
+   for (k = 0; k < d_number_of_intervals - 1; ++k) {
       os << d_front_position[k] << "  ";
    }
    os << endl;
    os << "       d_interval_uval = " << endl;
-   for (k = 0; k < d_number_of_intervals; k++) {
+   for (k = 0; k < d_number_of_intervals; ++k) {
       os << "            " << d_interval_uval[k] << endl;
    }
    os << "   Boundary condition data " << endl;
 
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
@@ -2157,7 +2160,7 @@ void LinAdv::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
@@ -2165,7 +2168,7 @@ void LinAdv::printClassData(
       }
    }
    if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
@@ -2174,14 +2177,14 @@ void LinAdv::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
@@ -2191,76 +2194,76 @@ void LinAdv::printClassData(
 
    os << "   Refinement criteria parameters " << endl;
 
-   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
          << d_refinement_criteria[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_tol.size()); ++j) {
       os << "       d_dev_tol[" << j << "] = "
          << d_dev_tol[j] << endl;
    }
-   for (j = 0; j < static_cast<int>(d_dev.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev.size()); ++j) {
       os << "       d_dev[" << j << "] = "
          << d_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); ++j) {
       os << "       d_dev_time_max[" << j << "] = "
          << d_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); ++j) {
       os << "       d_dev_time_min[" << j << "] = "
          << d_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_tol.size()); ++j) {
       os << "       d_grad_tol[" << j << "] = "
          << d_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); ++j) {
       os << "       d_grad_time_max[" << j << "] = "
          << d_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); ++j) {
       os << "       d_grad_time_min[" << j << "] = "
          << d_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_onset.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_onset.size()); ++j) {
       os << "       d_shock_onset[" << j << "] = "
          << d_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_tol.size()); ++j) {
       os << "       d_shock_tol[" << j << "] = "
          << d_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); ++j) {
       os << "       d_shock_time_max[" << j << "] = "
          << d_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); ++j) {
       os << "       d_shock_time_min[" << j << "] = "
          << d_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_tol.size()); ++j) {
       os << "       d_rich_tol[" << j << "] = "
          << d_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); ++j) {
       os << "       d_rich_time_max[" << j << "] = "
          << d_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); ++j) {
       os << "       d_rich_time_min[" << j << "] = "
          << d_rich_time_min[j] << endl;
    }
@@ -2352,7 +2355,7 @@ void LinAdv::getFromInput(
       std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < num_keys; i++) {
+      for (int i = 0; i < num_keys; ++i) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -2371,7 +2374,7 @@ void LinAdv::getFromInput(
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
-               def_key_cnt++;
+               ++def_key_cnt;
             }
 
             if (error_db && error_key == "UVAL_DEVIATION") {
@@ -2508,10 +2511,10 @@ void LinAdv::getFromInput(
        * Check that input is found for each string identifier in key list.
        */
       for (int k0 = 0;
-           k0 < static_cast<int>(d_refinement_criteria.size()); k0++) {
+           k0 < static_cast<int>(d_refinement_criteria.size()); ++k0) {
          string use_key = d_refinement_criteria[k0];
          bool key_found = false;
-         for (int k1 = 0; k1 < def_key_cnt; k1++) {
+         for (int k1 = 0; k1 < def_key_cnt; ++k1) {
             string def_key = ref_keys_defined[k1];
             if (def_key == use_key) key_found = true;
          }
@@ -2649,13 +2652,13 @@ void LinAdv::getFromInput(
                                            << "`uval' data missing in input for key = "
                                            << init_data_keys[nkey] << endl);
                }
-               i++;
+               ++i;
 
                found_interval_data = (i == d_number_of_intervals);
 
             }
 
-            nkey++;
+            ++nkey;
 
          }
 
@@ -2696,8 +2699,8 @@ void LinAdv::getFromInput(
    const hier::IntVector& one_vec = hier::IntVector::getOne(d_dim);
    hier::IntVector periodic(d_grid_geometry->getPeriodicShift(one_vec));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (input_db->keyExists("Boundary_data")) {
@@ -2793,7 +2796,7 @@ void LinAdv::putToRestart(
       restart_db->putStringVector("d_refinement_criteria",
          d_refinement_criteria);
    }
-   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); ++i) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
          restart_db->putDoubleVector("d_dev_tol", d_dev_tol);
@@ -2903,7 +2906,7 @@ void LinAdv::getFromRestart()
    if (db->keyExists("d_refinement_criteria")) {
       d_refinement_criteria = db->getStringVector("d_refinement_criteria");
    }
-   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); ++i) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
          d_dev_tol = db->getDoubleVector("d_dev_tol");
@@ -3024,7 +3027,7 @@ void LinAdv::checkBoundaryData(
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
-   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); ++i) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
@@ -3033,12 +3036,12 @@ void LinAdv::checkBoundaryData(
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_EDGES);
+               NUM_2D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_2D_NODES);
+               NUM_2D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
@@ -3046,17 +3049,17 @@ void LinAdv::checkBoundaryData(
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_FACES);
+               NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_EDGES);
+               NUM_3D_EDGES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) ==
-                        NUM_3D_NODES);
+               NUM_3D_NODES);
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }

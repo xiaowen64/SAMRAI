@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Basic templated edge-centered patch data operations.
  *
  ************************************************************************/
@@ -83,7 +83,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 + src2, elementwise. 
+    * Set dst = src1 + src2, elementwise.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -98,7 +98,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 - src2, elementwise. 
+    * Set dst = src1 - src2, elementwise.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -113,7 +113,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 * src2, elementwise. 
+    * Set dst = src1 * src2, elementwise.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -128,7 +128,7 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 / src2, elementwise.  No check for division by zero. 
+    * Set dst = src1 / src2, elementwise.  No check for division by zero.
     *
     * @pre dst && src1 && src2
     * @pre (dst->getDim() == src1->getDim()) &&
@@ -245,10 +245,10 @@ public:
 private:
    // The following are not implemented:
    PatchEdgeDataBasicOps(
-      const PatchEdgeDataBasicOps<TYPE>&);
-   void
+      const PatchEdgeDataBasicOps&);
+   PatchEdgeDataBasicOps&
    operator = (
-      const PatchEdgeDataBasicOps<TYPE>&);
+      const PatchEdgeDataBasicOps&);
 
    ArrayDataBasicOps<TYPE> d_array_ops;
 };

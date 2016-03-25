@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated cell centered patch data type
  *
  ************************************************************************/
@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/pdat/CellGeometry.h"
 #include "SAMRAI/pdat/CellOverlap.h"
+#include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -32,6 +33,9 @@ namespace pdat {
 
 template<class TYPE>
 const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
+
+template<class TYPE>
+boost::shared_ptr<tbox::Timer> CellData<TYPE>::t_copy;
 
 /*
  *************************************************************************
@@ -77,6 +81,9 @@ CellData<TYPE>::CellData(
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
 
+   t_copy = tbox::TimerManager::getManager()->
+      getTimer("pdat::CellData::copy");
+
    d_data.reset(new ArrayData<TYPE>(getGhostBox(), depth));
 }
 
@@ -93,7 +100,7 @@ CellData<TYPE>::getDepth() const
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 CellData<TYPE>::getPointer(
    int depth)
 {
@@ -103,7 +110,7 @@ CellData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 CellData<TYPE>::getPointer(
    int depth) const
 {
@@ -209,6 +216,7 @@ CellData<TYPE>::copy(
    const hier::PatchData& src,
    const hier::BoxOverlap& overlap)
 {
+   t_copy->start();
    const CellData<TYPE>* t_src = dynamic_cast<const CellData<TYPE> *>(&src);
 
    const CellOverlap* t_overlap = dynamic_cast<const CellOverlap *>(&overlap);
@@ -225,6 +233,7 @@ CellData<TYPE>::copy(
          copyWithRotation(*t_src, *t_overlap);
       }
    }
+   t_copy->stop();
 }
 
 template<class TYPE>
@@ -306,7 +315,7 @@ CellData<TYPE>::copyWithRotation(
             hier::Transformation::rotateIndex(src_index, back_rotate);
             src_index += back_shift;
 
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*d_data)(dst_index, d) = (*src.d_data)(src_index, d);
             }
          }
@@ -438,7 +447,7 @@ CellData<TYPE>::packWithRotation(
 
       if (!copybox.empty()) {
 
-         for (int d = 0; d < depth; d++) {
+         for (int d = 0; d < depth; ++d) {
             CellData<double>::iterator ciend(CellGeometry::end(copybox));
             for (CellData<double>::iterator ci(CellGeometry::begin(copybox));
                  ci != ciend; ++ci) {
@@ -448,7 +457,7 @@ CellData<TYPE>::packWithRotation(
                src_index += back_shift;
 
                buffer[i] = (*d_data)(src_index, d);
-               i++;
+               ++i;
             }
          }
       }
@@ -472,12 +481,12 @@ CellData<TYPE>::unpackStream(
 }
 
 /*
-*************************************************************************
-*                                                                       *
-* Add source data to the destination according to overlap descriptor.   *
-*                                                                       *
-*************************************************************************
-*/
+ *************************************************************************
+ *                                                                       *
+ * Add source data to the destination according to overlap descriptor.   *
+ *                                                                       *
+ *************************************************************************
+ */
 
 template<class TYPE>
 void CellData<TYPE>::sum(
@@ -486,12 +495,12 @@ void CellData<TYPE>::sum(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, src);
 
-   const CellOverlap *t_overlap =
+   const CellOverlap* t_overlap =
       dynamic_cast<const CellOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
-   const CellData<TYPE> *t_onode_src =
+   const CellData<TYPE>* t_onode_src =
       dynamic_cast<const CellData<TYPE> *>(&src);
 
    // NOTE:  We assume this operation is only needed to
@@ -500,49 +509,49 @@ void CellData<TYPE>::sum(
    //        data or other flavors of the copy operation, we
    //        should refactor the routine similar to the way
    //        the regular copy operations are implemented.
-   if ( t_onode_src == NULL ) {
+   if (t_onode_src == NULL) {
       TBOX_ERROR("CellData<dim>::sum error!\n"
-                 << "Can copy and add only from CellData<TYPE> "
-                 << "of the same dim and TYPE.");
+         << "Can copy and add only from CellData<TYPE> "
+         << "of the same dim and TYPE.");
    } else {
 
-      const hier::IntVector& src_offset( t_overlap->getSourceOffset() );
+      const hier::IntVector& src_offset(t_overlap->getSourceOffset());
       const hier::BoxContainer& box_container(
-         t_overlap->getDestinationBoxContainer() );
-      const ArrayData<TYPE>& src_array( *t_onode_src->d_data );
+         t_overlap->getDestinationBoxContainer());
+      const ArrayData<TYPE>& src_array(*t_onode_src->d_data);
       if (d_data->isInitialized()) {
-         d_data->sum( src_array, box_container, src_offset );
+         d_data->sum(src_array, box_container, src_offset);
       }
    }
 }
 
 /*
-*************************************************************************
-*                                                                       *
-* Unpack data from the message stream and add to this cell data         *
-* object using the index space in the overlap descriptor.               *
-*                                                                       *
-*************************************************************************
-*/
+ *************************************************************************
+ *                                                                       *
+ * Unpack data from the message stream and add to this cell data         *
+ * object using the index space in the overlap descriptor.               *
+ *                                                                       *
+ *************************************************************************
+ */
 
 template<class TYPE>
 void CellData<TYPE>::unpackStreamAndSum(
    tbox::MessageStream& stream,
    const hier::BoxOverlap& overlap)
 {
-   const CellOverlap *t_overlap =
+   const CellOverlap* t_overlap =
       dynamic_cast<const CellOverlap *>(&overlap);
 
    TBOX_ASSERT(t_overlap != NULL);
 
    const hier::BoxContainer& dst_boxes(
-      t_overlap->getDestinationBoxContainer() );
-   const hier::IntVector& src_offset( t_overlap->getSourceOffset() );
+      t_overlap->getDestinationBoxContainer());
+   const hier::IntVector& src_offset(t_overlap->getSourceOffset());
    for (hier::BoxContainer::const_iterator dst_box(dst_boxes.begin());
-        dst_box != dst_boxes.end(); dst_box++) {
-      const hier::Box intersect( *dst_box * d_data->getBox() );
+        dst_box != dst_boxes.end(); ++dst_box) {
+      const hier::Box intersect(*dst_box * d_data->getBox());
       if (!intersect.empty()) {
-         d_data->unpackStreamAndSum( stream, intersect, src_offset );
+         d_data->unpackStreamAndSum(stream, intersect, src_offset);
       }
    }
 }
@@ -607,7 +616,7 @@ CellData<TYPE>::print(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       os << "Array depth = " << d << std::endl;
       print(box, d, os, prec);
    }

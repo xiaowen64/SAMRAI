@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Hypre solver interface for diffusion-like elliptic problems.
  *
  ************************************************************************/
@@ -311,8 +311,8 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
    if (!s_Ak0_var[d_dim.getValue() - 1]) {
-     s_Ak0_var[d_dim.getValue() - 1].reset(
-        new pdat::OutersideVariable<double>(d_dim, d_object_name + "::Ak0", 1));
+      s_Ak0_var[d_dim.getValue() - 1].reset(
+         new pdat::OutersideVariable<double>(d_dim, d_object_name + "::Ak0", 1));
    }
 
    d_Ak0_id =
@@ -527,7 +527,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1 }, { 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -537,7 +537,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1, 0 }, { 0, -1 }, { 0, 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -547,7 +547,7 @@ CellPoissonHypreSolver::allocateHypreData()
             { -1, 0, 0 }, { 0, -1, 0 }, { 0, 0, -1 }, { 0, 0, 0 }
          };
          HYPRE_StructStencilCreate(d_dim.getValue(), stencil_size, &d_stencil);
-         for (int s = 0; s < stencil_size; s++) {
+         for (int s = 0; s < stencil_size; ++s) {
             HYPRE_StructStencilSetElement(d_stencil, s,
                stencil_offsets[s]);
          }
@@ -788,18 +788,18 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
          C_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
-            patch.getPatchData(spec.getCPatchDataId()));
+               patch.getPatchData(spec.getCPatchDataId()));
          TBOX_ASSERT(C_data);
       }
 
       if (!spec.dIsConstant()) {
          D_data = BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
-            patch.getPatchData(spec.getDPatchDataId()));
+               patch.getPatchData(spec.getDPatchDataId()));
          TBOX_ASSERT(D_data);
       }
 
       Ak0 = BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
-         patch.getPatchData(d_Ak0_id));
+            patch.getPatchData(d_Ak0_id));
       TBOX_ASSERT(Ak0);
 
       Ak0->fillAll(0.0);
@@ -931,10 +931,12 @@ CellPoissonHypreSolver::setMatrixCoefficients(
           */
 
          std::vector<hier::BoundaryBox> empty_vector(0,
-            hier::BoundaryBox(d_dim));
+                                                     hier::BoundaryBox(d_dim));
          const std::vector<hier::BoundaryBox>& surface_boxes =
             d_dim == tbox::Dimension(2) ? d_cf_boundary->getEdgeBoundaries(pi->getGlobalId()) :
-            (d_dim == tbox::Dimension(3) ? d_cf_boundary->getFaceBoundaries(pi->getGlobalId()) : empty_vector);
+            (d_dim ==
+             tbox::Dimension(3) ? d_cf_boundary->getFaceBoundaries(pi->getGlobalId()) :
+             empty_vector);
 
          const int n_bdry_boxes = static_cast<int>(surface_boxes.size());
 
@@ -993,7 +995,7 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       int stencil_indices[stencil_size];
       double mat_entries[stencil_size];
 
-      for (i = 0; i < stencil_size; i++) stencil_indices[i] = i;
+      for (i = 0; i < stencil_size; ++i) stencil_indices[i] = i;
 
       pdat::CellIterator ic(pdat::CellGeometry::begin(patch_box));
       pdat::CellIterator icend(pdat::CellGeometry::end(patch_box));
@@ -1075,7 +1077,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     * and so is moved to the rhs.  Before solving, g*A*k0(a) is added
     * to rhs.
     */
-   boost::shared_ptr<pdat::OutersideData<double> >Ak0(
+   boost::shared_ptr<pdat::OutersideData<double> > Ak0(
       BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
          patch.getPatchData(d_Ak0_id)));
 

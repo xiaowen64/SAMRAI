@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -24,6 +24,7 @@
 #include "SAMRAI/xfer/CoarsenSchedule.h"
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
+#include "SAMRAI/hier/PatchDataRestartManager.h"
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -191,7 +192,7 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    const std::string& object_name,
    const boost::shared_ptr<tbox::Database>& input_db,
    HyperbolicPatchStrategy* patch_strategy,
-   bool use_time_refinement) :
+   bool use_time_refinement):
    d_patch_strategy(patch_strategy),
    d_object_name(object_name),
    d_use_time_refinement(use_time_refinement),
@@ -343,7 +344,7 @@ HyperbolicLevelIntegrator::initializeLevelData(
 
             patch->setPatchData(old_indx, patch->getPatchData(cur_indx));
 
-            time_dep_var++;
+            ++time_dep_var;
          }
 
       }
@@ -398,7 +399,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
       && (coarsest_level <= finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln0 = 0; ln0 <= finest_level; ln0++) {
+   for (int ln0 = 0; ln0 <= finest_level; ++ln0) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln0));
    }
 #endif
@@ -408,7 +409,7 @@ HyperbolicLevelIntegrator::resetHierarchyConfiguration(
    d_bdry_sched_advance.resize(finest_hiera_level + 1);
    d_bdry_sched_advance_new.resize(finest_hiera_level + 1);
 
-   for (int ln = coarsest_level; ln <= finest_hiera_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_hiera_level; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
 
       t_advance_bdry_fill_create->start();
@@ -677,7 +678,7 @@ HyperbolicLevelIntegrator::applyRichardsonExtrapolation(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       d_patch_strategy->
-         tagRichardsonExtrapolationCells(*patch,
+      tagRichardsonExtrapolationCells(*patch,
          error_level_number,
          d_new,                                     //  finer context
          d_current,                                 //  coarser context
@@ -891,9 +892,8 @@ HyperbolicLevelIntegrator::getMaxFinerLevelDt(
 {
    NULL_USE(finer_level_number);
 
-
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int id = 0; id < ratio.getDim().getValue(); id++) {
+   for (int id = 0; id < ratio.getDim().getValue(); ++id) {
       TBOX_ASSERT(ratio(id) > 0);
    }
 #endif
@@ -1262,7 +1262,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    TBOX_ASSERT(hierarchy);
 
    std::vector<double> old_times(finest_level - coarsest_level + 1);
-   for (int i = coarsest_level; i <= finest_level; i++) {
+   for (int i = coarsest_level; i <= finest_level; ++i) {
       old_times[i] = old_time;
    }
    standardLevelSynchronization(hierarchy, coarsest_level, finest_level,
@@ -1283,7 +1283,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
       && (finest_level <= hierarchy->getFinestLevelNumber()));
    TBOX_ASSERT(static_cast<int>(old_times.size()) >= finest_level);
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln = coarsest_level; ln < finest_level; ln++) {
+   for (int ln = coarsest_level; ln < finest_level; ++ln) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
       TBOX_ASSERT(sync_time >= old_times[ln]);
    }
@@ -1291,7 +1291,7 @@ HyperbolicLevelIntegrator::standardLevelSynchronization(
    TBOX_ASSERT(hierarchy->getPatchLevel(finest_level));
    t_std_level_sync->start();
 
-   for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
+   for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
       const int coarse_ln = fine_ln - 1;
 
       boost::shared_ptr<hier::PatchLevel> fine_level(
@@ -1355,7 +1355,7 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
       && (coarsest_level < finest_level)
       && (finest_level <= hierarchy->getFinestLevelNumber()));
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (int ln = coarsest_level; ln <= finest_level; ln++) {
+   for (int ln = coarsest_level; ln <= finest_level; ++ln) {
       TBOX_ASSERT(hierarchy->getPatchLevel(ln));
    }
 #endif
@@ -1366,7 +1366,7 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
 
       d_patch_strategy->setDataContext(d_current);
 
-      for (int fine_ln = finest_level; fine_ln > coarsest_level; fine_ln--) {
+      for (int fine_ln = finest_level; fine_ln > coarsest_level; --fine_ln) {
          const int coarse_ln = fine_ln - 1;
 
          boost::shared_ptr<hier::PatchLevel> fine_level(
@@ -1539,7 +1539,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
 
       std::list<boost::shared_ptr<hier::Variable> >::iterator time_dep_var =
-          d_time_dep_variables.begin();
+         d_time_dep_variables.begin();
       while (time_dep_var != d_time_dep_variables.end()) {
 
          int cur_indx =
@@ -1579,7 +1579,7 @@ HyperbolicLevelIntegrator::resetTimeDependentData(
 
          patch->deallocatePatchData(new_indx);
 
-         time_dep_var++;
+         ++time_dep_var;
 
       }
 
@@ -1701,7 +1701,7 @@ HyperbolicLevelIntegrator::registerVariable(
    TBOX_ASSERT(transfer_geom);
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, *var);
 
-   if ( !d_bdry_fill_advance ) {
+   if (!d_bdry_fill_advance) {
       /*
        * One-time set-up for communication algorithms.
        * We wait until this point to do this because we need a dimension.
@@ -1749,7 +1749,7 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
+         hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
          /*
@@ -1844,7 +1844,7 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
+         hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
          /*
@@ -1896,7 +1896,7 @@ HyperbolicLevelIntegrator::registerVariable(
          /*
           * Register variable and context needed for restart.
           */
-         hier::VariableDatabase::getDatabase()->
+         hier::PatchDataRestartManager::getManager()->
          registerPatchDataForRestart(cur_id);
 
          boost::shared_ptr<hier::RefineOperator> refine_op(
@@ -2067,7 +2067,6 @@ HyperbolicLevelIntegrator::preprocessFluxData(
    TBOX_ASSERT(level);
    TBOX_ASSERT(cur_time <= new_time);
 
-
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
    const int level_number = level->getLevelNumber();
@@ -2120,7 +2119,7 @@ HyperbolicLevelIntegrator::preprocessFluxData(
                   fsum_data->fillAll(0.0);
                }
 
-               fs_var++;
+               ++fs_var;
             }
          }
 
@@ -2230,9 +2229,9 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                flux_ghosts = sflux_data->getGhostCellWidth();
             }
 
-            for (int d = 0; d < ddepth; d++) {
+            for (int d = 0; d < ddepth; ++d) {
                // loop over lower and upper parts of outer face/side arrays
-               for (int ifs = 0; ifs < 2; ifs++) {
+               for (int ifs = 0; ifs < 2; ++ifs) {
                   if (level->getDim() == tbox::Dimension(1)) {
                      SAMRAI_F77_FUNC(upfluxsum1d, UPFLUXSUM1D) (ilo(0), ihi(0),
                         flux_ghosts(0),
@@ -2339,8 +2338,8 @@ HyperbolicLevelIntegrator::postprocessFluxData(
                }  // loop over lower and upper sides/faces
             }  // loop over depth
 
-            flux_var++;
-            fluxsum_var++;
+            ++flux_var;
+            ++fluxsum_var;
 
          }  // loop over flux variables
 
@@ -2381,7 +2380,7 @@ HyperbolicLevelIntegrator::copyTimeDependentData(
             patch->getPatchData(*time_dep_var, dst_context));
 
          dst_data->copy(*src_data);
-         time_dep_var++;
+         ++time_dep_var;
       }
 
    }
@@ -2467,7 +2466,7 @@ HyperbolicLevelIntegrator::printStatistics(
          }
          s
          <<
-         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-NormDiff  B-Sum B-Avg B-Min -> B-Max B-NormDiff C/B-Avg\n";
+         " Seq#  SimTime       C-Sum      C-Avg      C-Min   ->    C-Max  C-MaxNorm   B-Sum B-Avg B-Min -> B-Max B-MaxNorm  C/B-Avg\n";
 #ifdef __INTEL_COMPILER
 #pragma warning (disable:1572)
 #endif
@@ -2478,14 +2477,16 @@ HyperbolicLevelIntegrator::printStatistics(
                      ), sn);
             const double cmin = statn->getGlobalProcStatMin(cstat.getInstanceId(
                      ), sn);
-            const double cdiffnorm = cmax != 0 ? 1.0 - cmin / cmax : 0;
+            const double cavg = csum / mpi.getSize();
+            const double cmaxnorm = cavg != 0 ? cmax / cavg - 1 : 0;
             const double bsum = statn->getGlobalProcStatSum(bstat.getInstanceId(
                      ), sn);
             const double bmax = statn->getGlobalProcStatMax(bstat.getInstanceId(
                      ), sn);
             const double bmin = statn->getGlobalProcStatMin(bstat.getInstanceId(
                      ), sn);
-            const double bdiffnorm = bmax != 0 ? 1.0 - bmin / bmax : 0;
+            const double bavg = bsum / mpi.getSize();
+            const double bmaxnorm = bavg != 0 ? bmax / bavg - 1 : 0;
             const double stime = statn->getGlobalProcStatMin(
                   tstat.getInstanceId(),
                   sn);
@@ -2498,14 +2499,14 @@ HyperbolicLevelIntegrator::printStatistics(
               << std::setw(10) << csum / mpi.getSize() << " "
               << std::setw(10) << cmin << " -> "
               << std::setw(10) << cmax
-              << "  " << std::setw(4) << std::setprecision(4) << cdiffnorm
+              << "  " << std::setw(4) << std::setprecision(4) << cmaxnorm
               << "  "
               << std::fixed << std::setprecision(0)
               << std::setw(6) << bsum << " "
               << std::setw(5) << bsum / mpi.getSize() << " "
               << std::setw(5) << bmin << "  ->"
               << std::setw(5) << bmax
-              << "   " << std::setw(4) << std::setprecision(4) << bdiffnorm
+              << "   " << std::setw(4) << std::setprecision(4) << bmaxnorm
               << std::setw(10) << std::setprecision(0)
               << (bsum != 0 ? csum / bsum : 0)
               << std::endl;

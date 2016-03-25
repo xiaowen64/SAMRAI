@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utility routines for manipulating 2D Skeleton boundary data
  *
  ************************************************************************/
@@ -154,7 +154,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_edge_conds.size()) == NUM_2D_EDGES);
    TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
-               NUM_2D_EDGES * (vardata->getDepth()));
+      NUM_2D_EDGES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
@@ -174,7 +174,7 @@ void SkeletonBoundaryUtilities2::fillEdgeBoundaryData(
 
    const std::vector<hier::BoundaryBox>& edge_bdry =
       pgeom->getCodimensionBoundaries(Bdry::EDGE2D);
-   for (int i = 0; i < static_cast<int>(edge_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(edge_bdry.size()); ++i) {
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == Bdry::EDGE2D);
 
       int bedge_loc = edge_bdry[i].getLocationIndex();
@@ -231,7 +231,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    TBOX_ASSERT(vardata);
    TBOX_ASSERT(static_cast<int>(bdry_node_conds.size()) == NUM_2D_NODES);
    TBOX_ASSERT(static_cast<int>(bdry_edge_values.size()) ==
-               NUM_2D_EDGES * (vardata->getDepth()));
+      NUM_2D_EDGES * (vardata->getDepth()));
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
@@ -252,7 +252,7 @@ void SkeletonBoundaryUtilities2::fillNodeBoundaryData(
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(Bdry::NODE2D);
 
-   for (int i = 0; i < static_cast<int>(node_bdry.size()); i++) {
+   for (int i = 0; i < static_cast<int>(node_bdry.size()); ++i) {
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == Bdry::NODE2D);
 
       int bnode_loc = node_bdry[i].getLocationIndex();
@@ -484,10 +484,10 @@ int SkeletonBoundaryUtilities2::checkBdryData(
         ic != icend; ++ic) {
       double checkval = valfact * (*vardata)(*id, depth) + constval;
       pdat::CellIndex check = *ic;
-      for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
+      for (int p = 0; p < gbox_to_check.numberCells(idir); ++p) {
          double offcheckval = checkval + dxfact * (p + 1);
          if ((*vardata)(check, depth) != offcheckval) {
-            num_bad_values++;
+            ++num_bad_values;
             TBOX_WARNING("Bad " << bdry_type_str
                                 << " boundary value for " << varname
                                 << " found in cell " << check
@@ -518,13 +518,13 @@ void SkeletonBoundaryUtilities2::read2dBdryEdges(
    TBOX_ASSERT(static_cast<int>(edge_conds.size()) == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 2; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 2; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 2) { // face boundary input required
 
-      for (int s = 0; s < NUM_2D_EDGES; s++) {
+      for (int s = 0; s < NUM_2D_EDGES; ++s) {
 
          string bdry_loc_str;
          switch (s) {
@@ -611,13 +611,13 @@ void SkeletonBoundaryUtilities2::read2dBdryNodes(
    TBOX_ASSERT(static_cast<int>(node_conds.size()) == NUM_2D_NODES);
 
    int num_per_dirs = 0;
-   for (int id = 0; id < 2; id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < 2; ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    if (num_per_dirs < 1) { // node boundary data required
 
-      for (int s = 0; s < NUM_2D_NODES; s++) {
+      for (int s = 0; s < NUM_2D_NODES; ++s) {
 
          string bdry_loc_str;
          switch (s) {

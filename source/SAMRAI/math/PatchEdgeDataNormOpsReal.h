@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated norm operations for real edge-centered data.
  *
  ************************************************************************/
@@ -237,10 +237,10 @@ public:
 private:
    // The following are not implemented:
    PatchEdgeDataNormOpsReal(
-      const PatchEdgeDataNormOpsReal<TYPE>&);
-   void
+      const PatchEdgeDataNormOpsReal&);
+   PatchEdgeDataNormOpsReal&
    operator = (
-      const PatchEdgeDataNormOpsReal<TYPE>&);
+      const PatchEdgeDataNormOpsReal&);
 
    ArrayDataNormOpsReal<TYPE> d_array_ops;
 };

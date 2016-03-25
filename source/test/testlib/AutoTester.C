@@ -3,8 +3,8 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
- * Description:   (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
+ * Description:   (c) 1997-2014 Lawrence Livermore National Security, LLC
  *                Description:   Class used for auto testing applications
  *
  ************************************************************************/
@@ -19,7 +19,8 @@ AutoTester::AutoTester(
    const std::string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db):
-   d_dim(dim)
+   d_dim(dim),
+   d_base_name("unnamed")
 #ifdef HAVE_HDF5
    ,
    d_hdf_db("AutoTesterDatabase")
@@ -38,8 +39,18 @@ AutoTester::AutoTester(
 
    getFromInput(input_db);
 
+   std::string test_patch_boxes_filename = "test_inputs/";
+#if defined(__xlC__)
+#ifdef OPT_BUILD
+   test_patch_boxes_filename += "xlC/";
+#else
+   test_patch_boxes_filename += "xlC_debug/";
+#endif
+#endif
+   test_patch_boxes_filename += d_base_name + ".boxes";
+
    const std::string hdf_filename =
-      d_test_patch_boxes_filename
+      test_patch_boxes_filename
       + "." + tbox::Utilities::nodeToString(mpi.getSize())
       + "." + tbox::Utilities::processorToString(mpi.getRank());
 
@@ -122,7 +133,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 0 FAILED: Check Time Refinement Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -145,7 +156,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 1 FAILED: Check Time Refinement Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -169,7 +180,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 2 FAILED: Check Hyperbolic Level Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -188,7 +199,7 @@ int AutoTester::evalTestData(
                     << std::endl;
       } else {
          tbox::perr << "Test 3 FAILED: Check Gridding Algorithm" << std::endl;
-         num_failures++;
+         ++num_failures;
       }
 
    }
@@ -220,7 +231,7 @@ int AutoTester::evalTestData(
           * We should be checking against base runs with the same number of processors,
           * compare different data.
           */
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
@@ -248,7 +259,7 @@ int AutoTester::evalTestData(
          boost::shared_ptr<tbox::Database> step_db(
             d_hdf_db.putDatabase(step_name));
 
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
             boost::shared_ptr<hier::PatchLevel> level(
                hierarchy->getPatchLevel(ln));
 
@@ -265,7 +276,7 @@ int AutoTester::evalTestData(
       }
 #endif
 
-      d_test_patch_boxes_step_count++;
+      ++d_test_patch_boxes_step_count;
 
    }
 
@@ -328,7 +339,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 0 FAILED: Simulation time incorrect"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -350,7 +361,7 @@ int AutoTester::evalTestData(
          } else {
             tbox::perr << "Test 1 FAILED: Check Method of Lines Integrator"
                        << std::endl;
-            num_failures++;
+            ++num_failures;
          }
       }
 
@@ -368,7 +379,7 @@ int AutoTester::evalTestData(
          tbox::plog << "Test 2: Gridding Alg check successful" << std::endl;
       } else {
          tbox::perr << "Test 2 FAILED: Check Gridding Algorithm" << std::endl;
-         num_failures++;
+         ++num_failures;
       }
 
    }
@@ -393,7 +404,7 @@ int AutoTester::evalTestData(
          boost::shared_ptr<tbox::Database> step_db(
             d_hdf_db.getDatabase(step_name));
 
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
 
             const std::string level_name =
                std::string("level_number_") + tbox::Utilities::levelToString(ln);
@@ -425,7 +436,7 @@ int AutoTester::evalTestData(
          boost::shared_ptr<tbox::Database> step_db(
             d_hdf_db.putDatabase(step_name));
 
-         for (int ln = 0; ln < num_levels; ln++) {
+         for (int ln = 0; ln < num_levels; ++ln) {
             boost::shared_ptr<hier::PatchLevel> level(
                hierarchy->getPatchLevel(ln));
 
@@ -439,7 +450,7 @@ int AutoTester::evalTestData(
       }
 #endif
 
-      d_test_patch_boxes_step_count++;
+      ++d_test_patch_boxes_step_count;
 
    }
 
@@ -459,6 +470,8 @@ void AutoTester::getFromInput(
 {
    boost::shared_ptr<tbox::Database> tester_db(
       input_db->getDatabase(d_object_name));
+   boost::shared_ptr<tbox::Database> main_db(
+      input_db->getDatabase("Main"));
 
    /*
     * Read testing parameters from testing_db
@@ -482,6 +495,7 @@ void AutoTester::getFromInput(
                  << "Cannot 'read_patch_boxes' and 'write_patch_boxes' \n"
                  << "at the same time." << std::endl;
    }
+   d_base_name = main_db->getStringWithDefault("base_name", d_base_name);
    if (d_read_patch_boxes || d_write_patch_boxes) {
       if (!tester_db->keyExists("test_patch_boxes_at_steps")) {
          tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
@@ -490,14 +504,6 @@ void AutoTester::getFromInput(
       } else {
          d_test_patch_boxes_at_steps =
             tester_db->getIntegerVector("test_patch_boxes_at_steps");
-      }
-      if (!tester_db->keyExists("test_patch_boxes_filename")) {
-         tbox::perr << "FAILED: - AutoTester " << d_object_name << "\n"
-                    << "Must provide 'test_patch_boxes_filename' data."
-                    << std::endl;
-      } else {
-         d_test_patch_boxes_filename =
-            tester_db->getString("test_patch_boxes_filename");
       }
    }
 
@@ -586,9 +592,9 @@ int AutoTester::checkHierarchyBoxes(
                  << correct_minus_computed.format("\t");
       tbox::plog << " global box_level \\ correct_box_level:\n"
                  << computed_minus_correct.format("\t");
-      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ",2) << '\n'
-                 << " box_level:\n" << box_level.format(" ",2) << "\n\n";
-      num_failures++;
+      tbox::plog << " correct_box_level:\n" << correct_box_level.format(" ", 2) << '\n'
+                 << " box_level:\n" << box_level.format(" ", 2) << "\n\n";
+      ++num_failures;
    }
 
    if (d_output_correct) {

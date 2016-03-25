@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Multiblock performance tests.
  *
  ************************************************************************/
@@ -164,7 +164,7 @@ int main(
    tbox::SAMRAI_MPI::init(&argc, &argv);
    tbox::SAMRAIManager::initialize();
 
-   for (int run = 0; run < 1; run++) {
+   for (int run = 0; run < 1; ++run) {
 
       tbox::SAMRAIManager::startup();
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
@@ -332,7 +332,6 @@ int main(
             mpi.getSize());
       }
 
-
       /*
        * Create major algorithm and data objects which comprise application.
        * Each object will be initialized either from input data or restart
@@ -374,14 +373,14 @@ int main(
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim,
-         input_db->getDatabase("BergerRigoutsos")));
+            input_db->getDatabase("BergerRigoutsos")));
 
       boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "TreeLoadBalancer",
             input_db->getDatabaseWithDefault("TreeLoadBalancer",
-                                             boost::shared_ptr<tbox::Database>())));
+               boost::shared_ptr<tbox::Database>())));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       boost::shared_ptr<mesh::GriddingAlgorithm> mblk_gridding_algorithm(

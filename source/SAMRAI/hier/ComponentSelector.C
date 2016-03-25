@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Simple bit vector of a fixed length (128 bits)
  *
  ************************************************************************/
@@ -22,7 +22,7 @@ ComponentSelector::ComponentSelector(
    int num_mod = pd_entries % C_BITSET_SIZE;
 
    if (num_mod != 0) {
-      num_bitset_elements++;
+      ++num_bitset_elements;
    }
 
    std::bitset<C_BITSET_SIZE> l_bits;

@@ -3,19 +3,17 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   Test program for performance of tree search algorithm. 
 ##
 #########################################################################
 
-SAMRAI	      =	@top_srcdir@
-SRCDIR	      =	@srcdir@
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
 SUBDIR        = source/test/performance/treesearch
-VPATH	      =	@srcdir@
+VPATH         = @srcdir@
 OBJECT        = ../../../..
 REPORT        = $(OBJECT)/report.xml
-
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)
 
 default: check
 
@@ -71,16 +69,16 @@ examples:
 perf:
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 include $(SRCDIR)/Makefile.depend

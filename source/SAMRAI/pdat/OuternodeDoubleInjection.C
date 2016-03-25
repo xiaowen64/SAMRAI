@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   ConstantCoarsen averaging operator for outernode-centered
  *                double data on a mesh.
  *
@@ -107,7 +107,7 @@ OuternodeDoubleInjection::getOperatorPriority() const
 }
 
 hier::IntVector
-OuternodeDoubleInjection::getStencilWidth( const tbox::Dimension &dim ) const
+OuternodeDoubleInjection::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -143,13 +143,13 @@ OuternodeDoubleInjection::coarsen(
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
-   for (int i = 0; i < 2; i++) {
+   for (int i = 0; i < 2; ++i) {
 
-      for (int axis = 0; axis < dim.getValue(); axis++) {
+      for (int axis = 0; axis < dim.getValue(); ++axis) {
 
          if (cdata->dataExists(axis)) {
 
-            for (int d = 0; d < cdata->getDepth(); d++) {
+            for (int d = 0; d < cdata->getDepth(); ++d) {
 
                if (dim == tbox::Dimension(1)) {
                   SAMRAI_F77_FUNC(conavgouternodedoub1d,

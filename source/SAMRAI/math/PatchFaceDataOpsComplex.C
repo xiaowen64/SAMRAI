@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex face-centered patch data.
  *
  ************************************************************************/
@@ -77,7 +77,7 @@ PatchFaceDataOpsComplex::copyData(
    TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       dst->getArrayData(d).copy(src->getArrayData(d),
          pdat::FaceGeometry::toFaceBox(box, d));
    }

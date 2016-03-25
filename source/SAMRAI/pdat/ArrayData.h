@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
@@ -29,11 +29,11 @@
 namespace SAMRAI {
 namespace pdat {
 
-template <class TYPE>
+template<class TYPE>
 class OuteredgeData;
-template <class TYPE>
+template<class TYPE>
 class OuternodeData;
-template <class TYPE>
+template<class TYPE>
 class SideData;
 
 /*!
@@ -614,12 +614,12 @@ private:
 
    // Unimplemented copy constructor.
    ArrayData(
-      const ArrayData<TYPE>&);
+      const ArrayData&);
 
    // Unimplemented assignment operator.
-   void
+   ArrayData&
    operator = (
-      const ArrayData<TYPE>&);
+      const ArrayData&);
 
    /*
     * Static integer constant describing this class's version number.

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for patch data communication tests.
  *
  ************************************************************************/
@@ -42,6 +42,10 @@ using namespace std;
 //#include "MultiVariableDataTest.h"
 
 #include "boost/shared_ptr.hpp"
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 using namespace SAMRAI;
 
@@ -258,6 +262,14 @@ int main(
          tbox::PIO::logOnlyNodeZero(log_file_name);
       }
 
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
+
       int ntimes_run = 1;
       if (main_db->keyExists("ntimes_run")) {
          ntimes_run = main_db->getInteger("ntimes_run");
@@ -441,13 +453,13 @@ int main(
 
       if (do_refine) {
 
-         for (int n = 0; n < ntimes_run; n++) {
+         for (int n = 0; n < ntimes_run; ++n) {
 
             /*
              * Create communication schedules for data refine tests.
              */
             refine_create_time->start();
-            for (int i = 0; i < nlevels; i++) {
+            for (int i = 0; i < nlevels; ++i) {
                comm_tester->createRefineSchedule(i);
             }
             refine_create_time->stop();
@@ -456,7 +468,7 @@ int main(
              * Perform refine data communication operations.
              */
             refine_comm_time->start();
-            for (int j = 0; j < nlevels; j++) {
+            for (int j = 0; j < nlevels; ++j) {
                comm_tester->performRefineOperations(j);
             }
             refine_comm_time->stop();
@@ -467,13 +479,13 @@ int main(
 
       if (do_coarsen) {
 
-         for (int n = 0; n < ntimes_run; n++) {
+         for (int n = 0; n < ntimes_run; ++n) {
 
             /*
              * Create communication schedules for data coarsen tests.
              */
             coarsen_create_time->start();
-            for (int i = nlevels - 1; i > 0; i--) {
+            for (int i = nlevels - 1; i > 0; --i) {
                comm_tester->createCoarsenSchedule(i);
             }
             coarsen_create_time->stop();
@@ -482,7 +494,7 @@ int main(
              * Perform coarsen data communication operations.
              */
             coarsen_comm_time->start();
-            for (int j = nlevels - 1; j > 0; j--) {
+            for (int j = nlevels - 1; j > 0; --j) {
                comm_tester->performCoarsenOperations(j);
             }
             coarsen_comm_time->stop();
@@ -495,13 +507,13 @@ int main(
 
       if (do_refine) {
 
-         for (int n = 0; n < ntimes_run; n++) {
+         for (int n = 0; n < ntimes_run; ++n) {
 
             /*
              * Create communication schedules for data refine tests.
              */
             refine_create_time->start();
-            for (int i = 0; i < nlevels; i++) {
+            for (int i = 0; i < nlevels; ++i) {
                comm_tester->resetRefineSchedule(i);
             }
             refine_create_time->stop();
@@ -510,7 +522,7 @@ int main(
              * Perform refine data communication operations.
              */
             refine_comm_time->start();
-            for (int j = 0; j < nlevels; j++) {
+            for (int j = 0; j < nlevels; ++j) {
                comm_tester->performRefineOperations(j);
             }
             refine_comm_time->stop();
@@ -521,13 +533,13 @@ int main(
 
       if (do_coarsen) {
 
-         for (int n = 0; n < ntimes_run; n++) {
+         for (int n = 0; n < ntimes_run; ++n) {
 
             /*
              * Create communication schedules for data coarsen tests.
              */
             coarsen_create_time->start();
-            for (int i = nlevels - 1; i > 0; i--) {
+            for (int i = nlevels - 1; i > 0; --i) {
                comm_tester->resetCoarsenSchedule(i);
             }
             coarsen_create_time->stop();
@@ -536,7 +548,7 @@ int main(
              * Perform coarsen data communication operations.
              */
             coarsen_comm_time->start();
-            for (int j = nlevels - 1; j > 0; j--) {
+            for (int j = nlevels - 1; j > 0; --j) {
                comm_tester->performCoarsenOperations(j);
             }
             coarsen_comm_time->stop();

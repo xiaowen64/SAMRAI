@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
@@ -28,20 +28,19 @@ namespace hier {
 
 const int BoxContainer::HIER_BOX_CONTAINER_VERSION = 0;
 
-
 /*
  *************************************************************************
  * Constructors and destructor
  *************************************************************************
  */
 
-BoxContainer::BoxContainer() :
+BoxContainer::BoxContainer():
    d_ordered(false)
 {
 }
 
 BoxContainer::BoxContainer(
-   const bool ordered) :
+   const bool ordered):
    d_ordered(ordered)
 {
 }
@@ -60,7 +59,7 @@ BoxContainer::BoxContainer(
 BoxContainer::BoxContainer(
    const BoxContainer& other):
    d_list(other.d_list),
-   d_ordered(false) 
+   d_ordered(false)
 {
    if (other.d_ordered) {
       order();
@@ -119,7 +118,7 @@ BoxContainer::BoxContainer(
  *************************************************************************
  *
  * Construct from DatabaseBox array.
- * 
+ *
  *************************************************************************
  */
 
@@ -128,7 +127,7 @@ BoxContainer::BoxContainer(
    d_ordered(false)
 {
    const int n = static_cast<int>(other.size());
-   for (int j = 0; j < n; j++) {
+   for (int j = 0; j < n; ++j) {
       pushBack(Box(other[j]));
    }
 }
@@ -141,7 +140,7 @@ BoxContainer::~BoxContainer()
  *************************************************************************
  *
  * Assignment.
- * 
+ *
  *************************************************************************
  */
 
@@ -152,7 +151,7 @@ BoxContainer::operator = (
    if (this != &rhs) {
       clear();
       d_list = rhs.d_list;
-      if (rhs.d_ordered) { 
+      if (rhs.d_ordered) {
          order();
       } else {
          d_ordered = false;
@@ -168,7 +167,7 @@ BoxContainer::operator = (
    clear();
 
    const int n = static_cast<int>(rhs.size());
-   for (int j = 0; j < n; j++) {
+   for (int j = 0; j < n; ++j) {
       pushBack(Box(rhs[j]));
    }
    d_ordered = false;
@@ -186,21 +185,55 @@ bool
 BoxContainer::operator == (
    const BoxContainer& rhs) const
 {
-   bool isEqual = (d_ordered == rhs.d_ordered); 
-   if (isEqual) {
-      isEqual = size() == rhs.size();
-   }
-   if (isEqual) {
-      if (!d_ordered) { 
-         isEqual = std::equal(d_list.begin(), d_list.end(),
-                      rhs.d_list.begin(), Box::box_equality());
+   bool is_equal = (d_ordered == rhs.d_ordered);
+   if (is_equal) {
+      if (!d_ordered) {
+         is_equal = isSpatiallyEqual(rhs);
       } else {
-         isEqual = std::equal(d_set.begin(), d_set.end(),
-                      rhs.d_set.begin(), Box::id_equal());
+         is_equal = isIdEqual(rhs);
+         if (is_equal) {
+            is_equal = isSpatiallyEqual(rhs);
+         }
       }
    }
 
-   return isEqual;
+   return is_equal;
+}
+
+bool
+BoxContainer::isIdEqual(
+   const BoxContainer& other) const
+{
+   if (!d_ordered || !other.d_ordered) {
+      TBOX_ERROR("isIdEqual called on unordered container." << std::endl);
+   }
+
+   bool is_equal = (size() == other.size());
+   if (is_equal) {
+      is_equal = std::equal(d_set.begin(), d_set.end(),
+            other.d_set.begin(), Box::id_equal());
+   }
+
+   return is_equal;
+}
+
+bool
+BoxContainer::isSpatiallyEqual(
+   const BoxContainer& other) const
+{
+
+   bool is_equal = (size() == other.size());
+   if (is_equal) {
+      if (d_ordered && other.d_ordered) {
+         is_equal = std::equal(d_set.begin(), d_set.end(),
+               other.d_set.begin(), Box::box_equality());
+      } else {
+         is_equal = std::equal(d_list.begin(), d_list.end(),
+               other.d_list.begin(), Box::box_equality());
+      }
+   }
+
+   return is_equal;
 }
 
 /*
@@ -278,7 +311,7 @@ BoxContainer::insert(
    }
 
    const std::list<Box>::iterator& iter = d_list.insert(d_list.end(), box);
-   Box* box_ptr(&(*iter));
+   Box * box_ptr(&(*iter));
    if (d_set.insert(box_ptr).second) {
       box_ptr->lockId();
       return true;
@@ -298,9 +331,9 @@ BoxContainer::insert(
  */
 
 void
-BoxContainer::insert (
+BoxContainer::insert(
    const_iterator first,
-   const_iterator last )
+   const_iterator last)
 {
 
    if (!d_ordered && isEmpty()) {
@@ -315,7 +348,7 @@ BoxContainer::insert (
       d_tree.reset();
    }
 
-   for (std::set<Box*, Box::id_less>::const_iterator set_iter = first.d_set_iter;
+   for (std::set<Box *, Box::id_less>::const_iterator set_iter = first.d_set_iter;
         set_iter != last.d_set_iter; ++set_iter) {
 
       TBOX_ASSERT((**set_iter).getBoxId().isValid());
@@ -391,7 +424,7 @@ BoxContainer::simplify()
       const tbox::Dimension dim(d_list.front().getDim());
 
       BoxContainer notCanonical;
-      for (int d = dim.getValue() - 1; d >= 0; d--) {
+      for (int d = dim.getValue() - 1; d >= 0; --d) {
          notCanonical.spliceBack(*this);
          while (!notCanonical.isEmpty()) {
             Box tryMe = notCanonical.front();
@@ -412,7 +445,7 @@ BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
 
                   combineDaPuppies = true;
-                  for (int du = d + 1; du < dim.getValue(); du++) {
+                  for (int du = d + 1; du < dim.getValue(); ++du) {
                      if ((al(du) != bl(du)) || (ah(du) != bh(du))) {
                         combineDaPuppies = false;
                         break;
@@ -422,7 +455,7 @@ BoxContainer::simplify()
                      if ((bl(d) > ah(d) + 1) || (bh(d) < al(d) - 1)) {
                         combineDaPuppies = false;
                      } else {
-                        for (int dl = 0; dl < d; dl++) {
+                        for (int dl = 0; dl < d; ++dl) {
                            if ((bl(dl) > ah(dl)) || (bh(dl) < al(dl))) {
                               combineDaPuppies = false;
                               break;
@@ -448,7 +481,7 @@ BoxContainer::simplify()
                   const Index& bh = tryMe.upper();
                   Index il = andMe.lower();
                   Index ih = andMe.upper();
-                  for (int dl = 0; dl < d; dl++) {
+                  for (int dl = 0; dl < d; ++dl) {
                      if (il(dl) < bl(dl)) {
                         il(dl) = bl(dl);
                      }
@@ -558,8 +591,7 @@ BoxContainer::removePeriodicImageBoxes()
    for (iterator na = begin(); na != end(); ) {
       if (na->isPeriodicImage()) {
          erase(na++);
-      }
-      else {
+      } else {
          ++na;
       }
    }
@@ -622,8 +654,8 @@ BoxContainer::rotate(
          for (iterator i = begin(); i != end(); ++i) {
             if (i->getBlockId() != block_id) {
                TBOX_ERROR("BoxContainer::rotate() error ..."
-                 << "\n  Attempted to rotate BoxContainer having Boxes with"
-                 << "\n  differing BlockIds " << std::endl);
+                  << "\n  Attempted to rotate BoxContainer having Boxes with"
+                  << "\n  differing BlockIds " << std::endl);
             } else {
                i->rotate(rotation_ident);
             }
@@ -636,7 +668,6 @@ BoxContainer::rotate(
       }
    }
 }
-
 
 /*
  *************************************************************************
@@ -659,13 +690,13 @@ BoxContainer::getBoundingBox() const
       if (i->getBlockId() == block_id) {
          bbox += *i;
       } else {
-         TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks"
+         TBOX_ERROR(
+            "Attempted to find bounding box for BoxContainer with boxes from different blocks"
             << std::endl);
       }
    }
    return bbox;
 }
-
 
 Box
 BoxContainer::getBoundingBox(
@@ -680,7 +711,7 @@ BoxContainer::getBoundingBox(
 
    /*
     * First find the first box with the given BlockId
-    */ 
+    */
    const_iterator i = begin();
    for ( ; i != end(); ++i) {
       if (i->getBlockId() == block_id) {
@@ -976,7 +1007,6 @@ BoxContainer::removeIntersections(
    }
 }
 
-
 void
 BoxContainer::removeIntersectionsFromSublist(
    const Box& takeaway,
@@ -1151,7 +1181,7 @@ BoxContainer::intersectBoxes(
 
    if (keep.isEmpty()) {
       clear();
-      return; 
+      return;
    }
 
    if (!keep.d_tree) {
@@ -1248,7 +1278,7 @@ BoxContainer::burstBoxes(
 
    // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < dimension; d++) {
+   for (int d = 0; d < dimension; ++d) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
@@ -1295,7 +1325,7 @@ BoxContainer::burstBoxes(
 
    // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < direction; d++) {
+   for (int d = 0; d < direction; ++d) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
@@ -1462,7 +1492,6 @@ BoxContainer::erase(
    }
 }
 
-
 int
 BoxContainer::erase(
    const Box& box)
@@ -1472,7 +1501,7 @@ BoxContainer::erase(
          << std::endl);
    }
 
-   int ret = static_cast<int>(d_set.erase(const_cast<Box*>(&box)));
+   int ret = static_cast<int>(d_set.erase(const_cast<Box *>(&box)));
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
         ++bi) {
       if (bi->getBoxId() == box.getBoxId()) {
@@ -1545,7 +1574,6 @@ BoxContainer::grow(
    }
 }
 
-
 void
 BoxContainer::shift(
    const IntVector& offset)
@@ -1610,7 +1638,6 @@ BoxContainer::hasBoxInBlock(
    }
 }
 
-
 /*
  ***********************************************************************
  * Write the BoxContainer to a restart database.
@@ -1655,7 +1682,6 @@ BoxContainer::putToRestart(
    }
 }
 
-
 /*
  ***********************************************************************
  * Read the BoxContainer from a restart database.
@@ -1690,14 +1716,13 @@ BoxContainer::getFromRestart(
          Box array_box(db_box_array[i]);
          array_box.setBlockId(BlockId(block_ids[i]));
          BoxId box_id(LocalId(local_ids[i]),
-            ranks[i],
-            PeriodicId(periodic_ids[i]));
+                      ranks[i],
+                      PeriodicId(periodic_ids[i]));
          array_box.setId(box_id);
          insert(end(), array_box);
       }
    }
 }
-
 
 /*
  ***********************************************************************
@@ -1708,12 +1733,13 @@ void
 BoxContainer::print(
    std::ostream& co) const
 {
-   co << size() << " boxes, " << (d_ordered?"ordered":"unordered") << '\n';
+   co << size() << " boxes, " << (d_ordered ? "ordered" : "unordered") << '\n';
    for (const_iterator bi = begin(); bi != end(); ++bi) {
       Box box(*bi);
       co << "    "
          << box << "   "
-         << box.numberCells() << '\n';
+         << box.numberCells() << '|'
+         << box.size() << '\n';
    }
 }
 
@@ -1747,7 +1773,6 @@ operator << (
    format.d_set.print(s);
    return s;
 }
-
 
 /*
  ***********************************************************************
@@ -1791,7 +1816,7 @@ BoxContainer::findOverlapBoxes(
 
 void
 BoxContainer::findOverlapBoxes(
-   std::vector<const Box*>& box_vector,
+   std::vector<const Box *>& box_vector,
    const Box& box) const
 {
    if (d_tree) {
@@ -1819,34 +1844,57 @@ BoxContainer::findOverlapBoxes(
    }
 
    if (!d_tree) {
-      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
+      TBOX_ERROR(
+         "Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
          << std::endl);
    }
 
    d_tree->findOverlapBoxes(overlap_boxes,
-                            box,
-                            refinement_ratio,
-                            include_singularity_block_neighbors); 
+      box,
+      refinement_ratio,
+      include_singularity_block_neighbors);
 }
 
+void
+BoxContainer::findOverlapBoxes(
+   std::vector<const Box *>& overlap_boxes,
+   const Box& box,
+   const IntVector& refinement_ratio,
+   bool include_singularity_block_neighbors) const
+{
+   if (isEmpty()) {
+      return;
+   }
+
+   if (!d_tree) {
+      TBOX_ERROR(
+         "Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
+         << std::endl);
+   }
+
+   d_tree->findOverlapBoxes(overlap_boxes,
+      box,
+      refinement_ratio,
+      include_singularity_block_neighbors);
+}
 
 bool
 BoxContainer::hasOverlap(
    const Box& box) const
 {
    if (d_tree) {
-      return (d_tree->hasOverlap(box));
+      return d_tree->hasOverlap(box);
    } else {
-      bool ret_val = false;      
+      bool ret_val = false;
       for (const_iterator ni = begin(); ni != end(); ++ni) {
          const Box& my_box = *ni;
          if (box.intersects(my_box)) {
             ret_val = true;
             break;
-         } 
+         }
       }
       return ret_val;
-   } 
+   }
 }
 
 BoxContainerSingleBlockIterator
@@ -1895,7 +1943,7 @@ BoxContainer::BoxContainerIterator::BoxContainerIterator(
    d_list_iter(from_start ? container.d_list.begin() :
                container.d_list.end()),
    d_set_iter(from_start ? container.d_set.begin() :
-               container.d_set.end()),
+              container.d_set.end()),
    d_ordered(container.d_ordered)
 {
 }
@@ -1906,8 +1954,7 @@ BoxContainer::BoxContainerIterator::BoxContainerIterator(
    d_ordered = other.d_ordered;
    if (d_ordered) {
       d_set_iter = other.d_set_iter;
-   }
-   else {
+   } else {
       d_list_iter = other.d_list_iter;
    }
 }
@@ -1938,8 +1985,7 @@ BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
    d_ordered = other.d_ordered;
    if (d_ordered) {
       d_set_iter = other.d_set_iter;
-   }
-   else {
+   } else {
       d_list_iter = other.d_list_iter;
    }
 }
@@ -1950,8 +1996,7 @@ BoxContainer::BoxContainerConstIterator::BoxContainerConstIterator(
    d_ordered = other.d_ordered;
    if (d_ordered) {
       d_set_iter = other.d_set_iter;
-   }
-   else {
+   } else {
       d_list_iter = other.d_list_iter;
    }
 }

@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright
 ## information, see COPYRIGHT and COPYING.LESSER.
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   Multiblock performance tests.
 ##
 #########################################################################
@@ -71,17 +71,18 @@ perf:
 	$(MAKE) perf3d
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf
 
-clean-check:
-	$(SAMCLEAN)
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.timing*
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main viz* *.timing*
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 redo:
 	$(RM) main

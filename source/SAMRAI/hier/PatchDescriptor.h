@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Factory class for patch data objects that live on a patch
  *
  ************************************************************************/
@@ -243,7 +243,7 @@ private:
 
    PatchDescriptor(
       const PatchDescriptor&);                  // not implemented
-   void
+   PatchDescriptor&
    operator = (
       const PatchDescriptor&);                  // not implemented
 

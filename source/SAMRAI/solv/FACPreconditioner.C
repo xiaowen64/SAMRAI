@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   FAC algorithm for solving linear equations on a hierarchy
  *
  ************************************************************************/
@@ -219,7 +219,7 @@ FACPreconditioner::initializeSolverState(
                                << "level.\n");
    }
 #endif
-   for (int ln = d_coarsest_ln; ln <= d_finest_ln; ln++) {
+   for (int ln = d_coarsest_ln; ln <= d_finest_ln; ++ln) {
       if (!d_patch_hierarchy->getPatchLevel(ln)) {
          TBOX_ERROR("FACPreconditioner::initializeSolverState error ..."
             << "\n   object name = " << d_object_name

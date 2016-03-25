@@ -1,7 +1,7 @@
-# generated automatically by aclocal 1.10 -*- Autoconf -*-
+# generated automatically by aclocal 1.13.1 -*- Autoconf -*-
 
-# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
-# 2005, 2006  Free Software Foundation, Inc.
+# Copyright (C) 1996-2012 Free Software Foundation, Inc.
+
 # This file is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -11,6 +11,7 @@
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
 
+m4_ifndef([AC_CONFIG_MACRO_DIRS], [m4_defun([_AM_CONFIG_MACRO_DIRS], [])m4_defun([AC_CONFIG_MACRO_DIRS], [_AM_CONFIG_MACRO_DIRS($@)])])
 dnl File arg-with-environment.m4
 dnl Written by Brian T.N. Gunney
 dnl gunneyb@llnl.gov
@@ -1036,7 +1037,7 @@ AC_DEFUN([CASC_SUPPORT_HDF5],[
 # Begin CASC_SUPPORT_HDF5
 # Defines hdf5_PREFIX hdf5_INCLUDES and hdf5_LIBS if with-hdf5 is specified.
 AC_ARG_WITH(hdf5,
-[ --with-hdf5[=PATH]  Use HDF5 and optionally specify where HDF5 is installed.],
+[  --with-hdf5[=PATH]  Use HDF5 and optionally specify where HDF5 is installed.],
 , with_hdf5=no)
 
 case "$with_hdf5" in
@@ -2826,7 +2827,7 @@ AC_DEFUN([CASC_SUPPORT_SILO],[
 # Begin CASC_SUPPORT_SILO
 # Defines silo_PREFIX silo_INCLUDES and silo_LIBS if with-silo is specified.
 AC_ARG_WITH(silo,
-[ --with-silo[=PATH]  Use SILO and optionally specify where SILO is installed.],
+[  --with-silo[=PATH]  Use SILO and optionally specify where SILO is installed.],
 , with_silo=no)
 
 case "$with_silo" in
@@ -2889,7 +2890,7 @@ AC_DEFUN([CASC_SUPPORT_VALGRIND],[
 # Begin CASC_SUPPORT_VALGRIND
 # Defines valgrind_EXE
 AC_ARG_WITH(valgrind,
-[ --with-valgrind[=PATH]  Use VALGRIND and optionally specify where VALGRIND is installed.],
+[  --with-valgrind[=PATH]  Use VALGRIND and optionally specify where VALGRIND is installed.],
 , with_valgrind=no)
 
 case "$with_valgrind" in
@@ -4057,7 +4058,7 @@ AC_DEFUN([CASC_SUPPORT_BOOST],[
 # Begin CASC_SUPPORT_BOOST
 # Defines boost_PREFIX boost_INCLUDES and boost_LIBS.
 AC_ARG_WITH(boost,
-[ --with-boost[=PATH]  Use BOOST and specify where BOOST is installed.],
+[  --with-boost[=PATH]  Use BOOST and specify where BOOST is installed.],
 , with_boost=no)
 
 case "$with_boost" in
@@ -4308,7 +4309,7 @@ fi
 dnl
 dnl  File:           $HeadURL$
 dnl  Package:        SAMRAI
-dnl  Copyright:      (c) 1997-2013 Lawrence Livermore National Security, LLC
+dnl  Copyright:      (c) 1997-2014 Lawrence Livermore National Security, LLC
 dnl  Date:           $Date$
 dnl  Revision:       $LastChangedRevision$
 dnl  Description:    Macro to control whether timers are compile into or

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Lookup table to aid in BoundaryBox construction
  *
  ************************************************************************/
@@ -58,7 +58,7 @@ public:
    getLookupTable(
       const tbox::Dimension& dim)
    {
-     int idx = dim.getValue() - 1;
+      int idx = dim.getValue() - 1;
       if (!s_lookup_table_instance[idx]) {
          s_lookup_table_instance[idx] = new BoundaryLookupTable(dim);
       }

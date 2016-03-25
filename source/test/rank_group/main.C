@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Test program for RankGroup with TreeLoadBalancer.
  *
  ************************************************************************/
@@ -255,8 +255,6 @@ int main(
          grid_geometry,
          mpi,
          hier::BoxLevel::GLOBALIZED);
-
-      ;
       for (hier::BoxContainer::iterator domain_boxes_itr = domain_boxes.begin();
            domain_boxes_itr != domain_boxes.end(); ++domain_boxes_itr) {
          domain_box_level.addBox(*domain_boxes_itr);
@@ -312,8 +310,8 @@ int main(
             main_db->getDatabaseBoxVector("anchor_boxes");
          hier::BoxContainer anchor_boxes(db_box_vector);
          const int boxes_per_proc =
-            (anchor_boxes.size() + anchor_box_level->getMPI().getSize() - 1) /
-             anchor_box_level->getMPI().getSize();
+            (anchor_boxes.size() + anchor_box_level->getMPI().getSize() - 1)
+            / anchor_box_level->getMPI().getSize();
          const int my_boxes_start = anchor_box_level->getMPI().getRank()
             * boxes_per_proc;
          const int my_boxes_stop =
@@ -358,11 +356,11 @@ int main(
             active_ranks[0] = 0;
          } else {
             active_ranks.resize(nnodes / 2);
-            for (int i = 0; i < nnodes / 2; i++) {
+            for (int i = 0; i < nnodes / 2; ++i) {
                active_ranks[i] = (i + 1) % (nnodes / 2);
             }
             std::sort(&active_ranks[0],
-               &active_ranks[0]+static_cast<int>(active_ranks.size()));
+               &active_ranks[0] + static_cast<int>(active_ranks.size()));
          }
          tbox::RankGroup rank_group_0(active_ranks, mpi);
 
@@ -747,13 +745,13 @@ void generatePrebalanceByUserBoxes(
    initial_owners = database->getIntegerVector("initial_owners");
 
    balance_box_level.reset(new hier::BoxLevel(hier::IntVector(dim, 1),
-      hierarchy->getGridGeometry(),
-      anchor_box_level.getMPI()));
+         hierarchy->getGridGeometry(),
+         anchor_box_level.getMPI()));
    hier::BoxContainer::iterator balance_boxes_itr = balance_boxes.begin();
    for (int i = 0; i < balance_boxes.size(); ++i, ++balance_boxes_itr) {
       const int owner = i % static_cast<int>(initial_owners.size());
       if (owner == balance_box_level->getMPI().getRank()) {
-         balance_boxes_itr->setBlockId(hier::BlockId(0)); 
+         balance_boxes_itr->setBlockId(hier::BlockId(0));
          balance_box_level->addBox(hier::Box(*balance_boxes_itr,
                hier::LocalId(i), owner));
       }

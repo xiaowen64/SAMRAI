@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Coarsening schedule for data transfer between AMR levels
  *
  ************************************************************************/
@@ -115,7 +115,7 @@ CoarsenSchedule::CoarsenSchedule(
 
    getFromInput();
 
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
    }
 
@@ -129,7 +129,7 @@ CoarsenSchedule::CoarsenSchedule(
    const hier::IntVector& fine(d_fine_level->getRatioToLevelZero());
    const hier::IntVector& crse(d_crse_level->getRatioToLevelZero());
    int i;
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       if (fine(i) > 1) {
          d_ratio_between_levels(i) = fine(i) / crse(i);
       } else {
@@ -139,11 +139,11 @@ CoarsenSchedule::CoarsenSchedule(
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   for (i = 0; i < dim.getValue(); i++) {
+   for (i = 0; i < dim.getValue(); ++i) {
       TBOX_ASSERT(d_ratio_between_levels(i) != 0);
    }
    if (dim > tbox::Dimension(1))
-      for (i = 0; i < dim.getValue(); i++) {
+      for (i = 0; i < dim.getValue(); ++i) {
          if (d_ratio_between_levels(i)
              * d_ratio_between_levels((i + 1) % dim.getValue()) < 0) {
             TBOX_ASSERT((d_ratio_between_levels(i) == 1) ||
@@ -165,7 +165,7 @@ CoarsenSchedule::CoarsenSchedule(
 
    generateSchedule();
 
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " returning" << std::endl;
    }
 }
@@ -182,6 +182,7 @@ CoarsenSchedule::CoarsenSchedule(
 CoarsenSchedule::~CoarsenSchedule()
 {
    clearCoarsenItems();
+   delete[] d_coarsen_items;
 }
 
 /*
@@ -255,17 +256,10 @@ CoarsenSchedule::reset(
 void
 CoarsenSchedule::coarsenData() const
 {
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " entered" << std::endl;
    }
    t_coarsen_data->barrierAndStart();
-
-   /*
-    * Set the coarsen items for all transactions.  These items are
-    * shared by all transaction objects in the communication schedule.
-    */
-   d_transaction_factory->setCoarsenItems(d_coarsen_items,
-      static_cast<int>(d_number_coarsen_items));
 
    /*
     * Allocate the source data space on the temporary patch level.
@@ -302,16 +296,9 @@ CoarsenSchedule::coarsenData() const
 
    d_temp_crse_level->deallocatePatchData(d_sources);
 
-   /*
-    * Unset the coarsen items for the copy transactions.  These items
-    * are shared by all such transaction objects in the communication
-    * schedule.
-    */
-   d_transaction_factory->unsetCoarsenItems();
-
    t_coarsen_data->stop();
 
-   if ( s_extra_debug ) {
+   if (s_extra_debug) {
       tbox::plog << "CoarsenSchedule::coarsenData " << this << " returning" << std::endl;
    }
 }
@@ -341,15 +328,15 @@ CoarsenSchedule::generateTemporaryLevel()
    const hier::IntVector min_gcw = getMaxGhostsToGrow();
    const hier::IntVector transpose_width =
       hier::Connector::convertHeadWidthToBase(d_crse_level->getBoxLevel()->getRefinementRatio(),
-                                        d_fine_level->getBoxLevel()->getRefinementRatio(),
-                                        min_gcw);
+         d_fine_level->getBoxLevel()->getRefinementRatio(),
+         min_gcw);
 
    const hier::Connector& coarse_to_fine =
       d_crse_level->findConnectorWithTranspose(*d_fine_level,
-            transpose_width,
-            min_gcw,
-            hier::CONNECTOR_IMPLICIT_CREATION_RULE,
-            true);
+         transpose_width,
+         min_gcw,
+         hier::CONNECTOR_IMPLICIT_CREATION_RULE,
+         true);
 
    /*
     * Generate temporary BoxLevel and Connectors.
@@ -404,7 +391,7 @@ CoarsenSchedule::setupRefineAlgorithm()
 
       d_precoarsen_refine_algorithm.reset(new RefineAlgorithm());
 
-      for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+      for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          const int src_id = d_coarsen_items[ici]->d_src;
          d_precoarsen_refine_algorithm->registerRefine(src_id,
             src_id,
@@ -498,7 +485,7 @@ CoarsenSchedule::generateScheduleNSquared()
 
    hier::BoxContainer::const_iterator crse_itr_dp =
       d_crse_level->getBoxes().begin();
-   for (int dp = 0; dp < dst_npatches; dp++, ++crse_itr_dp) {
+   for (int dp = 0; dp < dst_npatches; ++dp, ++crse_itr_dp) {
 
       const hier::Box dst_box(*crse_itr_dp,
                               hier::LocalId(dp),
@@ -506,7 +493,7 @@ CoarsenSchedule::generateScheduleNSquared()
 
       hier::BoxContainer::const_iterator crse_itr_sp =
          d_temp_crse_level->getBoxes().begin();
-      for (int sp = 0; sp < src_npatches; sp++, ++crse_itr_sp) {
+      for (int sp = 0; sp < src_npatches; ++sp, ++crse_itr_sp) {
 
          const hier::Box src_box(
             *crse_itr_sp,
@@ -694,7 +681,7 @@ CoarsenSchedule::getMaxGhostsToGrow() const
     */
    hier::IntVector gcw(dim, 1);
 
-   for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+   for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
 
       const int src_id = d_coarsen_items[ici]->d_src;
       gcw.max(pd->getPatchDataFactory(src_id)->getGhostCellWidth());
@@ -821,12 +808,12 @@ CoarsenSchedule::constructScheduleTransactions(
       offset *= d_crse_level->getRatioToLevelZero();
 
       transformation = hier::Transformation(rotation, offset,
-                                            src_block_id, dst_block_id);
+            src_block_id, dst_block_id);
       transformation.transform(transformed_src_box);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (grid_geometry->areSingularityNeighbors(dst_block_id, src_block_id)) {
-         for (int nc = 0; nc < num_equiv_classes; nc++) {
+         for (int nc = 0; nc < num_equiv_classes; ++nc) {
             const CoarsenClasses::Data& rep_item =
                d_coarsen_classes->getClassRepresentative(nc);
 
@@ -842,9 +829,9 @@ CoarsenSchedule::constructScheduleTransactions(
    std::vector<boost::shared_ptr<tbox::Transaction> > transactions(
       num_coarsen_items);
 
-   for (int nc = 0; nc < num_equiv_classes; nc++) {
+   for (int nc = 0; nc < num_equiv_classes; ++nc) {
 
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << " equivalent class " << nc << "/" << num_equiv_classes << std::endl;
       }
       const CoarsenClasses::Data& rep_item =
@@ -874,7 +861,7 @@ CoarsenSchedule::constructScheduleTransactions(
       hier::Box src_mask(test_mask);
       transformation.inverseTransform(src_mask);
 
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << " dst_gcw = " << dst_gcw
                     << "\n dst_fill_box = " << dst_fill_box
                     << "\n test_mask = " << test_mask
@@ -882,7 +869,7 @@ CoarsenSchedule::constructScheduleTransactions(
                     << std::endl;
       }
 
-      if ( ! src_mask.empty() ) {
+      if (!src_mask.empty()) {
          // What does this block do?  Need comments!
          test_mask = unshifted_src_box;
          test_mask.grow(
@@ -892,7 +879,7 @@ CoarsenSchedule::constructScheduleTransactions(
          src_mask += test_mask;
       }
 
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << "\n src_mask (after += test_mask) = " << src_mask
                     << std::endl;
       }
@@ -913,20 +900,22 @@ CoarsenSchedule::constructScheduleTransactions(
             << "\n dst box = " << dst_box
             << "\n src mask = " << src_mask << std::endl);
       }
-      if ( s_extra_debug ) {
+      if (s_extra_debug) {
          tbox::plog << " Overlap:\n" << std::endl;
          overlap->print(tbox::plog);
       }
 
       if (!overlap->isOverlapEmpty()) {
-         if ( s_extra_debug ) {
+         if (s_extra_debug) {
             tbox::plog << " Overlap FINITE." << std::endl;
          }
          for (std::list<int>::iterator l(d_coarsen_classes->getIterator(nc));
-              l != d_coarsen_classes->getIteratorEnd(nc); l++) {
+              l != d_coarsen_classes->getIteratorEnd(nc); ++l) {
             const CoarsenClasses::Data& item =
                d_coarsen_classes->getCoarsenItem(*l);
             TBOX_ASSERT(item.d_class_index == nc);
+            TBOX_ASSERT(item.d_tag == *l);
+            TBOX_ASSERT(&item == d_coarsen_items[*l]);
 
             const int citem_count = item.d_tag;
             transactions[citem_count] =
@@ -935,18 +924,18 @@ CoarsenSchedule::constructScheduleTransactions(
                   overlap,
                   dst_box,
                   src_box,
+                  d_coarsen_items,
                   citem_count);
          }
-      }
-      else {
-         if ( s_extra_debug ) {
+      } else {
+         if (s_extra_debug) {
             tbox::plog << " Overlap empty." << std::endl;
          }
       }
 
    }  // iterate over all coarsen equivalence classes
 
-   for (int i = 0; i < num_coarsen_items; i++) {
+   for (int i = 0; i < num_coarsen_items; ++i) {
       if (transactions[i]) {
          d_schedule->appendTransaction(transactions[i]);
       }
@@ -987,7 +976,7 @@ CoarsenSchedule::coarsenSourceData(
             *fine_patch, box, d_ratio_between_levels);
       }
 
-      for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+      for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          const CoarsenClasses::Data * const crs_item =
             d_coarsen_items[ici];
          if (crs_item->d_opcoarsen) {
@@ -1032,7 +1021,7 @@ CoarsenSchedule::setCoarsenItems(
     */
    d_sources.clrAllFlags();
 
-   for (unsigned int nc = 0; nc < d_number_coarsen_items; nc++) {
+   for (unsigned int nc = 0; nc < d_number_coarsen_items; ++nc) {
       const CoarsenClasses::Data& item = d_coarsen_classes->getCoarsenItem(nc);
       d_sources.setFlag(item.d_src);
    }
@@ -1041,14 +1030,16 @@ CoarsenSchedule::setCoarsenItems(
     * Allocate and initialize array of coarsen items.
     */
 
-   d_coarsen_items =
-      new const CoarsenClasses::Data *[d_number_coarsen_items];
+   if (!d_coarsen_items) {
+      d_coarsen_items =
+         new const CoarsenClasses::Data *[d_number_coarsen_items];
+   }
 
    int ircount = 0;
-   for (unsigned int nc = 0; nc < d_number_coarsen_items; nc++) {
+   for (unsigned int nc = 0; nc < d_number_coarsen_items; ++nc) {
       d_coarsen_classes->getCoarsenItem(nc).d_tag = ircount;
       d_coarsen_items[ircount] = &(d_coarsen_classes->getCoarsenItem(nc));
-      ircount++;
+      ++ircount;
    }
 
 }
@@ -1083,7 +1074,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
       user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth(dim);
    }
 
-   for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+   for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
 
       const CoarsenClasses::Data * const crs_item = d_coarsen_items[ici];
 
@@ -1153,15 +1144,12 @@ void
 CoarsenSchedule::clearCoarsenItems()
 {
    if (d_coarsen_items) {
-      for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
+      for (size_t ici = 0; ici < d_number_coarsen_items; ++ici) {
          d_coarsen_items[ici] = 0;
       }
-      delete[] d_coarsen_items;
-      d_coarsen_items = 0;
       d_number_coarsen_items = 0;
    }
 }
-
 
 /*
  **************************************************************************
@@ -1169,16 +1157,15 @@ CoarsenSchedule::clearCoarsenItems()
  */
 
 void
-CoarsenSchedule::setDeterministicUnpackOrderingFlag( bool flag )
+CoarsenSchedule::setDeterministicUnpackOrderingFlag(bool flag)
 {
-   if ( d_schedule ) {
+   if (d_schedule) {
       d_schedule->setDeterministicUnpackOrderingFlag(flag);
    }
-   if ( d_precoarsen_refine_schedule ) {
+   if (d_precoarsen_refine_schedule) {
       d_precoarsen_refine_schedule->setDeterministicUnpackOrderingFlag(flag);
    }
 }
-
 
 /*
  * ************************************************************************

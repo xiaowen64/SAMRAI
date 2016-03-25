@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -138,7 +138,7 @@ MblkLinAdv::MblkLinAdv(
    d_uval(new pdat::CellVariable<double>(dim, "uval", DEPTH)),
    d_vol(new pdat::CellVariable<double>(dim, "vol", 1)),
    d_flux(new pdat::SideVariable<double>(dim, "flux",
-      hier::IntVector::getOne(dim), 1)),
+                                         hier::IntVector::getOne(dim), 1)),
    d_xyz(new pdat::NodeVariable<double>(dim, "xyz", dim.getValue())),
    d_dx_set(false),
    d_godunov_order(1),
@@ -172,7 +172,7 @@ MblkLinAdv::MblkLinAdv(
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
 
    // SINE problem
-   for (int k = 0; k < d_dim.getValue(); k++) d_frequency[k] = 0.;
+   for (int k = 0; k < d_dim.getValue(); ++k) d_frequency[k] = 0.;
 
    /*
     * Defaults for boundary conditions. Set to bogus values
@@ -181,30 +181,29 @@ MblkLinAdv::MblkLinAdv(
 
    if (d_dim == tbox::Dimension(2)) {
       d_scalar_bdry_edge_conds.resize(NUM_2D_EDGES);
-      for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_2D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_node_conds.resize(NUM_2D_NODES);
       d_node_bdry_edge.resize(NUM_2D_NODES);
 
-      for (int ni = 0; ni < NUM_2D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_2D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_edge[ni] = BOGUS_BDRY_DATA;
       }
 
       d_bdry_edge_uval.resize(NUM_2D_EDGES);
       tbox::MathUtilities<double>::setVectorToSignalingNaN(d_bdry_edge_uval);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds.resize(NUM_3D_FACES);
-      for (int fi = 0; fi < NUM_3D_FACES; fi++) {
+      for (int fi = 0; fi < NUM_3D_FACES; ++fi) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
       }
 
       d_scalar_bdry_edge_conds.resize(NUM_3D_EDGES);
       d_edge_bdry_face.resize(NUM_3D_EDGES);
-      for (int ei = 0; ei < NUM_3D_EDGES; ei++) {
+      for (int ei = 0; ei < NUM_3D_EDGES; ++ei) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
          d_edge_bdry_face[ei] = BOGUS_BDRY_DATA;
       }
@@ -212,7 +211,7 @@ MblkLinAdv::MblkLinAdv(
       d_scalar_bdry_node_conds.resize(NUM_3D_NODES);
       d_node_bdry_face.resize(NUM_3D_NODES);
 
-      for (int ni = 0; ni < NUM_3D_NODES; ni++) {
+      for (int ni = 0; ni < NUM_3D_NODES; ++ni) {
          d_scalar_bdry_node_conds[ni] = BOGUS_BDRY_DATA;
          d_node_bdry_face[ni] = BOGUS_BDRY_DATA;
       }
@@ -262,13 +261,13 @@ MblkLinAdv::MblkLinAdv(
     * so we reset them to FLOW.
     */
    if (d_dim == tbox::Dimension(2)) {
-      for (int i = 0; i < NUM_2D_EDGES; i++) {
+      for (int i = 0; i < NUM_2D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_2D_NODES; i++) {
+      for (int i = 0; i < NUM_2D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -282,15 +281,14 @@ MblkLinAdv::MblkLinAdv(
                   i, d_scalar_bdry_node_conds[i]);
          }
       }
-   }
-   else if (d_dim == tbox::Dimension(3)) {
-      for (int i = 0; i < NUM_3D_FACES; i++) {
+   } else if (d_dim == tbox::Dimension(3)) {
+      for (int i = 0; i < NUM_3D_FACES; ++i) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
          }
       }
 
-      for (int i = 0; i < NUM_3D_EDGES; i++) {
+      for (int i = 0; i < NUM_3D_EDGES; ++i) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::XFLOW;
          }
@@ -308,7 +306,7 @@ MblkLinAdv::MblkLinAdv(
          }
       }
 
-      for (int i = 0; i < NUM_3D_NODES; i++) {
+      for (int i = 0; i < NUM_3D_NODES; ++i) {
          if (d_scalar_bdry_node_conds[i] == BdryCond::XREFLECT) {
             d_scalar_bdry_node_conds[i] = BdryCond::XFLOW;
          }
@@ -525,9 +523,9 @@ void MblkLinAdv::initializeDataOnPatch(
       //
       // compute the source due to the upwind method
       //
-      for (int k = ifirst(2); k <= ilast(2); k++) {
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                int cind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -697,9 +695,9 @@ double MblkLinAdv::computeStableDtOnPatch(
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
 
-   for (int k = ifirst(2); k <= ilast(2); k++) {
-      for (int j = ifirst(1); j <= ilast(1); j++) {
-         for (int i = ifirst(0); i <= ilast(0); i++) {
+   for (int k = ifirst(2); k <= ilast(2); ++k) {
+      for (int j = ifirst(1); j <= ilast(1); ++j) {
+         for (int i = ifirst(0); i <= ilast(0); ++i) {
 
             int cind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -916,9 +914,9 @@ void MblkLinAdv::computeFluxesOnPatch(
    //
    // compute the source due to the upwind method
    //
-   for (int k = ifirst(2); k <= ilast(2); k++) {
-      for (int j = ifirst(1); j <= ilast(1); j++) {
-         for (int i = ifirst(0); i <= ilast(0) + 1; i++) {
+   for (int k = ifirst(2); k <= ilast(2); ++k) {
+      for (int j = ifirst(1); j <= ilast(1); ++j) {
+         for (int i = ifirst(0); i <= ilast(0) + 1; ++i) {
 
             int ifx = POLY3(i, j, k, fx_imn, fx_jmn, fx_kmn, fx_nx, fx_nxny);
 
@@ -943,9 +941,9 @@ void MblkLinAdv::computeFluxesOnPatch(
       }
    }
 
-   for (int k = ifirst(2); k <= ilast(2); k++) {
-      for (int j = ifirst(1); j <= ilast(1) + 1; j++) {
-         for (int i = ifirst(0); i <= ilast(0); i++) {
+   for (int k = ifirst(2); k <= ilast(2); ++k) {
+      for (int j = ifirst(1); j <= ilast(1) + 1; ++j) {
+         for (int i = ifirst(0); i <= ilast(0); ++i) {
 
             int ify = POLY3(i, j, k, fy_imn, fy_jmn, fy_kmn, fy_nx, fy_nxny);
 
@@ -970,9 +968,9 @@ void MblkLinAdv::computeFluxesOnPatch(
       }
    }
 
-   for (int k = ifirst(2); k <= ilast(2) + 1; k++) {
-      for (int j = ifirst(1); j <= ilast(1); j++) {
-         for (int i = ifirst(0); i <= ilast(0); i++) {
+   for (int k = ifirst(2); k <= ilast(2) + 1; ++k) {
+      for (int j = ifirst(1); j <= ilast(1); ++j) {
+         for (int i = ifirst(0); i <= ilast(0); ++i) {
 
             int ifz = POLY3(i, j, k, fz_imn, fz_jmn, fz_kmn, fz_nx, fz_nxny);
 
@@ -1000,9 +998,9 @@ void MblkLinAdv::computeFluxesOnPatch(
    //
    // compute the source due to the upwind method
    //
-   for (int k = ifirst(2); k <= ilast(2); k++) {
-      for (int j = ifirst(1); j <= ilast(1); j++) {
-         for (int i = ifirst(0); i <= ilast(0); i++) {
+   for (int k = ifirst(2); k <= ilast(2); ++k) {
+      for (int j = ifirst(1); j <= ilast(1); ++j) {
+         for (int i = ifirst(0); i <= ilast(0); ++i) {
 
             int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -1317,17 +1315,17 @@ void MblkLinAdv::postprocessRefine(
    //
    // ================================= history variable refinement ====================
    //
-   for (int n = 0; n < DEPTH; n++) {
+   for (int n = 0; n < DEPTH; ++n) {
 
-      for (int l = 0; l < nel; l++) {       // default slopes are zero
+      for (int l = 0; l < nel; ++l) {       // default slopes are zero
          slope0[l] = 0.0;  // this yields piecewise constant interpolation
          slope1[l] = 0.0;  // and makes a handy initializer
          slope2[l] = 0.0;
       }
 
-      for (int k = ifirstc(2); k <= ilastc(2); k++) {
-         for (int j = ifirstc(1); j <= ilastc(1); j++) {
-            for (int i = ifirstc(0); i <= ilastc(0); i++) {
+      for (int k = ifirstc(2); k <= ilastc(2); ++k) {
+         for (int j = ifirstc(1); j <= ilastc(1); ++j) {
+            for (int i = ifirstc(0); i <= ilastc(0); ++i) {
 
                int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
                int chind =
@@ -1377,9 +1375,9 @@ void MblkLinAdv::postprocessRefine(
       // compute the interpolated data from the cached slopes, looping
       // over the fine zones
       //
-      for (int k = ifirstf(2); k <= ilastf(2); k++) {
-         for (int j = ifirstf(1); j <= ilastf(1); j++) {
-            for (int i = ifirstf(0); i <= ilastf(0); i++) {
+      for (int k = ifirstf(2); k <= ilastf(2); ++k) {
+         for (int j = ifirstf(1); j <= ilastf(1); ++j) {
+            for (int i = ifirstf(0); i <= ilastf(0); ++i) {
 
                int fhind =
                   POLY3(i, j, k, fimin, fjmin, fkmin, fnx, fnxny) + n * fnel;
@@ -1557,14 +1555,14 @@ void MblkLinAdv::postprocessCoarsen(
    //
    // average the data
    //
-   for (int n = 0; n < DEPTH; n++) {
+   for (int n = 0; n < DEPTH; ++n) {
 
       //
       // zero out the underlying coarse data to serve as a counter
       //
-      for (int k = ifirstc(2); k <= ilastc(2); k++) {    // loop over the coarse zones
-         for (int j = ifirstc(1); j <= ilastc(1); j++) {
-            for (int i = ifirstc(0); i <= ilastc(0); i++) {
+      for (int k = ifirstc(2); k <= ilastc(2); ++k) {    // loop over the coarse zones
+         for (int j = ifirstc(1); j <= ilastc(1); ++j) {
+            for (int i = ifirstc(0); i <= ilastc(0); ++i) {
 
                int chind =
                   POLY3(i, j, k, cimin, cjmin, ckmin, cnx, cnxny) + n * cnel;
@@ -1578,9 +1576,9 @@ void MblkLinAdv::postprocessCoarsen(
       // compute the interpolated data from the cached slopes
       //
 
-      for (int k = ifirstf(2); k <= ilastf(2); k++) {    // loop over the coarse zones
-         for (int j = ifirstf(1); j <= ilastf(1); j++) {
-            for (int i = ifirstf(0); i <= ilastf(0); i++) {
+      for (int k = ifirstf(2); k <= ilastf(2); ++k) {    // loop over the coarse zones
+         for (int j = ifirstf(1); j <= ilastf(1); ++j) {
+            for (int i = ifirstf(0); i <= ilastf(0); ++i) {
 
                int vol_ind = POLY3(i, j, k, fimin, fjmin, fkmin, fnx, fnxny);
                int fhind = vol_ind + n * fnel;
@@ -1610,9 +1608,9 @@ void MblkLinAdv::postprocessCoarsen(
       //
       // normalize the completed sum by converting back from extensive to intensive
       //
-      for (int k = ifirstc(2); k <= ilastc(2); k++) {    // loop over the coarse zones
-         for (int j = ifirstc(1); j <= ilastc(1); j++) {
-            for (int i = ifirstc(0); i <= ilastc(0); i++) {
+      for (int k = ifirstc(2); k <= ilastc(2); ++k) {    // loop over the coarse zones
+         for (int j = ifirstc(1); j <= ilastc(1); ++j) {
+            for (int i = ifirstc(0); i <= ilastc(0); ++i) {
 
                int vol_ind = POLY3(i, j, k, cimin, cjmin, ckmin, cnx, cnxny);
                int chind = vol_ind + n * cnel;
@@ -1755,7 +1753,7 @@ void MblkLinAdv::tagGradientDetectorCells(
    // the level.
    //
    for (int ncrit = 0;
-        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       string ref = d_refinement_criteria[ncrit];
       int size = 0;
@@ -1767,9 +1765,9 @@ void MblkLinAdv::tagGradientDetectorCells(
                 ? d_grad_tol[error_level_number]
                 : d_grad_tol[size - 1]);
 
-         for (int k = ifirst(2); k <= ilast(2); k++) {
-            for (int j = ifirst(1); j <= ilast(1); j++) {
-               for (int i = ifirst(0); i <= ilast(0); i++) {
+         for (int k = ifirst(2); k <= ilast(2); ++k) {
+            for (int j = ifirst(1); j <= ilast(1); ++j) {
+               for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                   int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
                   int tind = POLY3(i, j, k, imn, jmn, kmn, tnx, tnxny);
@@ -2052,13 +2050,13 @@ void MblkLinAdv::printClassData(
    os << "MblkLinAdv: this = " << (MblkLinAdv *)this << endl;
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
-//   for (j=0; j < d_grid_geometry.getSize(); j++) {
+//   for (j=0; j < d_grid_geometry.getSize(); ++j) {
 //      os << (*((boost::shared_ptr<geom::GridGeometry >)(d_grid_geometry[j]))) << endl;
 //   }
 
    os << "Parameters for numerical method ..." << endl;
    os << "   d_advection_velocity = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_advection_velocity[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
    os << endl;
    os << "   d_godunov_order = " << d_godunov_order << endl;
    os << "   d_corner_transport = " << d_corner_transport << endl;
@@ -2071,25 +2069,25 @@ void MblkLinAdv::printClassData(
 
    os << "       d_radius = " << d_radius << endl;
    os << "       d_center = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_center[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_center[j] << " ";
    os << endl;
    os << "       d_uval_inside = " << d_uval_inside << endl;
    os << "       d_uval_outside = " << d_uval_outside << endl;
 
    os << "       d_number_of_intervals = " << d_number_of_intervals << endl;
    os << "       d_front_position = ";
-   for (k = 0; k < d_number_of_intervals - 1; k++) {
+   for (k = 0; k < d_number_of_intervals - 1; ++k) {
       os << d_front_position[k] << "  ";
    }
    os << endl;
    os << "       d_interval_uval = " << endl;
-   for (k = 0; k < d_number_of_intervals; k++) {
+   for (k = 0; k < d_number_of_intervals; ++k) {
       os << "            " << d_interval_uval[k] << endl;
    }
    os << "   Boundary condition data " << endl;
 
    if (d_dim == tbox::Dimension(2)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          if (d_scalar_bdry_edge_conds[j] == BdryCond::DIRICHLET) {
@@ -2098,15 +2096,14 @@ void MblkLinAdv::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_edge[" << j << "] = "
             << d_node_bdry_edge[j] << endl;
       }
-   }
-   else if (d_dim == tbox::Dimension(3)) {
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); j++) {
+   } else if (d_dim == tbox::Dimension(3)) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_face_conds.size()); ++j) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;
          if (d_scalar_bdry_face_conds[j] == BdryCond::DIRICHLET) {
@@ -2115,14 +2112,14 @@ void MblkLinAdv::printClassData(
          }
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_edge_conds.size()); ++j) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
          os << "       d_edge_bdry_face[" << j << "] = "
             << d_edge_bdry_face[j] << endl;
       }
       os << endl;
-      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); j++) {
+      for (j = 0; j < static_cast<int>(d_scalar_bdry_node_conds.size()); ++j) {
          os << "       d_scalar_bdry_node_conds[" << j << "] = "
             << d_scalar_bdry_node_conds[j] << endl;
          os << "       d_node_bdry_face[" << j << "] = "
@@ -2132,76 +2129,76 @@ void MblkLinAdv::printClassData(
 
    os << "   Refinement criteria parameters " << endl;
 
-   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_refinement_criteria.size()); ++j) {
       os << "       d_refinement_criteria[" << j << "] = "
          << d_refinement_criteria[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_tol.size()); ++j) {
       os << "       d_dev_tol[" << j << "] = "
          << d_dev_tol[j] << endl;
    }
-   for (j = 0; j < static_cast<int>(d_dev.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev.size()); ++j) {
       os << "       d_dev[" << j << "] = "
          << d_dev[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_max.size()); ++j) {
       os << "       d_dev_time_max[" << j << "] = "
          << d_dev_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_dev_time_min.size()); ++j) {
       os << "       d_dev_time_min[" << j << "] = "
          << d_dev_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_tol.size()); ++j) {
       os << "       d_grad_tol[" << j << "] = "
          << d_grad_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_max.size()); ++j) {
       os << "       d_grad_time_max[" << j << "] = "
          << d_grad_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_grad_time_min.size()); ++j) {
       os << "       d_grad_time_min[" << j << "] = "
          << d_grad_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_onset.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_onset.size()); ++j) {
       os << "       d_shock_onset[" << j << "] = "
          << d_shock_onset[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_tol.size()); ++j) {
       os << "       d_shock_tol[" << j << "] = "
          << d_shock_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_max.size()); ++j) {
       os << "       d_shock_time_max[" << j << "] = "
          << d_shock_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_shock_time_min.size()); ++j) {
       os << "       d_shock_time_min[" << j << "] = "
          << d_shock_time_min[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_tol.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_tol.size()); ++j) {
       os << "       d_rich_tol[" << j << "] = "
          << d_rich_tol[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_max.size()); ++j) {
       os << "       d_rich_time_max[" << j << "] = "
          << d_rich_time_max[j] << endl;
    }
    os << endl;
-   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); j++) {
+   for (j = 0; j < static_cast<int>(d_rich_time_min.size()); ++j) {
       os << "       d_rich_time_min[" << j << "] = "
          << d_rich_time_min[j] << endl;
    }
@@ -2295,7 +2292,7 @@ void MblkLinAdv::getFromInput(
       std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < num_keys; i++) {
+      for (int i = 0; i < num_keys; ++i) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -2314,7 +2311,7 @@ void MblkLinAdv::getFromInput(
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
-               def_key_cnt++;
+               ++def_key_cnt;
             }
 
             if (error_db && error_key == "UVAL_DEVIATION") {
@@ -2566,13 +2563,13 @@ void MblkLinAdv::getFromInput(
                                            << "`uval' data missing in input for key = "
                                            << init_data_keys[nkey] << endl);
                }
-               i++;
+               ++i;
 
                found_interval_data = (i == d_number_of_intervals);
 
             }
 
-            nkey++;
+            ++nkey;
 
          }
 
@@ -2613,8 +2610,8 @@ void MblkLinAdv::getFromInput(
    hier::IntVector periodic = d_grid_geometry->getPeriodicShift(
          hier::IntVector(d_dim, 1));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    /*
@@ -2636,8 +2633,7 @@ void MblkLinAdv::getFromInput(
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          SkeletonBoundaryUtilities3::getFromInput(this,
             bdry_db,
             d_scalar_bdry_face_conds,
@@ -2709,8 +2705,7 @@ void MblkLinAdv::putToRestart(
 
    if (d_dim == tbox::Dimension(2)) {
       restart_db->putDoubleVector("d_bdry_edge_uval", d_bdry_edge_uval);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       restart_db->putIntegerVector("d_scalar_bdry_face_conds",
          d_scalar_bdry_face_conds);
       restart_db->putDoubleVector("d_bdry_face_uval", d_bdry_face_uval);
@@ -2720,7 +2715,7 @@ void MblkLinAdv::putToRestart(
       restart_db->putStringVector("d_refinement_criteria",
          d_refinement_criteria);
    }
-   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); ++i) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
          restart_db->putDoubleVector("d_dev_tol", d_dev_tol);
@@ -2821,8 +2816,7 @@ void MblkLinAdv::getFromRestart()
 
    if (d_dim == tbox::Dimension(2)) {
       d_bdry_edge_uval = db->getDoubleVector("d_bdry_edge_uval");
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       d_scalar_bdry_face_conds =
          db->getIntegerVector("d_scalar_bdry_face_conds");
 
@@ -2832,7 +2826,7 @@ void MblkLinAdv::getFromRestart()
    if (db->keyExists("d_refinement_criteria")) {
       d_refinement_criteria = db->getStringVector("d_refinement_criteria");
    }
-   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_refinement_criteria.size()); ++i) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
          d_dev_tol = db->getDoubleVector("d_dev_tol");
@@ -2878,8 +2872,7 @@ void MblkLinAdv::readDirichletBoundaryDataEntry(
          db_name,
          bdry_location_index,
          d_bdry_edge_uval);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -2936,8 +2929,7 @@ void MblkLinAdv::checkBoundaryData(
    if (d_dim == tbox::Dimension(2)) {
       TBOX_ASSERT(btype == Bdry::EDGE2D ||
          btype == Bdry::NODE2D);
-   }
-   else if (d_dim == tbox::Dimension(3)) {
+   } else if (d_dim == tbox::Dimension(3)) {
       TBOX_ASSERT(btype == Bdry::FACE3D ||
          btype == Bdry::EDGE3D ||
          btype == Bdry::NODE3D);
@@ -2951,7 +2943,7 @@ void MblkLinAdv::checkBoundaryData(
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
-   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); i++) {
+   for (int i = 0; i < static_cast<int>(bdry_boxes.size()); ++i) {
       hier::BoundaryBox bbox = bdry_boxes[i];
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
       int bloc = bbox.getLocationIndex();
@@ -2967,8 +2959,7 @@ void MblkLinAdv::checkBoundaryData(
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+      } else if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
             TBOX_ASSERT(static_cast<int>(scalar_bconds.size()) == NUM_3D_FACES);
             bscalarcase = scalar_bconds[bloc];
@@ -2984,29 +2975,34 @@ void MblkLinAdv::checkBoundaryData(
          }
       }
 
+#if (TESTING == 1)
       int num_bad_values = 0;
+#endif
 
       if (d_dim == tbox::Dimension(2)) {
+#if (TESTING == 1)
          num_bad_values =
-            SkeletonBoundaryUtilities2::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_edge_uval[refbdryloc]);
-      }
-      else if (d_dim == tbox::Dimension(3)) {
+#endif
+         SkeletonBoundaryUtilities2::checkBdryData(
+            d_uval->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_edge_uval[refbdryloc]);
+      } else if (d_dim == tbox::Dimension(3)) {
+#if (TESTING == 1)
          num_bad_values =
-            SkeletonBoundaryUtilities3::checkBdryData(
-               d_uval->getName(),
-               patch,
-               vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
-               ghost_width_to_check,
-               bbox,
-               bscalarcase,
-               d_bdry_face_uval[refbdryloc]);
+#endif
+         SkeletonBoundaryUtilities3::checkBdryData(
+            d_uval->getName(),
+            patch,
+            vdb->mapVariableAndContextToIndex(d_uval, getDataContext()), 0,
+            ghost_width_to_check,
+            bbox,
+            bscalarcase,
+            d_bdry_face_uval[refbdryloc]);
       }
 #if (TESTING == 1)
       if (num_bad_values > 0) {

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   AMR communication tests for node-centered patch data
  *
  ************************************************************************/
@@ -136,7 +136,7 @@ void OuternodeDataTest::registerVariables(
    d_variables_src.resize(nvars);
    d_variables_dst.resize(nvars);
 
-   for (int i = 0; i < nvars; i++) {
+   for (int i = 0; i < nvars; ++i) {
       d_variables_src[i].reset(
          new pdat::OuternodeVariable<double>(
             d_dim,
@@ -207,7 +207,7 @@ void OuternodeDataTest::setLinearData(
          z = lowerx[2] + dx[2] * ((*ci)(2) - loweri(2));
       }
 
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          (*data)(*ci, d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
       }
 
@@ -265,7 +265,7 @@ void OuternodeDataTest::setLinearData(
             }
 
             pdat::NodeIndex ni(*bi, (pdat::NodeIndex::Corner)0);
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                (*data)(ni,
                        d) = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
             }
@@ -291,7 +291,7 @@ void OuternodeDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -317,7 +317,7 @@ void OuternodeDataTest::initializeDataOnPatch(
 
    } else if (d_do_coarsen) {
 
-      for (int i = 0; i < static_cast<int>(variables.size()); i++) {
+      for (int i = 0; i < static_cast<int>(variables.size()); ++i) {
 
          boost::shared_ptr<hier::PatchData> data(
             patch.getPatchData(variables[i], getDataContext()));
@@ -377,7 +377,7 @@ void OuternodeDataTest::checkPatchInteriorData(
       }
 
       double value;
-      for (int d = 0; d < depth; d++) {
+      for (int d = 0; d < depth; ++d) {
          value = d_Dcoef + d_Acoef * x + d_Bcoef * y + d_Ccoef * z;
          if (!(tbox::MathUtilities<double>::equalEps((*data)(*ci,
                                                              d), value))) {
@@ -425,7 +425,7 @@ bool OuternodeDataTest::verifyResults(
       tbox::plog << "Patch box = " << patch.getBox() << endl;
 
       hier::IntVector tgcw(d_dim, 0);
-      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
          tgcw.max(patch.getPatchData(d_variables_dst[i], getDataContext())->
             getGhostCellWidth());
       }
@@ -444,7 +444,7 @@ bool OuternodeDataTest::verifyResults(
             patch);                 //, hierarchy, level_number);
       }
 
-      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); i++) {
+      for (int i = 0; i < static_cast<int>(d_variables_dst.size()); ++i) {
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             BOOST_CAST<pdat::NodeData<double>, hier::PatchData>(
@@ -457,7 +457,7 @@ bool OuternodeDataTest::verifyResults(
          for (pdat::NodeIterator ci(pdat::NodeGeometry::begin(dbox));
               ci != ciend; ++ci) {
             double correct = (*solution)(*ci);
-            for (int d = 0; d < depth; d++) {
+            for (int d = 0; d < depth; ++d) {
                double result = (*node_data)(*ci, d);
                if (!tbox::MathUtilities<double>::equalEps(correct, result)) {
                   tbox::perr << "Test FAILED: ...."

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   tbox
  *
  ************************************************************************/
@@ -36,7 +36,7 @@ ProcessorMapping::ProcessorMapping(
    const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       d_mapping[i] = 0;
    }
 }
@@ -52,7 +52,7 @@ ProcessorMapping::ProcessorMapping(
    d_my_rank = mpi.getRank();
    d_nodes = mpi.getSize();
    const int n = static_cast<int>(d_mapping.size());
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       d_mapping[i] = mapping.d_mapping[i];
    }
 }
@@ -79,7 +79,7 @@ ProcessorMapping::setMappingSize(
 {
    d_mapping.resize(n);
 
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       d_mapping[i] = 0;
    }
    d_local_id_count = -1;
@@ -91,7 +91,7 @@ ProcessorMapping::setProcessorMapping(
 {
    d_mapping.resize(mapping.size());
 
-   for (int i = 0; i < static_cast<int>(d_mapping.size()); i++) {
+   for (int i = 0; i < static_cast<int>(d_mapping.size()); ++i) {
       //  (mapping[i] % d_nodes) keeps patches from being assigned
       //  non-existent processors.
       setProcessorAssignment(i, mapping[i] % d_nodes);
@@ -113,7 +113,7 @@ ProcessorMapping::computeLocalIndices() const
    const int n = static_cast<int>(d_mapping.size());
    d_local_id_count = 0;
 
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       if (d_mapping[i] == d_my_rank) {
          ++d_local_id_count;
       }
@@ -124,7 +124,7 @@ ProcessorMapping::computeLocalIndices() const
     */
    d_local_indices.resize(d_local_id_count);
    int idx = 0;
-   for (int i = 0; i < n; i++) {
+   for (int i = 0; i < n; ++i) {
       if (d_mapping[i] == d_my_rank) {
          d_local_indices[idx++] = i;
       }

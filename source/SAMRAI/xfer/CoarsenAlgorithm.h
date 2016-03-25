@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Coarsening algorithm for data transfer between AMR levels
  *
  ************************************************************************/
@@ -249,7 +249,7 @@ public:
    createSchedule(
       const boost::shared_ptr<hier::PatchLevel>& crse_level,
       const boost::shared_ptr<hier::PatchLevel>& fine_level,
-      CoarsenPatchStrategy * coarsen_strategy = 0,
+      CoarsenPatchStrategy* coarsen_strategy = 0,
       const boost::shared_ptr<CoarsenTransactionFactory>& transaction_factory =
          boost::shared_ptr<CoarsenTransactionFactory>());
 
@@ -322,7 +322,7 @@ public:
 private:
    CoarsenAlgorithm(
       const CoarsenAlgorithm&);               // not implemented
-   void
+   CoarsenAlgorithm&
    operator = (
       const CoarsenAlgorithm&);                   // not implemented
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Basic templated face-centered patch data operations.
  *
  ************************************************************************/
@@ -50,7 +50,7 @@ PatchFaceDataBasicOps<TYPE>::scale(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.scale(dst->getArrayData(d),
          alpha, src->getArrayData(d),
@@ -71,7 +71,7 @@ PatchFaceDataBasicOps<TYPE>::addScalar(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.addScalar(dst->getArrayData(d),
          src->getArrayData(d), alpha,
@@ -92,7 +92,7 @@ PatchFaceDataBasicOps<TYPE>::add(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.add(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -113,7 +113,7 @@ PatchFaceDataBasicOps<TYPE>::subtract(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.subtract(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -134,7 +134,7 @@ PatchFaceDataBasicOps<TYPE>::multiply(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.multiply(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -155,7 +155,7 @@ PatchFaceDataBasicOps<TYPE>::divide(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.divide(dst->getArrayData(d),
          src1->getArrayData(d), src2->getArrayData(d),
@@ -175,7 +175,7 @@ PatchFaceDataBasicOps<TYPE>::reciprocal(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.reciprocal(dst->getArrayData(d),
          src->getArrayData(d),
@@ -198,7 +198,7 @@ PatchFaceDataBasicOps<TYPE>::linearSum(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.linearSum(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -221,7 +221,7 @@ PatchFaceDataBasicOps<TYPE>::axpy(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.axpy(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -244,7 +244,7 @@ PatchFaceDataBasicOps<TYPE>::axmy(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.axmy(dst->getArrayData(d),
          alpha, src1->getArrayData(d),
@@ -266,7 +266,7 @@ PatchFaceDataBasicOps<TYPE>::setRandomValues(
 
    int dimVal = dst->getDim().getValue();
 
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       d_array_ops.setRandomValues(dst->getArrayData(d),
          width, low, face_box);
@@ -285,7 +285,7 @@ PatchFaceDataBasicOps<TYPE>::min(
    int dimVal = data->getDim().getValue();
 
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       minval = tbox::MathUtilities<TYPE>::Min(
             minval, d_array_ops.min(data->getArrayData(d), face_box));
@@ -305,7 +305,7 @@ PatchFaceDataBasicOps<TYPE>::max(
    int dimVal = data->getDim().getValue();
 
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
-   for (int d = 0; d < dimVal; d++) {
+   for (int d = 0; d < dimVal; ++d) {
       const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
       maxval = tbox::MathUtilities<TYPE>::Max(
             maxval, d_array_ops.max(data->getArrayData(d), face_box));

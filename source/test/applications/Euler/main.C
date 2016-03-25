@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Euler gas dynamics sample application
  *
  ************************************************************************/
@@ -58,6 +58,10 @@ using namespace std;
 #endif
 
 #include <sys/stat.h>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 // Classes for autotesting.
 
@@ -289,6 +293,14 @@ int main(
          tbox::PIO::logOnlyNodeZero(log_filename);
       }
 
+#ifdef _OPENMP
+      tbox::plog << "Compiled with OpenMP version " << _OPENMP
+                 << ".  Running with " << omp_get_max_threads() << " threads."
+                 << std::endl;
+#else
+      tbox::plog << "Compiled without OpenMP.\n";
+#endif
+
       int viz_dump_interval = 0;
       if (main_db->keyExists("viz_dump_interval")) {
          viz_dump_interval = main_db->getInteger("viz_dump_interval");
@@ -311,7 +323,7 @@ int main(
       int matlab_pencil_direction = 0;
       std::vector<int> matlab_pencil_index(dim.getValue() - 1);
       bool matlab_default_pencil = true;
-      for (int id = 0; id < dim.getValue() - 1; id++) {
+      for (int id = 0; id < dim.getValue() - 1; ++id) {
          matlab_pencil_index[id] = 0;
       }
 
@@ -667,6 +679,9 @@ int main(
 
       }
 
+      tbox::plog << "GriddingAlgorithm statistics:\n";
+      gridding_algorithm->printStatistics();
+
       /*
        * Output timer results.
        */
@@ -735,32 +750,32 @@ static void dumpMatlabData1dPencil(
       int indx = 0;
       int id = 0;
       std::vector<int> tmp(dim.getValue() - 1);
-      for (id = 0; id < dim.getValue() - 1; id++) {
+      for (id = 0; id < dim.getValue() - 1; ++id) {
          tmp[id] = pencil_index[id];
       }
       if (default_pencil) {
          hier::Index ifirst = domain.getBoundingBox().lower();
          indx = 0;
-         for (id = 0; id < dim.getValue(); id++) {
+         for (id = 0; id < dim.getValue(); ++id) {
             if (id != pencil_direction) {
                tmp[indx] = ifirst(id);
-               indx++;
+               ++indx;
             }
          }
       }
       indx = 0;
-      for (id = 0; id < dim.getValue(); id++) {
+      for (id = 0; id < dim.getValue(); ++id) {
          if (id != pencil_direction) {
             pencil_box.lower(id) = tmp[indx];
             pencil_box.upper(id) = tmp[indx];
-            indx++;
+            ++indx;
          }
       }
    }
 
    std::vector<hier::BoxContainer> outboxes(nlevels);
 
-   for (int l1 = 0; l1 < nlevels; l1++) {
+   for (int l1 = 0; l1 < nlevels; ++l1) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(l1));
       outboxes[l1] = hier::BoxContainer(level->getBoxes());
 
@@ -812,7 +827,7 @@ static void dumpMatlabData1dPencil(
    /*
     * There are 7 values dumped for every cell.  Here we dump the time.
     */
-   for (int i = 0; i < 6 + 1; i++) {
+   for (int i = 0; i < 6 + 1; ++i) {
       outfile << plot_time << "  ";
    }
    outfile << endl;
@@ -820,7 +835,7 @@ static void dumpMatlabData1dPencil(
    euler_model->setDataContext(
       hier::VariableDatabase::getDatabase()->getContext("CURRENT"));
 
-   for (int l5 = 0; l5 < nlevels; l5++) {
+   for (int l5 = 0; l5 < nlevels; ++l5) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(l5));
 
       hier::Box level_pencil_box = pencil_box;

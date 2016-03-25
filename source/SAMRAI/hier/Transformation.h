@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Class for managing tanssformations between index spaces in
  *                an AMR hierarchy.
  *
@@ -166,7 +166,7 @@ public:
     * @param[in,out] box  The Box will be transformed
     *
     * @pre (box.getBlockId() == getBeginBlock()) ||
-           (getBeginBlock() == BlockId::invalidId())
+    *      (getBeginBlock() == BlockId::invalidId())
     */
    void
    transform(
@@ -181,7 +181,7 @@ public:
     * @param[in,out] box
     *
     * @pre (box.getBlockId() == getBeginBlock()) ||
-           (getBeginBlock() == BlockId::invalidId())
+    *      (getBeginBlock() == BlockId::invalidId())
     */
    void
    inverseTransform(
@@ -191,7 +191,8 @@ public:
     * @brief Get a Tranformation object that defines the inverse of this
     * tranformation.
     */
-   Transformation getInverseTransformation() const;
+   Transformation
+   getInverseTransformation() const;
 
    /*!
     * @brief Assignment operator
@@ -209,7 +210,7 @@ public:
 
    /*!
     * @brief Get the BlockId for the Box before transformation.
-    */ 
+    */
    const BlockId& getBeginBlock() const
    {
       return d_begin_block;

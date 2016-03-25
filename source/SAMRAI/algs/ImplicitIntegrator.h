@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Implicit time integration manager class.
  *
  ************************************************************************/
@@ -124,8 +124,8 @@ public:
    ImplicitIntegrator(
       const std::string& object_name,
       const boost::shared_ptr<tbox::Database>& input_db,
-      ImplicitEquationStrategy * implicit_equations,
-      solv::NonlinearSolverStrategy * nonlinear_solver,
+      ImplicitEquationStrategy* implicit_equations,
+      solv::NonlinearSolverStrategy* nonlinear_solver,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
@@ -357,7 +357,7 @@ private:
    // The following are not implemented:
    ImplicitIntegrator(
       const ImplicitIntegrator&);
-   void
+   ImplicitIntegrator&
    operator = (
       const ImplicitIntegrator&);
 

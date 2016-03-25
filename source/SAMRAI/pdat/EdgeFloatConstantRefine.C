@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for edge-centered float data on
  *                a  mesh.
  *
@@ -105,7 +105,7 @@ EdgeFloatConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-EdgeFloatConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+EdgeFloatConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -144,7 +144,7 @@ EdgeFloatConstantRefine::refine(
    const hier::Index filo = fdata->getGhostBox().lower();
    const hier::Index fihi = fdata->getGhostBox().upper();
 
-   for (int axis = 0; axis < dim.getValue(); axis++) {
+   for (int axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
 
       for (hier::BoxContainer::const_iterator b = boxes.begin();
@@ -153,7 +153,7 @@ EdgeFloatConstantRefine::refine(
          hier::Box fine_box(*b);
          TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
-         for (int i = 0; i < dim.getValue(); i++) {
+         for (int i = 0; i < dim.getValue(); ++i) {
             if (i != axis) {
                fine_box.upper(i) -= 1;
             }
@@ -165,7 +165,7 @@ EdgeFloatConstantRefine::refine(
          const hier::Index ifirstf = fine_box.lower();
          const hier::Index ilastf = fine_box.upper();
 
-         for (int d = 0; d < fdata->getDepth(); d++) {
+         for (int d = 0; d < fdata->getDepth(); ++d) {
             if (dim == tbox::Dimension(1)) {
                SAMRAI_F77_FUNC(conrefedgeflot1d, CONREFEDGEFLOT1D) (
                   ifirstc(0), ilastc(0),

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Implementation for SparseDataFactory
  *
  ************************************************************************/
@@ -53,9 +53,9 @@ SparseDataFactory<BOX_GEOMETRY>::cloneFactory(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
    return boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
-      ghosts,
-      d_dbl_attributes,
-      d_int_attributes);
+             ghosts,
+             d_dbl_attributes,
+             d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>
@@ -65,10 +65,10 @@ SparseDataFactory<BOX_GEOMETRY>::allocate(
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
    return boost::make_shared<SparseData<BOX_GEOMETRY> >(
-         patch.getBox(),
-         d_ghosts,
-         d_dbl_attributes,
-         d_int_attributes);
+             patch.getBox(),
+             d_ghosts,
+             d_dbl_attributes,
+             d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>

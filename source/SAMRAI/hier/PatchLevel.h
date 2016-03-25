@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A collection of patches at one level of the AMR hierarchy
  *
  ************************************************************************/
@@ -142,24 +142,18 @@ public:
       bool defer_boundary_box_creation = false);
 
    /*!
-    * @brief Construct a new patch level from the specified PatchLevel 
+    * @brief Construct a new patch level from the specified PatchLevel
     * restart database.
     *
     * The box, mapping, and ratio to level zero data which are normally
     * passed in during the construction of a new patch level are
-    * retrieved from the specified restart database.  The component_selector
-    * argument specifies which patch data components should be allocated
-    * and read in from the restart_database.  By default, all bits in the
-    * component selector are set to false so that no patch data are
-    * allocated.
+    * retrieved from the specified restart database.
     *
     * @param[in]  restart_database
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch
     *             data.
     * @param[in]  factory
-    * @param[in]  component_selector Optional ComponentSelector. @b Default:
-    *             a ComponentSelector with all elements set to false
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.  @b Default: false
     *
@@ -172,8 +166,6 @@ public:
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory,
-      const ComponentSelector& component_selector =
-         *(new ComponentSelector(false)),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -212,7 +204,7 @@ public:
       const int level)
    {
       d_level_number = level;
-      for (Iterator p(begin()); p != end(); p++) {
+      for (Iterator p(begin()); p != end(); ++p) {
          p->setPatchLevelNumber(d_level_number);
       }
    }
@@ -274,7 +266,7 @@ public:
       bool in_hierarchy)
    {
       d_in_hierarchy = in_hierarchy;
-      for (Iterator p(begin()); p != end(); p++) {
+      for (Iterator p(begin()); p != end(); ++p) {
          p->setPatchInHierarchy(d_in_hierarchy);
       }
    }
@@ -339,7 +331,11 @@ public:
    {
       BoxId mbid(gid);
       PatchContainer::const_iterator it = d_patches.find(mbid);
-      TBOX_ASSERT(it != d_patches.end());
+      if (it == d_patches.end()) {
+         TBOX_ERROR("PatchLevel::getPatch error: GlobalId "
+            << gid << " does not exist locally.\n"
+            << "You must specify the GlobalId of a current local patch.");
+      }
       return it->second;
    }
 
@@ -357,13 +353,29 @@ public:
       const BoxId& mbid) const
    {
       const PatchContainer::const_iterator mi = d_patches.find(mbid);
-#ifdef DEBUG_CHECK_ASSERTIONS
       if (mi == d_patches.end()) {
-         TBOX_ERROR("PatchLevel::getPatch(" << mbid
-            << "): patch does not exist locally." << std::endl);
+         TBOX_ERROR("PatchLevel::getPatch error: BoxId "
+            << mbid << " does not exist locally.\n"
+            << "You must specify the BoxId of a current local box"
+            << " that is not a periodic image.");
       }
-#endif
       return (*mi).second;
+   }
+
+   /*!
+    * @brief Get a patch using a random access index.
+    *
+    * The index specifies the position of the patch as would be
+    * encountered when iterating through the patches.
+    */
+   const boost::shared_ptr<Patch>& getPatch(size_t index) const
+   {
+      if (index >= d_patch_vector.size()) {
+         TBOX_ERROR("PatchLevel::getPatch error: index "
+            << index << " is too big.\n"
+            << "There are only " << d_patch_vector.size() << " patches.");
+      }
+      return d_patch_vector[index];
    }
 
    /*!
@@ -743,7 +755,7 @@ public:
       const int id,
       const double timestamp = 0.0)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(id, timestamp);
       }
    }
@@ -760,7 +772,7 @@ public:
       const ComponentSelector& components,
       const double timestamp = 0.0)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->allocatePatchData(components, timestamp);
       }
    }
@@ -797,7 +809,7 @@ public:
    deallocatePatchData(
       const int id)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->deallocatePatchData(id);
       }
    }
@@ -814,7 +826,7 @@ public:
    deallocatePatchData(
       const ComponentSelector& components)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->deallocatePatchData(components);
       }
    }
@@ -841,7 +853,7 @@ public:
       const double timestamp,
       const int id)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp, id);
       }
    }
@@ -858,7 +870,7 @@ public:
       const double timestamp,
       const ComponentSelector& components)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp, components);
       }
    }
@@ -872,7 +884,7 @@ public:
    setTime(
       const double timestamp)
    {
-      for (Iterator ip(begin()); ip != end(); ip++) {
+      for (Iterator ip(begin()); ip != end(); ++ip) {
          ip->setTime(timestamp);
       }
    }
@@ -1068,14 +1080,12 @@ public:
     * level are equal.
     *
     * @param[in,out] restart_db
-    * @param[in]     component_selector
     *
     * @pre restart_db
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& component_selector);
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write data to the restart database.
@@ -1085,15 +1095,12 @@ public:
     * the restart database.
     *
     * @param[in,out]  restart_db
-    * @param[in]      patchdata_write_table The ComponentSelector specifying
-    *                 which patch data to write to the database
     *
     * @pre restart_db
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& patchdata_write_table) const;
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Print a patch level to varying details.
@@ -1120,9 +1127,13 @@ private:
 
    /*
     * @brief Container of distributed patches on level.
-    *
     */
    typedef std::map<BoxId, boost::shared_ptr<Patch> > PatchContainer;
+
+   /*
+    * @brief Vector of local patches on level.
+    */
+   typedef std::vector<boost::shared_ptr<Patch> > PatchVector;
 
 public:
    /*!
@@ -1130,7 +1141,7 @@ public:
     */
    class Iterator
    {
-friend class PatchLevel;
+      friend class PatchLevel;
 
 public:
       /*!
@@ -1379,10 +1390,24 @@ private:
     */
    PatchContainer d_patches;
 
+   /*!
+    * @brief Vector holding the same patches in d_patches, in the same order.
+    *
+    * This allows random access to the patches.
+    */
+   PatchVector d_patch_vector;
+
    /*
     * Flag to indicate boundary boxes are created.
     */
    bool d_boundary_boxes_created;
+
+   /*!
+    * @brief Has shutdown handler been initialized.
+    *
+    * This should be checked and set in every ctor.
+    */
+   static bool s_initialized;
 
    /*!
     * @brief Initialize static state
@@ -1395,6 +1420,8 @@ private:
    static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
    static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
    static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
+   static boost::shared_ptr<tbox::Timer> t_set_patch_touches;
+   static boost::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Strategy interface for params, tagging, init for gridding.
  *
  ************************************************************************/
@@ -297,7 +297,7 @@ public:
    /*!
     * @brief Process a level before it is removed from the hierarchy during
     * regrid.
-    * 
+    *
     * In some cases user code may wish to process a PatchLevel before it is
     * removed from the hierarchy.  For example, data may exist only on a given
     * PatchLevel such as the finest level.  If that level were to be removed
@@ -328,7 +328,7 @@ private:
    // The following are not implemented:
    TagAndInitializeStrategy(
       const TagAndInitializeStrategy&);
-   void
+   TagAndInitializeStrategy&
    operator = (
       const TagAndInitializeStrategy&);
 

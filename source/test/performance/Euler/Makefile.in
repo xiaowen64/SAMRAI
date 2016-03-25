@@ -3,7 +3,7 @@
 ## This file is part of the SAMRAI distribution.  For full copyright 
 ## information, see COPYRIGHT and COPYING.LESSER. 
 ##
-## Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
 ## Description:   makefile for Euler gas dynamics sample application 
 ##
 #########################################################################
@@ -38,9 +38,13 @@ main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)     \
 	$(LIBSAMRAI) $(LDLIBS) -o main
 
-clean:
-	$(SAMCLEAN)
-	$(RM) *.f main *.timing*
+checkclean:
+	$(CLEAN_COMMON_CHECK_FILES)
+	$(RM) *.timing*
+
+clean: checkclean
+	$(CLEAN_COMMON_TEST_FILES)
+	$(RM) main
 
 redo:
 	$(RM) main core *.ii *.int.c
@@ -65,7 +69,7 @@ perf:	main
 	done
 
 everything:
-	$(MAKE) checkcompile
+	$(MAKE) checkcompile || exit 1
 	$(MAKE) checktest
 	$(MAKE) examples
 	$(MAKE) perf

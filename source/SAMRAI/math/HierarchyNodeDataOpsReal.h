@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated operations for real node data on multiple levels.
  *
  ************************************************************************/
@@ -625,10 +625,10 @@ public:
 private:
    // The following are not implemented
    HierarchyNodeDataOpsReal(
-      const HierarchyNodeDataOpsReal<TYPE>&);
-   void
+      const HierarchyNodeDataOpsReal&);
+   HierarchyNodeDataOpsReal&
    operator = (
-      const HierarchyNodeDataOpsReal<TYPE>&);
+      const HierarchyNodeDataOpsReal&);
 
    boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;

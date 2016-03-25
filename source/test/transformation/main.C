@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Test program to demonstrate/test the Transformation class
  *
  ************************************************************************/
@@ -72,7 +72,7 @@ int main(
          zero_trans.inverseTransform(trans_box);
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
-            fail_count++;
+            ++fail_count;
             tbox::perr << "FAILED: - 2D trivial tranformation" << endl;
          }
 
@@ -94,7 +94,7 @@ int main(
          zero_trans.inverseTransform(trans_box);
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
-            fail_count++;
+            ++fail_count;
             tbox::perr << "FAILED: - 3D trivial tranformation" << endl;
          }
 
@@ -122,7 +122,7 @@ int main(
          shift_trans.inverseTransform(trans_box);
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
-            fail_count++;
+            ++fail_count;
             tbox::perr << "FAILED: - 2D shift tranformation" << endl;
          }
 
@@ -151,7 +151,7 @@ int main(
          shift_trans.inverseTransform(trans_box);
 
          if (!trans_box.isSpatiallyEqual(ref_box)) {
-            fail_count++;
+            ++fail_count;
             tbox::perr << "FAILED: - 3D shift tranformation" << endl;
          }
 
@@ -163,7 +163,7 @@ int main(
        */
       {
          // loop over all 2D rotations
-         for (int i = 0; i < 4; i++) {
+         for (int i = 0; i < 4; ++i) {
             hier::Transformation::RotationIdentifier rotate =
                static_cast<hier::Transformation::RotationIdentifier>(i);
 
@@ -183,7 +183,7 @@ int main(
             trans.inverseTransform(trans_box);
 
             if (!trans_box.isSpatiallyEqual(ref_box)) {
-               fail_count++;
+               ++fail_count;
                tbox::perr << "FAILED: - 2D rotate/shift transformation" << endl;
             }
 
@@ -196,7 +196,7 @@ int main(
        */
       {
          // loop over all 3D rotations
-         for (int i = 0; i < 24; i++) {
+         for (int i = 0; i < 24; ++i) {
             hier::Transformation::RotationIdentifier rotate =
                static_cast<hier::Transformation::RotationIdentifier>(i);
 
@@ -216,7 +216,7 @@ int main(
             trans.inverseTransform(trans_box);
 
             if (!trans_box.isSpatiallyEqual(ref_box)) {
-               fail_count++;
+               ++fail_count;
                tbox::perr << "FAILED: - 3D rotate/shift transformation" << endl;
             }
 
@@ -226,20 +226,20 @@ int main(
 
       /*
        * 2D getSourceBoxContainer tests
-       */ 
+       */
       {
-         hier::Index index_lo_a(28,17);
-         hier::Index index_hi_a(33,66);
-         hier::Index index_lo_b(34,44);
-         hier::Index index_hi_b(44,49);
-         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero); 
+         hier::Index index_lo_a(28, 17);
+         hier::Index index_hi_a(33, 66);
+         hier::Index index_lo_b(34, 44);
+         hier::Index index_hi_b(44, 49);
+         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero);
          hier::Box dst_box_b(index_lo_b, index_hi_b, block_zero);
 
          hier::BoxContainer dst_boxes;
          dst_boxes.pushBack(dst_box_a);
          dst_boxes.pushBack(dst_box_b);
 
-         for (int i = 0; i < 4; i++) {
+         for (int i = 0; i < 4; ++i) {
             hier::Transformation::RotationIdentifier rotate =
                static_cast<hier::Transformation::RotationIdentifier>(i);
 
@@ -272,7 +272,7 @@ int main(
                hier::Box trans_box(*bi);
                trans.transform(trans_box);
                if (!trans_box.isSpatiallyEqual(*cdi)) {
-                  fail_count++;
+                  ++fail_count;
                   tbox::perr << "FAILED: - 2D CellOverlap getSourceBoxContainer" << endl;
                }
 
@@ -280,7 +280,7 @@ int main(
             }
 
             /*
-             * NodeOverlap test 
+             * NodeOverlap test
              */
 
             hier::BoxContainer dst_node_boxes;
@@ -297,7 +297,7 @@ int main(
             hier::BoxContainer node_ov_src;
             node_overlap.getSourceBoxContainer(node_ov_src);
 
-            /* 
+            /*
              * node_ov_src is node_ov_dst inverse-transformed to source
              * space.  Transform back to dst space and the boxes should
              * be equal to those in node_ov_dst.
@@ -309,7 +309,7 @@ int main(
                hier::Box trans_box(*bi);
                pdat::NodeGeometry::transform(trans_box, trans);
                if (!trans_box.isSpatiallyEqual(*ndi)) {
-                  fail_count++;
+                  ++fail_count;
                   tbox::perr << "FAILED: - 2D NodeOverlap getSourceBoxContainer" << endl;
                }
 
@@ -317,10 +317,10 @@ int main(
             }
 
             /*
-             * SideOverlap test 
+             * SideOverlap test
              */
             std::vector<hier::BoxContainer> dst_side_boxes(dim2.getValue());
-            for (int normal = 0; normal < dim2.getValue(); normal++) {
+            for (int normal = 0; normal < dim2.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -328,19 +328,19 @@ int main(
                      pdat::SideGeometry::toSideBox(*di, normal));
                }
             }
-   
+
             pdat::SideOverlap side_overlap(dst_side_boxes, trans);
 
-            for (int normal = 0; normal < dim2.getValue(); normal++) {
- 
+            for (int normal = 0; normal < dim2.getValue(); ++normal) {
+
                const hier::BoxContainer& side_ov_dst =
                   side_overlap.getDestinationBoxContainer(normal);
-   
+
                hier::BoxContainer side_ov_src;
                int src_normal = normal;
                side_overlap.getSourceBoxContainer(side_ov_src, src_normal);
-   
-               /* 
+
+               /*
                 * side_ov_src is side_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in side_ov_dst.
@@ -354,7 +354,7 @@ int main(
                   pdat::SideGeometry::transform(trans_box, test_normal, trans);
                   if (!trans_box.isSpatiallyEqual(*sdi) ||
                       test_normal != normal) {
-                     fail_count++;
+                     ++fail_count;
                      tbox::perr << "FAILED: - 2D SideOverlap getSourceBoxContainer" << endl;
                   }
 
@@ -363,10 +363,10 @@ int main(
             }
 
             /*
-             * FaceOverlap test 
+             * FaceOverlap test
              */
             std::vector<hier::BoxContainer> dst_face_boxes(dim2.getValue());
-            for (int normal = 0; normal < dim2.getValue(); normal++) {
+            for (int normal = 0; normal < dim2.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -374,19 +374,19 @@ int main(
                      pdat::FaceGeometry::toFaceBox(*di, normal));
                }
             }
-   
+
             pdat::FaceOverlap face_overlap(dst_face_boxes, trans);
 
-            for (int normal = 0; normal < dim2.getValue(); normal++) {
- 
+            for (int normal = 0; normal < dim2.getValue(); ++normal) {
+
                const hier::BoxContainer& face_ov_dst =
                   face_overlap.getDestinationBoxContainer(normal);
-   
+
                hier::BoxContainer face_ov_src;
                int src_normal = normal;
                face_overlap.getSourceBoxContainer(face_ov_src, src_normal);
-   
-               /* 
+
+               /*
                 * face_ov_src is face_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in face_ov_dst.
@@ -400,7 +400,7 @@ int main(
                   pdat::FaceGeometry::transform(trans_box, test_normal, trans);
                   if (!trans_box.isSpatiallyEqual(*fdi) ||
                       test_normal != normal) {
-                     fail_count++;
+                     ++fail_count;
                      tbox::perr << "FAILED: - 2D FaceOverlap getSourceBoxContainer" << endl;
                   }
 
@@ -409,10 +409,10 @@ int main(
             }
 
             /*
-             * EdgeOverlap test 
+             * EdgeOverlap test
              */
             std::vector<hier::BoxContainer> dst_edge_boxes(dim2.getValue());
-            for (int axis = 0; axis < dim2.getValue(); axis++) {
+            for (int axis = 0; axis < dim2.getValue(); ++axis) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -420,19 +420,19 @@ int main(
                      pdat::EdgeGeometry::toEdgeBox(*di, axis));
                }
             }
-   
+
             pdat::EdgeOverlap edge_overlap(dst_edge_boxes, trans);
 
-            for (int axis = 0; axis < dim2.getValue(); axis++) {
- 
+            for (int axis = 0; axis < dim2.getValue(); ++axis) {
+
                const hier::BoxContainer& edge_ov_dst =
                   edge_overlap.getDestinationBoxContainer(axis);
-   
+
                hier::BoxContainer edge_ov_src;
                int src_axis = axis;
                edge_overlap.getSourceBoxContainer(edge_ov_src, src_axis);
-   
-               /* 
+
+               /*
                 * edge_ov_src is edge_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in edge_ov_dst.
@@ -446,7 +446,7 @@ int main(
                   pdat::EdgeGeometry::transform(trans_box, test_axis, trans);
                   if (!trans_box.isSpatiallyEqual(*edi) ||
                       test_axis != axis) {
-                     fail_count++;
+                     ++fail_count;
                      tbox::perr << "FAILED: - 2D EdgeOverlap getSourceBoxContainer" << endl;
                   }
 
@@ -459,27 +459,27 @@ int main(
 
       /*
        * 3D getSourceBoxContainer tests
-       */ 
+       */
       {
-         hier::Index index_lo_a(19,15,26);
-         hier::Index index_hi_a(24,43,74);
-         hier::Index index_lo_b(25,19,48);
-         hier::Index index_hi_b(73,59,64);
-         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero); 
+         hier::Index index_lo_a(19, 15, 26);
+         hier::Index index_hi_a(24, 43, 74);
+         hier::Index index_lo_b(25, 19, 48);
+         hier::Index index_hi_b(73, 59, 64);
+         hier::Box dst_box_a(index_lo_a, index_hi_a, block_zero);
          hier::Box dst_box_b(index_lo_b, index_hi_b, block_zero);
 
          hier::BoxContainer dst_boxes;
          dst_boxes.pushBack(dst_box_a);
          dst_boxes.pushBack(dst_box_b);
 
-         for (int i = 0; i < 24; i++) {
+         for (int i = 0; i < 24; ++i) {
             hier::Transformation::RotationIdentifier rotate =
                static_cast<hier::Transformation::RotationIdentifier>(i);
 
             hier::IntVector offset(dim3);
             offset[0] = 46 + i;
             offset[1] = 50 - i;
-            offset[2] = -17 + 4*i;
+            offset[2] = -17 + 4 * i;
 
             hier::Transformation trans(rotate, offset, block_one, block_zero);
 
@@ -506,7 +506,7 @@ int main(
                hier::Box trans_box(*bi);
                trans.transform(trans_box);
                if (!trans_box.isSpatiallyEqual(*cdi)) {
-                  fail_count++;
+                  ++fail_count;
                   tbox::perr << "FAILED: - 3D CellOverlap getSourceBoxContainer" << endl;
                }
 
@@ -514,7 +514,7 @@ int main(
             }
 
             /*
-             * NodeOverlap test 
+             * NodeOverlap test
              */
 
             hier::BoxContainer dst_node_boxes;
@@ -531,7 +531,7 @@ int main(
             hier::BoxContainer node_ov_src;
             node_overlap.getSourceBoxContainer(node_ov_src);
 
-            /* 
+            /*
              * node_ov_src is node_ov_dst inverse-transformed to source
              * space.  Transform back to dst space and the boxes should
              * be equal to those in node_ov_dst.
@@ -543,7 +543,7 @@ int main(
                hier::Box trans_box(*bi);
                pdat::NodeGeometry::transform(trans_box, trans);
                if (!trans_box.isSpatiallyEqual(*ndi)) {
-                  fail_count++;
+                  ++fail_count;
                   tbox::perr << "FAILED: - 3D NodeOverlap getSourceBoxContainer" << endl;
                }
 
@@ -551,10 +551,10 @@ int main(
             }
 
             /*
-             * SideOverlap test 
+             * SideOverlap test
              */
             std::vector<hier::BoxContainer> dst_side_boxes(dim3.getValue());
-            for (int normal = 0; normal < dim3.getValue(); normal++) {
+            for (int normal = 0; normal < dim3.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -565,7 +565,7 @@ int main(
 
             pdat::SideOverlap side_overlap(dst_side_boxes, trans);
 
-            for (int normal = 0; normal < dim3.getValue(); normal++) {
+            for (int normal = 0; normal < dim3.getValue(); ++normal) {
 
                const hier::BoxContainer& side_ov_dst =
                   side_overlap.getDestinationBoxContainer(normal);
@@ -574,7 +574,7 @@ int main(
                int src_normal = normal;
                side_overlap.getSourceBoxContainer(side_ov_src, src_normal);
 
-               /* 
+               /*
                 * side_ov_src is side_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in side_ov_dst.
@@ -588,7 +588,7 @@ int main(
                   pdat::SideGeometry::transform(trans_box, test_normal, trans);
                   if (!trans_box.isSpatiallyEqual(*sdi) ||
                       test_normal != normal) {
-                     fail_count++;
+                     ++fail_count;
                      tbox::perr << "FAILED: - 3D SideOverlap getSourceBoxContainer" << endl;
                   }
 
@@ -597,10 +597,10 @@ int main(
             }
 
             /*
-             * FaceOverlap test 
+             * FaceOverlap test
              */
             std::vector<hier::BoxContainer> dst_face_boxes(dim3.getValue());
-            for (int normal = 0; normal < dim3.getValue(); normal++) {
+            for (int normal = 0; normal < dim3.getValue(); ++normal) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -611,7 +611,7 @@ int main(
 
             pdat::FaceOverlap face_overlap(dst_face_boxes, trans);
 
-            for (int normal = 0; normal < dim3.getValue(); normal++) {
+            for (int normal = 0; normal < dim3.getValue(); ++normal) {
 
                const hier::BoxContainer& face_ov_dst =
                   face_overlap.getDestinationBoxContainer(normal);
@@ -620,7 +620,7 @@ int main(
                int src_normal = normal;
                face_overlap.getSourceBoxContainer(face_ov_src, src_normal);
 
-               /* 
+               /*
                 * face_ov_src is face_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in face_ov_dst.
@@ -634,7 +634,7 @@ int main(
                   pdat::FaceGeometry::transform(trans_box, test_normal, trans);
                   if (!trans_box.isSpatiallyEqual(*fdi) ||
                       test_normal != normal) {
-                     fail_count++;
+                     ++fail_count;
                      tbox::perr << "FAILED: - 3D FaceOverlap getSourceBoxContainer" << endl;
                   }
 
@@ -643,10 +643,10 @@ int main(
             }
 
             /*
-             * EdgeOverlap test 
+             * EdgeOverlap test
              */
             std::vector<hier::BoxContainer> dst_edge_boxes(dim3.getValue());
-            for (int axis = 0; axis < dim3.getValue(); axis++) {
+            for (int axis = 0; axis < dim3.getValue(); ++axis) {
 
                for (hier::BoxContainer::iterator di = dst_boxes.begin();
                     di != dst_boxes.end(); ++di) {
@@ -657,7 +657,7 @@ int main(
 
             pdat::EdgeOverlap edge_overlap(dst_edge_boxes, trans);
 
-            for (int axis = 0; axis < dim3.getValue(); axis++) {
+            for (int axis = 0; axis < dim3.getValue(); ++axis) {
 
                const hier::BoxContainer& edge_ov_dst =
                   edge_overlap.getDestinationBoxContainer(axis);
@@ -666,7 +666,7 @@ int main(
                int src_axis = axis;
                edge_overlap.getSourceBoxContainer(edge_ov_src, src_axis);
 
-               /* 
+               /*
                 * edge_ov_src is edge_ov_dst inverse-transformed to source
                 * space.  Transform back to dst space and the boxes should
                 * be equal to those in edge_ov_dst.
@@ -680,7 +680,7 @@ int main(
                   pdat::EdgeGeometry::transform(trans_box, test_axis, trans);
                   if (!trans_box.isSpatiallyEqual(*edi) ||
                       test_axis != axis) {
-                     fail_count++;
+                     ++fail_count;
                      tbox::perr << "FAILED: - 3D EdgeOverlap getSourceBoxContainer" << endl;
                   }
 
@@ -733,7 +733,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    pdat::CellGeometry::transform(trans_cindex, reverse_trans);
 
    if (trans_cindex != ref_cindex) {
-      fail_count++;
+      ++fail_count;
       tbox::perr << "FAILED: - CellIndex transformation" << endl;
    }
 
@@ -745,7 +745,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    pdat::NodeGeometry::transform(trans_node_box, transformation);
    pdat::NodeGeometry::transform(trans_node_box, reverse_trans);
    if (!trans_node_box.isSpatiallyEqual(ref_node_box)) {
-      fail_count++;
+      ++fail_count;
       tbox::perr << "FAILED: - Node box transformation" << endl;
    }
 
@@ -755,21 +755,21 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    pdat::NodeGeometry::transform(trans_nindex, reverse_trans);
 
    if (trans_nindex != ref_nindex) {
-      fail_count++;
+      ++fail_count;
       tbox::perr << "FAILED: - NodeIndex transformation" << endl;
    }
 
    /*
     * Side test
     */
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       hier::Box ref_side_box(pdat::SideGeometry::toSideBox(box, d));
       hier::Box trans_side_box(ref_side_box);
       int direction = d;
       pdat::SideGeometry::transform(trans_side_box, direction, transformation);
       pdat::SideGeometry::transform(trans_side_box, direction, reverse_trans);
       if (!trans_side_box.isSpatiallyEqual(ref_side_box)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Side box transformation" << endl;
       }
 
@@ -779,7 +779,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       pdat::SideGeometry::transform(trans_sindex, reverse_trans);
 
       if (trans_sindex != ref_sindex) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - SideIndex transformation" << endl;
       }
    }
@@ -787,14 +787,14 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    /*
     * Edge test
     */
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       hier::Box ref_edge_box(pdat::EdgeGeometry::toEdgeBox(box, d));
       hier::Box trans_edge_box(ref_edge_box);
       int direction = d;
       pdat::EdgeGeometry::transform(trans_edge_box, direction, transformation);
       pdat::EdgeGeometry::transform(trans_edge_box, direction, reverse_trans);
       if (!trans_edge_box.isSpatiallyEqual(ref_edge_box)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Edge box transformation" << endl;
       }
 
@@ -804,7 +804,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       pdat::EdgeGeometry::transform(trans_eindex, reverse_trans);
 
       if (trans_eindex != ref_eindex) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - EdgeIndex transformation" << endl;
       }
    }
@@ -812,14 +812,14 @@ int testGeometryTransformations(const hier::Transformation& transformation,
    /*
     * Face test
     */
-   for (int d = 0; d < dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); ++d) {
       hier::Box ref_face_box(pdat::FaceGeometry::toFaceBox(box, d));
       hier::Box trans_face_box(ref_face_box);
       int direction = d;
       pdat::FaceGeometry::transform(trans_face_box, direction, transformation);
       pdat::FaceGeometry::transform(trans_face_box, direction, reverse_trans);
       if (!trans_face_box.isSpatiallyEqual(ref_face_box)) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - Face box transformation" << endl;
       }
 
@@ -829,7 +829,7 @@ int testGeometryTransformations(const hier::Transformation& transformation,
       pdat::FaceGeometry::transform(trans_findex, reverse_trans);
 
       if (trans_findex != ref_findex) {
-         fail_count++;
+         ++fail_count;
          tbox::perr << "FAILED: - FaceIndex transformation" << endl;
       }
    }

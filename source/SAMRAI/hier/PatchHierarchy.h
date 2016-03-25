@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   An AMR hierarchy of patch levels
  *
  ************************************************************************/
@@ -395,10 +395,6 @@ public:
       const std::string& coarse_hierarchy_name,
       const IntVector& coarsen_ratio) const;
 
-/*
- * TODO: Is it an error to call these methods when a level with the given
- * level number already exists?  Are some preconditions assumed?
- */
    /*!
     * @brief Construct new PatchLevel in hierarchy at given level number.
     *
@@ -631,7 +627,7 @@ public:
    getRequiredConnectorWidth(
       int base_ln,
       int head_ln,
-      bool commit = false ) const;
+      bool commit = false) const;
 
    /*!
     * @brief Add a ConnectorWidthRequestorStrategy implementation to
@@ -707,7 +703,7 @@ public:
          d_proper_nesting_buffer.resize(
             d_max_levels - 1,
             d_proper_nesting_buffer.empty() ?
-               1 : d_proper_nesting_buffer.back());
+            1 : d_proper_nesting_buffer.back());
       }
    }
 
@@ -930,8 +926,9 @@ public:
     * @param log_fine_connector
     * @param log_coarse_connector
     */
-   void logMetadataStatistics(
-      const char *note,
+   void
+   logMetadataStatistics(
+      const char* note,
       int ln,
       int cycle,
       double level_time,
@@ -1056,21 +1053,6 @@ private:
     */
    void
    computeRequiredConnectorWidths() const;
-
-   /*!
-    * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the restart database.
-    *
-    * Only those patch data indicated in the ComponentSelector are written to
-    * the specified database.
-    *
-    * @param[out] restart_db
-    * @param[in]  patchdata_write_table
-    */
-   void
-   putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db,
-      const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Read input data from specified database and initialize

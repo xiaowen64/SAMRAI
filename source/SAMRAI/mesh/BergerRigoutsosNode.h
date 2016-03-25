@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Node in asynchronous Berger-Rigoutsos tree
  *
  ************************************************************************/
@@ -66,14 +66,12 @@ class BergerRigoutsosNode:
 {
 
 public:
-
    /*!
     * @brief Destructor.
     */
    virtual ~BergerRigoutsosNode();
 
 private:
-
    /*
     * BergerRigoutsos and BergerRigoutsosNode are tightly coupled.
     * Technically, BergerRigoutsosNode can be made a private subclass
@@ -93,10 +91,9 @@ private:
       BergerRigoutsos* common_params,
       const hier::Box& box);
 
-   const tbox::Dimension &getDim() const {
+   const tbox::Dimension& getDim() const {
       return d_box.getDim();
    }
-
 
    /*
     * Static integer constant defining value corresponding to a bad integer.
@@ -356,7 +353,8 @@ private:
       return tree_deg;
    }
 
-   void computeGlobalTagDependentVariables();
+   void
+   computeGlobalTagDependentVariables();
 
    bool
    findZeroCutSwath(
@@ -461,12 +459,10 @@ private:
       return false;
    }
 
-
    //! @name Developer's methods for analysis and debugging this class.
    void
    printNodeState(
       std::ostream& co) const;
-
 
    /*!
     * @brief Unique id in the binary tree.
@@ -592,7 +588,6 @@ private:
    tbox::AsyncCommGroup* d_comm_group;
    //@}
 
-
    //@{
    //! @name Deubgging aid
 
@@ -612,6 +607,5 @@ private:
 
 }
 }
-
 
 #endif  // included_mesh_BergerRigoutsosNode

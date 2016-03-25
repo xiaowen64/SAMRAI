@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated outerside centered patch data type
  *
  ************************************************************************/
@@ -561,12 +561,12 @@ private:
 
    // Unimplemented copy constructor
    OutersideData(
-      const OutersideData<TYPE>&);
+      const OutersideData&);
 
    // Unimplemented assignment operator
-   void
+   OutersideData&
    operator = (
-      const OutersideData<TYPE>&);
+      const OutersideData&);
 
    int d_depth;
 

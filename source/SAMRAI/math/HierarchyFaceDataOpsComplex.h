@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Operations for complex face data on multiple levels.
  *
  ************************************************************************/
@@ -498,7 +498,7 @@ private:
    // The following are not implemented
    HierarchyFaceDataOpsComplex(
       const HierarchyFaceDataOpsComplex&);
-   void
+   HierarchyFaceDataOpsComplex&
    operator = (
       const HierarchyFaceDataOpsComplex&);
 
@@ -506,7 +506,7 @@ private:
    int d_coarsest_level;
    int d_finest_level;
    std::vector<std::vector<hier::BoxContainer> >
-      d_nonoverlapping_face_boxes[SAMRAI::MAX_DIM_VAL];
+   d_nonoverlapping_face_boxes[SAMRAI::MAX_DIM_VAL];
 
    PatchFaceDataOpsComplex d_patch_ops;
 

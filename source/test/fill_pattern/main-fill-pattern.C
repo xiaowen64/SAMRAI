@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  *
  ************************************************************************/
 
@@ -52,7 +52,7 @@ void txt2boxes(
    // translate coordinates into cell-centered, lower-left origin based
 
    int width = -1;
-   for (unsigned int idx = 0; idx < strlen(txt) - 1; idx++) {
+   for (unsigned int idx = 0; idx < strlen(txt) - 1; ++idx) {
       if (('x' == txt[idx] || '.' == txt[idx]) &&
           ('.' == txt[idx + 1] || '|' == txt[idx + 1])) {
          width = idx + 1;
@@ -72,7 +72,7 @@ void txt2boxes(
 
    // make vector of x locations
    vector<pair<int, int> > ix;
-   for (unsigned int idx = 0; idx < strlen(txt); idx++) {
+   for (unsigned int idx = 0; idx < strlen(txt); ++idx) {
       if ('x' == txt[idx]) {
          int j = idx / width;
          int i = idx - j * width;
@@ -82,7 +82,7 @@ void txt2boxes(
 
    // foreach x1 in x
    vector<pair<int, int> >::iterator it;
-   for (it = ix.begin(); it != ix.end(); it++) {
+   for (it = ix.begin(); it != ix.end(); ++it) {
 
       vector<pair<int, int> >::iterator it2;
 
@@ -92,7 +92,7 @@ void txt2boxes(
       vector<hier::Box> boxes_here;
       boxes_here.clear();
 
-      for (it2 = ix.begin(); it2 != ix.end(); it2++) {
+      for (it2 = ix.begin(); it2 != ix.end(); ++it2) {
 
          if (it2->first > it->first &&
              it2->second > it->second) {
@@ -111,8 +111,8 @@ void txt2boxes(
             if (txt[idx2] != 'x') isbox = false;
 
             // ...interior cells contain no corners
-            for (int i = it->first + 1; i < it2->first; i++) {
-               for (int j = it->second + 1; j < it2->second; j++) {
+            for (int i = it->first + 1; i < it2->first; ++i) {
+               for (int j = it->second + 1; j < it2->second; ++j) {
                   int idx = j * width + i;
                   if ('x' == txt[idx]) isbox = false;
                   if ('-' == txt[idx]) isbox = false;
@@ -128,8 +128,8 @@ void txt2boxes(
                int j0 = it->second / 2;
                j1 = it2->second / 2;
 
-               i1--;
-               j1--;
+               --i1;
+               --j1;
 
                // Flip coordinates vertically.
                j0 = cell_max - j0;
@@ -141,7 +141,7 @@ void txt2boxes(
                j0 = tmp;
 
                hier::Box abox(hier::Index(i0, j0),
-                              hier::Index(i1, j1), 
+                              hier::Index(i1, j1),
                               hier::BlockId(0));
                boxes_here.push_back(abox);
             }
@@ -154,7 +154,7 @@ void txt2boxes(
          hier::Box smallest_box(boxes_here[0]);
 
          for (vector<hier::Box>::iterator itb = boxes_here.begin();
-              itb != boxes_here.end(); itb++) {
+              itb != boxes_here.end(); ++itb) {
             if ((*itb).numberCells() < smallest_box.numberCells()) {
                smallest_box = *itb;
             }
@@ -176,7 +176,7 @@ int txt_width(
    const char* txt)
 {
    int width = -1;
-   for (unsigned int idx = 0; idx < strlen(txt) - 1; idx++) {
+   for (unsigned int idx = 0; idx < strlen(txt) - 1; ++idx) {
       if (('x' == txt[idx] || '.' == txt[idx]) &&
           ('.' == txt[idx + 1] || '|' == txt[idx + 1])) {
          width = idx + 1;
@@ -237,11 +237,11 @@ bool txt_next_val(
 
       // If we outside the grid, there cannot be a value here
       if (grid_i < 0 || grid_j < 0) {
-         idx++;
+         ++idx;
          continue;
       }
       if (grid_i > grid_width || grid_j > grid_height) {
-         idx++;
+         ++idx;
          continue;
       }
       // Translate grid coords to text coordinates.  Text coordinates
@@ -286,7 +286,7 @@ bool txt_next_val(
          return true;
       }
 
-      idx++; // advance to next domain idx
+      ++idx; // advance to next domain idx
 
    } while (cnt++ < cnt_max);
 
@@ -360,7 +360,7 @@ bool SingleLevelTestCase(
 
       if (proc == mpi.getRank()) {
          mblevel->addBox(hier::Box(*level_boxes_itr, local_id, proc));
-         local_id++;
+         ++local_id;
       }
 
    }

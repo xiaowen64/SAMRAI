@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Parser that reads the input database grammar
  *
  ************************************************************************/
@@ -154,11 +154,11 @@ Parser::advanceCursor(
 {
    Parser::ParseData& pd = d_parse_stack.front();
    pd.d_cursor = pd.d_nextcursor;
-   for (std::string::const_iterator i = token.begin(); i != token.end(); i++) {
+   for (std::string::const_iterator i = token.begin(); i != token.end(); ++i) {
       if (*i == '\t') {
          pd.d_nextcursor = ((pd.d_nextcursor + 7) & (~7)) + 1;
       } else {
-         pd.d_nextcursor++;
+         ++(pd.d_nextcursor);
       }
    }
 }
@@ -183,11 +183,11 @@ Parser::error(
 
    pout << pd.d_linebuffer << std::endl << std::flush;
 
-   for (int i = 0; i < pd.d_cursor; i++)
+   for (int i = 0; i < pd.d_cursor; ++i)
       pout << " ";
    pout << "^\n";
 
-   d_errors++;
+   ++d_errors;
 }
 
 /*
@@ -210,11 +210,11 @@ Parser::warning(
 
    pout << pd.d_linebuffer << std::endl << std::flush;
 
-   for (int i = 0; i < pd.d_cursor; i++)
+   for (int i = 0; i < pd.d_cursor; ++i)
       pout << " ";
    pout << "^\n";
 
-   d_warnings++;
+   ++d_warnings;
 }
 
 /*
@@ -231,7 +231,7 @@ Parser::getDatabaseWithKey(
    const std::string& key)
 {
    std::list<boost::shared_ptr<Database> >::iterator i = d_scope_stack.begin();
-   for ( ; i != d_scope_stack.end(); i++) {
+   for ( ; i != d_scope_stack.end(); ++i) {
       if ((*i)->keyExists(key)) {
          return *i;
       }

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A null database that does nothing for all database methods.
  *
  ************************************************************************/
@@ -106,7 +106,7 @@ public:
    /**
     * Always returns 0.
     */
-   virtual int
+   virtual size_t
    getArraySize(
       const std::string& key);
 
@@ -145,7 +145,7 @@ public:
    putBoolArray(
       const std::string& key,
       const bool * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<bool>.
@@ -168,7 +168,7 @@ public:
    putDatabaseBoxArray(
       const std::string& key,
       const DatabaseBox * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<box>.
@@ -191,7 +191,7 @@ public:
    putCharArray(
       const std::string& key,
       const char * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<char>.
@@ -214,7 +214,7 @@ public:
    putComplexArray(
       const std::string& key,
       const dcomplex * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<dcomplex>.
@@ -237,7 +237,7 @@ public:
    putDoubleArray(
       const std::string& key,
       const double * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<double>.
@@ -260,7 +260,7 @@ public:
    putFloatArray(
       const std::string& key,
       const float * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<float>.
@@ -283,7 +283,7 @@ public:
    putIntegerArray(
       const std::string& key,
       const int * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<int>.
@@ -306,7 +306,7 @@ public:
    putStringArray(
       const std::string& key,
       const std::string * const data,
-      const int nelements);
+      const size_t nelements);
 
    /**
     * Returns an empty std::vector<std::string>.
@@ -349,9 +349,9 @@ public:
 private:
    NullDatabase(
       const NullDatabase&);             // not implemented
-   void
+   NullDatabase&
    operator = (
-      const NullDatabase&);                     // not implemented
+      const NullDatabase&);             // not implemented
 
 };
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program to test edge-centered patch data ops
  *
  ************************************************************************/
@@ -101,7 +101,7 @@ int main(
       hier::Index flo1(dim);
       hier::Index fhi1(dim);
 
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          lo[i] = 0.0;
          clo0(i) = 0;
          flo0(i) = 4;
@@ -165,11 +165,11 @@ int main(
          boost::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
-      for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
+      for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
          if (nproc > 1) {
             if (ib == layer0->getMPI().getRank()) {
                layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
-                  layer0->getMPI().getRank()));
+                     layer0->getMPI().getRank()));
             }
          } else {
             layer0->addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
@@ -177,11 +177,11 @@ int main(
       }
 
       hier::BoxContainer::iterator fine_itr = fine_boxes.begin();
-      for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
+      for (int ib = 0; ib < n_fine_boxes; ++ib, ++fine_itr) {
          if (nproc > 1) {
             if (ib == layer1->getMPI().getRank()) {
                layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib),
-                  layer1->getMPI().getRank()));
+                     layer1->getMPI().getRank()));
             }
          } else {
             layer1->addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
@@ -219,9 +219,9 @@ int main(
             swgt, dummy, no_ghosts);
 
       // allocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->allocatePatchData(swgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->allocatePatchData(svindx[iv]);
          }
       }
@@ -244,7 +244,7 @@ int main(
       // Initialize control volume data for edge-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          boost::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
@@ -256,7 +256,7 @@ int main(
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double edge_vol = dx[0];
-            for (int i = 1; i < dim.getValue(); i++) {
+            for (int i = 1; i < dim.getValue(); ++i) {
                edge_vol *= dx[i];
             }
             boost::shared_ptr<pdat::EdgeData<double> > data(
@@ -278,94 +278,93 @@ int main(
 
                   if (patch->getLocalId() == 0) {
                      // bottom edge boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(ic, plo1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right edge boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Upper);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                   } else {
                      // top and bottom edge boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(ic, plo1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(ic, phi1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Upper);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right edge boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Upper);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Upper);
                         (*data)(fi) *= 0.5;
                      }
                   }
                } else {
                   if (patch->getLocalId() == 0) {
                      // top and bottom coarse-fine edge boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(ic, plo1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(ic, phi1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Upper);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                      // left coarse-fine edge boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) *= 1.5;
                      }
                   } else {
                      // top and bottom coarse-fine edge boundaries
-                     for (ic = plo0; ic <= phi0; ic++) {
+                     for (ic = plo0; ic <= phi0; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(ic, plo1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(ic, phi1),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::Upper);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                      // left and right coarse-fine edge boundaries
-                     for (ic = plo1; ic <= phi1; ic++) {
+                     for (ic = plo1; ic <= phi1; ++ic) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Lower);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Lower);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::Upper);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::Upper);
                         (*data)(fi) *= 1.5;
                      }
                   }
                }
-            }
-            else {
+            } else {
                int plo0 = patch->getBox().lower(0);
                int phi0 = patch->getBox().upper(0);
                int plo1 = patch->getBox().lower(1);
@@ -379,699 +378,696 @@ int main(
 
                   if (patch->getLocalId() == 0) {
                      // front and back face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.5;
                      }
                      // bottom face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.5;
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right face boundary edges
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                      }
                      // front and back top and bottom edges
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right top and bottom edges
-                     for (ic2 = plo2; ic2 <= phi2; ic2++) {
+                     for (ic2 = plo2; ic2 <= phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                      }
                      // left and right front and back edges
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.25;
                      }
-                  }
-                  else {
+                  } else {
                      // front and back face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                      }
                      // top and bottom face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) = 0.0;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) = 0.0;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) = 0.0;
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) = 0.0;
                      }
                      // left and right face boundary edges
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                            fi = pdat::EdgeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 0.5;
                         }
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.5;
                      }
                      // front and back top and bottom edges
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) = 0.0;
                      }
                      // left and right top and bottom edges
-                     for (ic2 = plo2; ic2 <= phi2; ic2++) {
+                     for (ic2 = plo2; ic2 <= phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) = 0.0;
                      }
                      // left and right front and back edges
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 0.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 0.25;
                      }
                   }
-               }
-               else {
+               } else {
                   if (patch->getLocalId() == 0) {
                      // front and back face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 1.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 1.5;
                      }
                      // top and bottom face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 1.5;
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 1.5;
                      }
                      // left face boundary edges
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 1.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 1.5;
                      }
                      // front and back top and bottom edges
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 2.25;
                      }
                      // left and right top and bottom edges
-                     for (ic2 = plo2; ic2 <= phi2; ic2++) {
+                     for (ic2 = plo2; ic2 <= phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 1.5;
                      }
                      // left and right front and back edges
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 1.5;
                      }
-                  }
-                  else {
+                  } else {
                      // front and back face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, phi2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, ic1, plo2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 1.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 1.5;
                      }
                      // top and bottom face boundary edges
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
-                        for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
+                        for (ic2 = plo2; ic2 < phi2; ++ic2) {
                            fi = pdat::EdgeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, phi1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::X,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::X,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(ic0, plo1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                     for (ic0 = plo0; ic0 < phi0; ic0++) {
+                     for (ic0 = plo0; ic0 < phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 1.5;
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 1.5;
                      }
                      // left and right face boundary edges
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
-                        for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
+                        for (ic1 = plo1; ic1 < phi1; ++ic1) {
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperLeft);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperLeft);
                            (*data)(fi) = 0.0;
                            fi = pdat::EdgeIndex(hier::Index(plo0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::LowerRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::LowerRight);
                            (*data)(fi) = 0.0;
                            fi = pdat::EdgeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::EdgeIndex::Z,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Z,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                            fi = pdat::EdgeIndex(hier::Index(phi0, ic1, ic2),
-                                   pdat::EdgeIndex::Y,
-                                   pdat::EdgeIndex::UpperRight);
+                                 pdat::EdgeIndex::Y,
+                                 pdat::EdgeIndex::UpperRight);
                            (*data)(fi) *= 1.5;
                         }
                      }
-                     for (ic2 = plo2; ic2 < phi2; ic2++) {
+                     for (ic2 = plo2; ic2 < phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                      }
-                     for (ic1 = plo1; ic1 < phi1; ic1++) {
+                     for (ic1 = plo1; ic1 < phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 1.5;
                      }
                      // front and back top and bottom edges
-                     for (ic0 = plo0; ic0 <= phi0; ic0++) {
+                     for (ic0 = plo0; ic0 <= phi0; ++ic0) {
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, phi1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, phi2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(ic0, plo1, plo2),
-                                pdat::EdgeIndex::X,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::X,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) *= 2.25;
                      }
                      // left and right top and bottom edges
-                     for (ic2 = plo2; ic2 <= phi2; ic2++) {
+                     for (ic2 = plo2; ic2 <= phi2; ++ic2) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, phi1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(plo0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, plo1, ic2),
-                                pdat::EdgeIndex::Z,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Z,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) *= 2.25;
                      }
                      // left and right front and back edges
-                     for (ic1 = plo1; ic1 <= phi1; ic1++) {
+                     for (ic1 = plo1; ic1 <= phi1; ++ic1) {
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerRight);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(plo0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::LowerLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::LowerLeft);
                         (*data)(fi) = 0.0;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, phi2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperRight);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperRight);
                         (*data)(fi) *= 2.25;
                         fi = pdat::EdgeIndex(hier::Index(phi0, ic1, plo2),
-                                pdat::EdgeIndex::Y,
-                                pdat::EdgeIndex::UpperLeft);
+                              pdat::EdgeIndex::Y,
+                              pdat::EdgeIndex::UpperLeft);
                         (*data)(fi) *= 2.25;
                      }
                   }
@@ -1086,7 +1082,7 @@ int main(
       // Expected: cwgt = 0.01 on coarse (except where finer patch exists) and
       // 0.0025 on fine level
 /*   bool vol_test_passed = true;
- *   for (ln = 0; ln < 2; ln++) {
+ *   for (ln = 0; ln < 2; ++ln) {
  *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   boost::shared_ptr< pdat::EdgeData<double> > cvdata = patch->getPatchData(cwgt_id);
@@ -1116,7 +1112,7 @@ int main(
  *   }
  *   }
  *   if (!vol_test_passed) {
- *   num_failures++;
+ *   ++num_failures;
  *   tbox::perr << "FAILED: - Test #1a: Check control volume data set properly" << std::endl;
  *   cwgt_ops->printData(cwgt_id, tbox::plog);
  *   }
@@ -1133,12 +1129,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1.0;
-         }
-         else {
+         } else {
             compare = 1.5;
          }
          if (!tbox::MathUtilities<double>::equalEps(norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #1b: math::HierarchyEdgeDataOpsReal::sumControlVolumes()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -1153,12 +1148,11 @@ int main(
          int compare;
          if (dim.getValue() == 2) {
             compare = 209;
-         }
-         else {
+         } else {
             compare = 2615;
          }
          if (num_data_points != compare) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #2: math::HierarchyEdgeDataOpsReal::numberOfEntries()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -1171,7 +1165,7 @@ int main(
       double val0 = double(2.0);
       edge_ops->setToScalar(svindx[0], val0);
       if (!doubleDataSameAsValue(svindx[0], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3a: math::HierarchyEdgeDataOpsReal::setToScalar()\n"
          << "Expected: v0 = " << val0 << std::endl;
@@ -1183,7 +1177,7 @@ int main(
       edge_ops->setToScalar(svindx[1], 4.0);
       double val1 = 4.0;
       if (!doubleDataSameAsValue(svindx[1], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #3b: math::HierarchyEdgeDataOpsReal::setToScalar()\n"
          << "Expected: v1 = " << val1 << std::endl;
@@ -1194,7 +1188,7 @@ int main(
       // Expected:  v2 = v1 = (4.0)
       edge_ops->copyData(svindx[2], svindx[1]);
       if (!doubleDataSameAsValue(svindx[2], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #4: math::HierarchyEdgeDataOpsReal::copyData()\n"
          << "Expected: v2 = " << val1 << std::endl;
@@ -1205,14 +1199,14 @@ int main(
       // Expected:  v0 = (4.0), v1 = (2.0)
       edge_ops->swapData(svindx[0], svindx[1]);
       if (!doubleDataSameAsValue(svindx[0], val1, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5a: math::HierarchyEdgeDataOpsReal::swapData()\n"
          << "Expected: v0 = " << val1 << std::endl;
          edge_ops->printData(svindx[0], tbox::plog);
       }
       if (!doubleDataSameAsValue(svindx[1], val0, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #5b: math::HierarchyEdgeDataOpsReal::swapData()\n"
          << "Expected: v1 = " << val0 << std::endl;
@@ -1224,7 +1218,7 @@ int main(
       edge_ops->scale(svindx[2], 0.25, svindx[2]);
       double val_scale = 1.0;
       if (!doubleDataSameAsValue(svindx[2], val_scale, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #6: math::HierarchyEdgeDataOpsReal::scale()\n"
          << "Expected: v2 = " << val_scale << std::endl;
@@ -1236,7 +1230,7 @@ int main(
       edge_ops->add(svindx[3], svindx[0], svindx[1]);
       double val_add = 6.0;
       if (!doubleDataSameAsValue(svindx[3], val_add, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #7: math::HierarchyEdgeDataOpsReal::add()\n"
          << "Expected: v3 = " << val_add << std::endl;
@@ -1251,7 +1245,7 @@ int main(
       edge_ops->subtract(svindx[1], svindx[3], svindx[0]);
       double val_sub = 6.0;
       if (!doubleDataSameAsValue(svindx[1], val_sub, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #8: math::HierarchyEdgeDataOpsReal::subtract()\n"
          << "Expected: v1 = " << val_sub << std::endl;
@@ -1263,7 +1257,7 @@ int main(
       edge_ops->addScalar(svindx[1], svindx[1], 0.0);
       double val_addScalar = 6.0;
       if (!doubleDataSameAsValue(svindx[1], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9a: math::HierarchyEdgeDataOpsReal::addScalar()\n"
          << "Expected: v1 = " << val_addScalar << std::endl;
@@ -1275,7 +1269,7 @@ int main(
       edge_ops->addScalar(svindx[2], svindx[2], 0.0);
       val_addScalar = 1.0;
       if (!doubleDataSameAsValue(svindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9b: math::HierarchyEdgeDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -1287,7 +1281,7 @@ int main(
       edge_ops->addScalar(svindx[2], svindx[2], 3.0);
       val_addScalar = 4.0;
       if (!doubleDataSameAsValue(svindx[2], val_addScalar, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #9c: math::HierarchyEdgeDataOpsReal::addScalar()\n"
          << "Expected: v2 = " << val_addScalar << std::endl;
@@ -1302,7 +1296,7 @@ int main(
       edge_ops->multiply(svindx[1], svindx[3], svindx[1]);
       double val_mult = 3.0;
       if (!doubleDataSameAsValue(svindx[1], val_mult, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #10 math::HierarchyEdgeDataOpsReal::multiply()\n"
          << "Expected: v1 = " << val_mult << std::endl;
@@ -1314,7 +1308,7 @@ int main(
       edge_ops->divide(svindx[0], svindx[2], svindx[1]);
       double val_div = 1.333333333333;
       if (!doubleDataSameAsValue(svindx[0], val_div, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #11 math::HierarchyEdgeDataOpsReal::divide()\n"
          << "Expected: v0 = " << val_div << std::endl;
@@ -1326,7 +1320,7 @@ int main(
       edge_ops->reciprocal(svindx[1], svindx[1]);
       double val_rec = 0.33333333333333;
       if (!doubleDataSameAsValue(svindx[1], val_rec, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #12 math::HierarchyEdgeDataOpsReal::reciprocal()\n"
          << "Expected: v1 = " << val_rec << std::endl;
@@ -1338,7 +1332,7 @@ int main(
       edge_ops->abs(svindx[3], svindx[2]);
       double val_abs = 4.0;
       if (!doubleDataSameAsValue(svindx[3], val_abs, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #13 math::HierarchyEdgeDataOpsReal::abs()\n"
          << "Expected: v3 = " << val_abs << std::endl;
@@ -1350,7 +1344,7 @@ int main(
 
       // set values
       boost::shared_ptr<hier::PatchLevel> level_zero(
-        hierarchy->getPatchLevel(0));
+         hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
@@ -1369,8 +1363,7 @@ int main(
                (*cdata)(pdat::EdgeIndex(index1, pdat::EdgeIndex::Y,
                            pdat::EdgeIndex::Upper), 0) = -1000.0;
             }
-         }
-         else {
+         } else {
             if (patch->getBox().contains(index0)) {
                (*cdata)(pdat::EdgeIndex(index0, pdat::EdgeIndex::Y,
                            pdat::EdgeIndex::LowerRight), 0) = 100.0;
@@ -1397,8 +1390,7 @@ int main(
          if (dim.getValue() == 2) {
             corner0 = pdat::EdgeIndex::Lower;
             corner1 = pdat::EdgeIndex::Upper;
-         }
-         else {
+         } else {
             corner0 = pdat::EdgeIndex::LowerRight;
             corner1 = pdat::EdgeIndex::UpperRight;
          }
@@ -1461,7 +1453,7 @@ int main(
          }
       }
       if (!bogus_value_test_passed) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #14:  Place some bogus values on coarse level"
          << std::endl;
@@ -1475,12 +1467,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 1984.0;
-         }
-         else {
+         } else {
             compare = 12592.0;
          }
          if (!tbox::MathUtilities<double>::equalEps(bogus_l1_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #15: math::HierarchyEdgeDataOpsReal::L1Norm()"
             << " - w/o control weights\n"
@@ -1496,12 +1487,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 4.0;
-         }
-         else {
+         } else {
             compare = 6.0;
          }
          if (!tbox::MathUtilities<double>::equalEps(correct_l1_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #16: math::HierarchyEdgeDataOpsReal::L1Norm()"
             << " - w/control weights\n"
@@ -1517,12 +1507,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 4.0;
-         }
-         else {
+         } else {
             compare = 4.89897948557;
          }
          if (!tbox::MathUtilities<double>::equalEps(l2_norm, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #17: math::HierarchyEdgeDataOpsReal::L2Norm()\n"
             << "Expected value = " << compare << ", Computed value = "
@@ -1534,7 +1523,7 @@ int main(
       // Expected: bogus_max_norm = 1000.0
       double bogus_max_norm = edge_ops->maxNorm(svindx[2]);
       if (!tbox::MathUtilities<double>::equalEps(bogus_max_norm, 1000.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #18: math::HierarchyEdgeDataOpsReal::maxNorm()"
          << " - w/o control weights\n"
@@ -1546,7 +1535,7 @@ int main(
       // Expected: max_norm = 4.0
       double max_norm = edge_ops->maxNorm(svindx[2], swgt_id);
       if (!tbox::MathUtilities<double>::equalEps(max_norm, 4.0)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #19: math::HierarchyEdgeDataOpsReal::maxNorm()"
          << " - w/control weights\n"
@@ -1564,7 +1553,7 @@ int main(
       edge_ops->linearSum(svindx[3], 2.0, svindx[1], 0.0, svindx[0]);
       double val_linearSum = 5.0;
       if (!doubleDataSameAsValue(svindx[3], val_linearSum, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #20: math::HierarchyEdgeDataOpsReal::linearSum()\n"
          << "Expected: v3 = " << val_linearSum << std::endl;
@@ -1576,7 +1565,7 @@ int main(
       edge_ops->axmy(svindx[3], 3.0, svindx[1], svindx[0]);
       double val_axmy = 6.5;
       if (!doubleDataSameAsValue(svindx[3], val_axmy, hierarchy)) {
-         num_failures++;
+         ++num_failures;
          tbox::perr
          << "FAILED: - Test #21: math::HierarchyEdgeDataOpsReal::axmy()\n"
          << "Expected: v3 = " << val_axmy << std::endl;
@@ -1590,12 +1579,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 17.5;
-         }
-         else {
+         } else {
             compare = 26.25;
          }
          if (!tbox::MathUtilities<double>::equalEps(cdot, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #22a: math::HierarchyEdgeDataOpsReal::dot() - (ind2) * (ind1)\n"
             << "Expected Value = " << compare << ", Computed Value = "
@@ -1610,12 +1598,11 @@ int main(
          double compare;
          if (dim.getValue() == 2) {
             compare = 17.5;
-         }
-         else {
+         } else {
             compare = 26.25;
          }
          if (!tbox::MathUtilities<double>::equalEps(cdot, compare)) {
-            num_failures++;
+            ++num_failures;
             tbox::perr
             << "FAILED: - Test #22b: math::HierarchyEdgeDataOpsReal::dot() - (ind2) * (ind1)\n"
             << "Expected Value = " << compare << ", Computed Value = "
@@ -1624,14 +1611,14 @@ int main(
       }
 
       // deallocate data on hierarchy
-      for (ln = 0; ln < 2; ln++) {
+      for (ln = 0; ln < 2; ++ln) {
          hierarchy->getPatchLevel(ln)->deallocatePatchData(swgt_id);
-         for (iv = 0; iv < NVARS; iv++) {
+         for (iv = 0; iv < NVARS; ++iv) {
             hierarchy->getPatchLevel(ln)->deallocatePatchData(svindx[iv]);
          }
       }
 
-      for (iv = 0; iv < NVARS; iv++) {
+      for (iv = 0; iv < NVARS; ++iv) {
          fvar[iv].reset();
       }
       swgt.reset();
@@ -1667,7 +1654,7 @@ doubleDataSameAsValue(
 
    int ln;
    boost::shared_ptr<hier::Patch> patch;
-   for (ln = 0; ln < 2; ln++) {
+   for (ln = 0; ln < 2; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {

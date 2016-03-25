@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Conservative linear refine operator for cell-centered
  *                double data on a Skeleton mesh.
  *
@@ -72,9 +72,9 @@ SkeletonCellDoubleConservativeLinearRefine(
 {
    const int max_levels = 10;
    d_dx.resize(max_levels);
-   for (int n = 0; n < max_levels; n++) {
+   for (int n = 0; n < max_levels; ++n) {
       d_dx[n].resize(dim.getValue());
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          d_dx[n][i] = 1.;
       }
    }
@@ -93,7 +93,7 @@ SkeletonCellDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-SkeletonCellDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const {
+SkeletonCellDoubleConservativeLinearRefine::getStencilWidth(const tbox::Dimension& dim) const {
    return hier::IntVector(dim, 1);
 }
 
@@ -170,7 +170,7 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    getDx(clev_num, cdx);
    getDx(flev_num, fdx);
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (
             ifirstc(0), ilastc(0),
@@ -240,7 +240,7 @@ void SkeletonCellDoubleConservativeLinearRefine::setDx(
    if (level_number >= static_cast<int>(d_dx.size())) {
       d_dx.resize(level_number + 1);
       d_dx[level_number].resize(d_dim.getValue());
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < d_dim.getValue(); ++i) {
          d_dx[level_number][i] = dx[i];
       }
    }
@@ -250,7 +250,7 @@ void SkeletonCellDoubleConservativeLinearRefine::getDx(
    const int level_number,
    double* dx) const
 {
-   for (int i = 0; i < d_dim.getValue(); i++) {
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       dx[i] = d_dx[level_number][i];
    }
 }

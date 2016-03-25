@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   utility routines useful for load balancing operations
  *
  ************************************************************************/
@@ -14,10 +14,14 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include "SAMRAI/hier/BaseGridGeometry.h"
+#include "SAMRAI/hier/Connector.h"
+#include "SAMRAI/hier/MappingConnector.h"
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/math/PatchCellDataNormOpsReal.h"
+#include "SAMRAI/mesh/PartitioningParams.h"
 #include "SAMRAI/mesh/SpatialKey.h"
+#include "SAMRAI/tbox/RankGroup.h"
 
 #include <iostream>
 #include <list>
@@ -296,6 +300,86 @@ struct BalanceUtilities {
       const hier::Box& box);
 
    /*!
+    * @brief Find small boxes in a post-balance BoxLevel that are not
+    * in a pre-balance BoxLevel.
+    *
+    * @param co Stream to report findings
+    *
+    * @param border Left border in report output
+    *
+    * @param [in] post_to_pre
+    *
+    * @param [in] min_width Report post-balance boxes smaller than
+    * min_width in any direction.
+    *
+    * @param [in] min_vol Report post-balance boxes with fewer cells
+    * than this.
+    */
+   static void
+   findSmallBoxesInPostbalance(
+      std::ostream& co,
+      const std::string& border,
+      const hier::MappingConnector& post_to_pre,
+      const hier::IntVector& min_width,
+      size_t min_vol);
+
+   /*!
+    * @brief Find small boxes in a post-balance BoxLevel that are not
+    * in a pre-balance BoxLevel.
+    *
+    * This method does not scale.  It acquires and processes
+    * globalized data.
+    *
+    * @param co Stream to report findings
+    *
+    * @param border Left border in report output
+    *
+    * @param [in] pre Pre-balance BoxLevel
+    *
+    * @param [in] post Post-balance BoxLevel
+    *
+    * @param [in] min_width Report post-balance boxes smaller than
+    * min_width in any direction.
+    *
+    * @param [in] min_vol Report post-balance boxes with fewer cells
+    * than this.
+    */
+   static void
+   findSmallBoxesInPostbalance(
+      std::ostream& co,
+      const std::string& border,
+      const hier::BoxLevel& pre,
+      const hier::BoxLevel& post,
+      const hier::IntVector& min_width,
+      size_t min_vol);
+
+   /*!
+    * @brief Evaluate whether a new load is an improvement over a
+    * current load based on their proximity to an ideal value or range
+    * of acceptable values.
+    *
+    * There is a slight bias toward current load.  The new_load is better
+    * only if it improves by at least pparams.getLoadComparisonTol().
+    *
+    * Return values in flags:
+    * - [0]: -1, 0 or 1: degrades, leave-alone or improves in-range
+    * - [1]: -1, 0 or 1: degrades, leave-alone or improves balance
+    * - [2]: -1, 0 or 1: degrades, leave-alone or improves overall
+    * - [3]: 0 or 1: whether new_load is within the range of [low, high]
+    *
+    * Return whether new_load is an improvement over current_load.
+    */
+   static bool
+   compareLoads(
+      int flags[],
+      double current_load,
+      double new_load,
+      double ideal_load,
+      double low_load,
+      double high_load,
+      const PartitioningParams &pparams);
+
+   /*!
     * Compute and return load balance efficiency for a level.
     *
     * @return         Double-valued estimate of the load balance efficiency
@@ -384,8 +468,37 @@ struct BalanceUtilities {
 
    //@}
 
-private:
+   /*
+    * Constrain maximum box sizes in the given BoxLevel and
+    * update given Connectors to the changed BoxLevel.
+    *
+    * @pre !anchor_to_level || anchor_to_level->hasTranspose()
+    */
+   static void
+   constrainMaxBoxSizes(
+      hier::BoxLevel& box_level,
+      hier::Connector* anchor_to_level,
+      const PartitioningParams& pparams);
 
+   static const int BalanceUtilities_PREBALANCE0 = 5;
+   static const int BalanceUtilities_PREBALANCE1 = 6;
+
+   /*!
+    * Move Boxes in balance_box_level from ranks outside of
+    * rank_group to ranks inside rank_group.  Modify the given connectors
+    * to make them correct following this moving of boxes.
+    *
+    * @pre !balance_to_anchor || balance_to_anchor->hasTranspose()
+    * @pre !balance_to_anchor || (balance_to_anchor->getTranspose().checkTransposeCorrectness(*balance_to_anchor) == 0)
+    * @pre !balance_to_anchor || (balance_to_anchor->checkTransposeCorrectness(balance_to_anchor->getTranspose()) == 0)
+    */
+   static void
+   prebalanceBoxLevel(
+      hier::BoxLevel& balance_box_level,
+      hier::Connector* balance_to_anchor,
+      const tbox::RankGroup& rank_group);
+
+private:
    struct RankAndLoad {
       int rank;
       double load;

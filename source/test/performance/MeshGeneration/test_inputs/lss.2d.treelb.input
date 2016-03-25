@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Input file for MeshGeneration tests.
  *
  ************************************************************************/
@@ -25,19 +25,19 @@ Main {
 
    // Domain definition: box, lower and upper corners.
    domain_boxes = [(0,0),(47,47)]
-   x_lo = 0.0, 0.0
-   x_up = 1.0, 1.0
+   xlo = 0.0, 0.0
+   xhi = 1.0, 1.0
 
    // Whether to enforce nesting (one value for each level, but first value is ignored).
    enforce_nesting = TRUE, TRUE, TRUE
 
    // Scale the domain size by number of processes divided by this value.
-   autoscale_base_nprocs = 1
+   autoscale_base_nprocs = 4
 
    // Box generator types: BergerRigoutsos or TileClustering
    box_generator_type = "BergerRigoutsos"
 
-   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer or TilePartitioner
+   // Balancer types: TreeLoadBalancer, ChopAndPackLoadBalancer or CascadePartitioner
    load_balancer_type = "TreeLoadBalancer"
 
    // Tree type for TreeLoadBalancer: CenteredRankTree, BalancedDepthFirstTree, or BreadthFirstTree.
@@ -45,6 +45,8 @@ Main {
 
    // Whether to load balance (one value for each level).
    load_balance = TRUE, TRUE, TRUE
+
+   write_comm_graph = FALSE
 
    // Mesh generator: SphericalShellGenerator, SinusoidalFrontGenerator, or ShrunkenLevelGenerator.
    mesh_generator_name = "SphericalShellGenerator"
@@ -63,10 +65,13 @@ Main {
 
 // Used if box_generator_type is TileClustering.  Refer to mesh::TileClustering for input.
 TileClustering {
-  box_size = 7, 7
+  tile_size = 7, 7
+  allow_remote_tile_extent = TRUE
   coalesce_boxes = TRUE
+  DEV_print_steps = TRUE
   DEV_log_cluster_summary = FALSE
   DEV_log_cluster = FALSE
+  DEV_debug_checks = TRUE
 }
 
 
@@ -89,37 +94,24 @@ BergerRigoutsos {
 }
 
 
-// Used if load_balancer_type is TilePartitioner.  Refer to mesh::TilePartitioner for input.
-TilePartitioner {
-  box_size = 21, 21
+// Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
+TreeLoadBalancer {
+  flexible_load_tolerance = 0.05
+  // max_cycle_spread_procs = 8
+  DEV_voucher_mode = FALSE
+  DEV_report_load_balance = TRUE // Reported in main
 
-  TreeLoadBalancer {
-    DEV_allow_box_breaking = TRUE
-    // Debugging options
-    DEV_check_map = TRUE
-    DEV_check_connectivity = FALSE
-    DEV_print_steps = FALSE
-    DEV_print_swap_steps = TRUE
-    DEV_print_break_steps = TRUE
-    DEV_print_edge_steps = FALSE
-    DEV_summarize_map = TRUE
-  }
+  // Debugging options
+  DEV_print_steps = FALSE
+  DEV_check_map = TRUE
+  DEV_check_connectivity = TRUE
+  DEV_summarize_map = TRUE
 }
 
 
-// Used if load_balancer_type is TreeLoadBalancer.  Refer to mesh::TreeLoadBalancer for input.
-TreeLoadBalancer {
-  flexible_load_tolerance = 0.03
-  DEV_report_load_balance = TRUE // Reported in main
-  DEV_balance_penalty_wt = 1.0
-  DEV_surface_penalty_wt = 1.0
-  DEV_slender_penalty_wt = 1.0
-  DEV_precut_penalty_wt = 1.0
-
-  // Debugging options
-  DEV_check_map = TRUE
-  DEV_check_connectivity = TRUE
+BoxTransitSet {
   DEV_print_steps = FALSE
+  DEV_print_pop_steps = FALSE
   DEV_print_swap_steps = FALSE
   DEV_print_break_steps = FALSE
   DEV_print_edge_steps = FALSE

@@ -3,18 +3,42 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   An abstract base class for a HDFDatabaseFactory
  *
  ************************************************************************/
 
 #include "SAMRAI/tbox/HDFDatabaseFactory.h"
 #include "SAMRAI/tbox/HDFDatabase.h"
+#include "SAMRAI/tbox/Utilities.h"
 
 #include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace tbox {
+
+HDFDatabaseFactory::HDFDatabaseFactory()
+{
+}
+
+HDFDatabaseFactory::~HDFDatabaseFactory()
+{
+}
+
+HDFDatabaseFactory::HDFDatabaseFactory(
+   const HDFDatabaseFactory& other):
+   DatabaseFactory()
+{
+   NULL_USE(other);
+}
+
+HDFDatabaseFactory&
+HDFDatabaseFactory::operator = (
+   const HDFDatabaseFactory& rhs)
+{
+   NULL_USE(rhs);
+   return *this;
+}
 
 /**
  * Build a new Database object.

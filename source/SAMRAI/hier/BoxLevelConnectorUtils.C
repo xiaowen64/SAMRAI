@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Utilities for working on DLBG edges.
  *
  ************************************************************************/
@@ -29,7 +29,7 @@ namespace hier {
 const std::string BoxLevelConnectorUtils::s_default_timer_prefix("hier::BoxLevelConnectorUtils");
 std::map<std::string, BoxLevelConnectorUtils::TimerStruct> BoxLevelConnectorUtils::s_static_timers;
 char BoxLevelConnectorUtils::s_ignore_external_timer_prefix('\0');
- 
+
 tbox::StartupShutdownManager::Handler
 BoxLevelConnectorUtils::s_initialize_handler(
    BoxLevelConnectorUtils::initializeCallback,
@@ -69,13 +69,13 @@ BoxLevelConnectorUtils::getFromInput()
       s_ignore_external_timer_prefix = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
          boost::shared_ptr<tbox::Database> idb(
-           tbox::InputManager::getInputDatabase());
+            tbox::InputManager::getInputDatabase());
          if (idb->isDatabase("BoxLevelConnectorUtils")) {
             boost::shared_ptr<tbox::Database> blcu_db(
                idb->getDatabase("BoxLevelConnectorUtils"));
             s_ignore_external_timer_prefix =
                blcu_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
-                                           'n');
+                  'n');
             if (!(s_ignore_external_timer_prefix == 'n' ||
                   s_ignore_external_timer_prefix == 'y')) {
                INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
@@ -124,8 +124,8 @@ BoxLevelConnectorUtils::baseNestsInHead(
       const IntVector ratio = head.getRefinementRatio()
          / base.getRefinementRatio();
       required_gcw += IntVector::ceilingDivide(
-         (head_swell + head_nesting_margin),
-         ratio);
+            (head_swell + head_nesting_margin),
+            ratio);
    } else {
       TBOX_ERROR("BoxLevelConnectorUtils::baseNestsInHead: head index space\n"
          << "must be either a refinement or a coarsening of\n"
@@ -224,9 +224,9 @@ BoxLevelConnectorUtils::baseNestsInHead(
    } else {
       const BoxContainer& base_boxes = base.getBoxes();
       swelledbase.reset(new BoxLevel(
-         base.getRefinementRatio(),
-         grid_geom,
-         base.getMPI()));
+            base.getRefinementRatio(),
+            grid_geom,
+            base.getMPI()));
       for (BoxContainer::const_iterator ni = base_boxes.begin();
            ni != base_boxes.end(); ++ni) {
          Box swelledbase_box(*ni);
@@ -243,9 +243,9 @@ BoxLevelConnectorUtils::baseNestsInHead(
       const BoxContainer& head_boxes = head.getBoxes();
 
       swelledhead.reset(new BoxLevel(
-         head.getRefinementRatio(),
-         grid_geom,
-         head.getMPI()));
+            head.getRefinementRatio(),
+            grid_geom,
+            head.getMPI()));
 
       for (BoxContainer::const_iterator ni = head_boxes.begin();
            ni != head_boxes.end(); ++ni) {
@@ -373,8 +373,8 @@ BoxLevelConnectorUtils::makeSortingMap(
       // Make a blank map.
       sorted_box_level.reset(new BoxLevel(unsorted_box_level));
       output_map.reset(new MappingConnector(unsorted_box_level,
-         *sorted_box_level,
-         IntVector::getZero(dim)));
+            *sorted_box_level,
+            IntVector::getZero(dim)));
       return;
    }
 
@@ -413,12 +413,12 @@ BoxLevelConnectorUtils::makeSortingMap(
    }
 
    sorted_box_level.reset(new BoxLevel(
-      unsorted_box_level.getRefinementRatio(),
-      unsorted_box_level.getGridGeometry(),
-      unsorted_box_level.getMPI()));
+         unsorted_box_level.getRefinementRatio(),
+         unsorted_box_level.getGridGeometry(),
+         unsorted_box_level.getMPI()));
    output_map.reset(new MappingConnector(unsorted_box_level,
-      *sorted_box_level,
-      IntVector::getZero(dim)));
+         *sorted_box_level,
+         IntVector::getZero(dim)));
 
    for (std::vector<Box>::const_iterator ni = real_box_vector.begin();
         ni != real_box_vector.end(); ++ni) {
@@ -461,8 +461,8 @@ BoxLevelConnectorUtils::makeSortingMap(
          output_map->insertLocalNeighbor(new_box,
             cur_box.getBoxId());
       }
-      sorted_box_level->finalize();
    }
+   sorted_box_level->finalize();
 
    d_object_timers->t_make_sorting_map->stop();
 }
@@ -599,20 +599,24 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          "and negative values." << std::endl);
    }
 
-   if ( nesting_width != zero_vec &&
-           input_to_reference.getConnectorWidth() < one_vec ) {
+   if (nesting_width != zero_vec &&
+       input_to_reference.getConnectorWidth() < one_vec) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:" << caller
                                                                    <<
          ": error:\n"
-         << "If nesting width " << nesting_width << " is non-zero,\n"
-         << "width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
-         << "must be at least 1.  Otherwise, correct results cannot be guaranteed."
-         << std::endl);
+                                                                   << "If nesting width "
+                                                                   << nesting_width
+                                                                   << " is non-zero,\n"
+                                                                   <<
+         "width of input_to_reference, " << input_to_reference.getConnectorWidth() << ",\n"
+                                                                   <<
+         "must be at least 1.  Otherwise, correct results cannot be guaranteed."
+                                                                   << std::endl);
    }
 
-   if ( !( input_to_reference.getConnectorWidth() >=
-          (nonnegative_nesting_width ? nesting_width : -nesting_width)) ) {
+   if (!(input_to_reference.getConnectorWidth() >=
+         (nonnegative_nesting_width ? nesting_width : -nesting_width))) {
       TBOX_ERROR(
          "BoxLevelConnectorUtils::computeInternalOrExternalParts:"
          << caller << ": error:\n"
@@ -622,7 +626,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    }
 
    parts.reset(new BoxLevel(input.getRefinementRatio(),
-      input.getGridGeometry(), input.getMPI()));
+         input.getGridGeometry(), input.getMPI()));
 
    /*
     * Get the set of neighboring boxes on the reference BoxLevel.  We first
@@ -681,7 +685,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
          reference_box_list,
          input.getRefinementRatio(),
          grid_geometry,
-         false );
+         false);
       // ... reference_boundary is now ( (R^1) \ R )
 
       if (!domain.isEmpty()) {
@@ -695,7 +699,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
             refined_domain.refine(input.getRefinementRatio());
             refined_domain.makeTree(grid_geometry.get());
             reference_box_list.intersectBoxes(input.getRefinementRatio(),
-                                              refined_domain);
+               refined_domain);
          }
 
       }
@@ -706,9 +710,7 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
    } // search_tree_represents_internal == false
    d_object_timers->t_compute_internal_or_external_parts_manip_reference->stop();
 
-
    reference_box_list.makeTree(grid_geometry.get());
-
 
    /*
     * Keep track of last index so we don't give parts an index
@@ -819,8 +821,8 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
             for (BoxContainer::iterator bi = parts_list.begin();
                  bi != parts_list.end(); ++bi) {
                const Box parts_box((*bi),
-                  ++last_used_index,
-                  input_box.getOwnerRank());
+                                   ++last_used_index,
+                                   input_box.getOwnerRank());
                TBOX_ASSERT(parts_box.getBlockId() == input_box.getBlockId());
                parts->addBox(parts_box);
 
@@ -833,7 +835,6 @@ BoxLevelConnectorUtils::computeInternalOrExternalParts(
       } // !input_to_reference.hasNeighborSet(ni->getBoxId())
 
    } // Loop through input_boxes
-
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (parts->getBoxes().isEmpty()) {
@@ -891,7 +892,7 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
       for (BoxContainer::const_iterator bi = boundary.begin();
            bi != boundary.end(); ++bi) {
-         single_block_reference[bi->getBlockId()].pushBack(*bi); 
+         single_block_reference[bi->getBlockId()].pushBack(*bi);
       }
    }
 
@@ -912,7 +913,6 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       false /* excludes singularity neighbors */);
    // ... boundary is now ( (R^1) \ R )
 
-
    /*
     * Separate boundary into containers for individual blocks required
     * by the block_id loop.  At the end of each block_id loop, stuff
@@ -924,7 +924,6 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
       boundary_by_blocks[bi->getBlockId()].pushBack(*bi);
    }
    boundary.clear();
-
 
    if (grid_geometry->getNumberOfBlockSingularities() > 0) {
       d_object_timers->t_compute_boxes_around_boundary_singularity->start();
@@ -975,13 +974,13 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
           */
          BoxContainer reduced_connectivity_singularity_boxes(
             grid_geometry->getSingularityBoxContainer(block_id));
-         const std::list<BaseGridGeometry::Neighbor>& neighbors(
+         const std::map<BlockId, BaseGridGeometry::Neighbor>& neighbors(
             grid_geometry->getNeighbors(block_id));
 
-         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
-              neighbors.begin();
-              ni != neighbors.end(); ni++) {
-            const BaseGridGeometry::Neighbor& neighbor(*ni);
+         for (std::map<BlockId, BaseGridGeometry::Neighbor>::const_iterator ni =
+                 neighbors.begin();
+              ni != neighbors.end(); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(ni->second);
             if (neighbor.isSingularity()) {
                reduced_connectivity_singularity_boxes.removeIntersections(
                   neighbor.getTransformedDomain());
@@ -1010,10 +1009,10 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
             singularity_boxes.refine(refinement_ratio);
          }
 
-         for (std::list<BaseGridGeometry::Neighbor>::const_iterator ni =
-              neighbors.begin();
-              ni != neighbors.end(); ni++) {
-            const BaseGridGeometry::Neighbor& neighbor(*ni);
+         for (std::map<BlockId, BaseGridGeometry::Neighbor>::const_iterator ni =
+                 neighbors.begin();
+              ni != neighbors.end(); ++ni) {
+            const BaseGridGeometry::Neighbor& neighbor(ni->second);
             const BlockId neighbor_block_id(neighbor.getBlockId());
             if (neighbor.isSingularity() &&
                 reference_boxes_tree.hasBoxInBlock(neighbor_block_id)) {
@@ -1056,10 +1055,10 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
    // Set correct box ids.
    for (std::map<BlockId, BoxContainer>::iterator bi = boundary_by_blocks.begin();
         bi != boundary_by_blocks.end(); ++bi) {
-      BoxContainer &boxes(bi->second);
-      for ( BoxContainer::iterator bj = boxes.begin(); bj!=boxes.end(); ++bj ) {
-         bj->setId(BoxId( bj->getLocalId(), bj->getOwnerRank(),
-                          bj->getPeriodicId() ));
+      BoxContainer& boxes(bi->second);
+      for (BoxContainer::iterator bj = boxes.begin(); bj != boxes.end(); ++bj) {
+         bj->setId(BoxId(bj->getLocalId(), bj->getOwnerRank(),
+               bj->getPeriodicId()));
       }
    }
 
@@ -1076,6 +1075,8 @@ BoxLevelConnectorUtils::computeBoxesAroundBoundary(
  * Given a mapping from an original BoxLevel to parts to be
  * removed, construct the remainder BoxLevel and the mapping from
  * the original to a remainder.
+ *
+ * This method does no communication.
  *************************************************************************
  */
 
@@ -1104,8 +1105,8 @@ BoxLevelConnectorUtils::makeRemainderMap(
    remainder.reset(new BoxLevel(orig));
 
    orig_to_remainder.reset(new MappingConnector(orig,
-      *remainder,
-      IntVector::getZero(dim)));
+         *remainder,
+         IntVector::getZero(dim)));
 
    /*
     * Track last used index to ensure we use unique indices for new
@@ -1494,20 +1495,20 @@ BoxLevelConnectorUtils::computeNonIntersectingParts(
    const tbox::Dimension& dim = input_to_takeaway.getConnectorWidth().getDim();
    boost::shared_ptr<MappingConnector> i_to_r_map;
    computeExternalParts(remainder,
-                        i_to_r_map,
-                        input_to_takeaway,
-                        IntVector::getZero(dim));
+      i_to_r_map,
+      input_to_takeaway,
+      IntVector::getZero(dim));
 
    input_to_remainder = boost::static_pointer_cast<Connector>(i_to_r_map);
 
    TBOX_ASSERT(input_to_remainder->getConnectorWidth() ==
-               IntVector::getZero(dim)); 
+      IntVector::getZero(dim));
 
    const BoxContainer& remainder_boxes = remainder->getBoxes();
    const BoxContainer& input_boxes =
       input_to_takeaway.getBase().getBoxes();
 
-   if (!remainder_boxes.isEmpty() && !input_boxes.isEmpty()) { 
+   if (!remainder_boxes.isEmpty() && !input_boxes.isEmpty()) {
 
       for (BoxContainer::const_iterator bi = remainder_boxes.begin();
            bi != remainder_boxes.end(); ++bi) {
@@ -1533,10 +1534,9 @@ BoxLevelConnectorUtils::initializeCallback()
 {
    // Initialize timers with default prefix.
    getAllTimers(s_default_timer_prefix,
-                s_static_timers[s_default_timer_prefix]);
+      s_static_timers[s_default_timer_prefix]);
 
 }
-
 
 /*
  ***********************************************************************
@@ -1549,8 +1549,7 @@ BoxLevelConnectorUtils::setTimerPrefix(
    std::string timer_prefix_used;
    if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
-   }
-   else {
+   } else {
       timer_prefix_used = timer_prefix;
    }
    std::map<std::string, TimerStruct>::iterator ti(

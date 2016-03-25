@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   StandardTagAndInitialize's implementation of PatchHierarchy
  *
  ************************************************************************/
@@ -158,9 +158,9 @@ StandardTagAndInitializeConnectorWidthRequestor::computeCoarsenRatio(
     * level are between the supported 2 or 3, and that the error coarsen
     * ratios are constant over the hierarchy.
     */
-   for (int ln = 1; ln < static_cast<int>(ratios_to_coarser.size()); ln++) {
+   for (int ln = 1; ln < static_cast<int>(ratios_to_coarser.size()); ++ln) {
 
-      for (int d = 0; d < dim.getValue(); d++) {
+      for (int d = 0; d < dim.getValue(); ++d) {
          int gcd = GCD(error_coarsen_ratio, ratios_to_coarser[ln](d));
          if ((gcd % error_coarsen_ratio) != 0) {
             gcd = ratios_to_coarser[ln](d);

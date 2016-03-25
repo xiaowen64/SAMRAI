@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Abstract factory class for creating patch level objects
  *
  ************************************************************************/
@@ -61,7 +61,6 @@ PatchLevelFactory::allocate(
    const boost::shared_ptr<tbox::Database>& database,
    const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
    const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const ComponentSelector& component_selector,
    const boost::shared_ptr<PatchFactory>& factory,
    const bool defer_boundary_box_creation) const
 {
@@ -71,7 +70,6 @@ PatchLevelFactory::allocate(
          grid_geometry,
          descriptor,
          factory,
-         component_selector,
          defer_boundary_box_creation));
    return pl;
 }

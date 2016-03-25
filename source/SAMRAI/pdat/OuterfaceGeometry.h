@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   hier
  *
  ************************************************************************/
@@ -125,9 +125,19 @@ private:
       const hier::Transformation& transformation,
       const hier::BoxContainer& dst_restrict_boxes);
 
+   static boost::shared_ptr<hier::BoxOverlap>
+   doOverlap(
+      const OuterfaceGeometry& dst_geometry,
+      const OuterfaceGeometry& src_geometry,
+      const hier::Box& src_mask,
+      const hier::Box& fill_box,
+      const bool overwrite_interior,
+      const hier::Transformation& transformation,
+      const hier::BoxContainer& dst_restrict_boxes);
+
    OuterfaceGeometry(
       const OuterfaceGeometry&);                // not implemented
-   void
+   OuterfaceGeometry&
    operator = (
       const OuterfaceGeometry&);                    // not implemented
 

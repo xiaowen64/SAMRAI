@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Singleton database class for managing variables and contexts.
  *
  ************************************************************************/
@@ -553,50 +553,6 @@ public:
       boost::shared_ptr<VariableContext>& context) const;
 
    /*!
-    * @brief Return copy of component selector that holds information about
-    * which patch data entries are written to restart.
-    *
-    * @return Component selector describing patch data items registered
-    *         for restart.  That is, the flags set in the component
-    *         selector will correspond to the patch data indices
-    *         that have been registered for restart.
-    */
-   virtual ComponentSelector
-   getPatchDataRestartTable() const;
-
-   /*!
-    * @brief Check whether given patch data index is registered with database
-    * for restart.
-    *
-    * @param[in]  index  Integer patch data index to check.
-    *
-    * @return Boolean true if the patch data with the given index
-    *         is registered for restart; otherwise false.
-    *
-    */
-   virtual bool
-   isPatchDataRegisteredForRestart(
-      int index) const;
-
-   /*!
-    * @brief Register the given patch data index for restart.
-    *
-    * @param[in]  index  Integer patch data index to set.
-    */
-   virtual void
-   registerPatchDataForRestart(
-      int index);
-
-   /*!
-    * @brief Unregister the given patch data index for restart.
-    *
-    * @param[in]  index  Integer patch data index to unset.
-    */
-   virtual void
-   unregisterPatchDataForRestart(
-      int index);
-
-   /*!
     * @brief Print variable, context, and patch descriptor information
     * contained in the database to the specified output stream.
     *
@@ -846,14 +802,6 @@ private:
     * d_is_user_variable[ <variable id> ]
     */
    std::vector<bool> d_is_user_variable;
-
-   /*
-    * ComponentSelector holds bits that determine which patch data
-    * items need to be written to the restart database.  The
-    * bit in position j corresponds to the patch data associated with
-    * the j-th index of the patch descriptor object.
-    */
-   ComponentSelector d_patchdata_restart_table;
 
    static tbox::StartupShutdownManager::Handler
       s_shutdown_handler;

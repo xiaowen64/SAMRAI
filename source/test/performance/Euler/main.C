@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Main program for SAMRAI Euler gas dynamics sample application
  *
  ************************************************************************/
@@ -181,15 +181,15 @@ int main(
 
       if ((argc != 2) && (argc != 3) && (argc != 4)) {
          tbox::pout << "USAGE:\n"
-              << argv[0] << " <input filename> "
-              << "or\n"
-              << argv[0] << " <input filename> <case name>"
-              << "or\n"
-              << argv[0] << " <input filename> "
-              << "  <restart dir> <restore number> [options]\n"
-              << "  options:\n"
-              << "  none at this time"
-              << endl;
+                    << argv[0] << " <input filename> "
+                    << "or\n"
+                    << argv[0] << " <input filename> <case name>"
+                    << "or\n"
+                    << argv[0] << " <input filename> "
+                    << "  <restart dir> <restore number> [options]\n"
+                    << "  options:\n"
+                    << "  none at this time"
+                    << endl;
          tbox::SAMRAI_MPI::abort();
          return -1;
       } else {
@@ -257,8 +257,8 @@ int main(
             mpi.getSize(),
             5);
       tbox::pout << "Added case name (" << case_name << ") and nprocs ("
-           << mpi.getSize() << ") to base name -> '"
-           << base_name_ext << "'\n";
+                 << mpi.getSize() << ") to base name -> '"
+                 << base_name_ext << "'\n";
 
       /*
        * Logging.
@@ -388,7 +388,7 @@ int main(
                "BergerRigoutsos",
                boost::shared_ptr<tbox::Database>())));
 #if 0
-      boost::shared_ptr<mesh::BergerRigoutsos > old_box_generator;
+      boost::shared_ptr<mesh::BergerRigoutsos> old_box_generator;
       const char which_br = main_db->getCharWithDefault("which_br", 'o');
       boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator(
          which_br == 'o'

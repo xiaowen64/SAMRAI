@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Constant refine operator for cell-centered integer data on
  *                a  mesh.
  *
@@ -79,7 +79,7 @@ CellIntegerConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CellIntegerConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
+CellIntegerConstantRefine::getStencilWidth(const tbox::Dimension& dim) const
 {
    return hier::IntVector::getZero(dim);
 }
@@ -143,7 +143,7 @@ CellIntegerConstantRefine::refine(
    const hier::Index ifirstf = fine_box.lower();
    const hier::Index ilastf = fine_box.upper();
 
-   for (int d = 0; d < fdata->getDepth(); d++) {
+   for (int d = 0; d < fdata->getDepth(); ++d) {
       if (fine.getDim() == tbox::Dimension(1)) {
          SAMRAI_F77_FUNC(conrefcellintg1d, CONREFCELLINTG1D) (ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),

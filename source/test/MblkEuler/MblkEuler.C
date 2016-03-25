@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Template for a multiblock AMR Euler code
  *
  ************************************************************************/
@@ -144,7 +144,7 @@ MblkEuler::MblkEuler(
    d_state.reset(new pdat::CellVariable<double>(dim, "state", d_nState));
    d_vol.reset(new pdat::CellVariable<double>(dim, "vol", 1));
    d_flux.reset(new pdat::SideVariable<double>(dim, "flux",
-      hier::IntVector::getOne(dim), d_nState));
+         hier::IntVector::getOne(dim), d_nState));
    d_xyz.reset(new pdat::NodeVariable<double>(dim, "xyz", d_dim.getValue()));
 
    //
@@ -153,17 +153,17 @@ MblkEuler::MblkEuler(
    tbox::plog << "region layout follows:" << endl;
 
    tbox::plog << "field";
-   for (int ir = 0; ir < d_number_of_regions; ir++)
+   for (int ir = 0; ir < d_number_of_regions; ++ir)
       tbox::plog << "\t" << ir;
    tbox::plog << endl;
 
-   for (int ii = 0; ii < d_number_of_regions * 10; ii++)
+   for (int ii = 0; ii < d_number_of_regions * 10; ++ii)
       tbox::plog << "-";
    tbox::plog << endl;
 
-   for (int istate = 0; istate < d_nState; istate++) {
+   for (int istate = 0; istate < d_nState; ++istate) {
       tbox::plog << d_state_names[istate];
-      for (int ir = 0; ir < d_number_of_regions; ir++)
+      for (int ir = 0; ir < d_number_of_regions; ++ir)
          tbox::plog << "\t" << d_state_ic[ir][istate];
       tbox::plog << endl;
    }
@@ -241,7 +241,7 @@ void MblkEuler::registerModelVariables(
                        << "\nbe written." << endl);
    }
 
-   for (int n = 0; n < d_nState; n++) {
+   for (int n = 0; n < d_nState; ++n) {
       string vname = d_state_names[n];
       d_visit_writer->registerPlotQuantity(vname, "SCALAR",
          vardb->mapVariableAndContextToIndex(d_state,
@@ -344,9 +344,9 @@ void MblkEuler::initializeDataOnPatch(
       //
       //  ---------------- compute the element coordinates
       //
-      for (int k = kmin; k <= kmax; k++) {
-         for (int j = jmin; j <= jmax; j++) {
-            for (int i = imin; i <= imax; i++) {
+      for (int k = kmin; k <= kmax; ++k) {
+         for (int j = jmin; j <= jmax; ++j) {
+            for (int i = imin; i <= imax; ++i) {
                int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
                int n1 = POLY3(i,
@@ -384,9 +384,9 @@ void MblkEuler::initializeDataOnPatch(
       //
       //  ---------------- compute the element volume
       //
-      for (int k = ifirst(2); k <= ilast(2); k++) {
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                int cind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -426,15 +426,15 @@ void MblkEuler::initializeDataOnPatch(
       //
       if (d_data_problem == "REVOLUTION") {
 
-         for (int m = 0; m < d_number_of_regions; m++) {    // loop over the regions and shape in data
+         for (int m = 0; m < d_number_of_regions; ++m) {    // loop over the regions and shape in data
 
             std::vector<double>& lrad = d_rev_rad[m];
             std::vector<double>& laxis = d_rev_axis[m];
             int naxis = static_cast<int>(laxis.size());
 
-            for (int k = kmin; k <= kmax; k++) {
-               for (int j = jmin; j <= jmax; j++) {
-                  for (int i = imin; i <= imax; i++) {
+            for (int k = kmin; k <= kmax; ++k) {
+               for (int j = jmin; j <= jmax; ++j) {
+                  for (int i = imin; i <= imax; ++i) {
                      int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
                      double x2 = zc[ind] - d_center[2];
@@ -450,7 +450,7 @@ void MblkEuler::initializeDataOnPatch(
 
                         int lpos = 0;
                         while (Dz > laxis[lpos])
-                           lpos++;
+                           ++lpos;
 
                         double a =
                            (Dz
@@ -475,9 +475,9 @@ void MblkEuler::initializeDataOnPatch(
       //
       else if (d_data_problem == "SPHERE") {
          double* front = &d_front_position[0];
-         for (int k = kmin; k <= kmax; k++) {
-            for (int j = jmin; j <= jmax; j++) {
-               for (int i = imin; i <= imax; i++) {
+         for (int k = kmin; k <= kmax; ++k) {
+            for (int j = jmin; j <= jmax; ++j) {
+               for (int i = imin; i <= imax; ++i) {
                   int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
                   double x2 = zc[ind] - d_center[2];
@@ -490,7 +490,7 @@ void MblkEuler::initializeDataOnPatch(
 
                   int ifr = 0;  // find the region we draw from (ifr=0 is always origin)
                   while (rad3 > front[ifr + 1]) {
-                     ifr++;
+                     ++ifr;
                   }
                   region_ids[ind] = ifr;
                }
@@ -513,14 +513,14 @@ void MblkEuler::initializeDataOnPatch(
             xx = zc;
          }
 
-         for (int k = kmin; k <= kmax; k++) {
-            for (int j = jmin; j <= jmax; j++) {
-               for (int i = imin; i <= imax; i++) {
+         for (int k = kmin; k <= kmax; ++k) {
+            for (int j = jmin; j <= jmax; ++j) {
+               for (int i = imin; i <= imax; ++i) {
                   int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
                   int ifr = 0;   // the geion we are in
                   while (xx[ind] > front[ifr + 1]) {
-                     ifr++;
+                     ++ifr;
                   }
                   region_ids[ind] = ifr;
                }
@@ -553,15 +553,15 @@ void MblkEuler::initializeDataOnPatch(
          double l_z = xdhi[2] - xdlo[2];
          double lpi = 3.14159265358979310862446895044;
 
-         for (int k = kmin; k <= kmax; k++) {
-            for (int j = jmin; j <= jmax; j++) {
-               for (int i = imin; i <= imax; i++) {
+         for (int k = kmin; k <= kmax; ++k) {
+            for (int j = jmin; j <= jmax; ++j) {
+               for (int i = imin; i <= imax; ++i) {
                   int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
                   double lpert = 0.0;
                   double ly = yc[ind];
                   double lz = zc[ind];
-                  for (int m = 0; m < nmodes; m++) {
+                  for (int m = 0; m < nmodes; ++m) {
                      double lphiy = 2.0 * lpi * n_mode[m] * ly / l_y + phiy[m];
                      double lphiz = 2.0 * lpi * m_mode[m] * lz / l_z + phiz[m];
                      double cy = cos(lphiy);
@@ -589,12 +589,12 @@ void MblkEuler::initializeDataOnPatch(
       //
       int depth = state->getDepth();
 
-      for (int idepth = 0; idepth < depth; idepth++) {
+      for (int idepth = 0; idepth < depth; ++idepth) {
          double* psi = state->getPointer(idepth);
 
-         for (int k = ifirst(2); k <= ilast(2); k++) {
-            for (int j = ifirst(1); j <= ilast(1); j++) {
-               for (int i = ifirst(0); i <= ilast(0); i++) {
+         for (int k = ifirst(2); k <= ilast(2); ++k) {
+            for (int j = ifirst(1); j <= ilast(1); ++j) {
+               for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                   int cind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 #if 0
@@ -700,30 +700,30 @@ double MblkEuler::computeStableDtOnPatch(
 
    int pind = 0;
    double* a11 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a12 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a13 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a21 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a22 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a23 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a31 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a32 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
    double* a33 = Aii.getPointer(pind);
-   pind++;
+   ++pind;
 
    //
    // compute direction cosines
    //
-   for (int k = ifirst(2); k <= ilast(2); k++) {
-      for (int j = ifirst(1); j <= ilast(1); j++) {
-         for (int i = ifirst(0); i <= ilast(0); i++) {
+   for (int k = ifirst(2); k <= ilast(2); ++k) {
+      for (int j = ifirst(1); j <= ilast(1); ++j) {
+         for (int i = ifirst(0); i <= ilast(0); ++i) {
 
             int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -839,9 +839,9 @@ double MblkEuler::computeStableDtOnPatch(
       double v = d_advection_velocity[1];
       double w = d_advection_velocity[2];
 
-      for (int k = ifirst(2); k <= ilast(2); k++) {
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
                int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
                double uxi = a11[ind] * u + a12[ind] * v + a13[ind] * w;  // max parametric signal speed
@@ -915,17 +915,17 @@ void MblkEuler::testPatchExtrema(
    //
    double* psi_min = new double[d_nState];
    double* psi_max = new double[d_nState];
-   for (int ii = 0; ii < d_nState; ii++) {
+   for (int ii = 0; ii < d_nState; ++ii) {
       psi_max[ii] = -1.e80;
       psi_min[ii] = 1.e80;
    }
 
-   for (int ii = 0; ii < d_nState; ii++) {
+   for (int ii = 0; ii < d_nState; ++ii) {
       double* lstate = state->getPointer(ii);
 
-      for (int k = ifirst(2); k <= ilast(2); k++) {     // just loop over interior elements
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {     // just loop over interior elements
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                int gind = POLY3(i, j, k, imgn, jmgn, kmgn, nxg, nxnyg);
 
@@ -941,7 +941,7 @@ void MblkEuler::testPatchExtrema(
 
    tbox::plog << endl << "extrema for the state follow " << pos
               << " (min,max) = " << endl;
-   for (int ii = 0; ii < d_nState; ii++) {
+   for (int ii = 0; ii < d_nState; ++ii) {
       tbox::plog << d_state_names[ii] << " (min,max) = ";
       tbox::plog << psi_min[ii] << " " << psi_max[ii] << endl;
    }
@@ -1080,7 +1080,7 @@ void MblkEuler::computeFluxesOnPatch(
 
    int depth = state->getDepth();
 
-   for (int idepth = 0; idepth < depth; idepth++) {
+   for (int idepth = 0; idepth < depth; ++idepth) {
 
       double* psi = state->getPointer(idepth); // assumed single depth here !!!!
 
@@ -1091,9 +1091,9 @@ void MblkEuler::computeFluxesOnPatch(
       //
       // compute the fluxes for the upwind method
       //
-      for (int k = ifirst(2); k <= ilast(2); k++) {
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0) + 1; i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0) + 1; ++i) {
 
                // --------- get the indices
                int ifx = POLY3(i, j, k, fx_imn, fx_jmn, fx_kmn, fx_nx, fx_nxny);
@@ -1182,9 +1182,9 @@ void MblkEuler::computeFluxesOnPatch(
          }
       }
 
-      for (int k = ifirst(2); k <= ilast(2); k++) {
-         for (int j = ifirst(1); j <= ilast(1) + 1; j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {
+         for (int j = ifirst(1); j <= ilast(1) + 1; ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                // --------- get the indices
                int ify = POLY3(i, j, k, fy_imn, fy_jmn, fy_kmn, fy_nx, fy_nxny);
@@ -1273,9 +1273,9 @@ void MblkEuler::computeFluxesOnPatch(
          }
       }
 
-      for (int k = ifirst(2); k <= ilast(2) + 1; k++) {
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2) + 1; ++k) {
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                // --------- get the indices
                int ifz = POLY3(i, j, k, fz_imn, fz_jmn, fz_kmn, fz_nx, fz_nxny);
@@ -1367,9 +1367,9 @@ void MblkEuler::computeFluxesOnPatch(
       //
       // compute the source due to the upwind method
       //
-      for (int k = ifirst(2); k <= ilast(2); k++) {
-         for (int j = ifirst(1); j <= ilast(1); j++) {
-            for (int i = ifirst(0); i <= ilast(0); i++) {
+      for (int k = ifirst(2); k <= ilast(2); ++k) {
+         for (int j = ifirst(1); j <= ilast(1); ++j) {
+            for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -1510,12 +1510,12 @@ void MblkEuler::markPhysicalBoundaryConditions(
    const boost::shared_ptr<hier::PatchGeometry> pgeom(
       patch.getPatchGeometry());
 
-   for (int ii = 0; ii < 3; ii++) {
+   for (int ii = 0; ii < 3; ++ii) {
 
       const std::vector<hier::BoundaryBox>& bc_bdry =
          pgeom->getCodimensionBoundaries(bc_types[ii]);
 
-      for (int jj = 0; jj < static_cast<int>(bc_bdry.size()); jj++) {
+      for (int jj = 0; jj < static_cast<int>(bc_bdry.size()); ++jj) {
 
          hier::Box fill_box = pgeom->getBoundaryFillBox(bc_bdry[jj],
                interior,
@@ -1530,12 +1530,12 @@ void MblkEuler::markPhysicalBoundaryConditions(
 
          int nd = state->getDepth();
 
-         for (int n = 0; n < nd; n++) {
+         for (int n = 0; n < nd; ++n) {
             double* sptr = state->getPointer(n);
 
-            for (int k = l_kmin; k <= l_kmax; k++) {
-               for (int j = l_jmin; j <= l_jmax; j++) {
-                  for (int i = l_imin; i <= l_imax; i++) {
+            for (int k = l_kmin; k <= l_kmax; ++k) {
+               for (int j = l_jmin; j <= l_jmax; ++j) {
+                  for (int i = l_imin; i <= l_imax; ++i) {
 
                      int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -1649,7 +1649,7 @@ void MblkEuler::setPhysicalBoundaryConditions(
    int nd_kmin = nghost_box.lower(2);
    int nd_kmax = nghost_box.upper(2);
 
-   for (int dir = 0; dir < d_dim.getValue(); dir++) {
+   for (int dir = 0; dir < d_dim.getValue(); ++dir) {
       if (!periodic(dir)) {
 
          if ((ghost_box.lower(dir) < domain_box.lower(dir)) &&
@@ -1860,20 +1860,20 @@ void MblkEuler::postprocessRefine(
    double* cdata = 0; // keeps pointers around till end of loop
    double* fdata = 0;
 
-   for (int n = 0; n < depth; n++) {
+   for (int n = 0; n < depth; ++n) {
 
       cdata = cstate->getPointer(n);
       fdata = fstate->getPointer(n);
 
-      for (int l = 0; l < nel; l++) {       // default slopes are zero
+      for (int l = 0; l < nel; ++l) {       // default slopes are zero
          slope0[l] = 0.0;  // this yields piecewise constant interpolation
          slope1[l] = 0.0;  // and makes a handy initializer
          slope2[l] = 0.0;
       }
 
-      for (int k = ifirstc(2); k <= ilastc(2); k++) {
-         for (int j = ifirstc(1); j <= ilastc(1); j++) {
-            for (int i = ifirstc(0); i <= ilastc(0); i++) {
+      for (int k = ifirstc(2); k <= ilastc(2); ++k) {
+         for (int j = ifirstc(1); j <= ilastc(1); ++j) {
+            for (int i = ifirstc(0); i <= ilastc(0); ++i) {
 
                int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
                int cind = POLY3(i, j, k, cimin, cjmin, ckmin, cnx, cnxny);
@@ -1920,9 +1920,9 @@ void MblkEuler::postprocessRefine(
       // compute the interpolated data from the cached slopes, looping
       // over the fine zones
       //
-      for (int k = ifirstf(2); k <= ilastf(2); k++) {
-         for (int j = ifirstf(1); j <= ilastf(1); j++) {
-            for (int i = ifirstf(0); i <= ilastf(0); i++) {
+      for (int k = ifirstf(2); k <= ilastf(2); ++k) {
+         for (int j = ifirstf(1); j <= ilastf(1); ++j) {
+            for (int i = ifirstf(0); i <= ilastf(0); ++i) {
 
                int find = POLY3(i, j, k, fimin, fjmin, fkmin, fnx, fnxny);
 
@@ -2100,14 +2100,14 @@ void MblkEuler::postprocessCoarsen(
    //
    // average the data
    //
-   for (int n = 0; n < depth; n++) {
+   for (int n = 0; n < depth; ++n) {
 
       //
       // zero out the underlying coarse data to serve as a counter
       //
-      for (int k = ifirstc(2); k <= ilastc(2); k++) {    // loop over the coarse zones
-         for (int j = ifirstc(1); j <= ilastc(1); j++) {
-            for (int i = ifirstc(0); i <= ilastc(0); i++) {
+      for (int k = ifirstc(2); k <= ilastc(2); ++k) {    // loop over the coarse zones
+         for (int j = ifirstc(1); j <= ilastc(1); ++j) {
+            for (int i = ifirstc(0); i <= ilastc(0); ++i) {
 
                int chind =
                   POLY3(i, j, k, cimin, cjmin, ckmin, cnx, cnxny) + n * cnel;
@@ -2121,9 +2121,9 @@ void MblkEuler::postprocessCoarsen(
       // compute the interpolated data from the cached slopes
       //
 
-      for (int k = ifirstf(2); k <= ilastf(2); k++) {    // loop over the coarse zones
-         for (int j = ifirstf(1); j <= ilastf(1); j++) {
-            for (int i = ifirstf(0); i <= ilastf(0); i++) {
+      for (int k = ifirstf(2); k <= ilastf(2); ++k) {    // loop over the coarse zones
+         for (int j = ifirstf(1); j <= ilastf(1); ++j) {
+            for (int i = ifirstf(0); i <= ilastf(0); ++i) {
 
                int vol_ind = POLY3(i, j, k, fimin, fjmin, fkmin, fnx, fnxny);
                int fhind = vol_ind + n * fnel;
@@ -2153,9 +2153,9 @@ void MblkEuler::postprocessCoarsen(
       //
       // normalize the completed sum by converting back from extensive to intensive
       //
-      for (int k = ifirstc(2); k <= ilastc(2); k++) {    // loop over the coarse zones
-         for (int j = ifirstc(1); j <= ilastc(1); j++) {
-            for (int i = ifirstc(0); i <= ilastc(0); i++) {
+      for (int k = ifirstc(2); k <= ilastc(2); ++k) {    // loop over the coarse zones
+         for (int j = ifirstc(1); j <= ilastc(1); ++j) {
+            for (int i = ifirstc(0); i <= ilastc(0); ++i) {
 
                int vol_ind = POLY3(i, j, k, cimin, cjmin, ckmin, cnx, cnxny);
                int chind = vol_ind + n * cnel;
@@ -2290,7 +2290,7 @@ void MblkEuler::tagGradientDetectorCells(
    // the level.
    //
    for (int ncrit = 0;
-        ncrit < static_cast<int>(d_refinement_criteria.size()); ncrit++) {
+        ncrit < static_cast<int>(d_refinement_criteria.size()); ++ncrit) {
 
       TBOX_ASSERT(var);
 
@@ -2298,7 +2298,7 @@ void MblkEuler::tagGradientDetectorCells(
 
       if (ref == "GRADIENT") {
          int nStateLocal = static_cast<int>(d_state_grad_names.size());
-         for (int id = 0; id < nStateLocal; id++) {
+         for (int id = 0; id < nStateLocal; ++id) {
 
             double* lvar = var->getPointer(d_state_grad_id[id]);
 
@@ -2307,9 +2307,9 @@ void MblkEuler::tagGradientDetectorCells(
                           ? d_state_grad_tol[id][error_level_number]
                           : d_state_grad_tol[id][size - 1]);
 
-            for (int k = ifirst(2); k <= ilast(2); k++) {
-               for (int j = ifirst(1); j <= ilast(1); j++) {
-                  for (int i = ifirst(0); i <= ilast(0); i++) {
+            for (int k = ifirst(2); k <= ilast(2); ++k) {
+               for (int j = ifirst(1); j <= ilast(1); ++j) {
+                  for (int i = ifirst(0); i <= ilast(0); ++i) {
 
                      int ind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
                      int tind = POLY3(i, j, k, imn, jmn, kmn, tnx, tnxny);
@@ -2555,7 +2555,7 @@ void MblkEuler::setMappedGridOnPatch(
    d_dom_current_bounds[5] = itr->upper(2);
    ++itr;
 
-   for (int i = 1; i < d_dom_current_nboxes; i++, ++itr) {
+   for (int i = 1; i < d_dom_current_nboxes; ++i, ++itr) {
       d_dom_current_bounds[0] = MIN(d_dom_current_bounds[0], itr->lower(0));
       d_dom_current_bounds[1] = MIN(d_dom_current_bounds[1], itr->lower(1));
       d_dom_current_bounds[2] = MIN(d_dom_current_bounds[2], itr->lower(2));
@@ -2628,9 +2628,9 @@ void MblkEuler::setVolumeOnPatch(
    double* y = xyz->getPointer(1);
    double* z = xyz->getPointer(2);
 
-   for (int k = ifirst(2); k <= ilast(2); k++) {
-      for (int j = ifirst(1); j <= ilast(1); j++) {
-         for (int i = ifirst(0); i <= ilast(0); i++) {
+   for (int k = ifirst(2); k <= ilast(2); ++k) {
+      for (int j = ifirst(1); j <= ilast(1); ++j) {
+         for (int i = ifirst(0); i <= ilast(0); ++i) {
 
             int cind = POLY3(i, j, k, imin, jmin, kmin, nx, nxny);
 
@@ -2696,7 +2696,7 @@ void MblkEuler::printClassData(
    os << "MblkEuler: this = " << (MblkEuler *)this << endl;
    os << "d_object_name = " << d_object_name << endl;
    os << "d_grid_geometry = " << endl;
-   for (j = 0; j < d_grid_geometry->getNumberBlocks(); j++) {
+   for (j = 0; j < d_grid_geometry->getNumberBlocks(); ++j) {
 //      os << (geom::GridGeometry*)d_grid_geometry[j] << endl;
    }
 
@@ -2704,7 +2704,7 @@ void MblkEuler::printClassData(
 
    os << "Parameters for numerical method ..." << endl;
    os << "   d_advection_velocity = ";
-   for (j = 0; j < d_dim.getValue(); j++) os << d_advection_velocity[j] << " ";
+   for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
    os << endl;
 
    os << "   d_nghosts    = " << d_nghosts << endl;
@@ -2754,7 +2754,7 @@ void MblkEuler::getFromInput(
       d_wall_factors = db->getIntegerVector("wall_factors");
    } else {
       d_wall_factors.resize(6);
-      for (int i = 0; i < 6; i++) d_wall_factors[i] = 0;
+      for (int i = 0; i < 6; ++i) d_wall_factors[i] = 0;
    }
 
    //
@@ -2833,7 +2833,7 @@ void MblkEuler::getFromInput(
          d_rev_rad.resize(d_number_of_regions);
          d_rev_axis.resize(d_number_of_regions);
 
-         for (int i = 0; i < d_number_of_regions; i++) {
+         for (int i = 0; i < d_number_of_regions; ++i) {
 
             char tmp[20];
             sprintf(tmp, "region_%d", i + 1);  //
@@ -2897,13 +2897,13 @@ void MblkEuler::getFromInput(
 //      int llen = d_number_of_regions*d_nState;
 //     //double *tmp = new double[llen];
 //    std::vector<double> tmp(llen);
-//   for ( int ii = 0 ; ii < llen ; ii++ ) {
+//   for ( int ii = 0 ; ii < llen ; ++ii ) {
 //       tmp[ii] = FLT_MAX;
 //     }
 
       d_state_ic.resize(d_number_of_regions);
       //d_state_ic  = new double *[d_number_of_regions];
-      for (int iReg = 0; iReg < d_number_of_regions; iReg++) {
+      for (int iReg = 0; iReg < d_number_of_regions; ++iReg) {
          d_state_ic[iReg].resize(d_nState);
          //d_state_ic[iReg] = tmp[d_nState*iReg];
       }
@@ -2916,9 +2916,9 @@ void MblkEuler::getFromInput(
             boost::shared_ptr<tbox::Database> state_db(
                db->getDatabase("state_data"));
             std::vector<double> lpsi;
-            for (int iState = 0; iState < d_nState; iState++) {
+            for (int iState = 0; iState < d_nState; ++iState) {
                lpsi = state_db->getDoubleVector(d_state_names[iState]);
-               for (int iReg = 0; iReg < d_number_of_regions; iReg++) {
+               for (int iReg = 0; iReg < d_number_of_regions; ++iReg) {
                   d_state_ic[iReg][iState] = lpsi[iReg];
                }
             }
@@ -2953,7 +2953,7 @@ void MblkEuler::getFromInput(
       std::vector<string> ref_keys_defined(num_keys);
       int def_key_cnt = 0;
       boost::shared_ptr<tbox::Database> error_db;
-      for (int i = 0; i < num_keys; i++) {
+      for (int i = 0; i < num_keys; ++i) {
 
          string error_key = refinement_keys[i];
          error_db.reset();
@@ -2973,7 +2973,7 @@ void MblkEuler::getFromInput(
             } else {
                error_db = refine_db->getDatabase(error_key);
                ref_keys_defined[def_key_cnt] = error_key;
-               def_key_cnt++;
+               ++def_key_cnt;
             }
 
             //
@@ -2987,13 +2987,13 @@ void MblkEuler::getFromInput(
                d_state_grad_tol.resize(nStateLocal);
                d_state_grad_id.resize(nStateLocal);
 
-               for (int id = 0; id < nStateLocal; id++) {
+               for (int id = 0; id < nStateLocal; ++id) {
                   string grad_name = d_state_grad_names[id];
 
                   // ... the index needed
                   d_state_grad_id[id] = -1;
                   bool found = false;
-                  for (int idj = 0; idj < d_nState && !found; idj++) {
+                  for (int idj = 0; idj < d_nState && !found; ++idj) {
                      if (grad_name == d_state_names[idj]) {
                         found = true;
                         d_state_grad_id[id] = idj;
@@ -3025,8 +3025,8 @@ void MblkEuler::getFromInput(
    hier::IntVector periodic = d_grid_geometry->getPeriodicShift(
          hier::IntVector(d_dim, 1));
    int num_per_dirs = 0;
-   for (int id = 0; id < d_dim.getValue(); id++) {
-      if (periodic(id)) num_per_dirs++;
+   for (int id = 0; id < d_dim.getValue(); ++id) {
+      if (periodic(id)) ++num_per_dirs;
    }
 
    /*

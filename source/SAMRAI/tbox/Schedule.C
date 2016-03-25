@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Schedule of communication transactions between processors
  *
  ************************************************************************/
@@ -272,7 +272,7 @@ Schedule::postReceives()
       unsigned int byte_count = 0;
       bool can_estimate_incoming_message_size = true;
       for (ConstIterator r = transactions.begin();
-           r != transactions.end(); r++) {
+           r != transactions.end(); ++r) {
          if (!(*r)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
             break;
@@ -313,43 +313,43 @@ Schedule::postSends()
 {
    d_object_timers->t_post_sends->start();
    /*
-    * We loop through d_send_sets packing the transactions for each send set
-    * into its corresponding MessageStream.  The MesageStreams are send in
-    * a separate, unthreaded loop later.
+    * We loop through d_send_sets starting with the first set with
+    * rank higher than the local process, continuing at the opposite
+    * end when we run out of sets.  This ordering tends to spread out
+    * the communication traffic over the entire network to reduce the
+    * potential network contention.
     */
 
    int rank = d_mpi.getRank();
 
    AsyncCommPeer<char>* send_coms = d_coms + d_recv_sets.size();
 
-   size_t num_send_sets = d_send_sets.size();
-
-   // Create a vector of all the MessageStreams.  Also convert the send sets
-   // which are stored in an associative container into a random access
-   // container so that each thread may access them independently.
-   std::vector<MessageStream*> outgoing_streams(num_send_sets);
-   std::vector<const std::list<boost::shared_ptr<Transaction> >*>
-      send_sets_vec(num_send_sets);
-   size_t counter = 0;
-   for (TransactionSets::const_iterator mi = d_send_sets.begin();
-        mi != d_send_sets.end(); ++mi) {
-      send_sets_vec[counter++] = &mi->second;
+   // Initialize iterators to where we want to start looping.
+   TransactionSets::const_iterator mi = d_send_sets.upper_bound(rank);
+   size_t icom = 0; // send_coms[icom] corresponds to mi.
+   while (icom < d_send_sets.size() &&
+          send_coms[icom].getPeerRank() < rank) {
+      ++icom;
    }
 
-#ifdef HAVE_OPENMP
-#pragma omp parallel private(counter) num_threads(4)
-{
-#pragma omp for schedule(dynamic) nowait
-#endif
-   for (counter = 0; counter < num_send_sets; ++counter) {
+   for (size_t counter = 0;
+        counter < d_send_sets.size();
+        ++counter, ++mi, ++icom) {
+
+      if (mi == d_send_sets.end()) {
+         // Continue loop at the opposite end.
+         mi = d_send_sets.begin();
+         icom = 0;
+      }
+      TBOX_ASSERT(mi->first == send_coms[icom].getPeerRank());
 
       // Compute message size and whether receiver can estimate it.
-      const std::list<boost::shared_ptr<Transaction> >* transactions =
-         send_sets_vec[counter];
+      const std::list<boost::shared_ptr<Transaction> >& transactions =
+         mi->second;
       size_t byte_count = 0;
       bool can_estimate_incoming_message_size = true;
-      for (ConstIterator pack = transactions->begin();
-           pack != transactions->end(); pack++) {
+      for (ConstIterator pack = transactions.begin();
+           pack != transactions.end(); ++pack) {
          if (!(*pack)->canEstimateIncomingMessageSize()) {
             can_estimate_incoming_message_size = false;
          }
@@ -357,52 +357,26 @@ Schedule::postSends()
       }
 
       // Pack outgoing data into a message.
-      MessageStream* outgoing_stream =
-         new MessageStream(byte_count, MessageStream::Write);
-      outgoing_streams[counter] = outgoing_stream;
-      for (ConstIterator pack = transactions->begin();
-           pack != transactions->end(); pack++) {
-         (*pack)->packStream(*outgoing_stream);
+      MessageStream outgoing_stream(byte_count, MessageStream::Write);
+      d_object_timers->t_pack_stream->start();
+      for (ConstIterator pack = transactions.begin();
+           pack != transactions.end(); ++pack) {
+         (*pack)->packStream(outgoing_stream);
       }
+      d_object_timers->t_pack_stream->stop();
 
       if (can_estimate_incoming_message_size) {
-         // Receiver knows message size, so set it exactly.
-         send_coms[counter].limitFirstDataLength(byte_count);
-      }
-   }
-#ifdef HAVE_OPENMP
-}
-#endif
-
-   // We start the sends with the first rank higher than the local process,
-   // continuing with the lowest rank process.  This ordering tends to spread
-   // out the communication traffic over the entire network to reduce the
-   // potential network contention.
-
-   // Initialize icom to where we want to start sending.
-   size_t icom = 0;
-   while (icom < num_send_sets && send_coms[icom].getPeerRank() < rank) {
-      ++icom;
-   }
-
-   // Perform sends.
-   for (counter = 0; counter < num_send_sets; ++counter) {
-
-      if (icom == num_send_sets) {
-         // Continue loop at the opposite end.
-         icom = 0;
+         // Receiver knows message size so set it exactly.
+         send_coms[icom].limitFirstDataLength(byte_count);
       }
 
       // Begin non-blocking send operation.
-      MessageStream* outgoing_stream = outgoing_streams[icom];
       send_coms[icom].beginSend(
-         (const char *)outgoing_stream->getBufferStart(),
-         static_cast<int>(outgoing_stream->getCurrentSize()));
+         (const char *)outgoing_stream.getBufferStart(),
+         static_cast<int>(outgoing_stream.getCurrentSize()));
       if (send_coms[icom].isDone()) {
          send_coms[icom].pushToCompletionQueue();
       }
-      delete outgoing_stream;
-      ++icom;
    }
 
    d_object_timers->t_post_sends->stop();
@@ -418,7 +392,7 @@ Schedule::performLocalCopies()
 {
    d_object_timers->t_local_copies->start();
    for (Iterator local = d_local_set.begin();
-        local != d_local_set.end(); local++) {
+        local != d_local_set.end(); ++local) {
       (*local)->copyLocalData();
    }
    d_object_timers->t_local_copies->stop();
@@ -439,17 +413,17 @@ Schedule::processCompletedCommunications()
 {
    d_object_timers->t_process_incoming_messages->start();
 
-   if ( d_unpack_in_deterministic_order ) {
+   if (d_unpack_in_deterministic_order) {
 
       // Unpack in deterministic order.  Wait for receive as needed.
 
       int irecv = 0;
-      for ( TransactionSets::iterator recv_itr=d_recv_sets.begin();
-            recv_itr!=d_recv_sets.end(); ++recv_itr, ++irecv ) {
+      for (TransactionSets::iterator recv_itr = d_recv_sets.begin();
+           recv_itr != d_recv_sets.end(); ++recv_itr, ++irecv) {
 
          int sender = recv_itr->first;
-         AsyncCommPeer<char> &completed_comm = d_coms[irecv];
-         TBOX_ASSERT( sender == completed_comm.getPeerRank() );
+         AsyncCommPeer<char>& completed_comm = d_coms[irecv];
+         TBOX_ASSERT(sender == completed_comm.getPeerRank());
          completed_comm.completeCurrentOperation();
          completed_comm.yankFromCompletionQueue();
 
@@ -457,11 +431,11 @@ Schedule::processCompletedCommunications()
             completed_comm.getRecvSize() * sizeof(char),
             MessageStream::Read,
             completed_comm.getRecvData(),
-            false /* don't use deep copy */ );
+            false /* don't use deep copy */);
 
          d_object_timers->t_unpack_stream->start();
          for (Iterator recv = d_recv_sets[sender].begin();
-              recv != d_recv_sets[sender].end(); recv++) {
+              recv != d_recv_sets[sender].end(); ++recv) {
             (*recv)->unpackStream(incoming_stream);
          }
          d_object_timers->t_unpack_stream->stop();
@@ -471,24 +445,23 @@ Schedule::processCompletedCommunications()
 
       // Complete sends.
       d_com_stage.advanceAll();
-      while ( d_com_stage.numberOfCompletedMembers() > 0 ) {
+      while (d_com_stage.hasCompletedMembers()) {
          d_com_stage.popCompletionQueue();
       }
 
-   }
-   else {
+   } else {
 
       // Unpack in order of completed receives.
 
-      while ( d_com_stage.numberOfCompletedMembers() > 0 ||
-              d_com_stage.advanceSome() ) {
+      size_t num_senders = d_recv_sets.size();
+      while (d_com_stage.hasCompletedMembers() || d_com_stage.advanceSome()) {
 
          AsyncCommPeer<char>* completed_comm =
             CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
 
          TBOX_ASSERT(completed_comm != 0);
          TBOX_ASSERT(completed_comm->isDone());
-         if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
+         if (static_cast<size_t>(completed_comm - d_coms) < num_senders) {
 
             const int sender = completed_comm->getPeerRank();
 
@@ -496,11 +469,11 @@ Schedule::processCompletedCommunications()
                completed_comm->getRecvSize() * sizeof(char),
                MessageStream::Read,
                completed_comm->getRecvData(),
-               false /* don't use deep copy */ );
+               false /* don't use deep copy */);
 
             d_object_timers->t_unpack_stream->start();
             for (Iterator recv = d_recv_sets[sender].begin();
-                 recv != d_recv_sets[sender].end(); recv++) {
+                 recv != d_recv_sets[sender].end(); ++recv) {
                (*recv)->unpackStream(incoming_stream);
             }
             d_object_timers->t_unpack_stream->stop();
@@ -525,7 +498,9 @@ void
 Schedule::allocateCommunicationObjects()
 {
    const size_t length = d_recv_sets.size() + d_send_sets.size();
-   d_coms = new AsyncCommPeer<char>[length];
+   if (length > 0) {
+      d_coms = new AsyncCommPeer<char>[length];
+   }
 
    size_t counter = 0;
    for (TransactionSets::iterator ti = d_recv_sets.begin();
@@ -570,7 +545,7 @@ Schedule::printClassData(
       const std::list<boost::shared_ptr<Transaction> >& send_set = ss->second;
       stream << "Send Set: " << ss->first << std::endl;
       for (ConstIterator send = send_set.begin();
-           send != send_set.end(); send++) {
+           send != send_set.end(); ++send) {
          (*send)->printClassData(stream);
       }
    }
@@ -580,14 +555,14 @@ Schedule::printClassData(
       const std::list<boost::shared_ptr<Transaction> >& recv_set = rs->second;
       stream << "Recv Set: " << rs->first << std::endl;
       for (ConstIterator recv = recv_set.begin();
-           recv != recv_set.end(); recv++) {
+           recv != recv_set.end(); ++recv) {
          (*recv)->printClassData(stream);
       }
    }
 
    stream << "Local Set" << std::endl;
    for (ConstIterator local = d_local_set.begin();
-        local != d_local_set.end(); local++) {
+        local != d_local_set.end(); ++local) {
       (*local)->printClassData(stream);
    }
 }
@@ -612,7 +587,7 @@ Schedule::getFromInput()
                idb->getDatabase("Schedule"));
             s_ignore_external_timer_prefix =
                sched_db->getCharWithDefault("DEV_ignore_external_timer_prefix",
-                                            'n');
+                  'n');
             if (!(s_ignore_external_timer_prefix == 'n' ||
                   s_ignore_external_timer_prefix == 'y')) {
                INPUT_VALUE_ERROR("DEV_ignore_external_timer_prefix");
@@ -633,8 +608,7 @@ Schedule::setTimerPrefix(
    std::string timer_prefix_used;
    if (s_ignore_external_timer_prefix == 'y') {
       timer_prefix_used = s_default_timer_prefix;
-   }
-   else {
+   } else {
       timer_prefix_used = timer_prefix;
    }
    std::map<std::string, TimerStruct>::iterator ti(
@@ -671,6 +645,8 @@ Schedule::getAllTimers(
       getTimer(timer_prefix + "::processIncomingMessages()");
    timers.t_MPI_wait = TimerManager::getManager()->
       getTimer(timer_prefix + "::MPI_wait");
+   timers.t_pack_stream = TimerManager::getManager()->
+      getTimer(timer_prefix + "::pack_stream");
    timers.t_unpack_stream = TimerManager::getManager()->
       getTimer(timer_prefix + "::unpack_stream");
    timers.t_local_copies = TimerManager::getManager()->

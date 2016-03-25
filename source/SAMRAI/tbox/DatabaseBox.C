@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   A box structure representing a portion of the AMR index space
  *
  ************************************************************************/
@@ -16,7 +16,7 @@ namespace tbox {
 DatabaseBox::DatabaseBox()
 {
    d_data.d_dimension = 0;
-   for ( int i=0; i<MAX_DIM_VAL; ++i ) {
+   for (int i = 0; i < MAX_DIM_VAL; ++i) {
       d_data.d_lo[i] = d_data.d_hi[i] = 0;
    }
 }

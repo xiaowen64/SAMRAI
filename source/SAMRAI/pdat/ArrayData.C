@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2013 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2014 Lawrence Livermore National Security, LLC
  * Description:   Templated array data structure supporting patch data types
  *
  ************************************************************************/
@@ -134,7 +134,7 @@ ArrayData<TYPE>::getIndex(
 }
 
 template<class TYPE>
-TYPE*
+TYPE *
 ArrayData<TYPE>::getPointer(
    int d)
 {
@@ -144,7 +144,7 @@ ArrayData<TYPE>::getPointer(
 }
 
 template<class TYPE>
-const TYPE*
+const TYPE *
 ArrayData<TYPE>::getPointer(
    int d) const
 {
@@ -212,7 +212,7 @@ ArrayData<TYPE>::copy(
       TYPE * const dst_ptr = &d_array[0];
       const TYPE * const src_ptr = &src.d_array[0];
       const int n = d_offset * d_depth;
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; ++i) {
          copyop(dst_ptr[i], src_ptr[i]);
       }
 
@@ -301,7 +301,8 @@ ArrayData<TYPE>::copy(
    const hier::Transformation& transformation)
 {
    if (transformation.getRotation() == hier::Transformation::NO_ROTATE
-       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())) {
+       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())
+       && transformation.getBeginBlock() == transformation.getEndBlock()) {
 
       copy(src, box);
 
@@ -407,7 +408,7 @@ ArrayData<TYPE>::copyDepth(
 
       TYPE * const dst_ptr_d = dst_ptr + dst_depth * d_offset;
       const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
-      for (int i = 0; i < d_offset; i++) {
+      for (int i = 0; i < d_offset; ++i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       }
 
@@ -471,7 +472,7 @@ ArrayData<TYPE>::sum(
       TYPE * const dst_ptr = &d_array[0];
       const TYPE * const src_ptr = &src.d_array[0];
       const int n = d_offset * d_depth;
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; ++i) {
          sumop(dst_ptr[i], src_ptr[i]);
       }
 
@@ -679,7 +680,6 @@ ArrayData<TYPE>::packStream(
 
 }
 
-
 template<class TYPE>
 void
 ArrayData<TYPE>::packStream(
@@ -706,7 +706,6 @@ ArrayData<TYPE>::packStream(
    stream.pack(&buffer[0], size);
 
 }
-
 
 /*
  *************************************************************************
@@ -835,7 +834,7 @@ ArrayData<TYPE>::fillAll(
    if (!d_box.empty()) {
       TYPE* ptr = &d_array[0];
       const int n = d_depth * d_offset;
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; ++i) {
          ptr[i] = t;
       }
    }
@@ -847,7 +846,7 @@ ArrayData<TYPE>::fillAll(
    const TYPE& t,
    const hier::Box& box)
 {
-   for (int d = 0; d < d_depth; d++) {
+   for (int d = 0; d < d_depth; ++d) {
       fill(t, box, d);
    }
 }
@@ -863,7 +862,7 @@ ArrayData<TYPE>::fill(
    if (!d_box.empty()) {
       TYPE* ptr = &d_array[d * d_offset];
       const int n = d_offset;
-      for (int i = 0; i < n; i++) {
+      for (int i = 0; i < n; ++i) {
          ptr[i] = t;
       }
    }
@@ -887,7 +886,7 @@ ArrayData<TYPE>::fill(
       int box_w[SAMRAI::MAX_DIM_VAL];
       int dst_w[SAMRAI::MAX_DIM_VAL];
       int dim_counter[SAMRAI::MAX_DIM_VAL];
-      for (int i = 0; i < dim.getValue(); i++) {
+      for (int i = 0; i < dim.getValue(); ++i) {
          box_w[i] = ispace.numberCells(i);
          dst_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -898,20 +897,20 @@ ArrayData<TYPE>::fill(
       int dst_counter = d_box.offset(ispace.lower()) + d * d_offset;
 
       int dst_b[SAMRAI::MAX_DIM_VAL];
-      for (int nd = 0; nd < dim.getValue(); nd++) {
+      for (int nd = 0; nd < dim.getValue(); ++nd) {
          dst_b[nd] = dst_counter;
       }
 
       TYPE * const dst_ptr = &d_array[0];
 
-      for (int nb = 0; nb < num_d0_blocks; nb++) {
+      for (int nb = 0; nb < num_d0_blocks; ++nb) {
 
-         for (int i0 = 0; i0 < box_w[0]; i0++) {
+         for (int i0 = 0; i0 < box_w[0]; ++i0) {
             dst_ptr[dst_counter + i0] = t;
          }
          int dim_jump = 0;
 
-         for (int j = 1; j < dim.getValue(); j++) {
+         for (int j = 1; j < dim.getValue(); ++j) {
             if (dim_counter[j] < box_w[j] - 1) {
                ++dim_counter[j];
                dim_jump = j;
@@ -923,12 +922,12 @@ ArrayData<TYPE>::fill(
 
          if (dim_jump > 0) {
             int dst_step = 1;
-            for (int k = 0; k < dim_jump; k++) {
+            for (int k = 0; k < dim_jump; ++k) {
                dst_step *= dst_w[k];
             }
             dst_counter = dst_b[dim_jump - 1] + dst_step;
 
-            for (int m = 0; m < dim_jump; m++) {
+            for (int m = 0; m < dim_jump; ++m) {
                dst_b[m] = dst_counter;
             }
          }
@@ -1004,7 +1003,7 @@ ArrayData<TYPE>::isValid()
 {
    return !d_box.isEmpty();
 }
- 
+
 /*
  *************************************************************************
  *
