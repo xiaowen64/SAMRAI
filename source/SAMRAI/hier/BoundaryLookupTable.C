@@ -54,7 +54,7 @@ BoundaryLookupTable::BoundaryLookupTable(
    d_dim(dim)
 {
    if (d_table[0].isNull()) {
-      int factrl[d_dim.getValue() + 1];
+      int factrl[tbox::Dimension::MAXIMUM_DIMENSION_VALUE + 1];
       factrl[0] = 1;
       for (int i = 1; i <= d_dim.getValue(); i++) factrl[i] = i * factrl[i - 1];
       d_ncomb.resizeArray(d_dim.getValue());

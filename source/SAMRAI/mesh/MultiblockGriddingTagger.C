@@ -199,9 +199,11 @@ void MultiblockGriddingTagger::fillSingularityBoundaryConditions(
                   pdat::CellIndex src_index(ci());
                   pdat::CellGeometry::transform(src_index, back_trans);
 
-                  (*tag_data)(ci()) += (*sing_data)(src_index);
+                  int sing_val = (*sing_data)(src_index);
+                  if (sing_val != 0 && (*tag_data)(ci()) == 0) {
+                     (*tag_data)(ci()) = sing_val;
+                  }
                }
-
             }
          }
       }

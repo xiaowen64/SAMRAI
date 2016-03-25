@@ -96,6 +96,7 @@ GriddingAlgorithm::GriddingAlgorithm(
    d_hierarchy(hierarchy),
    d_connector_width_requestor(),
    d_dim(hierarchy->getDim()),
+   d_buf_tag_ghosts(d_dim, 0),
    d_object_name(object_name),
    d_registered_for_restart(register_for_restart),
    d_tag_init_strategy(tag_init_strategy),
@@ -182,6 +183,7 @@ GriddingAlgorithm::GriddingAlgorithm(
       (*s_buf_tag_indx)[d_dim.getValue() - 1] =
          var_db->registerInternalSAMRAIVariable(d_buf_tag,
             hier::IntVector::getOne(d_dim));
+      d_buf_tag_ghosts = hier::IntVector::getOne(d_dim); 
    }
 
    d_tag_indx = (*s_tag_indx)[d_dim.getValue() - 1];
@@ -708,14 +710,6 @@ void GriddingAlgorithm::makeFinerLevel(
          t_make_finer_tagging->start();
 
          /*
-          * Create communication schedule for buffer tags on this level.
-          */
-         t_bdry_fill_tags_create->start();
-         d_bdry_sched_tags[tag_ln] =
-            d_bdry_fill_tags->createSchedule(tag_level, d_mb_tagger_strategy);
-         t_bdry_fill_tags_create->stop();
-
-         /*
           * Initialize integer tag arrays on level to false.
           */
          tag_level->allocatePatchData(d_tag_indx);
@@ -760,10 +754,43 @@ void GriddingAlgorithm::makeFinerLevel(
           * sufficient to keep disturbance on refined region until next regrid
           * of the level occurs.
           */
+         hier::IntVector max_descriptor_ghosts(
+            d_hierarchy->getPatchDescriptor()->getMaxGhostWidth(d_dim));
+
+         /*
+          * If the tag buffer value passed into this method is greater than the
+          * current ghost width of the data that handles tag buffering, then
+          * the call to resetTagBufferingData resets that data to have a ghost
+          * width equal to the tag buffer.
+          */
+
+         if (tag_buffer > d_buf_tag_ghosts.max()) {
+            resetTagBufferingData(tag_buffer);
+         }
+
+         /*
+          * Create communication schedule for buffer tags on this level.
+          */
+         t_bdry_fill_tags_create->start();
+         d_bdry_sched_tags[tag_ln] =
+            d_bdry_fill_tags->createSchedule(tag_level, d_mb_tagger_strategy);
+         t_bdry_fill_tags_create->stop();
+
+
          tag_level->allocatePatchData(d_buf_tag_indx);
          bufferTagsOnLevel(d_true_tag, tag_level, tag_buffer);
          tag_level->deallocatePatchData(d_buf_tag_indx);
          t_make_finer_tagging->stop();
+
+         /*
+          * We cannot leave this method with the tag buffering data having
+          * ghosts greater than any other data managed by the patch descriptor,
+          * so if that is the case, we reset it to the default value of 1.
+          */
+
+         if (tag_buffer > max_descriptor_ghosts.max()) {
+            resetTagBufferingData(1);
+         }
 
          /*
           * Determine Boxes for new fine level.
@@ -793,9 +820,7 @@ void GriddingAlgorithm::makeFinerLevel(
                   required_nesting = hier::IntVector(d_dim,
                         d_hierarchy->getProperNestingBuffer(tag_ln));
                } else {
-                  required_nesting =
-                     d_hierarchy->getPatchDescriptor()->getMaxGhostWidth(
-                        d_dim);
+                  required_nesting = max_descriptor_ghosts;
                }
 
                bool locally_nests = false;
@@ -1405,11 +1430,6 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingBeforeRecursiveRegrid(
       t_misc1->start();
    }
 
-   t_bdry_fill_tags_create->start();
-   d_bdry_sched_tags[tag_ln] =
-      d_bdry_fill_tags->createSchedule(tag_level, d_mb_tagger_strategy);
-   t_bdry_fill_tags_create->stop();
-
    tag_level->allocatePatchData(d_tag_indx);
    fillTags(d_false_tag, tag_level, d_tag_indx);
 
@@ -1515,8 +1535,36 @@ void GriddingAlgorithm::regridFinerLevel_doTaggingAfterRecursiveRegrid(
     * sufficient to keep disturbance on refined region until next
     * regrid of the level occurs.
     */
+
+   hier::IntVector max_descriptor_ghosts(
+      d_hierarchy->getPatchDescriptor()->getMaxGhostWidth(d_dim));
+
+   /*
+    * If the tag buffer value passed into this method is greater than the
+    * current ghost width of the data that handles tag buffering, then the
+    * call to resetTagBufferingData resets that data to have a ghost width
+    * equal to the tag buffer.
+    */ 
+   if (tag_buffer[tag_ln] > d_buf_tag_ghosts.max()) {
+      resetTagBufferingData(tag_buffer[tag_ln]);
+   }
+
+   t_bdry_fill_tags_create->start();
+   d_bdry_sched_tags[tag_ln] =
+      d_bdry_fill_tags->createSchedule(tag_level, d_mb_tagger_strategy);
+   t_bdry_fill_tags_create->stop();
+
    tag_level->allocatePatchData(d_buf_tag_indx);
    bufferTagsOnLevel(d_true_tag, tag_level, tag_buffer[tag_ln]);
+
+   /*
+    * We cannot leave this method with the tag buffering data having ghosts
+    * greater than any other data managed by the patch descriptor, so if that
+    * is the case, we reset it to the default value of 1.
+    */
+   if (tag_buffer[tag_ln] > max_descriptor_ghosts.max()) {
+      resetTagBufferingData(1);
+   }
 
    if (d_hierarchy->finerLevelExists(new_ln)) {
 
@@ -2291,6 +2339,47 @@ void GriddingAlgorithm::checkNonrefinedTags(
 }
 
 /*
+ *******************************************************************
+ * Reset tag buffering data to be able to handle given buffer size.
+ *******************************************************************
+ */
+
+void GriddingAlgorithm::resetTagBufferingData(const int tag_buffer)
+{
+   d_buf_tag_ghosts = hier::IntVector(d_dim, tag_buffer);
+
+   d_bdry_fill_tags.setNull();
+
+   hier::VariableDatabase* var_db =
+      hier::VariableDatabase::getDatabase();
+
+   /*
+    * Remove d_buf_tag from the VariableDatabase and re-register it with
+    * the new ghost width.
+    */
+   var_db->removeInternalSAMRAIVariablePatchDataIndex(d_buf_tag_indx);
+
+   (*s_buf_tag_indx)[d_dim.getValue() - 1] =
+      var_db->registerInternalSAMRAIVariable(d_buf_tag,
+         d_buf_tag_ghosts);
+
+   d_buf_tag_indx = (*s_buf_tag_indx)[d_dim.getValue() - 1];
+
+   if (d_hierarchy->getGridGeometry()->getNumberBlocks() > 1) {
+      TBOX_ASSERT(d_mb_tagger_strategy); 
+      d_mb_tagger_strategy->setScratchTagPatchDataIndex(d_buf_tag_indx);
+   }
+
+   d_bdry_fill_tags = new xfer::RefineAlgorithm(d_dim);
+
+   d_bdry_fill_tags->
+   registerRefine(d_buf_tag_indx,
+      d_buf_tag_indx,
+      d_buf_tag_indx,
+      ((tbox::Pointer<hier::RefineOperator>)NULL));
+}
+
+/*
  *************************************************************************
  *************************************************************************
  */
@@ -2683,21 +2772,13 @@ void GriddingAlgorithm::bufferTagsOnLevel(
 
       buf_tag_data->fillAll(not_tag);
 
-      hier::Box interior = patch->getBox();
+      const hier::Box& interior(patch->getBox());
 
-      for (int bc = buffer_size; bc >= 0; bc--) {
-
-         int fill_val = buffer_size - bc + 1;
-
-         for (pdat::CellIterator ic(interior); ic; ic++) {
-            if ((*tag_data)(ic()) == tag_value) {
-               hier::Box buf_box(ic() - bc, ic() + bc);
-               buf_tag_data->fill(fill_val, buf_box * interior);
-            }
+      for (pdat::CellIterator ic(interior); ic; ic++) {
+         if ((*tag_data)(ic()) == tag_value) {
+            (*buf_tag_data)(ic()) = d_true_tag;
          }
-
       }
-
    }
 
    /*
@@ -2721,27 +2802,19 @@ void GriddingAlgorithm::bufferTagsOnLevel(
       tbox::Pointer<pdat::CellData<int> > tag_data =
          patch->getPatchData(d_tag_indx);
 
-      hier::Box buf_tag_box = buf_tag_data->getGhostBox();
-      hier::Box tag_box = tag_data->getBox();
+      const hier::Box& tag_box(tag_data->getBox());
+      hier::Box buf_tag_box(tag_box);
+      buf_tag_box.grow(hier::IntVector(d_dim, buffer_size));
 
-      /*
-       * Set all interior tags to tag value where buffer tags non-zero.
-       */
-      for (pdat::CellIterator ic(tag_box); ic; ic++) {
-         (*tag_data)(ic()) = ((*buf_tag_data)(ic()) ? tag_value : not_tag);
-      }
+      tag_data->fillAll(not_tag);
 
-      /*
-       * Set all interior tags in buffers around tags in ghosts.
-       */
-      for (pdat::CellIterator ic2(buf_tag_box); ic2; ic2++) {
-         int tval = (*buf_tag_data)(ic2());
-         if (tval > 1) {
-            int buf_size = tval - 1;
-            hier::Box buf_box(ic2() - buf_size, ic2() + buf_size);
+      for (pdat::CellIterator ic(buf_tag_box); ic; ic++) {
+         if ((*buf_tag_data)(ic()) == d_true_tag) {
+            hier::Box buf_box(ic() - buffer_size, ic() + buffer_size);
             tag_data->fill(tag_value, buf_box);
          }
       }
+
    }
 
    t_buffer_tags->stop();
