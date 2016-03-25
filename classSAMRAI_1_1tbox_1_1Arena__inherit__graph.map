@@ -1,0 +1,5 @@
+base referer
+rect $classSAMRAI_1_1tbox_1_1FixedArena.html 8,158 189,182
+rect $classSAMRAI_1_1tbox_1_1ScratchArena.html 213,158 408,182
+rect $classSAMRAI_1_1tbox_1_1StandardArena.html 432,158 634,182
+rect $classtbox_1_1DescribedClass.html 253,9 368,33
