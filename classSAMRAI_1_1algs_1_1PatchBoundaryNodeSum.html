@@ -38,18 +38,18 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#97dc195503dbf6d21c7eb2c4194bc1ac">registerSum</a> (int node_data_id)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register node data with given patch data identifier for summing.  <a href="#97dc195503dbf6d21c7eb2c4194bc1ac"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#440e40c790514064364eea5d93ed10e6">setupSum</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#21d001989dbe742273ef7be9a4974ceb">setupSum</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up summation operations for node data across shared nodes on a single level.  <a href="#440e40c790514064364eea5d93ed10e6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#75a506c14813e503e4f00067b90c4ba3">setupSum</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up summation operations for node data across shared nodes on a single level.  <a href="#21d001989dbe742273ef7be9a4974ceb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#5602ea6a72e3cdc8cb8b4ffc836d53e7">setupSum</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up for summation operations for node data at shared nodes across a range of hierarchy levels.  <a href="#75a506c14813e503e4f00067b90c4ba3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up for summation operations for node data at shared nodes across a range of hierarchy levels.  <a href="#5602ea6a72e3cdc8cb8b4ffc836d53e7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#2be0a033db98b02ced7743b8a68c0492">computeSum</a> (const bool fill_hanging_nodes=false) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute sum of node values at each shared node and replace each such node value with the corresponding sum.  <a href="#2be0a033db98b02ced7743b8a68c0492"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#52895d444a3f704c97bd6d41a3ba67c2">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#8d2514c1dc5a96866824e57b9fd2f6ff">getObjectName</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the object name.  <a href="#52895d444a3f704c97bd6d41a3ba67c2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the object name.  <a href="#8d2514c1dc5a96866824e57b9fd2f6ff"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#c123f0ca14ac45e49664df09f1014a5b">getNumSharedPatchDataSlots</a> (int max_variables_to_register)</td></tr>
 
@@ -74,7 +74,7 @@ Usage of a patch boundry node sum involves the following sequence of steps:<p>
  *     </pre></div></li></ol>
 <p>
 The result of these operations is that each node patch data value associated with the registered ids at patch boundaries, on either the single level or range of hierarchy levels, is replaced by the sum of all data values at the node.<p>
-Note that only one of the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#440e40c790514064364eea5d93ed10e6">setupSum()</a> functions may be called once a <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html">PatchBoundaryNodeSum</a> object is created. 
+Note that only one of the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#21d001989dbe742273ef7be9a4974ceb">setupSum()</a> functions may be called once a <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html">PatchBoundaryNodeSum</a> object is created. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="6b67e61d9206b7db283c6126fcf83924"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::PatchBoundaryNodeSum" ref="6b67e61d9206b7db283c6126fcf83924" args="(const std::string &amp;object_name)" -->
@@ -87,7 +87,7 @@ Note that only one of the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBounda
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>object_name</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -136,7 +136,7 @@ Destructor for the schedule releases all internal storage.
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_variables_to_register</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -164,7 +164,7 @@ Static function used to predetermine number of patch data slots ahared among all
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_variables_to_register</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -209,14 +209,14 @@ Register node data with given patch data identifier for summing.
 The node data id must be a valid patch data id (&gt;=0) and must correspond to node-centered double data. If not, an error will result. 
 </div>
 </div><p>
-<a class="anchor" name="440e40c790514064364eea5d93ed10e6"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::setupSum" ref="440e40c790514064364eea5d93ed10e6" args="(tbox::Pointer&lt; hier::PatchLevel &gt; level)" -->
+<a class="anchor" name="21d001989dbe742273ef7be9a4974ceb"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::setupSum" ref="21d001989dbe742273ef7be9a4974ceb" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::PatchBoundaryNodeSum::setupSum           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -228,7 +228,7 @@ The node data id must be a valid patch data id (&gt;=0) and must correspond to n
 <p>
 Set up summation operations for node data across shared nodes on a single level. 
 <p>
-If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#440e40c790514064364eea5d93ed10e6">setupSum()</a> function for a range of hierarchy levels has been called previously for this object, an error will result.<p>
+If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#21d001989dbe742273ef7be9a4974ceb">setupSum()</a> function for a range of hierarchy levels has been called previously for this object, an error will result.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td>pointer to level on which to perform node sum</td></tr>
@@ -237,14 +237,14 @@ If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.htm
 When assertion checking is active, the level pointer cannot be null. 
 </div>
 </div><p>
-<a class="anchor" name="75a506c14813e503e4f00067b90c4ba3"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::setupSum" ref="75a506c14813e503e4f00067b90c4ba3" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level)" -->
+<a class="anchor" name="5602ea6a72e3cdc8cb8b4ffc836d53e7"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::setupSum" ref="5602ea6a72e3cdc8cb8b4ffc836d53e7" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::PatchBoundaryNodeSum::setupSum           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -271,7 +271,7 @@ When assertion checking is active, the level pointer cannot be null.
 <p>
 Set up for summation operations for node data at shared nodes across a range of hierarchy levels. 
 <p>
-If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#440e40c790514064364eea5d93ed10e6">setupSum()</a> function for a single level has been called previously for this object, an error will result.<p>
+If the other <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#21d001989dbe742273ef7be9a4974ceb">setupSum()</a> function for a single level has been called previously for this object, an error will result.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>pointer to hierarchy on which to perform node sum </td></tr>
@@ -301,8 +301,8 @@ When assertion checking is active, the hierarchy pointer cannot be null, and the
 <p>
 Compute sum of node values at each shared node and replace each such node value with the corresponding sum. 
 <p>
-At the end of this method, all values at shared node locations on patch boundaries (on levels indicated by the call to one of the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#440e40c790514064364eea5d93ed10e6">setupSum()</a> routines) will have the same value.<p>
-When the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#440e40c790514064364eea5d93ed10e6">setupSum()</a> method taking a range of patch levels in a hierarchy is called, this method will compute the sum of nodal quantities at all the specified patch boundaries. For nodes at a coarse-fine boundary, nodal sums will only be performed where the coarse and fine nodes overlap. A node on a fine level that is not also a node on the next coarser level (a so-called "hanging node") will not be summed.<p>
+At the end of this method, all values at shared node locations on patch boundaries (on levels indicated by the call to one of the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#21d001989dbe742273ef7be9a4974ceb">setupSum()</a> routines) will have the same value.<p>
+When the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html#21d001989dbe742273ef7be9a4974ceb">setupSum()</a> method taking a range of patch levels in a hierarchy is called, this method will compute the sum of nodal quantities at all the specified patch boundaries. For nodes at a coarse-fine boundary, nodal sums will only be performed where the coarse and fine nodes overlap. A node on a fine level that is not also a node on the next coarser level (a so-called "hanging node") will not be summed.<p>
 The boolean "fill_hanging_nodes" argument specifies whether the the hanging nodes should be filled using linearly interpolated values from neighboring non-hanging nodes (i.e. those that overlap nodes on a coarse level). The correct steps required to deal with hanging nodes is algorithm dependent so, if left unspecified, values at the hanging nodes will not be adjusted. However, because many algorithms average hanging nodes we provide the capability to do it here. Note that the hanging node interpolation provided does not take into consideration the spatial location of the nodes. So the interpolation may not be correct for coordinate systems other than standard Cartesian grid geometry.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -312,16 +312,16 @@ The boolean "fill_hanging_nodes" argument specifies whether the the hanging node
 
 </div>
 </div><p>
-<a class="anchor" name="52895d444a3f704c97bd6d41a3ba67c2"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::getObjectName" ref="52895d444a3f704c97bd6d41a3ba67c2" args="() const " -->
+<a class="anchor" name="8d2514c1dc5a96866824e57b9fd2f6ff"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryNodeSum::getObjectName" ref="8d2514c1dc5a96866824e57b9fd2f6ff" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::algs::PatchBoundaryNodeSum::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::algs::PatchBoundaryNodeSum::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -334,9 +334,9 @@ Returns the object name.
 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryNodeSum_8h.html">PatchBoundaryNodeSum.h</a><li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryNodeSum_8I.html">PatchBoundaryNodeSum.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following file:<ul>
+<li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryNodeSum_8h.html">PatchBoundaryNodeSum.h</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

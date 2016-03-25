@@ -28,7 +28,7 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#4de66f8f5d56cb3f7a43ea3a065a6c33">ParallelBuffer</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#60060602fb098729863315e5c934e8ec">~ParallelBuffer</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#60060602fb098729863315e5c934e8ec">~ParallelBuffer</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#d956917370f64fae02a01b1a5f063198">setActive</a> (bool active)</td></tr>
 
@@ -42,9 +42,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#cb0628d62ebdb00ee174b7793eacdb5d">outputString</a> (const std::string &amp;text, const int length)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#097db61aa30bfbcd762a7ffb758d8983">sync</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#097db61aa30bfbcd762a7ffb758d8983">sync</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#59467d9170df12dd6ce8991ac6d965f2">overflow</a> (int ch)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ParallelBuffer.html#59467d9170df12dd6ce8991ac6d965f2">overflow</a> (int ch)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -79,7 +79,7 @@ Create a parallel buffer class. The object will require further initialization t
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -120,7 +120,7 @@ Set whether the output stream will be active. If the parallel buffer stream is d
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>text</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -140,7 +140,7 @@ Set the prefix that begins every new line to the output stream. A sample prefix 
           <td class="paramtype">std::ostream *&nbsp;</td>
           <td class="paramname"> <em>stream</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -160,7 +160,7 @@ Set the primary output stream. If not NULL, then output data is sent to this str
           <td class="paramtype">std::ostream *&nbsp;</td>
           <td class="paramname"> <em>stream</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -180,7 +180,7 @@ Set the secondary output stream. If not NULL, then output data is sent to this s
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>text</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -228,7 +228,7 @@ Write a text string of the specified length to the output file. Note that the st
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -248,7 +248,7 @@ Synchronize the parallel buffer (called from streambuf).
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>ch</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -260,7 +260,7 @@ Write an overflow character into the parallel buffer (called from streambuf).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="ParallelBuffer_8h.html">ParallelBuffer.h</a><li>source/SAMRAI/tbox/<a class="el" href="ParallelBuffer_8C.html">ParallelBuffer.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1appu.html">appu</a>::<a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html">CartesianBoundaryUtilities3</a></div>
-<h1>SAMRAI::appu::CartesianBoundaryUtilities3 Struct Reference</h1><!-- doxytag: class="SAMRAI::appu::CartesianBoundaryUtilities3" -->Class <a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities2.html">CartesianBoundaryUtilities2</a> is a utility class that simplifies the implementation of simple physical boundary data in 3 spatial dimensions. It contains routines for reading boundary data information from input files, applying those boundary conditions, and error checking boundary data. These routines apply to the case of cell-centered double data only. One may use all of these capabilities, or use the input reading, boundary setting, and error checking routines independently.  
+<h1>SAMRAI::appu::CartesianBoundaryUtilities3 Struct Reference</h1><!-- doxytag: class="SAMRAI::appu::CartesianBoundaryUtilities3" -->Class <a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html">CartesianBoundaryUtilities3</a> is a utility class that simplifies the implementation of simple physical boundary data in 3 spatial dimensions. It contains routines for reading boundary data information from input files, applying those boundary conditions, and error checking boundary data. These routines apply to the case of cell-centered double data only. One may use all of these capabilities, or use the input reading, boundary setting, and error checking routines independently.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/appu/CartesianBoundaryUtilities3.h&gt;</code>
@@ -29,13 +29,13 @@
 <a href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#3e80b07f78ae48bf3cedfb852c96fd2f">readBoundaryInput</a> (<a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *bdry_strategy, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; bdry_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;face_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;edge_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;node_conds, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;periodic)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#62ac57cb9cc38b85c33ee8ed06ff734b">readBoundaryInput</a> (<a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html">BoundaryUtilityStrategy</a> *bdry_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;bdry_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;face_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;edge_conds, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;node_conds, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;periodic)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#63cc5740f0faa026872ede8fa27b6f37">fillFaceBoundaryData</a> (const std::string &amp;varname, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_face_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#444eecd7dabdb406ad7757b444b849e7">fillFaceBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_face_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#c758f6f9a96d683bb28fc14b44fe29fb">fillEdgeBoundaryData</a> (const std::string &amp;varname, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_edge_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#4bd6717a9a9fd491002110c2e71041ef">fillEdgeBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_edge_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#f448de6c94dba07db5812ba59e2ada8d">fillNodeBoundaryData</a> (const std::string &amp;varname, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_node_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#63cd5be955f1fa4a26984b54588d6979">fillNodeBoundaryData</a> (const std::string &amp;varname, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;vardata, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;bdry_node_conds, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;bdry_face_values)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html#46def28f0e4889bae1c93528c735c7e9">getFaceLocationForEdgeBdry</a> (int edge_loc, int edge_btype)</td></tr>
 
@@ -45,7 +45,7 @@
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities2.html">CartesianBoundaryUtilities2</a> is a utility class that simplifies the implementation of simple physical boundary data in 3 spatial dimensions. It contains routines for reading boundary data information from input files, applying those boundary conditions, and error checking boundary data. These routines apply to the case of cell-centered double data only. One may use all of these capabilities, or use the input reading, boundary setting, and error checking routines independently. 
+Class <a class="el" href="structSAMRAI_1_1appu_1_1CartesianBoundaryUtilities3.html">CartesianBoundaryUtilities3</a> is a utility class that simplifies the implementation of simple physical boundary data in 3 spatial dimensions. It contains routines for reading boundary data information from input files, applying those boundary conditions, and error checking boundary data. These routines apply to the case of cell-centered double data only. One may use all of these capabilities, or use the input reading, boundary setting, and error checking routines independently. 
 <p>
 To use the boundary condition input reading capabilities, the format of the input file section containing the boundary information must be as described next. Boundary face, node, and edge entries are only required for those that are not filled automatically when periodic conditions apply.<p>
 The boundary condition for face "*" is provided in a section as follows:<p>
@@ -103,7 +103,7 @@ See the include file <a class="el" href="CartesianBoundaryDefines_8h.html">Carte
 
 <p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="3e80b07f78ae48bf3cedfb852c96fd2f"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::readBoundaryInput" ref="3e80b07f78ae48bf3cedfb852c96fd2f" args="(BoundaryUtilityStrategy *bdry_strategy, tbox::Pointer&lt; tbox::Database &gt; bdry_db, tbox::Array&lt; int &gt; &amp;face_conds, tbox::Array&lt; int &gt; &amp;edge_conds, tbox::Array&lt; int &gt; &amp;node_conds, const hier::IntVector &amp;periodic)" -->
+<a class="anchor" name="62ac57cb9cc38b85c33ee8ed06ff734b"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::readBoundaryInput" ref="62ac57cb9cc38b85c33ee8ed06ff734b" args="(BoundaryUtilityStrategy *bdry_strategy, const boost::shared_ptr&lt; tbox::Database &gt; &amp;bdry_db, tbox::Array&lt; int &gt; &amp;face_conds, tbox::Array&lt; int &gt; &amp;edge_conds, tbox::Array&lt; int &gt; &amp;node_conds, const hier::IntVector &amp;periodic)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -116,7 +116,7 @@ See the include file <a class="el" href="CartesianBoundaryDefines_8h.html">Carte
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bdry_db</em>, </td>
         </tr>
         <tr>
@@ -169,7 +169,7 @@ When assertion checking is active, assertions will result when any of the pointe
 
 </div>
 </div><p>
-<a class="anchor" name="63cc5740f0faa026872ede8fa27b6f37"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillFaceBoundaryData" ref="63cc5740f0faa026872ede8fa27b6f37" args="(const std::string &amp;varname, tbox::Pointer&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_face_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
+<a class="anchor" name="444eecd7dabdb406ad7757b444b849e7"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillFaceBoundaryData" ref="444eecd7dabdb406ad7757b444b849e7" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_face_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -182,7 +182,7 @@ When assertion checking is active, assertions will result when any of the pointe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>vardata</em>, </td>
         </tr>
         <tr>
@@ -234,7 +234,7 @@ When assertion checking is active, assertions will result when any of the pointe
 
 </div>
 </div><p>
-<a class="anchor" name="c758f6f9a96d683bb28fc14b44fe29fb"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillEdgeBoundaryData" ref="c758f6f9a96d683bb28fc14b44fe29fb" args="(const std::string &amp;varname, tbox::Pointer&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_edge_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
+<a class="anchor" name="4bd6717a9a9fd491002110c2e71041ef"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillEdgeBoundaryData" ref="4bd6717a9a9fd491002110c2e71041ef" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_edge_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -247,7 +247,7 @@ When assertion checking is active, assertions will result when any of the pointe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>vardata</em>, </td>
         </tr>
         <tr>
@@ -299,7 +299,7 @@ When assertion checking is active, assertions will result when any of the pointe
 
 </div>
 </div><p>
-<a class="anchor" name="f448de6c94dba07db5812ba59e2ada8d"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillNodeBoundaryData" ref="f448de6c94dba07db5812ba59e2ada8d" args="(const std::string &amp;varname, tbox::Pointer&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_node_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
+<a class="anchor" name="63cd5be955f1fa4a26984b54588d6979"></a><!-- doxytag: member="SAMRAI::appu::CartesianBoundaryUtilities3::fillNodeBoundaryData" ref="63cd5be955f1fa4a26984b54588d6979" args="(const std::string &amp;varname, const boost::shared_ptr&lt; pdat::CellData&lt; double &gt; &gt; &amp;vardata, const hier::Patch &amp;patch, const hier::IntVector &amp;ghost_width_to_fill, const tbox::Array&lt; int &gt; &amp;bdry_node_conds, const tbox::Array&lt; double &gt; &amp;bdry_face_values)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -312,7 +312,7 @@ When assertion checking is active, assertions will result when any of the pointe
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>vardata</em>, </td>
         </tr>
         <tr>
@@ -522,7 +522,7 @@ When assertion checking is active, assertions will result when any of the pointe
 </div><p>
 <hr>The documentation for this struct was generated from the following file:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="CartesianBoundaryUtilities3_8h.html">CartesianBoundaryUtilities3.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

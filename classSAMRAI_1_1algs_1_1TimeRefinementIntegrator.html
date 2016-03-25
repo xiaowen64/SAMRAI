@@ -26,15 +26,14 @@
 <p>Inheritance diagram for SAMRAI::algs::TimeRefinementIntegrator:
 <p><center><img src="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.png" usemap="#SAMRAI::algs::TimeRefinementIntegrator_map" border="0" alt=""></center>
 <map name="SAMRAI::algs::TimeRefinementIntegrator_map">
-<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="0,56,237,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,237,24">
+<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="0,0,237,24">
 </map>
 <a href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#6a62814319a1226500376d44468987fd">TimeRefinementIntegrator</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt; level_integrator, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; gridding_algorithm, bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#1f03ca1887794a7d11098cadb7fbf92a">TimeRefinementIntegrator</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt; &amp;level_integrator, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; &amp;gridding_algorithm, bool register_for_restart=true)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#9bcbb540cfea4b0ac1dc9aef90fcdce0">~TimeRefinementIntegrator</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#9bcbb540cfea4b0ac1dc9aef90fcdce0">~TimeRefinementIntegrator</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#4ecf1480095713fd40f994e1585799f5">initializeHierarchy</a> ()</td></tr>
 
@@ -42,49 +41,49 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#5911c97d3d4e79ce007c01fbf6afb9bd">atRegridPoint</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#6b4f3f7e54a2eb9315d531996db757f1">getIntegratorTime</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#51718954d0e162db23bbae739a36319e">getIntegratorTime</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#8f42492e34cf286bf1525d58291c2532">getStartTime</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#2d0f3af896c43d157c2e57c04dccd6b5">getStartTime</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#b8848bc63ca1b48c2ff7c49e75ff6a0a">getEndTime</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#bcb60679de5620a0b4843f1911b2dd3f">getEndTime</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#6c0414e48f823fb2f730917b65844d84">getIntegratorStep</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#30e3e6c716b82ffd74f200b0a86aa996">getIntegratorStep</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#450da3ae4d30e94184b789eba8cd66e4">getMaxIntegratorSteps</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#1f4d00ab12198ffb3b672b32e1b4684d">getMaxIntegratorSteps</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#0b9277a53ae474f0c6ec69fae4dfb0ed">stepsRemaining</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#54d5dce0e9dcc1ec56ac019b75a5c926">stepsRemaining</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#3e46283cf8b57d63f1baa8e0edfdca2a">stepsRemaining</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#ecdcfccbb2a961a67a4f9c517f36890a">stepsRemaining</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#f17e49a5f18f8ac8c166d6dd41959a98">getLevelDtActual</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#e09e7fb81d591b2d269cb099cf876a71">getLevelDtActual</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#5aa0b33c0a78c27d71d7b3bf550b96bf">getLevelDtMax</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#67960ae6ef09ac116d183be6a2845c8c">getLevelDtMax</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#40f9a9165141056e03a08466da3e695e">getLevelSimTime</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#b565bcc6cd2c597a8fa4c0a6bb8c473a">getLevelSimTime</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#2af08d0392e1e0ae284853444123e186">getLevelStep</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#30240f920c497cb3def18797f64138f2">getLevelStep</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#2b5c9923618f1bbb244b587e0237f668">getLevelMaxSteps</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#fd25dce8a044eda1e08daf2febbffc37">getLevelMaxSteps</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#4ac161972bda128037b095f3e0caada7">getPatchHierarchy</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#3c9a735ccff5263217a5772b01be439a">getPatchHierarchy</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#ad87d6c7eecff4ab84380a16cf56a5c7">getLevelIntegrator</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#2ebbc2908e288909eb41ace57a4767bf">getLevelIntegrator</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#c87b89a14dbb3024fcf426eaeee8b713">getGriddingAlgorithm</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#3a7b216c55f358875084bcbb8b17270b">getGriddingAlgorithm</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#66b0088f31cbc2567442b10bcf097dd5">firstLevelStep</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#015da49039c2129fdef69fa10d58082d">firstLevelStep</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#3267b367ca9f986e0b82513f25b48350">lastLevelStep</a> (const int level_number) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#823d93e3af46bdd57143acd718df4803">lastLevelStep</a> (const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#e3ce6a40fc1f056dbab445eabd57f9b1">setRegridInterval</a> (const int regrid_interval)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#e065a394c51574e2ddad7ba2b0e2fc3b">setRegridInterval</a> (const int regrid_interval)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#bb00151d81b84962509150af4d2ea878">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#543f2fcd8ee9b3df5c83eb45740c1558">printDataForLevel</a> (std::ostream &amp;os, const int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#960c010c44d2b9efb9ca7aa339252c22">putToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#76300e1c77dfe363fec23d1cf8f3502f">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#69411bbbb23ca12adec80584fc20e643">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html#10a105eea404425a21b5fc555d9bd84d">getObjectName</a> () const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -128,7 +127,7 @@ When running in synchronized timestepping mode, an additional input key 'regrid_
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="6a62814319a1226500376d44468987fd"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::TimeRefinementIntegrator" ref="6a62814319a1226500376d44468987fd" args="(const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; input_db, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, tbox::Pointer&lt; TimeRefinementLevelStrategy &gt; level_integrator, tbox::Pointer&lt; mesh::GriddingAlgorithmStrategy &gt; gridding_algorithm, bool register_for_restart=true)" -->
+<a class="anchor" name="1f03ca1887794a7d11098cadb7fbf92a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::TimeRefinementIntegrator" ref="1f03ca1887794a7d11098cadb7fbf92a" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const boost::shared_ptr&lt; TimeRefinementLevelStrategy &gt; &amp;level_integrator, const boost::shared_ptr&lt; mesh::GriddingAlgorithmStrategy &gt; &amp;gridding_algorithm, bool register_for_restart=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -141,25 +140,25 @@ When running in synchronized timestepping mode, an additional input key 'regrid_
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level_integrator</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>gridding_algorithm</em>, </td>
         </tr>
         <tr>
@@ -192,7 +191,7 @@ If assertion checking is turned on, an unrecoverable assertion will result if an
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -275,16 +274,16 @@ This function assumes that all data on each level in the hierarchy has been set 
 Return true if the current step count for the level indicates that regridding should occur. In particular, true is returned if both the level allows refinement and the step count is an integer multiple of the regrid step interval. Otherwise, false is returned. 
 </div>
 </div><p>
-<a class="anchor" name="6b4f3f7e54a2eb9315d531996db757f1"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getIntegratorTime" ref="6b4f3f7e54a2eb9315d531996db757f1" args="() const " -->
+<a class="anchor" name="51718954d0e162db23bbae739a36319e"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getIntegratorTime" ref="51718954d0e162db23bbae739a36319e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::algs::TimeRefinementIntegrator::getIntegratorTime           </td>
+          <td class="memname">double SAMRAI::algs::TimeRefinementIntegrator::getIntegratorTime           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -294,16 +293,16 @@ Return true if the current step count for the level indicates that regridding sh
 Return current integration time for coarsest hierarchy level. 
 </div>
 </div><p>
-<a class="anchor" name="8f42492e34cf286bf1525d58291c2532"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getStartTime" ref="8f42492e34cf286bf1525d58291c2532" args="() const " -->
+<a class="anchor" name="2d0f3af896c43d157c2e57c04dccd6b5"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getStartTime" ref="2d0f3af896c43d157c2e57c04dccd6b5" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::algs::TimeRefinementIntegrator::getStartTime           </td>
+          <td class="memname">double SAMRAI::algs::TimeRefinementIntegrator::getStartTime           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -313,16 +312,16 @@ Return current integration time for coarsest hierarchy level.
 Return initial integration time. 
 </div>
 </div><p>
-<a class="anchor" name="b8848bc63ca1b48c2ff7c49e75ff6a0a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getEndTime" ref="b8848bc63ca1b48c2ff7c49e75ff6a0a" args="() const " -->
+<a class="anchor" name="bcb60679de5620a0b4843f1911b2dd3f"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getEndTime" ref="bcb60679de5620a0b4843f1911b2dd3f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::algs::TimeRefinementIntegrator::getEndTime           </td>
+          <td class="memname">double SAMRAI::algs::TimeRefinementIntegrator::getEndTime           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -332,16 +331,16 @@ Return initial integration time.
 Return final integration time. 
 </div>
 </div><p>
-<a class="anchor" name="6c0414e48f823fb2f730917b65844d84"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getIntegratorStep" ref="6c0414e48f823fb2f730917b65844d84" args="() const " -->
+<a class="anchor" name="30e3e6c716b82ffd74f200b0a86aa996"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getIntegratorStep" ref="30e3e6c716b82ffd74f200b0a86aa996" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::algs::TimeRefinementIntegrator::getIntegratorStep           </td>
+          <td class="memname">int SAMRAI::algs::TimeRefinementIntegrator::getIntegratorStep           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -351,16 +350,16 @@ Return final integration time.
 Return integration step count for entire hierarchy (i.e., number of steps taken by the coarsest level). 
 </div>
 </div><p>
-<a class="anchor" name="450da3ae4d30e94184b789eba8cd66e4"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getMaxIntegratorSteps" ref="450da3ae4d30e94184b789eba8cd66e4" args="() const " -->
+<a class="anchor" name="1f4d00ab12198ffb3b672b32e1b4684d"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getMaxIntegratorSteps" ref="1f4d00ab12198ffb3b672b32e1b4684d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::algs::TimeRefinementIntegrator::getMaxIntegratorSteps           </td>
+          <td class="memname">int SAMRAI::algs::TimeRefinementIntegrator::getMaxIntegratorSteps           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -370,17 +369,17 @@ Return integration step count for entire hierarchy (i.e., number of steps taken 
 Return maximum number of integration steps allowed for entire hierarchy (i.e., steps allowed on coarsest level). 
 </div>
 </div><p>
-<a class="anchor" name="0b9277a53ae474f0c6ec69fae4dfb0ed"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining" ref="0b9277a53ae474f0c6ec69fae4dfb0ed" args="(const int level_number) const " -->
+<a class="anchor" name="54d5dce0e9dcc1ec56ac019b75a5c926"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining" ref="54d5dce0e9dcc1ec56ac019b75a5c926" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining           </td>
+          <td class="memname">bool SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -390,16 +389,16 @@ Return maximum number of integration steps allowed for entire hierarchy (i.e., s
 Return true if any steps remain in current step sequence on level (i.e., before it will synchronize with some coarser level). Return false otherwise. 
 </div>
 </div><p>
-<a class="anchor" name="3e46283cf8b57d63f1baa8e0edfdca2a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining" ref="3e46283cf8b57d63f1baa8e0edfdca2a" args="() const " -->
+<a class="anchor" name="ecdcfccbb2a961a67a4f9c517f36890a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining" ref="ecdcfccbb2a961a67a4f9c517f36890a" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining           </td>
+          <td class="memname">bool SAMRAI::algs::TimeRefinementIntegrator::stepsRemaining           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -409,17 +408,17 @@ Return true if any steps remain in current step sequence on level (i.e., before 
 Return true if any integration steps remain, false otherwise. 
 </div>
 </div><p>
-<a class="anchor" name="f17e49a5f18f8ac8c166d6dd41959a98"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelDtActual" ref="f17e49a5f18f8ac8c166d6dd41959a98" args="(const int level_number) const " -->
+<a class="anchor" name="e09e7fb81d591b2d269cb099cf876a71"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelDtActual" ref="e09e7fb81d591b2d269cb099cf876a71" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::algs::TimeRefinementIntegrator::getLevelDtActual           </td>
+          <td class="memname">double SAMRAI::algs::TimeRefinementIntegrator::getLevelDtActual           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -429,17 +428,17 @@ Return true if any integration steps remain, false otherwise.
 Return current time increment used to advance level. 
 </div>
 </div><p>
-<a class="anchor" name="5aa0b33c0a78c27d71d7b3bf550b96bf"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelDtMax" ref="5aa0b33c0a78c27d71d7b3bf550b96bf" args="(const int level_number) const " -->
+<a class="anchor" name="67960ae6ef09ac116d183be6a2845c8c"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelDtMax" ref="67960ae6ef09ac116d183be6a2845c8c" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::algs::TimeRefinementIntegrator::getLevelDtMax           </td>
+          <td class="memname">double SAMRAI::algs::TimeRefinementIntegrator::getLevelDtMax           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -449,17 +448,17 @@ Return current time increment used to advance level.
 Return maximum time increment currently allowed on level. 
 </div>
 </div><p>
-<a class="anchor" name="40f9a9165141056e03a08466da3e695e"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelSimTime" ref="40f9a9165141056e03a08466da3e695e" args="(const int level_number) const " -->
+<a class="anchor" name="b565bcc6cd2c597a8fa4c0a6bb8c473a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelSimTime" ref="b565bcc6cd2c597a8fa4c0a6bb8c473a" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::algs::TimeRefinementIntegrator::getLevelSimTime           </td>
+          <td class="memname">double SAMRAI::algs::TimeRefinementIntegrator::getLevelSimTime           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -469,17 +468,17 @@ Return maximum time increment currently allowed on level.
 Return current simulation time for level. 
 </div>
 </div><p>
-<a class="anchor" name="2af08d0392e1e0ae284853444123e186"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelStep" ref="2af08d0392e1e0ae284853444123e186" args="(const int level_number) const " -->
+<a class="anchor" name="30240f920c497cb3def18797f64138f2"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelStep" ref="30240f920c497cb3def18797f64138f2" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::algs::TimeRefinementIntegrator::getLevelStep           </td>
+          <td class="memname">int SAMRAI::algs::TimeRefinementIntegrator::getLevelStep           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -489,17 +488,17 @@ Return current simulation time for level.
 Return step count for current integration sequence on level. 
 </div>
 </div><p>
-<a class="anchor" name="2b5c9923618f1bbb244b587e0237f668"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelMaxSteps" ref="2b5c9923618f1bbb244b587e0237f668" args="(const int level_number) const " -->
+<a class="anchor" name="fd25dce8a044eda1e08daf2febbffc37"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelMaxSteps" ref="fd25dce8a044eda1e08daf2febbffc37" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::algs::TimeRefinementIntegrator::getLevelMaxSteps           </td>
+          <td class="memname">int SAMRAI::algs::TimeRefinementIntegrator::getLevelMaxSteps           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -509,16 +508,16 @@ Return step count for current integration sequence on level.
 Return maximum number of time steps allowed on level in current integration step sequence. 
 </div>
 </div><p>
-<a class="anchor" name="4ac161972bda128037b095f3e0caada7"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getPatchHierarchy" ref="4ac161972bda128037b095f3e0caada7" args="() const " -->
+<a class="anchor" name="3c9a735ccff5263217a5772b01be439a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getPatchHierarchy" ref="3c9a735ccff5263217a5772b01be439a" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; SAMRAI::algs::TimeRefinementIntegrator::getPatchHierarchy           </td>
+          <td class="memname">const boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a>&gt; SAMRAI::algs::TimeRefinementIntegrator::getPatchHierarchy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -528,16 +527,16 @@ Return maximum number of time steps allowed on level in current integration step
 Return const pointer to patch hierarchy managed by integrator. 
 </div>
 </div><p>
-<a class="anchor" name="ad87d6c7eecff4ab84380a16cf56a5c7"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelIntegrator" ref="ad87d6c7eecff4ab84380a16cf56a5c7" args="() const " -->
+<a class="anchor" name="2ebbc2908e288909eb41ace57a4767bf"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getLevelIntegrator" ref="2ebbc2908e288909eb41ace57a4767bf" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> &gt; SAMRAI::algs::TimeRefinementIntegrator::getLevelIntegrator           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a>&gt; SAMRAI::algs::TimeRefinementIntegrator::getLevelIntegrator           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -547,16 +546,16 @@ Return const pointer to patch hierarchy managed by integrator.
 Return pointer to level integrator. 
 </div>
 </div><p>
-<a class="anchor" name="c87b89a14dbb3024fcf426eaeee8b713"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getGriddingAlgorithm" ref="c87b89a14dbb3024fcf426eaeee8b713" args="() const " -->
+<a class="anchor" name="3a7b216c55f358875084bcbb8b17270b"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getGriddingAlgorithm" ref="3a7b216c55f358875084bcbb8b17270b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; SAMRAI::algs::TimeRefinementIntegrator::getGriddingAlgorithm           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a>&gt; SAMRAI::algs::TimeRefinementIntegrator::getGriddingAlgorithm           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -566,17 +565,17 @@ Return pointer to level integrator.
 Return pointer to gridding algorithm object. 
 </div>
 </div><p>
-<a class="anchor" name="66b0088f31cbc2567442b10bcf097dd5"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::firstLevelStep" ref="66b0088f31cbc2567442b10bcf097dd5" args="(const int level_number) const " -->
+<a class="anchor" name="015da49039c2129fdef69fa10d58082d"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::firstLevelStep" ref="015da49039c2129fdef69fa10d58082d" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::algs::TimeRefinementIntegrator::firstLevelStep           </td>
+          <td class="memname">bool SAMRAI::algs::TimeRefinementIntegrator::firstLevelStep           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -586,17 +585,17 @@ Return pointer to gridding algorithm object.
 Return true if current step on level is first in current step sequence; otherwise return false. 
 </div>
 </div><p>
-<a class="anchor" name="3267b367ca9f986e0b82513f25b48350"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::lastLevelStep" ref="3267b367ca9f986e0b82513f25b48350" args="(const int level_number) const " -->
+<a class="anchor" name="823d93e3af46bdd57143acd718df4803"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::lastLevelStep" ref="823d93e3af46bdd57143acd718df4803" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::algs::TimeRefinementIntegrator::lastLevelStep           </td>
+          <td class="memname">bool SAMRAI::algs::TimeRefinementIntegrator::lastLevelStep           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -606,17 +605,17 @@ Return true if current step on level is first in current step sequence; otherwis
 Return true if current step on level is last in current step sequence; otherwise return false. 
 </div>
 </div><p>
-<a class="anchor" name="e3ce6a40fc1f056dbab445eabd57f9b1"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::setRegridInterval" ref="e3ce6a40fc1f056dbab445eabd57f9b1" args="(const int regrid_interval)" -->
+<a class="anchor" name="e065a394c51574e2ddad7ba2b0e2fc3b"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::setRegridInterval" ref="e065a394c51574e2ddad7ba2b0e2fc3b" args="(const int regrid_interval)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::algs::TimeRefinementIntegrator::setRegridInterval           </td>
+          <td class="memname">void SAMRAI::algs::TimeRefinementIntegrator::setRegridInterval           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>regrid_interval</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -675,17 +674,17 @@ Print data representation of this object to given output stream.
 Print time stepping data for a single level to given output stream. 
 </div>
 </div><p>
-<a class="anchor" name="960c010c44d2b9efb9ca7aa339252c22"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::putToDatabase" ref="960c010c44d2b9efb9ca7aa339252c22" args="(tbox::Pointer&lt; tbox::Database &gt; db)" -->
+<a class="anchor" name="76300e1c77dfe363fec23d1cf8f3502f"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::putToDatabase" ref="76300e1c77dfe363fec23d1cf8f3502f" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::TimeRefinementIntegrator::putToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -694,20 +693,18 @@ Print time stepping data for a single level to given output stream.
 <p>
 Write object state out to the given database.<p>
 When assertion checking is active, the database pointer must be non-null. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6fd7a9046bd2f60ad716c21293">SAMRAI::tbox::Serializable</a>.
 </div>
 </div><p>
-<a class="anchor" name="69411bbbb23ca12adec80584fc20e643"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getObjectName" ref="69411bbbb23ca12adec80584fc20e643" args="() const " -->
+<a class="anchor" name="10a105eea404425a21b5fc555d9bd84d"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementIntegrator::getObjectName" ref="10a105eea404425a21b5fc555d9bd84d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::algs::TimeRefinementIntegrator::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::algs::TimeRefinementIntegrator::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -718,8 +715,8 @@ Returns the object name.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/algs/<a class="el" href="TimeRefinementIntegrator_8h.html">TimeRefinementIntegrator.h</a><li>source/SAMRAI/algs/<a class="el" href="TimeRefinementIntegrator_8C.html">TimeRefinementIntegrator.C</a><li>source/SAMRAI/algs/<a class="el" href="TimeRefinementIntegrator_8I.html">TimeRefinementIntegrator.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/algs/<a class="el" href="TimeRefinementIntegrator_8h.html">TimeRefinementIntegrator.h</a><li>source/SAMRAI/algs/<a class="el" href="TimeRefinementIntegrator_8C.html">TimeRefinementIntegrator.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

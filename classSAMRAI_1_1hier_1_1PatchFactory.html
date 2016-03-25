@@ -26,11 +26,12 @@
 <a href="classSAMRAI_1_1hier_1_1PatchFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html#cd2ff35a5e65eeef554477398c1e51e6">PatchFactory</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html#5fbaa99f823a165c764817250899931c">PatchFactory</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html#ad9e2c47db2c5a5b5a4ead8491f2ca5f">~PatchFactory</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html#77b3beeade78679ace988e138d864d19">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;mapped_box_level_mapped_box, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; descriptor) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html#6c7ffee05d3527a884966c1f509f545b">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;mapped_box_level_mapped_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor) const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -39,12 +40,12 @@ Class <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="cd2ff35a5e65eeef554477398c1e51e6"></a><!-- doxytag: member="SAMRAI::hier::PatchFactory::PatchFactory" ref="cd2ff35a5e65eeef554477398c1e51e6" args="()" -->
+<a class="anchor" name="5fbaa99f823a165c764817250899931c"></a><!-- doxytag: member="SAMRAI::hier::PatchFactory::PatchFactory" ref="5fbaa99f823a165c764817250899931c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::PatchFactory::PatchFactory           </td>
+          <td class="memname">SAMRAI::hier::PatchFactory::PatchFactory           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -78,12 +79,12 @@ Virtual destructor for patch factory objects.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="77b3beeade78679ace988e138d864d19"></a><!-- doxytag: member="SAMRAI::hier::PatchFactory::allocate" ref="77b3beeade78679ace988e138d864d19" args="(const Box &amp;mapped_box_level_mapped_box, tbox::Pointer&lt; PatchDescriptor &gt; descriptor) const " -->
+<a class="anchor" name="6c7ffee05d3527a884966c1f509f545b"></a><!-- doxytag: member="SAMRAI::hier::PatchFactory::allocate" ref="6c7ffee05d3527a884966c1f509f545b" args="(const Box &amp;mapped_box_level_mapped_box, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt; SAMRAI::hier::PatchFactory::allocate           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt; SAMRAI::hier::PatchFactory::allocate           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mapped_box_level_mapped_box</em>, </td>
@@ -91,7 +92,7 @@ Virtual destructor for patch factory objects.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>descriptor</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -108,8 +109,8 @@ Allocate a patch with the specified domain and patch descriptor.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="PatchFactory_8h.html">PatchFactory.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchFactory_8C.html">PatchFactory.C</a><li>source/SAMRAI/hier/<a class="el" href="PatchFactory_8I.html">PatchFactory.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="PatchFactory_8h.html">PatchFactory.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchFactory_8C.html">PatchFactory.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

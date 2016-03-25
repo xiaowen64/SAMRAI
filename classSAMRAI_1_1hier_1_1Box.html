@@ -25,203 +25,262 @@
 <p>
 <a href="classSAMRAI_1_1hier_1_1Box-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Packing and unpacking Boxes</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#db7b568275bdcd9054fb1d4300a9a6e8">putToIntBuffer</a> (int *buffer) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Put self into a int buffer.  <a href="#db7b568275bdcd9054fb1d4300a9a6e8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#09488267c8a73d4441987dfd89d09dc1">getFromIntBuffer</a> (const int *buffer)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set attributes according to data in int buffer.  <a href="#09488267c8a73d4441987dfd89d09dc1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#59f195ffeb64596422e2b5277cce519f">putToMessageStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;msg) const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Put self into a MessageStream.  <a href="#59f195ffeb64596422e2b5277cce519f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8fa82dc81e35a8c2bca0ab9b6654706e">getFromMessageStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;msg)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set attributes according to data in MessageStream.  <a href="#8fa82dc81e35a8c2bca0ab9b6654706e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7a971ea9233db39a5065e106254662b0">commBufferSize</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give number of ints required for putting a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in message passing buffer.  <a href="#7a971ea9233db39a5065e106254662b0"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d104aa5bdf75fdc115427f8b850d3f04">Iterator</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d5e63a1e2ac8dfec4c90919caac82795">iterator</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#65bacf55556ffb026b5c38516f1bbae4">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#566e60e61584c2437362b90f349b438b">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#89a765cad50743c5c6d8f432bd938e8e">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;lower, const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;upper)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates an empty box with invalid <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> values.  <a href="#566e60e61584c2437362b90f349b438b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#9b291c41763340f877aabf09fd46771a">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;lower, const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;upper, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ad8562f782df44aa9889dc638b2c448d">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#74198667ea00070d453177bdfd1871d0">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#6bd056e85f2e0052ddf93e2707bce23e">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#74198667ea00070d453177bdfd1871d0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#4cfcfd5d9a9a7b5f875a73ba80216b46">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#904e9aa6f102ff1ef6d1aeb96cb1de49">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;local_id, const int owner_rank, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero(), const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c4c3deef7564e6e903220db4048ae9c9">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;local_id, const int owner_rank, const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initializing constructor.  <a href="#904e9aa6f102ff1ef6d1aeb96cb1de49"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c994559e0d8c75fe4c3d46001f020774">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;local_id, const int owner_rank, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero(), const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initializing constructor.  <a href="#c4c3deef7564e6e903220db4048ae9c9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cf4e254cecc0d4121c87976317230455">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;id, const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor with undefined box.  <a href="#c994559e0d8c75fe4c3d46001f020774"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3ad8daf46ca1d43b31d21b70fb0ca762">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero(), const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor with undefined box.  <a href="#cf4e254cecc0d4121c87976317230455"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d30c5fc054652026dd66b252f7a405d3">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor with undefined box.  <a href="#3ad8daf46ca1d43b31d21b70fb0ca762"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cfd80a0a2b924cda49ce510dcb01d4a6">Box</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id)</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor with undefined box and a <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#cfd80a0a2b924cda49ce510dcb01d4a6"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor with undefined box and a <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#d30c5fc054652026dd66b252f7a405d3"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#81dc50ca9aee220bf36438969abaf1b2">Box</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;other, const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refinement_ratio)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">"Copy" constructor allowing change in <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a>.  <a href="#81dc50ca9aee220bf36438969abaf1b2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cfadc651bd120e1fd8c8198de0abe0bf">initialize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;local_id, const int owner_rank, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id=BlockId::zero(), const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8a6211d513dfcf0716d4d4c08760f54c">~Box</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set all the attributes of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#cfadc651bd120e1fd8c8198de0abe0bf"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor for <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#8a6211d513dfcf0716d4d4c08760f54c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#09ee0007f4170fba78b34104ed8dd3df">initialize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;local_id, const int owner_rank, const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id=PeriodicId::zero())</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set all the attributes of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#09ee0007f4170fba78b34104ed8dd3df"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#1ea09afed22788bddfc089cfc5e264a0">initialize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;other, const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;periodic_id, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refinement_ratio)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set all the attributes identical to that of a reference <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, but with a different <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a>.  <a href="#1ea09afed22788bddfc089cfc5e264a0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#6d811cca1199f1dc6db7ecc78d30b649">~Box</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#41d5ff75dd5927cf713b27a6672ce21e">setId</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0a0c2ee41647b17395bec2f32c890ff3">getId</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#41d5ff75dd5927cf713b27a6672ce21e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a528c57d486e238261e713ad792c9ca4">getId</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#0a0c2ee41647b17395bec2f32c890ff3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0a5baa4f5b763cfcd707b2a772f92ab2">getId</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#a528c57d486e238261e713ad792c9ca4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d39d81f90544de567a9a7983759facac">setBlockId</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#0a5baa4f5b763cfcd707b2a772f92ab2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b47fcd7ca27f0a365863aaff0c7b342b">getBlockId</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>.  <a href="#d39d81f90544de567a9a7983759facac"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7b84730fe3b8a2418135f5ad0417302a">getBlockId</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the Block.  <a href="#b47fcd7ca27f0a365863aaff0c7b342b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8df14df95ff9caa6012116f5c90cba0e">getLocalId</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>.  <a href="#7b84730fe3b8a2418135f5ad0417302a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#dba4d7fee09e0902c6dae980114e8088">getLocalId</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a>.  <a href="#8df14df95ff9caa6012116f5c90cba0e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e68f999c17f9663a1c01f48396597e05">getGlobalId</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a>.  <a href="#dba4d7fee09e0902c6dae980114e8088"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e22f1032b50a89409ea6afee60ade632">getGlobalId</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>.  <a href="#e68f999c17f9663a1c01f48396597e05"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#f93a37e297d49c730083b22f27b50b0e">getOwnerRank</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>.  <a href="#e22f1032b50a89409ea6afee60ade632"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#f2bf91303f9386a2eea544de8fe35467">getOwnerRank</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the owner rank.  <a href="#f93a37e297d49c730083b22f27b50b0e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#9e13d00a1c67275c5f4dc73591e464cf">getPeriodicId</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the owner rank.  <a href="#f2bf91303f9386a2eea544de8fe35467"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c020f3d79ae353fd20cafaba71c1860f">getPeriodicId</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the periodic shift number.  <a href="#9e13d00a1c67275c5f4dc73591e464cf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#20411085edeb8a4927a1e3cb8991a9d0">isPeriodicImage</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the periodic shift number.  <a href="#c020f3d79ae353fd20cafaba71c1860f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#4d35dc2fed2d4e54472efc90614da8d0">isPeriodicImage</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is a periodic image.  <a href="#20411085edeb8a4927a1e3cb8991a9d0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d7d3aaaf93bc8f06bdd7ecd76ab14bc8">isIdEqual</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;other) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is a periodic image.  <a href="#4d35dc2fed2d4e54472efc90614da8d0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#6c95ac350496c74fd736168f5c8fe741">isIdEqual</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;other) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c5a11a48799dbfeae87409c4277f7197">putToIntBuffer</a> (int *buffer) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#92a03b4b251ea8c54c2e89c4b22ae28f">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Put self into a int buffer.  <a href="#c5a11a48799dbfeae87409c4277f7197"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a5e624eecb37448bb2e65b41c4d12551">getFromIntBuffer</a> (const int *buffer)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">assignment operator  <a href="#92a03b4b251ea8c54c2e89c4b22ae28f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#29e3893463067776e05403603b138fd8">lower</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set attributes according to data in int buffer.  <a href="#a5e624eecb37448bb2e65b41c4d12551"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a358b5a3a34c696dbe402e3dc454fce6">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a non-const lower index of the box.  <a href="#29e3893463067776e05403603b138fd8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d6f19b52c2f49a2f5dc50dc5578985f6">upper</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#bac8e299e48cc30ae590e0074e6862cc">lower</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a non-const upper index of the box.  <a href="#d6f19b52c2f49a2f5dc50dc5578985f6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#829a7934666ea9acb01eaabd67c165d5">lower</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c3cd17a4c9c2570ba175cfcdb2f9deaa">upper</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const lower index of the box.  <a href="#829a7934666ea9acb01eaabd67c165d5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#2b12d8306fc68e86a0948aa4e640c32f">upper</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8dfd6c2cb9d386b2821e009f2912f68e">lower</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const upper index of the box.  <a href="#2b12d8306fc68e86a0948aa4e640c32f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e7d948fd150ee7f8b6ede7a94549a061">lower</a> (const int i)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d818d38c0b6ce14b6e7eadf9413a376a">upper</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the i'th component (non-const) of the lower index.  <a href="#e7d948fd150ee7f8b6ede7a94549a061"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8a53af98b6beaca6ab01cb60d3abcb38">upper</a> (const int i)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cd6227b7642b557ee9fb269dbc8fe4d8">lower</a> (const int i)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the i'th component (non-const) of the upper index.  <a href="#8a53af98b6beaca6ab01cb60d3abcb38"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ab1956c0ec9b3dadf45c6bdb3622c560">lower</a> (const int i) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0c052d766424dd1d139d16dfc88de55d">upper</a> (const int i)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the i'th component (const) of the lower index.  <a href="#ab1956c0ec9b3dadf45c6bdb3622c560"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#bc58935107eaf4d485a27d9316e73999">upper</a> (const int i) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b0f767aa817f477e408cc9af0de641c0">lower</a> (const int i) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the i'th component (const) of the upper index.  <a href="#bc58935107eaf4d485a27d9316e73999"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#52160d13456176746d82bd46d1f37710">setEmpty</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7ee0222e3a463128aa29afe3198437c5">upper</a> (const int i) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the state of the box to empty.  <a href="#52160d13456176746d82bd46d1f37710"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#6d729b937ada38378b21b6e21817403b">empty</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#37da5fab418ba5cd94c628dbab683ca5">setEmpty</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return whether the box is ``empty''.  <a href="#6d729b937ada38378b21b6e21817403b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a8d7ca1459fd300d4dff373ac4d7afb9">isEmpty</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#02228d94b7546b0dd22629f1b82acfb0">empty</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return whether the box is ``empty''.  <a href="#a8d7ca1459fd300d4dff373ac4d7afb9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#de7b27e38da0bc4e94190240c465b1f3">numberCells</a> (const int i) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return whether the box is ``empty''.  <a href="#02228d94b7546b0dd22629f1b82acfb0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d4ab39e239285712c36bb13b85bf6149">isEmpty</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of cells (an integer) represented by the box in the given coordinate direction.  <a href="#de7b27e38da0bc4e94190240c465b1f3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c3d507c9ff86050254b5f0cb90813209">numberCells</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return whether the box is ``empty''.  <a href="#d4ab39e239285712c36bb13b85bf6149"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c31534989d40a3f254acf4071a957708">numberCells</a> (const int i) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of cells (a vector of integers) represented by the box in every coordinate direction.  <a href="#c3d507c9ff86050254b5f0cb90813209"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#bf5d88905891d7080fc4ca15440b55b1">size</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#16e1afa59b3747a080f2fcd385c3fbcb">numberCells</a> () const </td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#eb447a0965ebaa802cb5de4d1bb0bbcd">size</a> () const </td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the number of indices represented by the box.  <a href="#bf5d88905891d7080fc4ca15440b55b1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a8d6d725d36be9b51305fa687cf1b92c">longestDimension</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7c43da9e179dfdf84fed13a65a279f32">offset</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;p) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of the box that is longest.  <a href="#a8d6d725d36be9b51305fa687cf1b92c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#335745e943b909ffa651ab408e1129f8">offset</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;p) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c0e1b7816503853b8e38b1eb9d3d42c7">index</a> (const int offset) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given an index, calculate the offset of the index into the box.  <a href="#335745e943b909ffa651ab408e1129f8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5f97c36876b8461625db0cc4fca22abd">index</a> (const int offset) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#475e1a0026de5c0a16f4e004d308cdc0">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;p) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given an offset, calculate the index of the offset into the box.  <a href="#5f97c36876b8461625db0cc4fca22abd"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#f66b8d61fcc919d85fce2af774f6cc40">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;p) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#1533925515e42d274eaf43fd8979cbb9">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;b) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether an index lies within the bounds of the box.  <a href="#f66b8d61fcc919d85fce2af774f6cc40"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#487b65628f96d88fc0d5fc450ad640fe">contains</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;b) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#73985a6c5a67ebc0f888bebac68fdfc9">isSpatiallyEqual</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether a given box lies within the bounds of the box.  <a href="#487b65628f96d88fc0d5fc450ad640fe"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#07adf80b7f592b35ae50b8f24e493688">isSpatiallyEqual</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d26787f035ab700acdc98dd786924a53">operator *</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether two boxes represent the same portion of index space on the same block.  <a href="#07adf80b7f592b35ae50b8f24e493688"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#63631615c7710fdfa0a9249c9020b7a8">operator *</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a057cfd316a039bb6f70fdf7af5b3a98">operator *=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the intersection of the index spaces of two boxes.  <a href="#63631615c7710fdfa0a9249c9020b7a8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#35cb43c001c78b1104726f3f454ff2d2">operator *=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#325d58acc1cc35c7edbc9f3a520a393d">intersect</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;other, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;result) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the intersection of the index spaces of this and the given box.  <a href="#35cb43c001c78b1104726f3f454ff2d2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d85cd30cda3ef4cbc44253c07641eb44">intersect</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;other, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;result) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#513cbc725c2ac6e3f2709c9881aa942c">intersects</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> intersection.  <a href="#d85cd30cda3ef4cbc44253c07641eb44"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#f2514cfdc6a0c66e8478952813b75a24">intersects</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#1512e6be7c7393b442a032a1e7f0becc">operator+</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">check if boxes intersect.  <a href="#f2514cfdc6a0c66e8478952813b75a24"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#109448aa5f47e2e96aaa09e53979f810">operator+</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const </td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Calculate the bounding box of two boxes.  <a href="#109448aa5f47e2e96aaa09e53979f810"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#9353ec6a0cebfdd4c37889c551e3b850">operator+=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Increase this box to become the bounding box of this box and the argument box.  <a href="#9353ec6a0cebfdd4c37889c551e3b850"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d1486f0b7b2b526182ae68834ee59827">coalesceWith</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32f3c7473702f4d4c">grow</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if this box can be coalesced with the argument box, and set this box to the union of the boxes.  <a href="#d1486f0b7b2b526182ae68834ee59827"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d28c94492967fe51849b34c5ae0f3dba">grow</a> (const int direction, const int ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Grow this box by the specified ghost cell width.  <a href="#d373c3d26e20f79afbb4937d58a14c99"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b37a39a989ffbab2d79ff67be47fa734">grow</a> (const int direction, const int ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#16fe262c51a92b974cc5bf4c5ae87ccb">growLower</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Grow this box by the specified ghost cell width in the given coordinate direction.  <a href="#b37a39a989ffbab2d79ff67be47fa734"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3411bc0c82ed0e40c314354d451e5027">growLower</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#9466982df16c3f4c149c56082f6eecc5">growLower</a> (const int direction, const int ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> functions. However, box is only grown in lower directions (i.e., only lower index is changed).  <a href="#3411bc0c82ed0e40c314354d451e5027"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#02065904bb7228f02151ac1b1511e493">growLower</a> (const int direction, const int ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0023c5492a9b514258c7cd81e4a4a8b7">growUpper</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> functions. However, box is only grown in lower bound of given direction in index space.  <a href="#02065904bb7228f02151ac1b1511e493"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d97451e6b286da23fdc64d7d1e0e7a75">growUpper</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5acb8db0e7d977ed31c91473cc30976a">growUpper</a> (const int direction, const int ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> function. However, box is only grown in upper directions (i.e., only upper index is changed).  <a href="#d97451e6b286da23fdc64d7d1e0e7a75"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#533f249738fadb61791eb4635dc7acf4">growUpper</a> (const int direction, const int ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c87d37c98f8e9f26d041d95bade55747">lengthen</a> (const int direction, const int ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> functions. However, box is only grown in upper bound of given direction in index space.  <a href="#533f249738fadb61791eb4635dc7acf4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#539a726252f0d86e7816543c60b0ed54">lengthen</a> (const int direction, const int ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#4a446e8c3893eecb20e9c7af3133042d">shorten</a> (const int direction, const int ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d97451e6b286da23fdc64d7d1e0e7a75">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3411bc0c82ed0e40c314354d451e5027">growLower()</a> functions. However, box is lengthened (never shortened).  <a href="#539a726252f0d86e7816543c60b0ed54"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ae33efb3f2e5dc61d294885c1e7f9018">shorten</a> (const int direction, const int ghosts)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b7f61bf090cd749a7ff6d06efc3ef618">shift</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;offset)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d97451e6b286da23fdc64d7d1e0e7a75">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3411bc0c82ed0e40c314354d451e5027">growLower()</a> functions. However, box is shortened (never lengthened).  <a href="#ae33efb3f2e5dc61d294885c1e7f9018"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#885659eb8eda288a8e6d343fd681b198">shift</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;offset)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#62fee9167918ac779f75b70ed191788b">shift</a> (const int direction, const int offset)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Shift this box by the specified offset.  <a href="#885659eb8eda288a8e6d343fd681b198"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a9d2d3d70ecb4e447bfba0219cdd0f50">shift</a> (const int direction, const int offset)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#885659eb8eda288a8e6d343fd681b198">shift()</a> function above, but shift occurs only in specified direction in index space.  <a href="#a9d2d3d70ecb4e447bfba0219cdd0f50"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0b8209eee46144ba4af4c2a95de58782">rotate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#1908f436f2e3bec8b6c0c24b3fcb8cd9">Transformation::RotationIdentifier</a> rotation_ident)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#41f7b30ae22cfab7a66525e47c999f8b">refine</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#1e2a5355d927cad6ec49c0c9cf158a26">refine</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7e9631afa6ba695c78489e2ed6412aca">coarsen</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refine the index space of a box by specified vector ratio.  <a href="#1e2a5355d927cad6ec49c0c9cf158a26"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8e7ecdfcb5548321c2a8e92d1152b250">coarsen</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ed8c9bb5cf679c6c638e725a5d33537a">operator=</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Coarsen the index space of a box by specified vector ratio.  <a href="#8e7ecdfcb5548321c2a8e92d1152b250"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3199056c946d7c14aef8cf62f667f19f">operator=</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#4c7951e26a1a8bb431419af180cc7ce8">Box_from_DatabaseBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This assignment operator constructs a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> given a DatabaseBox.  <a href="#3199056c946d7c14aef8cf62f667f19f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#202a1a70a5f9845db64a9feff8d5e498">Box_from_DatabaseBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> and returns a reference to the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#202a1a70a5f9845db64a9feff8d5e498"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#45bb396d385c73e80a5970d9e1479f2d">set_Box_from_DatabaseBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;box)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Sets a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a DatabaseBox.  <a href="#45bb396d385c73e80a5970d9e1479f2d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#1e878fcf287ed06cc6135dc6bbad6b65">DatabaseBox_from_Box</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e4fc140e8c8c724c2ebecd4793cde0c3">operator tbox::DatabaseBox</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> generated from a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.  <a href="#1e878fcf287ed06cc6135dc6bbad6b65"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#2b22e924246be2e0383934a82c0f91b0">operator tbox::DatabaseBox</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#68b0437441b6fbe39d5706dec5836356">operator tbox::DatabaseBox</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#efe5d27ef080e7be02fc1283e1e49b8e">operator tbox::DatabaseBox</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#edd875e9194c26fbd9cfb72d24b3675d">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#9f40565dab4c09c555a33df06e63ffbf">getDim</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e0589046fa785f69b2a18d7a8a83694c">lockId</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#9f40565dab4c09c555a33df06e63ffbf"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#29fd918ff1054237918c44eac68e3cb8">lockId</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lock the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of this <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> so that it may not be changed in any way.  <a href="#e0589046fa785f69b2a18d7a8a83694c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8562b0f90fa3a2c5a817e7b0bdd53f6d">unlockId</a> ()</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unlock the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of this <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> so that it may be changed.  <a href="#8562b0f90fa3a2c5a817e7b0bdd53f6d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lock the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of this <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> so that it may not be changed in any way.  <a href="#29fd918ff1054237918c44eac68e3cb8"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#2d0e0533bdde3273118e7b0992b413d6">commBufferSize</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b1a434f239d8e76774699a92bf39276a">grow</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Give number of ints required for putting a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in message passing buffer.  <a href="#2d0e0533bdde3273118e7b0992b413d6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cc9b5455ebd8d7978c1cf56b703aa174">grow</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function to grow a box by the specified vector ghost cell width.  <a href="#b1a434f239d8e76774699a92bf39276a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#ba7f4d86a6b4ee6c8d3152a5b9e987e7">shift</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;offset)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#9cdf93f211ed1ca220489e77b3560c76">shift</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;offset)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function to shift a box by the specified offset.  <a href="#ba7f4d86a6b4ee6c8d3152a5b9e987e7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#11434864dbc32219fc87b1cf0870b198">refine</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cec7c8a80138f65e4f96864b5280834c">refine</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function to refine the index space of a box by the specified refinement ratio.  <a href="#11434864dbc32219fc87b1cf0870b198"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#249ea8e2c5350c7586be1e6b4849c546">coarsen</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#075dfffa6035203a70ab4e2c2c2f4baf">coarsen</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function to coarsen the index space of a box by the specified coarsening ratio.  <a href="#249ea8e2c5350c7586be1e6b4849c546"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#523ce1dcfdce6547d55a7bb11277154e">getEmptyBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#5c24ae46011a552d457bd4c72e596da6">getEmptyBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return an empty <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> of the specified dimension.  <a href="#523ce1dcfdce6547d55a7bb11277154e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#aa1aaa1f27e129150f3d99e49fb13595">getUniverse</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return an empty <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> of the specified dimension.  <a href="#5c24ae46011a552d457bd4c72e596da6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#be7648fb4662e06afefce3fa1b5c9140">getUniverse</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
-
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that represents the maximum allowed index extents for a given dimension. The "universe" that can be represented.  <a href="#aa1aaa1f27e129150f3d99e49fb13595"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d733a42c3b297f8564b889396b408fb1">pdat::ArrayData</a></td></tr>
+
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#95d29f10dd52f5550b38333f130055b9">BoxIterator</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d3a1217f0befb961fea0bf146f823dcd">std::vector&lt; Box &gt;</a></td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::istream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#736e4706ab9bb6b384176bc9c693daa6">operator&gt;&gt;</a> (std::istream &amp;s, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Read the box description in the form [L,U], where L and U are the lower and upper bounds of the box.  <a href="#736e4706ab9bb6b384176bc9c693daa6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">std::ostream &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#e01e41a34a4583b053e918bc67e8a431">operator&lt;&lt;</a> (std::ostream &amp;s, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box)</td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Output the box description in the form [L,U], where L and U are the lower and upper bounds of the box.  <a href="#e01e41a34a4583b053e918bc67e8a431"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">struct &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1Box_1_1box__equality.html">box_equality</a></td></tr>
 
@@ -232,17 +291,21 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> represents a n-dimensional box in the AMR index space. It is defined by lower and upper bounds given by index objects. The box semantics assumes that the box is cell-centered. A cell-centered convention implies that the index set covered by the box includes both the lower and upper bounds.<p>
+The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> contains identifying information in its state with a <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> and a <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. If the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is part of a single-block mesh, the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> should be zero. If the mesh is multi-block, the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> will have a value identifying on which block the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> exists. The <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> contains information about the MPI rank associated with the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> as well as a <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> to handle periodic shifts. Since periodic conditions and multiblock meshes cannot be mixed in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>, the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> and the <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> associated with a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> cannot both be nonzero.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">hier::BoxIterator</a> <p>
-<a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> </dd></dl>
+<a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">hier::BoxId</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">hier::PeriodicId</a> </dd></dl>
 
 <p>
 <hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="d104aa5bdf75fdc115427f8b850d3f04"></a><!-- doxytag: member="SAMRAI::hier::Box::Iterator" ref="d104aa5bdf75fdc115427f8b850d3f04" args="" -->
+<a class="anchor" name="d5e63a1e2ac8dfec4c90919caac82795"></a><!-- doxytag: member="SAMRAI::hier::Box::iterator" ref="d5e63a1e2ac8dfec4c90919caac82795" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">SAMRAI::hier::Box::Iterator</a>          </td>
+          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">BoxIterator</a> <a class="el" href="classSAMRAI_1_1hier_1_1BoxIterator.html">SAMRAI::hier::Box::iterator</a>          </td>
         </tr>
       </table>
 </div>
@@ -253,12 +316,12 @@ A box iterator iterates over the elements of a box. This class is defined elsewh
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="65bacf55556ffb026b5c38516f1bbae4"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="65bacf55556ffb026b5c38516f1bbae4" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="566e60e61584c2437362b90f349b438b"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="566e60e61584c2437362b90f349b438b" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
@@ -270,15 +333,22 @@ A box iterator iterates over the elements of a box. This class is defined elsewh
 <div class="memdoc">
 
 <p>
-Creates an ``empty'' box. 
+Creates an empty box with invalid <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> values. 
+<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
-<a class="anchor" name="89a765cad50743c5c6d8f432bd938e8e"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="89a765cad50743c5c6d8f432bd938e8e" args="(const Index &amp;lower, const Index &amp;upper)" -->
+<a class="anchor" name="9b291c41763340f877aabf09fd46771a"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="9b291c41763340f877aabf09fd46771a" args="(const Index &amp;lower, const Index &amp;upper, const BlockId &amp;block_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>lower</em>, </td>
@@ -287,27 +357,41 @@ Creates an ``empty'' box.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>upper</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>upper</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Create a box describing the index space between lower and upper. The box is assumed to be cell centered and include all elements between lower and upper, including the end points. 
+Create a box describing the index space between lower and upper. The box is assumed to be cell centered and include all elements between lower and upper, including the end points.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>lower</em>&nbsp;</td><td>Lower extent </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>upper</em>&nbsp;</td><td>Upper extent </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Block where the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> exists </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
-<a class="anchor" name="ad8562f782df44aa9889dc638b2c448d"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="ad8562f782df44aa9889dc638b2c448d" args="(const Box &amp;box)" -->
+<a class="anchor" name="74198667ea00070d453177bdfd1871d0"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="74198667ea00070d453177bdfd1871d0" args="(const Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -319,15 +403,17 @@ Create a box describing the index space between lower and upper. The box is assu
 <div class="memdoc">
 
 <p>
-The copy constructor copies the index space of the argument box. 
+Copy constructor. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="6bd056e85f2e0052ddf93e2707bce23e"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="6bd056e85f2e0052ddf93e2707bce23e" args="(const tbox::DatabaseBox &amp;box)" -->
+<a class="anchor" name="4cfcfd5d9a9a7b5f875a73ba80216b46"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="4cfcfd5d9a9a7b5f875a73ba80216b46" args="(const tbox::DatabaseBox &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -342,14 +428,14 @@ The copy constructor copies the index space of the argument box.
 Construct a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a DatabaseBox. 
 </div>
 </div><p>
-<a class="anchor" name="904e9aa6f102ff1ef6d1aeb96cb1de49"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="904e9aa6f102ff1ef6d1aeb96cb1de49" args="(const hier::Box &amp;box, const LocalId &amp;local_id, const int owner_rank, const BlockId &amp;block_id=BlockId::zero(), const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
+<a class="anchor" name="c4c3deef7564e6e903220db4048ae9c9"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="c4c3deef7564e6e903220db4048ae9c9" args="(const Box &amp;box, const LocalId &amp;local_id, const int owner_rank, const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
         </tr>
         <tr>
@@ -367,19 +453,13 @@ Construct a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em> = <code>BlockId::zero()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>periodic_id</em> = <code>PeriodicId::zero()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -393,78 +473,18 @@ Initializing constructor.
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_id</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>owner_rank</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_id</em>&nbsp;</td><td>The periodic shift number. If periodic_id is non-zero, specify the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in the position shifted according to the <code>periodic_id</code>. The default argument for <code>periodic_id</code> corresponds to the zero-shift. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_id</em>&nbsp;</td><td>Describes the periodic shift. If periodic_id is non-zero, specify the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in the position shifted according to the <code>periodic_id</code>. The default argument for <code>periodic_id</code> corresponds to the zero-shift. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="c994559e0d8c75fe4c3d46001f020774"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="c994559e0d8c75fe4c3d46001f020774" args="(const tbox::Dimension &amp;dim, const LocalId &amp;local_id, const int owner_rank, const BlockId &amp;block_id=BlockId::zero(), const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
+<a class="anchor" name="cf4e254cecc0d4121c87976317230455"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="cf4e254cecc0d4121c87976317230455" args="(const tbox::Dimension &amp;dim, const GlobalId &amp;id, const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>dim</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>local_id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>owner_rank</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em> = <code>BlockId::zero()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>periodic_id</em> = <code>PeriodicId::zero()</code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Constructor with undefined box. 
-<p>
-The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cfadc651bd120e1fd8c8198de0abe0bf">initialize()</a> methods or by assignment.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>owner_rank</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_id</em>&nbsp;</td><td></td></tr>
-  </table>
-</dl>
-
-</div>
-</div><p>
-<a class="anchor" name="3ad8daf46ca1d43b31d21b70fb0ca762"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="3ad8daf46ca1d43b31d21b70fb0ca762" args="(const tbox::Dimension &amp;dim, const GlobalId &amp;id, const BlockId &amp;block_id=BlockId::zero(), const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>, </td>
@@ -478,19 +498,13 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em> = <code>BlockId::zero()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>periodic_id</em> = <code>PeriodicId::zero()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -499,24 +513,23 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
 <p>
 Constructor with undefined box. 
 <p>
-The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cfadc651bd120e1fd8c8198de0abe0bf">initialize()</a> methods or by assignment.<p>
+The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#09ee0007f4170fba78b34104ed8dd3df">initialize()</a> methods or by assignment.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>global_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>id</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="cfd80a0a2b924cda49ce510dcb01d4a6"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="cfd80a0a2b924cda49ce510dcb01d4a6" args="(const tbox::Dimension &amp;dim, const BoxId &amp;mapped_box_id)" -->
+<a class="anchor" name="d30c5fc054652026dd66b252f7a405d3"></a><!-- doxytag: member="SAMRAI::hier::Box::Box" ref="d30c5fc054652026dd66b252f7a405d3" args="(const tbox::Dimension &amp;dim, const BoxId &amp;mapped_box_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::Box           </td>
+          <td class="memname">SAMRAI::hier::Box::Box           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>, </td>
@@ -530,7 +543,7 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -539,12 +552,11 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
 <p>
 Constructor with undefined box and a <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. 
 <p>
-The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#cfadc651bd120e1fd8c8198de0abe0bf">initialize()</a> methods or by assignment.<p>
+The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#09ee0007f4170fba78b34104ed8dd3df">initialize()</a> methods or by assignment.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mapped_box_id</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_id</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -575,7 +587,7 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -595,12 +607,12 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
 
 </div>
 </div><p>
-<a class="anchor" name="6d811cca1199f1dc6db7ecc78d30b649"></a><!-- doxytag: member="SAMRAI::hier::Box::~Box" ref="6d811cca1199f1dc6db7ecc78d30b649" args="()" -->
+<a class="anchor" name="8a6211d513dfcf0716d4d4c08760f54c"></a><!-- doxytag: member="SAMRAI::hier::Box::~Box" ref="8a6211d513dfcf0716d4d4c08760f54c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::~Box           </td>
+          <td class="memname">SAMRAI::hier::Box::~Box           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -612,17 +624,19 @@ The box can be initialized using any of the <a class="el" href="classSAMRAI_1_1h
 
 <p>
 The destructor for <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. 
+<p>
+
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="cfadc651bd120e1fd8c8198de0abe0bf"></a><!-- doxytag: member="SAMRAI::hier::Box::initialize" ref="cfadc651bd120e1fd8c8198de0abe0bf" args="(const hier::Box &amp;box, const LocalId &amp;local_id, const int owner_rank, const BlockId &amp;block_id=BlockId::zero(), const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
+<a class="anchor" name="09ee0007f4170fba78b34104ed8dd3df"></a><!-- doxytag: member="SAMRAI::hier::Box::initialize" ref="09ee0007f4170fba78b34104ed8dd3df" args="(const Box &amp;box, const LocalId &amp;local_id, const int owner_rank, const PeriodicId &amp;periodic_id=PeriodicId::zero())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::initialize           </td>
+          <td class="memname">void SAMRAI::hier::Box::initialize           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
         </tr>
         <tr>
@@ -640,19 +654,13 @@ The destructor for <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em> = <code>BlockId::zero()</code>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>periodic_id</em> = <code>PeriodicId::zero()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -666,7 +674,6 @@ Set all the attributes of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.htm
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_id</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>owner_rank</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>periodic_id</em>&nbsp;</td><td>The periodic shift number. If this is not zero, specify <code>box</code> in the shifted position. The default argument for <code>periodic_id</code> corresponds to the zero-shift. </td></tr>
   </table>
 </dl>
@@ -717,16 +724,38 @@ Set all the attributes identical to that of a reference <a class="el" href="clas
 
 </div>
 </div><p>
-<a class="anchor" name="0a0c2ee41647b17395bec2f32c890ff3"></a><!-- doxytag: member="SAMRAI::hier::Box::getId" ref="0a0c2ee41647b17395bec2f32c890ff3" args="()" -->
+<a class="anchor" name="41d5ff75dd5927cf713b27a6672ce21e"></a><!-- doxytag: member="SAMRAI::hier::Box::setId" ref="41d5ff75dd5927cf713b27a6672ce21e" args="(const BoxId &amp;box_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">hier::BoxId</a> &amp; SAMRAI::hier::Box::getId           </td>
+          <td class="memname">void SAMRAI::hier::Box::setId           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box_id</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="a528c57d486e238261e713ad792c9ca4"></a><!-- doxytag: member="SAMRAI::hier::Box::getId" ref="a528c57d486e238261e713ad792c9ca4" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>&amp; SAMRAI::hier::Box::getId           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -738,58 +767,59 @@ Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.
 
 </div>
 </div><p>
-<a class="anchor" name="0a5baa4f5b763cfcd707b2a772f92ab2"></a><!-- doxytag: member="SAMRAI::hier::Box::getId" ref="0a5baa4f5b763cfcd707b2a772f92ab2" args="() const " -->
+<a class="anchor" name="d39d81f90544de567a9a7983759facac"></a><!-- doxytag: member="SAMRAI::hier::Box::setBlockId" ref="d39d81f90544de567a9a7983759facac" args="(const BlockId &amp;block_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">hier::BoxId</a> &amp; SAMRAI::hier::Box::getId           </td>
+          <td class="memname">void SAMRAI::hier::Box::setBlockId           </td>
           <td>(</td>
-          <td class="paramname">          </td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. 
+Set the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>. 
 <p>
 
 </div>
 </div><p>
-<a class="anchor" name="b47fcd7ca27f0a365863aaff0c7b342b"></a><!-- doxytag: member="SAMRAI::hier::Box::getBlockId" ref="b47fcd7ca27f0a365863aaff0c7b342b" args="() const " -->
+<a class="anchor" name="7b84730fe3b8a2418135f5ad0417302a"></a><!-- doxytag: member="SAMRAI::hier::Box::getBlockId" ref="7b84730fe3b8a2418135f5ad0417302a" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp; SAMRAI::hier::Box::getBlockId           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>&amp; SAMRAI::hier::Box::getBlockId           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Get the Block. 
+Get the <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>. 
 <p>
 
 </div>
 </div><p>
-<a class="anchor" name="8df14df95ff9caa6012116f5c90cba0e"></a><!-- doxytag: member="SAMRAI::hier::Box::getLocalId" ref="8df14df95ff9caa6012116f5c90cba0e" args="() const " -->
+<a class="anchor" name="dba4d7fee09e0902c6dae980114e8088"></a><!-- doxytag: member="SAMRAI::hier::Box::getLocalId" ref="dba4d7fee09e0902c6dae980114e8088" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a> &amp; SAMRAI::hier::Box::getLocalId           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a>&amp; SAMRAI::hier::Box::getLocalId           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -801,16 +831,16 @@ Get the <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">LocalId</a>.
 
 </div>
 </div><p>
-<a class="anchor" name="e68f999c17f9663a1c01f48396597e05"></a><!-- doxytag: member="SAMRAI::hier::Box::getGlobalId" ref="e68f999c17f9663a1c01f48396597e05" args="() const " -->
+<a class="anchor" name="e22f1032b50a89409ea6afee60ade632"></a><!-- doxytag: member="SAMRAI::hier::Box::getGlobalId" ref="e22f1032b50a89409ea6afee60ade632" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp; SAMRAI::hier::Box::getGlobalId           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>&amp; SAMRAI::hier::Box::getGlobalId           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -822,16 +852,16 @@ Get the <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>.
 
 </div>
 </div><p>
-<a class="anchor" name="f93a37e297d49c730083b22f27b50b0e"></a><!-- doxytag: member="SAMRAI::hier::Box::getOwnerRank" ref="f93a37e297d49c730083b22f27b50b0e" args="() const " -->
+<a class="anchor" name="f2bf91303f9386a2eea544de8fe35467"></a><!-- doxytag: member="SAMRAI::hier::Box::getOwnerRank" ref="f2bf91303f9386a2eea544de8fe35467" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::Box::getOwnerRank           </td>
+          <td class="memname">int SAMRAI::hier::Box::getOwnerRank           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -843,16 +873,16 @@ Get the owner rank.
 
 </div>
 </div><p>
-<a class="anchor" name="9e13d00a1c67275c5f4dc73591e464cf"></a><!-- doxytag: member="SAMRAI::hier::Box::getPeriodicId" ref="9e13d00a1c67275c5f4dc73591e464cf" args="() const " -->
+<a class="anchor" name="c020f3d79ae353fd20cafaba71c1860f"></a><!-- doxytag: member="SAMRAI::hier::Box::getPeriodicId" ref="c020f3d79ae353fd20cafaba71c1860f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a> &amp; SAMRAI::hier::Box::getPeriodicId           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1PeriodicId.html">PeriodicId</a>&amp; SAMRAI::hier::Box::getPeriodicId           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -865,16 +895,16 @@ Get the periodic shift number.
 
 </div>
 </div><p>
-<a class="anchor" name="20411085edeb8a4927a1e3cb8991a9d0"></a><!-- doxytag: member="SAMRAI::hier::Box::isPeriodicImage" ref="20411085edeb8a4927a1e3cb8991a9d0" args="() const " -->
+<a class="anchor" name="4d35dc2fed2d4e54472efc90614da8d0"></a><!-- doxytag: member="SAMRAI::hier::Box::isPeriodicImage" ref="4d35dc2fed2d4e54472efc90614da8d0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::isPeriodicImage           </td>
+          <td class="memname">bool SAMRAI::hier::Box::isPeriodicImage           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -886,17 +916,17 @@ Whether the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is a pe
 
 </div>
 </div><p>
-<a class="anchor" name="d7d3aaaf93bc8f06bdd7ecd76ab14bc8"></a><!-- doxytag: member="SAMRAI::hier::Box::isIdEqual" ref="d7d3aaaf93bc8f06bdd7ecd76ab14bc8" args="(const Box &amp;other) const " -->
+<a class="anchor" name="6c95ac350496c74fd736168f5c8fe741"></a><!-- doxytag: member="SAMRAI::hier::Box::isIdEqual" ref="6c95ac350496c74fd736168f5c8fe741" args="(const Box &amp;other) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::isIdEqual           </td>
+          <td class="memname">bool SAMRAI::hier::Box::isIdEqual           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>other</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -906,17 +936,17 @@ Whether the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is a pe
 
 </div>
 </div><p>
-<a class="anchor" name="2d0e0533bdde3273118e7b0992b413d6"></a><!-- doxytag: member="SAMRAI::hier::Box::commBufferSize" ref="2d0e0533bdde3273118e7b0992b413d6" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="7a971ea9233db39a5065e106254662b0"></a><!-- doxytag: member="SAMRAI::hier::Box::commBufferSize" ref="7a971ea9233db39a5065e106254662b0" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::Box::commBufferSize           </td>
+          <td class="memname">static int SAMRAI::hier::Box::commBufferSize           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -926,16 +956,16 @@ Whether the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is a pe
 Give number of ints required for putting a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in message passing buffer. 
 <p>
 This number is independent of instance but dependent on dimension.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c5a11a48799dbfeae87409c4277f7197">putToIntBuffer()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a5e624eecb37448bb2e65b41c4d12551">getFromIntBuffer()</a>. </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#db7b568275bdcd9054fb1d4300a9a6e8">putToIntBuffer()</a>, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#09488267c8a73d4441987dfd89d09dc1">getFromIntBuffer()</a>. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="c5a11a48799dbfeae87409c4277f7197"></a><!-- doxytag: member="SAMRAI::hier::Box::putToIntBuffer" ref="c5a11a48799dbfeae87409c4277f7197" args="(int *buffer) const " -->
+<a class="anchor" name="db7b568275bdcd9054fb1d4300a9a6e8"></a><!-- doxytag: member="SAMRAI::hier::Box::putToIntBuffer" ref="db7b568275bdcd9054fb1d4300a9a6e8" args="(int *buffer) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::putToIntBuffer           </td>
+          <td class="memname">void SAMRAI::hier::Box::putToIntBuffer           </td>
           <td>(</td>
           <td class="paramtype">int *&nbsp;</td>
           <td class="paramname"> <em>buffer</em>          </td>
@@ -949,15 +979,15 @@ This number is independent of instance but dependent on dimension.<p>
 <p>
 Put self into a int buffer. 
 <p>
-This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a5e624eecb37448bb2e65b41c4d12551">getFromIntBuffer()</a>. Number of ints written is given by <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#2d0e0533bdde3273118e7b0992b413d6">commBufferSize()</a>. 
+This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#09488267c8a73d4441987dfd89d09dc1">getFromIntBuffer()</a>. Number of ints written is given by <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7a971ea9233db39a5065e106254662b0">commBufferSize()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="a5e624eecb37448bb2e65b41c4d12551"></a><!-- doxytag: member="SAMRAI::hier::Box::getFromIntBuffer" ref="a5e624eecb37448bb2e65b41c4d12551" args="(const int *buffer)" -->
+<a class="anchor" name="09488267c8a73d4441987dfd89d09dc1"></a><!-- doxytag: member="SAMRAI::hier::Box::getFromIntBuffer" ref="09488267c8a73d4441987dfd89d09dc1" args="(const int *buffer)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::getFromIntBuffer           </td>
+          <td class="memname">void SAMRAI::hier::Box::getFromIntBuffer           </td>
           <td>(</td>
           <td class="paramtype">const int *&nbsp;</td>
           <td class="paramname"> <em>buffer</em>          </td>
@@ -971,15 +1001,71 @@ This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a5e6
 <p>
 Set attributes according to data in int buffer. 
 <p>
-This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c5a11a48799dbfeae87409c4277f7197">putToIntBuffer()</a>. Number of ints read is given by <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#2d0e0533bdde3273118e7b0992b413d6">commBufferSize()</a>. 
+This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#db7b568275bdcd9054fb1d4300a9a6e8">putToIntBuffer()</a>. Number of ints read is given by <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#7a971ea9233db39a5065e106254662b0">commBufferSize()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="a358b5a3a34c696dbe402e3dc454fce6"></a><!-- doxytag: member="SAMRAI::hier::Box::operator=" ref="a358b5a3a34c696dbe402e3dc454fce6" args="(const Box &amp;box)" -->
+<a class="anchor" name="59f195ffeb64596422e2b5277cce519f"></a><!-- doxytag: member="SAMRAI::hier::Box::putToMessageStream" ref="59f195ffeb64596422e2b5277cce519f" args="(tbox::MessageStream &amp;msg) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::operator=           </td>
+          <td class="memname">void SAMRAI::hier::Box::putToMessageStream           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>msg</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Put self into a MessageStream. 
+<p>
+This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#8fa82dc81e35a8c2bca0ab9b6654706e">getFromMessageStream()</a>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>msg</em>&nbsp;</td><td>[in] Stream. Must be in write mode. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="8fa82dc81e35a8c2bca0ab9b6654706e"></a><!-- doxytag: member="SAMRAI::hier::Box::getFromMessageStream" ref="8fa82dc81e35a8c2bca0ab9b6654706e" args="(tbox::MessageStream &amp;msg)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::Box::getFromMessageStream           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>msg</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Set attributes according to data in MessageStream. 
+<p>
+This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#59f195ffeb64596422e2b5277cce519f">putToMessageStream()</a>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>msg</em>&nbsp;</td><td>[in] Stream. Must be in read mode. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="92a03b4b251ea8c54c2e89c4b22ae28f"></a><!-- doxytag: member="SAMRAI::hier::Box::operator=" ref="92a03b4b251ea8c54c2e89c4b22ae28f" args="(const Box &amp;box)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::operator=           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -991,20 +1077,21 @@ This is the opposite of <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#c5a1
 <div class="memdoc">
 
 <p>
-The assignment operator copies the index space of the argument box.<p>
-An assignment to an uninitialized box is allowed but assigning from an uninitialized box will result in an assert. 
+assignment operator 
+<p>
+An assignment to an uninitialized box is allowed but assigning from an uninitialized box will result in an assertion failure 
 </div>
 </div><p>
-<a class="anchor" name="bac8e299e48cc30ae590e0074e6862cc"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="bac8e299e48cc30ae590e0074e6862cc" args="()" -->
+<a class="anchor" name="29e3893463067776e05403603b138fd8"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="29e3893463067776e05403603b138fd8" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp; SAMRAI::hier::Box::lower           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&amp; SAMRAI::hier::Box::lower           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1012,18 +1099,20 @@ An assignment to an uninitialized box is allowed but assigning from an uninitial
 
 <p>
 Return a non-const lower index of the box. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="c3cd17a4c9c2570ba175cfcdb2f9deaa"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="c3cd17a4c9c2570ba175cfcdb2f9deaa" args="()" -->
+<a class="anchor" name="d6f19b52c2f49a2f5dc50dc5578985f6"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="d6f19b52c2f49a2f5dc50dc5578985f6" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp; SAMRAI::hier::Box::upper           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&amp; SAMRAI::hier::Box::upper           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1031,18 +1120,20 @@ Return a non-const lower index of the box.
 
 <p>
 Return a non-const upper index of the box. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="8dfd6c2cb9d386b2821e009f2912f68e"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="8dfd6c2cb9d386b2821e009f2912f68e" args="() const " -->
+<a class="anchor" name="829a7934666ea9acb01eaabd67c165d5"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="829a7934666ea9acb01eaabd67c165d5" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp; SAMRAI::hier::Box::lower           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&amp; SAMRAI::hier::Box::lower           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1050,18 +1141,20 @@ Return a non-const upper index of the box.
 
 <p>
 Return a const lower index of the box. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="d818d38c0b6ce14b6e7eadf9413a376a"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="d818d38c0b6ce14b6e7eadf9413a376a" args="() const " -->
+<a class="anchor" name="2b12d8306fc68e86a0948aa4e640c32f"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="2b12d8306fc68e86a0948aa4e640c32f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp; SAMRAI::hier::Box::upper           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&amp; SAMRAI::hier::Box::upper           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1069,117 +1162,129 @@ Return a const lower index of the box.
 
 <p>
 Return a const upper index of the box. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="cd6227b7642b557ee9fb269dbc8fe4d8"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="cd6227b7642b557ee9fb269dbc8fe4d8" args="(const int i)" -->
+<a class="anchor" name="e7d948fd150ee7f8b6ede7a94549a061"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="e7d948fd150ee7f8b6ede7a94549a061" args="(const int i)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int &amp; SAMRAI::hier::Box::lower           </td>
+          <td class="memname">int&amp; SAMRAI::hier::Box::lower           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>i</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Return the i'th component (non-const) of the lower index of the box. 
+Return the i'th component (non-const) of the lower index. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="0c052d766424dd1d139d16dfc88de55d"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="0c052d766424dd1d139d16dfc88de55d" args="(const int i)" -->
+<a class="anchor" name="8a53af98b6beaca6ab01cb60d3abcb38"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="8a53af98b6beaca6ab01cb60d3abcb38" args="(const int i)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int &amp; SAMRAI::hier::Box::upper           </td>
+          <td class="memname">int&amp; SAMRAI::hier::Box::upper           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>i</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Return the i'th component (non-const) of the upper index of the box. 
+Return the i'th component (non-const) of the upper index. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="b0f767aa817f477e408cc9af0de641c0"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="b0f767aa817f477e408cc9af0de641c0" args="(const int i) const " -->
+<a class="anchor" name="ab1956c0ec9b3dadf45c6bdb3622c560"></a><!-- doxytag: member="SAMRAI::hier::Box::lower" ref="ab1956c0ec9b3dadf45c6bdb3622c560" args="(const int i) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const int &amp; SAMRAI::hier::Box::lower           </td>
+          <td class="memname">const int&amp; SAMRAI::hier::Box::lower           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>i</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Return the i'th component (const) of the lower index of the box. 
+Return the i'th component (const) of the lower index. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="7ee0222e3a463128aa29afe3198437c5"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="7ee0222e3a463128aa29afe3198437c5" args="(const int i) const " -->
+<a class="anchor" name="bc58935107eaf4d485a27d9316e73999"></a><!-- doxytag: member="SAMRAI::hier::Box::upper" ref="bc58935107eaf4d485a27d9316e73999" args="(const int i) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const int &amp; SAMRAI::hier::Box::upper           </td>
+          <td class="memname">const int&amp; SAMRAI::hier::Box::upper           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>i</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Return the i'th component (const) of the upper index of the box. 
+Return the i'th component (const) of the upper index. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="37da5fab418ba5cd94c628dbab683ca5"></a><!-- doxytag: member="SAMRAI::hier::Box::setEmpty" ref="37da5fab418ba5cd94c628dbab683ca5" args="()" -->
+<a class="anchor" name="52160d13456176746d82bd46d1f37710"></a><!-- doxytag: member="SAMRAI::hier::Box::setEmpty" ref="52160d13456176746d82bd46d1f37710" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::setEmpty           </td>
+          <td class="memname">void SAMRAI::hier::Box::setEmpty           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Set the index space represented by the box to empty. 
+Set the state of the box to empty. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="02228d94b7546b0dd22629f1b82acfb0"></a><!-- doxytag: member="SAMRAI::hier::Box::empty" ref="02228d94b7546b0dd22629f1b82acfb0" args="() const " -->
+<a class="anchor" name="6d729b937ada38378b21b6e21817403b"></a><!-- doxytag: member="SAMRAI::hier::Box::empty" ref="6d729b937ada38378b21b6e21817403b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::empty           </td>
+          <td class="memname">bool SAMRAI::hier::Box::empty           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1188,21 +1293,21 @@ Set the index space represented by the box to empty.
 <p>
 Return whether the box is ``empty''. 
 <p>
-<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d4ab39e239285712c36bb13b85bf6149">isEmpty()</a> is preferred to match "is" standard syntax for boolean methods.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d4ab39e239285712c36bb13b85bf6149">isEmpty()</a> </dd></dl>
+<a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a8d7ca1459fd300d4dff373ac4d7afb9">isEmpty()</a> is preferred to match "is" standard syntax for boolean methods.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a8d7ca1459fd300d4dff373ac4d7afb9">isEmpty()</a> </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d4ab39e239285712c36bb13b85bf6149"></a><!-- doxytag: member="SAMRAI::hier::Box::isEmpty" ref="d4ab39e239285712c36bb13b85bf6149" args="() const " -->
+<a class="anchor" name="a8d7ca1459fd300d4dff373ac4d7afb9"></a><!-- doxytag: member="SAMRAI::hier::Box::isEmpty" ref="a8d7ca1459fd300d4dff373ac4d7afb9" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::isEmpty           </td>
+          <td class="memname">bool SAMRAI::hier::Box::isEmpty           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1214,17 +1319,17 @@ Return whether the box is ``empty''.
 A box is empty if any of the lower bounds is greater than the corresponding upper bound. An empty box has a size of zero. 
 </div>
 </div><p>
-<a class="anchor" name="c31534989d40a3f254acf4071a957708"></a><!-- doxytag: member="SAMRAI::hier::Box::numberCells" ref="c31534989d40a3f254acf4071a957708" args="(const int i) const " -->
+<a class="anchor" name="de7b27e38da0bc4e94190240c465b1f3"></a><!-- doxytag: member="SAMRAI::hier::Box::numberCells" ref="de7b27e38da0bc4e94190240c465b1f3" args="(const int i) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::Box::numberCells           </td>
+          <td class="memname">int SAMRAI::hier::Box::numberCells           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>i</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1232,18 +1337,20 @@ A box is empty if any of the lower bounds is greater than the corresponding uppe
 
 <p>
 Return the number of cells (an integer) represented by the box in the given coordinate direction. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="16e1afa59b3747a080f2fcd385c3fbcb"></a><!-- doxytag: member="SAMRAI::hier::Box::numberCells" ref="16e1afa59b3747a080f2fcd385c3fbcb" args="() const " -->
+<a class="anchor" name="c3d507c9ff86050254b5f0cb90813209"></a><!-- doxytag: member="SAMRAI::hier::Box::numberCells" ref="c3d507c9ff86050254b5f0cb90813209" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> SAMRAI::hier::Box::numberCells           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> SAMRAI::hier::Box::numberCells           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1251,25 +1358,29 @@ Return the number of cells (an integer) represented by the box in the given coor
 
 <p>
 Return the number of cells (a vector of integers) represented by the box in every coordinate direction. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="eb447a0965ebaa802cb5de4d1bb0bbcd"></a><!-- doxytag: member="SAMRAI::hier::Box::size" ref="eb447a0965ebaa802cb5de4d1bb0bbcd" args="() const " -->
+<a class="anchor" name="bf5d88905891d7080fc4ca15440b55b1"></a><!-- doxytag: member="SAMRAI::hier::Box::size" ref="bf5d88905891d7080fc4ca15440b55b1" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::Box::size           </td>
+          <td class="memname">int SAMRAI::hier::Box::size           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Calculate the number of indices represented by the box. If the box is empty, then the number of index points within the box is zero. 
+Calculate the number of indices represented by the box. 
+<p>
+If the box is empty, then the number of index points within the box is zero. 
 </div>
 </div><p>
 <a class="anchor" name="a8d6d725d36be9b51305fa687cf1b92c"></a><!-- doxytag: member="SAMRAI::hier::Box::longestDimension" ref="a8d6d725d36be9b51305fa687cf1b92c" args="() const " -->
@@ -1289,34 +1400,38 @@ Calculate the number of indices represented by the box. If the box is empty, the
 
 <p>
 Return the dimension of the box that is longest. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="7c43da9e179dfdf84fed13a65a279f32"></a><!-- doxytag: member="SAMRAI::hier::Box::offset" ref="7c43da9e179dfdf84fed13a65a279f32" args="(const Index &amp;p) const " -->
+<a class="anchor" name="335745e943b909ffa651ab408e1129f8"></a><!-- doxytag: member="SAMRAI::hier::Box::offset" ref="335745e943b909ffa651ab408e1129f8" args="(const Index &amp;p) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::Box::offset           </td>
+          <td class="memname">int SAMRAI::hier::Box::offset           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>p</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Given an index, calculate the offset of the index into the box. This function assumes column-major (e.g., Fortran) ordering of the indices within the box. This operation is a convenience function for later array indexing operations. 
+Given an index, calculate the offset of the index into the box. 
+<p>
+This function assumes column-major (e.g., Fortran) ordering of the indices within the box. This operation is a convenience function for array indexing operations. 
 </div>
 </div><p>
-<a class="anchor" name="c0e1b7816503853b8e38b1eb9d3d42c7"></a><!-- doxytag: member="SAMRAI::hier::Box::index" ref="c0e1b7816503853b8e38b1eb9d3d42c7" args="(const int offset) const " -->
+<a class="anchor" name="5f97c36876b8461625db0cc4fca22abd"></a><!-- doxytag: member="SAMRAI::hier::Box::index" ref="5f97c36876b8461625db0cc4fca22abd" args="(const int offset) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> SAMRAI::hier::Box::index           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> SAMRAI::hier::Box::index           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>offset</em>          </td>
@@ -1328,20 +1443,22 @@ Given an index, calculate the offset of the index into the box. This function as
 <div class="memdoc">
 
 <p>
-Given an offset, calculate the index of the offset into the box. This function assumes column-major (e.g., Fortran) ordering of the indices within the box. This operation is a convenience function for later array indexing operations. 
+Given an offset, calculate the index of the offset into the box. 
+<p>
+This function assumes column-major (e.g., Fortran) ordering of the indices within the box. This operation is a convenience function for array indexing operations. 
 </div>
 </div><p>
-<a class="anchor" name="475e1a0026de5c0a16f4e004d308cdc0"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="475e1a0026de5c0a16f4e004d308cdc0" args="(const Index &amp;p) const " -->
+<a class="anchor" name="f66b8d61fcc919d85fce2af774f6cc40"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="f66b8d61fcc919d85fce2af774f6cc40" args="(const Index &amp;p) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::contains           </td>
+          <td class="memname">bool SAMRAI::hier::Box::contains           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>p</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1349,14 +1466,16 @@ Given an offset, calculate the index of the offset into the box. This function a
 
 <p>
 Check whether an index lies within the bounds of the box. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="1533925515e42d274eaf43fd8979cbb9"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="1533925515e42d274eaf43fd8979cbb9" args="(const Box &amp;b) const " -->
+<a class="anchor" name="487b65628f96d88fc0d5fc450ad640fe"></a><!-- doxytag: member="SAMRAI::hier::Box::contains" ref="487b65628f96d88fc0d5fc450ad640fe" args="(const Box &amp;b) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::contains           </td>
+          <td class="memname">bool SAMRAI::hier::Box::contains           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>b</em>          </td>
@@ -1368,16 +1487,39 @@ Check whether an index lies within the bounds of the box.
 <div class="memdoc">
 
 <p>
-Check whether a given box lies within the bounds of the box.<p>
+Check whether a given box lies within the bounds of the box. 
+<p>
 If <code>b</code> is empty, always return true. 
 </div>
 </div><p>
-<a class="anchor" name="73985a6c5a67ebc0f888bebac68fdfc9"></a><!-- doxytag: member="SAMRAI::hier::Box::isSpatiallyEqual" ref="73985a6c5a67ebc0f888bebac68fdfc9" args="(const Box &amp;box) const " -->
+<a class="anchor" name="07adf80b7f592b35ae50b8f24e493688"></a><!-- doxytag: member="SAMRAI::hier::Box::isSpatiallyEqual" ref="07adf80b7f592b35ae50b8f24e493688" args="(const Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::isSpatiallyEqual           </td>
+          <td class="memname">bool SAMRAI::hier::Box::isSpatiallyEqual           </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>box</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Check whether two boxes represent the same portion of index space on the same block. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="63631615c7710fdfa0a9249c9020b7a8"></a><!-- doxytag: member="SAMRAI::hier::Box::operator *" ref="63631615c7710fdfa0a9249c9020b7a8" args="(const Box &amp;box) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::operator *           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -1389,35 +1531,17 @@ If <code>b</code> is empty, always return true.
 <div class="memdoc">
 
 <p>
-Check whether two boxes represent the same portion of index space. 
-</div>
-</div><p>
-<a class="anchor" name="d26787f035ab700acdc98dd786924a53"></a><!-- doxytag: member="SAMRAI::hier::Box::operator *" ref="d26787f035ab700acdc98dd786924a53" args="(const Box &amp;box) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::operator *           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>box</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
+Calculate the intersection of the index spaces of two boxes. 
 <p>
-Calculate the intersection of the index spaces of two boxes. The intersection with an empty box always yields an empty box. 
+The intersection with an empty box always yields an empty box. If the two boxes have different BlockIds and are both non-empty, an error will occur. 
 </div>
 </div><p>
-<a class="anchor" name="a057cfd316a039bb6f70fdf7af5b3a98"></a><!-- doxytag: member="SAMRAI::hier::Box::operator *=" ref="a057cfd316a039bb6f70fdf7af5b3a98" args="(const Box &amp;box)" -->
+<a class="anchor" name="35cb43c001c78b1104726f3f454ff2d2"></a><!-- doxytag: member="SAMRAI::hier::Box::operator *=" ref="35cb43c001c78b1104726f3f454ff2d2" args="(const Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::operator *=           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::operator *=           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -1429,15 +1553,17 @@ Calculate the intersection of the index spaces of two boxes. The intersection wi
 <div class="memdoc">
 
 <p>
-Calculate the intersection of the index spaces of this and the given box. The intersection with an empty box always yields an empty box. 
+Calculate the intersection of the index spaces of this and the given box. 
+<p>
+The intersection with an empty box always yields an empty box. If the two boxes have different BlockIds and are both non-empty, an error will occur. 
 </div>
 </div><p>
-<a class="anchor" name="325d58acc1cc35c7edbc9f3a520a393d"></a><!-- doxytag: member="SAMRAI::hier::Box::intersect" ref="325d58acc1cc35c7edbc9f3a520a393d" args="(const Box &amp;other, Box &amp;result) const " -->
+<a class="anchor" name="d85cd30cda3ef4cbc44253c07641eb44"></a><!-- doxytag: member="SAMRAI::hier::Box::intersect" ref="d85cd30cda3ef4cbc44253c07641eb44" args="(const Box &amp;other, Box &amp;result) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::intersect           </td>
+          <td class="memname">void SAMRAI::hier::Box::intersect           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>other</em>, </td>
@@ -1458,15 +1584,17 @@ Calculate the intersection of the index spaces of this and the given box. The in
 <div class="memdoc">
 
 <p>
-Preallocated box intersection. Calculate the intersection of the index spaces of two boxes. The intersection with an empty box always yields an empty box. 
+<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> intersection. 
+<p>
+Calculate the intersection of the index spaces of two boxes. The intersection with an empty box always yields an empty box. If the two boxes have different BlockIds and are both non-empty, an error will occur. 
 </div>
 </div><p>
-<a class="anchor" name="513cbc725c2ac6e3f2709c9881aa942c"></a><!-- doxytag: member="SAMRAI::hier::Box::intersects" ref="513cbc725c2ac6e3f2709c9881aa942c" args="(const Box &amp;box) const " -->
+<a class="anchor" name="f2514cfdc6a0c66e8478952813b75a24"></a><!-- doxytag: member="SAMRAI::hier::Box::intersects" ref="f2514cfdc6a0c66e8478952813b75a24" args="(const Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::Box::intersects           </td>
+          <td class="memname">bool SAMRAI::hier::Box::intersects           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -1478,15 +1606,17 @@ Preallocated box intersection. Calculate the intersection of the index spaces of
 <div class="memdoc">
 
 <p>
-Return true if two boxes have a non-empty intersection. Otherwise, return false. 
+check if boxes intersect. 
+<p>
+Returns true if two boxes have a non-empty intersection. 
 </div>
 </div><p>
-<a class="anchor" name="1512e6be7c7393b442a032a1e7f0becc"></a><!-- doxytag: member="SAMRAI::hier::Box::operator+" ref="1512e6be7c7393b442a032a1e7f0becc" args="(const Box &amp;box) const " -->
+<a class="anchor" name="109448aa5f47e2e96aaa09e53979f810"></a><!-- doxytag: member="SAMRAI::hier::Box::operator+" ref="109448aa5f47e2e96aaa09e53979f810" args="(const Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::operator+           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::operator+           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -1498,7 +1628,10 @@ Return true if two boxes have a non-empty intersection. Otherwise, return false.
 <div class="memdoc">
 
 <p>
-Calculate the bounding box of two boxes. Note that this is not the union of the two boxes (since union is not closed over boxes), but rather the smallest box that contains both boxes. 
+Calculate the bounding box of two boxes. 
+<p>
+Note that this is not the union of the two boxes (since union is not closed over boxes), but rather the smallest box that contains both boxes.<p>
+If one box is empty and the other is non-empty, the non-empty box will be returned. If both boxes are non-empty and have different BlockIds, an assertion failure will occur. 
 </div>
 </div><p>
 <a class="anchor" name="9353ec6a0cebfdd4c37889c551e3b850"></a><!-- doxytag: member="SAMRAI::hier::Box::operator+=" ref="9353ec6a0cebfdd4c37889c551e3b850" args="(const Box &amp;box)" -->
@@ -1518,7 +1651,11 @@ Calculate the bounding box of two boxes. Note that this is not the union of the 
 <div class="memdoc">
 
 <p>
-Increase the bounding box to include the argument box. 
+Increase this box to become the bounding box of this box and the argument box. 
+<p>
+If this box is empty, this box will become equal to the argument box.<p>
+If the argument box is empty, this box will be unchanged.<p>
+If the two boxes are both non-empty and have different BlockIds, and assertion failure will occur. 
 </div>
 </div><p>
 <a class="anchor" name="d1486f0b7b2b526182ae68834ee59827"></a><!-- doxytag: member="SAMRAI::hier::Box::coalesceWith" ref="d1486f0b7b2b526182ae68834ee59827" args="(const Box &amp;box)" -->
@@ -1538,35 +1675,39 @@ Increase the bounding box to include the argument box.
 <div class="memdoc">
 
 <p>
-Return true if this box can be coalesced with the argument box, and set this box to the union of the boxes. Otherwise, return false and leave boxes as is. Two boxes may be coalesced if their union is a box (recall that index set union is not closed over boxes). If either box is empty, then the return value is true and this box becomes the union of the two. 
+Return true if this box can be coalesced with the argument box, and set this box to the union of the boxes. 
+<p>
+Otherwise, return false and leave boxes as is. Two boxes may be coalesced if their union is a box (recall that index set union is not closed over boxes). If one box is empty and the other is non-empty, then the return value is true and this box becomes equal to the non-empty box. If both boxes are empty, the return value is true and this box remains empty. 
 </div>
 </div><p>
-<a class="anchor" name="87c847d00f1e80b32f3c7473702f4d4c"></a><!-- doxytag: member="SAMRAI::hier::Box::grow" ref="87c847d00f1e80b32f3c7473702f4d4c" args="(const IntVector &amp;ghosts)" -->
+<a class="anchor" name="d373c3d26e20f79afbb4937d58a14c99"></a><!-- doxytag: member="SAMRAI::hier::Box::grow" ref="d373c3d26e20f79afbb4937d58a14c99" args="(const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::grow           </td>
+          <td class="memname">void SAMRAI::hier::Box::grow           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Grow a box by the specified ghost cell width. The lower bound is decremented by the width, and the upper bound is incremented by the width. All dimensions are grown by the corresponding component in the <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>; ghost cell widths may be different in each dimension. Negative ghost cell widths will shrink the box. 
+Grow this box by the specified ghost cell width. 
+<p>
+The lower bound decremented by the width, and the upper bound is incremented by the width. All dimensions are grown by the corresponding component in the <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>; ghost cell widths may be different in each dimension. Negative ghost cell widths will shrink the box. 
 </div>
 </div><p>
-<a class="anchor" name="d28c94492967fe51849b34c5ae0f3dba"></a><!-- doxytag: member="SAMRAI::hier::Box::grow" ref="d28c94492967fe51849b34c5ae0f3dba" args="(const int direction, const int ghosts)" -->
+<a class="anchor" name="b37a39a989ffbab2d79ff67be47fa734"></a><!-- doxytag: member="SAMRAI::hier::Box::grow" ref="b37a39a989ffbab2d79ff67be47fa734" args="(const int direction, const int ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::grow           </td>
+          <td class="memname">void SAMRAI::hier::Box::grow           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>direction</em>, </td>
@@ -1580,42 +1721,46 @@ Grow a box by the specified ghost cell width. The lower bound is decremented by 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Grow a box by the specified ghost cell width in the given coordinate direction in index space. The lower bound is decremented by the width, and the upper bound is incremented by the width. Note that negative ghost cell widths will shrink the box. 
+Grow this box by the specified ghost cell width in the given coordinate direction. 
+<p>
+The lower bound is decremented by the width, and the upper bound is incremented by the width. Note that negative ghost cell widths will shrink the box. 
 </div>
 </div><p>
-<a class="anchor" name="16fe262c51a92b974cc5bf4c5ae87ccb"></a><!-- doxytag: member="SAMRAI::hier::Box::growLower" ref="16fe262c51a92b974cc5bf4c5ae87ccb" args="(const IntVector &amp;ghosts)" -->
+<a class="anchor" name="3411bc0c82ed0e40c314354d451e5027"></a><!-- doxytag: member="SAMRAI::hier::Box::growLower" ref="3411bc0c82ed0e40c314354d451e5027" args="(const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::growLower           </td>
+          <td class="memname">void SAMRAI::hier::Box::growLower           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32f3c7473702f4d4c">grow()</a> functions. However, box is only grown in lower directions (i.e., only lower index is changed). 
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> functions. However, box is only grown in lower directions (i.e., only lower index is changed). 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="9466982df16c3f4c149c56082f6eecc5"></a><!-- doxytag: member="SAMRAI::hier::Box::growLower" ref="9466982df16c3f4c149c56082f6eecc5" args="(const int direction, const int ghosts)" -->
+<a class="anchor" name="02065904bb7228f02151ac1b1511e493"></a><!-- doxytag: member="SAMRAI::hier::Box::growLower" ref="02065904bb7228f02151ac1b1511e493" args="(const int direction, const int ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::growLower           </td>
+          <td class="memname">void SAMRAI::hier::Box::growLower           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>direction</em>, </td>
@@ -1629,42 +1774,77 @@ Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32f3c7473702f4d4c">grow()</a> functions. However, box is only grown in lower bound of given direction in index space. 
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> functions. However, box is only grown in lower bound of given direction in index space. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="0023c5492a9b514258c7cd81e4a4a8b7"></a><!-- doxytag: member="SAMRAI::hier::Box::growUpper" ref="0023c5492a9b514258c7cd81e4a4a8b7" args="(const IntVector &amp;ghosts)" -->
+<a class="anchor" name="d97451e6b286da23fdc64d7d1e0e7a75"></a><!-- doxytag: member="SAMRAI::hier::Box::growUpper" ref="d97451e6b286da23fdc64d7d1e0e7a75" args="(const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::growUpper           </td>
+          <td class="memname">void SAMRAI::hier::Box::growUpper           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32f3c7473702f4d4c">grow()</a> function. However, box is only grown in upper directions (i.e., only upper index is changed). 
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> function. However, box is only grown in upper directions (i.e., only upper index is changed). 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="5acb8db0e7d977ed31c91473cc30976a"></a><!-- doxytag: member="SAMRAI::hier::Box::growUpper" ref="5acb8db0e7d977ed31c91473cc30976a" args="(const int direction, const int ghosts)" -->
+<a class="anchor" name="533f249738fadb61791eb4635dc7acf4"></a><!-- doxytag: member="SAMRAI::hier::Box::growUpper" ref="533f249738fadb61791eb4635dc7acf4" args="(const int direction, const int ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::growUpper           </td>
+          <td class="memname">void SAMRAI::hier::Box::growUpper           </td>
+          <td>(</td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>direction</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramname"> <em>ghosts</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d373c3d26e20f79afbb4937d58a14c99">grow()</a> functions. However, box is only grown in upper bound of given direction in index space. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="539a726252f0d86e7816543c60b0ed54"></a><!-- doxytag: member="SAMRAI::hier::Box::lengthen" ref="539a726252f0d86e7816543c60b0ed54" args="(const int direction, const int ghosts)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::Box::lengthen           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>direction</em>, </td>
@@ -1685,15 +1865,17 @@ Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32f3c7473702f4d4c">grow()</a> functions. However, box is only grown in upper bound of given direction in index space. 
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d97451e6b286da23fdc64d7d1e0e7a75">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3411bc0c82ed0e40c314354d451e5027">growLower()</a> functions. However, box is lengthened (never shortened). 
+<p>
+The sign of <code>ghosts</code> refer to whether the box is lengthened in the upper or lower side. 
 </div>
 </div><p>
-<a class="anchor" name="c87d37c98f8e9f26d041d95bade55747"></a><!-- doxytag: member="SAMRAI::hier::Box::lengthen" ref="c87d37c98f8e9f26d041d95bade55747" args="(const int direction, const int ghosts)" -->
+<a class="anchor" name="ae33efb3f2e5dc61d294885c1e7f9018"></a><!-- doxytag: member="SAMRAI::hier::Box::shorten" ref="ae33efb3f2e5dc61d294885c1e7f9018" args="(const int direction, const int ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::lengthen           </td>
+          <td class="memname">void SAMRAI::hier::Box::shorten           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>direction</em>, </td>
@@ -1714,64 +1896,39 @@ Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#87c847d00f1e80b32
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0023c5492a9b514258c7cd81e4a4a8b7">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#16fe262c51a92b974cc5bf4c5ae87ccb">growLower()</a> functions. However, box is lengthened (never shortened). The sign of <code>ghosts</code> refer to whether the box is lengthened in the upper or lower side. 
-</div>
-</div><p>
-<a class="anchor" name="4a446e8c3893eecb20e9c7af3133042d"></a><!-- doxytag: member="SAMRAI::hier::Box::shorten" ref="4a446e8c3893eecb20e9c7af3133042d" args="(const int direction, const int ghosts)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::shorten           </td>
-          <td>(</td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>direction</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>ghosts</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#d97451e6b286da23fdc64d7d1e0e7a75">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#3411bc0c82ed0e40c314354d451e5027">growLower()</a> functions. However, box is shortened (never lengthened). 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#0023c5492a9b514258c7cd81e4a4a8b7">growUpper()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#16fe262c51a92b974cc5bf4c5ae87ccb">growLower()</a> functions. However, box is shortened (never lengthened). The sign of <code>ghosts</code> refer to whether the box is shortened in the upper or lower side. 
+The sign of <code>ghosts</code> refer to whether the box is shortened in the upper or lower side. 
 </div>
 </div><p>
-<a class="anchor" name="b7f61bf090cd749a7ff6d06efc3ef618"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="b7f61bf090cd749a7ff6d06efc3ef618" args="(const IntVector &amp;offset)" -->
+<a class="anchor" name="885659eb8eda288a8e6d343fd681b198"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="885659eb8eda288a8e6d343fd681b198" args="(const IntVector &amp;offset)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::shift           </td>
+          <td class="memname">void SAMRAI::hier::Box::shift           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>offset</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Shift a box by the specified amount (a vector of integers). The new box is located at (lower+offset, upper+offset). 
+Shift this box by the specified offset. 
+<p>
+The box will be located at (lower+offset, upper+offset). 
 </div>
 </div><p>
-<a class="anchor" name="62fee9167918ac779f75b70ed191788b"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="62fee9167918ac779f75b70ed191788b" args="(const int direction, const int offset)" -->
+<a class="anchor" name="a9d2d3d70ecb4e447bfba0219cdd0f50"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="a9d2d3d70ecb4e447bfba0219cdd0f50" args="(const int direction, const int offset)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::shift           </td>
+          <td class="memname">void SAMRAI::hier::Box::shift           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>direction</em>, </td>
@@ -1785,14 +1942,16 @@ Shift a box by the specified amount (a vector of integers). The new box is locat
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b7f61bf090cd749a7ff6d06efc3ef618">shift()</a> function above, but shift occurs only in specified direction in index space. The new box is located at (lower+offset, upper+offset) in that direction. 
+Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#885659eb8eda288a8e6d343fd681b198">shift()</a> function above, but shift occurs only in specified direction in index space. 
+<p>
+The box will located at (lower+offset, upper+offset) in that direction. 
 </div>
 </div><p>
 <a class="anchor" name="0b8209eee46144ba4af4c2a95de58782"></a><!-- doxytag: member="SAMRAI::hier::Box::rotate" ref="0b8209eee46144ba4af4c2a95de58782" args="(const Transformation::RotationIdentifier rotation_ident)" -->
@@ -1815,12 +1974,12 @@ Similar to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#b7f61bf090cd749a7
 Rotate 90 degrees around origin. 
 </div>
 </div><p>
-<a class="anchor" name="41f7b30ae22cfab7a66525e47c999f8b"></a><!-- doxytag: member="SAMRAI::hier::Box::refine" ref="41f7b30ae22cfab7a66525e47c999f8b" args="(const IntVector &amp;ratio)" -->
+<a class="anchor" name="1e2a5355d927cad6ec49c0c9cf158a26"></a><!-- doxytag: member="SAMRAI::hier::Box::refine" ref="1e2a5355d927cad6ec49c0c9cf158a26" args="(const IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::refine           </td>
+          <td class="memname">void SAMRAI::hier::Box::refine           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ratio</em>          </td>
@@ -1832,40 +1991,44 @@ Rotate 90 degrees around origin.
 <div class="memdoc">
 
 <p>
-Refine the index space of a box by specified vector ratio. Each component of the box is multiplied by the refinement ratio, then <code></code>(ratio-1) is added to the upper corner. 
+Refine the index space of a box by specified vector ratio. 
+<p>
+Each component of the box is multiplied by the refinement ratio, then <code></code>(ratio-1) is added to the upper corner. 
 </div>
 </div><p>
-<a class="anchor" name="7e9631afa6ba695c78489e2ed6412aca"></a><!-- doxytag: member="SAMRAI::hier::Box::coarsen" ref="7e9631afa6ba695c78489e2ed6412aca" args="(const IntVector &amp;ratio)" -->
+<a class="anchor" name="8e7ecdfcb5548321c2a8e92d1152b250"></a><!-- doxytag: member="SAMRAI::hier::Box::coarsen" ref="8e7ecdfcb5548321c2a8e92d1152b250" args="(const IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::coarsen           </td>
+          <td class="memname">void SAMRAI::hier::Box::coarsen           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ratio</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Coarsen the index space of a box by specified vector ratio. Each component is divided by the specified coarsening ratio and rounded (if necessary) such that the coarsened box contains the cells that are the parents of the refined box. In other words, refining a coarsened box will always yield a box that is equal to or larger than the original box. 
+Coarsen the index space of a box by specified vector ratio. 
+<p>
+Each component is divided by the specified coarsening ratio and rounded (if necessary) such that the coarsened box contains the cells that are the parents of the refined box. In other words, refining a coarsened box will always yield a box that is equal to or larger than the original box. 
 </div>
 </div><p>
-<a class="anchor" name="ed8c9bb5cf679c6c638e725a5d33537a"></a><!-- doxytag: member="SAMRAI::hier::Box::operator=" ref="ed8c9bb5cf679c6c638e725a5d33537a" args="(const tbox::DatabaseBox &amp;box)" -->
+<a class="anchor" name="3199056c946d7c14aef8cf62f667f19f"></a><!-- doxytag: member="SAMRAI::hier::Box::operator=" ref="3199056c946d7c14aef8cf62f667f19f" args="(const tbox::DatabaseBox &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::operator=           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; SAMRAI::hier::Box::operator=           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1873,19 +2036,21 @@ Coarsen the index space of a box by specified vector ratio. Each component is di
 
 <p>
 This assignment operator constructs a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> given a DatabaseBox. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="4c7951e26a1a8bb431419af180cc7ce8"></a><!-- doxytag: member="SAMRAI::hier::Box::Box_from_DatabaseBox" ref="4c7951e26a1a8bb431419af180cc7ce8" args="(const tbox::DatabaseBox &amp;box)" -->
+<a class="anchor" name="202a1a70a5f9845db64a9feff8d5e498"></a><!-- doxytag: member="SAMRAI::hier::Box::Box_from_DatabaseBox" ref="202a1a70a5f9845db64a9feff8d5e498" args="(const tbox::DatabaseBox &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::Box_from_DatabaseBox           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; SAMRAI::hier::Box::Box_from_DatabaseBox           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1893,6 +2058,8 @@ This assignment operator constructs a <a class="el" href="classSAMRAI_1_1hier_1_
 
 <p>
 Sets a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> and returns a reference to the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. 
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="45bb396d385c73e80a5970d9e1479f2d"></a><!-- doxytag: member="SAMRAI::hier::Box::set_Box_from_DatabaseBox" ref="45bb396d385c73e80a5970d9e1479f2d" args="(const tbox::DatabaseBox &amp;box)" -->
@@ -1913,6 +2080,8 @@ Sets a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a <a cl
 
 <p>
 Sets a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a DatabaseBox. 
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="1e878fcf287ed06cc6135dc6bbad6b65"></a><!-- doxytag: member="SAMRAI::hier::Box::DatabaseBox_from_Box" ref="1e878fcf287ed06cc6135dc6bbad6b65" args="() const " -->
@@ -1932,52 +2101,54 @@ Sets a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> from a Datab
 
 <p>
 Returns a <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a> generated from a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="e4fc140e8c8c724c2ebecd4793cde0c3"></a><!-- doxytag: member="SAMRAI::hier::Box::operator tbox::DatabaseBox" ref="e4fc140e8c8c724c2ebecd4793cde0c3" args="()" -->
+<a class="anchor" name="2b22e924246be2e0383934a82c0f91b0"></a><!-- doxytag: member="SAMRAI::hier::Box::operator tbox::DatabaseBox" ref="2b22e924246be2e0383934a82c0f91b0" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::operator <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a>           </td>
+          <td class="memname">SAMRAI::hier::Box::operator <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Type conversion from <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> 
+Type conversion from <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to DatabaseBox 
 </div>
 </div><p>
-<a class="anchor" name="68b0437441b6fbe39d5706dec5836356"></a><!-- doxytag: member="SAMRAI::hier::Box::operator tbox::DatabaseBox" ref="68b0437441b6fbe39d5706dec5836356" args="() const " -->
+<a class="anchor" name="efe5d27ef080e7be02fc1283e1e49b8e"></a><!-- doxytag: member="SAMRAI::hier::Box::operator tbox::DatabaseBox" ref="efe5d27ef080e7be02fc1283e1e49b8e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::Box::operator <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a>           </td>
+          <td class="memname">SAMRAI::hier::Box::operator <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">tbox::DatabaseBox</a>           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Type conversion from <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> 
+Type conversion from <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> to DatabaseBox 
 </div>
 </div><p>
-<a class="anchor" name="cc9b5455ebd8d7978c1cf56b703aa174"></a><!-- doxytag: member="SAMRAI::hier::Box::grow" ref="cc9b5455ebd8d7978c1cf56b703aa174" args="(const Box &amp;box, const IntVector &amp;ghosts)" -->
+<a class="anchor" name="b1a434f239d8e76774699a92bf39276a"></a><!-- doxytag: member="SAMRAI::hier::Box::grow" ref="b1a434f239d8e76774699a92bf39276a" args="(const Box &amp;box, const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::grow           </td>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::grow           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
@@ -1991,22 +2162,24 @@ Type conversion from <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Utility function to grow a box by the specified vector ghost cell width. A new box is returned and the argument is not changed. 
+Static function to grow a box by the specified vector ghost cell width. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="9cdf93f211ed1ca220489e77b3560c76"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="9cdf93f211ed1ca220489e77b3560c76" args="(const Box &amp;box, const IntVector &amp;offset)" -->
+<a class="anchor" name="ba7f4d86a6b4ee6c8d3152a5b9e987e7"></a><!-- doxytag: member="SAMRAI::hier::Box::shift" ref="ba7f4d86a6b4ee6c8d3152a5b9e987e7" args="(const Box &amp;box, const IntVector &amp;offset)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::shift           </td>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::shift           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
@@ -2020,22 +2193,24 @@ Utility function to grow a box by the specified vector ghost cell width. A new b
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Utility function to shift a box by the specified offset. A new box is returned and the argument is not changed. 
+Static function to shift a box by the specified offset. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="cec7c8a80138f65e4f96864b5280834c"></a><!-- doxytag: member="SAMRAI::hier::Box::refine" ref="cec7c8a80138f65e4f96864b5280834c" args="(const Box &amp;box, const IntVector &amp;ratio)" -->
+<a class="anchor" name="11434864dbc32219fc87b1cf0870b198"></a><!-- doxytag: member="SAMRAI::hier::Box::refine" ref="11434864dbc32219fc87b1cf0870b198" args="(const Box &amp;box, const IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::refine           </td>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::refine           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
@@ -2049,22 +2224,24 @@ Utility function to shift a box by the specified offset. A new box is returned a
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Utility function to refine the index space of a box by the specified refinement ratio. A new box is returned and the argument is not changed. 
+Static function to refine the index space of a box by the specified refinement ratio. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="075dfffa6035203a70ab4e2c2c2f4baf"></a><!-- doxytag: member="SAMRAI::hier::Box::coarsen" ref="075dfffa6035203a70ab4e2c2c2f4baf" args="(const Box &amp;box, const IntVector &amp;ratio)" -->
+<a class="anchor" name="249ea8e2c5350c7586be1e6b4849c546"></a><!-- doxytag: member="SAMRAI::hier::Box::coarsen" ref="249ea8e2c5350c7586be1e6b4849c546" args="(const Box &amp;box, const IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::coarsen           </td>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> SAMRAI::hier::Box::coarsen           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>, </td>
@@ -2078,26 +2255,28 @@ Utility function to refine the index space of a box by the specified refinement 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Utility function to coarsen the index space of a box by the specified coarsening ratio. A new box is returned and the argument is not changed. 
+Static function to coarsen the index space of a box by the specified coarsening ratio. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="edd875e9194c26fbd9cfb72d24b3675d"></a><!-- doxytag: member="SAMRAI::hier::Box::getDim" ref="edd875e9194c26fbd9cfb72d24b3675d" args="() const " -->
+<a class="anchor" name="9f40565dab4c09c555a33df06e63ffbf"></a><!-- doxytag: member="SAMRAI::hier::Box::getDim" ref="9f40565dab4c09c555a33df06e63ffbf" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::hier::Box::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::Box::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -2105,18 +2284,20 @@ Utility function to coarsen the index space of a box by the specified coarsening
 
 <p>
 Return the dimension of this object. 
+<p>
+
 </div>
 </div><p>
-<a class="anchor" name="e0589046fa785f69b2a18d7a8a83694c"></a><!-- doxytag: member="SAMRAI::hier::Box::lockId" ref="e0589046fa785f69b2a18d7a8a83694c" args="()" -->
+<a class="anchor" name="29fd918ff1054237918c44eac68e3cb8"></a><!-- doxytag: member="SAMRAI::hier::Box::lockId" ref="29fd918ff1054237918c44eac68e3cb8" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::lockId           </td>
+          <td class="memname">void SAMRAI::hier::Box::lockId           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -2128,38 +2309,17 @@ Lock the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of thi
 
 </div>
 </div><p>
-<a class="anchor" name="8562b0f90fa3a2c5a817e7b0bdd53f6d"></a><!-- doxytag: member="SAMRAI::hier::Box::unlockId" ref="8562b0f90fa3a2c5a817e7b0bdd53f6d" args="()" -->
+<a class="anchor" name="523ce1dcfdce6547d55a7bb11277154e"></a><!-- doxytag: member="SAMRAI::hier::Box::getEmptyBox" ref="523ce1dcfdce6547d55a7bb11277154e" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::Box::unlockId           </td>
-          <td>(</td>
-          <td class="paramname">          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Unlock the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> of this <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> so that it may be changed. 
-<p>
-
-</div>
-</div><p>
-<a class="anchor" name="5c24ae46011a552d457bd4c72e596da6"></a><!-- doxytag: member="SAMRAI::hier::Box::getEmptyBox" ref="5c24ae46011a552d457bd4c72e596da6" args="(const tbox::Dimension &amp;dim)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::getEmptyBox           </td>
+          <td class="memname">static const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; SAMRAI::hier::Box::getEmptyBox           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -2171,17 +2331,17 @@ Return an empty <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> of 
 Can be used to avoid object creation overheads. 
 </div>
 </div><p>
-<a class="anchor" name="be7648fb4662e06afefce3fa1b5c9140"></a><!-- doxytag: member="SAMRAI::hier::Box::getUniverse" ref="be7648fb4662e06afefce3fa1b5c9140" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="aa1aaa1f27e129150f3d99e49fb13595"></a><!-- doxytag: member="SAMRAI::hier::Box::getUniverse" ref="aa1aaa1f27e129150f3d99e49fb13595" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::Box::getUniverse           </td>
+          <td class="memname">static const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; SAMRAI::hier::Box::getUniverse           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -2189,9 +2349,26 @@ Can be used to avoid object creation overheads.
 
 <p>
 Returns a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that represents the maximum allowed index extents for a given dimension. The "universe" that can be represented. 
+<p>
+
 </div>
 </div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="d733a42c3b297f8564b889396b408fb1"></a><!-- doxytag: member="SAMRAI::hier::Box::pdat::ArrayData" ref="d733a42c3b297f8564b889396b408fb1" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a><code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
 <a class="anchor" name="95d29f10dd52f5550b38333f130055b9"></a><!-- doxytag: member="SAMRAI::hier::Box::BoxIterator" ref="95d29f10dd52f5550b38333f130055b9" args="" -->
 <div class="memitem">
 <div class="memproto">
@@ -2249,6 +2426,8 @@ Returns a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> that repr
 
 <p>
 Read the box description in the form [L,U], where L and U are the lower and upper bounds of the box. 
+<p>
+
 </div>
 </div><p>
 <a class="anchor" name="e01e41a34a4583b053e918bc67e8a431"></a><!-- doxytag: member="SAMRAI::hier::Box::operator&lt;&lt;" ref="e01e41a34a4583b053e918bc67e8a431" args="(std::ostream &amp;s, const Box &amp;box)" -->
@@ -2278,11 +2457,13 @@ Read the box description in the form [L,U], where L and U are the lower and uppe
 
 <p>
 Output the box description in the form [L,U], where L and U are the lower and upper bounds of the box. 
+<p>
+
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="Box_8h.html">Box.h</a><li>source/SAMRAI/hier/<a class="el" href="Box_8C.html">Box.C</a><li>source/SAMRAI/hier/<a class="el" href="Box_8I.html">Box.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="Box_8h.html">Box.h</a><li>source/SAMRAI/hier/<a class="el" href="Box_8C.html">Box.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

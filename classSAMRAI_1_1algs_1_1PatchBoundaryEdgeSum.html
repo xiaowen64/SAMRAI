@@ -38,22 +38,22 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#35c32c00942fb52c8a354e7c9b118728">registerSum</a> (int edge_data_id)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register edge data with given patch data identifier for summing.  <a href="#35c32c00942fb52c8a354e7c9b118728"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#47c15390b5e19b394959607b7a3e9475">setupSum</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#99ac1e10009749a53850d3cfac8c50b7">setupSum</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up summation operations for edge data across shared edges on a single level.  <a href="#47c15390b5e19b394959607b7a3e9475"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up summation operations for edge data across shared edges on a single level.  <a href="#99ac1e10009749a53850d3cfac8c50b7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#3f199e4ff1f07fab2bacd9035bbc1264">computeSum</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute sum of edge values at each shared edge and replace each such edge value with the corresponding sum.  <a href="#3f199e4ff1f07fab2bacd9035bbc1264"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#65f33d16470b96629fc0d584b8e64faa">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#cfb6c85cfed5a2b1022eb3668623809c">getObjectName</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the object name.  <a href="#65f33d16470b96629fc0d584b8e64faa"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the object name.  <a href="#cfb6c85cfed5a2b1022eb3668623809c"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#c085d8efcffe88ae995252e094235d17">getNumSharedPatchDataSlots</a> (int max_variables_to_register)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#b6f2d52e3b75c99e7df19890103e6b9b">getNumSharedPatchDataSlots</a> (int max_variables_to_register)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function used to predetermine number of patch data slots ahared among all <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html">PatchBoundaryEdgeSum</a> objects (i.e., static members). To get a correct count, this routine should only be called once.  <a href="#c085d8efcffe88ae995252e094235d17"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#47ae11a4ed8882126e4b22148dec4ec3">getNumUniquePatchDataSlots</a> (int max_variables_to_register)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function used to predetermine number of patch data slots ahared among all <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html">PatchBoundaryEdgeSum</a> objects (i.e., static members). To get a correct count, this routine should only be called once.  <a href="#b6f2d52e3b75c99e7df19890103e6b9b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html#8b0d97cacf71dda4016a1c71151a3869">getNumUniquePatchDataSlots</a> (int max_variables_to_register)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function used to predetermine number of patch data slots unique to each <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html">PatchBoundaryEdgeSum</a> object (i.e., non-static members). To get a correct count, this routine should be called exactly once for each object that will be constructed.  <a href="#47ae11a4ed8882126e4b22148dec4ec3"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static function used to predetermine number of patch data slots unique to each <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html">PatchBoundaryEdgeSum</a> object (i.e., non-static members). To get a correct count, this routine should be called exactly once for each object that will be constructed.  <a href="#8b0d97cacf71dda4016a1c71151a3869"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryEdgeSum.html">PatchBoundaryEdgeSum</a> provides operations summing edge data values at edges that are shared by multiple patches on a single level. Note that this utility only works on a SINGLE patch level, not on a multiple levels in an AMR patch hierarchy like the <a class="el" href="classSAMRAI_1_1algs_1_1PatchBoundaryNodeSum.html">PatchBoundaryNodeSum</a> class. Unlike node data, edge data at coarse-fine boundaries are not co-located, so the sum operation is not clearly defined. 
@@ -81,7 +81,7 @@ The result of these operations is that each edge patch data value associated wit
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>object_name</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -120,17 +120,17 @@ Destructor for the schedule releases all internal storage.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="c085d8efcffe88ae995252e094235d17"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::getNumSharedPatchDataSlots" ref="c085d8efcffe88ae995252e094235d17" args="(int max_variables_to_register)" -->
+<a class="anchor" name="b6f2d52e3b75c99e7df19890103e6b9b"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::getNumSharedPatchDataSlots" ref="b6f2d52e3b75c99e7df19890103e6b9b" args="(int max_variables_to_register)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::algs::PatchBoundaryEdgeSum::getNumSharedPatchDataSlots           </td>
+          <td class="memname">static int SAMRAI::algs::PatchBoundaryEdgeSum::getNumSharedPatchDataSlots           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_variables_to_register</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -148,17 +148,17 @@ Static function used to predetermine number of patch data slots ahared among all
 
 </div>
 </div><p>
-<a class="anchor" name="47ae11a4ed8882126e4b22148dec4ec3"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::getNumUniquePatchDataSlots" ref="47ae11a4ed8882126e4b22148dec4ec3" args="(int max_variables_to_register)" -->
+<a class="anchor" name="8b0d97cacf71dda4016a1c71151a3869"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::getNumUniquePatchDataSlots" ref="8b0d97cacf71dda4016a1c71151a3869" args="(int max_variables_to_register)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::algs::PatchBoundaryEdgeSum::getNumUniquePatchDataSlots           </td>
+          <td class="memname">static int SAMRAI::algs::PatchBoundaryEdgeSum::getNumUniquePatchDataSlots           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_variables_to_register</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -203,14 +203,14 @@ Register edge data with given patch data identifier for summing.
 The edge data id must be a valid patch data id (&gt;=0) and must correspond to edge-centered double data. If not, an error will result. 
 </div>
 </div><p>
-<a class="anchor" name="47c15390b5e19b394959607b7a3e9475"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::setupSum" ref="47c15390b5e19b394959607b7a3e9475" args="(tbox::Pointer&lt; hier::PatchLevel &gt; level)" -->
+<a class="anchor" name="99ac1e10009749a53850d3cfac8c50b7"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::setupSum" ref="99ac1e10009749a53850d3cfac8c50b7" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::PatchBoundaryEdgeSum::setupSum           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -251,16 +251,16 @@ Compute sum of edge values at each shared edge and replace each such edge value 
 At the end of this method, all values at shared edge locations on patch boundaries will have the same value. 
 </div>
 </div><p>
-<a class="anchor" name="65f33d16470b96629fc0d584b8e64faa"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::getObjectName" ref="65f33d16470b96629fc0d584b8e64faa" args="() const " -->
+<a class="anchor" name="cfb6c85cfed5a2b1022eb3668623809c"></a><!-- doxytag: member="SAMRAI::algs::PatchBoundaryEdgeSum::getObjectName" ref="cfb6c85cfed5a2b1022eb3668623809c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::algs::PatchBoundaryEdgeSum::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::algs::PatchBoundaryEdgeSum::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -274,8 +274,8 @@ Returns the object name.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryEdgeSum_8h.html">PatchBoundaryEdgeSum.h</a><li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryEdgeSum_8C.html">PatchBoundaryEdgeSum.C</a><li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryEdgeSum_8I.html">PatchBoundaryEdgeSum.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryEdgeSum_8h.html">PatchBoundaryEdgeSum.h</a><li>source/SAMRAI/algs/<a class="el" href="PatchBoundaryEdgeSum_8C.html">PatchBoundaryEdgeSum.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

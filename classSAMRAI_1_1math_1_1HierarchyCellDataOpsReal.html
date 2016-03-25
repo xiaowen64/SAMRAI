@@ -31,15 +31,15 @@
 <a href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#0f07b4f21c46cdf505d305c8aec002d1">HierarchyCellDataOpsReal</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level=-1, const int finest_level=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#071102df65a62dcf4a3933bbe1eb4a19">HierarchyCellDataOpsReal</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level=-1, const int finest_level=-1)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#b6ce413720d5731ff96106653df1093a">~HierarchyCellDataOpsReal</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#ec0e915a5203952a2da5a14bfaa06801">setPatchHierarchy</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#8e74c6206c3f1aeca354311c7a7dd3b6">setPatchHierarchy</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#fc508e61eb4f3992aa9835c95a60de9e">resetLevels</a> (const int coarsest_level, const int finest_level)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#bf1fc2104b4b7a7b151c55c64e2c6530">getPatchHierarchy</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#9e216e24518db4df03b253e4c229daf0">getPatchHierarchy</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#05576bcc7e573b739e695883ebcaa069">copyData</a> (const int dst_id, const int src_id, const bool interior_only=true) const </td></tr>
 
@@ -121,7 +121,7 @@ Note that, when it makes sense, an operation accept a boolean argument which ind
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="0f07b4f21c46cdf505d305c8aec002d1"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::HierarchyCellDataOpsReal" ref="0f07b4f21c46cdf505d305c8aec002d1" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level=-1, const int finest_level=-1)" -->
+<a class="anchor" name="071102df65a62dcf4a3933bbe1eb4a19"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::HierarchyCellDataOpsReal" ref="071102df65a62dcf4a3933bbe1eb4a19" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level=-1, const int finest_level=-1)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -130,7 +130,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">SAMRAI::math::HierarchyCellDataOpsReal</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">HierarchyCellDataOpsReal</a>           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -155,7 +155,7 @@ template&lt;class TYPE&gt; </div>
 <div class="memdoc">
 
 <p>
-The constructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">HierarchyCellDataOpsReal</a> class sets the default patch hierarchy and coarsest and finest patch levels in that hierarchy over which operations will be performed. The hierarchy and operations may be reset using the member functions <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#ec0e915a5203952a2da5a14bfaa06801">setPatchHierarchy()</a> and <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#fc508e61eb4f3992aa9835c95a60de9e">resetLevels()</a> below. If no level number arguments are given here, the levels over which the operations will be performed are those already existing in the hierarchy. If the hierarchy level configuration changes, the operations must be explicitly reset by calling the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#fc508e61eb4f3992aa9835c95a60de9e">resetLevels()</a> function. 
+The constructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">HierarchyCellDataOpsReal</a> class sets the default patch hierarchy and coarsest and finest patch levels in that hierarchy over which operations will be performed. The hierarchy and operations may be reset using the member functions <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#8e74c6206c3f1aeca354311c7a7dd3b6">setPatchHierarchy()</a> and <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#fc508e61eb4f3992aa9835c95a60de9e">resetLevels()</a> below. If no level number arguments are given here, the levels over which the operations will be performed are those already existing in the hierarchy. If the hierarchy level configuration changes, the operations must be explicitly reset by calling the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#fc508e61eb4f3992aa9835c95a60de9e">resetLevels()</a> function. 
 </div>
 </div><p>
 <a class="anchor" name="b6ce413720d5731ff96106653df1093a"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::~HierarchyCellDataOpsReal" ref="b6ce413720d5731ff96106653df1093a" args="()" -->
@@ -180,7 +180,7 @@ Virtual destructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyC
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="ec0e915a5203952a2da5a14bfaa06801"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::setPatchHierarchy" ref="ec0e915a5203952a2da5a14bfaa06801" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy)" -->
+<a class="anchor" name="8e74c6206c3f1aeca354311c7a7dd3b6"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::setPatchHierarchy" ref="8e74c6206c3f1aeca354311c7a7dd3b6" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -189,7 +189,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">SAMRAI::math::HierarchyCellDataOpsReal</a>&lt; TYPE &gt;::setPatchHierarchy           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -201,7 +201,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Reset patch hierarchy over which operations occur. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#943a05258be041397506055a482927f4">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.
+Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#f9989fd0620b6f400fe741a8a46b02c3">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="fc508e61eb4f3992aa9835c95a60de9e"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::resetLevels" ref="fc508e61eb4f3992aa9835c95a60de9e" args="(const int coarsest_level, const int finest_level)" -->
@@ -237,14 +237,14 @@ Reset range of patch levels over which operations occur. The levels must exist i
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#e138dd5ec7f619eaa6b46a336d91fa94">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="bf1fc2104b4b7a7b151c55c64e2c6530"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::getPatchHierarchy" ref="bf1fc2104b4b7a7b151c55c64e2c6530" args="() const " -->
+<a class="anchor" name="9e216e24518db4df03b253e4c229daf0"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::getPatchHierarchy" ref="9e216e24518db4df03b253e4c229daf0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">SAMRAI::math::HierarchyCellDataOpsReal</a>&lt; TYPE &gt;::getPatchHierarchy           </td>
+          <td class="memname">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">SAMRAI::math::HierarchyCellDataOpsReal</a>&lt; TYPE &gt;::getPatchHierarchy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -257,7 +257,7 @@ template&lt;class TYPE&gt; </div>
 <p>
 Return const pointer to patch hierarchy associated with operations. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#764d21d7ac2d38dbff8050da1fe035cc">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.
+Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#168add198b0171873d208940aa0b735f">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="05576bcc7e573b739e695883ebcaa069"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::copyData" ref="05576bcc7e573b739e695883ebcaa069" args="(const int dst_id, const int src_id, const bool interior_only=true) const " -->
@@ -1609,7 +1609,7 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyCellDataOpsReal_8h.html">HierarchyCellDataOpsReal.h</a><li>source/SAMRAI/math/<a class="el" href="HierarchyCellDataOpsReal_8C.html">HierarchyCellDataOpsReal.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

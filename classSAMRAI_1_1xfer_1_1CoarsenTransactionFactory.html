@@ -46,16 +46,17 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#fe975418b483051df4ae3e9d487f7747">unsetCoarsenItems</a> ()=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to clear the array of CoarsenClass::Data items associated with the coarsen schedule. This operation is called by the coarsen schedule after data communication operations are complete.  <a href="#fe975418b483051df4ae3e9d487f7747"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#a88f959960ec20cf15e95bcddf1a1e39">allocate</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int citem_id) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#33384113a900643dce31c325bf1800cc">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int citem_id) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to allocate a concrete coarsen transaction object. This routine is called by the coarsen schedule during construction of the schedule.  <a href="#a88f959960ec20cf15e95bcddf1a1e39"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to allocate a concrete coarsen transaction object. This routine is called by the coarsen schedule during construction of the schedule.  <a href="#33384113a900643dce31c325bf1800cc"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class defining the interface for all concrete transaction factory objects that generate data transaction objects used with a <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> object. A concrete subclass will allocate new transaction objects. This class is an example of the ``Abstract Factory'' method described in the Design Patterns book by Gamma, et al. 
 <p>
 To add a new type of Transaction object MyCoarsenTransaction:<p>
 <ol type=1>
-<li>Implement a concrete <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> object as a subclass that is derived from this <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> base class. Implement the abstract virtual functions as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#a88f959960ec20cf15e95bcddf1a1e39">allocate()</a> function must return a new instance of the desired transaction object.</li><li>The type of the transaction allocated by the concrete factory is a Transaction&lt;DIM&gt;. Thus, the new transaction object must be derived from the Transaction&lt;DIM&gt; base class and implement the abstract virtual functions declared by the base class.</li></ol>
+<li>Implement a concrete <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> object as a subclass that is derived from this <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> base class. Implement the abstract virtual functions as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html#33384113a900643dce31c325bf1800cc">allocate()</a> function must return a new instance of the desired transaction object.</li><li>The type of the transaction allocated by the concrete factory is a Transaction&lt;DIM&gt;. Thus, the new transaction object must be derived from the Transaction&lt;DIM&gt; base class and implement the abstract virtual functions declared by the base class.</li></ol>
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> </dd></dl>
 
@@ -160,26 +161,26 @@ Pure virtual function to clear the array of CoarsenClass::Data items associated 
 Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#e119b70d53bc5ef53452cf4c11277047">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="a88f959960ec20cf15e95bcddf1a1e39"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::allocate" ref="a88f959960ec20cf15e95bcddf1a1e39" args="(tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, tbox::Pointer&lt; hier::BoxOverlap &gt; overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int citem_id) const =0" -->
+<a class="anchor" name="33384113a900643dce31c325bf1800cc"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenTransactionFactory::allocate" ref="33384113a900643dce31c325bf1800cc" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int citem_id) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a>&gt; SAMRAI::xfer::CoarsenTransactionFactory::allocate           </td>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a>&gt; SAMRAI::xfer::CoarsenTransactionFactory::allocate           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em>, </td>
         </tr>
         <tr>
@@ -214,22 +215,22 @@ Pure virtual function to allocate a concrete coarsen transaction object. This ro
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to source patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to overlap region between patches. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dst_patch_id</em>&nbsp;</td><td>Integer index of destination patch in destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_patch_id</em>&nbsp;</td><td>Integer index of source patch in source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td>boost::shared_ptr to destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td>boost::shared_ptr to source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td>boost::shared_ptr to overlap region between patches. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_mapped_box</em>&nbsp;</td><td>Destination Box in destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_mapped_box</em>&nbsp;</td><td>Source Box in source patch level. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>citem_id</em>&nbsp;</td><td>Integer index of CoarsenClass::Data item associated with transaction. </td></tr>
   </table>
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#22b056feffbff67263d4a81eddb26abc">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardCoarsenTransactionFactory.html#a2a059a53f89347592ab454bb5c46185">SAMRAI::xfer::StandardCoarsenTransactionFactory</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenTransactionFactory_8h.html">CoarsenTransactionFactory.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenTransactionFactory_8C.html">CoarsenTransactionFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

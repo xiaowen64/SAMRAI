@@ -35,8 +35,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideIntegerConstantRefine.html#f468a7d9deb4ffb41ee3d120912053c1">~SideIntegerConstantRefine</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideIntegerConstantRefine.html#0c9da1293c279757e06dbc755e31a579">findRefineOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const std::string &amp;op_name) const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideIntegerConstantRefine.html#a44f73ec5b1d162b968a1bddf625de60">getOperatorPriority</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1SideIntegerConstantRefine.html#4338ba2f9743567a688ed83869d557c4">getStencilWidth</a> () const </td></tr>
@@ -46,7 +44,6 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1SideIntegerConstantRefine.html">SideIntegerConstantRefine</a> implements constant interpolation for side-centered integer patch data defined over a mesh. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> base class. The numerical operations for interpolation use FORTRAN numerical routines.<p>
-The <a class="el" href="classSAMRAI_1_1pdat_1_1SideIntegerConstantRefine.html#0c9da1293c279757e06dbc755e31a579">findRefineOperator()</a> operator function returns true if the input variable is side-centered integer, and the string is "CONSTANT_REFINE".<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> </dd></dl>
 
 <p>
@@ -91,37 +88,6 @@ Uninteresting virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="0c9da1293c279757e06dbc755e31a579"></a><!-- doxytag: member="SAMRAI::pdat::SideIntegerConstantRefine::findRefineOperator" ref="0c9da1293c279757e06dbc755e31a579" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;var, const std::string &amp;op_name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::pdat::SideIntegerConstantRefine::findRefineOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return true if the variable and name string match side-centered integer constant interpolation; otherwise, return false. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#179871a2379def0a0979981db947a011">SAMRAI::hier::RefineOperator</a>.
-</div>
-</div><p>
 <a class="anchor" name="a44f73ec5b1d162b968a1bddf625de60"></a><!-- doxytag: member="SAMRAI::pdat::SideIntegerConstantRefine::getOperatorPriority" ref="a44f73ec5b1d162b968a1bddf625de60" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +187,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="SideIntegerConstantRefine_8h.html">SideIntegerConstantRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -43,21 +43,24 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#e48277ca5772b9af251083fcd3723100">computeFillBoxesAndNeighborhoodSets</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;fill_mapped_boxes, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_fill, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;dst_to_src, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the mapped boxes representing the region that will be filled by a <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a>.  <a href="#e48277ca5772b9af251083fcd3723100"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#bf91d9e2af5934a168685521bbb0e0dc">needsToCommunicateDestinationFillBoxes</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#c191f27ba505558ac071597ad569de7f">needsToCommunicateDestinationFillBoxes</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true because source patch owner cannot compute fill boxes across block boundaries.  <a href="#bf91d9e2af5934a168685521bbb0e0dc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#caf40097b24d517d02d140dfd00ceb22">doesSourceLevelCommunicateToDestination</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true because source patch owner cannot compute fill boxes across block boundaries.  <a href="#c191f27ba505558ac071597ad569de7f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#871b24506e8b42724ff9d822577c74ee">computeDestinationFillBoxesOnSourceProc</a> (<a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#62ec75c7180c8d5e1b9afe3824c639f3">FillSet</a> &amp;dst_fill_boxes_on_src_proc, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;dst_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;src_to_dst, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;fill_ghost_width)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> not to communicate data directly from source to destination level.  <a href="#caf40097b24d517d02d140dfd00ceb22"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#6de03ad467206ecc3059e0771efebf61">getMaxFillBoxes</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual method to compute the destination fill boxes.  <a href="#871b24506e8b42724ff9d822577c74ee"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#a233785254b11d5d5eeeac3551024e54">doesSourceLevelCommunicateToDestination</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the maximum number of fill boxes.  <a href="#6de03ad467206ecc3059e0771efebf61"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#5ca572c28f071498b11105bacb2bc738">fillingCoarseFineGhosts</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Tell <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> not to communicate data directly from source to destination level.  <a href="#a233785254b11d5d5eeeac3551024e54"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#b968f645c0de166c6276a47d074db6dc">getMaxFillBoxes</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true because this fill pattern fills coarse fine ghost data.  <a href="#5ca572c28f071498b11105bacb2bc738"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#cc334b708f3d641cb257b9076e1ab9cd">fillingEnhancedConnectivityOnly</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the maximum number of fill boxes.  <a href="#b968f645c0de166c6276a47d074db6dc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#db7815211741b0b2f7802bd2d9e2f182">fillingCoarseFineGhosts</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true because this fill pattern is specialized for enhanced connectivity only.  <a href="#cc334b708f3d641cb257b9076e1ab9cd"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true because this fill pattern fills coarse fine ghost data.  <a href="#db7815211741b0b2f7802bd2d9e2f182"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#bc5ece3d8c18528c8efd490e063538e4">fillingEnhancedConnectivityOnly</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true because this fill pattern is specialized for enhanced connectivity only.  <a href="#bc5ece3d8c18528c8efd490e063538e4"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html">PatchLevelEnhancedFillPattern</a> is an implementation of the abstract base class <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a>. 
@@ -185,12 +188,12 @@ This is currently unimplemented until BoxLevel is multiblock-aware. An error wil
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#13db97cb834837a51a80c93e6cc1d8ee">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="bf91d9e2af5934a168685521bbb0e0dc"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes" ref="bf91d9e2af5934a168685521bbb0e0dc" args="() const " -->
+<a class="anchor" name="c191f27ba505558ac071597ad569de7f"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes" ref="c191f27ba505558ac071597ad569de7f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes           </td>
+          <td class="memname">bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::needsToCommunicateDestinationFillBoxes           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -209,12 +212,55 @@ Return true because source patch owner cannot compute fill boxes across block bo
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#25c69f091a221ea90cc044b557f23552">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="caf40097b24d517d02d140dfd00ceb22"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::doesSourceLevelCommunicateToDestination" ref="caf40097b24d517d02d140dfd00ceb22" args="() const " -->
+<a class="anchor" name="871b24506e8b42724ff9d822577c74ee"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::computeDestinationFillBoxesOnSourceProc" ref="871b24506e8b42724ff9d822577c74ee" args="(FillSet &amp;dst_fill_boxes_on_src_proc, const hier::BoxLevel &amp;dst_mapped_box_level, const hier::Connector &amp;src_to_dst, const hier::IntVector &amp;fill_ghost_width)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::doesSourceLevelCommunicateToDestination           </td>
+          <td class="memname">void SAMRAI::xfer::PatchLevelEnhancedFillPattern::computeDestinationFillBoxesOnSourceProc           </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#62ec75c7180c8d5e1b9afe3824c639f3">FillSet</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_fill_boxes_on_src_proc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>dst_mapped_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>src_to_dst</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>fill_ghost_width</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Virtual method to compute the destination fill boxes. 
+<p>
+Since <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelEnhancedFillPattern.html#c191f27ba505558ac071597ad569de7f">needsToCommunicateDestinationFillBoxes()</a> returns true, this method should never be called. It is implemented here to satisfy the pure virtual interface from the base class. An error will result if this is ever called. 
+</div>
+</div><p>
+<a class="anchor" name="a233785254b11d5d5eeeac3551024e54"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::doesSourceLevelCommunicateToDestination" ref="a233785254b11d5d5eeeac3551024e54" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::doesSourceLevelCommunicateToDestination           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -234,12 +280,12 @@ With this fill pattern, the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSch
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#553200893e48c553ce9a848f41f8c69d">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="6de03ad467206ecc3059e0771efebf61"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::getMaxFillBoxes" ref="6de03ad467206ecc3059e0771efebf61" args="() const " -->
+<a class="anchor" name="b968f645c0de166c6276a47d074db6dc"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::getMaxFillBoxes" ref="b968f645c0de166c6276a47d074db6dc" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::xfer::PatchLevelEnhancedFillPattern::getMaxFillBoxes           </td>
+          <td class="memname">int SAMRAI::xfer::PatchLevelEnhancedFillPattern::getMaxFillBoxes           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -257,12 +303,12 @@ This will not return a valid value until computeFillBoxesAndNeighborhoodSets is 
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#2bd1d013f9fd6788899e80faecda44c8">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="5ca572c28f071498b11105bacb2bc738"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingCoarseFineGhosts" ref="5ca572c28f071498b11105bacb2bc738" args="() const " -->
+<a class="anchor" name="db7815211741b0b2f7802bd2d9e2f182"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingCoarseFineGhosts" ref="db7815211741b0b2f7802bd2d9e2f182" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingCoarseFineGhosts           </td>
+          <td class="memname">bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingCoarseFineGhosts           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -280,12 +326,12 @@ Returns true because this fill pattern fills coarse fine ghost data.
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html#0ed70f3a014fdb65ef2c916f21e327a2">SAMRAI::xfer::PatchLevelFillPattern</a>.
 </div>
 </div><p>
-<a class="anchor" name="cc334b708f3d641cb257b9076e1ab9cd"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly" ref="cc334b708f3d641cb257b9076e1ab9cd" args="() const " -->
+<a class="anchor" name="bc5ece3d8c18528c8efd490e063538e4"></a><!-- doxytag: member="SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly" ref="bc5ece3d8c18528c8efd490e063538e4" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly           </td>
+          <td class="memname">bool SAMRAI::xfer::PatchLevelEnhancedFillPattern::fillingEnhancedConnectivityOnly           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -304,8 +350,8 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8h.html">PatchLevelEnhancedFillPattern.h</a><li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8C.html">PatchLevelEnhancedFillPattern.C</a><li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8I.html">PatchLevelEnhancedFillPattern.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8h.html">PatchLevelEnhancedFillPattern.h</a><li>source/SAMRAI/xfer/<a class="el" href="PatchLevelEnhancedFillPattern_8C.html">PatchLevelEnhancedFillPattern.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:59 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

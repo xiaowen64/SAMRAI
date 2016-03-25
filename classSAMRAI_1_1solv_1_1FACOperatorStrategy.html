@@ -62,12 +62,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#d87ddb09cfe2c3aa4fb73ca0ba05d516">computeResidualNorm</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;residual, int fine_ln, int coarse_ln)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the norm of the residual quantity.  <a href="#d87ddb09cfe2c3aa4fb73ca0ba05d516"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#821ecf721ad77ed218f2253372d0273e">postprocessOneCycle</a> (int fac_cycle_num, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;current_soln, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;residual)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#17f9d1fc4955fb151f09ab56ea02654b">postprocessOneCycle</a> (int fac_cycle_num, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;current_soln, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;residual)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Regular call back routine to be called after each FAC cycle.  <a href="#821ecf721ad77ed218f2253372d0273e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#b7c6eafb7193640cc4704a5e46a0c7ff">initializeOperatorState</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;solution, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;rhs)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Regular call back routine to be called after each FAC cycle.  <a href="#17f9d1fc4955fb151f09ab56ea02654b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#2fb54d806fdf60549bcaada57a3694a7">initializeOperatorState</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;solution, const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;rhs)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute hierarchy-dependent data if any is required.  <a href="#b7c6eafb7193640cc4704a5e46a0c7ff"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute hierarchy-dependent data if any is required.  <a href="#2fb54d806fdf60549bcaada57a3694a7"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#cd3290e2ac8e3f53342c4997afcc0c43">deallocateOperatorState</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove all hierarchy-dependent data.  <a href="#cd3290e2ac8e3f53342c4997afcc0c43"></a><br></td></tr>
@@ -519,12 +519,12 @@ Residual values that lie under a finer level should not be counted.<p>
 Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#600efac0d1a09650e090b3fd78fd91bb">SAMRAI::solv::CellPoissonFACOps</a>.
 </div>
 </div><p>
-<a class="anchor" name="821ecf721ad77ed218f2253372d0273e"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::postprocessOneCycle" ref="821ecf721ad77ed218f2253372d0273e" args="(int fac_cycle_num, const SAMRAIVectorReal&lt; double &gt; &amp;current_soln, const SAMRAIVectorReal&lt; double &gt; &amp;residual)" -->
+<a class="anchor" name="17f9d1fc4955fb151f09ab56ea02654b"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::postprocessOneCycle" ref="17f9d1fc4955fb151f09ab56ea02654b" args="(int fac_cycle_num, const SAMRAIVectorReal&lt; double &gt; &amp;current_soln, const SAMRAIVectorReal&lt; double &gt; &amp;residual)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::solv::FACOperatorStrategy::postprocessOneCycle           </td>
+          <td class="memname">virtual void SAMRAI::solv::FACOperatorStrategy::postprocessOneCycle           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>fac_cycle_num</em>, </td>
@@ -544,7 +544,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -564,15 +564,15 @@ The default implementation does nothing.<p>
 </dl>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#dda1412142d5c70a223128be7a0dfcd1">SAMRAI::solv::CellPoissonFACOps</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#dda1412142d5c70a223128be7a0dfcd1">SAMRAI::solv::CellPoissonFACOps</a>.
 </div>
 </div><p>
-<a class="anchor" name="b7c6eafb7193640cc4704a5e46a0c7ff"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::initializeOperatorState" ref="b7c6eafb7193640cc4704a5e46a0c7ff" args="(const SAMRAIVectorReal&lt; double &gt; &amp;solution, const SAMRAIVectorReal&lt; double &gt; &amp;rhs)" -->
+<a class="anchor" name="2fb54d806fdf60549bcaada57a3694a7"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::initializeOperatorState" ref="2fb54d806fdf60549bcaada57a3694a7" args="(const SAMRAIVectorReal&lt; double &gt; &amp;solution, const SAMRAIVectorReal&lt; double &gt; &amp;rhs)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::solv::FACOperatorStrategy::initializeOperatorState           </td>
+          <td class="memname">virtual void SAMRAI::solv::FACOperatorStrategy::initializeOperatorState           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>solution</em>, </td>
@@ -586,7 +586,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.ht
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -608,7 +608,7 @@ Note that although the vector arguments given to other methods in this class may
 </dl>
 The default implementation does nothing. 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#de6b8fff6898f32c5b952b068cf43651">SAMRAI::solv::CellPoissonFACOps</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#de6b8fff6898f32c5b952b068cf43651">SAMRAI::solv::CellPoissonFACOps</a>.
 </div>
 </div><p>
 <a class="anchor" name="cd3290e2ac8e3f53342c4997afcc0c43"></a><!-- doxytag: member="SAMRAI::solv::FACOperatorStrategy::deallocateOperatorState" ref="cd3290e2ac8e3f53342c4997afcc0c43" args="()" -->
@@ -629,8 +629,8 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.ht
 <p>
 Remove all hierarchy-dependent data. 
 <p>
-Remove all hierarchy-dependent data set by <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#b7c6eafb7193640cc4704a5e46a0c7ff">initializeOperatorState()</a>.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#b7c6eafb7193640cc4704a5e46a0c7ff">initializeOperatorState</a> </dd></dl>
+Remove all hierarchy-dependent data set by <a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#2fb54d806fdf60549bcaada57a3694a7">initializeOperatorState()</a>.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1FACOperatorStrategy.html#2fb54d806fdf60549bcaada57a3694a7">initializeOperatorState</a> </dd></dl>
 
 <p>
 Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.html#c5cabdad53ce01fd47d3b1b63e268c10">SAMRAI::solv::CellPoissonFACOps</a>.
@@ -638,7 +638,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACOps.ht
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/solv/<a class="el" href="FACOperatorStrategy_8h.html">FACOperatorStrategy.h</a><li>source/SAMRAI/solv/<a class="el" href="FACOperatorStrategy_8C.html">FACOperatorStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

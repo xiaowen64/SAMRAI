@@ -29,90 +29,90 @@
 <a href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#0494668cb6e6fa9a0370452cd5d2440c">CellPoissonFACSolver</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#24b917173ba66d851c45ae4e1d9de14a">CellPoissonFACSolver</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a solver.  <a href="#0494668cb6e6fa9a0370452cd5d2440c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#1432f3bfe3613178e201c9b1434a1733">~CellPoissonFACSolver</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a solver.  <a href="#24b917173ba66d851c45ae4e1d9de14a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#64ceaaebaecc22cc229e9af7dcfa5e70">~CellPoissonFACSolver</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#1432f3bfe3613178e201c9b1434a1733"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#64ceaaebaecc22cc229e9af7dcfa5e70"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#1a53dd35c21b776b65d20355a4003cd7">enableLogging</a> (bool logging)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enable logging.  <a href="#1a53dd35c21b776b65d20355a4003cd7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#e0bcc36f2669513b7b52e06d691f83b1">solveSystem</a> (const int solution, const int rhs, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, int coarse_ln=-1, int fine_ln=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#2a957bb187d3b63c5fe717dd2d830a79">solveSystem</a> (const int solution, const int rhs, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int coarse_ln=-1, int fine_ln=-1)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve Poisson's equation, assuming an uninitialized solver state.  <a href="#e0bcc36f2669513b7b52e06d691f83b1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve Poisson's equation, assuming an uninitialized solver state.  <a href="#2a957bb187d3b63c5fe717dd2d830a79"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#aac02784e9cbcb1aac14e3200c6ec45b">solveSystem</a> (const int solution, const int rhs)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve Poisson's equation using the current solver state set by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a>.  <a href="#aac02784e9cbcb1aac14e3200c6ec45b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve Poisson's equation using the current solver state set by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a>.  <a href="#aac02784e9cbcb1aac14e3200c6ec45b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dce4cbfccddba8482bb4513ed369cffb">setBoundaries</a> (const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify the boundary conditions that are to be used at the physical domain boundary.  <a href="#dce4cbfccddba8482bb4513ed369cffb"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#c48d798320cedd1a0761b00666882bce">setBcObject</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *bc_object)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Override internal implementation to set boundary condition coefficients with user-provided implementation.  <a href="#c48d798320cedd1a0761b00666882bce"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState</a> (const int solution, const int rhs, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarse_level=-1, const int fine_level=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState</a> (const int solution, const int rhs, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarse_level=-1, const int fine_level=-1)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Prepare the solver's internal state for solving.  <a href="#213e2e13fc4469c3483673647afb7646"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Prepare the solver's internal state for solving.  <a href="#a307091f8fc0501fcef233fa8cf7a817"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#29641296b35a31d68627c52bfd5371f0">deallocateSolverState</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove the solver's internal state data.  <a href="#29641296b35a31d68627c52bfd5371f0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#6c9202f74850e57d794aee2b70eaad65">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d68aff6e5610391b028d44ed5bac5f8e">getObjectName</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#6c9202f74850e57d794aee2b70eaad65"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#d68aff6e5610391b028d44ed5bac5f8e"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Specifying PDE parameters</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#973955603cb04fac38d34ccff14c22ef">setDPatchDataId</a> (int id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#ebc803b1d2016fb8cce53a679ea07c7a">setDPatchDataId</a> (int id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the patch data index for variable D.  <a href="#973955603cb04fac38d34ccff14c22ef"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#779608d30ac4c1b51865c9e502970f53">setDConstant</a> (double scalar)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the patch data index for variable D.  <a href="#ebc803b1d2016fb8cce53a679ea07c7a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#88743b1fa623d1344724fba7533487a3">setDConstant</a> (double scalar)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the scalar value variable D.  <a href="#779608d30ac4c1b51865c9e502970f53"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#f014877c35b8d7c85b6a6964cc38711c">setCPatchDataId</a> (int id)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the scalar value variable D.  <a href="#88743b1fa623d1344724fba7533487a3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#81cd4ff98db2648352f0e230f8ebf301">setCPatchDataId</a> (int id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the scalar value variable C.  <a href="#f014877c35b8d7c85b6a6964cc38711c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#97b49b7f7ef9c2685377c2b73d0f88ff">setCConstant</a> (double scalar)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the scalar value variable C.  <a href="#81cd4ff98db2648352f0e230f8ebf301"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dfdb55e97439fe7172da4e397789060a">setCConstant</a> (double scalar)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the patch data index for variable C.  <a href="#97b49b7f7ef9c2685377c2b73d0f88ff"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the patch data index for variable C.  <a href="#dfdb55e97439fe7172da4e397789060a"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d13f042ecfc9e6e88ad94459db4c8d96">setCoarsestLevelSolverChoice</a> (const std::string &amp;choice)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#1888facbf5428b887c41f61291945528">setCoarsestLevelSolverChoice</a> (const std::string &amp;choice)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set coarse level solver.  <a href="#d13f042ecfc9e6e88ad94459db4c8d96"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#04c814a7d724dd6b5776d0c4bcc55b05">setCoarsestLevelSolverTolerance</a> (double tol)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set coarse level solver.  <a href="#1888facbf5428b887c41f61291945528"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#9ae6cf394d3e92da088718923a8ed9c8">setCoarsestLevelSolverTolerance</a> (double tol)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set tolerance for coarse level solve.  <a href="#04c814a7d724dd6b5776d0c4bcc55b05"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#fccd175c7a0079b26600eaf613796477">setCoarsestLevelSolverMaxIterations</a> (int max_iterations)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set tolerance for coarse level solve.  <a href="#9ae6cf394d3e92da088718923a8ed9c8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#c17f9500ad33f6f91a912d073cb0e00c">setCoarsestLevelSolverMaxIterations</a> (int max_iterations)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set max iterations for coarse level solve.  <a href="#fccd175c7a0079b26600eaf613796477"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#4034f2a0d7c889e6d520e5ee8eb6be16">setUseSMG</a> (bool use_smg)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set max iterations for coarse level solve.  <a href="#c17f9500ad33f6f91a912d073cb0e00c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#299fa193b2c6236119cba88ff7ccf0f0">setUseSMG</a> (bool use_smg)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use HYPRe's PFMG algorithm instead of the SMG algorithm.  <a href="#4034f2a0d7c889e6d520e5ee8eb6be16"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#7a01aabda75dfef8789230170a8ed90c">setCoarseFineDiscretization</a> (const std::string &amp;coarsefine_method)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use HYPRe's PFMG algorithm instead of the SMG algorithm.  <a href="#299fa193b2c6236119cba88ff7ccf0f0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#07411d1dae611abb3e87b93ea9329058">setCoarseFineDiscretization</a> (const std::string &amp;coarsefine_method)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the coarse-fine boundary discretization method.  <a href="#7a01aabda75dfef8789230170a8ed90c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#222179ae37ace9355201a6756869c80d">setProlongationMethod</a> (const std::string &amp;prolongation_method)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the coarse-fine boundary discretization method.  <a href="#07411d1dae611abb3e87b93ea9329058"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#4051286a90b49e8cdef05cda287360a6">setProlongationMethod</a> (const std::string &amp;prolongation_method)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the name of the prolongation method.  <a href="#222179ae37ace9355201a6756869c80d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#54918bf862095228e95671f42c7bd368">setPresmoothingSweeps</a> (int num_pre_sweeps)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the name of the prolongation method.  <a href="#4051286a90b49e8cdef05cda287360a6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#b2b2ad1245fc78aa4a885edfc2ad2135">setPresmoothingSweeps</a> (int num_pre_sweeps)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of pre-smoothing sweeps during FAC iteration process.  <a href="#54918bf862095228e95671f42c7bd368"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#1d9d81bbb349e6432d0089bbd6508b90">setPostsmoothingSweeps</a> (int num_post_sweeps)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of pre-smoothing sweeps during FAC iteration process.  <a href="#b2b2ad1245fc78aa4a885edfc2ad2135"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dd1bb32372d25357303d12d51f604655">setPostsmoothingSweeps</a> (int num_post_sweeps)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of post-smoothing sweeps during FAC iteration process.  <a href="#1d9d81bbb349e6432d0089bbd6508b90"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#ce9dffabb75627f500a634a844b93e48">setMaxCycles</a> (int max_cycles)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of post-smoothing sweeps during FAC iteration process.  <a href="#dd1bb32372d25357303d12d51f604655"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#2756a57368bf09c129786f1fe9334118">setMaxCycles</a> (int max_cycles)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the max number of iterations (cycles) to use per solve.  <a href="#ce9dffabb75627f500a634a844b93e48"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a4618195b0e02c0f470f2b453faafd12">setResidualTolerance</a> (double residual_tol)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the max number of iterations (cycles) to use per solve.  <a href="#2756a57368bf09c129786f1fe9334118"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#ac7da779cd9270a552a49c7795aafdb1">setResidualTolerance</a> (double residual_tol)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the residual tolerance for stopping.  <a href="#a4618195b0e02c0f470f2b453faafd12"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the residual tolerance for stopping.  <a href="#ac7da779cd9270a552a49c7795aafdb1"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions to get data on last solve.</div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d63d229a713f69ce70bb0570e2d4ed31">getNumberOfIterations</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#aebd721a089d38a1e2b64362909fff80">getNumberOfIterations</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return FAC iteration count from last (or current if there is one) FAC iteration process.  <a href="#d63d229a713f69ce70bb0570e2d4ed31"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#53f7250dc2a2e975d1b707c7d1dec020">getConvergenceFactors</a> (double &amp;avg_factor, double &amp;final_factor) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return FAC iteration count from last (or current if there is one) FAC iteration process.  <a href="#aebd721a089d38a1e2b64362909fff80"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d039daa0ba1472a87429fc6216889a08">getConvergenceFactors</a> (double &amp;avg_factor, double &amp;final_factor) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get average convergance rate and convergence rate of the last (or current if there is one) FAC solve.  <a href="#53f7250dc2a2e975d1b707c7d1dec020"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#62a37918dc0c50f8c342765dddd04e74">getResidualNorm</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get average convergance rate and convergence rate of the last (or current if there is one) FAC solve.  <a href="#d039daa0ba1472a87429fc6216889a08"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#9368b2be26b1b09591766c675f799140">getResidualNorm</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return residual norm from the just-completed FAC iteration.  <a href="#62a37918dc0c50f8c342765dddd04e74"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return residual norm from the just-completed FAC iteration.  <a href="#9368b2be26b1b09591766c675f799140"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class for solving scalar Poisson's equation on SAMR grid, wrapping up lower-level components (FAC cycling, Poisson equation operations and boundary conditions) in a single high-level interface. 
@@ -122,10 +122,10 @@ We solve the equation div(D grad(u)) + Cu = f where D is a side-centered array a
 This class is a wrapper, providing a single class that coordinates three major components: the FAC solver, the cell-centered Poisson FAC operator and a default Robin bc coefficient implelemtation. It is perfectly acceptable to use those classes outside of this class.<p>
 The underlying solver is an FAC solver using cell-centered discretization. The difference scheme is second-order central-difference. On coarse-fine boundaries within the solution levels, the composite grid operator uses, by default, the discretization method of Ewing, Lazarov and Vassilevski ("Local Refinement Techniques for Elliptic Problems on Cell-Centered Grids, I. Error Analysis", Mathematics of Computation, Vol. 56, No. 194, April 1991, pp. 437-461).<p>
 Typical use of this class is:<ol type=1>
-<li>Construct a <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html">CellPoissonFACSolver</a> object, providing it the hierarchy and range of levels participating in the solve.</li><li>Set the parameters C and D using the functions named <code>setC</code>... and <code>setD</code>... By default, D=1 and C=0 everywhere.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dce4cbfccddba8482bb4513ed369cffb">setBoundaries()</a> to state the types boundary conditions, along with supplemental data for setting those boundary conditions.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a> to set up information internal to the solver. This is step is not required but will save setup costs if you are making multiple solves. This commits the object to the current hierarchy state and the specific <em>types</em> of boundary conditions you selected, It does NOT commit to the specific <em>values</em> of the boundary condition. A hierarchy change (through adaption or other means) invalidates the state, thus you must reinitialize or <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#29641296b35a31d68627c52bfd5371f0">deallocateSolverState()</a> the state before another solve.</li><li>Solve the equation with <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#e0bcc36f2669513b7b52e06d691f83b1">solveSystem()</a>. You provide the patch data indices for the solution u and the right hand side f. u must have at least one ghost cell and where a Dirichlet boundary condition applies, those cells must be set to the value on the boundary. If only Neumann boundary conditions are used, the ghost cell values do not matter.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#29641296b35a31d68627c52bfd5371f0">deallocateSolverState()</a> to free up internal resources, if <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a> was called before the solve.</li></ol>
+<li>Construct a <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html">CellPoissonFACSolver</a> object, providing it the hierarchy and range of levels participating in the solve.</li><li>Set the parameters C and D using the functions named <code>setC</code>... and <code>setD</code>... By default, D=1 and C=0 everywhere.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dce4cbfccddba8482bb4513ed369cffb">setBoundaries()</a> to state the types boundary conditions, along with supplemental data for setting those boundary conditions.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a> to set up information internal to the solver. This is step is not required but will save setup costs if you are making multiple solves. This commits the object to the current hierarchy state and the specific <em>types</em> of boundary conditions you selected, It does NOT commit to the specific <em>values</em> of the boundary condition. A hierarchy change (through adaption or other means) invalidates the state, thus you must reinitialize or <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#29641296b35a31d68627c52bfd5371f0">deallocateSolverState()</a> the state before another solve.</li><li>Solve the equation with <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#2a957bb187d3b63c5fe717dd2d830a79">solveSystem()</a>. You provide the patch data indices for the solution u and the right hand side f. u must have at least one ghost cell and where a Dirichlet boundary condition applies, those cells must be set to the value on the boundary. If only Neumann boundary conditions are used, the ghost cell values do not matter.</li><li>Call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#29641296b35a31d68627c52bfd5371f0">deallocateSolverState()</a> to free up internal resources, if <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a> was called before the solve.</li></ol>
 <p>
 After the solve, information on the solve can be obtained by calling one of these functions:<ul>
-<li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d63d229a713f69ce70bb0570e2d4ed31">getNumberOfIterations()</a> gives the number of FAC cycles used.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#53f7250dc2a2e975d1b707c7d1dec020">getConvergenceFactors()</a> gives the average and final convergence factors for the solve.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#62a37918dc0c50f8c342765dddd04e74">getResidualNorm()</a> gives the final residual</li></ul>
+<li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#aebd721a089d38a1e2b64362909fff80">getNumberOfIterations()</a> gives the number of FAC cycles used.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d039daa0ba1472a87429fc6216889a08">getConvergenceFactors()</a> gives the average and final convergence factors for the solve.</li><li><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#9368b2be26b1b09591766c675f799140">getResidualNorm()</a> gives the final residual</li></ul>
 <p>
 Finer solver controls can be set using the functions in this class.<p>
 Object of this class can be set using input databases. The following parameters can be set. Each is shown with its default value in the case where hypre is used. <div class="fragment"><pre class="fragment"> * enable_logging = TRUE // Bool flag to switch logging on/off
@@ -143,7 +143,7 @@ Object of this class can be set using input databases. The following parameters 
  * </pre></div> 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="0494668cb6e6fa9a0370452cd5d2440c"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::CellPoissonFACSolver" ref="0494668cb6e6fa9a0370452cd5d2440c" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; database=tbox::Pointer&lt; tbox::Database &gt;())" -->
+<a class="anchor" name="24b917173ba66d851c45ae4e1d9de14a"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::CellPoissonFACSolver" ref="24b917173ba66d851c45ae4e1d9de14a" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;database=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -162,8 +162,8 @@ Object of this class can be set using input databases. The following parameters 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>database</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>database</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -177,9 +177,10 @@ Object of this class can be set using input databases. The following parameters 
 <p>
 Construct a solver. 
 <p>
-If the database is not NULL, initial settings will be set using the database. The solver is uninitialized until <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a> is called.<p>
+If the database is not NULL, initial settings will be set using the database. The solver is uninitialized until <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a> is called.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>Name of object used in outputs </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>database</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> for initialization (may be NULL) </td></tr>
   </table>
@@ -187,14 +188,13 @@ If the database is not NULL, initial settings will be set using the database. Th
 
 </div>
 </div><p>
-<a class="anchor" name="1432f3bfe3613178e201c9b1434a1733"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::~CellPoissonFACSolver" ref="1432f3bfe3613178e201c9b1434a1733" args="(void)" -->
+<a class="anchor" name="64ceaaebaecc22cc229e9af7dcfa5e70"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::~CellPoissonFACSolver" ref="64ceaaebaecc22cc229e9af7dcfa5e70" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::solv::CellPoissonFACSolver::~CellPoissonFACSolver           </td>
           <td>(</td>
-          <td class="paramtype">void&nbsp;</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -220,7 +220,7 @@ Destructor.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>logging</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -232,7 +232,7 @@ Enable logging.
 To disable, pass in <code>false</code>. 
 </div>
 </div><p>
-<a class="anchor" name="e0bcc36f2669513b7b52e06d691f83b1"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::solveSystem" ref="e0bcc36f2669513b7b52e06d691f83b1" args="(const int solution, const int rhs, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, int coarse_ln=-1, int fine_ln=-1)" -->
+<a class="anchor" name="2a957bb187d3b63c5fe717dd2d830a79"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::solveSystem" ref="2a957bb187d3b63c5fe717dd2d830a79" args="(const int solution, const int rhs, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, int coarse_ln=-1, int fine_ln=-1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -251,7 +251,7 @@ To disable, pass in <code>false</code>.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -281,7 +281,7 @@ Solve Poisson's equation, assuming an uninitialized solver state.
 Here, u is the "solution" patch data index and f is the right hand side patch data index. The return value is true if the solver converged and false otherwise.<p>
 This function is a wrapper. It simply initializes the solver state, call the <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#aac02784e9cbcb1aac14e3200c6ec45b">solveSystem(const int,const int)</a> for the initialized solver then deallocates the solver state.<p>
 Upon return from this function, solution will contain the result of the solve.<p>
-See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a> for opportunities to save overhead when using multiple consecutive solves.<p>
+See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a> for opportunities to save overhead when using multiple consecutive solves.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#aac02784e9cbcb1aac14e3200c6ec45b">solveSystem(const int,const int)</a></dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -293,7 +293,7 @@ See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e1
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>whether solver converged to specified level</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState</a> </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState</a> </dd></dl>
 
 </div>
 </div><p>
@@ -323,12 +323,12 @@ See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e1
 <div class="memdoc">
 
 <p>
-Solve Poisson's equation using the current solver state set by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a>. 
+Solve Poisson's equation using the current solver state set by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a>. 
 <p>
 When the solver state has been initialized, this function may be called repeadedly with different values on the rhs. There is some cost savings for multiple solves when this is done.<p>
 Before calling this function, the solution and right-hand-side quantities should be set properly by the user on all patch interiors on the range of levels covered by the FAC iteration. All data for these patch data index should be allocated. Thus, the user is responsible for managing the storage for the solution and right-hand-side.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>whether solver converged to specified level</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#e0bcc36f2669513b7b52e06d691f83b1">solveSystem( const int, const int, tbox::Pointer&lt; hier::PatchHierarchy &gt;, int, int)</a>; </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd>solveSystem( const int, const int, boost::shared_ptr&lt; hier::PatchHierarchy &gt;, int, int); </dd></dl>
 
 </div>
 </div><p>
@@ -389,7 +389,7 @@ The mixed boundary type is for a mixture of Dirichlet and Neumann boundary condi
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *&nbsp;</td>
           <td class="paramname"> <em>bc_object</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -403,17 +403,17 @@ Note that an important limitation of the <a class="el" href="classSAMRAI_1_1solv
 Once the boundary condition object is overwritten by this method, you must no longer call the <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dce4cbfccddba8482bb4513ed369cffb">setBoundaries()</a> method. 
 </div>
 </div><p>
-<a class="anchor" name="973955603cb04fac38d34ccff14c22ef"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setDPatchDataId" ref="973955603cb04fac38d34ccff14c22ef" args="(int id)" -->
+<a class="anchor" name="ebc803b1d2016fb8cce53a679ea07c7a"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setDPatchDataId" ref="ebc803b1d2016fb8cce53a679ea07c7a" args="(int id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setDPatchDataId           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setDPatchDataId           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -422,20 +422,20 @@ Once the boundary condition object is overwritten by this method, you must no lo
 <p>
 Set the patch data index for variable D. 
 <p>
-In addition, disregard any previous D specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#779608d30ac4c1b51865c9e502970f53">setDConstant()</a>. 
+In addition, disregard any previous D specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#88743b1fa623d1344724fba7533487a3">setDConstant()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="779608d30ac4c1b51865c9e502970f53"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setDConstant" ref="779608d30ac4c1b51865c9e502970f53" args="(double scalar)" -->
+<a class="anchor" name="88743b1fa623d1344724fba7533487a3"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setDConstant" ref="88743b1fa623d1344724fba7533487a3" args="(double scalar)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setDConstant           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setDConstant           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>scalar</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -444,20 +444,20 @@ In addition, disregard any previous D specified by <a class="el" href="classSAMR
 <p>
 Set the scalar value variable D. 
 <p>
-In addition, disregard any previous D specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#973955603cb04fac38d34ccff14c22ef">setDPatchDataId()</a>. 
+In addition, disregard any previous D specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#ebc803b1d2016fb8cce53a679ea07c7a">setDPatchDataId()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="f014877c35b8d7c85b6a6964cc38711c"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCPatchDataId" ref="f014877c35b8d7c85b6a6964cc38711c" args="(int id)" -->
+<a class="anchor" name="81cd4ff98db2648352f0e230f8ebf301"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCPatchDataId" ref="81cd4ff98db2648352f0e230f8ebf301" args="(int id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setCPatchDataId           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setCPatchDataId           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -466,20 +466,20 @@ In addition, disregard any previous D specified by <a class="el" href="classSAMR
 <p>
 Set the scalar value variable C. 
 <p>
-In addition, disregard any previous C specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#97b49b7f7ef9c2685377c2b73d0f88ff">setCConstant()</a>. 
+In addition, disregard any previous C specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dfdb55e97439fe7172da4e397789060a">setCConstant()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="97b49b7f7ef9c2685377c2b73d0f88ff"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCConstant" ref="97b49b7f7ef9c2685377c2b73d0f88ff" args="(double scalar)" -->
+<a class="anchor" name="dfdb55e97439fe7172da4e397789060a"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCConstant" ref="dfdb55e97439fe7172da4e397789060a" args="(double scalar)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setCConstant           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setCConstant           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>scalar</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -488,20 +488,20 @@ In addition, disregard any previous C specified by <a class="el" href="classSAMR
 <p>
 Set the patch data index for variable C. 
 <p>
-In addition, disregard any previous C specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#97b49b7f7ef9c2685377c2b73d0f88ff">setCConstant()</a>. 
+In addition, disregard any previous C specified by <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#dfdb55e97439fe7172da4e397789060a">setCConstant()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="d13f042ecfc9e6e88ad94459db4c8d96"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverChoice" ref="d13f042ecfc9e6e88ad94459db4c8d96" args="(const std::string &amp;choice)" -->
+<a class="anchor" name="1888facbf5428b887c41f61291945528"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverChoice" ref="1888facbf5428b887c41f61291945528" args="(const std::string &amp;choice)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverChoice           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverChoice           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>choice</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -515,17 +515,17 @@ Select from these:<ul>
 
 </div>
 </div><p>
-<a class="anchor" name="04c814a7d724dd6b5776d0c4bcc55b05"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverTolerance" ref="04c814a7d724dd6b5776d0c4bcc55b05" args="(double tol)" -->
+<a class="anchor" name="9ae6cf394d3e92da088718923a8ed9c8"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverTolerance" ref="9ae6cf394d3e92da088718923a8ed9c8" args="(double tol)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverTolerance           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverTolerance           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>tol</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -537,17 +537,17 @@ Set tolerance for coarse level solve.
 If the coarse level solver requires a tolerance (currently, they all do), the specified value is used. 
 </div>
 </div><p>
-<a class="anchor" name="fccd175c7a0079b26600eaf613796477"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverMaxIterations" ref="fccd175c7a0079b26600eaf613796477" args="(int max_iterations)" -->
+<a class="anchor" name="c17f9500ad33f6f91a912d073cb0e00c"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverMaxIterations" ref="c17f9500ad33f6f91a912d073cb0e00c" args="(int max_iterations)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverMaxIterations           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setCoarsestLevelSolverMaxIterations           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_iterations</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -559,17 +559,17 @@ Set max iterations for coarse level solve.
 If the coarse level solver requires a max iteration limit (currently, they all do), the specified value is used. 
 </div>
 </div><p>
-<a class="anchor" name="4034f2a0d7c889e6d520e5ee8eb6be16"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setUseSMG" ref="4034f2a0d7c889e6d520e5ee8eb6be16" args="(bool use_smg)" -->
+<a class="anchor" name="299fa193b2c6236119cba88ff7ccf0f0"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setUseSMG" ref="299fa193b2c6236119cba88ff7ccf0f0" args="(bool use_smg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setUseSMG           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setUseSMG           </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>use_smg</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -579,21 +579,21 @@ If the coarse level solver requires a max iteration limit (currently, they all d
 Set whether to use HYPRe's PFMG algorithm instead of the SMG algorithm. 
 <p>
 The flag is used to select which of HYPRE's linear solver algorithms to use if true, the semicoarsening multigrid algorithm is used, and if false, the ``PF'' multigrid algorithm is used. By default, the SMG algorithm is used.<p>
-This setting has effect only when HYPRe is chosen for the coarsest level solver. See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#d13f042ecfc9e6e88ad94459db4c8d96">setCoarsestLevelSolverChoice()</a>.<p>
+This setting has effect only when HYPRe is chosen for the coarsest level solver. See <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#1888facbf5428b887c41f61291945528">setCoarsestLevelSolverChoice()</a>.<p>
 Changing the algorithm must be done before setting up the matrix coefficients. 
 </div>
 </div><p>
-<a class="anchor" name="7a01aabda75dfef8789230170a8ed90c"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarseFineDiscretization" ref="7a01aabda75dfef8789230170a8ed90c" args="(const std::string &amp;coarsefine_method)" -->
+<a class="anchor" name="07411d1dae611abb3e87b93ea9329058"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setCoarseFineDiscretization" ref="07411d1dae611abb3e87b93ea9329058" args="(const std::string &amp;coarsefine_method)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setCoarseFineDiscretization           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setCoarseFineDiscretization           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>coarsefine_method</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -612,17 +612,17 @@ There is one important instance where this std::string is <em>not</em> passed to
 
 </div>
 </div><p>
-<a class="anchor" name="222179ae37ace9355201a6756869c80d"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setProlongationMethod" ref="222179ae37ace9355201a6756869c80d" args="(const std::string &amp;prolongation_method)" -->
+<a class="anchor" name="4051286a90b49e8cdef05cda287360a6"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setProlongationMethod" ref="4051286a90b49e8cdef05cda287360a6" args="(const std::string &amp;prolongation_method)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setProlongationMethod           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setProlongationMethod           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>prolongation_method</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -642,17 +642,17 @@ Prolonging using linear refinement requires a Robin bc coefficient implementatio
 
 </div>
 </div><p>
-<a class="anchor" name="54918bf862095228e95671f42c7bd368"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setPresmoothingSweeps" ref="54918bf862095228e95671f42c7bd368" args="(int num_pre_sweeps)" -->
+<a class="anchor" name="b2b2ad1245fc78aa4a885edfc2ad2135"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setPresmoothingSweeps" ref="b2b2ad1245fc78aa4a885edfc2ad2135" args="(int num_pre_sweeps)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setPresmoothingSweeps           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setPresmoothingSweeps           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>num_pre_sweeps</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -670,17 +670,17 @@ Presmoothing is applied during the fine-to-coarse phase of the iteration. The de
 
 </div>
 </div><p>
-<a class="anchor" name="1d9d81bbb349e6432d0089bbd6508b90"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setPostsmoothingSweeps" ref="1d9d81bbb349e6432d0089bbd6508b90" args="(int num_post_sweeps)" -->
+<a class="anchor" name="dd1bb32372d25357303d12d51f604655"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setPostsmoothingSweeps" ref="dd1bb32372d25357303d12d51f604655" args="(int num_post_sweeps)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setPostsmoothingSweeps           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setPostsmoothingSweeps           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>num_post_sweeps</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -698,17 +698,17 @@ Postsmoothing is applied during the coarse-to-fine phase of the iteration. The d
 
 </div>
 </div><p>
-<a class="anchor" name="ce9dffabb75627f500a634a844b93e48"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setMaxCycles" ref="ce9dffabb75627f500a634a844b93e48" args="(int max_cycles)" -->
+<a class="anchor" name="2756a57368bf09c129786f1fe9334118"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setMaxCycles" ref="2756a57368bf09c129786f1fe9334118" args="(int max_cycles)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setMaxCycles           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setMaxCycles           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_cycles</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -720,17 +720,17 @@ Set the max number of iterations (cycles) to use per solve.
 
 </div>
 </div><p>
-<a class="anchor" name="a4618195b0e02c0f470f2b453faafd12"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setResidualTolerance" ref="a4618195b0e02c0f470f2b453faafd12" args="(double residual_tol)" -->
+<a class="anchor" name="ac7da779cd9270a552a49c7795aafdb1"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::setResidualTolerance" ref="ac7da779cd9270a552a49c7795aafdb1" args="(double residual_tol)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::setResidualTolerance           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::setResidualTolerance           </td>
           <td>(</td>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>residual_tol</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -742,7 +742,7 @@ Set the residual tolerance for stopping.
 If you want the prescribed maximum number of cycles to always be taken, set the residual tolerance to a negative number. 
 </div>
 </div><p>
-<a class="anchor" name="213e2e13fc4469c3483673647afb7646"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::initializeSolverState" ref="213e2e13fc4469c3483673647afb7646" args="(const int solution, const int rhs, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarse_level=-1, const int fine_level=-1)" -->
+<a class="anchor" name="a307091f8fc0501fcef233fa8cf7a817"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::initializeSolverState" ref="a307091f8fc0501fcef233fa8cf7a817" args="(const int solution, const int rhs, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarse_level=-1, const int fine_level=-1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -761,7 +761,7 @@ If you want the prescribed maximum number of cycles to always be taken, set the 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -822,20 +822,20 @@ The <code>solution</code> and <code>rhs</code> patch data indices in the argumen
 Remove the solver's internal state data. 
 <p>
 Remove all hierarchy-dependent data set by initializeSolverState. It is safe to call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#29641296b35a31d68627c52bfd5371f0">deallocateSolverState()</a> even state is already deallocated, but nothing is done in that case.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#213e2e13fc4469c3483673647afb7646">initializeSolverState()</a> </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a307091f8fc0501fcef233fa8cf7a817">initializeSolverState()</a> </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d63d229a713f69ce70bb0570e2d4ed31"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getNumberOfIterations" ref="d63d229a713f69ce70bb0570e2d4ed31" args="() const " -->
+<a class="anchor" name="aebd721a089d38a1e2b64362909fff80"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getNumberOfIterations" ref="aebd721a089d38a1e2b64362909fff80" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::solv::CellPoissonFACSolver::getNumberOfIterations           </td>
+          <td class="memname">int SAMRAI::solv::CellPoissonFACSolver::getNumberOfIterations           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -847,12 +847,12 @@ Return FAC iteration count from last (or current if there is one) FAC iteration 
 
 </div>
 </div><p>
-<a class="anchor" name="53f7250dc2a2e975d1b707c7d1dec020"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getConvergenceFactors" ref="53f7250dc2a2e975d1b707c7d1dec020" args="(double &amp;avg_factor, double &amp;final_factor) const " -->
+<a class="anchor" name="d039daa0ba1472a87429fc6216889a08"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getConvergenceFactors" ref="d039daa0ba1472a87429fc6216889a08" args="(double &amp;avg_factor, double &amp;final_factor) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonFACSolver::getConvergenceFactors           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonFACSolver::getConvergenceFactors           </td>
           <td>(</td>
           <td class="paramtype">double &amp;&nbsp;</td>
           <td class="paramname"> <em>avg_factor</em>, </td>
@@ -866,7 +866,7 @@ Return FAC iteration count from last (or current if there is one) FAC iteration 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -884,16 +884,16 @@ Get average convergance rate and convergence rate of the last (or current if the
 
 </div>
 </div><p>
-<a class="anchor" name="62a37918dc0c50f8c342765dddd04e74"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getResidualNorm" ref="62a37918dc0c50f8c342765dddd04e74" args="() const " -->
+<a class="anchor" name="9368b2be26b1b09591766c675f799140"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getResidualNorm" ref="9368b2be26b1b09591766c675f799140" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::solv::CellPoissonFACSolver::getResidualNorm           </td>
+          <td class="memname">double SAMRAI::solv::CellPoissonFACSolver::getResidualNorm           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -906,16 +906,16 @@ The norm return value is computed as the maximum norm over all patch levels invo
 The latest computed norm is the one returned. 
 </div>
 </div><p>
-<a class="anchor" name="6c9202f74850e57d794aee2b70eaad65"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getObjectName" ref="6c9202f74850e57d794aee2b70eaad65" args="() const " -->
+<a class="anchor" name="d68aff6e5610391b028d44ed5bac5f8e"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonFACSolver::getObjectName" ref="d68aff6e5610391b028d44ed5bac5f8e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::solv::CellPoissonFACSolver::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::solv::CellPoissonFACSolver::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -929,8 +929,8 @@ Get the name of this object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACSolver_8h.html">CellPoissonFACSolver.h</a><li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACSolver_8C.html">CellPoissonFACSolver.C</a><li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACSolver_8I.html">CellPoissonFACSolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACSolver_8h.html">CellPoissonFACSolver.h</a><li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACSolver_8C.html">CellPoissonFACSolver.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

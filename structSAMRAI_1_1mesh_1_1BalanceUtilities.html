@@ -33,9 +33,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#c3fdee10201b6542c22763f6dc1c376f">spatialBinPack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">hier::ProcessorMapping</a> &amp;mapping, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;weights, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const int nproc)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#203962449f69486573bc04e774263544">recursiveBisectionUniform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;out_boxes, <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; double &gt; &amp;out_workloads, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;in_boxes, double ideal_workload, const double workload_tolerance, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;physical_domain)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#e1c1ad8b851c7121173fa82d7f6d0665">recursiveBisectionUniform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;out_boxes, std::list&lt; double &gt; &amp;out_workloads, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;in_boxes, double ideal_workload, const double workload_tolerance, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;physical_domain)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#bf8ed7ed02ab750431dfaf3a9384ed56">recursiveBisectionNonuniform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;out_boxes, <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; double &gt; &amp;out_workloads, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;in_level, int work_id, double ideal_workload, const double workload_tolerance, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;physical_domain)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#07f0e461a7d18c1e4453abcf5aba48b1">recursiveBisectionNonuniform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;out_boxes, std::list&lt; double &gt; &amp;out_workloads, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;in_level, int work_id, double ideal_workload, const double workload_tolerance, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;physical_domain)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#0689a61cca7d97d76cb02c9e992ce7c3">computeDomainDependentProcessorLayout</a> (<a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;proc_dist, int num_procs, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
@@ -43,10 +43,20 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#ba3efcfc8069ca6beb087b1f29e97a5b">sortDescendingBoxWorkloads</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;workload)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#52da32ae2a9abdcde758e2ebc300a70a">computeNonUniformWorkload</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &gt; patch, int wrk_indx, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#ddb5960c049014ca76a6b8e2d38fec7f">computeNonUniformWorkload</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &gt; &amp;patch, int wrk_indx, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#f43a8ec010220ef89a163d7cee41522e">computeLoadBalanceEfficiency</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, std::ostream &amp;os, int workload_data_id=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#05b65eebfb27e50855d27c1af4b7faa3">computeLoadBalanceEfficiency</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, std::ostream &amp;os, int workload_data_id=-1)</td></tr>
 
+<tr><td colspan="2"><div class="groupHeader">Load balance reporting.</div></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#7fe436bb040d4a6564ef64c70b6724b3">gatherAndReportLoadBalance</a> (double local_workload, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gather workloads in an MPI group and write out a summary of load balance efficiency.  <a href="#7fe436bb040d4a6564ef64c70b6724b3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#c0a645adb45584f090ce53fb6ac9c002">gatherAndReportLoadBalance</a> (const std::vector&lt; double &gt; &amp;local_loads, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gather a sequence of workloads in an MPI group and write out a summary of load balance efficiency.  <a href="#c0a645adb45584f090ce53fb6ac9c002"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#6f67761c6351bc5589b4a7227a2678b0">reportLoadBalance</a> (const std::vector&lt; double &gt; &amp;workloads, std::ostream &amp;output_stream)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out a short report of how well load is balanced.  <a href="#6f67761c6351bc5589b4a7227a2678b0"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Utility class <a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html">BalanceUtilities</a> provides several functions useful in various load balancing operations. These utilities include bin packing operations, box chopping by recursive bisection, and computation of effective processor layouts for boxes. 
@@ -148,7 +158,7 @@ Note that this routine potentially reorders the boxes passed in to achieve the f
 Note that the wight and box arrrays must be the same size. 
 </div>
 </div><p>
-<a class="anchor" name="203962449f69486573bc04e774263544"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::recursiveBisectionUniform" ref="203962449f69486573bc04e774263544" args="(hier::BoxContainer &amp;out_boxes, tbox::List&lt; double &gt; &amp;out_workloads, const hier::BoxContainer &amp;in_boxes, double ideal_workload, const double workload_tolerance, const hier::IntVector &amp;min_size, const hier::IntVector &amp;cut_factor, const hier::IntVector &amp;bad_interval, const hier::BoxContainer &amp;physical_domain)" -->
+<a class="anchor" name="e1c1ad8b851c7121173fa82d7f6d0665"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::recursiveBisectionUniform" ref="e1c1ad8b851c7121173fa82d7f6d0665" args="(hier::BoxContainer &amp;out_boxes, std::list&lt; double &gt; &amp;out_workloads, const hier::BoxContainer &amp;in_boxes, double ideal_workload, const double workload_tolerance, const hier::IntVector &amp;min_size, const hier::IntVector &amp;cut_factor, const hier::IntVector &amp;bad_interval, const hier::BoxContainer &amp;physical_domain)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -161,7 +171,7 @@ Note that the wight and box arrrays must be the same size.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::list&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>out_workloads</em>, </td>
         </tr>
         <tr>
@@ -233,7 +243,7 @@ Recursively chop chops boxes in input boxlist until each box has a workload less
 
 </div>
 </div><p>
-<a class="anchor" name="bf8ed7ed02ab750431dfaf3a9384ed56"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::recursiveBisectionNonuniform" ref="bf8ed7ed02ab750431dfaf3a9384ed56" args="(hier::BoxContainer &amp;out_boxes, tbox::List&lt; double &gt; &amp;out_workloads, const tbox::Pointer&lt; hier::PatchLevel &gt; &amp;in_level, int work_id, double ideal_workload, const double workload_tolerance, const hier::IntVector &amp;min_size, const hier::IntVector &amp;cut_factor, const hier::IntVector &amp;bad_interval, const hier::BoxContainer &amp;physical_domain)" -->
+<a class="anchor" name="07f0e461a7d18c1e4453abcf5aba48b1"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::recursiveBisectionNonuniform" ref="07f0e461a7d18c1e4453abcf5aba48b1" args="(hier::BoxContainer &amp;out_boxes, std::list&lt; double &gt; &amp;out_workloads, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;in_level, int work_id, double ideal_workload, const double workload_tolerance, const hier::IntVector &amp;min_size, const hier::IntVector &amp;cut_factor, const hier::IntVector &amp;bad_interval, const hier::BoxContainer &amp;physical_domain)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -246,13 +256,13 @@ Recursively chop chops boxes in input boxlist until each box has a workload less
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::list&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>out_workloads</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>in_level</em>, </td>
         </tr>
         <tr>
@@ -448,14 +458,14 @@ Note that if you simply want to sort boxes based on their size, see <a class="el
 Note that both arrays must be the same size. 
 </div>
 </div><p>
-<a class="anchor" name="52da32ae2a9abdcde758e2ebc300a70a"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkload" ref="52da32ae2a9abdcde758e2ebc300a70a" args="(tbox::Pointer&lt; hier::Patch &gt; patch, int wrk_indx, const hier::Box &amp;box)" -->
+<a class="anchor" name="ddb5960c049014ca76a6b8e2d38fec7f"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkload" ref="ddb5960c049014ca76a6b8e2d38fec7f" args="(const boost::shared_ptr&lt; hier::Patch &gt; &amp;patch, int wrk_indx, const hier::Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">double SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkload           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>patch</em>, </td>
         </tr>
         <tr>
@@ -492,14 +502,14 @@ Compute total workload in region of argument box based on patch data defined by 
 Note that wrk_indx must refer to a valid cell-centered patch data entry. 
 </div>
 </div><p>
-<a class="anchor" name="f43a8ec010220ef89a163d7cee41522e"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency" ref="f43a8ec010220ef89a163d7cee41522e" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; &amp;level, std::ostream &amp;os, int workload_data_id=-1)" -->
+<a class="anchor" name="05b65eebfb27e50855d27c1af4b7faa3"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency" ref="05b65eebfb27e50855d27c1af4b7faa3" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, std::ostream &amp;os, int workload_data_id=-1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">double SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -536,9 +546,138 @@ Compute and return load balance efficiency for a level.<p>
 
 </div>
 </div><p>
+<a class="anchor" name="7fe436bb040d4a6564ef64c70b6724b3"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance" ref="7fe436bb040d4a6564ef64c70b6724b3" args="(double local_workload, const tbox::SAMRAI_MPI &amp;mpi, std::ostream &amp;output_stream=tbox::plog)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance           </td>
+          <td>(</td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>local_workload</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>mpi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>output_stream</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a></code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Gather workloads in an MPI group and write out a summary of load balance efficiency. 
+<p>
+To be used for performance evaluation. Not recommended for general use.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_workload</em>&nbsp;</td><td>Workload of the local process</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mpi</em>&nbsp;</td><td>Represents all processes involved in the load balancing.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td>TODO: This method is a utility that doesn't strictly belong in a strategy design pattern. It should be moved elsewhere. </td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="c0a645adb45584f090ce53fb6ac9c002"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance" ref="c0a645adb45584f090ce53fb6ac9c002" args="(const std::vector&lt; double &gt; &amp;local_loads, const tbox::SAMRAI_MPI &amp;mpi, std::ostream &amp;output_stream=tbox::plog)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance           </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>local_loads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>mpi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>output_stream</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a></code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Gather a sequence of workloads in an MPI group and write out a summary of load balance efficiency. 
+<p>
+Each value in the sequence of workloads represent a certain load the local process had over a sequence of load balancings.<p>
+To be used for performance evaluation. Not recommended for general use.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_loads</em>&nbsp;</td><td>Sequence of workloads of the local process. The size of <code>local_loads</code> is the number times load balancing has been used. It must be the same across all processors in <code>mpi</code>.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mpi</em>&nbsp;</td><td>Represents all processes involved in the load balancing.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
+<a class="anchor" name="6f67761c6351bc5589b4a7227a2678b0"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::reportLoadBalance" ref="6f67761c6351bc5589b4a7227a2678b0" args="(const std::vector&lt; double &gt; &amp;workloads, std::ostream &amp;output_stream)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::mesh::BalanceUtilities::reportLoadBalance           </td>
+          <td>(</td>
+          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>workloads</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::ostream &amp;&nbsp;</td>
+          <td class="paramname"> <em>output_stream</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"><code> [static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Write out a short report of how well load is balanced. 
+<p>
+Given the workloads of a number of processes, format and write out a brief report for assessing how well balanced the workloads are.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>workloads</em>&nbsp;</td><td>One value for each process. The number of processes is taken to be the size of this container.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
+  </table>
+</dl>
+
+</div>
+</div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8h.html">BalanceUtilities.h</a><li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8C.html">BalanceUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

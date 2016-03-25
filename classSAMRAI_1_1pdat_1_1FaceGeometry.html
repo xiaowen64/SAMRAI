@@ -40,18 +40,20 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#6cecb9be2f4393b6e6188565664b99df">~FaceGeometry</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor does nothing interesting.  <a href="#6cecb9be2f4393b6e6188565664b99df"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#f1c3e494c0b175a1f449b652da92a703">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#dd8dd4c89d6cd04205865697a87e9b60">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in face-centered index space between the source box geometry and the destination box geometry.  <a href="#f1c3e494c0b175a1f449b652da92a703"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#0da951dce3175ddd246de1be0bb66cb9">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in face-centered index space between the source box geometry and the destination box geometry.  <a href="#dd8dd4c89d6cd04205865697a87e9b60"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#8c84dffbed37e92ade3fd3d1fd4ca30d">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> object based on the given boxes and the transformation.  <a href="#0da951dce3175ddd246de1be0bb66cb9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#3a3f34a797fcf5780a0b0aa7b5a0782e">getBox</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> object based on the given boxes and the transformation.  <a href="#8c84dffbed37e92ade3fd3d1fd4ca30d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#6610b2ed30022e4f55bdbdc68edabb75">getBox</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the box for this face centered box geometry object.  <a href="#3a3f34a797fcf5780a0b0aa7b5a0782e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#985a6d815f87d391e6f6ff371cabbc24">getGhosts</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the box for this face centered box geometry object.  <a href="#6610b2ed30022e4f55bdbdc68edabb75"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#07a470438ef64f72e4a8128e1ccbbbe7">getGhosts</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the ghost cell width for this face centered box geometry object.  <a href="#985a6d815f87d391e6f6ff371cabbc24"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the ghost cell width for this face centered box geometry object.  <a href="#07a470438ef64f72e4a8128e1ccbbbe7"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceGeometry.html#a4bf0005c6eea59ef3290034d4c51dac">toFaceBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int face_normal)</td></tr>
 
@@ -106,7 +108,7 @@ The BoxOverlap implemenation for this geometry.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -254,12 +256,12 @@ This static method applies a coordinate system transformation to the given <a cl
 
 </div>
 </div><p>
-<a class="anchor" name="f1c3e494c0b175a1f449b652da92a703"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::calculateOverlap" ref="f1c3e494c0b175a1f449b652da92a703" args="(const hier::BoxGeometry &amp;dst_geometry, const hier::BoxGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const bool retry, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
+<a class="anchor" name="dd8dd4c89d6cd04205865697a87e9b60"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::calculateOverlap" ref="dd8dd4c89d6cd04205865697a87e9b60" args="(const hier::BoxGeometry &amp;dst_geometry, const hier::BoxGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const bool retry, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::FaceGeometry::calculateOverlap           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::FaceGeometry::calculateOverlap           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_geometry</em>, </td>
@@ -320,15 +322,15 @@ Compute the overlap in face-centered index space between the source box geometry
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#29665dece6037638c48af693e615b87e">SAMRAI::hier::BoxGeometry</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="0da951dce3175ddd246de1be0bb66cb9"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::setUpOverlap" ref="0da951dce3175ddd246de1be0bb66cb9" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
+<a class="anchor" name="8c84dffbed37e92ade3fd3d1fd4ca30d"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::setUpOverlap" ref="8c84dffbed37e92ade3fd3d1fd4ca30d" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::FaceGeometry::setUpOverlap           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::FaceGeometry::setUpOverlap           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>boxes</em>, </td>
@@ -353,19 +355,19 @@ Set up a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverla
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#e78d82615211c06087ee3d63cda98a56">SAMRAI::hier::BoxGeometry</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#4725975261e356cb3ebc7450aae8e856">SAMRAI::hier::BoxGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="3a3f34a797fcf5780a0b0aa7b5a0782e"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::getBox" ref="3a3f34a797fcf5780a0b0aa7b5a0782e" args="() const " -->
+<a class="anchor" name="6610b2ed30022e4f55bdbdc68edabb75"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::getBox" ref="6610b2ed30022e4f55bdbdc68edabb75" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp; SAMRAI::pdat::FaceGeometry::getBox           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&amp; SAMRAI::pdat::FaceGeometry::getBox           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -377,16 +379,16 @@ Return the box for this face centered box geometry object.
 
 </div>
 </div><p>
-<a class="anchor" name="985a6d815f87d391e6f6ff371cabbc24"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::getGhosts" ref="985a6d815f87d391e6f6ff371cabbc24" args="() const " -->
+<a class="anchor" name="07a470438ef64f72e4a8128e1ccbbbe7"></a><!-- doxytag: member="SAMRAI::pdat::FaceGeometry::getGhosts" ref="07a470438ef64f72e4a8128e1ccbbbe7" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::pdat::FaceGeometry::getGhosts           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; SAMRAI::pdat::FaceGeometry::getGhosts           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -399,8 +401,8 @@ Return the ghost cell width for this face centered box geometry object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8h.html">FaceGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8C.html">FaceGeometry.C</a><li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8I.html">FaceGeometry.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8h.html">FaceGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceGeometry_8C.html">FaceGeometry.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

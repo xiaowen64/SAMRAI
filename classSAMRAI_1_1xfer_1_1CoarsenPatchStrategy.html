@@ -50,9 +50,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#a2d42bd7e5e5b39581df0d5a15059a33">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#a2d42bd7e5e5b39581df0d5a15059a33"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#65bb799b527cc3099d996eb38d6670ae">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#9124cea2ea7dc4a41eee08ce5c9c89a7">getDim</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#65bb799b527cc3099d996eb38d6670ae"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#9124cea2ea7dc4a41eee08ce5c9c89a7"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#417e8f41e8404aa092a58d0b55890ad5">getMaxCoarsenOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
@@ -170,7 +170,7 @@ Return maximum stencil width needed for user-defined data coarsening operations 
 This is needed to determine the correct coarsening data dependencies and to ensure that the data has a sufficient amount of ghost width.<p>
 For any user-defined coarsening operations implemented in the preprocess or postprocess methods, return the maximum stencil needed on a fine patch to coarsen data to a coarse patch. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#d9f2e566fe1cd9c77c65eaf2d396a0c2">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#b4de45d0c0fcc7579194760edaaa25e2">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#d9f2e566fe1cd9c77c65eaf2d396a0c2">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#d359338662d314f3c422921b0666cfed">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="0814ce9491959240638a20bd848a2350"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::preprocessCoarsen" ref="0814ce9491959240638a20bd848a2350" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
@@ -216,15 +216,15 @@ Perform user-defined patch data coarsening operations.
 This member function is called before standard coarsening operations (expressed using concrete subclasses of the CoarsenOperator base class). The preprocess function should move data from the source components on the fine patch into the source components on the coarse patch in the specified coarse box region. Recall that the source components are specified in calls to the registerCoarsen() function in the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> class.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>coarse[out]</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fine[in]</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>coarse_box[in]</em>&nbsp;</td><td>Box region on coarse patch into which data is coarsened. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ratio[in]</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_box</em>&nbsp;</td><td>Box region on coarse patch into which data is coarsened. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
   </table>
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#3480ca32124e2c7bb9964946b29db3b3">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#6ecbada7a80d8ee71b8fb65d9c173bf9">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#3480ca32124e2c7bb9964946b29db3b3">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#5d89843869aba61b1cb058de5af71799">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="a2d42bd7e5e5b39581df0d5a15059a33"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::postprocessCoarsen" ref="a2d42bd7e5e5b39581df0d5a15059a33" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
@@ -270,27 +270,27 @@ Perform user-defined patch data coarsening operations.
 This member function is called after standard coarsening operations (expressed using concrete subclasses of the CoarsenOperator base class). The postprocess function should move data from the source components on the fine patch into the source components on the coarse patch in the specified coarse box region. Recall that the source components are specified in calls to the registerCoarsen() function in the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> class.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>coarse[out]</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fine[in]</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>coarse_box[in]</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ratio[in]</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
   </table>
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c049b88562fdf98350513952fb604176">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#b7df1fdfa6dd40c99fb692a489a5a301">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c049b88562fdf98350513952fb604176">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3df150d71e6a02ecd5f9db9eedd8d5c5">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="65bb799b527cc3099d996eb38d6670ae"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::getDim" ref="65bb799b527cc3099d996eb38d6670ae" args="() const " -->
+<a class="anchor" name="9124cea2ea7dc4a41eee08ce5c9c89a7"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenPatchStrategy::getDim" ref="9124cea2ea7dc4a41eee08ce5c9c89a7" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::xfer::CoarsenPatchStrategy::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::xfer::CoarsenPatchStrategy::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -301,12 +301,12 @@ Return the dimension of this object.
 <p>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#81deadcfc673b84af5ca41898f4cd8c2">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#c84b57386287c74dd3f326f182ef3172">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
+Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#e438e481350988a0026dad9aa8bec517">SAMRAI::algs::HyperbolicPatchStrategy</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#c84b57386287c74dd3f326f182ef3172">SAMRAI::algs::MethodOfLinesPatchStrategy</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenPatchStrategy_8h.html">CoarsenPatchStrategy.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenPatchStrategy_8C.html">CoarsenPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

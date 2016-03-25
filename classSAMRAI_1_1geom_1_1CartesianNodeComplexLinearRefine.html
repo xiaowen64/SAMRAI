@@ -35,8 +35,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html#b50694cd35c31050effde3e72784d4b6">~CartesianNodeComplexLinearRefine</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html#84d6b7a0f1ff3949714f7e096b0d9073">findRefineOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const std::string &amp;op_name) const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html#3c59f521193e578be5f3dbd5fda57744">getOperatorPriority</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html#a0ad23247ae0734c6526a07f78a64616">getStencilWidth</a> () const </td></tr>
@@ -48,7 +46,6 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html">CartesianNodeComplexLinearRefine</a> implements linear interpolation for node-centered complex patch data defined over a Cartesian mesh. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> base class. The numerical operations for interpolation use FORTRAN numerical routines.<p>
-The <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html#84d6b7a0f1ff3949714f7e096b0d9073">findRefineOperator()</a> operator function returns true if the input variable is node-centered complex, and the std::string is "LINEAR_REFINE".<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> </dd></dl>
 
 <p>
@@ -93,37 +90,6 @@ Uninteresting virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="84d6b7a0f1ff3949714f7e096b0d9073"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeComplexLinearRefine::findRefineOperator" ref="84d6b7a0f1ff3949714f7e096b0d9073" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;var, const std::string &amp;op_name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::geom::CartesianNodeComplexLinearRefine::findRefineOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return true if the variable and name std::string match node-centered complex linear interpolation; otherwise, return false. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#179871a2379def0a0979981db947a011">SAMRAI::hier::RefineOperator</a>.
-</div>
-</div><p>
 <a class="anchor" name="3c59f521193e578be5f3dbd5fda57744"></a><!-- doxytag: member="SAMRAI::geom::CartesianNodeComplexLinearRefine::getOperatorPriority" ref="3c59f521193e578be5f3dbd5fda57744" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -276,7 +242,7 @@ Refine the source component on the coarse patch to the destination component on 
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianNodeComplexLinearRefine_8h.html">CartesianNodeComplexLinearRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

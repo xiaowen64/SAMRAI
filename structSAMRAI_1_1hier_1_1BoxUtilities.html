@@ -30,7 +30,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#b848873ced363a81d1084ba8f6b02a56">chopBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;physical_boxes)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#30310972e88a0b3f66f591580fc8bbcf">chopBox</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; cut_points)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#51989ccd450e995070b8f0b5b07e3b3c">chopBox</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; cut_points)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#b167369ff453a5d125d54ca9d2a4fe02">extendBoxToDomainBoundary</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;domain, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ext_ghosts)</td></tr>
 
@@ -40,13 +40,13 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#92ad807482ac35ef806cd543a75fa174">growBoxWithinDomain</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;local_domain_complement, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#bc4585f4758674c2a05f968045724084">findBestCutPointsGivenMax</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#fa2dea7ba976d93efb62312ad698a3eb">findBestCutPointsGivenMax</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#4d0028023c19418e9891734fd94b86e8">findBestCutPointsForDirectionGivenMax</a> (const int idir, <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int max_size, const int min_size, const int cut_factor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#ba05a88e39b9d1658eaf0d19892e9a70">findBestCutPointsForDirectionGivenMax</a> (const int idir, std::list&lt; int &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int max_size, const int min_size, const int cut_factor)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#1dc5f1f92b36497d434bd622dffacf24">findBestCutPointsGivenNumber</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;number_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#cc96ccb6fd2ab2acc44c31514ae6d924">findBestCutPointsGivenNumber</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;number_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#d85e4d073d4385d89f17950ee23e2e42">findBestCutPointsForDirectionGivenNumber</a> (const int idir, <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int num_boxes, const int min_size, const int cut_factor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#ea3e85c240385f070989b7ba4e229d4e">findBestCutPointsForDirectionGivenNumber</a> (const int idir, std::list&lt; int &gt; &amp;cut_points, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int num_boxes, const int min_size, const int cut_factor)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#6cd08d6fa42d299adfc23ee36dfdb3f9">checkBoxForBadCutPoints</a> (<a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;bad_cut_information, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;physical_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;bad_interval)</td></tr>
 
@@ -56,9 +56,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#9ab86664ba277fda3ba47a2fc1f09672">findBadCutPointsForDirection</a> (const int dir, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; bool &gt; &amp;bad_cuts, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;physical_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;bad_interval)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#dad47224700d7a5ec2378f67643791a3">fixBadCutPoints</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; &amp;cuts, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; bool &gt; &gt; &amp;bad_cuts, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#e35adbda2f14aa683ebb314ce81dedab">fixBadCutPoints</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; &amp;cuts, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; bool &gt; &gt; &amp;bad_cuts, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;cut_factor)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#298c20c9748abc6288783feb3c8793a7">fixBadCutPointsForDirection</a> (const int dir, <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &amp;cuts, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; bool &gt; &amp;bad_cuts, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int min_size, const int cut_factor)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#ec153e1e291c2f1dd0e8bf7623d2479f">fixBadCutPointsForDirection</a> (const int dir, std::list&lt; int &gt; &amp;cuts, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; bool &gt; &amp;bad_cuts, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int min_size, const int cut_factor)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html#906fce06a805709264e79a62ed13485e">findBadCutPointsForBorderAndDirection</a> (const int id, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; bool &gt; &amp;bad_cuts, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;border, const int bad_interval)</td></tr>
 
@@ -254,7 +254,7 @@ Notes:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="30310972e88a0b3f66f591580fc8bbcf"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::chopBox" ref="30310972e88a0b3f66f591580fc8bbcf" args="(BoxContainer &amp;boxes, const Box &amp;box, const tbox::Array&lt; tbox::List&lt; int &gt; &gt; cut_points)" -->
+<a class="anchor" name="51989ccd450e995070b8f0b5b07e3b3c"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::chopBox" ref="51989ccd450e995070b8f0b5b07e3b3c" args="(BoxContainer &amp;boxes, const Box &amp;box, const tbox::Array&lt; std::list&lt; int &gt; &gt; cut_points)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -273,7 +273,7 @@ Notes:<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt;&nbsp;</td>
           <td class="paramname"> <em>cut_points</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -507,14 +507,14 @@ This routine will grow each box as far as it can, but will not remedy these situ
 
 </div>
 </div><p>
-<a class="anchor" name="bc4585f4758674c2a05f968045724084"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsGivenMax" ref="bc4585f4758674c2a05f968045724084" args="(tbox::Array&lt; tbox::List&lt; int &gt; &gt; &amp;cut_points, const Box &amp;box, const IntVector &amp;max_size, const IntVector &amp;min_size, const IntVector &amp;cut_factor)" -->
+<a class="anchor" name="fa2dea7ba976d93efb62312ad698a3eb"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsGivenMax" ref="fa2dea7ba976d93efb62312ad698a3eb" args="(tbox::Array&lt; std::list&lt; int &gt; &gt; &amp;cut_points, const Box &amp;box, const IntVector &amp;max_size, const IntVector &amp;min_size, const IntVector &amp;cut_factor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool SAMRAI::hier::BoxUtilities::findBestCutPointsGivenMax           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>cut_points</em>, </td>
         </tr>
         <tr>
@@ -584,7 +584,7 @@ Assertion checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="4d0028023c19418e9891734fd94b86e8"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsForDirectionGivenMax" ref="4d0028023c19418e9891734fd94b86e8" args="(const int idir, tbox::List&lt; int &gt; &amp;cut_points, const Box &amp;box, const int max_size, const int min_size, const int cut_factor)" -->
+<a class="anchor" name="ba05a88e39b9d1658eaf0d19892e9a70"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsForDirectionGivenMax" ref="ba05a88e39b9d1658eaf0d19892e9a70" args="(const int idir, std::list&lt; int &gt; &amp;cut_points, const Box &amp;box, const int max_size, const int min_size, const int cut_factor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -597,7 +597,7 @@ Assertion checks:<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::list&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>cut_points</em>, </td>
         </tr>
         <tr>
@@ -670,14 +670,14 @@ Assertion checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="1dc5f1f92b36497d434bd622dffacf24"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsGivenNumber" ref="1dc5f1f92b36497d434bd622dffacf24" args="(tbox::Array&lt; tbox::List&lt; int &gt; &gt; &amp;cut_points, const Box &amp;box, const IntVector &amp;number_boxes, const IntVector &amp;min_size, const IntVector &amp;cut_factor)" -->
+<a class="anchor" name="cc96ccb6fd2ab2acc44c31514ae6d924"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsGivenNumber" ref="cc96ccb6fd2ab2acc44c31514ae6d924" args="(tbox::Array&lt; std::list&lt; int &gt; &gt; &amp;cut_points, const Box &amp;box, const IntVector &amp;number_boxes, const IntVector &amp;min_size, const IntVector &amp;cut_factor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool SAMRAI::hier::BoxUtilities::findBestCutPointsGivenNumber           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>cut_points</em>, </td>
         </tr>
         <tr>
@@ -745,7 +745,7 @@ Assertion checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="d85e4d073d4385d89f17950ee23e2e42"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsForDirectionGivenNumber" ref="d85e4d073d4385d89f17950ee23e2e42" args="(const int idir, tbox::List&lt; int &gt; &amp;cut_points, const Box &amp;box, const int num_boxes, const int min_size, const int cut_factor)" -->
+<a class="anchor" name="ea3e85c240385f070989b7ba4e229d4e"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::findBestCutPointsForDirectionGivenNumber" ref="ea3e85c240385f070989b7ba4e229d4e" args="(const int idir, std::list&lt; int &gt; &amp;cut_points, const Box &amp;box, const int num_boxes, const int min_size, const int cut_factor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -758,7 +758,7 @@ Assertion checks:<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::list&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>cut_points</em>, </td>
         </tr>
         <tr>
@@ -1081,14 +1081,14 @@ Assertion checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="dad47224700d7a5ec2378f67643791a3"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::fixBadCutPoints" ref="dad47224700d7a5ec2378f67643791a3" args="(tbox::Array&lt; tbox::List&lt; int &gt; &gt; &amp;cuts, const tbox::Array&lt; tbox::Array&lt; bool &gt; &gt; &amp;bad_cuts, const Box &amp;box, const IntVector &amp;min_size, const IntVector &amp;cut_factor)" -->
+<a class="anchor" name="e35adbda2f14aa683ebb314ce81dedab"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::fixBadCutPoints" ref="e35adbda2f14aa683ebb314ce81dedab" args="(tbox::Array&lt; std::list&lt; int &gt; &gt; &amp;cuts, const tbox::Array&lt; tbox::Array&lt; bool &gt; &gt; &amp;bad_cuts, const Box &amp;box, const IntVector &amp;min_size, const IntVector &amp;cut_factor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::BoxUtilities::fixBadCutPoints           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::list&lt; int &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>cuts</em>, </td>
         </tr>
         <tr>
@@ -1160,7 +1160,7 @@ Assertion checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="298c20c9748abc6288783feb3c8793a7"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::fixBadCutPointsForDirection" ref="298c20c9748abc6288783feb3c8793a7" args="(const int dir, tbox::List&lt; int &gt; &amp;cuts, const tbox::Array&lt; bool &gt; &amp;bad_cuts, const Box &amp;box, const int min_size, const int cut_factor)" -->
+<a class="anchor" name="ec153e1e291c2f1dd0e8bf7623d2479f"></a><!-- doxytag: member="SAMRAI::hier::BoxUtilities::fixBadCutPointsForDirection" ref="ec153e1e291c2f1dd0e8bf7623d2479f" args="(const int dir, std::list&lt; int &gt; &amp;cuts, const tbox::Array&lt; bool &gt; &amp;bad_cuts, const Box &amp;box, const int min_size, const int cut_factor)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -1173,7 +1173,7 @@ Assertion checks:<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a>&lt; int &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::list&lt; int &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>cuts</em>, </td>
         </tr>
         <tr>
@@ -1330,7 +1330,7 @@ Arguments:<p>
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxUtilities_8h.html">BoxUtilities.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxUtilities_8C.html">BoxUtilities.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

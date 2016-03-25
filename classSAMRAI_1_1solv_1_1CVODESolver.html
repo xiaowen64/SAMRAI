@@ -41,7 +41,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#0e5a3871b89bfdb65f02d11fca4209fe">setCVODEFunctions</a> (<a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a> *my_functions, const bool uses_preconditioner)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#96a0a9255fed2e28dbc0e50568579dcf">getCVODEFunctions</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#1f39d13f07363499e3dacbc7cbdd8043">getCVODEFunctions</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#3349215efc0342cad109e47c98449f86">setLinearMultistepMethod</a> (int linear_multistep_method)</td></tr>
 
@@ -83,7 +83,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#23a5887e91b67bd652554308b250cbd3">setCVSpgmrToleranceScaleFactor</a> (double tol_scale_factor)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#20d8cc8b871135c07c39b2b7f5c35ae3">getSolutionVector</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#1951f936b7037abb9488b8b9bdbdc406">getSolutionVector</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#3b9cee8dea1c0aae624e247806d9f933">getDkyVector</a> (double t, int k, <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *dky) const </td></tr>
 
@@ -137,7 +137,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#c595f1cab02118e007e32deff36f256b">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#6dc038cafb620533f33adcf5846375c6">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.html#84deaae88dcc61bbaf2246942af2101f">getObjectName</a> () const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -297,7 +297,7 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1solv_1_1CVODESolver.ht
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
           <td class="paramname"> <em>solution</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -323,7 +323,7 @@ Assertion checks:<p>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -377,7 +377,7 @@ Assertion checks:<p>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>log_fname</em> = <code>std::string()</code>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -407,7 +407,7 @@ If the file name string is empty the default file name "cvode.log" is used.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -421,16 +421,16 @@ Assertion checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="96a0a9255fed2e28dbc0e50568579dcf"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::getCVODEFunctions" ref="96a0a9255fed2e28dbc0e50568579dcf" args="() const " -->
+<a class="anchor" name="1f39d13f07363499e3dacbc7cbdd8043"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::getCVODEFunctions" ref="1f39d13f07363499e3dacbc7cbdd8043" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a> * SAMRAI::solv::CVODESolver::getCVODEFunctions           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1CVODEAbstractFunctions.html">CVODEAbstractFunctions</a>* SAMRAI::solv::CVODESolver::getCVODEFunctions           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -450,7 +450,7 @@ Return pointer to object that provides user-defined functions for CVODE and CVSp
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>linear_multistep_method</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -475,7 +475,7 @@ Note: the enumeration constants ADAMS and BDF are defined in cvode.h.
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>iteration_type</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -500,7 +500,7 @@ Note: the enumeration constants FUNCTIONAL and NEWTON are defined in cvode.h.
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>tolerance_type</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -525,7 +525,7 @@ Note: the enumeration constants SS and SV are defined in cvode.h.
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>relative_tolerance</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -550,7 +550,7 @@ Note that pure absolute tolerance can be used by setting the relative tolerance 
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>absolute_tolerance</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -575,7 +575,7 @@ Note that pure relative tolerance can be used by setting the absolute tolerance 
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
           <td class="paramname"> <em>absolute_tolerance</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -603,7 +603,7 @@ Note that pure relative tolerance can be used by setting the absolute tolerance 
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>stepping_method</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -628,7 +628,7 @@ Note: the enumeration constants NORMAL and ONE_STEP are defined in cvode.h.
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>t_0</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -657,7 +657,7 @@ Set initial value for independent variable.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -677,7 +677,7 @@ Set final value for independent variable (i.e. the value of independent variable
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
           <td class="paramname"> <em>ic_vector</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -701,7 +701,7 @@ Assertion checks:<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_order</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -725,7 +725,7 @@ Assertion checks:<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_num_internal_steps</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -749,7 +749,7 @@ Assertion checks:<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_num_warnings</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -773,7 +773,7 @@ Assertion checks:<p>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>init_step_size</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -797,7 +797,7 @@ Assertion checks:<p>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>max_step_size</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -821,7 +821,7 @@ Assertion checks:<p>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>min_step_size</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -845,7 +845,7 @@ Assertion checks:<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>precondition_type</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -869,7 +869,7 @@ Assertion Checks:<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>gs_type</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -893,7 +893,7 @@ Assertion Checks:<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>max_krylov_dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -917,7 +917,7 @@ Assertion Checks:<p>
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>tol_scale_factor</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -931,16 +931,16 @@ Assertion Checks:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="20d8cc8b871135c07c39b2b7f5c35ae3"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::getSolutionVector" ref="20d8cc8b871135c07c39b2b7f5c35ae3" args="() const " -->
+<a class="anchor" name="1951f936b7037abb9488b8b9bdbdc406"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::getSolutionVector" ref="1951f936b7037abb9488b8b9bdbdc406" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> * SAMRAI::solv::CVODESolver::getSolutionVector           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a>* SAMRAI::solv::CVODESolver::getSolutionVector           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -975,7 +975,7 @@ Get solution vector.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1023,7 +1023,7 @@ Important Notes:<p>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1043,7 +1043,7 @@ Get actual value of the independent variable that CVODE integrated to (i.e. the 
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
           <td class="paramname"> <em>os</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1125,7 +1125,7 @@ The abbreviations printed out refer to the following quantities:<p>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1145,7 +1145,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1165,7 +1165,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1185,7 +1185,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1205,7 +1205,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1225,7 +1225,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1245,7 +1245,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1265,7 +1265,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1285,7 +1285,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1305,7 +1305,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1325,7 +1325,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1345,7 +1345,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1365,7 +1365,7 @@ Note: if the solver was not set to collect statistics, a value of -1 is returned
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1385,7 +1385,7 @@ Note: if the solver was not set to collect statistics, the minimum double value 
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1444,7 +1444,7 @@ The abbreviations printed out refer to the following quantities:<p>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1463,7 +1463,7 @@ Return the number of preconditioner evaluations.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1482,7 +1482,7 @@ Return the number of linear iterations.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1501,7 +1501,7 @@ Return the number of CVSpgmrPrecondSolve() calls.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1520,7 +1520,7 @@ Return the number of linear convergence failures.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1539,7 +1539,7 @@ Return the size (in double words) of memory used for doubles.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1569,16 +1569,16 @@ Return the size (in integer words) of memory used for integers.
 Print out all data members for this object. 
 </div>
 </div><p>
-<a class="anchor" name="6dc038cafb620533f33adcf5846375c6"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::getObjectName" ref="6dc038cafb620533f33adcf5846375c6" args="() const " -->
+<a class="anchor" name="84deaae88dcc61bbaf2246942af2101f"></a><!-- doxytag: member="SAMRAI::solv::CVODESolver::getObjectName" ref="84deaae88dcc61bbaf2246942af2101f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::solv::CVODESolver::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::solv::CVODESolver::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1589,8 +1589,8 @@ Returns the object name.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8h.html">CVODESolver.h</a><li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8C.html">CVODESolver.C</a><li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8I.html">CVODESolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8h.html">CVODESolver.h</a><li>source/SAMRAI/solv/<a class="el" href="CVODESolver_8C.html">CVODESolver.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

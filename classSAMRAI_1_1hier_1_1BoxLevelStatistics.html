@@ -59,9 +59,10 @@ A utility for writing out various statistics of MappedBoxes.
 <p>
 Constructor. 
 <p>
+Compute and store statistics for the given <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>. The statistics reflects the current <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> state and can be printed out afterwards. All processes in the BoxLevel's SAMRAI_MPI must call this constructor because it requires collective communication.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>i]</em>&nbsp;</td><td>box_level </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>box_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> to compute statistics for. </td></tr>
   </table>
 </dl>
 
@@ -107,7 +108,7 @@ Print out local and globally reduced statistics on the Boxes.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BoxLevelStatistics_8h.html">BoxLevelStatistics.h</a><li>source/SAMRAI/hier/<a class="el" href="BoxLevelStatistics_8C.html">BoxLevelStatistics.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

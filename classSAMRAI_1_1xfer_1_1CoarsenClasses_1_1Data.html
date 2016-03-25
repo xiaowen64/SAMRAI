@@ -44,18 +44,18 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Boolean flag that is set to true when it is desired that fine data values have priority over coarse data values when data exists at the same location in the mesh on levels with different resolutions.  <a href="#809ea76d167ab00339d0ede8491b82e5"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#e1cdca46323046141a08ca4e22ce750f">d_gcw_to_coarsen</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#bd19cc0118d204b571fc4be60718d31b">d_opcoarsen</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#b0da447913216ba8323eab5b6938f587">d_opcoarsen</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Coarsening operator.  <a href="#bd19cc0118d204b571fc4be60718d31b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Coarsening operator.  <a href="#b0da447913216ba8323eab5b6938f587"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#abf15897fb7bfe301693a197dfd841c0">d_class_index</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Index of equivalence class where this item belongs. All items of the same equivalence class will have the same value.  <a href="#abf15897fb7bfe301693a197dfd841c0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#34cf29d3a4127f335caf6c5c7b80f513">d_tag</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An array index telling where this item sits in an array of coarsen items.  <a href="#34cf29d3a4127f335caf6c5c7b80f513"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#7ee5e61cbeb70a839f1fce4c5c728f85">d_var_fill_pattern</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#a30c72239a1e5c5fd85aa8090bea6fe2">d_var_fill_pattern</a></td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> that can restrict the stencil of the data coarsened by the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a>.  <a href="#7ee5e61cbeb70a839f1fce4c5c728f85"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> that can restrict the stencil of the data coarsened by the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a>.  <a href="#a30c72239a1e5c5fd85aa8090bea6fe2"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Nested class used to describe a coarsening operation between patch data components on an AMR hierarchy. 
@@ -71,7 +71,7 @@ Nested class used to describe a coarsening operation between patch data componen
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, explicit]</code></td>
+          <td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -155,12 +155,12 @@ Boolean flag that is set to true when it is desired that fine data values have p
 If the coarsen operation requires data to be coarsened from the fine level's ghost regions onto the coarse data representing the same mesh space, then this IntVector tells how wide the ghost region to coarsen will be. It is represented in terms of the coarse level's index space. 
 </div>
 </div><p>
-<a class="anchor" name="bd19cc0118d204b571fc4be60718d31b"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::Data::d_opcoarsen" ref="bd19cc0118d204b571fc4be60718d31b" args="" -->
+<a class="anchor" name="b0da447913216ba8323eab5b6938f587"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::Data::d_opcoarsen" ref="b0da447913216ba8323eab5b6938f587" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a>&gt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#bd19cc0118d204b571fc4be60718d31b">SAMRAI::xfer::CoarsenClasses::Data::d_opcoarsen</a>          </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a>&gt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#b0da447913216ba8323eab5b6938f587">SAMRAI::xfer::CoarsenClasses::Data::d_opcoarsen</a>          </td>
         </tr>
       </table>
 </div>
@@ -206,12 +206,12 @@ An array index telling where this item sits in an array of coarsen items.
 
 </div>
 </div><p>
-<a class="anchor" name="7ee5e61cbeb70a839f1fce4c5c728f85"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::Data::d_var_fill_pattern" ref="7ee5e61cbeb70a839f1fce4c5c728f85" args="" -->
+<a class="anchor" name="a30c72239a1e5c5fd85aa8090bea6fe2"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenClasses::Data::d_var_fill_pattern" ref="a30c72239a1e5c5fd85aa8090bea6fe2" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>&gt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#7ee5e61cbeb70a839f1fce4c5c728f85">SAMRAI::xfer::CoarsenClasses::Data::d_var_fill_pattern</a>          </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>&gt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html#a30c72239a1e5c5fd85aa8090bea6fe2">SAMRAI::xfer::CoarsenClasses::Data::d_var_fill_pattern</a>          </td>
         </tr>
       </table>
 </div>
@@ -223,9 +223,9 @@ An array index telling where this item sits in an array of coarsen items.
 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8h.html">CoarsenClasses.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following files:<ul>
+<li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8h.html">CoarsenClasses.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenClasses_8C.html">CoarsenClasses.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

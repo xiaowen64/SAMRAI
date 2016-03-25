@@ -32,7 +32,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#650c6d58ebeb55b4997b9ec85335b4d6">VisItDataWriter</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const std::string &amp;dump_directory_name, int number_procs_per_file=1, bool is_multiblock=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor initializes the VisIt data writer to a default state.  <a href="#650c6d58ebeb55b4997b9ec85335b4d6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a21821fa3e5c5e1101727c12ab020e01">~VisItDataWriter</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a21821fa3e5c5e1101727c12ab020e01">~VisItDataWriter</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor for a <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html">VisItDataWriter</a> object.  <a href="#a21821fa3e5c5e1101727c12ab020e01"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#45da5f564956048f569b91f00e2cbc8c">setDefaultDerivedDataWriter</a> (<a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> *default_derived_writer)</td></tr>
@@ -68,15 +68,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#6173979ca3ae02f218a7ecc36e5b7e7d">registerVisItExpressions</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expression_keys, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expressions, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; std::string &gt; &amp;expression_types)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method registers expressions that will be embedded in the VisIt datafiles.  <a href="#6173979ca3ae02f218a7ecc36e5b7e7d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#876e5e6e2db02b85cd219927c000bf17">writePlotData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, int time_step, double simulation_time=0.0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#9adeba64aa87585833eb7b17af2c8d2b">writePlotData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int time_step, double simulation_time=0.0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method causes the VisIt data writer to dump all registered data. The appropriate packing methods will be invoked for material-related data and derived data.  <a href="#876e5e6e2db02b85cd219927c000bf17"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This method causes the VisIt data writer to dump all registered data. The appropriate packing methods will be invoked for material-related data and derived data.  <a href="#9adeba64aa87585833eb7b17af2c8d2b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#221e89a092a2df3eb507d277bf3cecc1">setSummaryFilename</a> (std::string &amp;filename)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the name of the summary file.  <a href="#221e89a092a2df3eb507d277bf3cecc1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#cad9155544df4bd4673f6f86e02cefe8">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a130a311649aaa8d6ead3fcf12ffc986">getObjectName</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the object name.  <a href="#cad9155544df4bd4673f6f86e02cefe8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the object name.  <a href="#a130a311649aaa8d6ead3fcf12ffc986"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html">VisItDataWriter</a> is used by SAMRAI-based application codes to generate VisIt data files. VisIt provides a wide range of visualization and post-processing capabilities. This class supports both cell-centered and node-centered 2D and 3D AMR data where the underlying data type is either double, float, or int. Scalar, vector and 2nd-order tensor variables are supported. This class may be used when the mesh geometry is managed by a <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">geom::CartesianGridGeometry</a> object, or when the mesh itself is stored in a state variable to allow moving deformed grids. 
@@ -112,7 +112,7 @@ A brief summary of the basic steps typically involved in using the VDW are:<p>
 <li>If using species of the materials, register the names of the species of each material using the <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a80f223e3adf67a57765faa282dbb4b3">registerSpeciesNames()</a> method.</li></ul>
 <p>
 <ul>
-<li>The writer will generate VisIt dump files when the method <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#876e5e6e2db02b85cd219927c000bf17">writePlotData()</a> is called. Minimally, only a hierarchy and the time step number is needed. A simulation time can also be specified which will be included as part of the file information in the dump</li></ul>
+<li>The writer will generate VisIt dump files when the method <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#9adeba64aa87585833eb7b17af2c8d2b">writePlotData()</a> is called. Minimally, only a hierarchy and the time step number is needed. A simulation time can also be specified which will be included as part of the file information in the dump</li></ul>
 <p>
 <ul>
 <li>The document "Generating VisIt Visualization Data Files in SAMRAI" in the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> documentation directory (docs/userdocs/VisIt-writer.pdf) gives in-depth details on the use of the VDW and materials, as well as example code fragments showing how the various <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html">VisItDataWriter</a> methods can be embedded in an application. </li></ul>
@@ -172,6 +172,7 @@ An error results and the program will halt if:<ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>String name for data writer object </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>dump_directory_name</em>&nbsp;</td><td>String name for dump directory, which may include a path. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>number_procs_per_file</em>&nbsp;</td><td>Optional integer number processors (&gt;= 1) to share a common dump file; default is 1. </td></tr>
@@ -190,7 +191,7 @@ An error results and the program will halt if:<ul>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -213,7 +214,7 @@ The destructor for the writer does nothing interesting.
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> *&nbsp;</td>
           <td class="paramname"> <em>default_derived_writer</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -228,7 +229,7 @@ An error results and the program will halt if:<ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>default_derived_writer</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to a <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> object. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>default_derived_writer</em>&nbsp;</td><td>Pointer to a <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html">VisDerivedDataStrategy</a> object. </td></tr>
   </table>
 </dl>
 
@@ -244,7 +245,7 @@ An error results and the program will halt if:<ul>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a> *&nbsp;</td>
           <td class="paramname"> <em>materials_data_writer</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -258,7 +259,7 @@ An error results and the program will halt if:<ul>
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>materials_data_writer</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to a <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a> object. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>materials_data_writer</em>&nbsp;</td><td>Pointer to a <a class="el" href="classSAMRAI_1_1appu_1_1VisMaterialsDataStrategy.html">VisMaterialsDataStrategy</a> object. </td></tr>
   </table>
 </dl>
 
@@ -399,7 +400,7 @@ An error results and the program will halt if:<ul>
     <tr><td valign="top"></td><td valign="top"><em>derived_writer</em>&nbsp;</td><td>(optional) derived data strategy object to use to calculate this derived data - will use default derived data object if not supplied </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>scale_factor</em>&nbsp;</td><td>(optional) scale factor with which to multiply all data values </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>variable_centering</em>&nbsp;</td><td>(optional) centering of derived data - "CELL" or "NODE" </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>mix</em>&nbsp;</td><td>type (optional) indicate whether or not the mixed material state will be stored, "MIXED", or the default of using cell averages "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must be provided. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>variable_mix_type</em>&nbsp;</td><td>(optional) indicate whether or not the mixed material state will be stored, "MIXED", or the default of using cell averages "CLEAN". If "MIXED" then packMixedDerivedDataIntoDoubleBuffer() must be provided. </td></tr>
   </table>
 </dl>
 
@@ -702,14 +703,14 @@ This method registers expressions that will be embedded in the VisIt datafiles.
 The three Arrays of strings define the names (or keys) of the expressions, the expressions, and the types of the expressions (scalar, vector, tensor). For more information on defining VisIt expressions see the VisItUsersManual. 
 </div>
 </div><p>
-<a class="anchor" name="876e5e6e2db02b85cd219927c000bf17"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::writePlotData" ref="876e5e6e2db02b85cd219927c000bf17" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, int time_step, double simulation_time=0.0)" -->
+<a class="anchor" name="9adeba64aa87585833eb7b17af2c8d2b"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::writePlotData" ref="9adeba64aa87585833eb7b17af2c8d2b" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, int time_step, double simulation_time=0.0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::appu::VisItDataWriter::writePlotData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -760,7 +761,7 @@ An error results and the program will halt if:<ul>
           <td class="paramtype">std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>filename</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -772,16 +773,16 @@ Set the name of the summary file.
 This sets the summary file written at each step of the simulation which describes the data contained in the visit files written by each MPI process. The supplied string is appended with ".samrai" so the actual name of the file will be "&lt;filename&gt;.samrai". If no alternative name is supplied, by default the summary file used is "summary.samrai". 
 </div>
 </div><p>
-<a class="anchor" name="cad9155544df4bd4673f6f86e02cefe8"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::getObjectName" ref="cad9155544df4bd4673f6f86e02cefe8" args="() const " -->
+<a class="anchor" name="a130a311649aaa8d6ead3fcf12ffc986"></a><!-- doxytag: member="SAMRAI::appu::VisItDataWriter::getObjectName" ref="a130a311649aaa8d6ead3fcf12ffc986" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::appu::VisItDataWriter::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::appu::VisItDataWriter::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -795,8 +796,8 @@ Returns the object name.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8h.html">VisItDataWriter.h</a><li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8C.html">VisItDataWriter.C</a><li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8I.html">VisItDataWriter.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8h.html">VisItDataWriter.h</a><li>source/SAMRAI/appu/<a class="el" href="VisItDataWriter_8C.html">VisItDataWriter.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -38,15 +38,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#487153669e765777e2d77e843a57a0cd">~BaseConnectorAlgorithm</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#487153669e765777e2d77e843a57a0cd"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#f866c54fc3ba684b3ccbbf242684da66">setupCommunication</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html">tbox::AsyncCommPeer</a>&lt; int &gt; *&amp;all_comms, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">tbox::AsyncCommStage</a> &amp;comm_stage, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">tbox::AsyncCommStage::MemberVec</a> &amp;completed, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, const std::set&lt; int &gt; &amp;incoming_ranks, const std::set&lt; int &gt; &amp;outgoing_ranks, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;mpi_wait_timer, int &amp;operation_mpi_tag) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#2972a95d4210abfdeae01a9a57f79d0c">setupCommunication</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html">tbox::AsyncCommPeer</a>&lt; int &gt; *&amp;all_comms, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">tbox::AsyncCommStage</a> &amp;comm_stage, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, const std::set&lt; int &gt; &amp;incoming_ranks, const std::set&lt; int &gt; &amp;outgoing_ranks, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;mpi_wait_timer, int &amp;operation_mpi_tag) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up communication objects for use in privateBridge/Modify.  <a href="#f866c54fc3ba684b3ccbbf242684da66"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up communication objects for use in privateBridge/Modify.  <a href="#2972a95d4210abfdeae01a9a57f79d0c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#38b24799042a7a3d8a5a46d620b86e17">sendDiscoveryToOneProcess</a> (std::vector&lt; int &gt; &amp;send_mesg, const int idx_offset_to_ref, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;referenced_new_head_nabrs, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;referenced_new_base_nabrs, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html">tbox::AsyncCommPeer</a>&lt; int &gt; &amp;outgoing_comm, const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Send discovery to one processor during privateBridge/Modify.  <a href="#38b24799042a7a3d8a5a46d620b86e17"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#bc901813eea27cf246ca873f0a64c259">receiveAndUnpack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;new_base_to_new_head, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> *new_head_to_new_base, std::set&lt; int &gt; &amp;incoming_ranks, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html">tbox::AsyncCommPeer</a>&lt; int &gt; all_comms[], <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">tbox::AsyncCommStage</a> &amp;comm_stage, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">tbox::AsyncCommStage::MemberVec</a> &amp;completed, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;receive_and_unpack_timer) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#b6f02713dd5c1bd9c7598b1a5cc95994">receiveAndUnpack</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;new_base_to_new_head, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> *new_head_to_new_base, std::set&lt; int &gt; &amp;incoming_ranks, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html">tbox::AsyncCommPeer</a>&lt; int &gt; all_comms[], <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">tbox::AsyncCommStage</a> &amp;comm_stage, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;receive_and_unpack_timer) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Receive messages and unpack info sent from other processes.  <a href="#bc901813eea27cf246ca873f0a64c259"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Receive messages and unpack info sent from other processes.  <a href="#b6f02713dd5c1bd9c7598b1a5cc95994"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html#b47888e55765270c6319ea97681d90f4">unpackDiscoveryMessage</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html">tbox::AsyncCommPeer</a>&lt; int &gt; *incoming_comm, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;west_to_east, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> *east_to_west) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack message sent by sendDiscoverytoOneProcess().  <a href="#b47888e55765270c6319ea97681d90f4"></a><br></td></tr>
@@ -64,7 +64,7 @@
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [explicit, protected]</code></td>
+          <td width="100%"><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -98,7 +98,7 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="f866c54fc3ba684b3ccbbf242684da66"></a><!-- doxytag: member="SAMRAI::hier::BaseConnectorAlgorithm::setupCommunication" ref="f866c54fc3ba684b3ccbbf242684da66" args="(tbox::AsyncCommPeer&lt; int &gt; *&amp;all_comms, tbox::AsyncCommStage &amp;comm_stage, tbox::AsyncCommStage::MemberVec &amp;completed, const tbox::SAMRAI_MPI &amp;mpi, const std::set&lt; int &gt; &amp;incoming_ranks, const std::set&lt; int &gt; &amp;outgoing_ranks, tbox::Pointer&lt; tbox::Timer &gt; &amp;mpi_wait_timer, int &amp;operation_mpi_tag) const " -->
+<a class="anchor" name="2972a95d4210abfdeae01a9a57f79d0c"></a><!-- doxytag: member="SAMRAI::hier::BaseConnectorAlgorithm::setupCommunication" ref="2972a95d4210abfdeae01a9a57f79d0c" args="(tbox::AsyncCommPeer&lt; int &gt; *&amp;all_comms, tbox::AsyncCommStage &amp;comm_stage, const tbox::SAMRAI_MPI &amp;mpi, const std::set&lt; int &gt; &amp;incoming_ranks, const std::set&lt; int &gt; &amp;outgoing_ranks, const boost::shared_ptr&lt; tbox::Timer &gt; &amp;mpi_wait_timer, int &amp;operation_mpi_tag) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -113,12 +113,6 @@ Destructor.
           <td></td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">tbox::AsyncCommStage</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>comm_stage</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">tbox::AsyncCommStage::MemberVec</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>completed</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -141,7 +135,7 @@ Destructor.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>mpi_wait_timer</em>, </td>
         </tr>
         <tr>
@@ -220,7 +214,7 @@ Send discovery to one processor during privateBridge/Modify.
 
 </div>
 </div><p>
-<a class="anchor" name="bc901813eea27cf246ca873f0a64c259"></a><!-- doxytag: member="SAMRAI::hier::BaseConnectorAlgorithm::receiveAndUnpack" ref="bc901813eea27cf246ca873f0a64c259" args="(Connector &amp;new_base_to_new_head, Connector *new_head_to_new_base, std::set&lt; int &gt; &amp;incoming_ranks, tbox::AsyncCommPeer&lt; int &gt; all_comms[], tbox::AsyncCommStage &amp;comm_stage, tbox::AsyncCommStage::MemberVec &amp;completed, tbox::Pointer&lt; tbox::Timer &gt; &amp;receive_and_unpack_timer) const " -->
+<a class="anchor" name="b6f02713dd5c1bd9c7598b1a5cc95994"></a><!-- doxytag: member="SAMRAI::hier::BaseConnectorAlgorithm::receiveAndUnpack" ref="b6f02713dd5c1bd9c7598b1a5cc95994" args="(Connector &amp;new_base_to_new_head, Connector *new_head_to_new_base, std::set&lt; int &gt; &amp;incoming_ranks, tbox::AsyncCommPeer&lt; int &gt; all_comms[], tbox::AsyncCommStage &amp;comm_stage, const boost::shared_ptr&lt; tbox::Timer &gt; &amp;receive_and_unpack_timer) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -257,13 +251,7 @@ Send discovery to one processor during privateBridge/Modify.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">tbox::AsyncCommStage::MemberVec</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>completed</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">tbox::Timer</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>receive_and_unpack_timer</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -336,7 +324,7 @@ Unpack message sent by sendDiscoverytoOneProcess().
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="BaseConnectorAlgorithm_8h.html">BaseConnectorAlgorithm.h</a><li>source/SAMRAI/hier/<a class="el" href="BaseConnectorAlgorithm_8C.html">BaseConnectorAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

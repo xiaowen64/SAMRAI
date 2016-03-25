@@ -33,9 +33,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html#c2446b0c4ba956237901fef54264a483">~BoundaryUtilityStrategy</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html#b8316707aa3bd3d3c972568b7a3eff82">readDirichletBoundaryDataEntry</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db, std::string &amp;db_name, int bdry_location_index)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html#53fc3c9c1287c1f631cdc1e2eae22518">readDirichletBoundaryDataEntry</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db, std::string &amp;db_name, int bdry_location_index)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html#64cb61852d78250e6ad92c80d8bdbc2e">readNeumannBoundaryDataEntry</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db, std::string &amp;db_name, int bdry_location_index)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStrategy.html#5cb949cc6b89a0ec07941221c1f86ba2">readNeumannBoundaryDataEntry</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db, std::string &amp;db_name, int bdry_location_index)=0</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -86,14 +86,14 @@ The destructor for <a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStr
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b8316707aa3bd3d3c972568b7a3eff82"></a><!-- doxytag: member="SAMRAI::appu::BoundaryUtilityStrategy::readDirichletBoundaryDataEntry" ref="b8316707aa3bd3d3c972568b7a3eff82" args="(tbox::Pointer&lt; tbox::Database &gt; db, std::string &amp;db_name, int bdry_location_index)" -->
+<a class="anchor" name="53fc3c9c1287c1f631cdc1e2eae22518"></a><!-- doxytag: member="SAMRAI::appu::BoundaryUtilityStrategy::readDirichletBoundaryDataEntry" ref="53fc3c9c1287c1f631cdc1e2eae22518" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db, std::string &amp;db_name, int bdry_location_index)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::appu::BoundaryUtilityStrategy::readDirichletBoundaryDataEntry           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>, </td>
         </tr>
         <tr>
@@ -111,14 +111,14 @@ The destructor for <a class="el" href="classSAMRAI_1_1appu_1_1BoundaryUtilityStr
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Read DIRICHLET boundary state values for an edge (in 2d) or a face (in 3d) from a given database. This virtual function is given a blank implementation here to avoid the need for users to do the same if they do not need this functionality.<p>
+Read DIRICHLET boundary state values for an edge (in 2d) or a face (in 3d) from a given database.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>db</em>&nbsp;</td><td>Input database from which to read boundary values. </td></tr>
@@ -129,14 +129,14 @@ Read DIRICHLET boundary state values for an edge (in 2d) or a face (in 3d) from 
 
 </div>
 </div><p>
-<a class="anchor" name="64cb61852d78250e6ad92c80d8bdbc2e"></a><!-- doxytag: member="SAMRAI::appu::BoundaryUtilityStrategy::readNeumannBoundaryDataEntry" ref="64cb61852d78250e6ad92c80d8bdbc2e" args="(tbox::Pointer&lt; tbox::Database &gt; db, std::string &amp;db_name, int bdry_location_index)" -->
+<a class="anchor" name="5cb949cc6b89a0ec07941221c1f86ba2"></a><!-- doxytag: member="SAMRAI::appu::BoundaryUtilityStrategy::readNeumannBoundaryDataEntry" ref="5cb949cc6b89a0ec07941221c1f86ba2" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db, std::string &amp;db_name, int bdry_location_index)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::appu::BoundaryUtilityStrategy::readNeumannBoundaryDataEntry           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>, </td>
         </tr>
         <tr>
@@ -154,14 +154,14 @@ Read DIRICHLET boundary state values for an edge (in 2d) or a face (in 3d) from 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Read NEUMANN boundary state values for an edge (in 2d) or a face (in 3d) from a given database. This virtual function is given a blank implementation here to avoid the need for users to do the same if they do not need this functionality.<p>
+Read NEUMANN boundary state values for an edge (in 2d) or a face (in 3d) from a given database.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>db</em>&nbsp;</td><td>Input database from which to read boundary values. </td></tr>
@@ -174,7 +174,7 @@ Read NEUMANN boundary state values for an edge (in 2d) or a face (in 3d) from a 
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="BoundaryUtilityStrategy_8h.html">BoundaryUtilityStrategy.h</a><li>source/SAMRAI/appu/<a class="el" href="BoundaryUtilityStrategy_8C.html">BoundaryUtilityStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

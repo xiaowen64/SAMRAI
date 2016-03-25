@@ -32,53 +32,53 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#bce03a4293e78fea11276b9d579d7631">RefineAlgorithm</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a refinement algorithm and initialize its basic state.  <a href="#bce03a4293e78fea11276b9d579d7631"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#0db5776c5e06ca803470563c5bd39368">~RefineAlgorithm</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#0db5776c5e06ca803470563c5bd39368">~RefineAlgorithm</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor releases all internal storage.  <a href="#0db5776c5e06ca803470563c5bd39368"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d5ddd7c66c1c63bd3747d5850cdcd9e9">registerRefine</a> (const int dst, const int src, const int scratch, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt; oprefine, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; var_fill_pattern=(<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> &gt;) NULL)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor releases all internal storage.  <a href="#0db5776c5e06ca803470563c5bd39368"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#b47f62e19bd1f174b7f7c12c6b0ce34c">registerRefine</a> (const int dst, const int src, const int scratch, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt; &amp;oprefine, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; &amp;var_fill_pattern=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a refine operation with the refine algorithm object.  <a href="#d5ddd7c66c1c63bd3747d5850cdcd9e9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#737dd4b085e80c6430ae8c9879f28be3">registerRefine</a> (const int dst, const int src, const int src_told, const int src_tnew, const int scratch, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt; oprefine, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> &gt; optime, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; var_fill_pattern=(<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> &gt;) NULL)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a refine operation with the refine algorithm object.  <a href="#b47f62e19bd1f174b7f7c12c6b0ce34c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#bd61c6ae58bc86d63d7780ff643bd477">registerRefine</a> (const int dst, const int src, const int src_told, const int src_tnew, const int scratch, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt; &amp;oprefine, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> &gt; &amp;optime, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; &amp;var_fill_pattern=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a refine operation with the refine algorithm object.  <a href="#737dd4b085e80c6430ae8c9879f28be3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d93735084a5e4c89f3c8e428e74f263d">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register a refine operation with the refine algorithm object.  <a href="#bd61c6ae58bc86d63d7780ff643bd477"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#37eaad0259737d26d7e91fc7c86b013f">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule for communicating data within a single level.  <a href="#d93735084a5e4c89f3c8e428e74f263d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#73e4c931167c8ddac2cba1d6d1d2003a">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; fill_pattern, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule for communicating data within a single level.  <a href="#37eaad0259737d26d7e91fc7c86b013f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#0383fb3760b35c8d6190a7061c38a012">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;fill_pattern, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#37d374628fb6243c02389d932871059d">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#79a1d58a4eae6fd059f6184ec910d39d">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that communicates data between two levels that are at the same level of resolution.  <a href="#37d374628fb6243c02389d932871059d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#af269eab663a90ea4e8c09506d31c559">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; fill_pattern, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that communicates data between two levels that are at the same level of resolution.  <a href="#79a1d58a4eae6fd059f6184ec910d39d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#1a5da61bdbee0a3bf1e8c244d4e727ea">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;fill_pattern, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as the above, except with fill_pattern specified.  <a href="#af269eab663a90ea4e8c09506d31c559"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#43f962ea2c4c432063d63ed19e6040ae">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as the above, except with fill_pattern specified.  <a href="#1a5da61bdbee0a3bf1e8c244d4e727ea"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#e7d935d1bd2702d593175621b2aca7da">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const int next_coarser_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that communicates data within a single level and interpolates data from coarser hierarchy levels where needed.  <a href="#43f962ea2c4c432063d63ed19e6040ae"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#fd433a08a1d83554d7035de7003224b2">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; fill_pattern, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that communicates data within a single level and interpolates data from coarser hierarchy levels where needed.  <a href="#e7d935d1bd2702d593175621b2aca7da"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#1fbf21842413b943cb8447ad118090d0">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;fill_pattern, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const int next_coarser_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as the above, except with fill_pattern specified.  <a href="#fd433a08a1d83554d7035de7003224b2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#b1b2092fc7be89683a29435c27b11eab">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as the above, except with fill_pattern specified.  <a href="#1fbf21842413b943cb8447ad118090d0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#97882dc1ffcc423ab279af6237f7cc18">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const int next_coarser_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that communicates data from a source level to a destination level and interpolates data from coarser hierarchy levels where needed.  <a href="#b1b2092fc7be89683a29435c27b11eab"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#f082839ee547a7629d4950bae88f07d8">createSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; fill_pattern, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, const int next_coarser_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt; transaction_factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create a communication schedule that communicates data from a source level to a destination level and interpolates data from coarser hierarchy levels where needed.  <a href="#97882dc1ffcc423ab279af6237f7cc18"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#6b3d1890ce66580978c7cd5ad980c34d">createSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;fill_pattern, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const int next_coarser_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *patch_strategy=((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;transaction_factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as the above, except with fill_pattern specified.  <a href="#f082839ee547a7629d4950bae88f07d8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#a54fbcaf84ed518c929ba6348c4a5d34">checkConsistency</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; schedule) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Same as the above, except with fill_pattern specified.  <a href="#6b3d1890ce66580978c7cd5ad980c34d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#90cf9a3fd8db08acf1d0fb3eaa1e521c">checkConsistency</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; &amp;schedule) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a previously-generated refine schedule, check for consistency with this refine algorithm object to see whether a call to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#96a4ac2a59b4552b902d69e4ceb4b6d0">resetSchedule()</a> is a valid operation.  <a href="#a54fbcaf84ed518c929ba6348c4a5d34"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#96a4ac2a59b4552b902d69e4ceb4b6d0">resetSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; schedule) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a previously-generated refine schedule, check for consistency with this refine algorithm object to see whether a call to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d0d2f0baf14ad9c84307df59cdda30fb">resetSchedule()</a> is a valid operation.  <a href="#90cf9a3fd8db08acf1d0fb3eaa1e521c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d0d2f0baf14ad9c84307df59cdda30fb">resetSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; &amp;schedule) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a previously-generated refine schedule, reconfigure it to peform the communication operations registered with THIS refine algorithm object.  <a href="#96a4ac2a59b4552b902d69e4ceb4b6d0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d840d18d23271172731286b3837092d3">getEquivalenceClasses</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a previously-generated refine schedule, reconfigure it to peform the communication operations registered with THIS refine algorithm object.  <a href="#d0d2f0baf14ad9c84307df59cdda30fb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#1691beafca7582add84dc26e316aeaf5">getEquivalenceClasses</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the refine equivalence classes used in the algorithm.  <a href="#d840d18d23271172731286b3837092d3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d974726e43c6dd58241d07497a153861">setEquivalenceClasses</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt; refine_classes)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the refine equivalence classes used in the algorithm.  <a href="#1691beafca7582add84dc26e316aeaf5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#222df9440dd657e5070cd81e7512ab4a">setEquivalenceClasses</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt; &amp;refine_classes)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the pointer to the refine equivalence classes to be equal to the given argument.  <a href="#d974726e43c6dd58241d07497a153861"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#4b18d4b99d0a7cdbff613b93fc84875b">getDim</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the pointer to the refine equivalence classes to be equal to the given argument.  <a href="#222df9440dd657e5070cd81e7512ab4a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#4c503b3391b30cc6893ba577c8f52f88">getDim</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#4b18d4b99d0a7cdbff613b93fc84875b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#4c503b3391b30cc6893ba577c8f52f88"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d514085e1f666fa009afff5ab763d8ed">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print the refine algorithm state to the specified data stream.  <a href="#d514085e1f666fa009afff5ab763d8ed"></a><br></td></tr>
@@ -99,23 +99,23 @@ fill physical boundary conditions regions </li>
 Each data communication procedure generally consists of three parts: an algorithm, a schedule, and a patch strategy. The algorithm describes the patch data components and time and space interpolation operations, but is independent of the configuration of the patches in an AMR hierarchy. Patch data items and their associated spatial and time interpolation operators are registered with an instantiation of this algorithm class. To generate the communication dependencies for a particular patch hierarchy configuration, the algorithm creates a refine schedule based on the state of a given hierarchy and the information in the algorithm. The schedule can then perform the communication operations that move data to the destination patch level using the associated operators. User-defined operations (such as filling physical boundaries and special interpolation procedures) are provided through a refine patch strategy object. User-defined interpolation operations can be written using the interfaces in <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> for preprocessRefine() and postProcessRefine().<p>
 In general, source data is copied into the designated scratch data for temporary processing. The scratch space must contain sufficient ghost cells to accommodate the stencil width of the given interpolation operators and any physical boundary data that must be filled. The scratch storage is copied into the destination data space at the end of the communication process. Thus, copy operations between source, scratch, and destination patch data objects must be defined.<p>
 In general, the destination and scratch data components may be the same (assuming that the scratch component has a sufficient ghost cells width). The source and scratch components SHOULD NOT be the same, since the interiors of the source space could be changed by the use of the scratch data as temporary work space.<p>
-It is the user's responsibility to register valid operations with the refine algorithm so that the data communication can occur. In particular, communication operations (e.g., data refinement, data copy, etc.) are performed in the order that items are registered for refinement with a refine algorithm object. Thus, order of registration must repect any dependencies among patch data communicated. Also, users who use the preprocessRefine() and postProcessRefine() operations in the patch strategy object must make sure that all data that is needed in those operations are registered with the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html">RefineAlgorithm</a> using <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d5ddd7c66c1c63bd3747d5850cdcd9e9">registerRefine()</a> whether or not the data is to be refined.<p>
+It is the user's responsibility to register valid operations with the refine algorithm so that the data communication can occur. In particular, communication operations (e.g., data refinement, data copy, etc.) are performed in the order that items are registered for refinement with a refine algorithm object. Thus, order of registration must repect any dependencies among patch data communicated. Also, users who use the preprocessRefine() and postProcessRefine() operations in the patch strategy object must make sure that all data that is needed in those operations are registered with the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html">RefineAlgorithm</a> using <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#b47f62e19bd1f174b7f7c12c6b0ce34c">registerRefine()</a> whether or not the data is to be refined.<p>
 Typical usage of a refine algorithm to perform inter-patch communication on an AMR hierarchy involves four steps:<p>
 <ul>
 <li>
 Construct a refine algorithm object. </li>
 <li>
-Register refine operations with the refine algorithm. Using the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d5ddd7c66c1c63bd3747d5850cdcd9e9">registerRefine()</a> methods(s), one provides source and destination patch data information, as well as time and space interpolation operators as needed. Two <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d5ddd7c66c1c63bd3747d5850cdcd9e9">registerRefine()</a> methods appear in this class; one supports time interpolation, one does not. </li>
+Register refine operations with the refine algorithm. Using the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#b47f62e19bd1f174b7f7c12c6b0ce34c">registerRefine()</a> methods(s), one provides source and destination patch data information, as well as time and space interpolation operators as needed. Two <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#b47f62e19bd1f174b7f7c12c6b0ce34c">registerRefine()</a> methods appear in this class; one supports time interpolation, one does not. </li>
 <li>
-After all operations are registered with the algorithm, one creates a communication schedule using one of the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d93735084a5e4c89f3c8e428e74f263d">createSchedule()</a> methods. These methods are distinguished by the resulting data communication pattern (e.g., interpatch communication on a single level, between two different levels at the same grid resolution, interpolation of data between different AMR hierarchy levels, etc.) Note that when creating a communication schedule, a concrete instance of a <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> object may be required to supply physical boundary conditions as well as user-defined spatial data interpolation operations. </li>
+After all operations are registered with the algorithm, one creates a communication schedule using one of the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#37eaad0259737d26d7e91fc7c86b013f">createSchedule()</a> methods. These methods are distinguished by the resulting data communication pattern (e.g., interpatch communication on a single level, between two different levels at the same grid resolution, interpolation of data between different AMR hierarchy levels, etc.) Note that when creating a communication schedule, a concrete instance of a <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> object may be required to supply physical boundary conditions as well as user-defined spatial data interpolation operations. </li>
 <li>
-Invoke the fillData() method in the communication schedule to perform the data transfers.<p>
+Invoke the fillData() method in the communication schedule to perform the data transfers. </li>
+</ul>
+<p>
 Note that each refine schedule created by a refine algorithm remains valid as long as the patches involved in the communication process do not change; thus, they can be used for multiple data communication cycles.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> <p>
 <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">xfer::RefineClasses</a> </dd></dl>
-</li>
-</ul>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -138,7 +138,7 @@ Note that each refine schedule created by a refine algorithm remains valid as lo
 <p>
 Construct a refinement algorithm and initialize its basic state. 
 <p>
-Refinement operations must be registered with this algorithm before it can do anything useful. See the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d5ddd7c66c1c63bd3747d5850cdcd9e9">registerRefine()</a> routines for details 
+Refinement operations must be registered with this algorithm before it can do anything useful. See the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#b47f62e19bd1f174b7f7c12c6b0ce34c">registerRefine()</a> routines for details 
 </div>
 </div><p>
 <a class="anchor" name="0db5776c5e06ca803470563c5bd39368"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::~RefineAlgorithm" ref="0db5776c5e06ca803470563c5bd39368" args="()" -->
@@ -150,20 +150,20 @@ Refinement operations must be registered with this algorithm before it can do an
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-The virtual destructor releases all internal storage. 
+The destructor releases all internal storage. 
 <p>
 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="d5ddd7c66c1c63bd3747d5850cdcd9e9"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::registerRefine" ref="d5ddd7c66c1c63bd3747d5850cdcd9e9" args="(const int dst, const int src, const int scratch, tbox::Pointer&lt; hier::RefineOperator &gt; oprefine, tbox::Pointer&lt; VariableFillPattern &gt; var_fill_pattern=(tbox::Pointer&lt; BoxGeometryVariableFillPattern &gt;) NULL)" -->
+<a class="anchor" name="b47f62e19bd1f174b7f7c12c6b0ce34c"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::registerRefine" ref="b47f62e19bd1f174b7f7c12c6b0ce34c" args="(const int dst, const int src, const int scratch, const boost::shared_ptr&lt; hier::RefineOperator &gt; &amp;oprefine, const boost::shared_ptr&lt; VariableFillPattern &gt; &amp;var_fill_pattern=boost::shared_ptr&lt; VariableFillPattern &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -188,14 +188,14 @@ The virtual destructor releases all internal storage.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>oprefine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>var_fill_pattern</em> = <code>(<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a>&nbsp;&gt;)&nbsp;NULL</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>var_fill_pattern</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -216,13 +216,13 @@ This method does not support time interpolation. Data values will be moved from 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src</em>&nbsp;</td><td>Patch data index for source data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>scratch</em>&nbsp;</td><td>Patch data index for temporary work space data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>oprefine</em>&nbsp;</td><td>Refinement operator. This may be a null pointer. In this case, refinement must be handled by the refine patch strategy member functions. See the comments for <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5d1588459650fb4ff5f7c5dd66ece46">RefinePatchStrategy::preprocessRefine()</a> and <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">RefinePatchStrategy::postprocessRefine()</a>. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_fill_pattern</em>&nbsp;</td><td>Pointer to the variable fill pattern, which can be used to restrict the filling of data to a specific stencil. If the NULL default is used, then class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> will be used internally. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_fill_pattern</em>&nbsp;</td><td>boost::shared_ptr to the variable fill pattern, which can be used to restrict the filling of data to a specific stencil. If the NULL default is used, then class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> will be used internally. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="737dd4b085e80c6430ae8c9879f28be3"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::registerRefine" ref="737dd4b085e80c6430ae8c9879f28be3" args="(const int dst, const int src, const int src_told, const int src_tnew, const int scratch, tbox::Pointer&lt; hier::RefineOperator &gt; oprefine, tbox::Pointer&lt; hier::TimeInterpolateOperator &gt; optime, tbox::Pointer&lt; VariableFillPattern &gt; var_fill_pattern=(tbox::Pointer&lt; BoxGeometryVariableFillPattern &gt;) NULL)" -->
+<a class="anchor" name="bd61c6ae58bc86d63d7780ff643bd477"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::registerRefine" ref="bd61c6ae58bc86d63d7780ff643bd477" args="(const int dst, const int src, const int src_told, const int src_tnew, const int scratch, const boost::shared_ptr&lt; hier::RefineOperator &gt; &amp;oprefine, const boost::shared_ptr&lt; hier::TimeInterpolateOperator &gt; &amp;optime, const boost::shared_ptr&lt; VariableFillPattern &gt; &amp;var_fill_pattern=boost::shared_ptr&lt; VariableFillPattern &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -259,20 +259,20 @@ This method does not support time interpolation. Data values will be moved from 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>oprefine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>optime</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>var_fill_pattern</em> = <code>(<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a>&nbsp;&gt;)&nbsp;NULL</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>var_fill_pattern</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1VariableFillPattern.html">VariableFillPattern</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -296,20 +296,20 @@ This method supports time interpolation. Time interpolation will take place betw
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>scratch</em>&nbsp;</td><td>Patch data index for temporary work space data. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>oprefine</em>&nbsp;</td><td>Refinement operator. This may be a null pointer. In this case, refinement must be handled by the refine patch strategy member functions. See the comments for <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5d1588459650fb4ff5f7c5dd66ece46">RefinePatchStrategy::preprocessRefine()</a> and <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">RefinePatchStrategy::postprocessRefine()</a>. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>optime</em>&nbsp;</td><td>Time interpolation operator. This pointer may not be null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_fill_pattern</em>&nbsp;</td><td>Pointer to the variable fill pattern, which can be used to restrict the filling of data to a specific stencil. If the NULL default is used, then class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> will be used internally. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_fill_pattern</em>&nbsp;</td><td>boost::shared_ptr to the variable fill pattern, which can be used to restrict the filling of data to a specific stencil. If the NULL default is used, then class <a class="el" href="classSAMRAI_1_1xfer_1_1BoxGeometryVariableFillPattern.html">BoxGeometryVariableFillPattern</a> will be used internally. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d93735084a5e4c89f3c8e428e74f263d"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="d93735084a5e4c89f3c8e428e74f263d" args="(tbox::Pointer&lt; hier::PatchLevel &gt; level, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="37eaad0259737d26d7e91fc7c86b013f"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="37eaad0259737d26d7e91fc7c86b013f" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -321,8 +321,8 @@ This method supports time interpolation. Time interpolation will take place betw
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -339,32 +339,31 @@ Create a communication schedule for communicating data within a single level.
 The schedule will communicate data from the interiors of the source data into the interior and ghosts of the destination data on the the same level where those sources and destinations overlap.<p>
 Neither time nor spatial interpolation is performed.<p>
 Note that the schedule remains valid as long as the level does not change; thus, it can be used for multiple data communication cycles cycles.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>Pointer to refine schedule that performs the data transfers.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to refine schedule that performs the data transfers.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>Level on which communication occurs. This pointer cannot be null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>Optional pointer to a refine patch strategy that provides user-defined physical boundary filling operations. If this patch strategy is null (default state), then no physical boundary filling is performed. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Identifies the block that this schedule will operate on. Defaults to zero for single-block problems. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Optional Pointer to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Optional boost::shared_ptr to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="73e4c931167c8ddac2cba1d6d1d2003a"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="73e4c931167c8ddac2cba1d6d1d2003a" args="(tbox::Pointer&lt; PatchLevelFillPattern &gt; fill_pattern, tbox::Pointer&lt; hier::PatchLevel &gt; level, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="0383fb3760b35c8d6190a7061c38a012"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="0383fb3760b35c8d6190a7061c38a012" args="(const boost::shared_ptr&lt; PatchLevelFillPattern &gt; &amp;fill_pattern, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_pattern</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -376,8 +375,8 @@ Note that the schedule remains valid as long as the level does not change; thus,
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -392,27 +391,27 @@ Note that the schedule remains valid as long as the level does not change; thus,
 
 </div>
 </div><p>
-<a class="anchor" name="37d374628fb6243c02389d932871059d"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="37d374628fb6243c02389d932871059d" args="(tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, xfer::RefinePatchStrategy *patch_strategy=((xfer::RefinePatchStrategy *) NULL), bool use_time_interpolation=false, tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="79a1d58a4eae6fd059f6184ec910d39d"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="79a1d58a4eae6fd059f6184ec910d39d" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -423,8 +422,8 @@ Note that the schedule remains valid as long as the level does not change; thus,
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -442,46 +441,46 @@ Data will be communicated from the interiors of the source data on the source le
 Note that both levels must reside in the same AMR hierarchy index space, or in index spaces that represent the same level of mesh refinement. No spatial interpolation is performed.<p>
 In certain rare cases it may be desired to use this schedule to perform time interpolation, in which case the use_time_interpolation optional argument should be set to true.<p>
 Note that the schedule remains valid as long as the levels do not change; thus, it can be used for multiple data communication cycles.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>Pointer to refine schedule that performs the data transfers.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to refine schedule that performs the data transfers.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_level</em>&nbsp;</td><td>Pointer to destination level; cannot be null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_level</em>&nbsp;</td><td>Pointer to source level; cannot be null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>Pointer to a refine patch strategy that provides user-defined physical boundary filling operations. If this patch strategy is null (default state), then no physical boundary filling is performed. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_level</em>&nbsp;</td><td>boost::shared_ptr to destination level; cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_level</em>&nbsp;</td><td>boost::shared_ptr to source level; cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>boost::shared_ptr to a refine patch strategy that provides user-defined physical boundary filling operations. If this patch strategy is null (default state), then no physical boundary filling is performed. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td>Flag to create the schedule with the ability to perform time interpolation. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Pointer to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>boost::shared_ptr to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="af269eab663a90ea4e8c09506d31c559"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="af269eab663a90ea4e8c09506d31c559" args="(tbox::Pointer&lt; PatchLevelFillPattern &gt; fill_pattern, tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, xfer::RefinePatchStrategy *patch_strategy=((xfer::RefinePatchStrategy *) NULL), bool use_time_interpolation=false, tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="1a5da61bdbee0a3bf1e8c244d4e727ea"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="1a5da61bdbee0a3bf1e8c244d4e727ea" args="(const boost::shared_ptr&lt; PatchLevelFillPattern &gt; &amp;fill_pattern, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_pattern</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -492,8 +491,8 @@ Note that the schedule remains valid as long as the levels do not change; thus, 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -510,19 +509,24 @@ Same as the above, except with fill_pattern specified.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_pattern</em>&nbsp;</td><td>Indicates which parts of the destination level to fill. See <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> for available patterns. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="43f962ea2c4c432063d63ed19e6040ae"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="43f962ea2c4c432063d63ed19e6040ae" args="(tbox::Pointer&lt; hier::PatchLevel &gt; level, const int next_coarser_level, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, xfer::RefinePatchStrategy *patch_strategy=((xfer::RefinePatchStrategy *) NULL), bool use_time_interpolation=false, tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="e7d935d1bd2702d593175621b2aca7da"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="e7d935d1bd2702d593175621b2aca7da" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const int next_coarser_level, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -534,14 +538,14 @@ Same as the above, except with fill_pattern specified.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -552,8 +556,8 @@ Same as the above, except with fill_pattern specified.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -572,35 +576,34 @@ Data is time interpolated between old and new sources on coarser levels when and
 In certain rare cases in may be necessary to perform time interpolation between old and new sources on the given patch level. In this case the optional argument use_time_interpolation should be set to true. Regardless of the value of this argument, time interpolation on coarser levels will always occur whenever needed.<p>
 Note that the next coarser level number must correspond to a level in the hierarchy that represents a region of coarser index space than the destination level.<p>
 Note that the schedule remains valid as long as the levels involved in its creation do not change; thus, it can be used for multiple data communication cycles.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>Pointer to refine schedule that performs the data transfers.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to refine schedule that performs the data transfers.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>Pointer to destination level; cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td>boost::shared_ptr to destination level; cannot be null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>next_coarser_level</em>&nbsp;</td><td>Level number of next coarser patch level in the patch hierarchy relative to the destination level. Note that when the destination level has number zero (i.e., the coarsest level), this value should value should be &lt; 0. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>Pointer to patch hierarchy from which data to fill level should come. This pointer may be null only when the next_coarser_level is &lt; 0. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>Pointer to a refine patch strategy that provides user-defined physical boundary filling operations and user-defined spatial interpolation operations. If this patch strategy is null (default state), then no physical boundary filling or user-defined interpolation is performed. Note that this may cause problems if the interpolation stencils require physical boundary data on the coarser levels. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Identifies the block that this schedule will operate on. Defaults to zero for single-block problems. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>boost::shared_ptr to patch hierarchy from which data to fill level should come. This pointer may be null only when the next_coarser_level is &lt; 0. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>boost::shared_ptr to a refine patch strategy that provides user-defined physical boundary filling operations and user-defined spatial interpolation operations. If this patch strategy is null (default state), then no physical boundary filling or user-defined interpolation is performed. Note that this may cause problems if the interpolation stencils require physical boundary data on the coarser levels. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td>Boolean flag to create the schedule the ability to perform time interpolation on the destination level. Default is no time interpolation (false). </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Pointer to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>boost::shared_ptr to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="fd433a08a1d83554d7035de7003224b2"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="fd433a08a1d83554d7035de7003224b2" args="(tbox::Pointer&lt; PatchLevelFillPattern &gt; fill_pattern, tbox::Pointer&lt; hier::PatchLevel &gt; level, const int next_coarser_level, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, xfer::RefinePatchStrategy *patch_strategy=((xfer::RefinePatchStrategy *) NULL), bool use_time_interpolation=false, tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="1fbf21842413b943cb8447ad118090d0"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="1fbf21842413b943cb8447ad118090d0" args="(const boost::shared_ptr&lt; PatchLevelFillPattern &gt; &amp;fill_pattern, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const int next_coarser_level, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_pattern</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -612,14 +615,14 @@ Note that the schedule remains valid as long as the levels involved in its creat
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -630,8 +633,8 @@ Note that the schedule remains valid as long as the levels involved in its creat
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -648,25 +651,31 @@ Same as the above, except with fill_pattern specified.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_pattern</em>&nbsp;</td><td>Indicates which parts of the destination level to fill. See <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> for available patterns. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>next_coarser_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="b1b2092fc7be89683a29435c27b11eab"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="b1b2092fc7be89683a29435c27b11eab" args="(tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, const int next_coarser_level, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, xfer::RefinePatchStrategy *patch_strategy=((xfer::RefinePatchStrategy *) NULL), bool use_time_interpolation=false, tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="97882dc1ffcc423ab279af6237f7cc18"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="97882dc1ffcc423ab279af6237f7cc18" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const int next_coarser_level, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
@@ -678,14 +687,14 @@ Same as the above, except with fill_pattern specified.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -696,8 +705,8 @@ Same as the above, except with fill_pattern specified.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -717,42 +726,41 @@ This form of schedule construction is typically used after regridding (where the
 In certain rare cases in may be desired to perform time interpolation between old and new sources onto the destination level. In this case the optional argument use_time_interpolation should be set to true. Regardless of the value of this argument, time interpolation on coarser levels will always occur whenever needed.<p>
 Note that when the source level pointer is non-null, the index spaces of the source and destination levels must be aligned with one another.<p>
 Note that the schedule remains valid as long as the levels involved in its creation do not change; thus, it can be used for multiple data communication cycles.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>Pointer to refine schedule that performs the data transfers.</dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>boost::shared_ptr to refine schedule that performs the data transfers.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_level</em>&nbsp;</td><td>Pointer to destination level; cannot be null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_level</em>&nbsp;</td><td>Pointer to source level. This pointer may be null. In this case, data on the destination level will be filled only using interpolated data from coarser hierarchy levels. When this pointer is not null, the source level must live in the same AMR hierarchy index space as the destination level. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_level</em>&nbsp;</td><td>boost::shared_ptr to destination level; cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_level</em>&nbsp;</td><td>boost::shared_ptr to source level. This pointer may be null. In this case, data on the destination level will be filled only using interpolated data from coarser hierarchy levels. When this pointer is not null, the source level must live in the same AMR hierarchy index space as the destination level. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>next_coarser_level</em>&nbsp;</td><td>Level number of next coarser patch level in the patch hierarchy relative to the destination level. Note that when the destination level has number zero (i.e., the coarsest level), this value should value should be &lt; 0. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>Pointer to patch hierarchy from which data to fill level should come. This pointer may be null only when the next_coarser_level is &lt; 0. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>Pointer to a refine patch strategy that provides user-defined physical boundary filling operations and user-defined spatial interpolation operations. If this patch strategy is null (default state), then no physical boundary filling or user-defined interpolation is performed. Note that this may cause problems if the interpolation stencils require physical boundary data on the coarser levels. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>Identifies the block that this schedule will operate on. Defaults to zero for single-block problems. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>boost::shared_ptr to patch hierarchy from which data to fill level should come. This pointer may be null only when the next_coarser_level is &lt; 0. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>boost::shared_ptr to a refine patch strategy that provides user-defined physical boundary filling operations and user-defined spatial interpolation operations. If this patch strategy is null (default state), then no physical boundary filling or user-defined interpolation is performed. Note that this may cause problems if the interpolation stencils require physical boundary data on the coarser levels. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td>Boolean flag to create the schedule the ability to perform time interpolation on the destination level. Default is no time interpolation (false). </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Pointer to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>boost::shared_ptr to a refine transaction factory that creates data transactions for the schedule. If this pointer is null (default state), then a <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html">StandardRefineTransactionFactory</a> object will be used. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="f082839ee547a7629d4950bae88f07d8"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="f082839ee547a7629d4950bae88f07d8" args="(tbox::Pointer&lt; PatchLevelFillPattern &gt; fill_pattern, tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, const int next_coarser_level, tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, xfer::RefinePatchStrategy *patch_strategy=((xfer::RefinePatchStrategy *) NULL), bool use_time_interpolation=false, tbox::Pointer&lt; xfer::RefineTransactionFactory &gt; transaction_factory=tbox::Pointer&lt; xfer::RefineTransactionFactory &gt;(NULL))" -->
+<a class="anchor" name="6b3d1890ce66580978c7cd5ad980c34d"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::createSchedule" ref="6b3d1890ce66580978c7cd5ad980c34d" args="(const boost::shared_ptr&lt; PatchLevelFillPattern &gt; &amp;fill_pattern, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const int next_coarser_level, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, RefinePatchStrategy *patch_strategy=((RefinePatchStrategy *) NULL), bool use_time_interpolation=false, const boost::shared_ptr&lt; RefineTransactionFactory &gt; &amp;transaction_factory=boost::shared_ptr&lt; RefineTransactionFactory &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; SAMRAI::xfer::RefineAlgorithm::createSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1PatchLevelFillPattern.html">PatchLevelFillPattern</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fill_pattern</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
@@ -764,14 +772,14 @@ Note that the schedule remains valid as long as the levels involved in its creat
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> *&nbsp;</td>
-          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a> *&nbsp;</td>
+          <td class="paramname"> <em>patch_strategy</em> = <code>((<a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">RefinePatchStrategy</a>&nbsp;*)&nbsp;NULL)</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -782,8 +790,8 @@ Note that the schedule remains valid as long as the levels involved in its creat
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>transaction_factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">xfer::RefineTransactionFactory</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>transaction_factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -800,19 +808,26 @@ Same as the above, except with fill_pattern specified.
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_pattern</em>&nbsp;</td><td>Indicates which parts of the destination level to fill. See <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> for available patterns. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dst_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>src_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>next_coarser_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="a54fbcaf84ed518c929ba6348c4a5d34"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::checkConsistency" ref="a54fbcaf84ed518c929ba6348c4a5d34" args="(tbox::Pointer&lt; xfer::RefineSchedule &gt; schedule) const " -->
+<a class="anchor" name="90cf9a3fd8db08acf1d0fb3eaa1e521c"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::checkConsistency" ref="90cf9a3fd8db08acf1d0fb3eaa1e521c" args="(const boost::shared_ptr&lt; RefineSchedule &gt; &amp;schedule) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool SAMRAI::xfer::RefineAlgorithm::checkConsistency           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>schedule</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
@@ -822,26 +837,26 @@ Same as the above, except with fill_pattern specified.
 <div class="memdoc">
 
 <p>
-Given a previously-generated refine schedule, check for consistency with this refine algorithm object to see whether a call to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#96a4ac2a59b4552b902d69e4ceb4b6d0">resetSchedule()</a> is a valid operation. 
+Given a previously-generated refine schedule, check for consistency with this refine algorithm object to see whether a call to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#d0d2f0baf14ad9c84307df59cdda30fb">resetSchedule()</a> is a valid operation. 
 <p>
-Consistency means that the number of operations registered must be the same and the source and destination patch data items and operators must have identical characteristics (i.e., data centering, ghost cell widths, stencil requirements, etc.). However, the specific source, destination patch data ids and refine operators can be different. The specific time interpolation operators and variable fill patterns must be the same. See <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#3155281a67aaa15989995959050e2d26">RefineClasses::classesMatch()</a> for more details.<p>
+Consistency means that the number of operations registered must be the same and the source and destination patch data items and operators must have identical characteristics (i.e., data centering, ghost cell widths, stencil requirements, etc.). However, the specific source, destination patch data ids and refine operators can be different. The specific time interpolation operators and variable fill patterns must be the same. See <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html#e0755cb0c8c21f24e0b32cfe1454c70c">RefineClasses::classesMatch()</a> for more details.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>true if schedule reset is valid; false otherwise.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>Pointer to refine schedule, which cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>boost::shared_ptr to refine schedule, which cannot be null. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="96a4ac2a59b4552b902d69e4ceb4b6d0"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::resetSchedule" ref="96a4ac2a59b4552b902d69e4ceb4b6d0" args="(tbox::Pointer&lt; xfer::RefineSchedule &gt; schedule) const " -->
+<a class="anchor" name="d0d2f0baf14ad9c84307df59cdda30fb"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::resetSchedule" ref="d0d2f0baf14ad9c84307df59cdda30fb" args="(const boost::shared_ptr&lt; RefineSchedule &gt; &amp;schedule) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::xfer::RefineAlgorithm::resetSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">xfer::RefineSchedule</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>schedule</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const</td>
@@ -853,25 +868,25 @@ Consistency means that the number of operations registered must be the same and 
 <p>
 Given a previously-generated refine schedule, reconfigure it to peform the communication operations registered with THIS refine algorithm object. 
 <p>
-That is, the schedule will be transformed so that it will function as though this refine algorithm created it. Note that the set of operations registered with this refine algorithm must be essentially the same as those registered with the refine algorithm that created the schedule originally, and this is enforced using a call to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#a54fbcaf84ed518c929ba6348c4a5d34">checkConsistency()</a>. An error will result if the schedule is not consistent with this <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html">RefineAlgorithm</a> object according to the criteria in <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#a54fbcaf84ed518c929ba6348c4a5d34">checkConsistency()</a>.<p>
+That is, the schedule will be transformed so that it will function as though this refine algorithm created it. Note that the set of operations registered with this refine algorithm must be essentially the same as those registered with the refine algorithm that created the schedule originally, and this is enforced using a call to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#90cf9a3fd8db08acf1d0fb3eaa1e521c">checkConsistency()</a>. An error will result if the schedule is not consistent with this <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html">RefineAlgorithm</a> object according to the criteria in <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#90cf9a3fd8db08acf1d0fb3eaa1e521c">checkConsistency()</a>.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>Pointer to refine schedule, which cannot be null. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>schedule</em>&nbsp;</td><td>boost::shared_ptr to refine schedule, which cannot be null. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d840d18d23271172731286b3837092d3"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::getEquivalenceClasses" ref="d840d18d23271172731286b3837092d3" args="() const " -->
+<a class="anchor" name="1691beafca7582add84dc26e316aeaf5"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::getEquivalenceClasses" ref="1691beafca7582add84dc26e316aeaf5" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">xfer::RefineClasses</a> &gt; &amp; SAMRAI::xfer::RefineAlgorithm::getEquivalenceClasses           </td>
+          <td class="memname">const boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a>&gt;&amp; SAMRAI::xfer::RefineAlgorithm::getEquivalenceClasses           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -883,17 +898,17 @@ Return the refine equivalence classes used in the algorithm.
 
 </div>
 </div><p>
-<a class="anchor" name="d974726e43c6dd58241d07497a153861"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::setEquivalenceClasses" ref="d974726e43c6dd58241d07497a153861" args="(const tbox::Pointer&lt; RefineClasses &gt; refine_classes)" -->
+<a class="anchor" name="222df9440dd657e5070cd81e7512ab4a"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::setEquivalenceClasses" ref="222df9440dd657e5070cd81e7512ab4a" args="(const boost::shared_ptr&lt; RefineClasses &gt; &amp;refine_classes)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::xfer::RefineAlgorithm::setEquivalenceClasses           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1RefineClasses.html">RefineClasses</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>refine_classes</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -910,16 +925,16 @@ Set the pointer to the refine equivalence classes to be equal to the given argum
 
 </div>
 </div><p>
-<a class="anchor" name="4b18d4b99d0a7cdbff613b93fc84875b"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::getDim" ref="4b18d4b99d0a7cdbff613b93fc84875b" args="() const " -->
+<a class="anchor" name="4c503b3391b30cc6893ba577c8f52f88"></a><!-- doxytag: member="SAMRAI::xfer::RefineAlgorithm::getDim" ref="4c503b3391b30cc6893ba577c8f52f88" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::xfer::RefineAlgorithm::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::xfer::RefineAlgorithm::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -960,7 +975,7 @@ Print the refine algorithm state to the specified data stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefineAlgorithm_8h.html">RefineAlgorithm.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefineAlgorithm_8C.html">RefineAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:59 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

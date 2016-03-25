@@ -26,31 +26,31 @@
 <a href="classSAMRAI_1_1tbox_1_1TimerManager-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#bf235c216c51a6e45cea16cfa03000a9">getTimer</a> (const std::string &amp;name, bool ignore_timer_input=false)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#f57f47b7db9962e48c6101303779ed4d">getTimer</a> (const std::string &amp;name, bool ignore_timer_input=false)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#6a8084bfa53cf363986fa1b0e529cd75">checkTimerExists</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; &amp;timer, const std::string &amp;name) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#36826131e09ca25788b3c4224c33e6b4">checkTimerExists</a> (boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; &amp;timer, const std::string &amp;name) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#3aae3ed8356df84848bd4bb2c8aee271">checkTimerRunning</a> (const std::string &amp;name) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#3aae3ed8356df84848bd4bb2c8aee271">checkTimerRunning</a> (const std::string &amp;name) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#922535063b959036a2468772e266482c">resetAllTimers</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#922535063b959036a2468772e266482c">resetAllTimers</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#4c59a502a1f6d36faea9117f2db60f2a">print</a> (std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">plog</a>)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#4c59a502a1f6d36faea9117f2db60f2a">print</a> (std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">plog</a>)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#c5dae5478326854dc2f31fba9f88bc61">createManager</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; input_db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#80d1f7e63ce00dfb2490a5c89ac0a10b">createManager</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;input_db)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">getManager</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#95e840cdd4cb27a1803b801fc3732965">TimerManager</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; input_db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#b2b2b9173c412554dd073bd371cb4255">TimerManager</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;input_db)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#495e924a0da81820e10e1b06353b27e2">~TimerManager</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#495e924a0da81820e10e1b06353b27e2">~TimerManager</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#a7ac77579bddea2b2e8efcffbe41835f">registerSingletonSubclassInstance</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> *subclass_instance)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#0b647a1ac6d5279f7872c12a49d7923f">startTime</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> *timer)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#0b647a1ac6d5279f7872c12a49d7923f">startTime</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> *timer)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#5abf75601c73f8bca11a94dab3ef3992">stopTime</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> *timer)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#5abf75601c73f8bca11a94dab3ef3992">stopTime</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> *timer)</td></tr>
 
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#7d6acf8bbd6335147d132c0da34bba7c">Timer</a></td></tr>
@@ -59,7 +59,7 @@
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> is a Singleton class that manages a list of timer objects to do performance analysis in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library modules and application codes built with <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>.<p>
 Typically, entries in the input file guide timer invocation and output generation. Within the source code, timer objects are retrieved as follows:<p>
-Pointer&lt;Timer&gt; name_timer = <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">TimerManager::getManager</a>-&gt;getTimer("name");<p>
+boost::shared_ptr&lt;Timer&gt; name_timer = <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">TimerManager::getManager</a>-&gt;getTimer("name");<p>
 Here `name' is the name string identifier for the timer.<p>
 The input data is summarized as follows.<p>
 Required input keys: NONE<p>
@@ -101,7 +101,7 @@ Optional input keys and defaults:<p>
 <li><b>print_threshold</b> (double) Timers that use up less than (<em>print_threshold</em>) percent of the overall run time are not printed. This can be a convenient option to limit output if you have many timers invoked. [0.25]</li></ul>
 <p>
 <ul>
-<li><b>timer_list</b> (string array) <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">List</a> of timers to be invoked. The timers can be listed individually in <code>package::class::method</code> format or the entries may contain wildcards to turn on a set of timers in a given package or class: <div class="fragment"><pre class="fragment"> *          timer_list = "pkg1::*::*", "pkg2::class2::*", ...
+<li><b>timer_list</b> (string array) List of timers to be invoked. The timers can be listed individually in <code>package::class::method</code> format or the entries may contain wildcards to turn on a set of timers in a given package or class: <div class="fragment"><pre class="fragment"> *          timer_list = "pkg1::*::*", "pkg2::class2::*", ...
  *       </pre></div></li></ul>
 <p>
 A sample input file entry might look like:<p>
@@ -119,17 +119,17 @@ Timing recursive function calls will yeild erroneous results and may lead to mem
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="95e840cdd4cb27a1803b801fc3732965"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::TimerManager" ref="95e840cdd4cb27a1803b801fc3732965" args="(Pointer&lt; Database &gt; input_db)" -->
+<a class="anchor" name="b2b2b9173c412554dd073bd371cb4255"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::TimerManager" ref="b2b2b9173c412554dd073bd371cb4255" args="(const boost::shared_ptr&lt; Database &gt; &amp;input_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::tbox::TimerManager::TimerManager           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected]</code></td>
+          <td width="100%"><code> [explicit, protected]</code></td>
         </tr>
       </table>
 </div>
@@ -148,7 +148,7 @@ The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected, virtual]</code></td>
+          <td width="100%"><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -159,14 +159,14 @@ The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="c5dae5478326854dc2f31fba9f88bc61"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::createManager" ref="c5dae5478326854dc2f31fba9f88bc61" args="(Pointer&lt; Database &gt; input_db)" -->
+<a class="anchor" name="80d1f7e63ce00dfb2490a5c89ac0a10b"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::createManager" ref="80d1f7e63ce00dfb2490a5c89ac0a10b" args="(const boost::shared_ptr&lt; Database &gt; &amp;input_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::TimerManager::createManager           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [static]</code></td>
@@ -199,12 +199,12 @@ Generally, this routine should only be called once during program execution. If 
 Return a pointer to the singleton instance of the timer manager. All access to the <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html">TimerManager</a> object is through the <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">getManager()</a> function. For example, to add a timer with the name "my_timer" to the timer manager, use the following call: <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#07f3b8f77b3c72d709e1061acc178b7b">TimerManager::getManager()</a>-&gt;addTimer("my_timer"). 
 </div>
 </div><p>
-<a class="anchor" name="bf235c216c51a6e45cea16cfa03000a9"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::getTimer" ref="bf235c216c51a6e45cea16cfa03000a9" args="(const std::string &amp;name, bool ignore_timer_input=false)" -->
+<a class="anchor" name="f57f47b7db9962e48c6101303779ed4d"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::getTimer" ref="f57f47b7db9962e48c6101303779ed4d" args="(const std::string &amp;name, bool ignore_timer_input=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; SAMRAI::tbox::TimerManager::getTimer           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; SAMRAI::tbox::TimerManager::getTimer           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>name</em>, </td>
@@ -218,7 +218,7 @@ Return a pointer to the singleton instance of the timer manager. All access to t
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -229,14 +229,14 @@ Return pointer to timer object with the given name string. If a timer with the g
 When assertion checking is active, an assertion will result if the string is empty. 
 </div>
 </div><p>
-<a class="anchor" name="6a8084bfa53cf363986fa1b0e529cd75"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::checkTimerExists" ref="6a8084bfa53cf363986fa1b0e529cd75" args="(Pointer&lt; Timer &gt; &amp;timer, const std::string &amp;name) const " -->
+<a class="anchor" name="36826131e09ca25788b3c4224c33e6b4"></a><!-- doxytag: member="SAMRAI::tbox::TimerManager::checkTimerExists" ref="36826131e09ca25788b3c4224c33e6b4" args="(boost::shared_ptr&lt; Timer &gt; &amp;timer, const std::string &amp;name) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool SAMRAI::tbox::TimerManager::checkTimerExists           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>timer</em>, </td>
         </tr>
         <tr>
@@ -248,7 +248,7 @@ When assertion checking is active, an assertion will result if the string is emp
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -268,7 +268,7 @@ Return true if a timer whose name matches the argument string exists in the data
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>name</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [virtual]</code></td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -287,7 +287,7 @@ Return true if a timer whose name matches the argument string exists in the data
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -307,7 +307,7 @@ Reset the times in all timers to zero.
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
           <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">plog</a></code>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -347,7 +347,7 @@ Initialize Singleton instance with instance of subclass. This function is used t
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> *&nbsp;</td>
           <td class="paramname"> <em>timer</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected, virtual]</code></td>
+          <td width="100%"><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -368,7 +368,7 @@ When assertion checking is active, the timer pointer must be non-null.
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> *&nbsp;</td>
           <td class="paramname"> <em>timer</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected, virtual]</code></td>
+          <td width="100%"><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -397,7 +397,7 @@ When assertion checking is active, the timer pointer must be non-null.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="TimerManager_8h.html">TimerManager.h</a><li>source/SAMRAI/tbox/<a class="el" href="TimerManager_8C.html">TimerManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -29,13 +29,12 @@
 <p>Inheritance diagram for SAMRAI::xfer::RefineTimeTransaction:
 <p><center><img src="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.png" usemap="#SAMRAI::xfer::RefineTimeTransaction_map" border="0" alt=""></center>
 <map name="SAMRAI::xfer::RefineTimeTransaction_map">
-<area href="classSAMRAI_1_1tbox_1_1Transaction.html" alt="SAMRAI::tbox::Transaction" shape="rect" coords="0,56,222,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,222,24">
+<area href="classSAMRAI_1_1tbox_1_1Transaction.html" alt="SAMRAI::tbox::Transaction" shape="rect" coords="0,0,222,24">
 </map>
 <a href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#e071daf778ad9a0b56bdc9af441777f9">RefineTimeTransaction</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int refine_item_id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#ed603db4497be3d249a0b17997f5132e">RefineTimeTransaction</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const int refine_item_id)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#bf7e5deffbd919acca7b486aad96c5ce">~RefineTimeTransaction</a> ()</td></tr>
 
@@ -45,9 +44,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#614653e7cbfa6cb538f19592b6142b20">computeOutgoingMessageSize</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#f2389637fb88560955b268dbfc504d4b">getSourceProcessor</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#1297977cc3ee640ecad2b8dce8e33b62">getSourceProcessor</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#a63e5e96a692d576470875b238ecb535">getDestinationProcessor</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#4d33892a80f791ffa15d6f41aa8d1353">getDestinationProcessor</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#d5268d6e1d97f121edf98f8c4e13e528">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream)</td></tr>
 
@@ -58,11 +57,11 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#a6da3f2fe4df6064ff2046a06ef0115f">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#e4f4d323c443c722428e8bba61f4e53b">setRefineItems</a> (const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> **refine_items, int num_refine_items)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#fe8986a62e1c8698e5ad99fc7f733f18">setRefineItems</a> (const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> **refine_items, int num_refine_items)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#0e974515bab01f75152dba310a38acb5">unsetRefineItems</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#6cb0250ca2b137952ed3be8f78d3c0d9">unsetRefineItems</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#a6dbd0e4a2cc3d50bb5051bc4582ae84">setTransactionTime</a> (const double time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html#8df63ae79ba150bcf1bc91e8cbddd686">setTransactionTime</a> (const double time)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -75,26 +74,26 @@ Class <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html">Ref
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="e071daf778ad9a0b56bdc9af441777f9"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::RefineTimeTransaction" ref="e071daf778ad9a0b56bdc9af441777f9" args="(tbox::Pointer&lt; hier::PatchLevel &gt; &amp;dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; &amp;src_level, tbox::Pointer&lt; hier::BoxOverlap &gt; overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, const hier::Box &amp;box, int refine_item_id)" -->
+<a class="anchor" name="ed603db4497be3d249a0b17997f5132e"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::RefineTimeTransaction" ref="ed603db4497be3d249a0b17997f5132e" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, const hier::Box &amp;box, const int refine_item_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::xfer::RefineTimeTransaction::RefineTimeTransaction           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em>, </td>
         </tr>
         <tr>
@@ -118,13 +117,13 @@ Class <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html">Ref
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>refine_item_id</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -134,11 +133,11 @@ Class <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTimeTransaction.html">Ref
 Construct a transaction with the specified source and destination levels, patches, and patch data components found in the refine class item with the given id owned by the calling refine schedule. In general, this constructor is called by a <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> object for each data transaction (involving time interpolation) that must occur. This transaction will be responsible for one of the following: (1) performing a local copy, (2) packing a message stream from the source, or (3) unpacking a message stream from the destination. The transaction will perform time interpolation between the source old and new times using the time interpolation operator found in the refine class item.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to source patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to overlap region between patches. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dst_patch</em>&nbsp;</td><td>Integer index of destination patch in destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_patch</em>&nbsp;</td><td>Integer index of source patch in source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td>boost::shared_ptr to destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td>boost::shared_ptr to source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td>boost::shared_ptr to overlap region between patches. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_mapped_box</em>&nbsp;</td><td>Destination Box in destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_mapped_box</em>&nbsp;</td><td>Source Box in source patch level. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region in which to time interpolate. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>refine_item_id</em>&nbsp;</td><td>Integer id of refine data item owned by refine schedule.</td></tr>
   </table>
@@ -166,12 +165,12 @@ The virtual destructor for time transaction releases all memory associated with 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="e4f4d323c443c722428e8bba61f4e53b"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::setRefineItems" ref="e4f4d323c443c722428e8bba61f4e53b" args="(const RefineClasses::Data **refine_items, int num_refine_items)" -->
+<a class="anchor" name="fe8986a62e1c8698e5ad99fc7f733f18"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::setRefineItems" ref="fe8986a62e1c8698e5ad99fc7f733f18" args="(const RefineClasses::Data **refine_items, int num_refine_items)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::xfer::RefineTimeTransaction::setRefineItems           </td>
+          <td class="memname">static void SAMRAI::xfer::RefineTimeTransaction::setRefineItems           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="structSAMRAI_1_1xfer_1_1RefineClasses_1_1Data.html">RefineClasses::Data</a> **&nbsp;</td>
           <td class="paramname"> <em>refine_items</em>, </td>
@@ -185,7 +184,7 @@ The virtual destructor for time transaction releases all memory associated with 
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -195,16 +194,16 @@ The virtual destructor for time transaction releases all memory associated with 
 Static member function to set the array of refine class data items that is shared by all object instances of this time transaction class during data transfers. The array must be set before any transactions are executed. The array is set in the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> class. 
 </div>
 </div><p>
-<a class="anchor" name="0e974515bab01f75152dba310a38acb5"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::unsetRefineItems" ref="0e974515bab01f75152dba310a38acb5" args="()" -->
+<a class="anchor" name="6cb0250ca2b137952ed3be8f78d3c0d9"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::unsetRefineItems" ref="6cb0250ca2b137952ed3be8f78d3c0d9" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::xfer::RefineTimeTransaction::unsetRefineItems           </td>
+          <td class="memname">static void SAMRAI::xfer::RefineTimeTransaction::unsetRefineItems           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -214,17 +213,17 @@ Static member function to set the array of refine class data items that is share
 Static member function to unset the array of refine class data items that is shared by all object instances of this time transaction class during data transfers. The unset function is used to prevent erroneous execution of different schedules. The array is unset in the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> class. 
 </div>
 </div><p>
-<a class="anchor" name="a6dbd0e4a2cc3d50bb5051bc4582ae84"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::setTransactionTime" ref="a6dbd0e4a2cc3d50bb5051bc4582ae84" args="(const double time)" -->
+<a class="anchor" name="8df63ae79ba150bcf1bc91e8cbddd686"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::setTransactionTime" ref="8df63ae79ba150bcf1bc91e8cbddd686" args="(const double time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::xfer::RefineTimeTransaction::setTransactionTime           </td>
+          <td class="memname">static void SAMRAI::xfer::RefineTimeTransaction::setTransactionTime           </td>
           <td>(</td>
           <td class="paramtype">const double&nbsp;</td>
           <td class="paramname"> <em>time</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -297,16 +296,16 @@ Return the integer buffer space needed (in bytes) for the outgoing message.
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html#52bdc59da84e2e98fe1fde2381d1f2c5">SAMRAI::tbox::Transaction</a>.
 </div>
 </div><p>
-<a class="anchor" name="f2389637fb88560955b268dbfc504d4b"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::getSourceProcessor" ref="f2389637fb88560955b268dbfc504d4b" args="()" -->
+<a class="anchor" name="1297977cc3ee640ecad2b8dce8e33b62"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::getSourceProcessor" ref="1297977cc3ee640ecad2b8dce8e33b62" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int SAMRAI::xfer::RefineTimeTransaction::getSourceProcessor           </td>
+          <td class="memname">int SAMRAI::xfer::RefineTimeTransaction::getSourceProcessor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, virtual]</code></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -318,16 +317,16 @@ Return the sending processor number for the communications transaction.
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html#76a315bca4373a370ed8037629aa4424">SAMRAI::tbox::Transaction</a>.
 </div>
 </div><p>
-<a class="anchor" name="a63e5e96a692d576470875b238ecb535"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::getDestinationProcessor" ref="a63e5e96a692d576470875b238ecb535" args="()" -->
+<a class="anchor" name="4d33892a80f791ffa15d6f41aa8d1353"></a><!-- doxytag: member="SAMRAI::xfer::RefineTimeTransaction::getDestinationProcessor" ref="4d33892a80f791ffa15d6f41aa8d1353" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int SAMRAI::xfer::RefineTimeTransaction::getDestinationProcessor           </td>
+          <td class="memname">int SAMRAI::xfer::RefineTimeTransaction::getDestinationProcessor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, virtual]</code></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -428,7 +427,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html#c82147cb6
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefineTimeTransaction_8h.html">RefineTimeTransaction.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefineTimeTransaction_8C.html">RefineTimeTransaction.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:59 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

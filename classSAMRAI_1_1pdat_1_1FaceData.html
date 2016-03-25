@@ -34,7 +34,7 @@
 <a href="classSAMRAI_1_1pdat_1_1FaceData-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#314ac0d9494d9fdbd14977b5ef66a57e">Iterator</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#9adbfd3afa8e52d8216ca6951362b223">iterator</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#09dc09fe84813fba2ace698b23d2e3e2">FaceData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
@@ -43,27 +43,27 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#21e1c8f29c2a3ff17c540303cf0efe7a">~FaceData</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor for a face data object.  <a href="#21e1c8f29c2a3ff17c540303cf0efe7a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#ced56f815d5c03e937a30e1ee7bf073b">getDepth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#4ee9d90c4805b980225fb5ab5217804c">getDepth</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the depth (e.g., the number of components in each spatial location) of the array.  <a href="#ced56f815d5c03e937a30e1ee7bf073b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#5b331ccb07363480afdeace3c2ef4823">getPointer</a> (int face_normal, int depth=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the depth (e.g., the number of components in each spatial location) of the array.  <a href="#4ee9d90c4805b980225fb5ab5217804c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#d5a64469657ee7c4e301d3656e7008f2">getPointer</a> (int face_normal, int depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a pointer to the beginning of a particular face normal and depth component of the face centered array.  <a href="#5b331ccb07363480afdeace3c2ef4823"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#ec4778d269366a85b1664fe49fe29cf5">getPointer</a> (int face_normal, int depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a pointer to the beginning of a particular face normal and depth component of the face centered array.  <a href="#d5a64469657ee7c4e301d3656e7008f2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a8404902318cd76df00d402568a98955">getPointer</a> (int face_normal, int depth=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a const pointer to the beginning of a particular face normal and depth component of the face centered array.  <a href="#ec4778d269366a85b1664fe49fe29cf5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#aed0fc2e19b76f8a5726f253a0abaed5">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIndex.html">FaceIndex</a> &amp;i, int depth=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a const pointer to the beginning of a particular face normal and depth component of the face centered array.  <a href="#a8404902318cd76df00d402568a98955"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#ee4b99efd401e81ba064006199298c65">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIndex.html">FaceIndex</a> &amp;i, int depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the data entry corresponding to a given face index and depth.  <a href="#aed0fc2e19b76f8a5726f253a0abaed5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#b6912a8b29322637ddcd03f78dffaf0a">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIndex.html">FaceIndex</a> &amp;i, int depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the data entry corresponding to a given face index and depth.  <a href="#ee4b99efd401e81ba064006199298c65"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#0a13b240714ba4bdb9acb59a1bc11d14">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIndex.html">FaceIndex</a> &amp;i, int depth=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the data entry corresponding to a given face index and depth.  <a href="#b6912a8b29322637ddcd03f78dffaf0a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#7aa073aff77dbd6c9d9340b8f1be44d6">getArrayData</a> (int face_normal)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the data entry corresponding to a given face index and depth.  <a href="#0a13b240714ba4bdb9acb59a1bc11d14"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#44aace335801008b1ae4f6b72d76865a">getArrayData</a> (int face_normal)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the array data object for the given face normal of the face centered data object.  <a href="#7aa073aff77dbd6c9d9340b8f1be44d6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#7174da9efa3559e03a06be2d56b79056">getArrayData</a> (int face_normal) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the array data object for the given face normal of the face centered data object.  <a href="#44aace335801008b1ae4f6b72d76865a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#51bd4e8677d2b4b2b6158de56bd730be">getArrayData</a> (int face_normal) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the array data object for the given face normal of the face centered data object.  <a href="#7174da9efa3559e03a06be2d56b79056"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the array data object for the given face normal of the face centered data object.  <a href="#51bd4e8677d2b4b2b6158de56bd730be"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#7cd5ba05ae41550e3564f1bef4a0048f">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fast copy from source to destination (i.e., this) patch data object.  <a href="#7cd5ba05ae41550e3564f1bef4a0048f"></a><br></td></tr>
@@ -76,9 +76,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#268f7f9e48c92ae83e61afddb5f5e9fa">copy2</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source (i.e., this) to destination patch data object on the given overlap.  <a href="#268f7f9e48c92ae83e61afddb5f5e9fa"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#9b6fa7ef84aba363abdfffa3c2e784c7">copyOnBox</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a>&lt; TYPE &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#d55e115be1f992b938ce960a8667fef2">copyOnBox</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a>&lt; TYPE &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box.  <a href="#9b6fa7ef84aba363abdfffa3c2e784c7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box.  <a href="#d55e115be1f992b938ce960a8667fef2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#aac8978717b4f120d196392363de5329">copyDepth</a> (int dst_depth, const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a>&lt; TYPE &gt; &amp;src, int src_depth)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fast copy (i.e., source and this face data objects are defined over the same box) to this destination face data object from the given source face data object at the specified depths.  <a href="#aac8978717b4f120d196392363de5329"></a><br></td></tr>
@@ -118,9 +118,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#d29145dd16349a14d6cd47e057b60e11">printAxis</a> (int face_normal, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face centered data values for specified face normal direction residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#d29145dd16349a14d6cd47e057b60e11"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#751f0fd98668ed7fd4ba979ef6ca2607">getSpecializedFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#40b97f1c45c6c48211292b30c27ff96d">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#6cfcbfce09beea5706108866c0eadee2">putSpecializedToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#def00725cd1a61181ba5c06eefbca717">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#f18cb849e1b3828491099d1d219608e7">getSizeOfData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
@@ -161,14 +161,14 @@ IMPORTANT: The SideData&lt;DIM&gt; class provides the same storage as this face 
 
 <p>
 <hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="314ac0d9494d9fdbd14977b5ef66a57e"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::Iterator" ref="314ac0d9494d9fdbd14977b5ef66a57e" args="" -->
+<a class="anchor" name="9adbfd3afa8e52d8216ca6951362b223"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::iterator" ref="9adbfd3afa8e52d8216ca6951362b223" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a> <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">Iterator</a>          </td>
+          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a> <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">iterator</a>          </td>
         </tr>
       </table>
 </div>
@@ -206,7 +206,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -296,14 +296,14 @@ This function assumes that the amount of memory needed for TYPE is sizeof(TYPE).
 
 </div>
 </div><p>
-<a class="anchor" name="ced56f815d5c03e937a30e1ee7bf073b"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getDepth" ref="ced56f815d5c03e937a30e1ee7bf073b" args="() const " -->
+<a class="anchor" name="4ee9d90c4805b980225fb5ab5217804c"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getDepth" ref="4ee9d90c4805b980225fb5ab5217804c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getDepth           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getDepth           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -319,14 +319,14 @@ Return the depth (e.g., the number of components in each spatial location) of th
 
 </div>
 </div><p>
-<a class="anchor" name="5b331ccb07363480afdeace3c2ef4823"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getPointer" ref="5b331ccb07363480afdeace3c2ef4823" args="(int face_normal, int depth=0)" -->
+<a class="anchor" name="d5a64469657ee7c4e301d3656e7008f2"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getPointer" ref="d5a64469657ee7c4e301d3656e7008f2" args="(int face_normal, int depth=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getPointer           </td>
+          <td class="memname">TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getPointer           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>, </td>
@@ -352,14 +352,14 @@ Get a pointer to the beginning of a particular face normal and depth component o
 
 </div>
 </div><p>
-<a class="anchor" name="ec4778d269366a85b1664fe49fe29cf5"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getPointer" ref="ec4778d269366a85b1664fe49fe29cf5" args="(int face_normal, int depth=0) const " -->
+<a class="anchor" name="a8404902318cd76df00d402568a98955"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getPointer" ref="a8404902318cd76df00d402568a98955" args="(int face_normal, int depth=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getPointer           </td>
+          <td class="memname">const TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getPointer           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>, </td>
@@ -385,14 +385,14 @@ Get a const pointer to the beginning of a particular face normal and depth compo
 
 </div>
 </div><p>
-<a class="anchor" name="aed0fc2e19b76f8a5726f253a0abaed5"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::operator()" ref="aed0fc2e19b76f8a5726f253a0abaed5" args="(const FaceIndex &amp;i, int depth=0)" -->
+<a class="anchor" name="ee4b99efd401e81ba064006199298c65"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::operator()" ref="ee4b99efd401e81ba064006199298c65" args="(const FaceIndex &amp;i, int depth=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::operator()           </td>
+          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::operator()           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIndex.html">FaceIndex</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>i</em>, </td>
@@ -418,14 +418,14 @@ Return a reference to the data entry corresponding to a given face index and dep
 
 </div>
 </div><p>
-<a class="anchor" name="b6912a8b29322637ddcd03f78dffaf0a"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::operator()" ref="b6912a8b29322637ddcd03f78dffaf0a" args="(const FaceIndex &amp;i, int depth=0) const " -->
+<a class="anchor" name="0a13b240714ba4bdb9acb59a1bc11d14"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::operator()" ref="0a13b240714ba4bdb9acb59a1bc11d14" args="(const FaceIndex &amp;i, int depth=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::operator()           </td>
+          <td class="memname">const TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::operator()           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIndex.html">FaceIndex</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>i</em>, </td>
@@ -451,14 +451,14 @@ Return a const reference to the data entry corresponding to a given face index a
 
 </div>
 </div><p>
-<a class="anchor" name="7aa073aff77dbd6c9d9340b8f1be44d6"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getArrayData" ref="7aa073aff77dbd6c9d9340b8f1be44d6" args="(int face_normal)" -->
+<a class="anchor" name="44aace335801008b1ae4f6b72d76865a"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getArrayData" ref="44aace335801008b1ae4f6b72d76865a" args="(int face_normal)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getArrayData           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getArrayData           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>          </td>
@@ -475,14 +475,14 @@ Return a reference to the array data object for the given face normal of the fac
 
 </div>
 </div><p>
-<a class="anchor" name="7174da9efa3559e03a06be2d56b79056"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getArrayData" ref="7174da9efa3559e03a06be2d56b79056" args="(int face_normal) const " -->
+<a class="anchor" name="51bd4e8677d2b4b2b6158de56bd730be"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getArrayData" ref="51bd4e8677d2b4b2b6158de56bd730be" args="(int face_normal) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getArrayData           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getArrayData           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>          </td>
@@ -621,14 +621,14 @@ Currently, destination data must be <a class="el" href="classSAMRAI_1_1pdat_1_1F
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#bd068fc4e5d159b2f927d59ea2ffda40">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="9b6fa7ef84aba363abdfffa3c2e784c7"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::copyOnBox" ref="9b6fa7ef84aba363abdfffa3c2e784c7" args="(const FaceData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box)" -->
+<a class="anchor" name="d55e115be1f992b938ce960a8667fef2"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::copyOnBox" ref="d55e115be1f992b938ce960a8667fef2" args="(const FaceData&lt; TYPE &gt; &amp;src, const hier::Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::copyOnBox           </td>
+          <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::copyOnBox           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">FaceData</a>&lt; TYPE &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src</em>, </td>
@@ -1155,7 +1155,7 @@ Print all face centered data values for specified face normal direction residing
 
 </div>
 </div><p>
-<a class="anchor" name="751f0fd98668ed7fd4ba979ef6ca2607"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getSpecializedFromDatabase" ref="751f0fd98668ed7fd4ba979ef6ca2607" args="(tbox::Pointer&lt; tbox::Database &gt; database)" -->
+<a class="anchor" name="40b97f1c45c6c48211292b30c27ff96d"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getSpecializedFromDatabase" ref="40b97f1c45c6c48211292b30c27ff96d" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1164,7 +1164,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getSpecializedFromDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -1177,10 +1177,10 @@ template&lt;class TYPE&gt; </div>
 Check that class version and restart file version are equal. If so, read data members from the database.<p>
 Assertions: database must be non-null pointer. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5fb8db1f58940d0fd1f130ea857037a4">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1cf0a7a7a58668744601638c036103a1">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="6cfcbfce09beea5706108866c0eadee2"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::putSpecializedToDatabase" ref="6cfcbfce09beea5706108866c0eadee2" args="(tbox::Pointer&lt; tbox::Database &gt; database)" -->
+<a class="anchor" name="def00725cd1a61181ba5c06eefbca717"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::putSpecializedToDatabase" ref="def00725cd1a61181ba5c06eefbca717" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1189,10 +1189,10 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::putSpecializedToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -1202,12 +1202,12 @@ template&lt;class TYPE&gt; </div>
 Write out the class version number and other data members to the database.<p>
 Assertions: database must be non-null pointer. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#aa793038dcc04fee9bf96943b35951ee">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e0de5996e1ec46a9c409ab9d87df58f2">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/pdat/<a class="el" href="FaceData_8h.html">FaceData.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceData_8C.html">FaceData.C</a><li>source/SAMRAI/pdat/<a class="el" href="FaceData_8I.html">FaceData.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/pdat/<a class="el" href="FaceData_8h.html">FaceData.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceData_8C.html">FaceData.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

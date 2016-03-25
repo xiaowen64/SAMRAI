@@ -36,12 +36,12 @@
 <a href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#f266f20c5a0b210f36244b2a80c180d0">~ConnectorWidthRequestorStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#2c8bc59d0011d0c101e158e192b26e9c">~ConnectorWidthRequestorStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#f266f20c5a0b210f36244b2a80c180d0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#41f676bd5f51f959167e15e2c3796cf4">computeRequiredConnectorWidths</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;self_connector_widths, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;fine_connector_widths, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &amp;patch_hierarchy) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#2c8bc59d0011d0c101e158e192b26e9c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy_1_1ConnectorWidthRequestorStrategy.html#067d699e55dc77f0cc39d9b23a2e92ff">computeRequiredConnectorWidths</a> (std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;self_connector_widths, std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;fine_connector_widths, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a> &amp;patch_hierarchy) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provide <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths the child class requires in order to work properly on a given hierarchy.  <a href="#41f676bd5f51f959167e15e2c3796cf4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Provide <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths the child class requires in order to work properly on a given hierarchy.  <a href="#067d699e55dc77f0cc39d9b23a2e92ff"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class defining a Strategy pattern interface for providing <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> width information to the <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. 
@@ -53,16 +53,16 @@ When the hierarchy is first asked for any required width, it uses the registered
 Example of a typical scenario: GriddingAlgorithm is used to build the hierarchy. Two classes that will want the hierarchy's Connectors to have some specified widths are GriddingAlgorithm and RefineSchedule. This strategy should therefore be implemented by GriddingAlgorithm and RefineSchedule. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="f266f20c5a0b210f36244b2a80c180d0"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy" ref="f266f20c5a0b210f36244b2a80c180d0" args="()" -->
+<a class="anchor" name="2c8bc59d0011d0c101e158e192b26e9c"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy" ref="2c8bc59d0011d0c101e158e192b26e9c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy           </td>
+          <td class="memname">SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::~ConnectorWidthRequestorStrategy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, virtual]</code></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -75,20 +75,20 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="41f676bd5f51f959167e15e2c3796cf4"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths" ref="41f676bd5f51f959167e15e2c3796cf4" args="(std::vector&lt; hier::IntVector &gt; &amp;self_connector_widths, std::vector&lt; hier::IntVector &gt; &amp;fine_connector_widths, const PatchHierarchy &amp;patch_hierarchy) const =0" -->
+<a class="anchor" name="067d699e55dc77f0cc39d9b23a2e92ff"></a><!-- doxytag: member="SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths" ref="067d699e55dc77f0cc39d9b23a2e92ff" args="(std::vector&lt; IntVector &gt; &amp;self_connector_widths, std::vector&lt; IntVector &gt; &amp;fine_connector_widths, const PatchHierarchy &amp;patch_hierarchy) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::hier::PatchHierarchy::ConnectorWidthRequestorStrategy::computeRequiredConnectorWidths           </td>
           <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>self_connector_widths</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fine_connector_widths</em>, </td>
         </tr>
         <tr>
@@ -109,20 +109,26 @@ Destructor.
 <p>
 Provide <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths the child class requires in order to work properly on a given hierarchy. 
 <p>
-The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths are computed to the maximum that could be requested between levels in the given <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. The two vector parameters will contain the computed widths. <dl compact><dt><b>Assumptions</b></dt><dd>On completion of the function call, self_connector_width must be of length <code>patch_hierarchy.getMaxNumberOfLevels()</code>.  On completion of the function call, fine_connector_width must be of length <code>patch_hierarchy.getMaxNumberOfLevels()</code> - 1.</dd></dl>
+The <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> widths are computed to the maximum that could be requested between levels in the given <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">PatchHierarchy</a>. The two vector parameters will contain the computed widths. <dl compact><dt><b>Assumptions</b></dt><dd><ul>
+<li>
+On completion of the function call, self_connector_width must be of length <code>patch_hierarchy.getMaxNumberOfLevels()</code>. </li>
+<li>
+On completion of the function call, fine_connector_width must be of length <code>patch_hierarchy.getMaxNumberOfLevels()</code> - 1. </li>
+</ul>
+</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>self_connector_width</em>&nbsp;</td><td>Array of widths for Connectors from a level to itself.</td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine_connector_width</em>&nbsp;</td><td>Array of widths for Connectors from a level to the next finer level.</td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>self_connector_widths</em>&nbsp;</td><td>Array of widths for Connectors from a level to itself.</td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>fine_connector_widths</em>&nbsp;</td><td>Array of widths for Connectors from a level to the next finer level.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_hierarchy</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following files:<ul>
+<li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8h.html">PatchHierarchy.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchHierarchy_8C.html">PatchHierarchy.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

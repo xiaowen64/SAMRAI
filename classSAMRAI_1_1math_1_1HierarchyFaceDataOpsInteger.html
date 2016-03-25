@@ -31,15 +31,15 @@
 <a href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#d584c92c728c3f9696ae3e808716aaf9">HierarchyFaceDataOpsInteger</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level=-1, const int finest_level=-1)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#e2461bfb471365d15b40128062d6aefa">HierarchyFaceDataOpsInteger</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level=-1, const int finest_level=-1)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#8b3d9a778495e3f8cae5e5e4a80c0239">~HierarchyFaceDataOpsInteger</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#f21a4a8bac810e90f75f39e0301552fa">setPatchHierarchy</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#4310ac9ce4b7802f47711418cd775102">setPatchHierarchy</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#b8811b10719b8664cd8a85c6549bd778">resetLevels</a> (const int coarsest_level, const int finest_level)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#afc5205d52f41d3bc2c811e897a94566">getPatchHierarchy</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#be23b97aeebf69fe76eeeca2b791db5b">getPatchHierarchy</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#d95fba165f50aa12bf8fb8e6c158cfa1">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
 
@@ -88,14 +88,14 @@ Note that, when it makes sense, an operation accept a boolean argument which ind
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="d584c92c728c3f9696ae3e808716aaf9"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::HierarchyFaceDataOpsInteger" ref="d584c92c728c3f9696ae3e808716aaf9" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level=-1, const int finest_level=-1)" -->
+<a class="anchor" name="e2461bfb471365d15b40128062d6aefa"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::HierarchyFaceDataOpsInteger" ref="e2461bfb471365d15b40128062d6aefa" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level=-1, const int finest_level=-1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::math::HierarchyFaceDataOpsInteger::HierarchyFaceDataOpsInteger           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -120,7 +120,7 @@ Note that, when it makes sense, an operation accept a boolean argument which ind
 <div class="memdoc">
 
 <p>
-The constructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html">HierarchyFaceDataOpsInteger</a> class sets the default patch hierarchy and coarsest and finest patch levels in that hierarchy over which operations will be performed. The hierarchy and operations may be reset using the member fuctions <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#f21a4a8bac810e90f75f39e0301552fa">setPatchHierarchy()</a> and <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#b8811b10719b8664cd8a85c6549bd778">resetLevels()</a> below. If no level number arguments are given here, the levels over which the operations will be performed are those already existing in the hierarchy. If the hierarchy level configuration changes, the operations must be explicitly reset by calling the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#b8811b10719b8664cd8a85c6549bd778">resetLevels()</a> function. 
+The constructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html">HierarchyFaceDataOpsInteger</a> class sets the default patch hierarchy and coarsest and finest patch levels in that hierarchy over which operations will be performed. The hierarchy and operations may be reset using the member fuctions <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#4310ac9ce4b7802f47711418cd775102">setPatchHierarchy()</a> and <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#b8811b10719b8664cd8a85c6549bd778">resetLevels()</a> below. If no level number arguments are given here, the levels over which the operations will be performed are those already existing in the hierarchy. If the hierarchy level configuration changes, the operations must be explicitly reset by calling the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#b8811b10719b8664cd8a85c6549bd778">resetLevels()</a> function. 
 </div>
 </div><p>
 <a class="anchor" name="8b3d9a778495e3f8cae5e5e4a80c0239"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::~HierarchyFaceDataOpsInteger" ref="8b3d9a778495e3f8cae5e5e4a80c0239" args="()" -->
@@ -143,14 +143,14 @@ Virtual destructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyF
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="f21a4a8bac810e90f75f39e0301552fa"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::setPatchHierarchy" ref="f21a4a8bac810e90f75f39e0301552fa" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy)" -->
+<a class="anchor" name="4310ac9ce4b7802f47711418cd775102"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::setPatchHierarchy" ref="4310ac9ce4b7802f47711418cd775102" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::math::HierarchyFaceDataOpsInteger::setPatchHierarchy           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -162,7 +162,7 @@ Virtual destructor for the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyF
 <p>
 Reset patch hierarchy over which operations occur. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#ed13448439e4f3832c01f4b5085c18d0">SAMRAI::math::HierarchyDataOpsInteger</a>.
+Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#20add64c0f1df3c496aa313a042a5e5c">SAMRAI::math::HierarchyDataOpsInteger</a>.
 </div>
 </div><p>
 <a class="anchor" name="b8811b10719b8664cd8a85c6549bd778"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::resetLevels" ref="b8811b10719b8664cd8a85c6549bd778" args="(const int coarsest_level, const int finest_level)" -->
@@ -196,12 +196,12 @@ Reset range of patch levels over which operations occur. Levels must exist in hi
 Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#551d4136279a72e57c55f3430bb40d88">SAMRAI::math::HierarchyDataOpsInteger</a>.
 </div>
 </div><p>
-<a class="anchor" name="afc5205d52f41d3bc2c811e897a94566"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::getPatchHierarchy" ref="afc5205d52f41d3bc2c811e897a94566" args="() const " -->
+<a class="anchor" name="be23b97aeebf69fe76eeeca2b791db5b"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::getPatchHierarchy" ref="be23b97aeebf69fe76eeeca2b791db5b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; SAMRAI::math::HierarchyFaceDataOpsInteger::getPatchHierarchy           </td>
+          <td class="memname">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; SAMRAI::math::HierarchyFaceDataOpsInteger::getPatchHierarchy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -214,7 +214,7 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.ht
 <p>
 Return const pointer to patch hierarchy associated with operations. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#b5409c1ad9b96898842065b6a12c8d6a">SAMRAI::math::HierarchyDataOpsInteger</a>.
+Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#70c6b2d9a7b2305fedad6ad0be2a58af">SAMRAI::math::HierarchyDataOpsInteger</a>.
 </div>
 </div><p>
 <a class="anchor" name="d95fba165f50aa12bf8fb8e6c158cfa1"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::numberOfEntries" ref="d95fba165f50aa12bf8fb8e6c158cfa1" args="(const int data_id, const bool interior_only=true) const " -->
@@ -982,7 +982,7 @@ Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.ht
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyFaceDataOpsInteger_8h.html">HierarchyFaceDataOpsInteger.h</a><li>source/SAMRAI/math/<a class="el" href="HierarchyFaceDataOpsInteger_8C.html">HierarchyFaceDataOpsInteger.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -26,13 +26,12 @@
 <p>Inheritance diagram for SAMRAI::tbox::MemoryDatabase:
 <p><center><img src="classSAMRAI_1_1tbox_1_1MemoryDatabase.png" usemap="#SAMRAI::tbox::MemoryDatabase_map" border="0" alt=""></center>
 <map name="SAMRAI::tbox::MemoryDatabase_map">
-<area href="classSAMRAI_1_1tbox_1_1Database.html" alt="SAMRAI::tbox::Database" shape="rect" coords="0,56,194,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,194,24">
+<area href="classSAMRAI_1_1tbox_1_1Database.html" alt="SAMRAI::tbox::Database" shape="rect" coords="0,0,194,24">
 </map>
 <a href="classSAMRAI_1_1tbox_1_1MemoryDatabase-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#ae16418a6b0f4f6ae613e5a18e1da6fa">MemoryDatabase</a> (const std::string &amp;name)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#658a97894f875efec547ddc1d7b52ae0">MemoryDatabase</a> (const std::string &amp;name)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#24526d1c6db7825b87d7f8fca216057c">~MemoryDatabase</a> ()</td></tr>
 
@@ -42,7 +41,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#9651655147369f0e0ccdaedfdc7879d7">close</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#720f2d6afeb24200e203e102c2f513cb">getName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#f9c34f6e21e062cecfbbc1a016896925">getName</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#df0da713d123ebd03fe75f8e5fb8ef2e">keyExists</a> (const std::string &amp;key)</td></tr>
 
@@ -55,9 +54,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#81356a4fd8c88dd533fc2e7f56f54649">isDatabase</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#b16abafb47450c0e598dd3aa6d519c65">putDatabase</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#dba0e3b1b996b3d61e6c7c585c957550">putDatabase</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#348b7dc53d37524eb76e671f6d8e1d59">getDatabase</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#ee449b48777a6f6c863e86488872d5e6">getDatabase</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#077d1945e01d2680ce9b244a9af5e4c1">isBool</a> (const std::string &amp;key)</td></tr>
 
@@ -187,10 +188,10 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#10ded6527fc54c28e5a54a10f0dd9151">getStringArray</a> (const std::string &amp;key, std::string *data, const int nelements)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#dc2e54ff7758ae3acb51d3647d5151c7">getName</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual std::string&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#2f819d2b8cad2a285e4f539e98756629">getName</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the name of this database.  <a href="#dc2e54ff7758ae3acb51d3647d5151c7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#ce328d707ebd02c4b0639e76502f9092">keyAccessed</a> (const std::string &amp;key)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns the name of this database.  <a href="#2f819d2b8cad2a285e4f539e98756629"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#880acfc919e9b62bf9b81045ae31a1a0">keyAccessed</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html#4ef932995ae726410b29f221184f1e4e">printClassData</a> (std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48d553cde5d7c6066de6bec271ef3666">pout</a>)</td></tr>
 
@@ -207,12 +208,12 @@ Note that the memory database will attempt to promote numerical types where appr
 It is assumed that all processors will access the database in the same manner. Thus, all error messages are output to pout instead of perr. 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="ae16418a6b0f4f6ae613e5a18e1da6fa"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::MemoryDatabase" ref="ae16418a6b0f4f6ae613e5a18e1da6fa" args="(const std::string &amp;name)" -->
+<a class="anchor" name="658a97894f875efec547ddc1d7b52ae0"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::MemoryDatabase" ref="658a97894f875efec547ddc1d7b52ae0" args="(const std::string &amp;name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::tbox::MemoryDatabase::MemoryDatabase           </td>
+          <td class="memname">SAMRAI::tbox::MemoryDatabase::MemoryDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>name</em>          </td>
@@ -338,12 +339,12 @@ If the database is currently open then close it. This should flush all data to t
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#c491f20e84ec85bdfb417fa631c12e37">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="720f2d6afeb24200e203e102c2f513cb"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::getName" ref="720f2d6afeb24200e203e102c2f513cb" args="() const " -->
+<a class="anchor" name="f9c34f6e21e062cecfbbc1a016896925"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::getName" ref="f9c34f6e21e062cecfbbc1a016896925" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD std::string SAMRAI::tbox::MemoryDatabase::getName           </td>
+          <td class="memname">std::string SAMRAI::tbox::MemoryDatabase::getName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -474,12 +475,12 @@ Return whether the specified key represents a database entry. If the key does no
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471329aa4c509463f168330">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="b16abafb47450c0e598dd3aa6d519c65"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::putDatabase" ref="b16abafb47450c0e598dd3aa6d519c65" args="(const std::string &amp;key)" -->
+<a class="anchor" name="dba0e3b1b996b3d61e6c7c585c957550"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::putDatabase" ref="dba0e3b1b996b3d61e6c7c585c957550" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::MemoryDatabase::putDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::MemoryDatabase::putDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -493,15 +494,15 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471
 <p>
 Create a new database with the specified key name. If the key already exists in the database, then the old key record is deleted and the new one is silently created in its place. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ebaab620c363bac439e0c8ed889364e6">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ed79eabacdec5c32a6cbd2af92c48ef7">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="348b7dc53d37524eb76e671f6d8e1d59"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::getDatabase" ref="348b7dc53d37524eb76e671f6d8e1d59" args="(const std::string &amp;key)" -->
+<a class="anchor" name="ee449b48777a6f6c863e86488872d5e6"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::getDatabase" ref="ee449b48777a6f6c863e86488872d5e6" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::MemoryDatabase::getDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::MemoryDatabase::getDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -515,7 +516,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ebaab620c363
 <p>
 Get the database with the specified key name. If the specified key does not exist in the database or it is not a database, then an error message is printed and the program exits. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7911dae03a1b9daa5c151c75bebdc4b0">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#01c167dc865e82e220a9049d2fdc7f78">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="077d1945e01d2680ce9b244a9af5e4c1"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::isBool" ref="077d1945e01d2680ce9b244a9af5e4c1" args="(const std::string &amp;key)" -->
@@ -2382,12 +2383,12 @@ Get a string entry from the database with the specified key name. If the specifi
 Reimplemented from <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#315040a72af3d68ebdb89461e37d8d32">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="dc2e54ff7758ae3acb51d3647d5151c7"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::getName" ref="dc2e54ff7758ae3acb51d3647d5151c7" args="()" -->
+<a class="anchor" name="2f819d2b8cad2a285e4f539e98756629"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::getName" ref="2f819d2b8cad2a285e4f539e98756629" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string SAMRAI::tbox::MemoryDatabase::getName           </td>
+          <td class="memname">std::string SAMRAI::tbox::MemoryDatabase::getName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -2400,28 +2401,22 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#3150
 <p>
 Returns the name of this database. 
 <p>
-The name for the root of the database is the name supplied when creating it. Names for nested databases are the keyname of the database.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>os</em>&nbsp;</td><td>Output stream. </td></tr>
-  </table>
-</dl>
-
+The name for the root of the database is the name supplied when creating it. Names for nested databases are the keyname of the database. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7503cebadbb04d8248f19862c194e40d">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="ce328d707ebd02c4b0639e76502f9092"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::keyAccessed" ref="ce328d707ebd02c4b0639e76502f9092" args="(const std::string &amp;key)" -->
+<a class="anchor" name="880acfc919e9b62bf9b81045ae31a1a0"></a><!-- doxytag: member="SAMRAI::tbox::MemoryDatabase::keyAccessed" ref="880acfc919e9b62bf9b81045ae31a1a0" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::tbox::MemoryDatabase::keyAccessed           </td>
+          <td class="memname">bool SAMRAI::tbox::MemoryDatabase::keyAccessed           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -2464,7 +2459,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#399db08f3461
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
           <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48d553cde5d7c6066de6bec271ef3666">pout</a></code>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -2484,7 +2479,7 @@ Print the database keys that were not used to the specified output stream.
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
           <td class="paramname"> <em>os</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#48d553cde5d7c6066de6bec271ef3666">pout</a></code>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -2495,8 +2490,8 @@ Print the database keys that were set via default calls to the specified output 
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/tbox/<a class="el" href="MemoryDatabase_8h.html">MemoryDatabase.h</a><li>source/SAMRAI/tbox/<a class="el" href="MemoryDatabase_8C.html">MemoryDatabase.C</a><li>source/SAMRAI/tbox/<a class="el" href="MemoryDatabase_8I.html">MemoryDatabase.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/tbox/<a class="el" href="MemoryDatabase_8h.html">MemoryDatabase.h</a><li>source/SAMRAI/tbox/<a class="el" href="MemoryDatabase_8C.html">MemoryDatabase.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

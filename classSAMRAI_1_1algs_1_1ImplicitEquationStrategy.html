@@ -33,7 +33,7 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html#b06c7c22db2b624c5087dc47e3dad0e9">~ImplicitEquationStrategy</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html#1b52d89bcaafdd8fe4d37fd278c840d8">setupSolutionVector</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">solv::SAMRAIVectorReal</a>&lt; double &gt; &gt; solution)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html#f4292624d0d0536c076465a0a3184b01">setupSolutionVector</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">solv::SAMRAIVectorReal</a>&lt; double &gt; &gt; &amp;solution)=0</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquationStrategy.html#d44ae285312f20364cbaef636105b1ab">getInitialDt</a> ()=0</td></tr>
 
@@ -93,14 +93,14 @@ Empty destructor for <a class="el" href="classSAMRAI_1_1algs_1_1ImplicitEquation
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="1b52d89bcaafdd8fe4d37fd278c840d8"></a><!-- doxytag: member="SAMRAI::algs::ImplicitEquationStrategy::setupSolutionVector" ref="1b52d89bcaafdd8fe4d37fd278c840d8" args="(tbox::Pointer&lt; solv::SAMRAIVectorReal&lt; double &gt; &gt; solution)=0" -->
+<a class="anchor" name="f4292624d0d0536c076465a0a3184b01"></a><!-- doxytag: member="SAMRAI::algs::ImplicitEquationStrategy::setupSolutionVector" ref="f4292624d0d0536c076465a0a3184b01" args="(const boost::shared_ptr&lt; solv::SAMRAIVectorReal&lt; double &gt; &gt; &amp;solution)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::ImplicitEquationStrategy::setupSolutionVector           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">solv::SAMRAIVectorReal</a>&lt; double &gt; &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">solv::SAMRAIVectorReal</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>solution</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [pure virtual]</code></td>
@@ -244,7 +244,7 @@ Assuming that an acceptable time advanced solution has been found, update the st
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="ImplicitEquationStrategy_8h.html">ImplicitEquationStrategy.h</a><li>source/SAMRAI/algs/<a class="el" href="ImplicitEquationStrategy_8C.html">ImplicitEquationStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -21,16 +21,11 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1hier.html">hier</a>::<a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a></div>
-<h1>SAMRAI::hier::TransferOperatorRegistry Class Reference</h1><!-- doxytag: class="SAMRAI::hier::TransferOperatorRegistry" -->Class <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> is intended to serve as the registry for <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> transfer operators. It will be a singleton object held by class <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a>.  
+<h1>SAMRAI::hier::TransferOperatorRegistry Class Reference</h1><!-- doxytag: class="SAMRAI::hier::TransferOperatorRegistry" -->Class <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> is intended to serve as the registry for <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> transfer operators. It will be a singleton object held by class <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a>.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/hier/TransferOperatorRegistry.h&gt;</code>
 <p>
-<p>Inheritance diagram for SAMRAI::hier::TransferOperatorRegistry:
-<p><center><img src="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.png" usemap="#SAMRAI::hier::TransferOperatorRegistry_map" border="0" alt=""></center>
-<map name="SAMRAI::hier::TransferOperatorRegistry_map">
-<area href="classSAMRAI_1_1geom_1_1SAMRAITransferOperatorRegistry.html" alt="SAMRAI::geom::SAMRAITransferOperatorRegistry" shape="rect" coords="0,56,295,80">
-</map>
 <a href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
@@ -40,61 +35,49 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#9bf284f43b861d8f95ff0cf979d6b0f7">~TransferOperatorRegistry</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#9bf284f43b861d8f95ff0cf979d6b0f7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#43d14dad771939ec6a02a907b14c823f">addCoarsenOperator</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt; coarsen_op)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#89f95844bea5465187c6c59749e555b7">addCoarsenOperator</a> (const char *var_type_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt; &amp;coarsen_op)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a concrete spatial coarsening operator.  <a href="#43d14dad771939ec6a02a907b14c823f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#e4840536f9882901181b8500194bd97c">addRefineOperator</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt; refine_op)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a concrete spatial coarsening operator.  <a href="#89f95844bea5465187c6c59749e555b7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#dffc3fee87e5e40ec08c0b259cd128b3">addRefineOperator</a> (const char *var_type_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt; &amp;refine_op)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a concrete spatial refinement operator.  <a href="#e4840536f9882901181b8500194bd97c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#b2765566e7c5792e957dbb5e6ba34cab">addTimeInterpolateOperator</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt; time_op)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a concrete spatial refinement operator.  <a href="#dffc3fee87e5e40ec08c0b259cd128b3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#6d3495ce270434d2b80b5f9f8c1c34d6">addTimeInterpolateOperator</a> (const char *var_type_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt; &amp;time_op)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a concrete time interpolation operator.  <a href="#b2765566e7c5792e957dbb5e6ba34cab"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#745e219b5b21ad88c3e1fd2c60aeceda">lookupCoarsenOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a concrete time interpolation operator.  <a href="#6d3495ce270434d2b80b5f9f8c1c34d6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#7b7dc5cfc106b33ba702c7d08cbcddf4">lookupCoarsenOperator</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for coarsening operator.  <a href="#745e219b5b21ad88c3e1fd2c60aeceda"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#d72d9f255b4fb91a890d36c1a74be4fa">lookupRefineOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for coarsening operator.  <a href="#7b7dc5cfc106b33ba702c7d08cbcddf4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#ee5d5b40ccc0c350792cc8497012207e">lookupRefineOperator</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for refinement operator.  <a href="#d72d9f255b4fb91a890d36c1a74be4fa"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#c348148ec306064949c65ad50e9c8ac1">lookupTimeInterpolateOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name=&quot;STD_LINEAR_TIME_INTERPOLATE&quot;)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for refinement operator.  <a href="#ee5d5b40ccc0c350792cc8497012207e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#ff498de1102fa4b73ebe7b1c8ebfbbb4">lookupTimeInterpolateOperator</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name=&quot;STD_LINEAR_TIME_INTERPOLATE&quot;)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for time interpolation operator.  <a href="#c348148ec306064949c65ad50e9c8ac1"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Lookup function for time interpolation operator.  <a href="#ff498de1102fa4b73ebe7b1c8ebfbbb4"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the max stencil width of all transfer operators.  <a href="#fd62b2eba263446bb4c4ed9812f66e94"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#5f4cd36f58411e1f745356c4c50792a4">setMinTransferOpStencilWidth</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;min_value)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a minimum value on the value returned by <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#fd62b2eba263446bb4c4ed9812f66e94">getMaxTransferOpStencilWidth()</a>.  <a href="#5f4cd36f58411e1f745356c4c50792a4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#2f7ed73c46293fbee054809d5b474a24">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#05ab4d0f78de2af8fa7adaade2709e56">getDim</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> holding this object.  <a href="#2f7ed73c46293fbee054809d5b474a24"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> holding this object.  <a href="#05ab4d0f78de2af8fa7adaade2709e56"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#df4264e99ce8f4bd5a2af8e7dd2d7562">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print class data representation.  <a href="#df4264e99ce8f4bd5a2af8e7dd2d7562"></a><br></td></tr>
-<tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#c6a51f159a36807539149d7d743a36e1">buildCoarsenOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)=0</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> with name op_name associated with the centering of variable var. Can be specialized by applications which introduce their own CoarsenOperators. Specialized class will add knowledge of how to build application's operators and will call SAMRAITransferOperatorRegistry::buildCoarsenOperator to build a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> libaray <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a>.  <a href="#c6a51f159a36807539149d7d743a36e1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#0fb480bf6478394b5b36ee98c82b7ff8">buildRefineOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)=0</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> with name op_name associated with the centering of variable var. Can be specialized by applications which introduce their own RefineOperators. Specialized class will add knowledge of how to build application's operators and will call SAMRAITransferOperatorRegistry::buildRefineOperator to build a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> libaray <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a>.  <a href="#0fb480bf6478394b5b36ee98c82b7ff8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html#4b795f2c9148273b1077c2e7b190494c">buildTimeInterpolateOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;var, const std::string &amp;op_name)=0</td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Builds the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> with name op_name associated with the centering of variable var. Can be specialized by applications which introduce their own TimeInterpolateOperators. Specialized class will add knowledge of how to build application's operators and will call SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator to build a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> libaray <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a>.  <a href="#4b795f2c9148273b1077c2e7b190494c"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> is intended to serve as the registry for <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> transfer operators. It will be a singleton object held by class <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a>. 
+Class <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">TransferOperatorRegistry</a> is intended to serve as the registry for <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> transfer operators. It will be a singleton object held by class <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a>. 
 <p>
 This <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> class provides a lookup mechanism to search for time interpolation and spatial coarsening/refining operators. That is, algorithms and applications that manage communication on an AMR hierarchy may query the <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> object for operators that may be applied to specific variables.<p>
 Typically, the operators are assigned to the hier::TrnasferOperatorRegistry object in the constructor of the geometry object that defines the mesh coordinate system.<p>
 <dl compact><dt><b>Note:</b></dt><dd><ol>
 <li>
-Operators are added to the heads of the operator lists, so the most recently added operator will be returned if more than one operator satisfies a given request. </li>
-<li>
 Additional operators may be added to a transfer geometry object at any time during program execution. However, each operator must be added BEFORE it is requested or an unrecoverable assertion will be thrown and the program will abort. </li>
 </ol>
 </dd></dl>
 See the time interpolation,spatial coarsening, and spatial refinement operator base classes for more information about adding new operators for either new patch data types or new operators for pre-existing patch data types.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> <p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> </dd></dl>
@@ -111,7 +94,7 @@ See the time interpolation,spatial coarsening, and spatial refinement operator b
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -150,17 +133,26 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="43d14dad771939ec6a02a907b14c823f"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::addCoarsenOperator" ref="43d14dad771939ec6a02a907b14c823f" args="(tbox::Pointer&lt; CoarsenOperator &gt; coarsen_op)" -->
+<a class="anchor" name="89f95844bea5465187c6c59749e555b7"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::addCoarsenOperator" ref="89f95844bea5465187c6c59749e555b7" args="(const char *var_type_name, const boost::shared_ptr&lt; CoarsenOperator &gt; &amp;coarsen_op)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::TransferOperatorRegistry::addCoarsenOperator           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>coarsen_op</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>var_type_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>coarsen_op</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -171,23 +163,33 @@ Add a concrete spatial coarsening operator.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_op</em>&nbsp;</td><td>The concrete coarsening operator to add to the lookup list. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_type_name</em>&nbsp;</td><td>The type name of the variable with which coarsen_op is associated </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_op</em>&nbsp;</td><td>The concrete coarsening operator to add to the lookup hash map. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="e4840536f9882901181b8500194bd97c"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::addRefineOperator" ref="e4840536f9882901181b8500194bd97c" args="(tbox::Pointer&lt; RefineOperator &gt; refine_op)" -->
+<a class="anchor" name="dffc3fee87e5e40ec08c0b259cd128b3"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::addRefineOperator" ref="dffc3fee87e5e40ec08c0b259cd128b3" args="(const char *var_type_name, const boost::shared_ptr&lt; RefineOperator &gt; &amp;refine_op)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::TransferOperatorRegistry::addRefineOperator           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>refine_op</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>var_type_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>refine_op</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -198,23 +200,33 @@ Add a concrete spatial refinement operator.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refine_op</em>&nbsp;</td><td>The concrete refinement operator to add to the lookup list. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_type_name</em>&nbsp;</td><td>The type name of the variable with which refine_op is associated </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refine_op</em>&nbsp;</td><td>The concrete refinement operator to add to the lookup hash map. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="b2765566e7c5792e957dbb5e6ba34cab"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::addTimeInterpolateOperator" ref="b2765566e7c5792e957dbb5e6ba34cab" args="(tbox::Pointer&lt; TimeInterpolateOperator &gt; time_op)" -->
+<a class="anchor" name="6d3495ce270434d2b80b5f9f8c1c34d6"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::addTimeInterpolateOperator" ref="6d3495ce270434d2b80b5f9f8c1c34d6" args="(const char *var_type_name, const boost::shared_ptr&lt; TimeInterpolateOperator &gt; &amp;time_op)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::TransferOperatorRegistry::addTimeInterpolateOperator           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>time_op</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td class="paramtype">const char *&nbsp;</td>
+          <td class="paramname"> <em>var_type_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>time_op</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -225,20 +237,27 @@ Add a concrete time interpolation operator.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>time_op</em>&nbsp;</td><td>The concrete time interpolation operator to add to the lookup list. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var_type_name</em>&nbsp;</td><td>The type name of the variable with which time_op is associated </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>time_op</em>&nbsp;</td><td>The concrete time interpolation operator to add to the lookup hash map. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="745e219b5b21ad88c3e1fd2c60aeceda"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::lookupCoarsenOperator" ref="745e219b5b21ad88c3e1fd2c60aeceda" args="(const tbox::Pointer&lt; Variable &gt; &amp;var, const std::string &amp;op_name)" -->
+<a class="anchor" name="7b7dc5cfc106b33ba702c7d08cbcddf4"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::lookupCoarsenOperator" ref="7b7dc5cfc106b33ba702c7d08cbcddf4" args="(BaseGridGeometry &amp;grid_geometry, const boost::shared_ptr&lt; Variable &gt; &amp;var, const std::string &amp;op_name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt; SAMRAI::hier::TransferOperatorRegistry::lookupCoarsenOperator           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> &gt; SAMRAI::hier::TransferOperatorRegistry::lookupCoarsenOperator           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>grid_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>var</em>, </td>
         </tr>
         <tr>
@@ -259,9 +278,10 @@ Add a concrete time interpolation operator.
 <p>
 Lookup function for coarsening operator. 
 <p>
-Search list for the spatial coarsening operator matching the request for the given variable. If the operator is found, a pointer to it will be returned. Otherwise, an unrecoverable error will result and the program will abort.<p>
+Extract the spatial coarsening operator matching the request for the given variable from the hash map. If the operator is found, a pointer to it will be returned. Otherwise, an unrecoverable error will result and the program will abort.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>The grid geometry with which the operator being looked up is associated. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> for which the corresponding coarsening operator should match. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the coarsening operator. </td></tr>
   </table>
@@ -269,14 +289,20 @@ Search list for the spatial coarsening operator matching the request for the giv
 
 </div>
 </div><p>
-<a class="anchor" name="d72d9f255b4fb91a890d36c1a74be4fa"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::lookupRefineOperator" ref="d72d9f255b4fb91a890d36c1a74be4fa" args="(const tbox::Pointer&lt; Variable &gt; &amp;var, const std::string &amp;op_name)" -->
+<a class="anchor" name="ee5d5b40ccc0c350792cc8497012207e"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::lookupRefineOperator" ref="ee5d5b40ccc0c350792cc8497012207e" args="(BaseGridGeometry &amp;grid_geometry, const boost::shared_ptr&lt; Variable &gt; &amp;var, const std::string &amp;op_name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt; SAMRAI::hier::TransferOperatorRegistry::lookupRefineOperator           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> &gt; SAMRAI::hier::TransferOperatorRegistry::lookupRefineOperator           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>grid_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>var</em>, </td>
         </tr>
         <tr>
@@ -297,9 +323,10 @@ Search list for the spatial coarsening operator matching the request for the giv
 <p>
 Lookup function for refinement operator. 
 <p>
-Search list for the spatial refinement operator matching the request for the given variable. If the operator is found, a pointer to it will be returned. Otherwise, an unrecoverable error will result and the program will abort.<p>
+Extract the spatial refinement operator matching the request for the given variable from the hash map. If the operator is found, a pointer to it will be returned. Otherwise, an unrecoverable error will result and the program will abort.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>The grid geometry with which the operator being looked up is associated. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> for which the corresponding refinement operator should match. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the refinement operator. </td></tr>
   </table>
@@ -307,14 +334,20 @@ Search list for the spatial refinement operator matching the request for the giv
 
 </div>
 </div><p>
-<a class="anchor" name="c348148ec306064949c65ad50e9c8ac1"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::lookupTimeInterpolateOperator" ref="c348148ec306064949c65ad50e9c8ac1" args="(const tbox::Pointer&lt; Variable &gt; &amp;var, const std::string &amp;op_name=&quot;STD_LINEAR_TIME_INTERPOLATE&quot;)" -->
+<a class="anchor" name="ff498de1102fa4b73ebe7b1c8ebfbbb4"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::lookupTimeInterpolateOperator" ref="ff498de1102fa4b73ebe7b1c8ebfbbb4" args="(BaseGridGeometry &amp;grid_geometry, const boost::shared_ptr&lt; Variable &gt; &amp;var, const std::string &amp;op_name=&quot;STD_LINEAR_TIME_INTERPOLATE&quot;)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt; SAMRAI::hier::TransferOperatorRegistry::lookupTimeInterpolateOperator           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> &gt; SAMRAI::hier::TransferOperatorRegistry::lookupTimeInterpolateOperator           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>grid_geometry</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>var</em>, </td>
         </tr>
         <tr>
@@ -335,9 +368,10 @@ Search list for the spatial refinement operator matching the request for the giv
 <p>
 Lookup function for time interpolation operator. 
 <p>
-Search list for the time interpolation operator matching the request for the given variable. If the operator is found, a pointer to it will be returned. Otherwise, an unrecoverable error will result and the program will abort.<p>
+Extract the time interpolation operator matching the request for the given variable from the hash map. If the operator is found, a pointer to it will be returned. Otherwise, an unrecoverable error will result and the program will abort.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>grid_geometry</em>&nbsp;</td><td>The grid geometry with which the operator being looked up is associated. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>var</em>&nbsp;</td><td>The <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> for which the corresponding time interpolation operator should match. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_name</em>&nbsp;</td><td>The string identifier of the time interpolation operator. <b>Default:</b> STD_LINEAR_TIME_INTERPOLATE </td></tr>
   </table>
@@ -365,7 +399,7 @@ Get the max stencil width of all transfer operators.
 <p>
 The max stencil width computed from all registered (constructed) transfer operators. This function is simply returns the max from the registered refine, coarsen and time-refine operators.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>The max stencil width computed from all registered operators.</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#aedff762bf58267e0f04643c54b0eff5">hier::GridGeometry::getMaxTransferOpStencilWidth()</a>. <p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#bad878e7a8dd90861bd19b6c7ac198ee">hier::BaseGridGeometry::getMaxTransferOpStencilWidth()</a>. <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#b976d26e0e6521cf138381e1470eef6c">hier::RefineOperator::getMaxRefineOpStencilWidth()</a>. <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#dd34063d8a6f6033fcf6ef6d979206de">hier::CoarsenOperator::getMaxCoarsenOpStencilWidth()</a>. </dd></dl>
 
@@ -381,7 +415,7 @@ The max stencil width computed from all registered (constructed) transfer operat
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>min_value</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -399,25 +433,25 @@ This method allows users to specify a minimum value returned by <a class="el" hr
 
 </div>
 </div><p>
-<a class="anchor" name="2f7ed73c46293fbee054809d5b474a24"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::getDim" ref="2f7ed73c46293fbee054809d5b474a24" args="() const " -->
+<a class="anchor" name="05ab4d0f78de2af8fa7adaade2709e56"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::getDim" ref="05ab4d0f78de2af8fa7adaade2709e56" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::hier::TransferOperatorRegistry::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::TransferOperatorRegistry::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Get the dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> holding this object. 
+Get the dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> holding this object. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>The dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> holding this object. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>The dimension of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> holding this object. </dd></dl>
 
 </div>
 </div><p>
@@ -448,108 +482,9 @@ Print class data representation.
 
 </div>
 </div><p>
-<a class="anchor" name="c6a51f159a36807539149d7d743a36e1"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::buildCoarsenOperator" ref="c6a51f159a36807539149d7d743a36e1" args="(const tbox::Pointer&lt; Variable &gt; &amp;var, const std::string &amp;op_name)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a>&gt; SAMRAI::hier::TransferOperatorRegistry::buildCoarsenOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [protected, pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Builds the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a> with name op_name associated with the centering of variable var. Can be specialized by applications which introduce their own CoarsenOperators. Specialized class will add knowledge of how to build application's operators and will call SAMRAITransferOperatorRegistry::buildCoarsenOperator to build a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> libaray <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">CoarsenOperator</a>. 
-<p>
-
-<p>
-Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1SAMRAITransferOperatorRegistry.html#f5155d03fe70bf44ce3c62ac7aab19e8">SAMRAI::geom::SAMRAITransferOperatorRegistry</a>.
-</div>
-</div><p>
-<a class="anchor" name="0fb480bf6478394b5b36ee98c82b7ff8"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::buildRefineOperator" ref="0fb480bf6478394b5b36ee98c82b7ff8" args="(const tbox::Pointer&lt; Variable &gt; &amp;var, const std::string &amp;op_name)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a>&gt; SAMRAI::hier::TransferOperatorRegistry::buildRefineOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [protected, pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Builds the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a> with name op_name associated with the centering of variable var. Can be specialized by applications which introduce their own RefineOperators. Specialized class will add knowledge of how to build application's operators and will call SAMRAITransferOperatorRegistry::buildRefineOperator to build a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> libaray <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">RefineOperator</a>. 
-<p>
-
-<p>
-Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1SAMRAITransferOperatorRegistry.html#418dcd5c2bd794ca5f62c4055fc84d0f">SAMRAI::geom::SAMRAITransferOperatorRegistry</a>.
-</div>
-</div><p>
-<a class="anchor" name="4b795f2c9148273b1077c2e7b190494c"></a><!-- doxytag: member="SAMRAI::hier::TransferOperatorRegistry::buildTimeInterpolateOperator" ref="4b795f2c9148273b1077c2e7b190494c" args="(const tbox::Pointer&lt; Variable &gt; &amp;var, const std::string &amp;op_name)=0" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a>&gt; SAMRAI::hier::TransferOperatorRegistry::buildTimeInterpolateOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [protected, pure virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Builds the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a> with name op_name associated with the centering of variable var. Can be specialized by applications which introduce their own TimeInterpolateOperators. Specialized class will add knowledge of how to build application's operators and will call SAMRAITransferOperatorRegistry::buildTimeInterpolateOperator to build a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> libaray <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">TimeInterpolateOperator</a>. 
-<p>
-
-<p>
-Implemented in <a class="el" href="classSAMRAI_1_1geom_1_1SAMRAITransferOperatorRegistry.html#34962c100a127a19bd736a25eedbd67f">SAMRAI::geom::SAMRAITransferOperatorRegistry</a>.
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="TransferOperatorRegistry_8h.html">TransferOperatorRegistry.h</a><li>source/SAMRAI/hier/<a class="el" href="TransferOperatorRegistry_8C.html">TransferOperatorRegistry.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

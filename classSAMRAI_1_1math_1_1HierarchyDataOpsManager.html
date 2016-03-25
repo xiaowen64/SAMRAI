@@ -28,22 +28,24 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Getting operators.</div></td></tr>
 <tr><td colspan="2"><div class="groupText">If a unique operator object is not requested, and if one already exists for the hierarchy and variable specified, the existing one will be created and returned. Otherwise, a new one is created. Objects created created for unique requests will not be used later when an equivalent request is made. <br><br></div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt;<br>
- double &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#3b79832de7c57ea1e65f3a770af61ab1">getOperationsDouble</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt; double &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#0b6daf3928b4ae7a2cc066c92b8d2ed3">getOperationsDouble</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a double variable on the given hierarchy.  <a href="#3b79832de7c57ea1e65f3a770af61ab1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt;<br>
- float &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#7ce6baa0d8bb73c123681c90ea79489f">getOperationsFloat</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a double variable on the given hierarchy.  <a href="#0b6daf3928b4ae7a2cc066c92b8d2ed3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt; float &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#d8e9660ae7abb9afdfa6d1330a2780c1">getOperationsFloat</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a float variable on the given hierarchy.  <a href="#7ce6baa0d8bb73c123681c90ea79489f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html">HierarchyDataOpsComplex</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#ea9793802738da7efc78200498fe454e">getOperationsComplex</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a float variable on the given hierarchy.  <a href="#d8e9660ae7abb9afdfa6d1330a2780c1"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html">HierarchyDataOpsComplex</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#d96275184c38e6527da435386f11643d">getOperationsComplex</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a complex variable on the given hierarchy.  <a href="#ea9793802738da7efc78200498fe454e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html">HierarchyDataOpsInteger</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#1bfb639474acd60af2c9fe1c0857f7fc">getOperationsInteger</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a complex variable on the given hierarchy.  <a href="#d96275184c38e6527da435386f11643d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html">HierarchyDataOpsInteger</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#9041fa8f54410f95d90058dd110cf960">getOperationsInteger</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, bool get_unique=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a integer variable on the given hierarchy.  <a href="#1bfb639474acd60af2c9fe1c0857f7fc"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to operation object for a integer variable on the given hierarchy.  <a href="#9041fa8f54410f95d90058dd110cf960"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#55d65e0b551df632187a5e8174460d74">getManager</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#fe862a31e0f2b2f1b2b85dd84990ddcf">getManager</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#533a8151e15ec56aeb25f5a39d45b375">HierarchyDataOpsManager</a> ()</td></tr>
@@ -103,40 +105,40 @@ The destructor for <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsMa
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="55d65e0b551df632187a5e8174460d74"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getManager" ref="55d65e0b551df632187a5e8174460d74" args="()" -->
+<a class="anchor" name="fe862a31e0f2b2f1b2b85dd84990ddcf"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getManager" ref="fe862a31e0f2b2f1b2b85dd84990ddcf" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a> * SAMRAI::math::HierarchyDataOpsManager::getManager           </td>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a>* SAMRAI::math::HierarchyDataOpsManager::getManager           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Return a pointer to the single instance of the patch data operation manager. All access to the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a> object is through the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#55d65e0b551df632187a5e8174460d74">getManager()</a> function. For example, to obtain a pointer to a hierarchy data operation object appropriate for a variable of type double one makes the following call: <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#55d65e0b551df632187a5e8174460d74">HierarchyDataOpsManager::getManager()</a>-&gt;getOperationsDouble( var, hierarchy), where ``var'' is a pointer to the variable, and hierarchy is a pointer to the AMR hierarchy.<p>
+Return a pointer to the single instance of the patch data operation manager. All access to the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a> object is through the <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#fe862a31e0f2b2f1b2b85dd84990ddcf">getManager()</a> function. For example, to obtain a pointer to a hierarchy data operation object appropriate for a variable of type double one makes the following call: <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#fe862a31e0f2b2f1b2b85dd84990ddcf">HierarchyDataOpsManager::getManager()</a>-&gt;getOperationsDouble( var, hierarchy), where ``var'' is a pointer to the variable, and hierarchy is a pointer to the AMR hierarchy.<p>
 Note that when the manager is accessed for the first time, the Singleton instance is registered with the StartupShutdownManager class which destroys such objects at program completion. Thus, users of this class do not explicitly allocate or deallocate the Singleton instance. 
 </div>
 </div><p>
-<a class="anchor" name="3b79832de7c57ea1e65f3a770af61ab1"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsDouble" ref="3b79832de7c57ea1e65f3a770af61ab1" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;variable, tbox::Pointer&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
+<a class="anchor" name="0b6daf3928b4ae7a2cc066c92b8d2ed3"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsDouble" ref="0b6daf3928b4ae7a2cc066c92b8d2ed3" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable, boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt; double &gt; &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsDouble           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt; double &gt; &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsDouble           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -170,20 +172,20 @@ Whether a unique operator is requested </td></tr>
 </dl>
 </div>
 </div><p>
-<a class="anchor" name="7ce6baa0d8bb73c123681c90ea79489f"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsFloat" ref="7ce6baa0d8bb73c123681c90ea79489f" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;variable, tbox::Pointer&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
+<a class="anchor" name="d8e9660ae7abb9afdfa6d1330a2780c1"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsFloat" ref="d8e9660ae7abb9afdfa6d1330a2780c1" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable, boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt; float &gt; &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsFloat           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">HierarchyDataOpsReal</a>&lt; float &gt; &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsFloat           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -217,20 +219,20 @@ Whether a unique operator is requested </td></tr>
 </dl>
 </div>
 </div><p>
-<a class="anchor" name="ea9793802738da7efc78200498fe454e"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsComplex" ref="ea9793802738da7efc78200498fe454e" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;variable, tbox::Pointer&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
+<a class="anchor" name="d96275184c38e6527da435386f11643d"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsComplex" ref="d96275184c38e6527da435386f11643d" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable, boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html">HierarchyDataOpsComplex</a> &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsComplex           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html">HierarchyDataOpsComplex</a> &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsComplex           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -264,20 +266,20 @@ Whether a unique operator is requested </td></tr>
 </dl>
 </div>
 </div><p>
-<a class="anchor" name="1bfb639474acd60af2c9fe1c0857f7fc"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsInteger" ref="1bfb639474acd60af2c9fe1c0857f7fc" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;variable, tbox::Pointer&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
+<a class="anchor" name="9041fa8f54410f95d90058dd110cf960"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsManager::getOperationsInteger" ref="9041fa8f54410f95d90058dd110cf960" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable, boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, bool get_unique=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html">HierarchyDataOpsInteger</a> &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsInteger           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html">HierarchyDataOpsInteger</a> &gt; SAMRAI::math::HierarchyDataOpsManager::getOperationsInteger           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -321,7 +323,7 @@ Whether a unique operator is requested </td></tr>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html">HierarchyDataOpsManager</a> *&nbsp;</td>
           <td class="paramname"> <em>subclass_instance</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected]</code></td>
+          <td width="100%"><code> [inline, protected]</code></td>
         </tr>
       </table>
 </div>
@@ -333,7 +335,7 @@ Initialize Singleton instance with instance of subclass. This function is used t
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyDataOpsManager_8h.html">HierarchyDataOpsManager.h</a><li>source/SAMRAI/math/<a class="el" href="HierarchyDataOpsManager_8C.html">HierarchyDataOpsManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

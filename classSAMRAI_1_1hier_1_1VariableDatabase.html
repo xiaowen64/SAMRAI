@@ -29,81 +29,84 @@
 <a href="classSAMRAI_1_1hier_1_1VariableDatabase-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#05ecaeda092ecfc101658b8594869535">getNumberOfRegisteredPatchDataIndices</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#46ee11b6a577253cca4a94c693063556">getNumberOfRegisteredPatchDataIndices</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of patch data indices registered with the database.  <a href="#05ecaeda092ecfc101658b8594869535"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#49ea8779be802d19e0420603607feabc">getNumberOfRegisteredVariableContexts</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of patch data indices registered with the database.  <a href="#46ee11b6a577253cca4a94c693063556"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#d56e02d312c50c2a121ea9fcc471e507">getNumberOfRegisteredVariableContexts</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get number of variable contexts registered with the database.  <a href="#49ea8779be802d19e0420603607feabc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">hier::PatchDescriptor</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#f3b07a3f018343900d67fc68677b4139">getPatchDescriptor</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get number of variable contexts registered with the database.  <a href="#d56e02d312c50c2a121ea9fcc471e507"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#5d1106501a191a187c006b6aa01543e2">getPatchDescriptor</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the patch descriptor managed by the database.  <a href="#f3b07a3f018343900d67fc68677b4139"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#b32e1d1ba798f4d014b6cd7013c4a571">getContext</a> (const std::string &amp;context_name)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the patch descriptor managed by the database.  <a href="#5d1106501a191a187c006b6aa01543e2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#1e32ea613cbfdc260ac3371e4a82c1d8">getContext</a> (const std::string &amp;context_name)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates or returns a <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> object with the given name.  <a href="#b32e1d1ba798f4d014b6cd7013c4a571"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Creates or returns a <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> object with the given name.  <a href="#1e32ea613cbfdc260ac3371e4a82c1d8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#46c18bb71caa286ded495356ebe81107">checkContextExists</a> (const std::string &amp;context_name) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether context with given name exists in the database.  <a href="#46c18bb71caa286ded495356ebe81107"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#4d8fb3f42be4a6b429d133c31e9c7b85">addVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#ba5404d0179fce9dff1239874c795767">addVariable</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> to the database.  <a href="#4d8fb3f42be4a6b429d133c31e9c7b85"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> to the database.  <a href="#ba5404d0179fce9dff1239874c795767"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#4e2fe8c1097c27fc382a34b532cdae17">removeVariable</a> (const std::string &amp;variable_name)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> from the database identified by <code>name</code>.  <a href="#4e2fe8c1097c27fc382a34b532cdae17"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#d8bebaff0bcc17bd4c2b49cf0228f576">getVariable</a> (const std::string &amp;variable_name) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#36ee72a470b99f0afd748161691ba466">getVariable</a> (const std::string &amp;variable_name) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get variable in database with given name string identifier.  <a href="#d8bebaff0bcc17bd4c2b49cf0228f576"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get variable in database with given name string identifier.  <a href="#36ee72a470b99f0afd748161691ba466"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#1db45e26269e68e34f369cadf97f2745">checkVariableExists</a> (const std::string &amp;variable_name) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether a variable with given name exists in the database.  <a href="#1db45e26269e68e34f369cadf97f2745"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#91e0833ca200cd173153a516592903a1">registerClonedPatchDataIndex</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, int old_id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#81ab59845adcb2d3a57b3dcff8376383">registerClonedPatchDataIndex</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, int old_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and register a new patch data index by cloning the data factory associated with the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> at the index provided.  <a href="#91e0833ca200cd173153a516592903a1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#d99006293a9e8f1eb0195d1970cd4071">registerPatchDataIndex</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, int data_id=idUndefined())</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and register a new patch data index by cloning the data factory associated with the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> at the index provided.  <a href="#81ab59845adcb2d3a57b3dcff8376383"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#123b398a1baed58c1a4436634c7602c2">registerPatchDataIndex</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, int data_id=idUndefined())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add given patch data index and variable pair to the database.  <a href="#d99006293a9e8f1eb0195d1970cd4071"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add given patch data index and variable pair to the database.  <a href="#123b398a1baed58c1a4436634c7602c2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#7a995f788eb37b37c1f0fd4296b8a0d3">removePatchDataIndex</a> (int data_id)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove the patch data index from the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a> if it exists.  <a href="#7a995f788eb37b37c1f0fd4296b8a0d3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#a525af973d25990488b7b719e193ba17">checkVariablePatchDataIndex</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, int data_id) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#54c0bc8c92490c3db2b7187d39ce3509">checkVariablePatchDataIndex</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, int data_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether the given variable is mapped to the given patch data index in the database.  <a href="#a525af973d25990488b7b719e193ba17"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#a51f777387ed4961d2011c53db2a2cb1">checkVariablePatchDataIndexType</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, int data_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether the given variable is mapped to the given patch data index in the database.  <a href="#54c0bc8c92490c3db2b7187d39ce3509"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#18881e69cdb410467dfd40442ca2d350">checkVariablePatchDataIndexType</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, int data_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether the given variable matches the patch data type associated with the given patch data index in the database.  <a href="#a51f777387ed4961d2011c53db2a2cb1"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#cb14965253783851fc935e0a784d63db">registerVariableAndContext</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; context, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether the given variable matches the patch data type associated with the given patch data index in the database.  <a href="#18881e69cdb410467dfd40442ca2d350"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; &amp;context, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register variable and context pair along with the ghost width for the patch data mapped to the (<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>, <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>) pair with the variable database.  <a href="#cb14965253783851fc935e0a784d63db"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#ceff73efe17061f44b9b21f8ebc3387c">mapVariableAndContextToIndex</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; context) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register variable and context pair along with the ghost width for the patch data mapped to the (<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>, <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>) pair with the variable database.  <a href="#3887ef2a3ff58353de978ce5e3f4d785"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c4e88c0924d011b4198e9303c5f6b3b7">mapVariableAndContextToIndex</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; &amp;context) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map variable-context pair in database to patch data index.  <a href="#ceff73efe17061f44b9b21f8ebc3387c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#ff04ad27154b2b2f3231fc3d4567c5fc">mapIndexToVariable</a> (const int index, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map variable-context pair in database to patch data index.  <a href="#c4e88c0924d011b4198e9303c5f6b3b7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3e0347b9b58c44583f2fea28d70940e8">mapIndexToVariable</a> (const int index, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map patch data index to variable associated with the data, if possible, and set the variable pointer to the variable in the database.  <a href="#ff04ad27154b2b2f3231fc3d4567c5fc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#b8052ebae79ab131f0605e8be48c274a">mapIndexToVariableAndContext</a> (const int index, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map patch data index to variable associated with the data, if possible, and set the variable pointer to the variable in the database.  <a href="#3e0347b9b58c44583f2fea28d70940e8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#747bde295f4077ae928afd8e8ddb1d62">mapIndexToVariableAndContext</a> (const int index, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; &amp;context) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map patch data index to variable-context pair associated with the data, if possible, and set the variable and context pointers to the corresponding database entries.  <a href="#b8052ebae79ab131f0605e8be48c274a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">hier::ComponentSelector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#bae7c1f7f39b60f80856834f367dbcd3">getPatchDataRestartTable</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Map patch data index to variable-context pair associated with the data, if possible, and set the variable and context pointers to the corresponding database entries.  <a href="#747bde295f4077ae928afd8e8ddb1d62"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#85c6e13aa0338f8f03acb46d90d28f0e">getPatchDataRestartTable</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return copy of component selector that holds information about which patch data entries are written to restart.  <a href="#bae7c1f7f39b60f80856834f367dbcd3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#041c7c290931ca5f473bddb704eb0605">isPatchDataRegisteredForRestart</a> (int index) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return copy of component selector that holds information about which patch data entries are written to restart.  <a href="#85c6e13aa0338f8f03acb46d90d28f0e"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#0b4c4ad2a58830bf2ae86532eb73e6f8">isPatchDataRegisteredForRestart</a> (int index) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether given patch data index is registered with database for restart.  <a href="#041c7c290931ca5f473bddb704eb0605"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#f44cad8a0a6fc7acee5e747cfedf03eb">registerPatchDataForRestart</a> (int index)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check whether given patch data index is registered with database for restart.  <a href="#0b4c4ad2a58830bf2ae86532eb73e6f8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#1760d9ca4721727de59999667eba302f">registerPatchDataForRestart</a> (int index)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register the given patch data index for restart.  <a href="#f44cad8a0a6fc7acee5e747cfedf03eb"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#bfaf2bfec146963ced3c842ca22bd796">unregisterPatchDataForRestart</a> (int index)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register the given patch data index for restart.  <a href="#1760d9ca4721727de59999667eba302f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#94da57d3fd8427ee9c28b82fd8296183">unregisterPatchDataForRestart</a> (int index)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unregister the given patch data index for restart.  <a href="#bfaf2bfec146963ced3c842ca22bd796"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unregister the given patch data index for restart.  <a href="#94da57d3fd8427ee9c28b82fd8296183"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#683b5ff653d050d156954402940efbe7">printClassData</a> (std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, bool print_only_user_defined_variables=true) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print variable, context, and patch descriptor information contained in the database to the specified output stream.  <a href="#683b5ff653d050d156954402940efbe7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c467b97558c83507f4cb8e16aa64ca88">registerInternalSAMRAIVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#f80101f89b36b8ce62a243aa8a5d4a22">registerInternalSAMRAIVariable</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable and ghost width with the variable database.  <a href="#c467b97558c83507f4cb8e16aa64ca88"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Register internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable and ghost width with the variable database.  <a href="#f80101f89b36b8ce62a243aa8a5d4a22"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#134a204772420bba428f05bf0bd430c8">removeInternalSAMRAIVariablePatchDataIndex</a> (int data_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove the given index from the variable database if it exists in the database and is associated with an internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable registered with the function <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c467b97558c83507f4cb8e16aa64ca88">registerInternalSAMRAIVariable()</a>.  <a href="#134a204772420bba428f05bf0bd430c8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Remove the given index from the variable database if it exists in the database and is associated with an internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable registered with the function <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#f80101f89b36b8ce62a243aa8a5d4a22">registerInternalSAMRAIVariable()</a>.  <a href="#134a204772420bba428f05bf0bd430c8"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#53dede87024da9e337e1e7d2e2c9a59f">getDatabase</a> ()</td></tr>
 
@@ -118,9 +121,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#aa3306318544e7df28a1b6f5f022b3b7">getVariableId</a> (const std::string &amp;name) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return integer identifier for first variable found matching given string name identifier (care must be used to avoid adding variables to database with same name to insure correct behavior), or return an undefined integer index if no such variable exists in the database.  <a href="#aa3306318544e7df28a1b6f5f022b3b7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#2e4abb487560c820b11fe5dd7379504f">registerSingletonSubclassInstance</a> (<a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">hier::VariableDatabase</a> *subclass_instance)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#9bb23b4a85602a90472da6a2ce2c77e7">registerSingletonSubclassInstance</a> (<a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a> *subclass_instance)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class.  <a href="#2e4abb487560c820b11fe5dd7379504f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize Singleton instance with instance of subclass. This function is used to make the singleton object unique when inheriting from this base class.  <a href="#9bb23b4a85602a90472da6a2ce2c77e7"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#d7a395e9092ab9be82130f6285b5597e">idUndefined</a> ()</td></tr>
 
@@ -148,7 +151,7 @@ The following example shows the mapping between a <a class="el" href="classSAMRA
 <li>
 Add <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> to the database </li>
 <li>
-Get or create the <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> via the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#b32e1d1ba798f4d014b6cd7013c4a571">getContext()</a> function </li>
+Get or create the <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> via the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#1e32ea613cbfdc260ac3371e4a82c1d8">getContext()</a> function </li>
 <li>
 Register the <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> pair in the database </li>
 </ol>
@@ -157,14 +160,14 @@ Register the <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">Va
     ...
 
     <span class="comment">// Get the singleton variable database.</span>
-    hier::VariableDatabase* var_db = hier::VariableDatabase.getDatabase();
+    <a class="code" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c9055ddab13797c4d95d912e1d733ae7">VariableDatabase</a>* var_db = <a class="code" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c9055ddab13797c4d95d912e1d733ae7">VariableDatabase</a>.getDatabase();
 
     <span class="comment">// Create the context (or access it if it exists already).</span>
-    tbox::Pointer&lt;hier::VariableContext&gt; current =
+    boost::shared_ptr&lt;VariableContext&gt; current =
        var_db-&gt;getContext(<span class="stringliteral">"CURRENT"</span>);
 
     <span class="comment">// Define the variable.</span>
-    hier::Pointer&lt;pdat::FaceVariable&lt;double&gt; &gt; flux(
+    boost::shared_ptr&lt;pdat::FaceVariable&lt;double&gt; &gt; flux(
        <span class="keyword">new</span> pdat::FaceVariable&lt;double&gt;(dim, <span class="stringliteral">"flux"</span>, 1));
 
     <span class="comment">// Register the Variable/VariableContext pair.</span>
@@ -174,13 +177,13 @@ Register the <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">Va
     <span class="keyword">const</span> <span class="keywordtype">int</span> flux_current_id =
        var_db-&gt;registerVariableAndContext(flux, current, ghosts);
 </pre></div><p>
-<dl compact><dt><b></b></dt><dd>A <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> can also be added to the database using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#4d8fb3f42be4a6b429d133c31e9c7b85">addVariable()</a> function. This function does not register a mapping between a <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> and <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>, rather it is used when there are multiple objects needing to access a single <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>. This eliminates issues with shared objects, order of creation, etc. For example, two different algorithms in an application may need to access the current value for pressure. Each of these algorithms may use the database to access the patch data index of this shared state. This is not needed if <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#cb14965253783851fc935e0a784d63db">registerVariableAndContext()</a> is used.</dd></dl>
-<dl compact><dt><b>Alternate Usage</b></dt><dd>The database can be used to maintain a mapping between a single patch data index and a <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>. This type of mapping is constructed using either the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#d99006293a9e8f1eb0195d1970cd4071">registerPatchDataIndex()</a> function or <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#91e0833ca200cd173153a516592903a1">registerClonedPatchDataIndex()</a> function.</dd></dl>
+<dl compact><dt><b></b></dt><dd>A <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> can also be added to the database using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#ba5404d0179fce9dff1239874c795767">addVariable()</a> function. This function does not register a mapping between a <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> and <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>, rather it is used when there are multiple objects needing to access a single <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>. This eliminates issues with shared objects, order of creation, etc. For example, two different algorithms in an application may need to access the current value for pressure. Each of these algorithms may use the database to access the patch data index of this shared state. This is not needed if <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext()</a> is used.</dd></dl>
+<dl compact><dt><b>Alternate Usage</b></dt><dd>The database can be used to maintain a mapping between a single patch data index and a <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>. This type of mapping is constructed using either the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#123b398a1baed58c1a4436634c7602c2">registerPatchDataIndex()</a> function or <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#81ab59845adcb2d3a57b3dcff8376383">registerClonedPatchDataIndex()</a> function.</dd></dl>
 <ul>
 <li>
-Add variable and index pair to the database via the addVariablePatchDataIndex() function. Or, clone an existing variable-index pair via <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#91e0833ca200cd173153a516592903a1">registerClonedPatchDataIndex()</a>. Either of these functions will check to make sure that the type of the variable matches the given patch data index. </li>
+Add variable and index pair to the database via the addVariablePatchDataIndex() function. Or, clone an existing variable-index pair via <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#81ab59845adcb2d3a57b3dcff8376383">registerClonedPatchDataIndex()</a>. Either of these functions will check to make sure that the type of the variable matches the given patch data index. </li>
 <li>
-Get variable for the index via the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#ff04ad27154b2b2f3231fc3d4567c5fc">mapIndexToVariable()</a> function. </li>
+Get variable for the index via the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3e0347b9b58c44583f2fea28d70940e8">mapIndexToVariable()</a> function. </li>
 </ul>
 <p>
 <dl compact><dt><b></b></dt><dd>The database is also used in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> to manage the reading/writing of patch data objects to/from restart files.</dd></dl>
@@ -190,7 +193,7 @@ Get variable for the index via the <a class="el" href="classSAMRAI_1_1hier_1_1Va
 <li>
 <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> names are unique in the database </li>
 <li>
-<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> should be generated solely through the use of the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#b32e1d1ba798f4d014b6cd7013c4a571">getContext()</a> function to avoid unexpected results; e.g., multiple context objects with the same name. </li>
+<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> should be generated solely through the use of the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#1e32ea613cbfdc260ac3371e4a82c1d8">getContext()</a> function to avoid unexpected results; e.g., multiple context objects with the same name. </li>
 <li>
 A <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> can be removed from the database using <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#4e2fe8c1097c27fc382a34b532cdae17">removeVariable()</a>. </li>
 <li>
@@ -274,12 +277,12 @@ Return a pointer to the singleton variable database instance.
 
 </div>
 </div><p>
-<a class="anchor" name="05ecaeda092ecfc101658b8594869535"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getNumberOfRegisteredPatchDataIndices" ref="05ecaeda092ecfc101658b8594869535" args="() const " -->
+<a class="anchor" name="46ee11b6a577253cca4a94c693063556"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getNumberOfRegisteredPatchDataIndices" ref="46ee11b6a577253cca4a94c693063556" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::VariableDatabase::getNumberOfRegisteredPatchDataIndices           </td>
+          <td class="memname">int SAMRAI::hier::VariableDatabase::getNumberOfRegisteredPatchDataIndices           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -295,12 +298,12 @@ Get the number of patch data indices registered with the database.
 
 </div>
 </div><p>
-<a class="anchor" name="49ea8779be802d19e0420603607feabc"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getNumberOfRegisteredVariableContexts" ref="49ea8779be802d19e0420603607feabc" args="() const " -->
+<a class="anchor" name="d56e02d312c50c2a121ea9fcc471e507"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getNumberOfRegisteredVariableContexts" ref="d56e02d312c50c2a121ea9fcc471e507" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::VariableDatabase::getNumberOfRegisteredVariableContexts           </td>
+          <td class="memname">int SAMRAI::hier::VariableDatabase::getNumberOfRegisteredVariableContexts           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -316,12 +319,12 @@ Get number of variable contexts registered with the database.
 
 </div>
 </div><p>
-<a class="anchor" name="f3b07a3f018343900d67fc68677b4139"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getPatchDescriptor" ref="f3b07a3f018343900d67fc68677b4139" args="() const " -->
+<a class="anchor" name="5d1106501a191a187c006b6aa01543e2"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getPatchDescriptor" ref="5d1106501a191a187c006b6aa01543e2" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">hier::PatchDescriptor</a> &gt; SAMRAI::hier::VariableDatabase::getPatchDescriptor           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; SAMRAI::hier::VariableDatabase::getPatchDescriptor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -337,12 +340,12 @@ Get the patch descriptor managed by the database.
 This descriptor is shared by all patches in the hierarchy. 
 </div>
 </div><p>
-<a class="anchor" name="b32e1d1ba798f4d014b6cd7013c4a571"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getContext" ref="b32e1d1ba798f4d014b6cd7013c4a571" args="(const std::string &amp;context_name)" -->
+<a class="anchor" name="1e32ea613cbfdc260ac3371e4a82c1d8"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getContext" ref="1e32ea613cbfdc260ac3371e4a82c1d8" args="(const std::string &amp;context_name)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; SAMRAI::hier::VariableDatabase::getContext           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; SAMRAI::hier::VariableDatabase::getContext           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>context_name</em>          </td>
@@ -395,14 +398,14 @@ Check whether context with given name exists in the database.
 
 </div>
 </div><p>
-<a class="anchor" name="4d8fb3f42be4a6b429d133c31e9c7b85"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::addVariable" ref="4d8fb3f42be4a6b429d133c31e9c7b85" args="(const tbox::Pointer&lt; hier::Variable &gt; variable)" -->
+<a class="anchor" name="ba5404d0179fce9dff1239874c795767"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::addVariable" ref="ba5404d0179fce9dff1239874c795767" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::VariableDatabase::addVariable           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -417,7 +420,7 @@ Add the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> t
 If the given <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> already exists nothing is done; the same <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> may be added multiple times. If a <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> exists with the same name identifier but is a different <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> object, an error will be logged and the program will abort. This prevents multiple Variables being associated with the same name.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable. When assertion checking is active, an assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an assertion will result if the variable pointer is null. </td></tr>
   </table>
 </dl>
 
@@ -450,12 +453,12 @@ Remove the <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a
 
 </div>
 </div><p>
-<a class="anchor" name="d8bebaff0bcc17bd4c2b49cf0228f576"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getVariable" ref="d8bebaff0bcc17bd4c2b49cf0228f576" args="(const std::string &amp;variable_name) const " -->
+<a class="anchor" name="36ee72a470b99f0afd748161691ba466"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getVariable" ref="36ee72a470b99f0afd748161691ba466" args="(const std::string &amp;variable_name) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; SAMRAI::hier::VariableDatabase::getVariable           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; SAMRAI::hier::VariableDatabase::getVariable           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>variable_name</em>          </td>
@@ -506,14 +509,14 @@ Check whether a variable with given name exists in the database.
 
 </div>
 </div><p>
-<a class="anchor" name="91e0833ca200cd173153a516592903a1"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerClonedPatchDataIndex" ref="91e0833ca200cd173153a516592903a1" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, int old_id)" -->
+<a class="anchor" name="81ab59845adcb2d3a57b3dcff8376383"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerClonedPatchDataIndex" ref="81ab59845adcb2d3a57b3dcff8376383" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, int old_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int SAMRAI::hier::VariableDatabase::registerClonedPatchDataIndex           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
@@ -538,7 +541,7 @@ The new index and variable pair is added to the <a class="el" href="classSAMRAI_
 <dl compact><dt><b>Note:</b></dt><dd>This function does not deallocate any patch data storage associated with the new patch data index.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to <code><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a></code>. If the variable is unknown to the database, then an invalid patch data index (&lt; 0) will be returned. When assertion checking is active, an assertion will result when the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to <code><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a></code>. If the variable is unknown to the database, then an invalid patch data index (&lt; 0) will be returned. When assertion checking is active, an assertion will result when the variable pointer is null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>old_id</em>&nbsp;</td><td>Integer patch data index currently associated with variable. If this value is not a valid patch data index (&lt; 0) or does not map to patch data matching the type of the given variable, the program will abort with an error message.</td></tr>
   </table>
 </dl>
@@ -546,14 +549,14 @@ The new index and variable pair is added to the <a class="el" href="classSAMRAI_
 
 </div>
 </div><p>
-<a class="anchor" name="d99006293a9e8f1eb0195d1970cd4071"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerPatchDataIndex" ref="d99006293a9e8f1eb0195d1970cd4071" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, int data_id=idUndefined())" -->
+<a class="anchor" name="123b398a1baed58c1a4436634c7602c2"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerPatchDataIndex" ref="123b398a1baed58c1a4436634c7602c2" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, int data_id=idUndefined())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int SAMRAI::hier::VariableDatabase::registerPatchDataIndex           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
@@ -582,12 +585,12 @@ variable-patch data index pair generated with this function cannot be looked up 
 <li>
 This function does not allocate any patch data storage associated with the integer index. </li>
 <li>
-This function must not be used by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers for creating patch data indices for internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables. The routine <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c467b97558c83507f4cb8e16aa64ca88">registerInternalSAMRAIVariable()</a> must be used for that case. </li>
+This function must not be used by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers for creating patch data indices for internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables. The routine <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#f80101f89b36b8ce62a243aa8a5d4a22">registerInternalSAMRAIVariable()</a> must be used for that case. </li>
 </ul>
 </dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>. When assertion checking is active, an assertion will result when the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>. When assertion checking is active, an assertion will result when the variable pointer is null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Optional integer patch data index to be added (along with variable) to the database. If the value is unspecified (default case), the default variable patch data factory is used to generate a new factory. If the value is provided and does not map to patch data matching the type of the given variable, the program will abort with an error message.</td></tr>
   </table>
 </dl>
@@ -624,14 +627,14 @@ Remove the patch data index from the <a class="el" href="classSAMRAI_1_1hier_1_1
 
 </div>
 </div><p>
-<a class="anchor" name="a525af973d25990488b7b719e193ba17"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::checkVariablePatchDataIndex" ref="a525af973d25990488b7b719e193ba17" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, int data_id) const " -->
+<a class="anchor" name="54c0bc8c92490c3db2b7187d39ce3509"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::checkVariablePatchDataIndex" ref="54c0bc8c92490c3db2b7187d39ce3509" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, int data_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool SAMRAI::hier::VariableDatabase::checkVariablePatchDataIndex           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
@@ -654,7 +657,7 @@ Check whether the given variable is mapped to the given patch data index in the 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index. When assertion checking is active, an unrecoverable assertion will result if the value is an invalid identifier (either &lt; 0 or larger than the maximum allowed patch data id).</td></tr>
   </table>
 </dl>
@@ -662,14 +665,14 @@ Check whether the given variable is mapped to the given patch data index in the 
 
 </div>
 </div><p>
-<a class="anchor" name="a51f777387ed4961d2011c53db2a2cb1"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::checkVariablePatchDataIndexType" ref="a51f777387ed4961d2011c53db2a2cb1" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, int data_id) const " -->
+<a class="anchor" name="18881e69cdb410467dfd40442ca2d350"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::checkVariablePatchDataIndexType" ref="18881e69cdb410467dfd40442ca2d350" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, int data_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">bool SAMRAI::hier::VariableDatabase::checkVariablePatchDataIndexType           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
@@ -692,7 +695,7 @@ Check whether the given variable matches the patch data type associated with the
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>data_id</em>&nbsp;</td><td>Integer patch data index. When assertion checking is active, an unrecoverable assertion will result if the value is an invalid identifier (either &lt; 0 or larger than the maximum allowed patch data id).</td></tr>
   </table>
 </dl>
@@ -700,26 +703,26 @@ Check whether the given variable matches the patch data type associated with the
 
 </div>
 </div><p>
-<a class="anchor" name="cb14965253783851fc935e0a784d63db"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerVariableAndContext" ref="cb14965253783851fc935e0a784d63db" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, const tbox::Pointer&lt; hier::VariableContext &gt; context, const hier::IntVector &amp;ghosts)" -->
+<a class="anchor" name="3887ef2a3ff58353de978ce5e3f4d785"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerVariableAndContext" ref="3887ef2a3ff58353de978ce5e3f4d785" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, const boost::shared_ptr&lt; VariableContext &gt; &amp;context, const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int SAMRAI::hier::VariableDatabase::registerVariableAndContext           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>context</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -735,12 +738,12 @@ Check whether the given variable matches the patch data type associated with the
 Register variable and context pair along with the ghost width for the patch data mapped to the (<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>, <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>) pair with the variable database. 
 <p>
 <dl compact><dt><b></b></dt><dd>Typically, this function will generate a new patch data index for the variable and ghost width and add the variable-context pair and index to the database. If the variable-context pair is already mapped to some patch data index in the database, and the given ghost width matches that of the patch data, then that index will be returned and the function will do nothing. However, if the variable-context pair is already mapped to some patch data index with a different ghost width, the program will abort with a descriptive error message.</dd></dl>
-<dl compact><dt><b></b></dt><dd>If either the variable or the context is unknown to the database prior to calling this routine, both items will be added to the database, if possible. The constraints for the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#b32e1d1ba798f4d014b6cd7013c4a571">getContext()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#4d8fb3f42be4a6b429d133c31e9c7b85">addVariable()</a> routines apply.</dd></dl>
+<dl compact><dt><b></b></dt><dd>If either the variable or the context is unknown to the database prior to calling this routine, both items will be added to the database, if possible. The constraints for the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#1e32ea613cbfdc260ac3371e4a82c1d8">getContext()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#ba5404d0179fce9dff1239874c795767">addVariable()</a> routines apply.</dd></dl>
 <dl compact><dt><b>Note:</b></dt><dd>It is an error to map a (<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a>,<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a>) pair plus data index having a different ghost width than that passed in the argument list. The program will abort with a descriptive message in this case.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable context. When assertion checking is active, an unrecoverable assertion will result if the context pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context. When assertion checking is active, an unrecoverable assertion will result if the context pointer is null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghosts</em>&nbsp;</td><td>Optional ghost width for patch data associated with variable-context pair. If the ghost width is given, all entries of the vector must be &gt;= 0. When assertion checking is active, an unrecoverable assertion will result if the ghost width vector contains a negative entry.</td></tr>
   </table>
 </dl>
@@ -748,20 +751,20 @@ Register variable and context pair along with the ghost width for the patch data
 
 </div>
 </div><p>
-<a class="anchor" name="ceff73efe17061f44b9b21f8ebc3387c"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::mapVariableAndContextToIndex" ref="ceff73efe17061f44b9b21f8ebc3387c" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, const tbox::Pointer&lt; hier::VariableContext &gt; context) const " -->
+<a class="anchor" name="c4e88c0924d011b4198e9303c5f6b3b7"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::mapVariableAndContextToIndex" ref="c4e88c0924d011b4198e9303c5f6b3b7" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, const boost::shared_ptr&lt; VariableContext &gt; &amp;context) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int SAMRAI::hier::VariableDatabase::mapVariableAndContextToIndex           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>context</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -777,18 +780,18 @@ Register variable and context pair along with the ghost width for the patch data
 Map variable-context pair in database to patch data index. 
 <p>
 If there is no such pair in the database (either the variable does not exist, the context does not exist, or the pair has not been registered), then an invalid patch data index (i.e., &lt; 0) is returned.<p>
-<dl compact><dt><b>Note:</b></dt><dd>For this function to operate as expected, the database mapping information must have been generated using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#cb14965253783851fc935e0a784d63db">registerVariableAndContext()</a> function. If the variable was registered without a variable context, then the patch data index associated with the variable will not be returned. See the other map...() functions declared in this class.</dd></dl>
+<dl compact><dt><b>Note:</b></dt><dd>For this function to operate as expected, the database mapping information must have been generated using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext()</a> function. If the variable was registered without a variable context, then the patch data index associated with the variable will not be returned. See the other map...() functions declared in this class.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable context. When assertion checking is active, an unrecoverable assertion will result if the variable context pointer is null.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context. When assertion checking is active, an unrecoverable assertion will result if the variable context pointer is null.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>Integer patch data index of variable-context pair in database. If the variable-context pair was not registered with the database, then an invalid data index (&lt; 0) will be returned. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="ff04ad27154b2b2f3231fc3d4567c5fc"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::mapIndexToVariable" ref="ff04ad27154b2b2f3231fc3d4567c5fc" args="(const int index, tbox::Pointer&lt; hier::Variable &gt; &amp;variable) const " -->
+<a class="anchor" name="3e0347b9b58c44583f2fea28d70940e8"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::mapIndexToVariable" ref="3e0347b9b58c44583f2fea28d70940e8" args="(const int index, boost::shared_ptr&lt; Variable &gt; &amp;variable) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -801,7 +804,7 @@ If there is no such pair in the database (either the variable does not exist, th
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -819,14 +822,14 @@ Map patch data index to variable associated with the data, if possible, and set 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>index</em>&nbsp;</td><td>Integer patch data index. When assertion checking is active, an unrecoverable assertion will if the index is invalid (i.e., &lt; 0). </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable that maps to patch data index in database. If there is no index in the database matching the index input value, then the variable pointer is set to null.</td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable that maps to patch data index in database. If there is no index in the database matching the index input value, then the variable pointer is set to null.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>Boolean true if patch data index maps to variable in the database; otherwise false. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="b8052ebae79ab131f0605e8be48c274a"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::mapIndexToVariableAndContext" ref="b8052ebae79ab131f0605e8be48c274a" args="(const int index, tbox::Pointer&lt; hier::Variable &gt; &amp;variable, tbox::Pointer&lt; hier::VariableContext &gt; &amp;context) const " -->
+<a class="anchor" name="747bde295f4077ae928afd8e8ddb1d62"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::mapIndexToVariableAndContext" ref="747bde295f4077ae928afd8e8ddb1d62" args="(const int index, boost::shared_ptr&lt; Variable &gt; &amp;variable, boost::shared_ptr&lt; VariableContext &gt; &amp;context) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -839,13 +842,13 @@ Map patch data index to variable associated with the data, if possible, and set 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>context</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -860,24 +863,24 @@ Map patch data index to variable associated with the data, if possible, and set 
 <p>
 Map patch data index to variable-context pair associated with the data, if possible, and set the variable and context pointers to the corresponding database entries. 
 <p>
-<dl compact><dt><b>Note:</b></dt><dd>For this function to operate as expected, the database mapping information must have been generated using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#cb14965253783851fc935e0a784d63db">registerVariableAndContext()</a> function. If the variable was registered without a variable context, then the variable and variable context returned may not be what is expected by the user; e.g., they may be associated with internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables.</dd></dl>
+<dl compact><dt><b>Note:</b></dt><dd>For this function to operate as expected, the database mapping information must have been generated using the <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext()</a> function. If the variable was registered without a variable context, then the variable and variable context returned may not be what is expected by the user; e.g., they may be associated with internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>index</em>&nbsp;</td><td>patch data index </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable set to matching variable in database. If no match is found, it is set to null. </td></tr>
-    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable context set to matching variable context in database. If no match is found, it is set to null.</td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable set to matching variable in database. If no match is found, it is set to null. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>context</em>&nbsp;</td><td>boost::shared_ptr to variable context set to matching variable context in database. If no match is found, it is set to null.</td></tr>
   </table>
 </dl>
 <dl compact><dt><b>Returns:</b></dt><dd>Boolean true if patch data index maps to variable-context pair in the database; otherwise false. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="bae7c1f7f39b60f80856834f367dbcd3"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getPatchDataRestartTable" ref="bae7c1f7f39b60f80856834f367dbcd3" args="() const " -->
+<a class="anchor" name="85c6e13aa0338f8f03acb46d90d28f0e"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::getPatchDataRestartTable" ref="85c6e13aa0338f8f03acb46d90d28f0e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> SAMRAI::hier::VariableDatabase::getPatchDataRestartTable           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> SAMRAI::hier::VariableDatabase::getPatchDataRestartTable           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -894,12 +897,12 @@ Return copy of component selector that holds information about which patch data 
 
 </div>
 </div><p>
-<a class="anchor" name="041c7c290931ca5f473bddb704eb0605"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::isPatchDataRegisteredForRestart" ref="041c7c290931ca5f473bddb704eb0605" args="(int index) const " -->
+<a class="anchor" name="0b4c4ad2a58830bf2ae86532eb73e6f8"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::isPatchDataRegisteredForRestart" ref="0b4c4ad2a58830bf2ae86532eb73e6f8" args="(int index) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::VariableDatabase::isPatchDataRegisteredForRestart           </td>
+          <td class="memname">bool SAMRAI::hier::VariableDatabase::isPatchDataRegisteredForRestart           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>index</em>          </td>
@@ -922,12 +925,12 @@ Check whether given patch data index is registered with database for restart.
 
 </div>
 </div><p>
-<a class="anchor" name="f44cad8a0a6fc7acee5e747cfedf03eb"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerPatchDataForRestart" ref="f44cad8a0a6fc7acee5e747cfedf03eb" args="(int index)" -->
+<a class="anchor" name="1760d9ca4721727de59999667eba302f"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerPatchDataForRestart" ref="1760d9ca4721727de59999667eba302f" args="(int index)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::VariableDatabase::registerPatchDataForRestart           </td>
+          <td class="memname">void SAMRAI::hier::VariableDatabase::registerPatchDataForRestart           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>index</em>          </td>
@@ -949,12 +952,12 @@ Register the given patch data index for restart.
 
 </div>
 </div><p>
-<a class="anchor" name="bfaf2bfec146963ced3c842ca22bd796"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::unregisterPatchDataForRestart" ref="bfaf2bfec146963ced3c842ca22bd796" args="(int index)" -->
+<a class="anchor" name="94da57d3fd8427ee9c28b82fd8296183"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::unregisterPatchDataForRestart" ref="94da57d3fd8427ee9c28b82fd8296183" args="(int index)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::VariableDatabase::unregisterPatchDataForRestart           </td>
+          <td class="memname">void SAMRAI::hier::VariableDatabase::unregisterPatchDataForRestart           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>index</em>          </td>
@@ -1013,20 +1016,20 @@ Print variable, context, and patch descriptor information contained in the datab
 
 </div>
 </div><p>
-<a class="anchor" name="c467b97558c83507f4cb8e16aa64ca88"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerInternalSAMRAIVariable" ref="c467b97558c83507f4cb8e16aa64ca88" args="(const tbox::Pointer&lt; hier::Variable &gt; variable, const hier::IntVector &amp;ghosts)" -->
+<a class="anchor" name="f80101f89b36b8ce62a243aa8a5d4a22"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerInternalSAMRAIVariable" ref="f80101f89b36b8ce62a243aa8a5d4a22" args="(const boost::shared_ptr&lt; Variable &gt; &amp;variable, const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">int SAMRAI::hier::VariableDatabase::registerInternalSAMRAIVariable           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1042,10 +1045,10 @@ Print variable, context, and patch descriptor information contained in the datab
 Register internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable and ghost width with the variable database. 
 <p>
 This function will generate a new patch data index for the variable and ghost width unless the variable is already mapped to some patch data index in the database with a different ghost width or as a user-defined variable. If the variable is unknown to the database prior to calling this routine, it will be added to the database.<p>
-<dl compact><dt><b>Note:</b></dt><dd>This routine is intended for managing internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> work variables that are typically unseen by users. It should not be called by users for registering variables, or within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> for registering any user-defined variables with the variable database. This function enforces the same constraints on variable registration that are applied for registering user-defined variables; e.g., using the routine <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#cb14965253783851fc935e0a784d63db">registerVariableAndContext()</a>. Thus, it is the responsibility of <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers to avoid naming and ghost width conflicts with user-defined variables or other internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables.</dd></dl>
+<dl compact><dt><b>Note:</b></dt><dd>This routine is intended for managing internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> work variables that are typically unseen by users. It should not be called by users for registering variables, or within <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> for registering any user-defined variables with the variable database. This function enforces the same constraints on variable registration that are applied for registering user-defined variables; e.g., using the routine <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#3887ef2a3ff58353de978ce5e3f4d785">registerVariableAndContext()</a>. Thus, it is the responsibility of <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> developers to avoid naming and ghost width conflicts with user-defined variables or other internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variables.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>variable</em>&nbsp;</td><td>boost::shared_ptr to variable. When assertion checking is active, an unrecoverable assertion will result if the variable pointer is null. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ghosts</em>&nbsp;</td><td>Ghost width for patch data associated with the variable. All entries of the vector must be &gt;= 0. When assertion checking is active, an unrecoverable assertion results if the vector contains a negative entry. </td></tr>
   </table>
 </dl>
@@ -1070,7 +1073,7 @@ This function will generate a new patch data index for the variable and ghost wi
 <div class="memdoc">
 
 <p>
-Remove the given index from the variable database if it exists in the database and is associated with an internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable registered with the function <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#c467b97558c83507f4cb8e16aa64ca88">registerInternalSAMRAIVariable()</a>. 
+Remove the given index from the variable database if it exists in the database and is associated with an internal <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> variable registered with the function <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#f80101f89b36b8ce62a243aa8a5d4a22">registerInternalSAMRAIVariable()</a>. 
 <p>
 <dl compact><dt><b></b></dt><dd>Also, remove the given index from the patch descriptor and remove any mapping between the index and a variable from the variable database.</dd></dl>
 <dl compact><dt><b>Note:</b></dt><dd>This function does not deallocate any patch data storage associated with the integer index.<p>
@@ -1127,14 +1130,14 @@ Return integer identifier for first variable found matching given string name id
 
 </div>
 </div><p>
-<a class="anchor" name="2e4abb487560c820b11fe5dd7379504f"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerSingletonSubclassInstance" ref="2e4abb487560c820b11fe5dd7379504f" args="(hier::VariableDatabase *subclass_instance)" -->
+<a class="anchor" name="9bb23b4a85602a90472da6a2ce2c77e7"></a><!-- doxytag: member="SAMRAI::hier::VariableDatabase::registerSingletonSubclassInstance" ref="9bb23b4a85602a90472da6a2ce2c77e7" args="(VariableDatabase *subclass_instance)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::VariableDatabase::registerSingletonSubclassInstance           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">hier::VariableDatabase</a> *&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html">VariableDatabase</a> *&nbsp;</td>
           <td class="paramname"> <em>subclass_instance</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [protected]</code></td>
@@ -1150,8 +1153,8 @@ Initialize Singleton instance with instance of subclass. This function is used t
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8h.html">VariableDatabase.h</a><li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8C.html">VariableDatabase.C</a><li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8I.html">VariableDatabase.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8h.html">VariableDatabase.h</a><li>source/SAMRAI/hier/<a class="el" href="VariableDatabase_8C.html">VariableDatabase.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

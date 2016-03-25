@@ -37,13 +37,13 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#4746458c2955392dc0c2031a446dc4ce">isOverlapEmpty</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#670576b74e61ec4258c65f6a5b643f40">getDestinationBoxContainer</a> (const int axis) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#f4bc7e7cfec6886d462a48d286ee4ace">getDestinationBoxContainer</a> (const int axis) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#7c5fd722a1ff0363e25728fdc9662398">getSourceOffset</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#54fb5dda175e63a05ec863f339283f7f">getSourceOffset</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#155ae417e71a30ec8c85e8dcdbfd811d">getTransformation</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#8d83621a90b36a71d52bed24944436a0">getTransformation</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refturn the transformation between the destination and source index spaces.  <a href="#155ae417e71a30ec8c85e8dcdbfd811d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refturn the transformation between the destination and source index spaces.  <a href="#8d83621a90b36a71d52bed24944436a0"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> represents the intersection between two face centered geometry boxes. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> and records the portions of index space that needs to be copied between two objects with face centered geometry.<p>
@@ -71,7 +71,7 @@ Class <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -122,12 +122,12 @@ Return whether there is an empty intersection between the two face centered boxe
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#ebb4098c7aaacd9cdcf453e60cdd8d76">SAMRAI::hier::BoxOverlap</a>.
 </div>
 </div><p>
-<a class="anchor" name="670576b74e61ec4258c65f6a5b643f40"></a><!-- doxytag: member="SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer" ref="670576b74e61ec4258c65f6a5b643f40" args="(const int axis) const " -->
+<a class="anchor" name="f4bc7e7cfec6886d462a48d286ee4ace"></a><!-- doxytag: member="SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer" ref="f4bc7e7cfec6886d462a48d286ee4ace" args="(const int axis) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp; SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp; SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>axis</em>          </td>
@@ -139,15 +139,15 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#ebb4098c7a
 <div class="memdoc">
 
 <p>
-Return the list of boxes (in face centered index space) that constitute the intersection. The boxes are given in the destination coordinate space and must be shifted by -(<a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#7c5fd722a1ff0363e25728fdc9662398">getSourceOffset()</a>) to lie in the source index space. The axis argument represents which axis is desired: X=0, Y=1, and Z=2. This method over-rides the virtual function in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> base class. 
+Return the list of boxes (in face centered index space) that constitute the intersection. The boxes are given in the destination coordinate space and must be shifted by -(<a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html#54fb5dda175e63a05ec863f339283f7f">getSourceOffset()</a>) to lie in the source index space. The axis argument represents which axis is desired: X=0, Y=1, and Z=2. This method over-rides the virtual function in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> base class. 
 </div>
 </div><p>
-<a class="anchor" name="7c5fd722a1ff0363e25728fdc9662398"></a><!-- doxytag: member="SAMRAI::pdat::FaceOverlap::getSourceOffset" ref="7c5fd722a1ff0363e25728fdc9662398" args="() const " -->
+<a class="anchor" name="54fb5dda175e63a05ec863f339283f7f"></a><!-- doxytag: member="SAMRAI::pdat::FaceOverlap::getSourceOffset" ref="54fb5dda175e63a05ec863f339283f7f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::pdat::FaceOverlap::getSourceOffset           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::pdat::FaceOverlap::getSourceOffset           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -163,12 +163,12 @@ Return the offset between the destination and source index spaces. The destinati
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#197e1dc21bd7f93398790e913a1aba49">SAMRAI::hier::BoxOverlap</a>.
 </div>
 </div><p>
-<a class="anchor" name="155ae417e71a30ec8c85e8dcdbfd811d"></a><!-- doxytag: member="SAMRAI::pdat::FaceOverlap::getTransformation" ref="155ae417e71a30ec8c85e8dcdbfd811d" args="() const " -->
+<a class="anchor" name="8d83621a90b36a71d52bed24944436a0"></a><!-- doxytag: member="SAMRAI::pdat::FaceOverlap::getTransformation" ref="8d83621a90b36a71d52bed24944436a0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp; SAMRAI::pdat::FaceOverlap::getTransformation           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp; SAMRAI::pdat::FaceOverlap::getTransformation           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -189,8 +189,8 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#68b6bfbf0e
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/pdat/<a class="el" href="FaceOverlap_8h.html">FaceOverlap.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceOverlap_8C.html">FaceOverlap.C</a><li>source/SAMRAI/pdat/<a class="el" href="FaceOverlap_8I.html">FaceOverlap.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/pdat/<a class="el" href="FaceOverlap_8h.html">FaceOverlap.h</a><li>source/SAMRAI/pdat/<a class="el" href="FaceOverlap_8C.html">FaceOverlap.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

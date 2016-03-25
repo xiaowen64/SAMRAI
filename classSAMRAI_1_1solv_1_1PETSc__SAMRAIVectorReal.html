@@ -31,15 +31,15 @@
 <a href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static Vec&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#83c7d169a497b93f9bd40b665b99cc10">createPETScVector</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; samrai_vec, MPI_Comm comm=PETSC_COMM_SELF)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static Vec&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#3ab11c412b8c42c520c987fa842569dd">createPETScVector</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; &amp;samrai_vec, MPI_Comm comm=PETSC_COMM_SELF)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#281545c50fb500c1c5e06802950305a2">destroyPETScVector</a> (Vec petsc_vec)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt;<br>
- TYPE &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#498ce533a49b423b4ae836ff0c6b0907">getSAMRAIVector</a> (Vec petsc_vec)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#e70201789be0301098d27f438eaa7959">getSAMRAIVector</a> (Vec petsc_vec)</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#06a7ab47c4ac83e9900c749eca7ed3ef">PETSc_SAMRAIVectorReal</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; samrai_vector, bool vector_created_via_duplicate, MPI_Comm comm)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#b6c61472a71753a1fb47e823577c8e64">PETSc_SAMRAIVectorReal</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; &amp;samrai_vector, bool vector_created_via_duplicate, MPI_Comm comm)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html#5e026488af923220ff067b6e92cf2470">~PETSc_SAMRAIVectorReal</a> ()</td></tr>
 
@@ -56,7 +56,7 @@ Finally, we remark that PETSc allows vectors with complex-valued entries. This c
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="06a7ab47c4ac83e9900c749eca7ed3ef"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::PETSc_SAMRAIVectorReal" ref="06a7ab47c4ac83e9900c749eca7ed3ef" args="(tbox::Pointer&lt; SAMRAIVectorReal&lt; TYPE &gt; &gt; samrai_vector, bool vector_created_via_duplicate, MPI_Comm comm)" -->
+<a class="anchor" name="b6c61472a71753a1fb47e823577c8e64"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::PETSc_SAMRAIVectorReal" ref="b6c61472a71753a1fb47e823577c8e64" args="(const boost::shared_ptr&lt; SAMRAIVectorReal&lt; TYPE &gt; &gt; &amp;samrai_vector, bool vector_created_via_duplicate, MPI_Comm comm)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -65,7 +65,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html">SAMRAI::solv::PETSc_SAMRAIVectorReal</a>&lt; TYPE &gt;::<a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html">PETSc_SAMRAIVectorReal</a>           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>samrai_vector</em>, </td>
         </tr>
         <tr>
@@ -115,7 +115,7 @@ template&lt;class TYPE&gt; </div>
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="83c7d169a497b93f9bd40b665b99cc10"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::createPETScVector" ref="83c7d169a497b93f9bd40b665b99cc10" args="(tbox::Pointer&lt; SAMRAIVectorReal&lt; TYPE &gt; &gt; samrai_vec, MPI_Comm comm=PETSC_COMM_SELF)" -->
+<a class="anchor" name="3ab11c412b8c42c520c987fa842569dd"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::createPETScVector" ref="3ab11c412b8c42c520c987fa842569dd" args="(const boost::shared_ptr&lt; SAMRAIVectorReal&lt; TYPE &gt; &gt; &amp;samrai_vec, MPI_Comm comm=PETSC_COMM_SELF)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -124,7 +124,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname">Vec <a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html">SAMRAI::solv::PETSc_SAMRAIVectorReal</a>&lt; TYPE &gt;::createPETScVector           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>samrai_vec</em>, </td>
         </tr>
         <tr>
@@ -168,14 +168,14 @@ template&lt;class TYPE&gt; </div>
 Destroy a given PETSc vector object. It is important to note that this function does not deallocate storage for the vector data. Vector data must be deallocated through the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object. 
 </div>
 </div><p>
-<a class="anchor" name="498ce533a49b423b4ae836ff0c6b0907"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::getSAMRAIVector" ref="498ce533a49b423b4ae836ff0c6b0907" args="(Vec petsc_vec)" -->
+<a class="anchor" name="e70201789be0301098d27f438eaa7959"></a><!-- doxytag: member="SAMRAI::solv::PETSc_SAMRAIVectorReal::getSAMRAIVector" ref="e70201789be0301098d27f438eaa7959" args="(Vec petsc_vec)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">SAMRAI::tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAI::solv::SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; <a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html">SAMRAI::solv::PETSc_SAMRAIVectorReal</a>&lt; TYPE &gt;::getSAMRAIVector           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; TYPE &gt; &gt; <a class="el" href="classSAMRAI_1_1solv_1_1PETSc__SAMRAIVectorReal.html">SAMRAI::solv::PETSc_SAMRAIVectorReal</a>&lt; TYPE &gt;::getSAMRAIVector           </td>
           <td>(</td>
           <td class="paramtype">Vec&nbsp;</td>
           <td class="paramname"> <em>petsc_vec</em>          </td>
@@ -191,8 +191,8 @@ Return pointer to the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vecto
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8h.html">PETSc_SAMRAIVectorReal.h</a><li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8C.html">PETSc_SAMRAIVectorReal.C</a><li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8I.html">PETSc_SAMRAIVectorReal.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8h.html">PETSc_SAMRAIVectorReal.h</a><li>source/SAMRAI/solv/<a class="el" href="PETSc__SAMRAIVectorReal_8C.html">PETSc_SAMRAIVectorReal.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

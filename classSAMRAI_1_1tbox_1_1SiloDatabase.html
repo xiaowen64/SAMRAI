@@ -26,13 +26,14 @@
 <p>Inheritance diagram for SAMRAI::tbox::SiloDatabase:
 <p><center><img src="classSAMRAI_1_1tbox_1_1SiloDatabase.png" usemap="#SAMRAI::tbox::SiloDatabase_map" border="0" alt=""></center>
 <map name="SAMRAI::tbox::SiloDatabase_map">
-<area href="classSAMRAI_1_1tbox_1_1Database.html" alt="SAMRAI::tbox::Database" shape="rect" coords="0,56,169,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,169,24">
+<area href="classSAMRAI_1_1tbox_1_1Database.html" alt="SAMRAI::tbox::Database" shape="rect" coords="0,0,169,24">
 </map>
 <a href="classSAMRAI_1_1tbox_1_1SiloDatabase-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#b32ec0bdde9eb2d41d7822d0438e1dd5">SiloDatabase</a> (const std::string &amp;name)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#31a2f1fc057e2dc1f7c08efc5fa41554">SiloDatabase</a> (const std::string &amp;name, DBfile *file, const std::string &amp;directory, const bool create_in_file)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#5e75773827b5b575bd84df9fda9a313d">~SiloDatabase</a> ()</td></tr>
 
@@ -47,9 +48,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#7b0aa26f2f000f5f60d69171d496886f">isDatabase</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#bf6f12624c1a0e9f3632d374d8906bfe">putDatabase</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#d067e5fa6219e709286a682b5d3009b6">putDatabase</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#533be3ac0b6523e3a980ae1ee5c4b6c0">getDatabase</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#73768863f6891f5b2b6b2a091b4274bd">getDatabase</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1SiloDatabase.html#eaaf445e6791e70ac23018f90bca81b9">isBool</a> (const std::string &amp;key)</td></tr>
 
@@ -140,6 +143,47 @@ It is assumed that all processors will access the database in the same manner. E
 <p>
 The Silo database constructor creates an empty database with the specified name. By default the database will not be associated with a file until it is mounted, using the mount() member function.<p>
 When assertion checking is active, the name string must be non-empty. 
+</div>
+</div><p>
+<a class="anchor" name="31a2f1fc057e2dc1f7c08efc5fa41554"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::SiloDatabase" ref="31a2f1fc057e2dc1f7c08efc5fa41554" args="(const std::string &amp;name, DBfile *file, const std::string &amp;directory, const bool create_in_file)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::tbox::SiloDatabase::SiloDatabase           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">DBfile *&nbsp;</td>
+          <td class="paramname"> <em>file</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>directory</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool&nbsp;</td>
+          <td class="paramname"> <em>create_in_file</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Constructor used to create sub-databases. 
 </div>
 </div><p>
 <a class="anchor" name="5e75773827b5b575bd84df9fda9a313d"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::~SiloDatabase" ref="5e75773827b5b575bd84df9fda9a313d" args="()" -->
@@ -281,12 +325,12 @@ Return true or false depending on whether the specified key represents a databas
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471329aa4c509463f168330">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="bf6f12624c1a0e9f3632d374d8906bfe"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::putDatabase" ref="bf6f12624c1a0e9f3632d374d8906bfe" args="(const std::string &amp;key)" -->
+<a class="anchor" name="d067e5fa6219e709286a682b5d3009b6"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::putDatabase" ref="d067e5fa6219e709286a682b5d3009b6" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::SiloDatabase::putDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::SiloDatabase::putDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -301,15 +345,15 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471
 Create a new database with the specified key name and return a pointer to it. A new group with the key name is also created in the data file.<p>
 When assertion checking is active, the key string must be non-empty. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ebaab620c363bac439e0c8ed889364e6">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ed79eabacdec5c32a6cbd2af92c48ef7">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="533be3ac0b6523e3a980ae1ee5c4b6c0"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getDatabase" ref="533be3ac0b6523e3a980ae1ee5c4b6c0" args="(const std::string &amp;key)" -->
+<a class="anchor" name="73768863f6891f5b2b6b2a091b4274bd"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::getDatabase" ref="73768863f6891f5b2b6b2a091b4274bd" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::SiloDatabase::getDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::SiloDatabase::getDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -324,7 +368,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ebaab620c363
 Get the database with the specified key name. If the specified key does not represent a database entry in the database, then an error message is printed and the program exits.<p>
 When assertion checking is active, the key string must be non-empty. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7911dae03a1b9daa5c151c75bebdc4b0">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#01c167dc865e82e220a9049d2fdc7f78">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="eaaf445e6791e70ac23018f90bca81b9"></a><!-- doxytag: member="SAMRAI::tbox::SiloDatabase::isBool" ref="eaaf445e6791e70ac23018f90bca81b9" args="(const std::string &amp;key)" -->
@@ -1167,7 +1211,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#c491f20e84ec
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="SiloDatabase_8h.html">SiloDatabase.h</a><li>source/SAMRAI/tbox/<a class="el" href="SiloDatabase_8C.html">SiloDatabase.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

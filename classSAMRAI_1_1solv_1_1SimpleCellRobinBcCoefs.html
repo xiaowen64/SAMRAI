@@ -37,12 +37,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#8322fe7691e9646a309698770c2984ed">SimpleCellRobinBcCoefs</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name=std::string())</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#8322fe7691e9646a309698770c2984ed"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#9f8c562c73b086245b5fae650c32b7f3">~SimpleCellRobinBcCoefs</a> (void)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#a2bd4bb5f665d1dbe1da09e1e17bb46c">~SimpleCellRobinBcCoefs</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#9f8c562c73b086245b5fae650c32b7f3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#84cbbb26f19963b659fcdf0196487b94">setHierarchy</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;, const int ln_min=-1, const int ln_max=-1)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#a2bd4bb5f665d1dbe1da09e1e17bb46c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#dcfd87c911f2ad14caa730c5bd16cbdc">setHierarchy</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;, const int ln_min=-1, const int ln_max=-1)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the hierarchy where boundary data associated with the hierarchy is found.  <a href="#84cbbb26f19963b659fcdf0196487b94"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the hierarchy where boundary data associated with the hierarchy is found.  <a href="#dcfd87c911f2ad14caa730c5bd16cbdc"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries</a> (const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify the boundary conditions that are to be used at the physical domain boundary.  <a href="#6f10285acdd4c9006fc550dbca198c46"></a><br></td></tr>
@@ -58,13 +58,13 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#2f4ef56e213e9c4e1f088b2e4d0d9448">setDiffusionCoefConstant</a> (double diffusion_coef_value)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the value of the diffusion coefficient used in Neumann boundary fluxes to a constant.  <a href="#2f4ef56e213e9c4e1f088b2e4d0d9448"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#202e180b03e4ca9b2c6be80e3189c38e">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#87c01b629dd4e91bc9f6bc972ca8f8b9">getObjectName</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#202e180b03e4ca9b2c6be80e3189c38e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#87c01b629dd4e91bc9f6bc972ca8f8b9"></a><br></td></tr>
 <tr><td colspan="2"><div class="groupHeader"></div></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#3a6234e5b90298b229d2d0468c39290b">setBcCoefs</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;acoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;bcoef_data, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;gcoef_data, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;bdry_box, double fill_time=0.0) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#0b552ef12d77fcf9299a30db93453e17">setBcCoefs</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;acoef_data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;bcoef_data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;gcoef_data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">hier::BoundaryBox</a> &amp;bdry_box, double fill_time=0.0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to fill arrays of Robin boundary condition coefficients at a patch boundary.  <a href="#3a6234e5b90298b229d2d0468c39290b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Function to fill arrays of Robin boundary condition coefficients at a patch boundary.  <a href="#0b552ef12d77fcf9299a30db93453e17"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#f5d3748ecc053107b30670db76923507">numberOfExtensionsFillable</a> () const </td></tr>
 
 </table>
@@ -94,7 +94,7 @@ This class refers to some grid-based outerside or ghost cell data touching patch
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -106,14 +106,13 @@ Constructor.
 
 </div>
 </div><p>
-<a class="anchor" name="9f8c562c73b086245b5fae650c32b7f3"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::~SimpleCellRobinBcCoefs" ref="9f8c562c73b086245b5fae650c32b7f3" args="(void)" -->
+<a class="anchor" name="a2bd4bb5f665d1dbe1da09e1e17bb46c"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::~SimpleCellRobinBcCoefs" ref="a2bd4bb5f665d1dbe1da09e1e17bb46c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::solv::SimpleCellRobinBcCoefs::~SimpleCellRobinBcCoefs           </td>
           <td>(</td>
-          <td class="paramtype">void&nbsp;</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -129,32 +128,32 @@ Destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="3a6234e5b90298b229d2d0468c39290b"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs" ref="3a6234e5b90298b229d2d0468c39290b" args="(tbox::Pointer&lt; pdat::ArrayData&lt; double &gt; &gt; &amp;acoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; double &gt; &gt; &amp;bcoef_data, tbox::Pointer&lt; pdat::ArrayData&lt; double &gt; &gt; &amp;gcoef_data, const tbox::Pointer&lt; hier::Variable &gt; &amp;variable, const hier::Patch &amp;patch, const hier::BoundaryBox &amp;bdry_box, double fill_time=0.0) const " -->
+<a class="anchor" name="0b552ef12d77fcf9299a30db93453e17"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs" ref="0b552ef12d77fcf9299a30db93453e17" args="(const boost::shared_ptr&lt; pdat::ArrayData&lt; double &gt; &gt; &amp;acoef_data, const boost::shared_ptr&lt; pdat::ArrayData&lt; double &gt; &gt; &amp;bcoef_data, const boost::shared_ptr&lt; pdat::ArrayData&lt; double &gt; &gt; &amp;gcoef_data, const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable, const hier::Patch &amp;patch, const hier::BoundaryBox &amp;bdry_box, double fill_time=0.0) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>acoef_data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>bcoef_data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">pdat::ArrayData</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>gcoef_data</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>variable</em>, </td>
         </tr>
         <tr>
@@ -187,7 +186,7 @@ Destructor.
 <p>
 Function to fill arrays of Robin boundary condition coefficients at a patch boundary. 
 <p>
-This implementation of the virtual function <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#671dfede517f55cd2cf80d2ced9b4096">RobinBcCoefStrategy::setBcCoefs()</a> uses information specified by the call to <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries()</a> to determine the coefficients.<p>
+This implementation of the virtual function <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">RobinBcCoefStrategy::setBcCoefs()</a> uses information specified by the call to <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries()</a> to determine the coefficients.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>acoef_data</em>&nbsp;</td><td>boundary coefficient data. This is defined to include index range for the boundary faces on the boundary box <code>bdry_box</code>. If this is a null pointer, then the calling function is not interested in a, and you can disregard it. </td></tr>
@@ -201,7 +200,7 @@ This implementation of the virtual function <a class="el" href="classSAMRAI_1_1s
 </dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#671dfede517f55cd2cf80d2ced9b4096">SAMRAI::solv::RobinBcCoefStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">SAMRAI::solv::RobinBcCoefStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="f5d3748ecc053107b30670db76923507"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::numberOfExtensionsFillable" ref="f5d3748ecc053107b30670db76923507" args="() const " -->
@@ -225,14 +224,14 @@ Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#6
 Implements <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#f58238e9b0828211744a9c5150221f7e">SAMRAI::solv::RobinBcCoefStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="84cbbb26f19963b659fcdf0196487b94"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy" ref="84cbbb26f19963b659fcdf0196487b94" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt;, const int ln_min=-1, const int ln_max=-1)" -->
+<a class="anchor" name="dcfd87c911f2ad14caa730c5bd16cbdc"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy" ref="dcfd87c911f2ad14caa730c5bd16cbdc" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;, const int ln_min=-1, const int ln_max=-1)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname">, </td>
         </tr>
         <tr>
@@ -328,7 +327,7 @@ The mixed boundary type is for a mixture of Dirichlet and Neumann boundary condi
 Cache data providing Dirichlet boundary values. 
 <p>
 This function makes a private copy of the relevant ghost cell data that it later uses provide the coefficient g on Dirichlet boundaries. The index must correspond to cell-centered double data with non-zero ghost width.<p>
-Functions <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#84cbbb26f19963b659fcdf0196487b94">setHierarchy()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries()</a> should be called before this one. This function should be called each time the hierarchy or Dirichlet data changes.<p>
+Functions <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#dcfd87c911f2ad14caa730c5bd16cbdc">setHierarchy()</a> and <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">setBoundaries()</a> should be called before this one. This function should be called each time the hierarchy or Dirichlet data changes.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>dirichlet_data_id</em>&nbsp;</td><td>patch data id of the source cell data for copy. </td></tr>
@@ -376,7 +375,7 @@ The cached data is not dallocated.<p>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>diffusion_coef_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -399,7 +398,7 @@ This function overrides the effect of <a class="el" href="classSAMRAI_1_1solv_1_
           <td class="paramtype">double&nbsp;</td>
           <td class="paramname"> <em>diffusion_coef_value</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -412,16 +411,16 @@ This function is similar to <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCel
 This function overrides the effect of <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#145d24cf337d0af746f4db3fd5b056d6">setDiffusionCoefId()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="202e180b03e4ca9b2c6be80e3189c38e"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::getObjectName" ref="202e180b03e4ca9b2c6be80e3189c38e" args="() const " -->
+<a class="anchor" name="87c01b629dd4e91bc9f6bc972ca8f8b9"></a><!-- doxytag: member="SAMRAI::solv::SimpleCellRobinBcCoefs::getObjectName" ref="87c01b629dd4e91bc9f6bc972ca8f8b9" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::solv::SimpleCellRobinBcCoefs::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::solv::SimpleCellRobinBcCoefs::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -435,8 +434,8 @@ Get the name of this object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8h.html">SimpleCellRobinBcCoefs.h</a><li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8C.html">SimpleCellRobinBcCoefs.C</a><li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8I.html">SimpleCellRobinBcCoefs.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8h.html">SimpleCellRobinBcCoefs.h</a><li>source/SAMRAI/solv/<a class="el" href="SimpleCellRobinBcCoefs_8C.html">SimpleCellRobinBcCoefs.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

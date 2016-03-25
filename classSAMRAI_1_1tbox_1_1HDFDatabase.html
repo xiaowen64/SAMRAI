@@ -26,13 +26,14 @@
 <p>Inheritance diagram for SAMRAI::tbox::HDFDatabase:
 <p><center><img src="classSAMRAI_1_1tbox_1_1HDFDatabase.png" usemap="#SAMRAI::tbox::HDFDatabase_map" border="0" alt=""></center>
 <map name="SAMRAI::tbox::HDFDatabase_map">
-<area href="classSAMRAI_1_1tbox_1_1Database.html" alt="SAMRAI::tbox::Database" shape="rect" coords="0,56,174,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,174,24">
+<area href="classSAMRAI_1_1tbox_1_1Database.html" alt="SAMRAI::tbox::Database" shape="rect" coords="0,0,174,24">
 </map>
 <a href="classSAMRAI_1_1tbox_1_1HDFDatabase-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#a8a6a12bb80b6433a82c79eebbd206d0">HDFDatabase</a> (const std::string &amp;name)</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#a3f8e5a453fdb8ce9953c99f5f85e091">HDFDatabase</a> (const std::string &amp;name, hid_t group_ID)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#5f3e24fd04d3f9cc4f78559c4a6ed1a3">~HDFDatabase</a> ()</td></tr>
 
@@ -47,9 +48,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#004cfc58bbd52a491488770e0c5a779a">isDatabase</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#320a10644f662446ecd5cef0d0f3d6ec">putDatabase</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#a055835239c7b73d10b6702bf0626c6c">putDatabase</a> (const std::string &amp;key)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#60a9aa3fd7c10cdd7a9a988740aa8008">getDatabase</a> (const std::string &amp;key)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#0492900b1ee53d332d9f77889f1e9254">getDatabase</a> (const std::string &amp;key)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1HDFDatabase.html#c2c92c9a066964657533df11d4d2760d">isBool</a> (const std::string &amp;key)</td></tr>
 
@@ -142,6 +145,35 @@ It is assumed that all processors will access the database in the same manner. E
 <p>
 The HDF database constructor creates an empty database with the specified name. By default the database will not be associated with a file until it is mounted, using the mount() member function.<p>
 When assertion checking is active, the name string must be non-empty. The name string is *NOT* the name of the HDF file. 
+</div>
+</div><p>
+<a class="anchor" name="a3f8e5a453fdb8ce9953c99f5f85e091"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::HDFDatabase" ref="a3f8e5a453fdb8ce9953c99f5f85e091" args="(const std::string &amp;name, hid_t group_ID)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::tbox::HDFDatabase::HDFDatabase           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">hid_t&nbsp;</td>
+          <td class="paramname"> <em>group_ID</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Constructor used to create sub-databases. 
 </div>
 </div><p>
 <a class="anchor" name="5f3e24fd04d3f9cc4f78559c4a6ed1a3"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::~HDFDatabase" ref="5f3e24fd04d3f9cc4f78559c4a6ed1a3" args="()" -->
@@ -283,12 +315,12 @@ Return true or false depending on whether the specified key represents a databas
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471329aa4c509463f168330">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="320a10644f662446ecd5cef0d0f3d6ec"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::putDatabase" ref="320a10644f662446ecd5cef0d0f3d6ec" args="(const std::string &amp;key)" -->
+<a class="anchor" name="a055835239c7b73d10b6702bf0626c6c"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::putDatabase" ref="a055835239c7b73d10b6702bf0626c6c" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::HDFDatabase::putDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::HDFDatabase::putDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -303,15 +335,15 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#21299ab9b471
 Create a new database with the specified key name and return a pointer to it. A new group with the key name is also created in the data file.<p>
 When assertion checking is active, the key string must be non-empty. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ebaab620c363bac439e0c8ed889364e6">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ed79eabacdec5c32a6cbd2af92c48ef7">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
-<a class="anchor" name="60a9aa3fd7c10cdd7a9a988740aa8008"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::getDatabase" ref="60a9aa3fd7c10cdd7a9a988740aa8008" args="(const std::string &amp;key)" -->
+<a class="anchor" name="0492900b1ee53d332d9f77889f1e9254"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::getDatabase" ref="0492900b1ee53d332d9f77889f1e9254" args="(const std::string &amp;key)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::HDFDatabase::getDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::HDFDatabase::getDatabase           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>key</em>          </td>
@@ -326,7 +358,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#ebaab620c363
 Get the database with the specified key name. If the specified key does not represent a database entry in the database, then an error message is printed and the program exits.<p>
 When assertion checking is active, the key string must be non-empty. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7911dae03a1b9daa5c151c75bebdc4b0">SAMRAI::tbox::Database</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#01c167dc865e82e220a9049d2fdc7f78">SAMRAI::tbox::Database</a>.
 </div>
 </div><p>
 <a class="anchor" name="c2c92c9a066964657533df11d4d2760d"></a><!-- doxytag: member="SAMRAI::tbox::HDFDatabase::isBool" ref="c2c92c9a066964657533df11d4d2760d" args="(const std::string &amp;key)" -->
@@ -1162,7 +1194,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html#7503cebadbb0
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1174,7 +1206,7 @@ Return the group_id so VisIt can access an object's HDF database.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="HDFDatabase_8h.html">HDFDatabase.h</a><li>source/SAMRAI/tbox/<a class="el" href="HDFDatabase_8C.html">HDFDatabase.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

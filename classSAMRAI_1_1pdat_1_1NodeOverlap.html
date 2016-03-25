@@ -37,13 +37,13 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#82416aaae886213ba133712adceedd4e">isOverlapEmpty</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#7eaaae72efc433a81ee18064285e2d60">getDestinationBoxContainer</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#165aa305620eb920a6aaf1d6c5b9dc48">getDestinationBoxContainer</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#1a39aeb3d0e0035bd5b65b682a50452b">getSourceOffset</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#5ab2ab44b4f0097035a04b49e2911750">getSourceOffset</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#41c4b13e0daea037dec7bc8d60b5920d">getTransformation</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#d8700bfb4cdf45a0daaab49adf9e3e53">getTransformation</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refturn the transformation between the destination and source index spaces.  <a href="#41c4b13e0daea037dec7bc8d60b5920d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Refturn the transformation between the destination and source index spaces.  <a href="#d8700bfb4cdf45a0daaab49adf9e3e53"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html">NodeOverlap</a> represents the intersection between two node centered geometry boxes. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> and records the portions of index space that needs to be copied between two objects with node centered geometry.<p>
@@ -71,7 +71,7 @@ Class <a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html">NodeOverlap</
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -122,12 +122,12 @@ Return whether there is an empty intersection between the two node centered boxe
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#ebb4098c7aaacd9cdcf453e60cdd8d76">SAMRAI::hier::BoxOverlap</a>.
 </div>
 </div><p>
-<a class="anchor" name="7eaaae72efc433a81ee18064285e2d60"></a><!-- doxytag: member="SAMRAI::pdat::NodeOverlap::getDestinationBoxContainer" ref="7eaaae72efc433a81ee18064285e2d60" args="() const " -->
+<a class="anchor" name="165aa305620eb920a6aaf1d6c5b9dc48"></a><!-- doxytag: member="SAMRAI::pdat::NodeOverlap::getDestinationBoxContainer" ref="165aa305620eb920a6aaf1d6c5b9dc48" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp; SAMRAI::pdat::NodeOverlap::getDestinationBoxContainer           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp; SAMRAI::pdat::NodeOverlap::getDestinationBoxContainer           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -138,15 +138,15 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#ebb4098c7a
 <div class="memdoc">
 
 <p>
-Return the list of boxes (in node centered index space) that constitute the intersection. The boxes are given in the destination coordinate space and must be shifted by -(<a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#1a39aeb3d0e0035bd5b65b682a50452b">getSourceOffset()</a>) to lie in the source index space. This method over-rides the virtual function in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> base class. 
+Return the list of boxes (in node centered index space) that constitute the intersection. The boxes are given in the destination coordinate space and must be shifted by -(<a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#5ab2ab44b4f0097035a04b49e2911750">getSourceOffset()</a>) to lie in the source index space. This method over-rides the virtual function in the <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> base class. 
 </div>
 </div><p>
-<a class="anchor" name="1a39aeb3d0e0035bd5b65b682a50452b"></a><!-- doxytag: member="SAMRAI::pdat::NodeOverlap::getSourceOffset" ref="1a39aeb3d0e0035bd5b65b682a50452b" args="() const " -->
+<a class="anchor" name="5ab2ab44b4f0097035a04b49e2911750"></a><!-- doxytag: member="SAMRAI::pdat::NodeOverlap::getSourceOffset" ref="5ab2ab44b4f0097035a04b49e2911750" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::pdat::NodeOverlap::getSourceOffset           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::pdat::NodeOverlap::getSourceOffset           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -162,12 +162,12 @@ Return the offset between the destination and source index spaces. The destinati
 Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#197e1dc21bd7f93398790e913a1aba49">SAMRAI::hier::BoxOverlap</a>.
 </div>
 </div><p>
-<a class="anchor" name="41c4b13e0daea037dec7bc8d60b5920d"></a><!-- doxytag: member="SAMRAI::pdat::NodeOverlap::getTransformation" ref="41c4b13e0daea037dec7bc8d60b5920d" args="() const " -->
+<a class="anchor" name="d8700bfb4cdf45a0daaab49adf9e3e53"></a><!-- doxytag: member="SAMRAI::pdat::NodeOverlap::getTransformation" ref="d8700bfb4cdf45a0daaab49adf9e3e53" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp; SAMRAI::pdat::NodeOverlap::getTransformation           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp; SAMRAI::pdat::NodeOverlap::getTransformation           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -188,8 +188,8 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html#68b6bfbf0e
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/pdat/<a class="el" href="NodeOverlap_8h.html">NodeOverlap.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeOverlap_8C.html">NodeOverlap.C</a><li>source/SAMRAI/pdat/<a class="el" href="NodeOverlap_8I.html">NodeOverlap.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/pdat/<a class="el" href="NodeOverlap_8h.html">NodeOverlap.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeOverlap_8C.html">NodeOverlap.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

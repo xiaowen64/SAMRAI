@@ -34,18 +34,18 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#23bee31311b176f7de8150d36de80e29">printVector</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#d597a3487dd151c7df5404cc01b44b63">createSundialsVector</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; samrai_vec)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#b1dd0bb30ad9479e146f85c05e76a5d9">createSundialsVector</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; &amp;samrai_vec)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#c27f141fe8dc71f2a2bad3d9e938fcb6">destroySundialsVector</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *sundials_vec)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt;<br>
- double &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#d62f9044f1945fe44b9b8cb99a191725">getSAMRAIVector</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *sundials_vec)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#7aa203a8ed38302cad4f4048d5d22c42">getSAMRAIVector</a> (<a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *sundials_vec)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt;<br>
- double &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#05a1d987088649bfdf36e22e32fb822d">getSAMRAIVector</a> (N_Vector sundials_vec)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#aa5215759f9879594d0415c8571dbb51">getSAMRAIVector</a> (N_Vector sundials_vec)</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#c0809ee9d9e9c20f2dc1e11e56ebfad1">Sundials_SAMRAIVector</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; samrai_vector)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#62146e770cb09ab3c08caa18bd9ec960">Sundials_SAMRAIVector</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; &amp;samrai_vector)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1Sundials__SAMRAIVector.html#82803c643f2467fc73fe175899af57b4">~Sundials_SAMRAIVector</a> ()</td></tr>
 
@@ -59,17 +59,17 @@ Finally, we remark that this class provides vectors of type <code>double</code>,
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="c0809ee9d9e9c20f2dc1e11e56ebfad1"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::Sundials_SAMRAIVector" ref="c0809ee9d9e9c20f2dc1e11e56ebfad1" args="(tbox::Pointer&lt; SAMRAIVectorReal&lt; double &gt; &gt; samrai_vector)" -->
+<a class="anchor" name="62146e770cb09ab3c08caa18bd9ec960"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::Sundials_SAMRAIVector" ref="62146e770cb09ab3c08caa18bd9ec960" args="(const boost::shared_ptr&lt; SAMRAIVectorReal&lt; double &gt; &gt; &amp;samrai_vector)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::solv::Sundials_SAMRAIVector::Sundials_SAMRAIVector           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>samrai_vector</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected]</code></td>
+          <td width="100%"><code> [explicit, protected]</code></td>
         </tr>
       </table>
 </div>
@@ -99,14 +99,14 @@ Finally, we remark that this class provides vectors of type <code>double</code>,
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="d597a3487dd151c7df5404cc01b44b63"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::createSundialsVector" ref="d597a3487dd151c7df5404cc01b44b63" args="(tbox::Pointer&lt; SAMRAIVectorReal&lt; double &gt; &gt; samrai_vec)" -->
+<a class="anchor" name="b1dd0bb30ad9479e146f85c05e76a5d9"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::createSundialsVector" ref="b1dd0bb30ad9479e146f85c05e76a5d9" args="(const boost::shared_ptr&lt; SAMRAIVectorReal&lt; double &gt; &gt; &amp;samrai_vec)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> * SAMRAI::solv::Sundials_SAMRAIVector::createSundialsVector           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>samrai_vec</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [static]</code></td>
@@ -139,12 +139,12 @@ Create and return a new <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstr
 Destroy a given Sundials vector object. It is important to note that this function does not deallocate storage for the vector data. Vector data must be deallocated hrough the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object. 
 </div>
 </div><p>
-<a class="anchor" name="d62f9044f1945fe44b9b8cb99a191725"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector" ref="d62f9044f1945fe44b9b8cb99a191725" args="(SundialsAbstractVector *sundials_vec)" -->
+<a class="anchor" name="7aa203a8ed38302cad4f4048d5d22c42"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector" ref="7aa203a8ed38302cad4f4048d5d22c42" args="(SundialsAbstractVector *sundials_vec)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.html">SundialsAbstractVector</a> *&nbsp;</td>
           <td class="paramname"> <em>sundials_vec</em>          </td>
@@ -159,12 +159,12 @@ Destroy a given Sundials vector object. It is important to note that this functi
 Return pointer to the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> vector object associated with the given Sundials wrapper vector. 
 </div>
 </div><p>
-<a class="anchor" name="05a1d987088649bfdf36e22e32fb822d"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector" ref="05a1d987088649bfdf36e22e32fb822d" args="(N_Vector sundials_vec)" -->
+<a class="anchor" name="aa5215759f9879594d0415c8571dbb51"></a><!-- doxytag: member="SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector" ref="aa5215759f9879594d0415c8571dbb51" args="(N_Vector sundials_vec)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html">SAMRAIVectorReal</a>&lt; double &gt; &gt; SAMRAI::solv::Sundials_SAMRAIVector::getSAMRAIVector           </td>
           <td>(</td>
           <td class="paramtype">N_Vector&nbsp;</td>
           <td class="paramname"> <em>sundials_vec</em>          </td>
@@ -201,8 +201,8 @@ Implements <a class="el" href="classSAMRAI_1_1solv_1_1SundialsAbstractVector.htm
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/solv/<a class="el" href="Sundials__SAMRAIVector_8h.html">Sundials_SAMRAIVector.h</a><li>source/SAMRAI/solv/<a class="el" href="Sundials__SAMRAIVector_8C.html">Sundials_SAMRAIVector.C</a><li>source/SAMRAI/solv/<a class="el" href="Sundials__SAMRAIVector_8I.html">Sundials_SAMRAIVector.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/solv/<a class="el" href="Sundials__SAMRAIVector_8h.html">Sundials_SAMRAIVector.h</a><li>source/SAMRAI/solv/<a class="el" href="Sundials__SAMRAIVector_8C.html">Sundials_SAMRAIVector.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

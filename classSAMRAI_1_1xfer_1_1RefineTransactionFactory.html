@@ -48,24 +48,25 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#ef4a8b855273d3e3663b86dd5e6a4fdc">unsetRefineItems</a> ()=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to clear the array of RefineClass::Data items associated with the refine schedule. This operation is called by the refine schedule after data communication operations are complete.  <a href="#ef4a8b855273d3e3663b86dd5e6a4fdc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#50698123f8cb037c04f90154111b3968">allocate</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int ritem_id, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, bool use_time_interpolation=false) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#ca36a7626ddbfa6a181a185d68f253da">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int ritem_id, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, bool use_time_interpolation=false) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to allocate a concrete refine transaction object. This routine is called by the refine schedule during construction of the schedule.  <a href="#50698123f8cb037c04f90154111b3968"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#4c2da6314831a04f0512c62c83335fb4">allocate</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; src_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int ritem_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pure virtual function to allocate a concrete refine transaction object. This routine is called by the refine schedule during construction of the schedule.  <a href="#ca36a7626ddbfa6a181a185d68f253da"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#7d2b283cbcb751e3217628c2c9687916">allocate</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int ritem_id) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#2066bac464d225da0879909b2a06d7a9">setTransactionTime</a> (double fill_time)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual function to set simulation time for transaction objects. This operation is called by the refine schedule during the execution of the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#ec39a395f97618b72f4619862200468e">RefineSchedule::fillData()</a> routine before data communication operations begin. This function is optional for the concrete transaction factory object. The default implementation is a no-op.  <a href="#2066bac464d225da0879909b2a06d7a9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#8b94ab1863e0b935668930db35903f6d">preprocessScratchSpace</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">hier::ComponentSelector</a> &amp;preprocess_vector) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#a48ba0fc529457fb0e75648837658088">preprocessScratchSpace</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">hier::ComponentSelector</a> &amp;preprocess_vector) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual function allowing transaction factory to preprocess scratch space data before transactactions use it if they need to. This function is optional for the concrete transaction factory object. The default implementation is a no-op.  <a href="#8b94ab1863e0b935668930db35903f6d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual function allowing transaction factory to preprocess scratch space data before transactactions use it if they need to. This function is optional for the concrete transaction factory object. The default implementation is a no-op.  <a href="#a48ba0fc529457fb0e75648837658088"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Abstract base class defining the interface for all concrete transaction factory objects that generate data transaction objects used with a <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> object. A concrete subclass will allocate new transaction objects. This class is an example of the ``Abstract Factory'' method described in the Design Patterns book by Gamma, et al. 
 <p>
 To add a new type of Transaction object MyRefineTransaction:<p>
 <ol type=1>
-<li>Implement a concrete <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> object as a subclass that is derived from this <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> base class. Implement the abstract virtual functions as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#50698123f8cb037c04f90154111b3968">allocate()</a> function must return a new instance of the desired transaction object.</li><li>The type of the transaction allocated by the concrete factory is a Transaction&lt;DIM&gt;. Thus, the new transaction object must be derived from the Transaction&lt;DIM&gt; base class and implement the abstract virtual functions declared by the base class.</li></ol>
+<li>Implement a concrete <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> object as a subclass that is derived from this <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html">RefineTransactionFactory</a> base class. Implement the abstract virtual functions as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1xfer_1_1RefineTransactionFactory.html#ca36a7626ddbfa6a181a185d68f253da">allocate()</a> function must return a new instance of the desired transaction object.</li><li>The type of the transaction allocated by the concrete factory is a Transaction&lt;DIM&gt;. Thus, the new transaction object must be derived from the Transaction&lt;DIM&gt; base class and implement the abstract virtual functions declared by the base class.</li></ol>
 <p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> </dd></dl>
 
@@ -170,26 +171,26 @@ Pure virtual function to clear the array of RefineClass::Data items associated w
 Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#995531470d20c927ae3fa82125238211">SAMRAI::xfer::StandardRefineTransactionFactory</a>, <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#a1f8b67bc9593abe1ea284ab1ae6ec83">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#3cc69f14c9dbce86b892d40518645c1d">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="50698123f8cb037c04f90154111b3968"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::allocate" ref="50698123f8cb037c04f90154111b3968" args="(tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, tbox::Pointer&lt; hier::BoxOverlap &gt; overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int ritem_id, const hier::Box &amp;box, bool use_time_interpolation=false) const =0" -->
+<a class="anchor" name="ca36a7626ddbfa6a181a185d68f253da"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::allocate" ref="ca36a7626ddbfa6a181a185d68f253da" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int ritem_id, const hier::Box &amp;box, bool use_time_interpolation=false) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a>&gt; SAMRAI::xfer::RefineTransactionFactory::allocate           </td>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a>&gt; SAMRAI::xfer::RefineTransactionFactory::allocate           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em>, </td>
         </tr>
         <tr>
@@ -236,11 +237,11 @@ Pure virtual function to allocate a concrete refine transaction object. This rou
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to source patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to overlap region between patches. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dst_patch_id</em>&nbsp;</td><td>Integer index of destination patch in destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_patch_id</em>&nbsp;</td><td>Integer index of source patch in source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td>boost::shared_ptr to destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td>boost::shared_ptr to source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td>boost::shared_ptr to overlap region between patches. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_mapped_box</em>&nbsp;</td><td>Destination Box in destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_mapped_box</em>&nbsp;</td><td>Source Box in source patch level. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>ritem_id</em>&nbsp;</td><td>Integer index of RefineClass::Data item associated with transaction. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>box</em>&nbsp;</td><td>Optional const reference to box defining region of refine transaction. Default is an empty box. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>use_time_interpolation</em>&nbsp;</td><td>Optional boolean flag indicating whether the refine transaction involves time interpolation. Default is false. </td></tr>
@@ -248,29 +249,29 @@ Pure virtual function to allocate a concrete refine transaction object. This rou
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#7f83a20951625d2cdecd38eb2c6497b7">SAMRAI::xfer::StandardRefineTransactionFactory</a>, <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#87398065e28e3024ab23ac773f76805f">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#9abd6a6fc132f84d6a84d8cfc0e71e22">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#2639cdd9fc2e687a0270ab6017331856">SAMRAI::xfer::StandardRefineTransactionFactory</a>, <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#9c87e96093d9d09e2c756bd414eadbbc">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#97f4223849bcbc6552c89c78362c9281">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="4c2da6314831a04f0512c62c83335fb4"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::allocate" ref="4c2da6314831a04f0512c62c83335fb4" args="(tbox::Pointer&lt; hier::PatchLevel &gt; dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; src_level, tbox::Pointer&lt; hier::BoxOverlap &gt; overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int ritem_id) const " -->
+<a class="anchor" name="7d2b283cbcb751e3217628c2c9687916"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::allocate" ref="7d2b283cbcb751e3217628c2c9687916" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int ritem_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> &gt; SAMRAI::xfer::RefineTransactionFactory::allocate           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a>&gt; SAMRAI::xfer::RefineTransactionFactory::allocate           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em>, </td>
         </tr>
         <tr>
@@ -294,7 +295,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransact
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
+          <td></td><td></td><td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -303,7 +304,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransact
 <p>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#e74aab79ea14a4ba99cdf5f9471bc9d4">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#5a7cad065e3b29a249243ea97657ba7e">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
+Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#40e783c88b3a99e298e2575ae1afe2c0">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#f6487144755081f832353805b88b0202">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
 </div>
 </div><p>
 <a class="anchor" name="2066bac464d225da0879909b2a06d7a9"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::setTransactionTime" ref="2066bac464d225da0879909b2a06d7a9" args="(double fill_time)" -->
@@ -330,14 +331,14 @@ Virtual function to set simulation time for transaction objects. This operation 
 Reimplemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#ccc88a0cab8bf6b153d8fe0e57d8b21f">SAMRAI::xfer::StandardRefineTransactionFactory</a>.
 </div>
 </div><p>
-<a class="anchor" name="8b94ab1863e0b935668930db35903f6d"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::preprocessScratchSpace" ref="8b94ab1863e0b935668930db35903f6d" args="(tbox::Pointer&lt; hier::PatchLevel &gt; level, double fill_time, const hier::ComponentSelector &amp;preprocess_vector) const " -->
+<a class="anchor" name="a48ba0fc529457fb0e75648837658088"></a><!-- doxytag: member="SAMRAI::xfer::RefineTransactionFactory::preprocessScratchSpace" ref="a48ba0fc529457fb0e75648837658088" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, double fill_time, const hier::ComponentSelector &amp;preprocess_vector) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::xfer::RefineTransactionFactory::preprocessScratchSpace           </td>
+          <td class="memname">virtual void SAMRAI::xfer::RefineTransactionFactory::preprocessScratchSpace           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -355,7 +356,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransa
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"> const<code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -366,19 +367,19 @@ Virtual function allowing transaction factory to preprocess scratch space data b
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to patch level holding scratch data. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>level</em>&nbsp;</td><td>boost::shared_ptr to patch level holding scratch data. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>fill_time</em>&nbsp;</td><td>Double value of simulation time corresponding to <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html">RefineSchedule</a> operations. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>preprocess_vector</em>&nbsp;</td><td>Const reference to ComponentSelector that indicates patch data array indices of scratch patch data objects to preprocess. </td></tr>
   </table>
 </dl>
 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#00a56a8977e23aff589c41b17b06e577">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#a12c81eda0f8cf8b77c7221490726283">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1xfer_1_1StandardRefineTransactionFactory.html#77592d9321db80ee6734f8c34f2192e4">SAMRAI::xfer::StandardRefineTransactionFactory</a>, <a class="el" href="classSAMRAI_1_1algs_1_1OuteredgeSumTransactionFactory.html#0d7cb941711ef5460360955152926221">SAMRAI::algs::OuteredgeSumTransactionFactory</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1OuternodeSumTransactionFactory.html#5d4c2a14008216480f8285d6a74f7b85">SAMRAI::algs::OuternodeSumTransactionFactory</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="RefineTransactionFactory_8h.html">RefineTransactionFactory.h</a><li>source/SAMRAI/xfer/<a class="el" href="RefineTransactionFactory_8C.html">RefineTransactionFactory.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:59 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -40,23 +40,26 @@
 <a href="classSAMRAI_1_1hier_1_1PatchDataFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#411c1ea78de35f40915b28ebe95cef20">PatchDataFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#fdfc89e5e1864ff739fa734d46013608">PatchDataFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#903632a5198a4cc72dd47d3a8f2d7017">~PatchDataFactory</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for the patch data factory class.  <a href="#903632a5198a4cc72dd47d3a8f2d7017"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#bf179906bf07b3728303846298207e06">cloneFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#8e25f724ce554c386c4942565956e5ea">cloneFactory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ghosts)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to clone a patch data factory.  <a href="#bf179906bf07b3728303846298207e06"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">PatchData</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#c13970279dce72da9f83ca8bc6aea61b">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;patch) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to clone a patch data factory.  <a href="#8e25f724ce554c386c4942565956e5ea"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">PatchData</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">allocate</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;patch) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to allocate a concrete patch data object.  <a href="#c13970279dce72da9f83ca8bc6aea61b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">BoxGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#925d25752481b06f0c036f70625380b5">getBoxGeometry</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to allocate a concrete patch data object.  <a href="#433aa56ac27f0c4bbb1ba30b4f03dd0b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">BoxGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#0714dc4177b9fa53181a4146fe31fc7d">getBoxGeometry</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to allocate a concrete box geometry object.  <a href="#925d25752481b06f0c036f70625380b5"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#a72042ab28bac47d3c92c607ebef674f">getGhostCellWidth</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to allocate a concrete box geometry object.  <a href="#0714dc4177b9fa53181a4146fe31fc7d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#d2b508accaa5f98a92aae1893d9bed94">getGhostCellWidth</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the ghost cell width.  <a href="#a72042ab28bac47d3c92c607ebef674f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the ghost cell width.  <a href="#d2b508accaa5f98a92aae1893d9bed94"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#81f1cf57f6d5e5d600b7dd439f5cdfbb">getSizeOfMemory</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box) const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function to compute the amount of memory needed to allocate for object data and to represent the object itself.  <a href="#81f1cf57f6d5e5d600b7dd439f5cdfbb"></a><br></td></tr>
@@ -66,24 +69,35 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#cf3abe526e3c8bef87fbb1288fa8f421">dataLivesOnPatchBorder</a> () const =0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if the variable data lives on patch borders; false otherwise.  <a href="#cf3abe526e3c8bef87fbb1288fa8f421"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#64fca62071266c37cc5b595fb2872454">validCopyTo</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> &gt; &amp;dst_pdf) const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#a320ad2ca244ce8393848d061683d732">validCopyTo</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> &gt; &amp;dst_pdf) const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function that returns whether the current <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> can be copied to the supplied destination <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a>.  <a href="#64fca62071266c37cc5b595fb2872454"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1MultiblockDataTranslator.html">MultiblockDataTranslator</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#7e8b851c22a1dce748919aaeaf915b5e">getMultiblockDataTranslator</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Abstract virtual function that returns whether the current <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> can be copied to the supplied destination <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a>.  <a href="#a320ad2ca244ce8393848d061683d732"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual MultiblockDataTranslator *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#7e8b851c22a1dce748919aaeaf915b5e">getMultiblockDataTranslator</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#16560e7c86cfd46c35ccd92ddf7a222a">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#530469b752e0ea7d22fcdf5094cf5f2a">getDim</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Attributes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#7e037f08a2059709e798bcd37faee464">d_ghosts</a></td></tr>
 
 </table>
+<hr><a name="_details"></a><h2>Detailed Description</h2>
+Class <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> is an abstract base class used to allocate new instances of patch data objects. Recall that patch data objects (PDs) are the data storage containers that exist within a patch. PDs are created using patch data factory (PDF) objects; this is an example of the ``Abstract Factory'' method described in the Design Patterns book by Gamma, et al.<p>
+The separation of PDF from PD simplifies the creation of new concrete PD classes since it separates the definition of the concrete class type from the actual instantiation. The actual concrete class associated with the PDF is unknown to most of the framework; the PDF only defines enough information to create the PD instance. For example, to add a new type of PD object MyPD (MyPatchData):<ul>
+<li>Derive MyPDF from PDF and implement the abstract virtual function calls as appropriate for the concrete subclass; in particular, the <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">allocate()</a> function will return an instance of MyPD.</li><li>Derive MyPD from PD and implement the abstract virtual function calls as appropriate for the concrete subclass.</li><li>When defining the types of storage needed for a patch, add MyPDF to the patch descriptor list.</li><li>Now whenever the PDF base class of MyPDF is asked to create a concrete class, it will create MyPD. The creation of concrete PD objects is managed through the <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html#433aa56ac27f0c4bbb1ba30b4f03dd0b">allocate()</a> interfaces in PDF.</li></ul>
+<p>
+In addition to the generation of patch data, the patch data factory also generates box geometry descriptions used to calculate the overlap between two patch data objects. The allocation of the box geometry object is managed by the patch data factory instead of the patch data object since patch data factories are guaranteed to exist on all of the processors independent of the mapping of patches to processors. <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> data is guaranteed to exist only on those patches local to a processor.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> <p>
+<a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">hier::PatchDescriptor</a> </dd></dl>
+
+<p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="411c1ea78de35f40915b28ebe95cef20"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::PatchDataFactory" ref="411c1ea78de35f40915b28ebe95cef20" args="(const IntVector &amp;ghosts)" -->
+<a class="anchor" name="fdfc89e5e1864ff739fa734d46013608"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::PatchDataFactory" ref="fdfc89e5e1864ff739fa734d46013608" args="(const IntVector &amp;ghosts)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::PatchDataFactory::PatchDataFactory           </td>
+          <td class="memname">SAMRAI::hier::PatchDataFactory::PatchDataFactory           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
@@ -126,12 +140,12 @@ Virtual destructor for the patch data factory class.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="bf179906bf07b3728303846298207e06"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::cloneFactory" ref="bf179906bf07b3728303846298207e06" args="(const IntVector &amp;ghosts)=0" -->
+<a class="anchor" name="8e25f724ce554c386c4942565956e5ea"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::cloneFactory" ref="8e25f724ce554c386c4942565956e5ea" args="(const IntVector &amp;ghosts)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a>&gt; SAMRAI::hier::PatchDataFactory::cloneFactory           </td>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a>&gt; SAMRAI::hier::PatchDataFactory::cloneFactory           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ghosts</em>          </td>
@@ -153,15 +167,15 @@ This will return a new instantiation of the abstract factory with the same prope
 </dl>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#e19b9b9fdf167d3fc07b0cee8e944c1c">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#5b23bc15884a71f6f06abe5ac96450fe">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#7ec1f57ff7ca847c6013a54a3afbe1e2">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#92aebc51722100b287e273c3f454253c">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#2c413bed686a495d7fd732da7fbcfe71">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#99f43b23919cb2e3570bb2e7481ae72e">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#61e287a367ed2a3421d7c80476d843dc">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#80a6bd7649c0d5dbc24a92e9428a1e64">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#9e1e6f6b803c2a93681bf65414b64ba2">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#b00b31b8b334a66ddc21d0fea24bde86">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#2aa07de6c7145a555f83f54b3a204946">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#99e6e740830ef3de6d775bdd21c3547f">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#8da49ccff6c49cd3058b36032af0d6df">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#a7ad580a791d50d615609936f50cf38b">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#af37e79881b19728ff14d8280cc3c25c">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#315c55b5d1510fdfdf77173bb425aedb">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#4c9611401700a54c52944f243e7b413b">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#1e2bb4debb2b96a2409e779d5783cc3d">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#4afd7c2f512a3b2a0877086bccebaded">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#f66902aaebc821aff844c6fbb1fc4aba">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="c13970279dce72da9f83ca8bc6aea61b"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::allocate" ref="c13970279dce72da9f83ca8bc6aea61b" args="(const Patch &amp;patch) const =0" -->
+<a class="anchor" name="433aa56ac27f0c4bbb1ba30b4f03dd0b"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::allocate" ref="433aa56ac27f0c4bbb1ba30b4f03dd0b" args="(const Patch &amp;patch) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">PatchData</a>&gt; SAMRAI::hier::PatchDataFactory::allocate           </td>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">PatchData</a>&gt; SAMRAI::hier::PatchDataFactory::allocate           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>patch</em>          </td>
@@ -177,15 +191,15 @@ Abstract virtual function to allocate a concrete patch data object.
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#49a7c66b335e688d121a7908943fdb07">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#4e42ed3dbc617cd455b1e80eddfb8c74">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#16740c735b0f1238d18835ae6bc01269">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#6aa3a9376d092a235a53e4e3a5f7bdea">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#6fecc270ac0f1c44468093e08341aa7c">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#b7e1e03329b91e265211c600f5199607">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#62904c1ae6a1e636b3dba01a8733c642">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#71d9d308f0d6ec682bf6e3c57b28ab5f">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#23911f067b307e4155d125aa46bb3418">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#d24f75306dc471e77c81eb9528345157">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#40578b7590bb50868330e375df2fee15">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#f6a5089974e6c21ecac3aae763c7b780">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#ce4d4ee6da39aef8b9cadc3d1793d65d">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#87a7878d4f4abeb4a0464af274329bfa">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#b1e28ad26e03f4e126349e87ce81b03e">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#9cc7f2a498c5e97404ff8e2b7b99b2f4">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#8b151d1f6070a8f69152c621c1d4c722">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#710947cbc53271cee5f9a9850f9effa9">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#b5e605f1cad81d5e970a41710c21873b">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#c0d87af60f78fe79d9434b075c30cac9">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="925d25752481b06f0c036f70625380b5"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getBoxGeometry" ref="925d25752481b06f0c036f70625380b5" args="(const Box &amp;box) const =0" -->
+<a class="anchor" name="0714dc4177b9fa53181a4146fe31fc7d"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getBoxGeometry" ref="0714dc4177b9fa53181a4146fe31fc7d" args="(const Box &amp;box) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">BoxGeometry</a>&gt; SAMRAI::hier::PatchDataFactory::getBoxGeometry           </td>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">BoxGeometry</a>&gt; SAMRAI::hier::PatchDataFactory::getBoxGeometry           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
@@ -201,19 +215,19 @@ Abstract virtual function to allocate a concrete box geometry object.
 <p>
 The box geometry object will be used in the calculation of box intersections for the computation of data dependencies. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#fca19d9cddefd29b6010bb490adda437">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#fe999a74c83262b81c5f7006e1065dc6">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#65e0293d09ed1049cef76e0a1165908b">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#700b0beabe6c839576cda08342ebdfcd">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#f0a6a3087bf054b160f35cc9d1b43b0a">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#3f4bffc8d466301e2e3b94aa91cefda0">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#76dbd2acbaf3a8a96a80e99f89c2b381">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#59d3063092c91a732ce8441500b7d755">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#96e46f247ae753e534077defe3a85e4c">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#a82b67dd9c2269b027621679fa021314">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#594feae13d5f1ccd8c883f059002f15e">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#163e0a8c2f77da53cf4bff1860e00cd9">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#c015dd85874b9f30c8f81f6f5156cf2b">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#8c291fedfbf35dfd06419af24613c3a2">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#c7d009ffeff5a61962fedb45072bea5c">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#af2faf6f87ba87ff037b9499d779f9ef">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#123262d8f00d2215ef96a82685cf58d3">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#534759e4299aaae7a327cafd716df503">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#ff834d1b6a116f7201cf91c53cbcc67c">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#aeadd90793ad5752fd7f0817543c2e11">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="a72042ab28bac47d3c92c607ebef674f"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getGhostCellWidth" ref="a72042ab28bac47d3c92c607ebef674f" args="() const " -->
+<a class="anchor" name="d2b508accaa5f98a92aae1893d9bed94"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getGhostCellWidth" ref="d2b508accaa5f98a92aae1893d9bed94" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::hier::PatchDataFactory::getGhostCellWidth           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&amp; SAMRAI::hier::PatchDataFactory::getGhostCellWidth           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -295,14 +309,14 @@ The boolean return value is supplied by the concrete patch data factory subclass
 Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#9e696cd9841a94b7e5007da105f9f6aa">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#d253cbd3cbc07705997846f5266cbe16">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#55b2efb81f6e0d24e3e607f0777a8bb0">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#ccf9dbbbaadd938ddd2c264d1387f6c7">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#44f4e136320a67b1e253dc4c1307a732">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#232f11c13b0984c694c0ad38e96b9448">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#56bb97454ddb1a63b75b3033d893707e">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#8d55e4ff118fe95c9eb80e59b0727719">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#7a3a8637cb11e30f82d6e5a428e6700e">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#b9cff5f9eb90d88a66833055d652b35f">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="64fca62071266c37cc5b595fb2872454"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::validCopyTo" ref="64fca62071266c37cc5b595fb2872454" args="(const tbox::Pointer&lt; PatchDataFactory &gt; &amp;dst_pdf) const =0" -->
+<a class="anchor" name="a320ad2ca244ce8393848d061683d732"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::validCopyTo" ref="a320ad2ca244ce8393848d061683d732" args="(const boost::shared_ptr&lt; PatchDataFactory &gt; &amp;dst_pdf) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual bool SAMRAI::hier::PatchDataFactory::validCopyTo           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_pdf</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"> const<code> [pure virtual]</code></td>
@@ -315,8 +329,6 @@ Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#9
 Abstract virtual function that returns whether the current <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a> can be copied to the supplied destination <a class="el" href="classSAMRAI_1_1hier_1_1PatchDataFactory.html">PatchDataFactory</a>. 
 <p>
 Mechanisms to check for valid types are implemented in the patch data factory subclasses for particular datatypes. 
-<p>
-Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#542132b0b5607e77424ededb59c78455">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#825e33ea00fc7f3cea17bffa47b4ffc5">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#a4a72ba976e5f93245dcfb5236b2e87b">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1IndexDataFactory.html#8c2f03eb088aed0e81f8192157263a2e">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#f349de3a20dc1dc7258d661d677bf3e9">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeDataFactory.html#80b60e6bc1103d4b4dc85415f8ff70e8">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuterfaceDataFactory.html#54715d05457c1f45073034fa5d94f7f4">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OuternodeDataFactory.html#78c9e430639d9c93180a838ead7ddda7">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1OutersideDataFactory.html#51b55e535ee1d1ecd4ec37d9b8467879">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#3c584e66d778abe0c8c3c2d7e41c5302">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="7e8b851c22a1dce748919aaeaf915b5e"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getMultiblockDataTranslator" ref="7e8b851c22a1dce748919aaeaf915b5e" args="()" -->
@@ -324,7 +336,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#5
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1MultiblockDataTranslator.html">MultiblockDataTranslator</a> * SAMRAI::hier::PatchDataFactory::getMultiblockDataTranslator           </td>
+          <td class="memname">MultiblockDataTranslator * SAMRAI::hier::PatchDataFactory::getMultiblockDataTranslator           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -336,20 +348,18 @@ Implemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#5
 
 <p>
 
-<p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1pdat_1_1CellDataFactory.html#44359bd9ada9f2711226354d913a883f">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeDataFactory.html#36383dff1772d5554cad6c23a21830c7">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDataFactory.html#015736f9c6bf87fe1eb5682eeafd6a6f">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1pdat_1_1NodeDataFactory.html#7ad0b172527f2b0f050b68e588b53060">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1pdat_1_1SideDataFactory.html#37dddcd3fe50eac6ced5ad9e1cd05b4d">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;</a>.
 </div>
 </div><p>
-<a class="anchor" name="16560e7c86cfd46c35ccd92ddf7a222a"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getDim" ref="16560e7c86cfd46c35ccd92ddf7a222a" args="() const " -->
+<a class="anchor" name="530469b752e0ea7d22fcdf5094cf5f2a"></a><!-- doxytag: member="SAMRAI::hier::PatchDataFactory::getDim" ref="530469b752e0ea7d22fcdf5094cf5f2a" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::hier::PatchDataFactory::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::PatchDataFactory::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -376,8 +386,8 @@ Return the dimension of this object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8h.html">PatchDataFactory.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8C.html">PatchDataFactory.C</a><li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8I.html">PatchDataFactory.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8h.html">PatchDataFactory.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchDataFactory_8C.html">PatchDataFactory.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

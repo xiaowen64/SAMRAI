@@ -40,25 +40,25 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#8891057496e99d949ed6633096a3dcf4">AsyncCommGroup</a> (const size_t nchild, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a> *stage, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">AsyncCommStage::Handler</a> *handler=NULL)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct communication group.  <a href="#8891057496e99d949ed6633096a3dcf4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#ea4758e70c3ee13257cb04fe262291f7">~AsyncCommGroup</a> (void)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#3f4a78911a8ffafbd6eba4ec88d6e1c9">~AsyncCommGroup</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#ea4758e70c3ee13257cb04fe262291f7"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#3f4a78911a8ffafbd6eba4ec88d6e1c9"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#92054b7a0619bf59eafef7e6d7fc9614">initialize</a> (const int nchild, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a> *stage, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">AsyncCommStage::Handler</a> *handler=NULL)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize the object.  <a href="#92054b7a0619bf59eafef7e6d7fc9614"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#4bf0558cac92526b0e000e72efbfcf8c">setMPITag</a> (const int mpi_tag)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#48cddb46333c3ea51bf6e10ff85e60eb">setMPITag</a> (const int mpi_tag)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the MPI tag used for communication within the group.  <a href="#4bf0558cac92526b0e000e72efbfcf8c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#1106977ff3c89b06484449e784691fe8">setUseMPICollectiveForFullGroups</a> (bool use_mpi_collective=true)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the MPI tag used for communication within the group.  <a href="#48cddb46333c3ea51bf6e10ff85e60eb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#e84ef83052ede5e67a4a81003bb78727">setUseMPICollectiveForFullGroups</a> (bool use_mpi_collective=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use native MPI collective function calls when group includes all ranks in the MPI communicator.  <a href="#1106977ff3c89b06484449e784691fe8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#62ec7934413b27f55cef1a7351577ca8">setUseBlockingSendToParent</a> (const bool flag)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use native MPI collective function calls when group includes all ranks in the MPI communicator.  <a href="#e84ef83052ede5e67a4a81003bb78727"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#77af32fee36634efa030ef9891dc9742">setUseBlockingSendToParent</a> (const bool flag)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether sends to parents should be blocking.  <a href="#62ec7934413b27f55cef1a7351577ca8"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#13fc47f58f61fdb68fcb963039a5b88f">setUseBlockingSendToChildren</a> (const bool flag)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether sends to parents should be blocking.  <a href="#77af32fee36634efa030ef9891dc9742"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#8644f02f692b4969e0db3082812d3c4a">setUseBlockingSendToChildren</a> (const bool flag)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether sends to children should be blocking.  <a href="#13fc47f58f61fdb68fcb963039a5b88f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#0e14f541574e79e0003c17442ae9139e">getNumberOfChildren</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether sends to children should be blocking.  <a href="#8644f02f692b4969e0db3082812d3c4a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#102a0b18bbe8bc82ff3a2736f5f5df3e">getNumberOfChildren</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#324e958f59593e4068af89b1642f14d6">logCurrentState</a> (std::ostream &amp;co) const </td></tr>
 
@@ -91,9 +91,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#defc051a154c31e28cb0709552a5250f">proceedToNextWait</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check the current communication and complete it if all MPI requests are fulfilled.  <a href="#defc051a154c31e28cb0709552a5250f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#693ccf3a0b648a27baebba6263129746">isDone</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#a7fc4d297537864970dd318677d7a220">isDone</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether the last communication operation has finished.  <a href="#693ccf3a0b648a27baebba6263129746"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Whether the last communication operation has finished.  <a href="#a7fc4d297537864970dd318677d7a220"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#a2e47f7dd4a2b518723664ebef6796a1">completeCurrentOperation</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Wait for the current operation to complete.  <a href="#a2e47f7dd4a2b518723664ebef6796a1"></a><br></td></tr>
@@ -160,7 +160,7 @@ Default constructor does not set up anything. You must <a class="el" href="class
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -173,19 +173,20 @@ The number of children per node is flexible.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>nchild</em>&nbsp;</td><td>Number of children per tree node in the group, i.e., nchild=2 is a binary tree. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stage</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>handler</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="ea4758e70c3ee13257cb04fe262291f7"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::~AsyncCommGroup" ref="ea4758e70c3ee13257cb04fe262291f7" args="(void)" -->
+<a class="anchor" name="3f4a78911a8ffafbd6eba4ec88d6e1c9"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::~AsyncCommGroup" ref="3f4a78911a8ffafbd6eba4ec88d6e1c9" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::tbox::AsyncCommGroup::~AsyncCommGroup           </td>
           <td>(</td>
-          <td class="paramtype">void&nbsp;</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -332,12 +333,12 @@ Setup the group for the given group. The root process is specified by its rank.
 The rank of the root is root_rank, which must be one of the ranks given in the group. 
 </div>
 </div><p>
-<a class="anchor" name="4bf0558cac92526b0e000e72efbfcf8c"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setMPITag" ref="4bf0558cac92526b0e000e72efbfcf8c" args="(const int mpi_tag)" -->
+<a class="anchor" name="48cddb46333c3ea51bf6e10ff85e60eb"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setMPITag" ref="48cddb46333c3ea51bf6e10ff85e60eb" args="(const int mpi_tag)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::AsyncCommGroup::setMPITag           </td>
+          <td class="memname">void SAMRAI::tbox::AsyncCommGroup::setMPITag           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>mpi_tag</em>          </td>
@@ -355,12 +356,12 @@ Set the MPI tag used for communication within the group.
 
 </div>
 </div><p>
-<a class="anchor" name="1106977ff3c89b06484449e784691fe8"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setUseMPICollectiveForFullGroups" ref="1106977ff3c89b06484449e784691fe8" args="(bool use_mpi_collective=true)" -->
+<a class="anchor" name="e84ef83052ede5e67a4a81003bb78727"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setUseMPICollectiveForFullGroups" ref="e84ef83052ede5e67a4a81003bb78727" args="(bool use_mpi_collective=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::AsyncCommGroup::setUseMPICollectiveForFullGroups           </td>
+          <td class="memname">void SAMRAI::tbox::AsyncCommGroup::setUseMPICollectiveForFullGroups           </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>use_mpi_collective</em> = <code>true</code>          </td>
@@ -377,17 +378,17 @@ Set whether to use native MPI collective function calls when group includes all 
 This option is off by default to avoid MPI lock-ups. If you use it, make sure all processors can get to the collective operation to avoid lock-ups. 
 </div>
 </div><p>
-<a class="anchor" name="62ec7934413b27f55cef1a7351577ca8"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToParent" ref="62ec7934413b27f55cef1a7351577ca8" args="(const bool flag)" -->
+<a class="anchor" name="77af32fee36634efa030ef9891dc9742"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToParent" ref="77af32fee36634efa030ef9891dc9742" args="(const bool flag)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToParent           </td>
+          <td class="memname">void SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToParent           </td>
           <td>(</td>
           <td class="paramtype">const bool&nbsp;</td>
           <td class="paramname"> <em>flag</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -399,17 +400,17 @@ Set whether sends to parents should be blocking.
 The default is to use blocking send to parent. Because there is just one parent, short messages can be buffered by MPI to improve the performance of blocking sends. Blocking sends need not be checked for completion. 
 </div>
 </div><p>
-<a class="anchor" name="13fc47f58f61fdb68fcb963039a5b88f"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToChildren" ref="13fc47f58f61fdb68fcb963039a5b88f" args="(const bool flag)" -->
+<a class="anchor" name="8644f02f692b4969e0db3082812d3c4a"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToChildren" ref="8644f02f692b4969e0db3082812d3c4a" args="(const bool flag)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToChildren           </td>
+          <td class="memname">void SAMRAI::tbox::AsyncCommGroup::setUseBlockingSendToChildren           </td>
           <td>(</td>
           <td class="paramtype">const bool&nbsp;</td>
           <td class="paramname"> <em>flag</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -586,7 +587,7 @@ Buffer should contain the data to be gathered.<p>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -622,12 +623,12 @@ Check the current communication and complete it if all MPI requests are fulfille
 Implements <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#cfd165b72b53fc4c7dd206bfd5490049">SAMRAI::tbox::AsyncCommStage::Member</a>.
 </div>
 </div><p>
-<a class="anchor" name="693ccf3a0b648a27baebba6263129746"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::isDone" ref="693ccf3a0b648a27baebba6263129746" args="() const " -->
+<a class="anchor" name="a7fc4d297537864970dd318677d7a220"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::isDone" ref="a7fc4d297537864970dd318677d7a220" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::tbox::AsyncCommGroup::isDone           </td>
+          <td class="memname">bool SAMRAI::tbox::AsyncCommGroup::isDone           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -668,16 +669,16 @@ Wait for the current operation to complete.
 Implements <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#656fcd6b8b0ac508d5b0134acc92b7b7">SAMRAI::tbox::AsyncCommStage::Member</a>.
 </div>
 </div><p>
-<a class="anchor" name="0e14f541574e79e0003c17442ae9139e"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::getNumberOfChildren" ref="0e14f541574e79e0003c17442ae9139e" args="() const " -->
+<a class="anchor" name="102a0b18bbe8bc82ff3a2736f5f5df3e"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommGroup::getNumberOfChildren" ref="102a0b18bbe8bc82ff3a2736f5f5df3e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::tbox::AsyncCommGroup::getNumberOfChildren           </td>
+          <td class="memname">int SAMRAI::tbox::AsyncCommGroup::getNumberOfChildren           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -708,8 +709,8 @@ Implements <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/tbox/<a class="el" href="AsyncCommGroup_8h.html">AsyncCommGroup.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommGroup_8C.html">AsyncCommGroup.C</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommGroup_8I.html">AsyncCommGroup.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/tbox/<a class="el" href="AsyncCommGroup_8h.html">AsyncCommGroup.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommGroup_8C.html">AsyncCommGroup.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

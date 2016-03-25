@@ -34,9 +34,9 @@
 <a href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#915f48e9703b42accd4f282cffd9564b">ChopAndPackLoadBalancer</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;(NULL))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#2d514a3f7dc5c7defafea6c163d12b3f">ChopAndPackLoadBalancer</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#82e0075fc9845f8cee2fa03dcc0a7a89">ChopAndPackLoadBalancer</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;(NULL))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#05062ec6c23937fbbd0040d61751882a">ChopAndPackLoadBalancer</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#91c03cd738068c6c80177ce6326fe270">~ChopAndPackLoadBalancer</a> ()</td></tr>
 
@@ -54,11 +54,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#88e41115102265dd474ae40a0c19635a">getLoadBalanceDependsOnPatchData</a> (int level_number) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#940c2313b1ebc0ef9e6c6041274ff341">loadBalanceBoxLevel</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balance_mapped_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;balance_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;anchor_to_balance, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;unbalanced_to_attractor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;attractor_to_unbalanced, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;domain_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> &amp;rank_group=<a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a>()) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#f0b2801c28b98244bfd71424561a5416">loadBalanceBoxLevel</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balance_mapped_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;balance_to_anchor, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;anchor_to_balance, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;unbalanced_to_attractor, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;attractor_to_unbalanced, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;min_size, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_size, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;domain_mapped_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;bad_interval, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;cut_factor, const <a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a> &amp;rank_group=<a class="el" href="classSAMRAI_1_1tbox_1_1RankGroup.html">tbox::RankGroup</a>()) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#42e6dbae77e062f03987860048de660a">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#b24c2ba6706f1837ea70c1c61f770e8f">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1ChopAndPackLoadBalancer.html#f1683fe54b6aef6f0eac0960e3a7fe2f">getObjectName</a> () const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -107,7 +107,7 @@ Performance warning: This class implements a sequential algorithm. The time it t
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="915f48e9703b42accd4f282cffd9564b"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::ChopAndPackLoadBalancer" ref="915f48e9703b42accd4f282cffd9564b" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, tbox::Pointer&lt; tbox::Database &gt; input_db=tbox::Pointer&lt; tbox::Database &gt;(NULL))" -->
+<a class="anchor" name="2d514a3f7dc5c7defafea6c163d12b3f"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::ChopAndPackLoadBalancer" ref="2d514a3f7dc5c7defafea6c163d12b3f" args="(const tbox::Dimension &amp;dim, const std::string &amp;name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -126,8 +126,8 @@ Performance warning: This class implements a sequential algorithm. The time it t
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>input_db</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -142,14 +142,15 @@ Performance warning: This class implements a sequential algorithm. The time it t
 Construct load balancer object, including setting default object state and reading input data from the input data base, if required.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>name</em>&nbsp;</td><td>User-defined string identifier used for error reporting. This string must be non-empty. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>input_db</em>&nbsp;</td><td>(optional) database pointer providing parameters from input file. This pointer may be null indicating no input will be read. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>name</em>&nbsp;</td><td>User-defined string identifier used for error reporting. This string must be non-empty. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td>(optional) database pointer providing parameters from input file. This pointer may be null indicating no input will be read. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="82e0075fc9845f8cee2fa03dcc0a7a89"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::ChopAndPackLoadBalancer" ref="82e0075fc9845f8cee2fa03dcc0a7a89" args="(const tbox::Dimension &amp;dim, tbox::Pointer&lt; tbox::Database &gt; input_db=tbox::Pointer&lt; tbox::Database &gt;(NULL))" -->
+<a class="anchor" name="05062ec6c23937fbbd0040d61751882a"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::ChopAndPackLoadBalancer" ref="05062ec6c23937fbbd0040d61751882a" args="(const tbox::Dimension &amp;dim, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -162,13 +163,13 @@ Construct load balancer object, including setting default object state and readi
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>input_db</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -178,7 +179,8 @@ Construct load balancer object, including setting default object state and readi
 Construct load balancer object, including setting default object state and reading input data from the input data base, if required. The only difference between this constructor and the previous one is the string identifier input. If this constructor is used, the default object name "ChopAndPackLoadBalancer" applies.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>input_db</em>&nbsp;</td><td>(optional) database pointer providing parameters from input file. This pointer may be null indicating no input will be read. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>input_db</em>&nbsp;</td><td>(optional) database pointer providing parameters from input file. This pointer may be null indicating no input will be read. </td></tr>
   </table>
 </dl>
 
@@ -269,7 +271,7 @@ Set the max workload factor for either the specified level or all hierarchy leve
 Set the workload tolerance for either the specified level or all hierarchy levels. See discussion about inputs above for information on how this value is used during load balancing operations.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>factor</em>&nbsp;</td><td>Double value of tolerance. The default value is 0.0;</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>tolerance</em>&nbsp;</td><td>Double value of tolerance. The default value is 0.0;</td></tr>
     <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>Optional integer number for level to which factor is applied. If no value is given, the value will be used for all levels. </td></tr>
   </table>
 </dl>
@@ -384,7 +386,7 @@ Configure the load balancer to use the bin-packing procedure for mapping patches
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>flag</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -429,7 +431,7 @@ Return true if load balancing procedure for given level depends on patch data on
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1b1525f4eafbf028b8585def7a19541b">SAMRAI::mesh::LoadBalanceStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="940c2313b1ebc0ef9e6c6041274ff341"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::loadBalanceBoxLevel" ref="940c2313b1ebc0ef9e6c6041274ff341" args="(hier::BoxLevel &amp;balance_mapped_box_level, hier::Connector &amp;balance_to_anchor, hier::Connector &amp;anchor_to_balance, const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int level_number, const hier::Connector &amp;unbalanced_to_attractor, const hier::Connector &amp;attractor_to_unbalanced, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_mapped_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const " -->
+<a class="anchor" name="f0b2801c28b98244bfd71424561a5416"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::loadBalanceBoxLevel" ref="f0b2801c28b98244bfd71424561a5416" args="(hier::BoxLevel &amp;balance_mapped_box_level, hier::Connector &amp;balance_to_anchor, hier::Connector &amp;anchor_to_balance, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const hier::Connector &amp;unbalanced_to_attractor, const hier::Connector &amp;attractor_to_unbalanced, const hier::IntVector &amp;min_size, const hier::IntVector &amp;max_size, const hier::BoxLevel &amp;domain_mapped_box_level, const hier::IntVector &amp;bad_interval, const hier::IntVector &amp;cut_factor, const tbox::RankGroup &amp;rank_group=tbox::RankGroup()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -454,7 +456,7 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#1
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -525,23 +527,24 @@ Given a list of boxes, representing the domain of a level in the AMR hierarchy, 
 The load balancing algorithm should ignore any periodic image Boxes in the input balance_mapped_box_level.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>out_boxes</em>&nbsp;</td><td>Output box array for generating patches on level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>mapping</em>&nbsp;</td><td>Output processor mapping for patches on level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>in_boxes</em>&nbsp;</td><td>Input box list representing union of patches on level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>balance_mapped_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>anchor_to_balance</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>Input patch hierarchy in which level will reside. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>level_number</em>&nbsp;</td><td>Input integer number of level in patch hierarchy. This value must be &gt;= 0. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>physical_domain</em>&nbsp;</td><td>Array of boxes describing the physical extent of the problem domain in the index space associated with the level. This box array cannot be empty. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ratio_to_hierarchy_level_zero</em>&nbsp;</td><td>Input integer vector indicating ratio between index space of level to load balance and hierarchy level 0 (i.e., coarsest hierarchy level). </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>unbalanced_to_attractor</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>attractor_to_unbalanced</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>min_size</em>&nbsp;</td><td>Input integer vector of minimum dimensions for output boxes. All entries must be &gt; 0. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>max_size</em>&nbsp;</td><td>Input integer vector of maximum dimensions for output boxes. All entries must be &gt;= min_size. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct dimensions. The length of each box dimension will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>domain_mapped_box_level</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>bad_interval</em>&nbsp;</td><td>Input integer vector used to create boxes near physical domain boundary with sufficient number of cells. No box face will be closer to the boundary than the corresponding interval of cells to the boundary (the corresponding value is given by the normal direction of the box face) unless the face coincides with the boundary itself. The point of this argument is to have no patch live within a certain ghost cell width of the boundary if its boundary does not coincide with that boundary . That is, all ghost cells along a face will be either in the domain interior or outside the domain. All entries must be &gt;= 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>cut_factor</em>&nbsp;</td><td>Input integer vector used to create boxes with correct dimensions. The length of each box dimension will be an integer multiple of the corresponding cut factor vector entry. All vector entries must be &gt; 0. See <a class="el" href="structSAMRAI_1_1hier_1_1BoxUtilities.html">hier::BoxUtilities</a> documentation for more details. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>rank_group</em>&nbsp;</td><td>Needed for compatibility with parent class. This argument is ignored. </td></tr>
   </table>
 </dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#cb85a8a274e199dd7d10dd7c9288c148">SAMRAI::mesh::LoadBalanceStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#e5a2078b10f2a9727fb406074b593f64">SAMRAI::mesh::LoadBalanceStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="42e6dbae77e062f03987860048de660a"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::printClassData" ref="42e6dbae77e062f03987860048de660a" args="(std::ostream &amp;os) const " -->
@@ -564,16 +567,16 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#c
 Print out all members of the class instance to given output stream. 
 </div>
 </div><p>
-<a class="anchor" name="b24c2ba6706f1837ea70c1c61f770e8f"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::getObjectName" ref="b24c2ba6706f1837ea70c1c61f770e8f" args="() const " -->
+<a class="anchor" name="f1683fe54b6aef6f0eac0960e3a7fe2f"></a><!-- doxytag: member="SAMRAI::mesh::ChopAndPackLoadBalancer::getObjectName" ref="f1683fe54b6aef6f0eac0960e3a7fe2f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::mesh::ChopAndPackLoadBalancer::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::mesh::ChopAndPackLoadBalancer::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -586,8 +589,8 @@ Returns the name of this object.<p>
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/mesh/<a class="el" href="ChopAndPackLoadBalancer_8h.html">ChopAndPackLoadBalancer.h</a><li>source/SAMRAI/mesh/<a class="el" href="ChopAndPackLoadBalancer_8C.html">ChopAndPackLoadBalancer.C</a><li>source/SAMRAI/mesh/<a class="el" href="ChopAndPackLoadBalancer_8I.html">ChopAndPackLoadBalancer.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/mesh/<a class="el" href="ChopAndPackLoadBalancer_8h.html">ChopAndPackLoadBalancer.h</a><li>source/SAMRAI/mesh/<a class="el" href="ChopAndPackLoadBalancer_8C.html">ChopAndPackLoadBalancer.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

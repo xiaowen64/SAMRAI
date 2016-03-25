@@ -44,31 +44,31 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#f485d275c43539dafbf2e1dd49ec75f7">singleStep</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double dt, const double alpha_1, const double alpha_2, const double beta) const =0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#6716b4dbc826aac199d4f0333b514071">tagGradientDetectorCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#979c6e894c22554743a23b99739b1ab6">tagGradientDetectorCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)=0</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#668799adc09b7daf8ebc70b2e42e468b">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#ca5e9dcdd92b8a4f1854fd8c380d4ccd">getRefineOpStencilWidth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#5822403c640c893facfa44efeb1f1ddf">getRefineOpStencilWidth</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#9f2177c83b08c26e64cad592596362b4">preprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#4d37035315c65676bafe6d874ffe6ae3">preprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3349efc98f6723722667845cafc4331b">postprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#4c180ee265bc9c30dd9c8bf35c47929c">postprocessRefine</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fine_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#3349efc98f6723722667845cafc4331b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#b4de45d0c0fcc7579194760edaaa25e2">getCoarsenOpStencilWidth</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data refinement operations.  <a href="#4c180ee265bc9c30dd9c8bf35c47929c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#d359338662d314f3c422921b0666cfed">getCoarsenOpStencilWidth</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#6ecbada7a80d8ee71b8fb65d9c173bf9">preprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#5d89843869aba61b1cb058de5af71799">preprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#b7df1fdfa6dd40c99fb692a489a5a301">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3df150d71e6a02ecd5f9db9eedd8d5c5">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#b7df1fdfa6dd40c99fb692a489a5a301"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#75ec0f87352faca2543aa21c622fc2cc">getInteriorWithGhostsContext</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#3df150d71e6a02ecd5f9db9eedd8d5c5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#9f800adf74e19e5549d4c716dc0a9444">getInteriorWithGhostsContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#f27b56fe669c4b07f0cc631383d40b7e">getInteriorContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#eff4b1fb760c7eaec6dab9f4b771dc3c">getInteriorContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#f03d76662f290b0f962da0f0ae620df9">setInteriorWithGhostsContext</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3b7df58e74934006d68972e0647bf8f2">setInteriorWithGhostsContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#6199c4ed20e37f290579379ad5f853c3">setInteriorContext</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#74e826b840ca48dbc174b0f5d31b2f3b">setInteriorContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#c84b57386287c74dd3f326f182ef3172">getDim</a> () const </td></tr>
 
@@ -92,7 +92,7 @@ Class <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -139,7 +139,7 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesP
 <div class="memdoc">
 
 <p>
-Register variables specific to the problem to be solved with the integrator using the registerVariable function. This defines the way data for each quantity will be manipulated on the patches. For more information, refer to <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#2b607c92dafd14a8b010e44a847c46ac">MethodOfLinesIntegrator::registerVariable</a>. 
+Register variables specific to the problem to be solved with the integrator using the registerVariable function. This defines the way data for each quantity will be manipulated on the patches. For more information, refer to <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#df9e494270964a2ec6d162bb6b7f8e4b">MethodOfLinesIntegrator::registerVariable</a>. 
 </div>
 </div><p>
 <a class="anchor" name="12b6eb8c71e53d24efb9e91d0fe645cf"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::initializeDataOnPatch" ref="12b6eb8c71e53d24efb9e91d0fe645cf" args="(hier::Patch &amp;patch, const double time, const bool initial_time) const =0" -->
@@ -263,7 +263,7 @@ Advance a single Runge Kutta step.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="6716b4dbc826aac199d4f0333b514071"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::tagGradientDetectorCells" ref="6716b4dbc826aac199d4f0333b514071" args="(hier::Patch &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)" -->
+<a class="anchor" name="979c6e894c22554743a23b99739b1ab6"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::tagGradientDetectorCells" ref="979c6e894c22554743a23b99739b1ab6" args="(hier::Patch &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -300,7 +300,7 @@ Advance a single Runge Kutta step.<p>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -347,16 +347,16 @@ Set user-defined boundary conditions at the physical domain boundary.
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#428a5d166ab97a9ce9c8344685817b26">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="ca5e9dcdd92b8a4f1854fd8c380d4ccd"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getRefineOpStencilWidth" ref="ca5e9dcdd92b8a4f1854fd8c380d4ccd" args="() const " -->
+<a class="anchor" name="5822403c640c893facfa44efeb1f1ddf"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getRefineOpStencilWidth" ref="5822403c640c893facfa44efeb1f1ddf" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::algs::MethodOfLinesPatchStrategy::getRefineOpStencilWidth           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::algs::MethodOfLinesPatchStrategy::getRefineOpStencilWidth           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline, virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -368,7 +368,7 @@ Return maximum stencil width needed for user-defined data interpolation operatio
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#ac3c39692c90393a6748ea7a4f52facd">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="9f2177c83b08c26e64cad592596362b4"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::preprocessRefine" ref="9f2177c83b08c26e64cad592596362b4" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="4d37035315c65676bafe6d874ffe6ae3"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::preprocessRefine" ref="4d37035315c65676bafe6d874ffe6ae3" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -399,7 +399,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#a
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -409,14 +409,14 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#a
 Pre- and post-processing routines for implementing user-defined spatial interpolation routines applied to variables. The interpolation routines are used in the MOL AMR algorithm for filling patch ghost cells before advancing data on a level and after regridding a level to fill portions of the new level from some coarser level. These routines are called automatically from within patch boundary filling schedules; thus, some concrete function matching these signatures must be provided in the user's patch model. However, the routines only need to perform some operations when "USER_DEFINED_REFINE" is given as the interpolation method for some variable when the patch model registers variables with the MOL integration algorithm, typically. If the user does not provide operations that refine such variables in either of these routines, then they will not be refined.<p>
 The order in which these operations are used in each patch boundary filling schedule is:<p>
 <ul>
-<li><b></b>(1) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#9f2177c83b08c26e64cad592596362b4">preprocessRefine()</a> routine.}</li><li><b></b>(2) {Refine all variables with standard interpolation operators.}</li><li><b></b>(3) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3349efc98f6723722667845cafc4331b">postprocessRefine()</a> routine.}</li></ul>
+<li><b></b>(1) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#4d37035315c65676bafe6d874ffe6ae3">preprocessRefine()</a> routine.}</li><li><b></b>(2) {Refine all variables with standard interpolation operators.}</li><li><b></b>(3) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#4c180ee265bc9c30dd9c8bf35c47929c">postprocessRefine()</a> routine.}</li></ul>
 <p>
 Also, user routines that implement these functions must use data corresponding to the d_scratch context on both coarse and fine patches. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c5d1588459650fb4ff5f7c5dd66ece46">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="3349efc98f6723722667845cafc4331b"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::postprocessRefine" ref="3349efc98f6723722667845cafc4331b" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="4c180ee265bc9c30dd9c8bf35c47929c"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::postprocessRefine" ref="4c180ee265bc9c30dd9c8bf35c47929c" args="(hier::Patch &amp;fine, const hier::Patch &amp;coarse, const hier::Box &amp;fine_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -447,7 +447,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#c
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -470,16 +470,16 @@ This member function is called after standard refine operations (expressed using
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html#bd5a91534d2cd570b23e679555e4cf27">SAMRAI::xfer::RefinePatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="b4de45d0c0fcc7579194760edaaa25e2"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth" ref="b4de45d0c0fcc7579194760edaaa25e2" args="() const " -->
+<a class="anchor" name="d359338662d314f3c422921b0666cfed"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth" ref="d359338662d314f3c422921b0666cfed" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::algs::MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> SAMRAI::algs::MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [inline, virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -491,7 +491,7 @@ Return maximum stencil width needed for user-defined data coarsen operations. De
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#50c94be067e77211d1c3b5c1e6c3b082">SAMRAI::xfer::CoarsenPatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="6ecbada7a80d8ee71b8fb65d9c173bf9"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::preprocessCoarsen" ref="6ecbada7a80d8ee71b8fb65d9c173bf9" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="5d89843869aba61b1cb058de5af71799"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::preprocessCoarsen" ref="5d89843869aba61b1cb058de5af71799" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -522,7 +522,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -532,14 +532,14 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#
 Pre- and post-processing routines for implementing user-defined spatial coarsening routines applied to variables. The coarsening routines are used in the MOL AMR algorithm synchronizing coarse and fine levels when they have been integrated to the same point. These routines are called automatically from within the data synchronization coarsen schedules; thus, some concrete function matching these signatures must be provided in the user's patch model. However, the routines only need to perform some operations when "USER_DEFINED_COARSEN" is given as the coarsening method for some variable when the patch model registers variables with the MOL level integration algorithm, typically. If the user does not provide operations that coarsen such variables in either of these routines, then they will not be coarsened.<p>
 The order in which these operations are used in each coarsening schedule is:<p>
 <ul>
-<li><b></b>(1) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#6ecbada7a80d8ee71b8fb65d9c173bf9">preprocessCoarsen()</a> routine.}</li><li><b></b>(2) {Coarsen all variables with standard coarsening operators.}</li><li><b></b>(3) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#b7df1fdfa6dd40c99fb692a489a5a301">postprocessCoarsen()</a> routine.}</li></ul>
+<li><b></b>(1) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#5d89843869aba61b1cb058de5af71799">preprocessCoarsen()</a> routine.}</li><li><b></b>(2) {Coarsen all variables with standard coarsening operators.}</li><li><b></b>(3) {Call user's <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesPatchStrategy.html#3df150d71e6a02ecd5f9db9eedd8d5c5">postprocessCoarsen()</a> routine.}</li></ul>
 <p>
 Also, user routines that implement these functions must use corresponding to the d_new context on both coarse and fine patches for time-dependent quantities. 
 <p>
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#0814ce9491959240638a20bd848a2350">SAMRAI::xfer::CoarsenPatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="b7df1fdfa6dd40c99fb692a489a5a301"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::postprocessCoarsen" ref="b7df1fdfa6dd40c99fb692a489a5a301" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="3df150d71e6a02ecd5f9db9eedd8d5c5"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::postprocessCoarsen" ref="3df150d71e6a02ecd5f9db9eedd8d5c5" args="(hier::Patch &amp;coarse, const hier::Patch &amp;fine, const hier::Box &amp;coarse_box, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -570,7 +570,7 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -582,10 +582,10 @@ Perform user-defined patch data coarsening operations.
 This member function is called after standard coarsening operations (expressed using concrete subclasses of the CoarsenOperator base class). The postprocess function should move data from the source components on the fine patch into the source components on the coarse patch in the specified coarse box region. Recall that the source components are specified in calls to the registerCoarsen() function in the CoarsenAlgorithm class.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>coarse[out]</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fine[in]</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>coarse_box[in]</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ratio[in]</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
   </table>
 </dl>
 
@@ -593,12 +593,12 @@ This member function is called after standard coarsening operations (expressed u
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#a2d42bd7e5e5b39581df0d5a15059a33">SAMRAI::xfer::CoarsenPatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="75ec0f87352faca2543aa21c622fc2cc"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorWithGhostsContext" ref="75ec0f87352faca2543aa21c622fc2cc" args="() const " -->
+<a class="anchor" name="9f800adf74e19e5549d4c716dc0a9444"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorWithGhostsContext" ref="9f800adf74e19e5549d4c716dc0a9444" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorWithGhostsContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorWithGhostsContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -613,12 +613,12 @@ The method of lines integrator controls the context for the data to be used in t
 Return pointer to data context with ghost cells. 
 </div>
 </div><p>
-<a class="anchor" name="f27b56fe669c4b07f0cc631383d40b7e"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorContext" ref="f27b56fe669c4b07f0cc631383d40b7e" args="() const " -->
+<a class="anchor" name="eff4b1fb760c7eaec6dab9f4b771dc3c"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorContext" ref="eff4b1fb760c7eaec6dab9f4b771dc3c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::MethodOfLinesPatchStrategy::getInteriorContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -632,14 +632,14 @@ Return pointer to data context with ghost cells.
 Return pointer to data context with NO ghosts. 
 </div>
 </div><p>
-<a class="anchor" name="f03d76662f290b0f962da0f0ae620df9"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorWithGhostsContext" ref="f03d76662f290b0f962da0f0ae620df9" args="(tbox::Pointer&lt; hier::VariableContext &gt; context)" -->
+<a class="anchor" name="3b7df58e74934006d68972e0647bf8f2"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorWithGhostsContext" ref="3b7df58e74934006d68972e0647bf8f2" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorWithGhostsContext           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>context</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
@@ -652,14 +652,14 @@ Return pointer to data context with NO ghosts.
 Set pointer to data context with ghosts. 
 </div>
 </div><p>
-<a class="anchor" name="6199c4ed20e37f290579379ad5f853c3"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorContext" ref="6199c4ed20e37f290579379ad5f853c3" args="(tbox::Pointer&lt; hier::VariableContext &gt; context)" -->
+<a class="anchor" name="74e826b840ca48dbc174b0f5d31b2f3b"></a><!-- doxytag: member="SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorContext" ref="74e826b840ca48dbc174b0f5d31b2f3b" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::MethodOfLinesPatchStrategy::setInteriorContext           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>context</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [inline]</code></td>
@@ -692,12 +692,12 @@ Return the dimension of this object.
 <p>
 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#65bb799b527cc3099d996eb38d6670ae">SAMRAI::xfer::CoarsenPatchStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#9124cea2ea7dc4a41eee08ce5c9c89a7">SAMRAI::xfer::CoarsenPatchStrategy</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="MethodOfLinesPatchStrategy_8h.html">MethodOfLinesPatchStrategy.h</a><li>source/SAMRAI/algs/<a class="el" href="MethodOfLinesPatchStrategy_8C.html">MethodOfLinesPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

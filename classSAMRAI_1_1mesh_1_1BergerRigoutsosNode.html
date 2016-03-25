@@ -61,16 +61,16 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Method for advancing the algorithm.  <a href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#8a69889d5b0f0746db9644f3f0804db0">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#07afe0eb7b5751c66a1df42a84e13ff6">BergerRigoutsosNode</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;block_id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#cb14affe5cfa93cc2251306dcd5ff30a">BergerRigoutsosNode</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;block_id, const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;first_local_id)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the root node of a BR dendogram.  <a href="#07afe0eb7b5751c66a1df42a84e13ff6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#a986a8b35a1eb6ccd4bd98f008f5250c">~BergerRigoutsosNode</a> (void)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the root node of a BR dendogram.  <a href="#cb14affe5cfa93cc2251306dcd5ff30a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#2cb42c2907c77b4f4953638af64ca828">~BergerRigoutsosNode</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#a986a8b35a1eb6ccd4bd98f008f5250c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#6ad81f4c3ad40ef7e49f7ed8fc475c9d">setClusteringParameters</a> (const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_box_size, const double max_lap_cut_from_center)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#2cb42c2907c77b4f4953638af64ca828"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#6f1a065fdd68dee78ff02b6aba6bb4a0">setClusteringParameters</a> (const int tag_data_index, const int tag_val, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> min_box, const double efficiency_tol, const double combine_tol, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;max_box_size, const double max_lap_cut_from_center, const double laplace_cut_threshold_ar)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set parameters for (our slight variation of) the Berger-Rigoutsos algorithm.  <a href="#6ad81f4c3ad40ef7e49f7ed8fc475c9d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#31978f1d4dff7e6d3a3bd7706ecffae0">clusterAndComputeRelationships</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;new_mapped_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;tag_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;new_to_tag, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;bound_box, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; tag_level, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi_object)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set parameters for (our slight variation of) the Berger-Rigoutsos algorithm.  <a href="#6f1a065fdd68dee78ff02b6aba6bb4a0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#a6f659b17d58f84bd9b8400005756217">clusterAndComputeRelationships</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;new_mapped_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;tag_to_new, <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">hier::Connector</a> &amp;new_to_tag, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;bound_box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;tag_level, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi_object)</td></tr>
 
 <tr><td colspan="2"><div class="groupHeader">Algorithm mode settings</div></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#8e3ffa5a8dc45c641fcbcc84e93bb741">setAlgorithmAdvanceMode</a> (const std::string &amp;algo_advance_mode)</td></tr>
@@ -125,7 +125,7 @@ Clarification on the uses of the word "node":<ul>
 <p>
 Each dendogram node is associated with a candidate box, an owner process coordinating distributed computations on the box and a group of processors participating in those computations. Should the candidate box be one of the final output boxes, the owner also owns the graph node associated with the box.<p>
 To use this class:<ol type=1>
-<li>Construct the root dendogram node, an object of type <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a>.</li><li>Set the clustering parameters using <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#6ad81f4c3ad40ef7e49f7ed8fc475c9d">setClusteringParameters()</a>.</li><li>Finetune the algorithm settings using the methods under "Algorithm settings".</li><li>Start clustering by calling clusterAndComputeRelationships().</li></ol>
+<li>Construct the root dendogram node, an object of type <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html">BergerRigoutsosNode</a>.</li><li>Set the clustering parameters using <a class="el" href="classSAMRAI_1_1mesh_1_1BergerRigoutsosNode.html#6f1a065fdd68dee78ff02b6aba6bb4a0">setClusteringParameters()</a>.</li><li>Finetune the algorithm settings using the methods under "Algorithm settings".</li><li>Start clustering by calling clusterAndComputeRelationships().</li></ol>
 <p>
 The 2 primary outputs of this implementation are:<ol type=1>
 <li>A BoxLevel of Boxes containing input tags. Each node corresponds to an output box.</li><li>Connector between the tag BoxLevel and the new BoxLevel.</li></ol>
@@ -190,7 +190,7 @@ Each corresponds to a choice permitted by <a class="el" href="classSAMRAI_1_1mes
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="07afe0eb7b5751c66a1df42a84e13ff6"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::BergerRigoutsosNode" ref="07afe0eb7b5751c66a1df42a84e13ff6" args="(const tbox::Dimension &amp;dim, const hier::BlockId &amp;block_id)" -->
+<a class="anchor" name="cb14affe5cfa93cc2251306dcd5ff30a"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::BergerRigoutsosNode" ref="cb14affe5cfa93cc2251306dcd5ff30a" args="(const tbox::Dimension &amp;dim, const hier::BlockId &amp;block_id, const hier::LocalId &amp;first_local_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -204,12 +204,18 @@ Each corresponds to a choice permitted by <a class="el" href="classSAMRAI_1_1mes
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>block_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html">hier::LocalId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>first_local_id</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -221,17 +227,16 @@ Construct the root node of a BR dendogram.
 The root node is used to run the BR algorithm and obtain outputs. 
 </div>
 </div><p>
-<a class="anchor" name="a986a8b35a1eb6ccd4bd98f008f5250c"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::~BergerRigoutsosNode" ref="a986a8b35a1eb6ccd4bd98f008f5250c" args="(void)" -->
+<a class="anchor" name="2cb42c2907c77b4f4953638af64ca828"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::~BergerRigoutsosNode" ref="2cb42c2907c77b4f4953638af64ca828" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::mesh::BergerRigoutsosNode::~BergerRigoutsosNode           </td>
           <td>(</td>
-          <td class="paramtype">void&nbsp;</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -244,7 +249,7 @@ Deallocate internal data.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="6ad81f4c3ad40ef7e49f7ed8fc475c9d"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::setClusteringParameters" ref="6ad81f4c3ad40ef7e49f7ed8fc475c9d" args="(const int tag_data_index, const int tag_val, const hier::IntVector min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_box_size, const double max_lap_cut_from_center)" -->
+<a class="anchor" name="6f1a065fdd68dee78ff02b6aba6bb4a0"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::setClusteringParameters" ref="6f1a065fdd68dee78ff02b6aba6bb4a0" args="(const int tag_data_index, const int tag_val, const hier::IntVector min_box, const double efficiency_tol, const double combine_tol, const hier::IntVector &amp;max_box_size, const double max_lap_cut_from_center, const double laplace_cut_threshold_ar)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -288,7 +293,13 @@ Deallocate internal data.
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>max_lap_cut_from_center</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>max_lap_cut_from_center</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double&nbsp;</td>
+          <td class="paramname"> <em>laplace_cut_threshold_ar</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -305,7 +316,14 @@ Set parameters for (our slight variation of) the Berger-Rigoutsos algorithm.
 These parameters are not specific to the asynchronous algorithm or DLBG.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>max_lap_cut_from_center,:</em>&nbsp;</td><td>Limit the Laplace cut to this fraction of the distance from the center plane to the end. Zero means cut only at the center plane. One means unlimited. Under most situations, one is fine. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_data_index</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_val</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_box</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>efficiency_tol</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>combine_tol</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_box_size</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>max_lap_cut_from_center</em>&nbsp;</td><td>Limit the Laplace cut to this fraction of the distance from the center plane to the end. Zero means cut only at the center plane. One means unlimited. Under most situations, one is fine.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>laplace_cut_threshold_ar</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
@@ -331,7 +349,7 @@ These parameters are not specific to the asynchronous algorithm or DLBG.<p>
 Set the mode for advancing the asynchronous implementation. 
 <p>
 Choices are:<ul>
-<li><b>"SYNCHRONOUS"</b> --&gt; wait for each communication stage to complete before moving on, thus resulting in synchronous execution.</li><li><b>"ADVANCE_ANY"</b> --&gt; advance an dendogram node through its communication stage by using <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ff939a5759c70e520dfd8a4f9f610520">tbox::AsyncCommStage::advanceAny()</a>.</li><li><b>"ADVANCE_SOME"</b> --&gt; advance an dendogram node through its communication stage by using <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#315e118339a4c157a9af744b39cc3047">tbox::AsyncCommStage::advanceSome()</a>.</li></ul>
+<li><b>"SYNCHRONOUS"</b> --&gt; wait for each communication stage to complete before moving on, thus resulting in synchronous execution.</li><li><b>"ADVANCE_ANY"</b> --&gt; advance an dendogram node through its communication stage by using <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ace7bb05b85804aae01a21d05e71d74b">tbox::AsyncCommStage::advanceAny()</a>.</li><li><b>"ADVANCE_SOME"</b> --&gt; advance an dendogram node through its communication stage by using <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#704955860c9392e0329168943100f9cc">tbox::AsyncCommStage::advanceSome()</a>.</li></ul>
 <p>
 The default is "ADVANCE_SOME".<p>
 Asynchronous modes are NOT guaranteed to compute the output graph nodes in any particular order. The order depends on the ordering of message completion, which is not deterministic. If you require consistent outputs, we suggest you have a scheme for reordering the output boxes. 
@@ -403,7 +421,7 @@ The ghost_cell_width specifies the growth for the overlap checks. Overlap checki
 By default, compute bidirectional relationships with a ghost cell width of 1. 
 </div>
 </div><p>
-<a class="anchor" name="31978f1d4dff7e6d3a3bd7706ecffae0"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::clusterAndComputeRelationships" ref="31978f1d4dff7e6d3a3bd7706ecffae0" args="(hier::BoxLevel &amp;new_mapped_box_level, hier::Connector &amp;tag_to_new, hier::Connector &amp;new_to_tag, const hier::Box &amp;bound_box, const tbox::Pointer&lt; hier::PatchLevel &gt; tag_level, const tbox::SAMRAI_MPI &amp;mpi_object)" -->
+<a class="anchor" name="a6f659b17d58f84bd9b8400005756217"></a><!-- doxytag: member="SAMRAI::mesh::BergerRigoutsosNode::clusterAndComputeRelationships" ref="a6f659b17d58f84bd9b8400005756217" args="(hier::BoxLevel &amp;new_mapped_box_level, hier::Connector &amp;tag_to_new, hier::Connector &amp;new_to_tag, const hier::Box &amp;bound_box, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;tag_level, const tbox::SAMRAI_MPI &amp;mpi_object)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -434,7 +452,7 @@ By default, compute bidirectional relationships with a ghost cell width of 1.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>tag_level</em>, </td>
         </tr>
         <tr>
@@ -494,7 +512,7 @@ By default, compute bidirectional relationships with a ghost cell width of 1.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -515,7 +533,7 @@ Global number of tags in clusters.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -536,7 +554,7 @@ Max number of tags owned.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -557,7 +575,7 @@ Max number of local nodes for dendogram.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -578,7 +596,7 @@ max generation count for the local nodes in the dendogram.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -599,7 +617,7 @@ Max number of locally owned nodes in the dendogram.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -620,7 +638,7 @@ Average number of continuations for local nodes in dendogram.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -641,7 +659,7 @@ Max number of continuations for local nodes in dendogram.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -663,7 +681,7 @@ Number of boxes generated (but not necessarily owned) on the local process.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>flag</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -677,7 +695,7 @@ Set whether to log dendogram node action history (useful for debugging).
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsosNode_8h.html">BergerRigoutsosNode.h</a><li>source/SAMRAI/mesh/<a class="el" href="BergerRigoutsosNode_8C.html">BergerRigoutsosNode.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

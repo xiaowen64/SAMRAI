@@ -21,30 +21,26 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1tbox.html">tbox</a>::<a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a></div>
-<h1>SAMRAI::tbox::Schedule Class Reference</h1><!-- doxytag: class="SAMRAI::tbox::Schedule" --><!-- doxytag: inherits="tbox::DescribedClass" -->Class <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a> is used to construct and execute a set of data communication transactions. Each transaction represents some data dependency and exchange between two processors, or locally involving a single processor.  
+<h1>SAMRAI::tbox::Schedule Class Reference</h1><!-- doxytag: class="SAMRAI::tbox::Schedule" -->Class <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a> is used to construct and execute a set of data communication transactions. Each transaction represents some data dependency and exchange between two processors, or locally involving a single processor.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/tbox/Schedule.h&gt;</code>
 <p>
-<p>Inheritance diagram for SAMRAI::tbox::Schedule:
-<p><center><img src="classSAMRAI_1_1tbox_1_1Schedule.png" usemap="#SAMRAI::tbox::Schedule_map" border="0" alt=""></center>
-<map name="SAMRAI::tbox::Schedule_map">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,148,24">
-</map>
 <a href="classSAMRAI_1_1tbox_1_1Schedule-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#2b06d8a13337f2e47493a5af3d1d2729">Schedule</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create an empty schedule with no transactions.  <a href="#2b06d8a13337f2e47493a5af3d1d2729"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#436331775c1a88d95d644499d710dc16">~Schedule</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#436331775c1a88d95d644499d710dc16">~Schedule</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor deletes the schedule and all associated storage.  <a href="#436331775c1a88d95d644499d710dc16"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#7cb028532e52dea55b0ed6f9e55f80b9">addTransaction</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;transaction)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#494b50fb6d81c888ffce9cec0bd72ca4">addTransaction</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;transaction)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#00bb40e6d66ac6905e4d936c168ab88d">appendTransaction</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;transaction)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Add a data transaction to the head of the list of transactions in the schedule.  <a href="#494b50fb6d81c888ffce9cec0bd72ca4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#1ea6f3a1c2071e7dcd31f6c194ba0ec2">appendTransaction</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;transaction)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Append a data transaction to the tail of the list of transactions in the schedule.  <a href="#00bb40e6d66ac6905e4d936c168ab88d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Append a data transaction to the tail of the list of transactions in the schedule.  <a href="#1ea6f3a1c2071e7dcd31f6c194ba0ec2"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#d9ae1ba6734375168a2e0a038474ae7e">getNumSendTransactions</a> (const int rank) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return number of send transactions in the schedule.  <a href="#d9ae1ba6734375168a2e0a038474ae7e"></a><br></td></tr>
@@ -82,10 +78,9 @@
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a> is used to construct and execute a set of data communication transactions. Each transaction represents some data dependency and exchange between two processors, or locally involving a single processor. 
 <p>
-Once a communication schedule is constructed, transactions are provided to the schedule, using either the <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#7cb028532e52dea55b0ed6f9e55f80b9">addTransaction()</a> method or the <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#00bb40e6d66ac6905e4d936c168ab88d">appendTransaction()</a> method. The schedule is then executed forcing the communication, either interprocessor or local to occur. The basic idea behind the schedule is that it enables the cost of assembling communication dependencies and data transfers to be amortized over many communication phases.<p>
-Note that since the transactions are stored in lists, the "add" and "append" mimick the semantics of the <a class="el" href="classSAMRAI_1_1tbox_1_1List.html">List</a> class. That is, <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#7cb028532e52dea55b0ed6f9e55f80b9">addTransaction()</a> will put the transaction at the head of the list, while <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#00bb40e6d66ac6905e4d936c168ab88d">appendTransaction()</a> will put the transaction at the end of the list. This flexibility is provided for situations where the order of transaction execution matters. The transactions will be executed in the order in which they appear in the list.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> <p>
-<a class="el" href="classSAMRAI_1_1tbox_1_1List.html">tbox::List</a> </dd></dl>
+Once a communication schedule is constructed, transactions are provided to the schedule, using either the <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#494b50fb6d81c888ffce9cec0bd72ca4">addTransaction()</a> method or the <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#1ea6f3a1c2071e7dcd31f6c194ba0ec2">appendTransaction()</a> method. The schedule is then executed forcing the communication, either interprocessor or local to occur. The basic idea behind the schedule is that it enables the cost of assembling communication dependencies and data transfers to be amortized over many communication phases.<p>
+Note that since the transactions are stored in lists, the "add" and "append" mimick the semantics of the List class. That is, <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#494b50fb6d81c888ffce9cec0bd72ca4">addTransaction()</a> will put the transaction at the head of the list, while <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html#1ea6f3a1c2071e7dcd31f6c194ba0ec2">appendTransaction()</a> will put the transaction at the end of the list. This flexibility is provided for situations where the order of transaction execution matters. The transactions will be executed in the order in which they appear in the list.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">tbox::Transaction</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -119,7 +114,7 @@ Create an empty schedule with no transactions.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -132,14 +127,14 @@ Note that the schedule can not be deleted during a communication phase; this wil
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="7cb028532e52dea55b0ed6f9e55f80b9"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::addTransaction" ref="7cb028532e52dea55b0ed6f9e55f80b9" args="(const Pointer&lt; Transaction &gt; &amp;transaction)" -->
+<a class="anchor" name="494b50fb6d81c888ffce9cec0bd72ca4"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::addTransaction" ref="494b50fb6d81c888ffce9cec0bd72ca4" args="(const boost::shared_ptr&lt; Transaction &gt; &amp;transaction)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::Schedule::addTransaction           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>transaction</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -149,24 +144,25 @@ Note that the schedule can not be deleted during a communication phase; this wil
 <div class="memdoc">
 
 <p>
-Add a data transaction to the head of the list of transactions in the schedule.<p>
+Add a data transaction to the head of the list of transactions in the schedule. 
+<p>
 The transaction must involve the local processor as either a source or destination or both. If the transaction does not include the local processor, then the transaction is not placed on the schedule.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>transaction</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a> to transaction added to the schedule. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>transaction</em>&nbsp;</td><td>boost::shared_ptr to transaction added to the schedule. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="00bb40e6d66ac6905e4d936c168ab88d"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::appendTransaction" ref="00bb40e6d66ac6905e4d936c168ab88d" args="(const Pointer&lt; Transaction &gt; &amp;transaction)" -->
+<a class="anchor" name="1ea6f3a1c2071e7dcd31f6c194ba0ec2"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::appendTransaction" ref="1ea6f3a1c2071e7dcd31f6c194ba0ec2" args="(const boost::shared_ptr&lt; Transaction &gt; &amp;transaction)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::Schedule::appendTransaction           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html">Transaction</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>transaction</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -181,7 +177,7 @@ Append a data transaction to the tail of the list of transactions in the schedul
 The transaction must involve the local processor as either a source or destination or both. If the transaction does not include the local processor, then the transaction will not be not placed on the schedule.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>transaction</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a> to transaction appended to the schedule. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>transaction</em>&nbsp;</td><td>boost::shared_ptr to transaction appended to the schedule. </td></tr>
   </table>
 </dl>
 
@@ -240,7 +236,7 @@ Return number of receive transactions in the schedule.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -262,7 +258,7 @@ Return number of local transactions (non-communicating) in the schedule.
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mpi</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -271,7 +267,7 @@ Return number of local transactions (non-communicating) in the schedule.
 <p>
 Set the MPI communicator used for communication. 
 <p>
-By default the communicator returned by <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#8f81765263c8d7ec33c6ce56c0244f19">SAMRAI_MPI::getCommunicator()</a> at the time the <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a> constructor is called is used. This method may be used to override the default communicator. 
+By default the communicator returned by <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#7cc0a39def02ade568c016a05b9d6e29">SAMRAI_MPI::getCommunicator()</a> at the time the <a class="el" href="classSAMRAI_1_1tbox_1_1Schedule.html">Schedule</a> constructor is called is used. This method may be used to override the default communicator. 
 </div>
 </div><p>
 <a class="anchor" name="93ab75bc6e434f61e5d9a358745666b4"></a><!-- doxytag: member="SAMRAI::tbox::Schedule::setMPITag" ref="93ab75bc6e434f61e5d9a358745666b4" args="(const int first_tag, const int second_tag)" -->
@@ -293,7 +289,7 @@ By default the communicator returned by <a class="el" href="classSAMRAI_1_1tbox_
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -315,7 +311,7 @@ If you are using MPI communicators that are not sufficiently isolated from other
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>first_message_length</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -445,7 +441,7 @@ Print class data to the specified output stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Schedule_8h.html">Schedule.h</a><li>source/SAMRAI/tbox/<a class="el" href="Schedule_8C.html">Schedule.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

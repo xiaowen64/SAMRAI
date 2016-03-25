@@ -21,46 +21,56 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1geom.html">geom</a>::<a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a></div>
-<h1>SAMRAI::geom::CartesianGridGeometry Class Reference</h1><!-- doxytag: class="SAMRAI::geom::CartesianGridGeometry" --><!-- doxytag: inherits="SAMRAI::hier::GridGeometry" --><code>#include &lt;source/SAMRAI/geom/CartesianGridGeometry.h&gt;</code>
+<h1>SAMRAI::geom::CartesianGridGeometry Class Reference</h1><!-- doxytag: class="SAMRAI::geom::CartesianGridGeometry" --><!-- doxytag: inherits="SAMRAI::geom::GridGeometry" --><code>#include &lt;source/SAMRAI/geom/CartesianGridGeometry.h&gt;</code>
 <p>
 <p>Inheritance diagram for SAMRAI::geom::CartesianGridGeometry:
 <p><center><img src="classSAMRAI_1_1geom_1_1CartesianGridGeometry.png" usemap="#SAMRAI::geom::CartesianGridGeometry_map" border="0" alt=""></center>
 <map name="SAMRAI::geom::CartesianGridGeometry_map">
-<area href="classSAMRAI_1_1hier_1_1GridGeometry.html" alt="SAMRAI::hier::GridGeometry" shape="rect" coords="0,112,234,136">
-<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="0,56,234,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,234,24">
+<area href="classSAMRAI_1_1geom_1_1GridGeometry.html" alt="SAMRAI::geom::GridGeometry" shape="rect" coords="0,112,234,136">
+<area href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html" alt="SAMRAI::hier::BaseGridGeometry" shape="rect" coords="0,56,234,80">
+<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="0,0,234,24">
 </map>
 <a href="classSAMRAI_1_1geom_1_1CartesianGridGeometry-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#dffe099faf7bd1404fbce965fa813a79">CartesianGridGeometry</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db, bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#cf283241991e0cbd53404f1b41d8d339">CartesianGridGeometry</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, bool register_for_restart=true)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#de82a566b82d84755b4d2b963afd4488">CartesianGridGeometry</a> (const std::string &amp;object_name, const double *x_lo, const double *x_up, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;domain, bool register_for_restart=true)</td></tr>
 
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#9d24816b76af7877b275eb54a0bf3378">CartesianGridGeometry</a> (const std::string &amp;object_name, const double *x_lo, const double *x_up, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;domain, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> &gt; &amp;op_reg, bool register_for_restart)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new coarsened/refined <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> object with the supplied domain.  <a href="#9d24816b76af7877b275eb54a0bf3378"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#938c3f762b511270d80e9a468ebc28ce">~CartesianGridGeometry</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#a10363ea7202d51159354000de170b52">makeRefinedGridGeometry</a> (const std::string &amp;fine_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;refine_ratio, bool register_for_restart) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4a40cfec296568f78bbe857e471dc13b">makeRefinedGridGeometry</a> (const std::string &amp;fine_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;refine_ratio, bool register_for_restart) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#92dc6a4f7e11b47c850a78b55e6926bc">makeCoarsenedGridGeometry</a> (const std::string &amp;coarse_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;coarsen_ratio, bool register_for_restart) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#1050e4c6a487ffc1621473c4c133cf0f">makeCoarsenedGridGeometry</a> (const std::string &amp;coarse_geom_name, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;coarsen_ratio, bool register_for_restart) const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#85122a9d54d3f375585ffd3c41e908ed">setGeometryDataOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio_to_level_zero, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_regular_bdry, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">TwoDimBool</a> &amp;touches_periodic_bdry) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute and set grid data for patch.  <a href="#85122a9d54d3f375585ffd3c41e908ed"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4359edc133c696da66801d5cd678ca81">setGeometryData</a> (const double *x_lo, const double *x_up, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;domain)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#c1e57add74326c74e297e54003d45b49">getDx</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#c34a3cba1b3e7cd9ca8976abd07986cd">getDx</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#ce8d2195148a531217e2eec3cb4728d8">getXLower</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#6fdcb17788afe6b5f8516ec017737700">getXLower</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#30189b111cc9a69467981769ae466d89">getXUpper</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const double *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#0a7c83fe0d5e1e36487622f771ab6f9b">getXUpper</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#6b2ff51d7f095807d59eac0d488337a5">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#3660dcab5751f0b43e179bd16cfa7921">putToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4cf8cfba217abcaf02d58634ee4ea1e8">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
+
+<tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#030680478c70f34c3e8a06fdbe91ce66">buildOperators</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Build operators appropriate for a <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a>.  <a href="#030680478c70f34c3e8a06fdbe91ce66"></a><br></td></tr>
+<tr><td colspan="2"><br><h2>Friends</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#4a5f08314352ac69175668e73ec90cb0">TransferOperatorRegistry</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> provides simple Cartesian mesh geometry management on an AMR hierarchy. The mesh coordinates on each hierarchy level are limited to mesh increments specified as DIM-tuple (dx[0],...,dx[DIM-1]) and spatial coordinates of the lower and upper corners of the smallest parallelepiped bounding the entire computational domain. The mesh increments on each level are defined with respect to the coarsest hierarchy level and multiplying those values by the proper refinement ratio. This class sets geometry information on each patch in an AMR hierarchy. This class is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> base class.<p>
+Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> provides simple Cartesian mesh geometry management on an AMR hierarchy. The mesh coordinates on each hierarchy level are limited to mesh increments specified as DIM-tuple (dx[0],...,dx[DIM-1]) and spatial coordinates of the lower and upper corners of the smallest parallelepiped bounding the entire computational domain. The mesh increments on each level are defined with respect to the coarsest hierarchy level and multiplying those values by the proper refinement ratio. This class sets geometry information on each patch in an AMR hierarchy. This class is derived from the <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html">geom::GridGeometry</a> base class.<p>
 An object of this class requires numerous parameters to be read from input. Also, data must be written to and read from files for restart. The input and restart data are summarized as follows:<p>
 Required input keys and data types:<p>
 <ul>
@@ -86,11 +96,11 @@ A sample input file for a two-dimensional problem might look like:<p>
  *
  * </pre></div><p>
 This generates a two-dimensional rectangular domain periodic in the y-direction, and having 50 cells in the x-direction and 40 cells in the y-direction, with the cell size 1 unit in each direction.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html">geom::GridGeometry</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="dffe099faf7bd1404fbce965fa813a79"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::CartesianGridGeometry" ref="dffe099faf7bd1404fbce965fa813a79" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; input_db, bool register_for_restart=true)" -->
+<a class="anchor" name="cf283241991e0cbd53404f1b41d8d339"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::CartesianGridGeometry" ref="cf283241991e0cbd53404f1b41d8d339" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, bool register_for_restart=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -109,7 +119,7 @@ This generates a two-dimensional rectangular domain periodic in the y-direction,
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_db</em>, </td>
         </tr>
         <tr>
@@ -121,7 +131,7 @@ This generates a two-dimensional rectangular domain periodic in the y-direction,
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -169,7 +179,7 @@ Errors: passing in a null database pointer or an empty std::string will result i
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -178,6 +188,72 @@ Errors: passing in a null database pointer or an empty std::string will result i
 <p>
 Constructor for <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> sets data members based on arguments. The constructor also registers this object for restart using the specified object name when the boolean argument is true. Whether object will write its state to restart files during program execution is determined by this argument. Note that it has a default state of true.<p>
 Errors: passing in an empty std::string, or null data pointers will result in an unrecoverable assertion. 
+</div>
+</div><p>
+<a class="anchor" name="9d24816b76af7877b275eb54a0bf3378"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::CartesianGridGeometry" ref="9d24816b76af7877b275eb54a0bf3378" args="(const std::string &amp;object_name, const double *x_lo, const double *x_up, const hier::BoxContainer &amp;domain, const boost::shared_ptr&lt; hier::TransferOperatorRegistry &gt; &amp;op_reg, bool register_for_restart)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::geom::CartesianGridGeometry::CartesianGridGeometry           </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&nbsp;</td>
+          <td class="paramname"> <em>object_name</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double *&nbsp;</td>
+          <td class="paramname"> <em>x_lo</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const double *&nbsp;</td>
+          <td class="paramname"> <em>x_up</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>domain</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1TransferOperatorRegistry.html">hier::TransferOperatorRegistry</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>op_reg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>register_for_restart</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct a new coarsened/refined <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> object with the supplied domain. 
+<p>
+This method is intended to be called only by boost::make_shared from the make[Coarsened, Refined]<a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html">GridGeometry</a> methods to make a coarsened or refined version of a given <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a>.<p>
+<dl compact><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>object_name</em>&nbsp;</td><td>The same name as the uncoarsened/unrefined grid geometry. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>x_lo</em>&nbsp;</td><td>The same lower corner as the uncoarsened/unrefined grid geometry. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>x_up</em>&nbsp;</td><td>The same upper corner as the uncoarsened/unrefined grid geometry. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>domain</em>&nbsp;</td><td>The coarsened/refined domain. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>op_reg</em>&nbsp;</td><td>The same operator registry as the uncoarsened/unrefined grid geometry. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>register_for_restart</em>&nbsp;</td><td>Flag indicating whether this instance should be registered for restart. </td></tr>
+  </table>
+</dl>
+
 </div>
 </div><p>
 <a class="anchor" name="938c3f762b511270d80e9a468ebc28ce"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::~CartesianGridGeometry" ref="938c3f762b511270d80e9a468ebc28ce" args="()" -->
@@ -200,12 +276,12 @@ Destructor for <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="a10363ea7202d51159354000de170b52"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry" ref="a10363ea7202d51159354000de170b52" args="(const std::string &amp;fine_geom_name, const hier::IntVector &amp;refine_ratio, bool register_for_restart) const " -->
+<a class="anchor" name="4a40cfec296568f78bbe857e471dc13b"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry" ref="4a40cfec296568f78bbe857e471dc13b" args="(const std::string &amp;fine_geom_name, const hier::IntVector &amp;refine_ratio, bool register_for_restart) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt; SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>fine_geom_name</em>, </td>
@@ -232,17 +308,17 @@ Destructor for <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.
 <div class="memdoc">
 
 <p>
-Create and return a pointer to a refined version of this Cartesian grid geometry object. This function is pure virtual in the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> base class. 
+Create and return a pointer to a refined version of this Cartesian grid geometry object. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#163389d7c32ac0bd63cc1b423d4c29ae">SAMRAI::hier::GridGeometry</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#045479174b2dcdf8390f78005781af05">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="92dc6a4f7e11b47c850a78b55e6926bc"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry" ref="92dc6a4f7e11b47c850a78b55e6926bc" args="(const std::string &amp;coarse_geom_name, const hier::IntVector &amp;coarsen_ratio, bool register_for_restart) const " -->
+<a class="anchor" name="1050e4c6a487ffc1621473c4c133cf0f"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry" ref="1050e4c6a487ffc1621473c4c133cf0f" args="(const std::string &amp;coarse_geom_name, const hier::IntVector &amp;coarsen_ratio, bool register_for_restart) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt; SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>coarse_geom_name</em>, </td>
@@ -269,9 +345,9 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#
 <div class="memdoc">
 
 <p>
-Create and return a pointer to a coarsened version of this Cartesian grid geometry object. This function is pure virtual in the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> base class. 
+Create and return a pointer to a coarsened version of this Cartesian grid geometry object. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#2b74abf55f7dbcbb2c0c0da0ff2281fa">SAMRAI::hier::GridGeometry</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#59763e118347bd76ce406e2663ab359c">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
 <a class="anchor" name="85122a9d54d3f375585ffd3c41e908ed"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch" ref="85122a9d54d3f375585ffd3c41e908ed" args="(hier::Patch &amp;patch, const hier::IntVector &amp;ratio_to_level_zero, const TwoDimBool &amp;touches_regular_bdry, const TwoDimBool &amp;touches_periodic_bdry) const " -->
@@ -314,7 +390,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#
 <p>
 Compute and set grid data for patch. 
 <p>
-Pure virtual function. Implementers must override this method.<p>
+Virtual method -- should be overridden in specialized grid geometry classes<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>patch</em>&nbsp;</td><td>The patch on which to set grid data and the new concrete patch geometry object. </td></tr>
@@ -325,7 +401,7 @@ Pure virtual function. Implementers must override this method.<p>
 </dl>
 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#450641490d60bee95396607bb657a200">SAMRAI::hier::GridGeometry</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#b8146fe8b657e09cdae15f1248645dc3">SAMRAI::hier::BaseGridGeometry</a>.
 </div>
 </div><p>
 <a class="anchor" name="4359edc133c696da66801d5cd678ca81"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::setGeometryData" ref="4359edc133c696da66801d5cd678ca81" args="(const double *x_lo, const double *x_up, const hier::BoxContainer &amp;domain)" -->
@@ -363,16 +439,16 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#
 Set data members for this <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> object. 
 </div>
 </div><p>
-<a class="anchor" name="c1e57add74326c74e297e54003d45b49"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::getDx" ref="c1e57add74326c74e297e54003d45b49" args="() const " -->
+<a class="anchor" name="c34a3cba1b3e7cd9ca8976abd07986cd"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::getDx" ref="c34a3cba1b3e7cd9ca8976abd07986cd" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const double * SAMRAI::geom::CartesianGridGeometry::getDx           </td>
+          <td class="memname">const double* SAMRAI::geom::CartesianGridGeometry::getDx           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -382,16 +458,16 @@ Set data members for this <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGr
 Return const pointer to dx array for reference level in hierarchy. 
 </div>
 </div><p>
-<a class="anchor" name="ce8d2195148a531217e2eec3cb4728d8"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::getXLower" ref="ce8d2195148a531217e2eec3cb4728d8" args="() const " -->
+<a class="anchor" name="6fdcb17788afe6b5f8516ec017737700"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::getXLower" ref="6fdcb17788afe6b5f8516ec017737700" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const double * SAMRAI::geom::CartesianGridGeometry::getXLower           </td>
+          <td class="memname">const double* SAMRAI::geom::CartesianGridGeometry::getXLower           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -401,16 +477,16 @@ Return const pointer to dx array for reference level in hierarchy.
 Return const pointer to lower spatial coordinate for reference level in hierarchy. 
 </div>
 </div><p>
-<a class="anchor" name="30189b111cc9a69467981769ae466d89"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::getXUpper" ref="30189b111cc9a69467981769ae466d89" args="() const " -->
+<a class="anchor" name="0a7c83fe0d5e1e36487622f771ab6f9b"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::getXUpper" ref="0a7c83fe0d5e1e36487622f771ab6f9b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const double * SAMRAI::geom::CartesianGridGeometry::getXUpper           </td>
+          <td class="memname">const double* SAMRAI::geom::CartesianGridGeometry::getXUpper           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -439,20 +515,20 @@ Return const pointer to upper spatial coordinate for reference level in hierarch
 <p>
 Print class data representation. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#6e7001b9263ee5058128e75c1126cbd0">SAMRAI::hier::GridGeometry</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#14ec0f454f6d8d1f875448b4cb08abed">SAMRAI::hier::BaseGridGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="3660dcab5751f0b43e179bd16cfa7921"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::putToDatabase" ref="3660dcab5751f0b43e179bd16cfa7921" args="(tbox::Pointer&lt; tbox::Database &gt; db)" -->
+<a class="anchor" name="4cf8cfba217abcaf02d58634ee4ea1e8"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::putToDatabase" ref="4cf8cfba217abcaf02d58634ee4ea1e8" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::geom::CartesianGridGeometry::putToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -462,12 +538,53 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#
 Writes the state of the <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a> object to the database.<p>
 When assertion checking is active, db cannot be a null database pointer. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html#49293d85dc8096cd4bf0200d82d9da0c">SAMRAI::hier::GridGeometry</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#de6fe16e73de6bcbddfaa19789a136cc">SAMRAI::hier::BaseGridGeometry</a>.
+</div>
+</div><p>
+<a class="anchor" name="030680478c70f34c3e8a06fdbe91ce66"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::buildOperators" ref="030680478c70f34c3e8a06fdbe91ce66" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::geom::CartesianGridGeometry::buildOperators           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [protected, virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Build operators appropriate for a <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html">CartesianGridGeometry</a>. 
+<p>
+
+<p>
+Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#2a900b30bc6bf06bdc4ef69803eabc96">SAMRAI::geom::GridGeometry</a>.
+</div>
+</div><p>
+<hr><h2>Friends And Related Function Documentation</h2>
+<a class="anchor" name="4a5f08314352ac69175668e73ec90cb0"></a><!-- doxytag: member="SAMRAI::geom::CartesianGridGeometry::TransferOperatorRegistry" ref="4a5f08314352ac69175668e73ec90cb0" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class TransferOperatorRegistry<code> [friend]</code>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+<p>
+Reimplemented from <a class="el" href="classSAMRAI_1_1geom_1_1GridGeometry.html#4a5f08314352ac69175668e73ec90cb0">SAMRAI::geom::GridGeometry</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8h.html">CartesianGridGeometry.h</a><li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8C.html">CartesianGridGeometry.C</a><li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8I.html">CartesianGridGeometry.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8h.html">CartesianGridGeometry.h</a><li>source/SAMRAI/geom/<a class="el" href="CartesianGridGeometry_8C.html">CartesianGridGeometry.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

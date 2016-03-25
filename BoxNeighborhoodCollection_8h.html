@@ -25,6 +25,8 @@
 <code>#include &quot;<a class="el" href="IntVector_8h.html">SAMRAI/hier/IntVector.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Database_8h.html">SAMRAI/tbox/Database.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Dimension_8h.html">SAMRAI/tbox/Dimension.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
+<code>#include &lt;boost/shared_ptr.hpp&gt;</code><br>
 <code>#include &lt;map&gt;</code><br>
 <code>#include &lt;set&gt;</code><br>
 <code>#include &lt;vector&gt;</code><br>
@@ -41,8 +43,10 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Given a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in a base <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>, the Boxes in a head <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> which are adjacent to the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> are its neighbors and are said to form the neighborhood of the base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>. This class describes the neighborhoods of a collection of base Boxes. Each base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in the collection has a neighborhood of adjacent head Boxes.  <a href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1ConstIterator.html">SAMRAI::hier::BoxNeighborhoodCollection::ConstIterator</a></td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An iterator over the base Boxes of the neighborhoods in a const <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html">BoxNeighborhoodCollection</a>. The interface does not allow modification of the base Boxes.  <a href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1ConstIterator.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html">SAMRAI::hier::BoxNeighborhoodCollection::Iterator</a></td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An iterator over the base Boxes of the neighborhoods in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html">BoxNeighborhoodCollection</a>. The interface does not allow modification of the base Boxes.  <a href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1Iterator.html#_details">More...</a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1ConstNeighborIterator.html">SAMRAI::hier::BoxNeighborhoodCollection::ConstNeighborIterator</a></td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An iterator over the neighbors in the neighborhood of a base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in a const <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html">BoxNeighborhoodCollection</a>. The interface does not allow modification of the neighbors.  <a href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1ConstNeighborIterator.html#_details">More...</a><br></td></tr>
@@ -50,7 +54,7 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">An iterator over the neighbors in the neighborhood of a base <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> in a <a class="el" href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection.html">BoxNeighborhoodCollection</a>. The interface does not allow modification of the neighbors.  <a href="classSAMRAI_1_1hier_1_1BoxNeighborhoodCollection_1_1NeighborIterator.html#_details">More...</a><br></td></tr>
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:14 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

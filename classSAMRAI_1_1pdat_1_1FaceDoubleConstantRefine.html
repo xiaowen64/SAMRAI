@@ -35,8 +35,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceDoubleConstantRefine.html#dc633424b8be19e9361844e8ffee1624">~FaceDoubleConstantRefine</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceDoubleConstantRefine.html#42f7c45a20d31c36098160b2e1385c0a">findRefineOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const std::string &amp;op_name) const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceDoubleConstantRefine.html#c38171bc74d13a4f0193a92ed80137d0">getOperatorPriority</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceDoubleConstantRefine.html#3ff89e362f9bd7762422edfde4d85dd7">getStencilWidth</a> () const </td></tr>
@@ -46,7 +44,6 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDoubleConstantRefine.html">FaceDoubleConstantRefine</a> implements constant interpolation for face-centered double patch data defined over a mesh. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> base class. The numerical operations for interpolation use FORTRAN numerical routines.<p>
-The <a class="el" href="classSAMRAI_1_1pdat_1_1FaceDoubleConstantRefine.html#42f7c45a20d31c36098160b2e1385c0a">findRefineOperator()</a> operator function returns true if the input variable is face-centered double, and the string is "CONSTANT_REFINE".<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> </dd></dl>
 
 <p>
@@ -91,37 +88,6 @@ Uninteresting virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="42f7c45a20d31c36098160b2e1385c0a"></a><!-- doxytag: member="SAMRAI::pdat::FaceDoubleConstantRefine::findRefineOperator" ref="42f7c45a20d31c36098160b2e1385c0a" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;var, const std::string &amp;op_name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::pdat::FaceDoubleConstantRefine::findRefineOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return true if the variable and name string match face-centered double constant interpolation; otherwise, return false. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#179871a2379def0a0979981db947a011">SAMRAI::hier::RefineOperator</a>.
-</div>
-</div><p>
 <a class="anchor" name="c38171bc74d13a4f0193a92ed80137d0"></a><!-- doxytag: member="SAMRAI::pdat::FaceDoubleConstantRefine::getOperatorPriority" ref="c38171bc74d13a4f0193a92ed80137d0" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +187,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#3e64cd
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="FaceDoubleConstantRefine_8h.html">FaceDoubleConstantRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -35,14 +35,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellFloatLinearTimeInterpolateOp.html#fbcae244f267807ea6f0d822276e3ef3">~CellFloatLinearTimeInterpolateOp</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellFloatLinearTimeInterpolateOp.html#188fdc2e9a5758ebcce02260ff9256f9">findTimeInterpolateOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const std::string &amp;op_name) const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1CellFloatLinearTimeInterpolateOp.html#d176cd0a3f86fa9bc7ed8b407395594a">timeInterpolate</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst_data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;where, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src_data_old, const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src_data_new) const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1CellFloatLinearTimeInterpolateOp.html">CellFloatLinearTimeInterpolateOp</a> implements standard linear time interpolation for cell-centered float patch data. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> base class. The interpolation uses FORTRAN numerical routines.<p>
-The findCoarsenOperator() operator function returns true if the input variable is a cell-centered float, and the string is "STD_LINEAR_TIME_INTERPOLATE".<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html">hier::TimeInterpolateOperator</a> </dd></dl>
 
 <p>
@@ -86,37 +83,6 @@ Uninteresting virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="188fdc2e9a5758ebcce02260ff9256f9"></a><!-- doxytag: member="SAMRAI::pdat::CellFloatLinearTimeInterpolateOp::findTimeInterpolateOperator" ref="188fdc2e9a5758ebcce02260ff9256f9" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;var, const std::string &amp;op_name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::pdat::CellFloatLinearTimeInterpolateOp::findTimeInterpolateOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return true if the variable and name string match the standard cell-centered float interpolation; otherwise, return false. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.html#d79f57060b834eb627872f42f41586b6">SAMRAI::hier::TimeInterpolateOperator</a>.
-</div>
-</div><p>
 <a class="anchor" name="d176cd0a3f86fa9bc7ed8b407395594a"></a><!-- doxytag: member="SAMRAI::pdat::CellFloatLinearTimeInterpolateOp::timeInterpolate" ref="d176cd0a3f86fa9bc7ed8b407395594a" args="(hier::PatchData &amp;dst_data, const hier::Box &amp;where, const hier::PatchData &amp;src_data_old, const hier::PatchData &amp;src_data_new) const " -->
 <div class="memitem">
 <div class="memproto">
@@ -162,7 +128,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1TimeInterpolateOperator.ht
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="CellFloatLinearTimeInterpolateOp_8h.html">CellFloatLinearTimeInterpolateOp.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

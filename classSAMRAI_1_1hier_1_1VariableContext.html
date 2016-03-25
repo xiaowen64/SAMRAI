@@ -28,16 +28,16 @@
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#b0668bab65b05453a362ec5ca493ed06">VariableContext</a> (const std::string &amp;name)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#2b11f9915931733b8956bf2ed09581b2">~VariableContext</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#2b11f9915931733b8956bf2ed09581b2">~VariableContext</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#c3ea7639097e03460c160b574a998e52">getIndex</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#580ea0907ede69aaa40f7077550868f4">getIndex</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#80552ffc6a3c46ac0922515c30613393">getName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#85a25794c3d6bb8f4c48cd7c2daa5796">getName</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#3d50cef4e03a5124fccae00008b4a610">operator==</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &amp;other) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#6dc93c3ffb377794006428de72c7a2f9">operator==</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &amp;other) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#3bc5712624e39460fc22f46cad6b21fc">getCurrentMaximumInstanceNumber</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html#a9dc908411506fd6f995c01c33d4452d">getCurrentMaximumInstanceNumber</a> ()</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -87,27 +87,27 @@ When assertion checking is active, an unrecoverable assertion results when the n
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-The virtual destructor does nothing interesting. 
+The destructor does nothing interesting. 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="3bc5712624e39460fc22f46cad6b21fc"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::getCurrentMaximumInstanceNumber" ref="3bc5712624e39460fc22f46cad6b21fc" args="()" -->
+<a class="anchor" name="a9dc908411506fd6f995c01c33d4452d"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::getCurrentMaximumInstanceNumber" ref="a9dc908411506fd6f995c01c33d4452d" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::VariableContext::getCurrentMaximumInstanceNumber           </td>
+          <td class="memname">static int SAMRAI::hier::VariableContext::getCurrentMaximumInstanceNumber           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -117,16 +117,16 @@ The virtual destructor does nothing interesting.
 Return the current maximum instance number over all variable context objects. The instance identifiers returned from variable context objects are guaranteed to be between 0 and this number minus one. Note that this number changes as new variable contexts are created. 
 </div>
 </div><p>
-<a class="anchor" name="c3ea7639097e03460c160b574a998e52"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::getIndex" ref="c3ea7639097e03460c160b574a998e52" args="() const " -->
+<a class="anchor" name="580ea0907ede69aaa40f7077550868f4"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::getIndex" ref="580ea0907ede69aaa40f7077550868f4" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::VariableContext::getIndex           </td>
+          <td class="memname">int SAMRAI::hier::VariableContext::getIndex           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -136,16 +136,16 @@ Return the current maximum instance number over all variable context objects. Th
 Return integer index for <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> object. 
 </div>
 </div><p>
-<a class="anchor" name="80552ffc6a3c46ac0922515c30613393"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::getName" ref="80552ffc6a3c46ac0922515c30613393" args="() const " -->
+<a class="anchor" name="85a25794c3d6bb8f4c48cd7c2daa5796"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::getName" ref="85a25794c3d6bb8f4c48cd7c2daa5796" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::hier::VariableContext::getName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::hier::VariableContext::getName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -155,17 +155,17 @@ Return integer index for <a class="el" href="classSAMRAI_1_1hier_1_1VariableCont
 Return name std::string identifier for <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> object. 
 </div>
 </div><p>
-<a class="anchor" name="3d50cef4e03a5124fccae00008b4a610"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::operator==" ref="3d50cef4e03a5124fccae00008b4a610" args="(const VariableContext &amp;other) const " -->
+<a class="anchor" name="6dc93c3ffb377794006428de72c7a2f9"></a><!-- doxytag: member="SAMRAI::hier::VariableContext::operator==" ref="6dc93c3ffb377794006428de72c7a2f9" args="(const VariableContext &amp;other) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::VariableContext::operator==           </td>
+          <td class="memname">bool SAMRAI::hier::VariableContext::operator==           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">VariableContext</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>other</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -176,8 +176,8 @@ Check whether two contexts are the same. Return true if the index of the argumen
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="VariableContext_8h.html">VariableContext.h</a><li>source/SAMRAI/hier/<a class="el" href="VariableContext_8C.html">VariableContext.C</a><li>source/SAMRAI/hier/<a class="el" href="VariableContext_8I.html">VariableContext.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="VariableContext_8h.html">VariableContext.h</a><li>source/SAMRAI/hier/<a class="el" href="VariableContext_8C.html">VariableContext.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

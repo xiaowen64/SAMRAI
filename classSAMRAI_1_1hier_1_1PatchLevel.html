@@ -28,114 +28,118 @@
 <p>
 <a href="classSAMRAI_1_1hier_1_1PatchLevel-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
+<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#ba58f0c14363634216c7f5830126b74f">iterator</a></td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Typdef <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">PatchLevel::Iterator</a> to standard iterator nomenclature.  <a href="#ba58f0c14363634216c7f5830126b74f"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#200e6f739f70f39e542a1f60e507c7d9">PatchLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor. <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> must be initialized before it can be used.  <a href="#200e6f739f70f39e542a1f60e507c7d9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#a7935f0be448387823cd3f17d1072a63">PatchLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;mapped_box_level, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a> &gt; grid_geometry, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; descriptor, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; factory=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;(NULL), bool defer_boundary_box_creation=false)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#45cf4c9056b8757f4fa5929f41e3c8b6">PatchLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;mapped_box_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;(), bool defer_boundary_box_creation=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level given a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#a7935f0be448387823cd3f17d1072a63"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cf118496a09549de8d8b4e7a1db4b574">PatchLevel</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; level_database, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a> &gt; grid_geometry, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; descriptor, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; factory, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector=*(new <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a>(false)), bool defer_boundary_box_creation=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level given a <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>.  <a href="#45cf4c9056b8757f4fa5929f41e3c8b6"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8837d5b9aa9e9fe9bf14bbeb83d7a6b1">PatchLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;level_database, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;grid_geometry, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;descriptor, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;factory, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector=*(new <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a>(false)), bool defer_boundary_box_creation=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level from the specified <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> database.  <a href="#cf118496a09549de8d8b4e7a1db4b574"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a new patch level from the specified <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> database.  <a href="#8837d5b9aa9e9fe9bf14bbeb83d7a6b1"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#c5f14ea9d3a7fb54c638974e78f21632">~PatchLevel</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor for patch level deallocates all patches.  <a href="#c5f14ea9d3a7fb54c638974e78f21632"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fa1029a03a313f77eca137c5b4fc0aef">getLevelNumber</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#86ccd6c9e5b7e91f1d00f89c938eb681">getLevelNumber</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the level number.  <a href="#fa1029a03a313f77eca137c5b4fc0aef"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the level number.  <a href="#86ccd6c9e5b7e91f1d00f89c938eb681"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#a5f378638f00b82d204b37df8bb5e21b">setLevelNumber</a> (const int level)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of this level to the level in the hierarchy aligning with the index space of this level.  <a href="#a5f378638f00b82d204b37df8bb5e21b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#075ba40503220072582de98e4b3195a8">getNextCoarserHierarchyLevelNumber</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#5c0476e6795563d5a2ed07bae4f3704c">getNextCoarserHierarchyLevelNumber</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convenience method to get the next coarser level number in a hierarchy.  <a href="#075ba40503220072582de98e4b3195a8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convenience method to get the next coarser level number in a hierarchy.  <a href="#5c0476e6795563d5a2ed07bae4f3704c"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#2a985a8efeca1e4f08b89e6498acb82d">setNextCoarserHierarchyLevelNumber</a> (const int level)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convenience method to set the number of of the next coarser level in a hierarchy.  <a href="#2a985a8efeca1e4f08b89e6498acb82d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#92c09f9c43bdb459c73115349dfc53fd">inHierarchy</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8e6f9137668dded97fdc0b8714c80d10">inHierarchy</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Determine if this level resides in a hierarchy.  <a href="#92c09f9c43bdb459c73115349dfc53fd"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Determine if this level resides in a hierarchy.  <a href="#8e6f9137668dded97fdc0b8714c80d10"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#884c19a7bf9894213f2afc06f266fdbb">setLevelInHierarchy</a> (bool in_hierarchy)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Setting to indicate whether this level resides in a hierarchy.  <a href="#884c19a7bf9894213f2afc06f266fdbb"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#ccd06ffa50cd00cdfb0a03fba9d9b340">getNumberOfPatches</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#61264835ab9407fd78039af6bc3d64d5">getNumberOfPatches</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of patches.  <a href="#ccd06ffa50cd00cdfb0a03fba9d9b340"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#7fbb93435a13b9cc970995c577c20f7d">getLocalNumberOfPatches</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of patches.  <a href="#61264835ab9407fd78039af6bc3d64d5"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#b4194ddb2621f66bfaad0ef8c1a6b183">getLocalNumberOfPatches</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the local number of patches.  <a href="#7fbb93435a13b9cc970995c577c20f7d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#40ca79bfe5e5329e39224d9964ccc41d">getGlobalNumberOfPatches</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the local number of patches.  <a href="#b4194ddb2621f66bfaad0ef8c1a6b183"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#f1c646e30b1a744c4a3ee9b143da8569">getGlobalNumberOfPatches</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the global number of patches.  <a href="#40ca79bfe5e5329e39224d9964ccc41d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#242213e2f2c48eef281ffade1b198458">getLocalNumberOfCells</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the global number of patches.  <a href="#f1c646e30b1a744c4a3ee9b143da8569"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fed37e2ecb986bdf7a9b9709f402c4b3">getLocalNumberOfCells</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the local number of Cells.  <a href="#242213e2f2c48eef281ffade1b198458"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#90dbb3dd47fd53154128e0f146e057c4">getGlobalNumberOfCells</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the local number of Cells.  <a href="#fed37e2ecb986bdf7a9b9709f402c4b3"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#972352cf751442c4d8718c3729ea575f">getGlobalNumberOfCells</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the global number of cells.  <a href="#90dbb3dd47fd53154128e0f146e057c4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#152233fddbd90baa9778eb19bd1d0486">getPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;gid, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;bid) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the global number of cells.  <a href="#972352cf751442c4d8718c3729ea575f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#ce51aefb2487dd6701ecfcd476333750">getPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;gid) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on its <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>.  <a href="#152233fddbd90baa9778eb19bd1d0486"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#3f940f1ebc6d53f038ce761a803aeb55">getPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mbid) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on its <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>.  <a href="#ce51aefb2487dd6701ecfcd476333750"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#91d223e101894241d8648a7a8aab8280">getPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mbid) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on its <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#3f940f1ebc6d53f038ce761a803aeb55"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#0deb6d42bbce0e0e2a9634ee3694808a">getPatchDescriptor</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on its <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>.  <a href="#91d223e101894241d8648a7a8aab8280"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#96ad35f1ea0783909ab709eacdd65174">getPatchDescriptor</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a>.  <a href="#0deb6d42bbce0e0e2a9634ee3694808a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#998dddce587a5ef3aebd7df39d1a96bf">getPatchFactory</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a>.  <a href="#96ad35f1ea0783909ab709eacdd65174"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#46ecb6dc295d69fca5f562f51846de74">getPatchFactory</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>.  <a href="#998dddce587a5ef3aebd7df39d1a96bf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#51d3d46e74eb3d635d10b8c9466cf156">getGridGeometry</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>.  <a href="#46ecb6dc295d69fca5f562f51846de74"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#023e66514229ada50ed20dd7c5cf12f7">getGridGeometry</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a>.  <a href="#51d3d46e74eb3d635d10b8c9466cf156"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#04bafd88a60ec0705937d010c507f733">setRefinedPatchLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; coarse_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;refine_ratio, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt; fine_grid_geometry=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;(NULL), bool defer_boundary_box_creation=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the grid geometry.  <a href="#023e66514229ada50ed20dd7c5cf12f7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#b7741b806a8f48500a1b364b57e0b59d">setRefinedPatchLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt; &amp;coarse_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;refine_ratio, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;fine_grid_geometry=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;(), bool defer_boundary_box_creation=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Update this patch level through refining.  <a href="#04bafd88a60ec0705937d010c507f733"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#11cbed406551468f7a25ea9c1cfc45a4">setCoarsenedPatchLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; fine_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;coarsen_ratio, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt; coarse_grid_geom=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;(NULL), bool defer_boundary_box_creation=false)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Update this patch level through refining.  <a href="#b7741b806a8f48500a1b364b57e0b59d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#7346b1cb0cf45e50922d7ac1a04cd11e">setCoarsenedPatchLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt; &amp;fine_level, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;coarsen_ratio, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;coarse_grid_geom=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt;(), bool defer_boundary_box_creation=false)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Update this patch through coarsening.  <a href="#11cbed406551468f7a25ea9c1cfc45a4"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Update this patch through coarsening.  <a href="#7346b1cb0cf45e50922d7ac1a04cd11e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#adc756f7924a3355bb11bb22e4ef959e">setBoundaryBoxes</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create and store the boundary boxes for this level.  <a href="#adc756f7924a3355bb11bb22e4ef959e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#ae775df56ac19ea0978a31ac57bff419">getPhysicalDomainArray</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#24944ef3f21aa27c80aaf5187f00af5b">getPhysicalDomainArray</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the physical domain.  <a href="#ae775df56ac19ea0978a31ac57bff419"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#44e8f7733831fa5884940d0ed25ec944">getPhysicalDomain</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;block_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the physical domain.  <a href="#24944ef3f21aa27c80aaf5187f00af5b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#5639e9cbe1f05ddd103ac60770bf528f">getPhysicalDomain</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#bddcec8843c1ee714faff466628354f7">getBoxes</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#83c5776a46614be72fef9ae625ed52fa">getBoxes</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the box defining the patches on the level.  <a href="#bddcec8843c1ee714faff466628354f7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cf73571dd266ab0ca642e644436da526">getBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the box defining the patches on the level.  <a href="#83c5776a46614be72fef9ae625ed52fa"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cf16d88c00ea435f3e4e3dbab803ec05">getBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get boxes for a particular block.  <a href="#cf73571dd266ab0ca642e644436da526"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#a7c876e2e3a3bb734c59f72620a9cf46">getBoxLevel</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get boxes for a particular block.  <a href="#cf16d88c00ea435f3e4e3dbab803ec05"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#f12978c779b44256100ce591d10b1560">getBoxLevel</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.  <a href="#a7c876e2e3a3bb734c59f72620a9cf46"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#a2d17dcfbf65e7e88db06aab7b60242d">getGlobalizedBoxLevel</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.  <a href="#f12978c779b44256100ce591d10b1560"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#4a1dbcc46e8e71695031d622bf0354e8">getGlobalizedBoxLevel</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the globalized version of the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.  <a href="#a2d17dcfbf65e7e88db06aab7b60242d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">ProcessorMapping</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#f6b70feda918e84ddd71850a5b10e621">getProcessorMapping</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the globalized version of the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.  <a href="#4a1dbcc46e8e71695031d622bf0354e8"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">ProcessorMapping</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fcee1c777e955db2a3a8fbbf4ab3e73b">getProcessorMapping</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the mapping of patches to processors.  <a href="#f6b70feda918e84ddd71850a5b10e621"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#d55b187cc508dbe881527ae7bc68cc23">getRatioToLevelZero</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the mapping of patches to processors.  <a href="#fcee1c777e955db2a3a8fbbf4ab3e73b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#24725c20010021c7cc2afcb3451e747d">getRatioToLevelZero</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the ratio between the index space of this <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> and the reference level in the AMR hierarchy.  <a href="#d55b187cc508dbe881527ae7bc68cc23"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#58eb35d8be574ae7b0e45db3d9f95dbc">getRatioToCoarserLevel</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the ratio between the index space of this <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> and the reference level in the AMR hierarchy.  <a href="#24725c20010021c7cc2afcb3451e747d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#4c4a1db73d74c76760ec537208fde436">getRatioToCoarserLevel</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the ratio between this level and the next coarser level in the patch hierarchy.  <a href="#58eb35d8be574ae7b0e45db3d9f95dbc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8f5ae20726e0df4d934ebf181f54cd55">setRatioToCoarserLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the ratio between this level and the next coarser level in the patch hierarchy.  <a href="#4c4a1db73d74c76760ec537208fde436"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#7a2de3276c5a92abc92e1c1660382d0f">setRatioToCoarserLevel</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ratio between this level and the next coarser level in the patch hierarchy.  <a href="#8f5ae20726e0df4d934ebf181f54cd55"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#5d9a33d120ae97b6082d8a8433289a0f">getMappingForPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the ratio between this level and the next coarser level in the patch hierarchy.  <a href="#7a2de3276c5a92abc92e1c1660382d0f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#43402bcd5da716c8d912d3784f06b511">getMappingForPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the processor mapping for the patch.  <a href="#5d9a33d120ae97b6082d8a8433289a0f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#acbe85c54fb5832a2829413bc4c92eb9">getBoxForPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the processor mapping for the patch.  <a href="#43402bcd5da716c8d912d3784f06b511"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#80b55793054b84844e958776acdaa122">getBoxForPatch</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the box for the specified patch.  <a href="#acbe85c54fb5832a2829413bc4c92eb9"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cd8a4f6aac996332deb88887ec272833">patchTouchesRegularBoundary</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the box for the specified patch.  <a href="#80b55793054b84844e958776acdaa122"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#743de84683f7a356a0e35842eb72051f">patchTouchesRegularBoundary</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;mapped_box_id) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Determine if the patch is adjacent to a non-periodic physical domain boundary.  <a href="#cd8a4f6aac996332deb88887ec272833"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Determine if the patch is adjacent to a non-periodic physical domain boundary.  <a href="#743de84683f7a356a0e35842eb72051f"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#84d82d3137b6ddab72e68bdc1c850a14">allocatePatchData</a> (const int id, const double timestamp=0.0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Allocate the specified component on all patches.  <a href="#84d82d3137b6ddab72e68bdc1c850a14"></a><br></td></tr>
@@ -151,9 +155,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#9df56289678f1ce2754ab83ae740974f">deallocatePatchData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;components)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deallocate the specified components on all patches.  <a href="#9df56289678f1ce2754ab83ae740974f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#55a1a497e2e6160774ade8bc0d2f0983">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#64fb09ec627d950d4b4c44a987ddd004">getDim</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of this object.  <a href="#55a1a497e2e6160774ade8bc0d2f0983"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the dimension of this object.  <a href="#64fb09ec627d950d4b4c44a987ddd004"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#d6f088e034633873accb84c787bbb000">setTime</a> (const double timestamp, const int id)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the simulation time for the specified patch component.  <a href="#d6f088e034633873accb84c787bbb000"></a><br></td></tr>
@@ -163,15 +167,21 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#ff46b0eb8c82ac30f3d8b278eea31bda">setTime</a> (const double timestamp)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the simulation time for all allocated patch components.  <a href="#ff46b0eb8c82ac30f3d8b278eea31bda"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#cf9f759b34cbf89b3221934e9f423820">getFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#149376d0ae08ea10830b0e10bae891c7">getFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;component_selector)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> database to set the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> and to create all patches on the local processor.  <a href="#cf9f759b34cbf89b3221934e9f423820"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#d27e15b6adcd4a814e1b506febe71efe">putToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;patchdata_write_table)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> database to set the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> and to create all patches on the local processor.  <a href="#149376d0ae08ea10830b0e10bae891c7"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#f86aad55a9c06b52bc716b43fae02e44">putUnregisteredToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database, const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;patchdata_write_table) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write data to the database.  <a href="#d27e15b6adcd4a814e1b506febe71efe"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write data to the database.  <a href="#f86aad55a9c06b52bc716b43fae02e44"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#4e7c7baeb880b1b780b7d8d959056919">recursivePrint</a> (std::ostream &amp;os, const std::string &amp;border=std::string(), int depth=0)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print a patch level to varying details.  <a href="#4e7c7baeb880b1b780b7d8d959056919"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8fd80ee89b122692f806437570fee2ec">begin</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct an iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> in the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.  <a href="#8fd80ee89b122692f806437570fee2ec"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#7e358aea7db6c2dfc4aabb93aa23354b">end</a> () const </td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct an iterator pointing to the last <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> in the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>.  <a href="#7e358aea7db6c2dfc4aabb93aa23354b"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Classes</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a></td></tr>
 
@@ -190,6 +200,24 @@ To iterate over the local patches in a patch level, use the patch level iterator
 <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">hier::PatchLevel::Iterator</a> </dd></dl>
 
 <p>
+<hr><h2>Member Typedef Documentation</h2>
+<a class="anchor" name="ba58f0c14363634216c7f5830126b74f"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::iterator" ref="ba58f0c14363634216c7f5830126b74f" args="" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a> <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">SAMRAI::hier::PatchLevel::iterator</a>          </td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Typdef <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">PatchLevel::Iterator</a> to standard iterator nomenclature. 
+<p>
+
+</div>
+</div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="200e6f739f70f39e542a1f60e507c7d9"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::PatchLevel" ref="200e6f739f70f39e542a1f60e507c7d9" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
@@ -213,7 +241,7 @@ Default constructor. <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html"
 
 </div>
 </div><p>
-<a class="anchor" name="a7935f0be448387823cd3f17d1072a63"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::PatchLevel" ref="a7935f0be448387823cd3f17d1072a63" args="(const BoxLevel &amp;mapped_box_level, const tbox::Pointer&lt; GridGeometry &gt; grid_geometry, const tbox::Pointer&lt; PatchDescriptor &gt; descriptor, tbox::Pointer&lt; PatchFactory &gt; factory=tbox::Pointer&lt; PatchFactory &gt;(NULL), bool defer_boundary_box_creation=false)" -->
+<a class="anchor" name="45cf4c9056b8757f4fa5929f41e3c8b6"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::PatchLevel" ref="45cf4c9056b8757f4fa5929f41e3c8b6" args="(const BoxLevel &amp;mapped_box_level, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;grid_geometry, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor, const boost::shared_ptr&lt; PatchFactory &gt; &amp;factory=boost::shared_ptr&lt; PatchFactory &gt;(), bool defer_boundary_box_creation=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -226,20 +254,20 @@ Default constructor. <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html"
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>grid_geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>descriptor</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>factory</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>&nbsp;&gt;(NULL)</code>, </td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>factory</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>&nbsp;&gt;()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -250,7 +278,7 @@ Default constructor. <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html"
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -274,32 +302,32 @@ The ratio information provided by the <a class="el" href="classSAMRAI_1_1hier_1_
 
 </div>
 </div><p>
-<a class="anchor" name="cf118496a09549de8d8b4e7a1db4b574"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::PatchLevel" ref="cf118496a09549de8d8b4e7a1db4b574" args="(tbox::Pointer&lt; tbox::Database &gt; level_database, tbox::Pointer&lt; GridGeometry &gt; grid_geometry, tbox::Pointer&lt; PatchDescriptor &gt; descriptor, tbox::Pointer&lt; PatchFactory &gt; factory, const ComponentSelector &amp;component_selector=*(new ComponentSelector(false)), bool defer_boundary_box_creation=false)" -->
+<a class="anchor" name="8837d5b9aa9e9fe9bf14bbeb83d7a6b1"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::PatchLevel" ref="8837d5b9aa9e9fe9bf14bbeb83d7a6b1" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;level_database, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;grid_geometry, const boost::shared_ptr&lt; PatchDescriptor &gt; &amp;descriptor, const boost::shared_ptr&lt; PatchFactory &gt; &amp;factory, const ComponentSelector &amp;component_selector=*(new ComponentSelector(false)), bool defer_boundary_box_creation=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::hier::PatchLevel::PatchLevel           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level_database</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>grid_geometry</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>descriptor</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>factory</em>, </td>
         </tr>
         <tr>
@@ -317,7 +345,7 @@ The ratio information provided by the <a class="el" href="classSAMRAI_1_1hier_1_
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -363,16 +391,16 @@ The virtual destructor for patch level deallocates all patches.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="fa1029a03a313f77eca137c5b4fc0aef"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getLevelNumber" ref="fa1029a03a313f77eca137c5b4fc0aef" args="() const " -->
+<a class="anchor" name="86ccd6c9e5b7e91f1d00f89c938eb681"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getLevelNumber" ref="86ccd6c9e5b7e91f1d00f89c938eb681" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getLevelNumber           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getLevelNumber           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -382,7 +410,7 @@ The virtual destructor for patch level deallocates all patches.
 Get the level number. 
 <p>
 <dl compact><dt><b>Returns:</b></dt><dd>the number of this level in a hierarchy, or the number of a hierarchy level matching the index space of this level. If this level does not align with the index space of a level in the hierarchy, then this value is -1. When the level is in a hierarchy, the return value of the number of the level in the hierarchy.</dd></dl>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#92c09f9c43bdb459c73115349dfc53fd">inHierarchy()</a> </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8e6f9137668dded97fdc0b8714c80d10">inHierarchy()</a> </dd></dl>
 
 </div>
 </div><p>
@@ -396,7 +424,7 @@ Get the level number.
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -414,16 +442,16 @@ The default value is -1 meaning the level index space does not align with that o
 
 </div>
 </div><p>
-<a class="anchor" name="075ba40503220072582de98e4b3195a8"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getNextCoarserHierarchyLevelNumber" ref="075ba40503220072582de98e4b3195a8" args="() const " -->
+<a class="anchor" name="5c0476e6795563d5a2ed07bae4f3704c"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getNextCoarserHierarchyLevelNumber" ref="5c0476e6795563d5a2ed07bae4f3704c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getNextCoarserHierarchyLevelNumber           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getNextCoarserHierarchyLevelNumber           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -432,8 +460,8 @@ The default value is -1 meaning the level index space does not align with that o
 <p>
 Convenience method to get the next coarser level number in a hierarchy. 
 <p>
-Used for data interpolation from coarser levels. If the level is in a hierarchy, then this value is <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#fa1029a03a313f77eca137c5b4fc0aef">getLevelNumber()</a> - 1.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#92c09f9c43bdb459c73115349dfc53fd">inHierarchy()</a></dd></dl>
+Used for data interpolation from coarser levels. If the level is in a hierarchy, then this value is <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#86ccd6c9e5b7e91f1d00f89c938eb681">getLevelNumber()</a> - 1.<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8e6f9137668dded97fdc0b8714c80d10">inHierarchy()</a></dd></dl>
 <dl compact><dt><b>Returns:</b></dt><dd>The next coarser level in the hierarchy or -1 if the level does not exist in the hierarchy. </dd></dl>
 
 </div>
@@ -448,7 +476,7 @@ Used for data interpolation from coarser levels. If the level is in a hierarchy,
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -466,16 +494,16 @@ For the purposes of data interpolation from coarser levels, set the next coarser
 
 </div>
 </div><p>
-<a class="anchor" name="92c09f9c43bdb459c73115349dfc53fd"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::inHierarchy" ref="92c09f9c43bdb459c73115349dfc53fd" args="() const " -->
+<a class="anchor" name="8e6f9137668dded97fdc0b8714c80d10"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::inHierarchy" ref="8e6f9137668dded97fdc0b8714c80d10" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::PatchLevel::inHierarchy           </td>
+          <td class="memname">bool SAMRAI::hier::PatchLevel::inHierarchy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -498,7 +526,7 @@ Determine if this level resides in a hierarchy.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>in_hierarchy</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -515,16 +543,16 @@ Setting to indicate whether this level resides in a hierarchy.
 
 </div>
 </div><p>
-<a class="anchor" name="ccd06ffa50cd00cdfb0a03fba9d9b340"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getNumberOfPatches" ref="ccd06ffa50cd00cdfb0a03fba9d9b340" args="() const " -->
+<a class="anchor" name="61264835ab9407fd78039af6bc3d64d5"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getNumberOfPatches" ref="61264835ab9407fd78039af6bc3d64d5" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getNumberOfPatches           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getNumberOfPatches           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -533,19 +561,19 @@ Setting to indicate whether this level resides in a hierarchy.
 <p>
 Get the number of patches. 
 <p>
-This is equivalent to calling <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#40ca79bfe5e5329e39224d9964ccc41d">PatchLevel::getGlobalNumberOfPatches()</a>. 
+This is equivalent to calling <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#f1c646e30b1a744c4a3ee9b143da8569">PatchLevel::getGlobalNumberOfPatches()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="7fbb93435a13b9cc970995c577c20f7d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getLocalNumberOfPatches" ref="7fbb93435a13b9cc970995c577c20f7d" args="() const " -->
+<a class="anchor" name="b4194ddb2621f66bfaad0ef8c1a6b183"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getLocalNumberOfPatches" ref="b4194ddb2621f66bfaad0ef8c1a6b183" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getLocalNumberOfPatches           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getLocalNumberOfPatches           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -557,16 +585,16 @@ Get the local number of patches.
 
 </div>
 </div><p>
-<a class="anchor" name="40ca79bfe5e5329e39224d9964ccc41d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGlobalNumberOfPatches" ref="40ca79bfe5e5329e39224d9964ccc41d" args="() const " -->
+<a class="anchor" name="f1c646e30b1a744c4a3ee9b143da8569"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGlobalNumberOfPatches" ref="f1c646e30b1a744c4a3ee9b143da8569" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getGlobalNumberOfPatches           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getGlobalNumberOfPatches           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -578,16 +606,16 @@ Get the global number of patches.
 
 </div>
 </div><p>
-<a class="anchor" name="242213e2f2c48eef281ffade1b198458"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getLocalNumberOfCells" ref="242213e2f2c48eef281ffade1b198458" args="() const " -->
+<a class="anchor" name="fed37e2ecb986bdf7a9b9709f402c4b3"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getLocalNumberOfCells" ref="fed37e2ecb986bdf7a9b9709f402c4b3" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getLocalNumberOfCells           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getLocalNumberOfCells           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -599,16 +627,16 @@ Get the local number of Cells.
 
 </div>
 </div><p>
-<a class="anchor" name="90dbb3dd47fd53154128e0f146e057c4"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGlobalNumberOfCells" ref="90dbb3dd47fd53154128e0f146e057c4" args="() const " -->
+<a class="anchor" name="972352cf751442c4d8718c3729ea575f"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGlobalNumberOfCells" ref="972352cf751442c4d8718c3729ea575f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getGlobalNumberOfCells           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getGlobalNumberOfCells           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -620,55 +648,45 @@ Get the global number of cells.
 
 </div>
 </div><p>
-<a class="anchor" name="152233fddbd90baa9778eb19bd1d0486"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatch" ref="152233fddbd90baa9778eb19bd1d0486" args="(const GlobalId &amp;gid, const BlockId &amp;bid) const " -->
+<a class="anchor" name="ce51aefb2487dd6701ecfcd476333750"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatch" ref="ce51aefb2487dd6701ecfcd476333750" args="(const GlobalId &amp;gid) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt; &amp; SAMRAI::hier::PatchLevel::getPatch           </td>
+          <td class="memname">const boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a>&gt;&amp; SAMRAI::hier::PatchLevel::getPatch           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>gid</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>bid</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const</td>
+          <td class="paramname"> <em>gid</em>          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on its <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>. 
+Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on its <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>. 
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>gid</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>bid</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>A Pointer to the <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> indicated by the <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A boost::shared_ptr to the <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> indicated by the <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html">GlobalId</a>. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="3f940f1ebc6d53f038ce761a803aeb55"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatch" ref="3f940f1ebc6d53f038ce761a803aeb55" args="(const BoxId &amp;mbid) const " -->
+<a class="anchor" name="91d223e101894241d8648a7a8aab8280"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatch" ref="91d223e101894241d8648a7a8aab8280" args="(const BoxId &amp;mbid) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> &gt; SAMRAI::hier::PatchLevel::getPatch           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a>&gt; SAMRAI::hier::PatchLevel::getPatch           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mbid</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -682,20 +700,20 @@ Get a <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> based on 
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mbid</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
-<dl compact><dt><b>Returns:</b></dt><dd>A Pointer to the <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> indicated by the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A boost::shared_ptr to the <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> indicated by the <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a>. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="0deb6d42bbce0e0e2a9634ee3694808a"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatchDescriptor" ref="0deb6d42bbce0e0e2a9634ee3694808a" args="() const " -->
+<a class="anchor" name="96ad35f1ea0783909ab709eacdd65174"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatchDescriptor" ref="96ad35f1ea0783909ab709eacdd65174" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a> &gt; SAMRAI::hier::PatchLevel::getPatchDescriptor           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDescriptor</a>&gt; SAMRAI::hier::PatchLevel::getPatchDescriptor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -708,16 +726,16 @@ Get the <a class="el" href="classSAMRAI_1_1hier_1_1PatchDescriptor.html">PatchDe
 
 </div>
 </div><p>
-<a class="anchor" name="998dddce587a5ef3aebd7df39d1a96bf"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatchFactory" ref="998dddce587a5ef3aebd7df39d1a96bf" args="() const " -->
+<a class="anchor" name="46ecb6dc295d69fca5f562f51846de74"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPatchFactory" ref="46ecb6dc295d69fca5f562f51846de74" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a> &gt; SAMRAI::hier::PatchLevel::getPatchFactory           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFactory</a>&gt; SAMRAI::hier::PatchLevel::getPatchFactory           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -730,49 +748,49 @@ Get the <a class="el" href="classSAMRAI_1_1hier_1_1PatchFactory.html">PatchFacto
 
 </div>
 </div><p>
-<a class="anchor" name="51d3d46e74eb3d635d10b8c9466cf156"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGridGeometry" ref="51d3d46e74eb3d635d10b8c9466cf156" args="() const " -->
+<a class="anchor" name="023e66514229ada50ed20dd7c5cf12f7"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGridGeometry" ref="023e66514229ada50ed20dd7c5cf12f7" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a> &gt; SAMRAI::hier::PatchLevel::getGridGeometry           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a>&gt; SAMRAI::hier::PatchLevel::getGridGeometry           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Get the <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">GridGeometry</a>. 
+Get the grid geometry. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>A Pointer to the grid geometry description. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>A boost::shared_ptr to the grid geometry description. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="04bafd88a60ec0705937d010c507f733"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::setRefinedPatchLevel" ref="04bafd88a60ec0705937d010c507f733" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; coarse_level, const hier::IntVector &amp;refine_ratio, const tbox::Pointer&lt; hier::GridGeometry &gt; fine_grid_geometry=tbox::Pointer&lt; hier::GridGeometry &gt;(NULL), bool defer_boundary_box_creation=false)" -->
+<a class="anchor" name="b7741b806a8f48500a1b364b57e0b59d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::setRefinedPatchLevel" ref="b7741b806a8f48500a1b364b57e0b59d" args="(const boost::shared_ptr&lt; PatchLevel &gt; &amp;coarse_level, const IntVector &amp;refine_ratio, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;fine_grid_geometry=boost::shared_ptr&lt; BaseGridGeometry &gt;(), bool defer_boundary_box_creation=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::PatchLevel::setRefinedPatchLevel           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>coarse_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>refine_ratio</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>fine_grid_geometry</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a>&nbsp;&gt;(NULL)</code>, </td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>fine_grid_geometry</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a>&nbsp;&gt;()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -805,34 +823,34 @@ Second, when passed a non-null fine grid geometry pointer, the level is defined 
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_level</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>refine_ratio</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_grid_geometry</em>&nbsp;</td><td><b>Default:</b> Pointer to a null grid geometry </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_grid_geometry</em>&nbsp;</td><td><b>Default:</b> boost::shared_ptr to a null grid geometry </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>defer_boundary_box_creation</em>&nbsp;</td><td><b>Default:</b> false </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="11cbed406551468f7a25ea9c1cfc45a4"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::setCoarsenedPatchLevel" ref="11cbed406551468f7a25ea9c1cfc45a4" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; fine_level, const hier::IntVector &amp;coarsen_ratio, const tbox::Pointer&lt; hier::GridGeometry &gt; coarse_grid_geom=tbox::Pointer&lt; hier::GridGeometry &gt;(NULL), bool defer_boundary_box_creation=false)" -->
+<a class="anchor" name="7346b1cb0cf45e50922d7ac1a04cd11e"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::setCoarsenedPatchLevel" ref="7346b1cb0cf45e50922d7ac1a04cd11e" args="(const boost::shared_ptr&lt; PatchLevel &gt; &amp;fine_level, const IntVector &amp;coarsen_ratio, const boost::shared_ptr&lt; BaseGridGeometry &gt; &amp;coarse_grid_geom=boost::shared_ptr&lt; BaseGridGeometry &gt;(), bool defer_boundary_box_creation=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::PatchLevel::setCoarsenedPatchLevel           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fine_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>coarsen_ratio</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>coarse_grid_geom</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a>&nbsp;&gt;(NULL)</code>, </td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>coarse_grid_geom</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a>&nbsp;&gt;()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -864,7 +882,7 @@ When passed a non-null coarse grid geometry pointer, the level is defined relati
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_level</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_ratio</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_grid_geometry</em>&nbsp;</td><td><b>Default:</b> Pointer to a null grid geometry </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_grid_geom</em>&nbsp;</td><td><b>Default:</b> boost::shared_ptr to a null grid geometry </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>defer_boundary_box_creation</em>&nbsp;</td><td><b>Default:</b> false </td></tr>
   </table>
 </dl>
@@ -880,7 +898,7 @@ When passed a non-null coarse grid geometry pointer, the level is defined relati
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -893,16 +911,16 @@ If boundary boxes have already been constructed, this function does nothing. <dl
 
 </div>
 </div><p>
-<a class="anchor" name="ae775df56ac19ea0978a31ac57bff419"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPhysicalDomainArray" ref="ae775df56ac19ea0978a31ac57bff419" args="() const " -->
+<a class="anchor" name="24944ef3f21aa27c80aaf5187f00af5b"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPhysicalDomainArray" ref="24944ef3f21aa27c80aaf5187f00af5b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &gt; &amp; SAMRAI::hier::PatchLevel::getPhysicalDomainArray           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>&gt;&amp; SAMRAI::hier::PatchLevel::getPhysicalDomainArray           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -915,17 +933,17 @@ Get the physical domain.
 
 </div>
 </div><p>
-<a class="anchor" name="44e8f7733831fa5884940d0ed25ec944"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPhysicalDomain" ref="44e8f7733831fa5884940d0ed25ec944" args="(const hier::BlockId &amp;block_id) const " -->
+<a class="anchor" name="5639e9cbe1f05ddd103ac60770bf528f"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getPhysicalDomain" ref="5639e9cbe1f05ddd103ac60770bf528f" args="(const BlockId &amp;block_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp; SAMRAI::hier::PatchLevel::getPhysicalDomain           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>&amp; SAMRAI::hier::PatchLevel::getPhysicalDomain           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">hier::BlockId</a> &amp;&nbsp;</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>block_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -935,16 +953,16 @@ Get the physical domain.
 
 </div>
 </div><p>
-<a class="anchor" name="bddcec8843c1ee714faff466628354f7"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxes" ref="bddcec8843c1ee714faff466628354f7" args="() const " -->
+<a class="anchor" name="83c5776a46614be72fef9ae625ed52fa"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxes" ref="83c5776a46614be72fef9ae625ed52fa" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp; SAMRAI::hier::PatchLevel::getBoxes           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a>&amp; SAMRAI::hier::PatchLevel::getBoxes           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -953,17 +971,17 @@ Get the physical domain.
 <p>
 Get the box defining the patches on the level. 
 <p>
-The internal state of <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> (where boxes are concern) is dependent on the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with it, and computed only if <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#bddcec8843c1ee714faff466628354f7">getBoxes()</a> is called. The first call to <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#bddcec8843c1ee714faff466628354f7">getBoxes()</a> must be done by all processors as it requires communication.<p>
+The internal state of <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> (where boxes are concern) is dependent on the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with it, and computed only if <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#83c5776a46614be72fef9ae625ed52fa">getBoxes()</a> is called. The first call to <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#83c5776a46614be72fef9ae625ed52fa">getBoxes()</a> must be done by all processors as it requires communication.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>a const reference to the box array that defines the patches on the level. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="cf73571dd266ab0ca642e644436da526"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxes" ref="cf73571dd266ab0ca642e644436da526" args="(BoxContainer &amp;boxes, const BlockId &amp;block_id) const " -->
+<a class="anchor" name="cf16d88c00ea435f3e4e3dbab803ec05"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxes" ref="cf16d88c00ea435f3e4e3dbab803ec05" args="(BoxContainer &amp;boxes, const BlockId &amp;block_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::PatchLevel::getBoxes           </td>
+          <td class="memname">void SAMRAI::hier::PatchLevel::getBoxes           </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>boxes</em>, </td>
@@ -996,16 +1014,16 @@ The boxes from only the specified block will be stored in the output <a class="e
 
 </div>
 </div><p>
-<a class="anchor" name="a7c876e2e3a3bb734c59f72620a9cf46"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxLevel" ref="a7c876e2e3a3bb734c59f72620a9cf46" args="() const " -->
+<a class="anchor" name="f12978c779b44256100ce591d10b1560"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxLevel" ref="f12978c779b44256100ce591d10b1560" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &gt; &amp; SAMRAI::hier::PatchLevel::getBoxLevel           </td>
+          <td class="memname">const boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>&gt;&amp; SAMRAI::hier::PatchLevel::getBoxLevel           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1014,20 +1032,20 @@ The boxes from only the specified block will be stored in the output <a class="e
 <p>
 Get the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>. 
 <p>
-<dl compact><dt><b>Returns:</b></dt><dd>a reference to a Pointer to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>. </dd></dl>
+<dl compact><dt><b>Returns:</b></dt><dd>a reference to a boost::shared_ptr to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> associated with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="a2d17dcfbf65e7e88db06aab7b60242d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGlobalizedBoxLevel" ref="a2d17dcfbf65e7e88db06aab7b60242d" args="() const " -->
+<a class="anchor" name="4a1dbcc46e8e71695031d622bf0354e8"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getGlobalizedBoxLevel" ref="4a1dbcc46e8e71695031d622bf0354e8" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp; SAMRAI::hier::PatchLevel::getGlobalizedBoxLevel           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a>&amp; SAMRAI::hier::PatchLevel::getGlobalizedBoxLevel           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1041,16 +1059,16 @@ Get the globalized version of the <a class="el" href="classSAMRAI_1_1hier_1_1Box
 
 </div>
 </div><p>
-<a class="anchor" name="f6b70feda918e84ddd71850a5b10e621"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getProcessorMapping" ref="f6b70feda918e84ddd71850a5b10e621" args="() const " -->
+<a class="anchor" name="fcee1c777e955db2a3a8fbbf4ab3e73b"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getProcessorMapping" ref="fcee1c777e955db2a3a8fbbf4ab3e73b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">ProcessorMapping</a> &amp; SAMRAI::hier::PatchLevel::getProcessorMapping           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">ProcessorMapping</a>&amp; SAMRAI::hier::PatchLevel::getProcessorMapping           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1063,16 +1081,16 @@ Get the mapping of patches to processors.
 
 </div>
 </div><p>
-<a class="anchor" name="d55b187cc508dbe881527ae7bc68cc23"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getRatioToLevelZero" ref="d55b187cc508dbe881527ae7bc68cc23" args="() const " -->
+<a class="anchor" name="24725c20010021c7cc2afcb3451e747d"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getRatioToLevelZero" ref="24725c20010021c7cc2afcb3451e747d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp; SAMRAI::hier::PatchLevel::getRatioToLevelZero           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&amp; SAMRAI::hier::PatchLevel::getRatioToLevelZero           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1085,16 +1103,16 @@ Get the ratio between the index space of this <a class="el" href="classSAMRAI_1_
 
 </div>
 </div><p>
-<a class="anchor" name="58eb35d8be574ae7b0e45db3d9f95dbc"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getRatioToCoarserLevel" ref="58eb35d8be574ae7b0e45db3d9f95dbc" args="() const " -->
+<a class="anchor" name="4c4a1db73d74c76760ec537208fde436"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getRatioToCoarserLevel" ref="4c4a1db73d74c76760ec537208fde436" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp; SAMRAI::hier::PatchLevel::getRatioToCoarserLevel           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a>&amp; SAMRAI::hier::PatchLevel::getRatioToCoarserLevel           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1103,22 +1121,22 @@ Get the ratio between the index space of this <a class="el" href="classSAMRAI_1_
 <p>
 Get the ratio between this level and the next coarser level in the patch hierarchy. 
 <p>
-This vector is set with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#8f5ae20726e0df4d934ebf181f54cd55">setRatioToCoarserLevel()</a> function. If the level is not in a hierarchy, a default ratio of zero is returned.<p>
+This vector is set with the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html#7a2de3276c5a92abc92e1c1660382d0f">setRatioToCoarserLevel()</a> function. If the level is not in a hierarchy, a default ratio of zero is returned.<p>
 <dl compact><dt><b>Returns:</b></dt><dd>the vector ratio between this level and the next coarser level in the patch hierarchy. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="8f5ae20726e0df4d934ebf181f54cd55"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::setRatioToCoarserLevel" ref="8f5ae20726e0df4d934ebf181f54cd55" args="(const IntVector &amp;ratio)" -->
+<a class="anchor" name="7a2de3276c5a92abc92e1c1660382d0f"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::setRatioToCoarserLevel" ref="7a2de3276c5a92abc92e1c1660382d0f" args="(const IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::PatchLevel::setRatioToCoarserLevel           </td>
+          <td class="memname">void SAMRAI::hier::PatchLevel::setRatioToCoarserLevel           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>ratio</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1136,17 +1154,17 @@ This is required only when level resides in a hierarchy.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="5d9a33d120ae97b6082d8a8433289a0f"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getMappingForPatch" ref="5d9a33d120ae97b6082d8a8433289a0f" args="(const BoxId &amp;mapped_box_id) const " -->
+<a class="anchor" name="43402bcd5da716c8d912d3784f06b511"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getMappingForPatch" ref="43402bcd5da716c8d912d3784f06b511" args="(const BoxId &amp;mapped_box_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::PatchLevel::getMappingForPatch           </td>
+          <td class="memname">int SAMRAI::hier::PatchLevel::getMappingForPatch           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mapped_box_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1164,17 +1182,17 @@ Get the processor mapping for the patch.
 
 </div>
 </div><p>
-<a class="anchor" name="acbe85c54fb5832a2829413bc4c92eb9"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxForPatch" ref="acbe85c54fb5832a2829413bc4c92eb9" args="(const BoxId &amp;mapped_box_id) const " -->
+<a class="anchor" name="80b55793054b84844e958776acdaa122"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getBoxForPatch" ref="80b55793054b84844e958776acdaa122" args="(const BoxId &amp;mapped_box_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::PatchLevel::getBoxForPatch           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; SAMRAI::hier::PatchLevel::getBoxForPatch           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mapped_box_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1192,17 +1210,17 @@ Get the box for the specified patch.
 
 </div>
 </div><p>
-<a class="anchor" name="cd8a4f6aac996332deb88887ec272833"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::patchTouchesRegularBoundary" ref="cd8a4f6aac996332deb88887ec272833" args="(const BoxId &amp;mapped_box_id) const " -->
+<a class="anchor" name="743de84683f7a356a0e35842eb72051f"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::patchTouchesRegularBoundary" ref="743de84683f7a356a0e35842eb72051f" args="(const BoxId &amp;mapped_box_id) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::PatchLevel::patchTouchesRegularBoundary           </td>
+          <td class="memname">bool SAMRAI::hier::PatchLevel::patchTouchesRegularBoundary           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>mapped_box_id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1239,7 +1257,7 @@ Determine if the patch is adjacent to a non-periodic physical domain boundary.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1276,7 +1294,7 @@ Allocate the specified component on all patches.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1304,7 +1322,7 @@ Allocate the specified components on all patches.
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1332,7 +1350,7 @@ Determine if the patch data has been allocated.
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>id</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1360,7 +1378,7 @@ This component will need to be reallocated before its next use.<p>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1ComponentSelector.html">ComponentSelector</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>components</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1378,16 +1396,16 @@ Components will need to be reallocated before their next use.<p>
 
 </div>
 </div><p>
-<a class="anchor" name="55a1a497e2e6160774ade8bc0d2f0983"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getDim" ref="55a1a497e2e6160774ade8bc0d2f0983" args="() const " -->
+<a class="anchor" name="64fb09ec627d950d4b4c44a987ddd004"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getDim" ref="64fb09ec627d950d4b4c44a987ddd004" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::hier::PatchLevel::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::PatchLevel::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1419,7 +1437,7 @@ Get the dimension of this object.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1456,7 +1474,7 @@ Set the simulation time for the specified patch component.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1484,7 +1502,7 @@ Set the simulation time for the specified patch components.
           <td class="paramtype">const double&nbsp;</td>
           <td class="paramname"> <em>timestamp</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1501,14 +1519,14 @@ Set the simulation time for all allocated patch components.
 
 </div>
 </div><p>
-<a class="anchor" name="cf9f759b34cbf89b3221934e9f423820"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getFromDatabase" ref="cf9f759b34cbf89b3221934e9f423820" args="(tbox::Pointer&lt; tbox::Database &gt; database, const ComponentSelector &amp;component_selector)" -->
+<a class="anchor" name="149376d0ae08ea10830b0e10bae891c7"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::getFromDatabase" ref="149376d0ae08ea10830b0e10bae891c7" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database, const ComponentSelector &amp;component_selector)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::PatchLevel::getFromDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>, </td>
         </tr>
         <tr>
@@ -1529,7 +1547,7 @@ Set the simulation time for all allocated patch components.
 <p>
 Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> database to set the state of the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> and to create all patches on the local processor. 
 <p>
-<dl compact><dt><b>Assertions</b></dt><dd>Assertions will check that database is a non-null Pointer, that the data being retrieved from the database are of the type expected. Also checked is the number of patches is positive, and the number of patches and size of processor mapping array are the same, and that the number of patches and the number of boxes on the level are equal.</dd></dl>
+<dl compact><dt><b>Assertions</b></dt><dd>Assertions will check that database is a non-null boost::shared_ptr, that the data being retrieved from the database are of the type expected. Also checked is the number of patches is positive, and the number of patches and size of processor mapping array are the same, and that the number of patches and the number of boxes on the level are equal.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
@@ -1539,14 +1557,14 @@ Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</
 
 </div>
 </div><p>
-<a class="anchor" name="d27e15b6adcd4a814e1b506febe71efe"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::putToDatabase" ref="d27e15b6adcd4a814e1b506febe71efe" args="(tbox::Pointer&lt; tbox::Database &gt; database, const ComponentSelector &amp;patchdata_write_table)" -->
+<a class="anchor" name="f86aad55a9c06b52bc716b43fae02e44"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::putUnregisteredToDatabase" ref="f86aad55a9c06b52bc716b43fae02e44" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database, const ComponentSelector &amp;patchdata_write_table) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::hier::PatchLevel::putToDatabase           </td>
+          <td class="memname">void SAMRAI::hier::PatchLevel::putUnregisteredToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>, </td>
         </tr>
         <tr>
@@ -1558,7 +1576,7 @@ Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -1568,7 +1586,7 @@ Use the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</
 Write data to the database. 
 <p>
 Writes the data from the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a> to the database. Also tells all local patches to write out their state to the database.<p>
-<dl compact><dt><b>Assertions</b></dt><dd>Check that database is a non-null Pointer.</dd></dl>
+<dl compact><dt><b>Assertions</b></dt><dd>Check that database is a non-null boost::shared_ptr.</dd></dl>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>database</em>&nbsp;</td><td></td></tr>
@@ -1624,9 +1642,51 @@ If depth&gt;0, print function will be called for each patch in the level.<p>
 
 </div>
 </div><p>
+<a class="anchor" name="8fd80ee89b122692f806437570fee2ec"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::begin" ref="8fd80ee89b122692f806437570fee2ec" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a> SAMRAI::hier::PatchLevel::begin           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct an iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> in the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="7e358aea7db6c2dfc4aabb93aa23354b"></a><!-- doxytag: member="SAMRAI::hier::PatchLevel::end" ref="7e358aea7db6c2dfc4aabb93aa23354b" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel_1_1Iterator.html">Iterator</a> SAMRAI::hier::PatchLevel::end           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Construct an iterator pointing to the last <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">Patch</a> in the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">PatchLevel</a>. 
+<p>
+
+</div>
+</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8h.html">PatchLevel.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8C.html">PatchLevel.C</a><li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8I.html">PatchLevel.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8h.html">PatchLevel.h</a><li>source/SAMRAI/hier/<a class="el" href="PatchLevel_8C.html">PatchLevel.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

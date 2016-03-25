@@ -21,7 +21,10 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1hier.html">hier</a>::<a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a></div>
-<h1>SAMRAI::hier::BoundaryBox Class Reference</h1><!-- doxytag: class="SAMRAI::hier::BoundaryBox" --><code>#include &lt;source/SAMRAI/hier/BoundaryBox.h&gt;</code>
+<h1>SAMRAI::hier::BoundaryBox Class Reference</h1><!-- doxytag: class="SAMRAI::hier::BoundaryBox" -->Class <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> is is used to describe boundaries of a patch.  
+<a href="#_details">More...</a>
+<p>
+<code>#include &lt;source/SAMRAI/hier/BoundaryBox.h&gt;</code>
 <p>
 <a href="classSAMRAI_1_1hier_1_1BoundaryBox-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
@@ -39,46 +42,47 @@
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Enumerated type BoundaryOrientation is used to indicate where a boundary box is located relative to a patch in a particular coordinate direction. MIDDLE means a boundary box is neither on the upper or lower side of a patch in the given coordinate direction. For example, an edge boundary box on the right side of a patch in 2d is neither on the upper or lower side of the patch in the J coordinate direction, so its BoundaryOrientation value would be MIDDLE. The same boundary box would be UPPER in the I coordinate direction.  <a href="classSAMRAI_1_1hier_1_1BoundaryBox.html#13f91eccea35180adfdc51f3ad7df718">More...</a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#9b41d99a7193d34bba4ef908d54581a2">BoundaryBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#f720a99c5a59d404e8ff0cf510023603">BoundaryBox</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor that builds an undefined boundary box, with invalid values other than dimension.  <a href="#9b41d99a7193d34bba4ef908d54581a2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor that builds an undefined boundary box, with invalid values other than dimension.  <a href="#f720a99c5a59d404e8ff0cf510023603"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#7c0b03cbcb65225fcfdef102d6f0f892">BoundaryBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;box, const int bdry_type, const int location_index)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a boundary box described by arguments.  <a href="#7c0b03cbcb65225fcfdef102d6f0f892"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#3c56ac0b2b30611b2ddf80fed3825898">BoundaryBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;boundary_box)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#e3f8db3e355040150e72cc689d076961">BoundaryBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;boundary_box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#3c56ac0b2b30611b2ddf80fed3825898"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Copy constructor.  <a href="#e3f8db3e355040150e72cc689d076961"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#74243032051f188182eb182b18d494ba">~BoundaryBox</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor for <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>.  <a href="#74243032051f188182eb182b18d494ba"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#bd7e085ca2e42f91338e525e799e3ce2">getBox</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#79dbfdcf9a9057bab61d66d9a1587233">getBox</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> member of the boundary box.  <a href="#bd7e085ca2e42f91338e525e799e3ce2"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#092318c61cc0441a3c07f3d13c1eb865">getBoundaryType</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> member of the boundary box.  <a href="#79dbfdcf9a9057bab61d66d9a1587233"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#e58456c3439e6e73941212bdc3820460">getBoundaryType</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the boundary type (codimension) of the boundary box.  <a href="#092318c61cc0441a3c07f3d13c1eb865"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#9c2bb57c98acb107bec940417d009c5b">getLocationIndex</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the boundary type (codimension) of the boundary box.  <a href="#e58456c3439e6e73941212bdc3820460"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#0584d74aa32f002ba9fc3fe82c98dc7f">getLocationIndex</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the location index for the boundary box.  <a href="#9c2bb57c98acb107bec940417d009c5b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#539f350de9572694bc2083ced86fda51">setIsMultiblockSingularity</a> (bool is_mblk_singularity)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the location index for the boundary box.  <a href="#0584d74aa32f002ba9fc3fe82c98dc7f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#3b4ff9069c8806d4edc9f9df93fe016d">setIsMultiblockSingularity</a> (bool is_mblk_singularity)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the multiblock singularity flag to the argument value.  <a href="#539f350de9572694bc2083ced86fda51"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#60b62f246945949c5a3f9752d154f827">getIsMultiblockSingularity</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the multiblock singularity flag to the argument value.  <a href="#3b4ff9069c8806d4edc9f9df93fe016d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#c2f9a2d4bac4f8694642405cd5814544">getIsMultiblockSingularity</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the value of the multiblock singularity flag.  <a href="#60b62f246945949c5a3f9752d154f827"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#fac053263163b423dd6a3fb3f059193b">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;boundary_box)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the value of the multiblock singularity flag.  <a href="#c2f9a2d4bac4f8694642405cd5814544"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#0cf61ef696b54ac8e3713d18f360ac0b">operator=</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;boundary_box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The assignment operator copies all data components.  <a href="#fac053263163b423dd6a3fb3f059193b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#13f91eccea35180adfdc51f3ad7df718">BoundaryOrientation</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#a9612f68a5bb62cbb2c3f3f9913103fc">getBoundaryOrientation</a> (const int dir) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The assignment operator copies all data components.  <a href="#0cf61ef696b54ac8e3713d18f360ac0b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#13f91eccea35180adfdc51f3ad7df718">BoundaryOrientation</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#f3c2f223482a34b2a2d762e52f193d0b">getBoundaryOrientation</a> (const int dir) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get which side of a patch the boundary box is on.  <a href="#a9612f68a5bb62cbb2c3f3f9913103fc"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#0fd4a6f1a151f78226404714adde4bd9">getDim</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get which side of a patch the boundary box is on.  <a href="#f3c2f223482a34b2a2d762e52f193d0b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#d0a2849474f95cdce267f088e0f66856">getDim</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#0fd4a6f1a151f78226404714adde4bd9"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#d0a2849474f95cdce267f088e0f66856"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> is is used to describe boundaries of a patch.<p>
-Objects of this type are held by a <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">PatchGeometry</a> object. The <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> consists of a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, a boundary type (codimension), and a location index. The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is one cell wide in at least one direction and is located just outside of a patch boundary. For example, a bondary box along a patch face is one cell wide in the coordinate direction normal to the patch face. The boundary type identifies the type of patch bounadry: face, edge, or corner (node). The location index specifies the location of the boundary box in relation to the patch boundary. See the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#092318c61cc0441a3c07f3d13c1eb865">getBoundaryType()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#9c2bb57c98acb107bec940417d009c5b">getLocationIndex()</a> methods for more information.<p>
+Class <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> is is used to describe boundaries of a patch. 
+<p>
+Objects of this type are held by a <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">PatchGeometry</a> object. The <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> consists of a <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>, a boundary type (codimension), and a location index. The <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> is one cell wide in at least one direction and is located just outside of a patch boundary. For example, a bondary box along a patch face is one cell wide in the coordinate direction normal to the patch face. The boundary type identifies the type of patch bounadry: face, edge, or corner (node). The location index specifies the location of the boundary box in relation to the patch boundary. See the <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#e58456c3439e6e73941212bdc3820460">getBoundaryType()</a> and <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#0584d74aa32f002ba9fc3fe82c98dc7f">getLocationIndex()</a> methods for more information.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html">hier::PatchGeometry</a> <p>
 <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html">hier::BoundaryLookupTable</a> </dd></dl>
@@ -113,12 +117,12 @@ Enumerated type BoundaryOrientation is used to indicate where a boundary box is 
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="9b41d99a7193d34bba4ef908d54581a2"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::BoundaryBox" ref="9b41d99a7193d34bba4ef908d54581a2" args="(const tbox::Dimension &amp;dim)" -->
+<a class="anchor" name="f720a99c5a59d404e8ff0cf510023603"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::BoundaryBox" ref="f720a99c5a59d404e8ff0cf510023603" args="(const tbox::Dimension &amp;dim)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::BoundaryBox::BoundaryBox           </td>
+          <td class="memname">SAMRAI::hier::BoundaryBox::BoundaryBox           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
@@ -165,7 +169,7 @@ Constructor that builds an undefined boundary box, with invalid values other tha
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -185,12 +189,12 @@ Assertions: bdry_type must be between 1 and dim, inclusive. location_index must 
 
 </div>
 </div><p>
-<a class="anchor" name="3c56ac0b2b30611b2ddf80fed3825898"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::BoundaryBox" ref="3c56ac0b2b30611b2ddf80fed3825898" args="(const BoundaryBox &amp;boundary_box)" -->
+<a class="anchor" name="e3f8db3e355040150e72cc689d076961"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::BoundaryBox" ref="e3f8db3e355040150e72cc689d076961" args="(const BoundaryBox &amp;boundary_box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::hier::BoundaryBox::BoundaryBox           </td>
+          <td class="memname">SAMRAI::hier::BoundaryBox::BoundaryBox           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>boundary_box</em>          </td>
@@ -234,16 +238,16 @@ The destructor for <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="bd7e085ca2e42f91338e525e799e3ce2"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBox" ref="bd7e085ca2e42f91338e525e799e3ce2" args="() const " -->
+<a class="anchor" name="79dbfdcf9a9057bab61d66d9a1587233"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBox" ref="79dbfdcf9a9057bab61d66d9a1587233" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> &amp; SAMRAI::hier::BoundaryBox::getBox           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>&amp; SAMRAI::hier::BoundaryBox::getBox           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -256,16 +260,16 @@ Return the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> member o
 
 </div>
 </div><p>
-<a class="anchor" name="092318c61cc0441a3c07f3d13c1eb865"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBoundaryType" ref="092318c61cc0441a3c07f3d13c1eb865" args="() const " -->
+<a class="anchor" name="e58456c3439e6e73941212bdc3820460"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBoundaryType" ref="e58456c3439e6e73941212bdc3820460" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::BoundaryBox::getBoundaryType           </td>
+          <td class="memname">int SAMRAI::hier::BoundaryBox::getBoundaryType           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -296,16 +300,16 @@ Return the boundary type (codimension) of the boundary box.
 
 </div>
 </div><p>
-<a class="anchor" name="9c2bb57c98acb107bec940417d009c5b"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getLocationIndex" ref="9c2bb57c98acb107bec940417d009c5b" args="() const " -->
+<a class="anchor" name="0584d74aa32f002ba9fc3fe82c98dc7f"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getLocationIndex" ref="0584d74aa32f002ba9fc3fe82c98dc7f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::hier::BoundaryBox::getLocationIndex           </td>
+          <td class="memname">int SAMRAI::hier::BoundaryBox::getLocationIndex           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -378,17 +382,17 @@ The location index is an integer which indicates the location of the the boundar
 
 </div>
 </div><p>
-<a class="anchor" name="539f350de9572694bc2083ced86fda51"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::setIsMultiblockSingularity" ref="539f350de9572694bc2083ced86fda51" args="(bool is_mblk_singularity)" -->
+<a class="anchor" name="3b4ff9069c8806d4edc9f9df93fe016d"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::setIsMultiblockSingularity" ref="3b4ff9069c8806d4edc9f9df93fe016d" args="(bool is_mblk_singularity)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::hier::BoundaryBox::setIsMultiblockSingularity           </td>
+          <td class="memname">void SAMRAI::hier::BoundaryBox::setIsMultiblockSingularity           </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>is_mblk_singularity</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -406,16 +410,16 @@ In multiblock problems, the code setting up multiblock hierarchies and patch lev
 
 </div>
 </div><p>
-<a class="anchor" name="60b62f246945949c5a3f9752d154f827"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getIsMultiblockSingularity" ref="60b62f246945949c5a3f9752d154f827" args="() const " -->
+<a class="anchor" name="c2f9a2d4bac4f8694642405cd5814544"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getIsMultiblockSingularity" ref="c2f9a2d4bac4f8694642405cd5814544" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::hier::BoundaryBox::getIsMultiblockSingularity           </td>
+          <td class="memname">bool SAMRAI::hier::BoundaryBox::getIsMultiblockSingularity           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -428,17 +432,17 @@ Get the value of the multiblock singularity flag.
 
 </div>
 </div><p>
-<a class="anchor" name="fac053263163b423dd6a3fb3f059193b"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::operator=" ref="fac053263163b423dd6a3fb3f059193b" args="(const BoundaryBox &amp;boundary_box)" -->
+<a class="anchor" name="0cf61ef696b54ac8e3713d18f360ac0b"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::operator=" ref="0cf61ef696b54ac8e3713d18f360ac0b" args="(const BoundaryBox &amp;boundary_box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp; SAMRAI::hier::BoundaryBox::operator=           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a>&amp; SAMRAI::hier::BoundaryBox::operator=           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html">BoundaryBox</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>boundary_box</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -455,12 +459,12 @@ The assignment operator copies all data components.
 
 </div>
 </div><p>
-<a class="anchor" name="a9612f68a5bb62cbb2c3f3f9913103fc"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBoundaryOrientation" ref="a9612f68a5bb62cbb2c3f3f9913103fc" args="(const int dir) const " -->
+<a class="anchor" name="f3c2f223482a34b2a2d762e52f193d0b"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getBoundaryOrientation" ref="f3c2f223482a34b2a2d762e52f193d0b" args="(const int dir) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#13f91eccea35180adfdc51f3ad7df718">BoundaryBox::BoundaryOrientation</a> SAMRAI::hier::BoundaryBox::getBoundaryOrientation           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryBox.html#13f91eccea35180adfdc51f3ad7df718">BoundaryBox::BoundaryOrientation</a> SAMRAI::hier::BoundaryBox::getBoundaryOrientation           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>dir</em>          </td>
@@ -484,16 +488,16 @@ Returns BoundaryOrientation value indicating whether the boundary box is on the 
 
 </div>
 </div><p>
-<a class="anchor" name="0fd4a6f1a151f78226404714adde4bd9"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getDim" ref="0fd4a6f1a151f78226404714adde4bd9" args="() const " -->
+<a class="anchor" name="d0a2849474f95cdce267f088e0f66856"></a><!-- doxytag: member="SAMRAI::hier::BoundaryBox::getDim" ref="d0a2849474f95cdce267f088e0f66856" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::hier::BoundaryBox::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::hier::BoundaryBox::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -507,8 +511,8 @@ Return the dimension of this object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8h.html">BoundaryBox.h</a><li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8C.html">BoundaryBox.C</a><li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8I.html">BoundaryBox.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8h.html">BoundaryBox.h</a><li>source/SAMRAI/hier/<a class="el" href="BoundaryBox_8C.html">BoundaryBox.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

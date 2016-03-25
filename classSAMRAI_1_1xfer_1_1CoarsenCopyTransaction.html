@@ -29,13 +29,12 @@
 <p>Inheritance diagram for SAMRAI::xfer::CoarsenCopyTransaction:
 <p><center><img src="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.png" usemap="#SAMRAI::xfer::CoarsenCopyTransaction_map" border="0" alt=""></center>
 <map name="SAMRAI::xfer::CoarsenCopyTransaction_map">
-<area href="classSAMRAI_1_1tbox_1_1Transaction.html" alt="SAMRAI::tbox::Transaction" shape="rect" coords="0,56,238,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="0,0,238,24">
+<area href="classSAMRAI_1_1tbox_1_1Transaction.html" alt="SAMRAI::tbox::Transaction" shape="rect" coords="0,0,238,24">
 </map>
 <a href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#e0be84165f2b6db594ac1715137ace22">CoarsenCopyTransaction</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, int coarsen_item_id)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#bc56a4894d13303be97b9653c2252395">CoarsenCopyTransaction</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;dst_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;src_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;overlap, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;dst_mapped_box, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mapped_box, const int coarsen_item_id)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#23c533b5f0a4123104674e76d38af9f1">~CoarsenCopyTransaction</a> ()</td></tr>
 
@@ -45,9 +44,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#9ccda2aec7e7a5860598475567e00d2d">computeOutgoingMessageSize</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#28435d7a0ed0e54e207efa252f409efb">getSourceProcessor</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#987406e92237e3dd7ea304a94bb0b2d4">getSourceProcessor</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#df442107ab54dd51908ef49fafe5248f">getDestinationProcessor</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#880681921972297795abb3f4d03bb619">getDestinationProcessor</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#69ebae11f31837ae91416d8ce4f6f76a">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream)</td></tr>
 
@@ -58,9 +57,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#be5d0936e91e3bd2fc9d0a9467758619">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#b9bcad89a89347330845556569fc5587">setCoarsenItems</a> (const <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">CoarsenClasses::Data</a> **coarsen_items, int num_coarsen_items)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#615ccaa0fc6aeb8c172f76ea54ab8a13">setCoarsenItems</a> (const <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">CoarsenClasses::Data</a> **coarsen_items, int num_coarsen_items)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#75e24188cb03fb29c0f8a023634026de">unsetCoarsenItems</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html#0bf9016e01f7679e8087525940c3ecda">unsetCoarsenItems</a> ()</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -73,26 +72,26 @@ Class <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html">Co
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="e0be84165f2b6db594ac1715137ace22"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::CoarsenCopyTransaction" ref="e0be84165f2b6db594ac1715137ace22" args="(tbox::Pointer&lt; hier::PatchLevel &gt; &amp;dst_level, tbox::Pointer&lt; hier::PatchLevel &gt; &amp;src_level, tbox::Pointer&lt; hier::BoxOverlap &gt; overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, int coarsen_item_id)" -->
+<a class="anchor" name="bc56a4894d13303be97b9653c2252395"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::CoarsenCopyTransaction" ref="bc56a4894d13303be97b9653c2252395" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;dst_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;src_level, const boost::shared_ptr&lt; hier::BoxOverlap &gt; &amp;overlap, const hier::Box &amp;dst_mapped_box, const hier::Box &amp;src_mapped_box, const int coarsen_item_id)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::xfer::CoarsenCopyTransaction::CoarsenCopyTransaction           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em>, </td>
         </tr>
         <tr>
@@ -110,13 +109,13 @@ Class <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html">Co
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>coarsen_item_id</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -126,11 +125,11 @@ Class <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenCopyTransaction.html">Co
 Construct a transaction with the specified source and destination levels, patches, and patch data components found in the coarsen class item with the given id owned by the calling coarsen schedule. In general, this constructor is called by a <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> object for each data transaction (not involving time interpolation) that must occur. This transaction will be responsible for one of the following: (1) a local data copy, (2) packing a message stream with source patch data, or (3) unpacking destination patch data from a message stream.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to source patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> to overlap region between patches. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dst_patch</em>&nbsp;</td><td>Integer index of destination patch in destination patch level. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>src_patch</em>&nbsp;</td><td>Integer index of source patch in source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_level</em>&nbsp;</td><td>boost::shared_ptr to destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_level</em>&nbsp;</td><td>boost::shared_ptr to source patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>overlap</em>&nbsp;</td><td>boost::shared_ptr to overlap region between patches. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dst_mapped_box</em>&nbsp;</td><td>Destination Box in destination patch level. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>src_mapped_box</em>&nbsp;</td><td>Source Box in source patch level. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>coarsen_item_id</em>&nbsp;</td><td>Integer id of coarsen data item owned by coarsen schedule.</td></tr>
   </table>
 </dl>
@@ -157,12 +156,12 @@ The virtual destructor for the copy transaction releases all memory associated w
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="b9bcad89a89347330845556569fc5587"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::setCoarsenItems" ref="b9bcad89a89347330845556569fc5587" args="(const CoarsenClasses::Data **coarsen_items, int num_coarsen_items)" -->
+<a class="anchor" name="615ccaa0fc6aeb8c172f76ea54ab8a13"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::setCoarsenItems" ref="615ccaa0fc6aeb8c172f76ea54ab8a13" args="(const CoarsenClasses::Data **coarsen_items, int num_coarsen_items)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::xfer::CoarsenCopyTransaction::setCoarsenItems           </td>
+          <td class="memname">static void SAMRAI::xfer::CoarsenCopyTransaction::setCoarsenItems           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses_1_1Data.html">CoarsenClasses::Data</a> **&nbsp;</td>
           <td class="paramname"> <em>coarsen_items</em>, </td>
@@ -176,7 +175,7 @@ The virtual destructor for the copy transaction releases all memory associated w
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [static]</code></td>
+          <td></td><td></td><td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -186,16 +185,16 @@ The virtual destructor for the copy transaction releases all memory associated w
 Static member function to set the array of coarsen class data items that is shared by all object instances of this copy transaction class during data transfers. The array must be set before any transactions are executed. The array is set in the <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html">CoarsenSchedule</a> class. 
 </div>
 </div><p>
-<a class="anchor" name="75e24188cb03fb29c0f8a023634026de"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::unsetCoarsenItems" ref="75e24188cb03fb29c0f8a023634026de" args="()" -->
+<a class="anchor" name="0bf9016e01f7679e8087525940c3ecda"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::unsetCoarsenItems" ref="0bf9016e01f7679e8087525940c3ecda" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::xfer::CoarsenCopyTransaction::unsetCoarsenItems           </td>
+          <td class="memname">static void SAMRAI::xfer::CoarsenCopyTransaction::unsetCoarsenItems           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -268,16 +267,16 @@ Return the integer buffer space (in bytes) needed for the outgoing message.
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html#52bdc59da84e2e98fe1fde2381d1f2c5">SAMRAI::tbox::Transaction</a>.
 </div>
 </div><p>
-<a class="anchor" name="28435d7a0ed0e54e207efa252f409efb"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::getSourceProcessor" ref="28435d7a0ed0e54e207efa252f409efb" args="()" -->
+<a class="anchor" name="987406e92237e3dd7ea304a94bb0b2d4"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::getSourceProcessor" ref="987406e92237e3dd7ea304a94bb0b2d4" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int SAMRAI::xfer::CoarsenCopyTransaction::getSourceProcessor           </td>
+          <td class="memname">int SAMRAI::xfer::CoarsenCopyTransaction::getSourceProcessor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, virtual]</code></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -289,16 +288,16 @@ Return the sending processor number for the communications transaction.
 Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html#76a315bca4373a370ed8037629aa4424">SAMRAI::tbox::Transaction</a>.
 </div>
 </div><p>
-<a class="anchor" name="df442107ab54dd51908ef49fafe5248f"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::getDestinationProcessor" ref="df442107ab54dd51908ef49fafe5248f" args="()" -->
+<a class="anchor" name="880681921972297795abb3f4d03bb619"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenCopyTransaction::getDestinationProcessor" ref="880681921972297795abb3f4d03bb619" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int SAMRAI::xfer::CoarsenCopyTransaction::getDestinationProcessor           </td>
+          <td class="memname">int SAMRAI::xfer::CoarsenCopyTransaction::getDestinationProcessor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, virtual]</code></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -399,7 +398,7 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Transaction.html#c82147cb6
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenCopyTransaction_8h.html">CoarsenCopyTransaction.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenCopyTransaction_8C.html">CoarsenCopyTransaction.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

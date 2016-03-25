@@ -26,23 +26,24 @@
 <a href="classSAMRAI_1_1tbox_1_1InputManager-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#c386384aa370576ac17d6427b921f829">parseInputFile</a> (const std::string &amp;filename)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#b8f12963881afcb1a36adeec9608ead8">parseInputFile</a> (const std::string &amp;filename)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#fa6f67be08cb54557960bfe306773ff1">parseInputFile</a> (const std::string &amp;filename, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#f950895a71a499d1083983bd0bae07ae">parseInputFile</a> (const std::string &amp;filename, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt; &amp;input_db)</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html">InputManager</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#b0d81fc413d52fcb74edb90bec6044a9">getManager</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#d63c326afb9295d8598555e6e654c96a">setManager</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html">InputManager</a> *manager)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#8b374ebfb0ff6b1e1da8263ab8f804da">inputDatabaseExists</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#78b766579ace097c00a1562e51b5caca">inputDatabaseExists</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#0c9dd5979b469a58a6d2346c4f9ccee6">getInputDatabase</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#1cd2257ea9e0cd5f99c0f150774071fb">getInputDatabase</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#0a297850ed56acf179bfa2bf6a5224e9">InputManager</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#32966215c0fb64a07aba464b50014de3">~InputManager</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#32966215c0fb64a07aba464b50014de3">~InputManager</a> ()</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -89,7 +90,7 @@ The constructor is protected, since only subclasses of the singleton may access 
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected, virtual]</code></td>
+          <td width="100%"><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -139,16 +140,16 @@ Return a pointer to the single instance of the input manager. All access to the 
 Set a new input manager. This routine can only be used by subclasses since the constructor and destructor are protected. The manager object will be deleted at program exit. 
 </div>
 </div><p>
-<a class="anchor" name="8b374ebfb0ff6b1e1da8263ab8f804da"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::inputDatabaseExists" ref="8b374ebfb0ff6b1e1da8263ab8f804da" args="()" -->
+<a class="anchor" name="78b766579ace097c00a1562e51b5caca"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::inputDatabaseExists" ref="78b766579ace097c00a1562e51b5caca" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool SAMRAI::tbox::InputManager::inputDatabaseExists           </td>
+          <td class="memname">static bool SAMRAI::tbox::InputManager::inputDatabaseExists           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -158,16 +159,16 @@ Set a new input manager. This routine can only be used by subclasses since the c
 Return whether or not the manager has read an input database. If so, it returns true. If not, false. 
 </div>
 </div><p>
-<a class="anchor" name="0c9dd5979b469a58a6d2346c4f9ccee6"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::getInputDatabase" ref="0c9dd5979b469a58a6d2346c4f9ccee6" args="()" -->
+<a class="anchor" name="1cd2257ea9e0cd5f99c0f150774071fb"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::getInputDatabase" ref="1cd2257ea9e0cd5f99c0f150774071fb" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::InputManager::getInputDatabase           </td>
+          <td class="memname">static boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a>&gt; SAMRAI::tbox::InputManager::getInputDatabase           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -175,23 +176,23 @@ Return whether or not the manager has read an input database. If so, it returns 
 
 <p>
 Accessor method for the root input database held by <a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html">InputManager</a>. Inputs are read from the input file and held in this database. This method returns a pointer to the database, allowing any class in <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> to access the information inside it using standard database calls. For example, the following could appear in a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> class:<p>
-// get root database Pointer&lt;Database&gt; root_db = <a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#b0d81fc413d52fcb74edb90bec6044a9">InputManager::getManager()</a>-&gt;<a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#0c9dd5979b469a58a6d2346c4f9ccee6">getInputDatabase()</a>; // get class's sub-database Pointer&lt;Database&gt; class_db = root_db-&gt;getDatabase("MyClass"); // get parameter(s) from sub-database int dummy = class_db-&gt;getInteger("dummy");<p>
+// get root database boost::shared_ptr&lt;Database&gt; root_db = <a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#b0d81fc413d52fcb74edb90bec6044a9">InputManager::getManager()</a>-&gt;<a class="el" href="classSAMRAI_1_1tbox_1_1InputManager.html#1cd2257ea9e0cd5f99c0f150774071fb">getInputDatabase()</a>; // get class's sub-database boost::shared_ptr&lt;Database&gt; class_db = root_db-&gt;getDatabase("MyClass"); // get parameter(s) from sub-database int dummy = class_db-&gt;getInteger("dummy");<p>
 where "dummy" was supplied in "MyClass" entry of the input file:<p>
 MyClass { dummy = ... }<p>
 This function is intended for <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> classes in which there is no easy or efficient way to supply input parameters. 
 </div>
 </div><p>
-<a class="anchor" name="c386384aa370576ac17d6427b921f829"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::parseInputFile" ref="c386384aa370576ac17d6427b921f829" args="(const std::string &amp;filename)" -->
+<a class="anchor" name="b8f12963881afcb1a36adeec9608ead8"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::parseInputFile" ref="b8f12963881afcb1a36adeec9608ead8" args="(const std::string &amp;filename)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt; SAMRAI::tbox::InputManager::parseInputFile           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt; SAMRAI::tbox::InputManager::parseInputFile           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>filename</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -201,7 +202,7 @@ This function is intended for <a class="el" href="namespaceSAMRAI.html">SAMRAI</
 Create a new database named "main" from the specified input file. 
 </div>
 </div><p>
-<a class="anchor" name="fa6f67be08cb54557960bfe306773ff1"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::parseInputFile" ref="fa6f67be08cb54557960bfe306773ff1" args="(const std::string &amp;filename, Pointer&lt; InputDatabase &gt; db)" -->
+<a class="anchor" name="f950895a71a499d1083983bd0bae07ae"></a><!-- doxytag: member="SAMRAI::tbox::InputManager::parseInputFile" ref="f950895a71a499d1083983bd0bae07ae" args="(const std::string &amp;filename, const boost::shared_ptr&lt; InputDatabase &gt; &amp;input_db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -214,13 +215,13 @@ Create a new database named "main" from the specified input file.
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>db</em></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1MemoryDatabase.html">InputDatabase</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_db</em></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -232,7 +233,7 @@ Parse data from the specified file into the existing database.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="InputManager_8h.html">InputManager.h</a><li>source/SAMRAI/tbox/<a class="el" href="InputManager_8C.html">InputManager.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

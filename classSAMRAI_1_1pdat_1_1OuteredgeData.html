@@ -40,33 +40,33 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#9a45313b0dd677ddabab279055234d4a">~OuteredgeData</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for a outeredge data object.  <a href="#9a45313b0dd677ddabab279055234d4a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#d175e5c6129668508051a9fd17765f37">getDepth</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#4e2c60e44556495a2f54a53cdd0b8558">getDepth</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the depth (i.e., the number of data values for each spatial location) of the array.  <a href="#d175e5c6129668508051a9fd17765f37"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#cd37f4c111ce7ad6f42db2c9b0fe3305">dataExists</a> (int axis, int face_normal) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the depth (i.e., the number of data values for each spatial location) of the array.  <a href="#4e2c60e44556495a2f54a53cdd0b8558"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#617eb5320414e43fab94030254ae9a9b">dataExists</a> (int axis, int face_normal) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if outeredge data exists for the given axis and face normal direction; false otherwise.  <a href="#cd37f4c111ce7ad6f42db2c9b0fe3305"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if outeredge data exists for the given axis and face normal direction; false otherwise.  <a href="#617eb5320414e43fab94030254ae9a9b"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#9c8421843aace03937295e2cf5f1dabe">getDataBox</a> (int axis, int face_normal, int side)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the box of valid edge indices for outeredge data. Note: the returned box will reside in the <em>edge</em> index space.  <a href="#9c8421843aace03937295e2cf5f1dabe"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#aaf44bfc81bfb77b3d70bd4aa6fe0f68">getPointer</a> (int axis, int face_normal, int side, int depth=0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#0703996a4d97a92019cc278467300232">getPointer</a> (int axis, int face_normal, int side, int depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a pointer to the beginning of a particular axis, face normal, side, and depth component of the outeredge centered array.  <a href="#aaf44bfc81bfb77b3d70bd4aa6fe0f68"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#220d4648a8bf69af4d14d459c4937463">getPointer</a> (int axis, int face_normal, int side, int depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a pointer to the beginning of a particular axis, face normal, side, and depth component of the outeredge centered array.  <a href="#0703996a4d97a92019cc278467300232"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#18197f254a78f3a0a41c387e72aac81b">getPointer</a> (int axis, int face_normal, int side, int depth=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a const pointer to the beginning of a particular axis, face normal, side, and depth component of the outeredge centered array.  <a href="#220d4648a8bf69af4d14d459c4937463"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#e659bbd84250853583c036ea94bae473">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a const pointer to the beginning of a particular axis, face normal, side, and depth component of the outeredge centered array.  <a href="#18197f254a78f3a0a41c387e72aac81b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#f31f9a116493289a6fb451dcd28ec474">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to data entry corresponding to a given edge index and depth.  <a href="#e659bbd84250853583c036ea94bae473"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#1ac01c1a4fa33959274366ef3836269d">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to data entry corresponding to a given edge index and depth.  <a href="#f31f9a116493289a6fb451dcd28ec474"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const TYPE &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#5959db31342f0be1678f811b8ac7a9b9">operator()</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;i, int depth=0) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to data entry corresponding to a given edge index and depth.  <a href="#1ac01c1a4fa33959274366ef3836269d"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#8f397d69bda5ab01abdfe451a9d40416">getArrayData</a> (int axis, int face_normal, int side)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to data entry corresponding to a given edge index and depth.  <a href="#5959db31342f0be1678f811b8ac7a9b9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#b2763c86f66103d739cb217311a0016f">getArrayData</a> (int axis, int face_normal, int side)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the array data object for given axis, face normal, and side index of the outeredge centered array.  <a href="#8f397d69bda5ab01abdfe451a9d40416"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#250480802ff6f536436baf0aa56f0a50">getArrayData</a> (int axis, int face_normal, int side) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a reference to the array data object for given axis, face normal, and side index of the outeredge centered array.  <a href="#b2763c86f66103d739cb217311a0016f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#e41002bb7935f44678695d394d67b55d">getArrayData</a> (int axis, int face_normal, int side) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the array data object for given axis, face normal, and side index of the outeredge centered array.  <a href="#250480802ff6f536436baf0aa56f0a50"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a const reference to the array data object for given axis, face normal, and side index of the outeredge centered array.  <a href="#e41002bb7935f44678695d394d67b55d"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#112942d75cb0e22e82f97f0db69b1a5d">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">A fast copy from source to destination (i.e., this) patch data object.  <a href="#112942d75cb0e22e82f97f0db69b1a5d"></a><br></td></tr>
@@ -127,12 +127,12 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#b799936031bb8bc0a34832efebc8538f">printAxisSide</a> (int axis, int face_normal, int side, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>, int prec=12) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all outeredge centered data values for specified axis, face_normal, side, and depth residing in the specified box.  <a href="#b799936031bb8bc0a34832efebc8538f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#8175f8b0c8b9dff0282e1f3e2c96cff7">getSpecializedFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#3cc415b4c77ee6af117beded349522bf">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check that class version and restart file version are equal. If so, read data members from the database.  <a href="#8175f8b0c8b9dff0282e1f3e2c96cff7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#e53f7156393862b98eff9b35ddca1202">putSpecializedToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Check that class version and restart file version are equal. If so, read data members from the database.  <a href="#3cc415b4c77ee6af117beded349522bf"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#1ce497c1efdca6dd4fd4a3d262b79a61">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out the class version number and other data members to the database.  <a href="#e53f7156393862b98eff9b35ddca1202"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out the class version number and other data members to the database.  <a href="#1ce497c1efdca6dd4fd4a3d262b79a61"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html#1f2383a406bc6f18af91a8a1f9a7fbab">getSizeOfData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth)</td></tr>
 
@@ -224,7 +224,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -307,14 +307,14 @@ This function assumes that the amount of memory needed for TYPE is sizeof(TYPE).
 
 </div>
 </div><p>
-<a class="anchor" name="d175e5c6129668508051a9fd17765f37"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getDepth" ref="d175e5c6129668508051a9fd17765f37" args="() const " -->
+<a class="anchor" name="4e2c60e44556495a2f54a53cdd0b8558"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getDepth" ref="4e2c60e44556495a2f54a53cdd0b8558" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getDepth           </td>
+          <td class="memname">int <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getDepth           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -330,14 +330,14 @@ Return the depth (i.e., the number of data values for each spatial location) of 
 
 </div>
 </div><p>
-<a class="anchor" name="cd37f4c111ce7ad6f42db2c9b0fe3305"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::dataExists" ref="cd37f4c111ce7ad6f42db2c9b0fe3305" args="(int axis, int face_normal) const " -->
+<a class="anchor" name="617eb5320414e43fab94030254ae9a9b"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::dataExists" ref="617eb5320414e43fab94030254ae9a9b" args="(int axis, int face_normal) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::dataExists           </td>
+          <td class="memname">bool <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::dataExists           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>axis</em>, </td>
@@ -415,14 +415,14 @@ Return the box of valid edge indices for outeredge data. Note: the returned box 
 
 </div>
 </div><p>
-<a class="anchor" name="aaf44bfc81bfb77b3d70bd4aa6fe0f68"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getPointer" ref="aaf44bfc81bfb77b3d70bd4aa6fe0f68" args="(int axis, int face_normal, int side, int depth=0)" -->
+<a class="anchor" name="0703996a4d97a92019cc278467300232"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getPointer" ref="0703996a4d97a92019cc278467300232" args="(int axis, int face_normal, int side, int depth=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getPointer           </td>
+          <td class="memname">TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getPointer           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>axis</em>, </td>
@@ -468,14 +468,14 @@ Get a pointer to the beginning of a particular axis, face normal, side, and dept
 
 </div>
 </div><p>
-<a class="anchor" name="220d4648a8bf69af4d14d459c4937463"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getPointer" ref="220d4648a8bf69af4d14d459c4937463" args="(int axis, int face_normal, int side, int depth=0) const " -->
+<a class="anchor" name="18197f254a78f3a0a41c387e72aac81b"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getPointer" ref="18197f254a78f3a0a41c387e72aac81b" args="(int axis, int face_normal, int side, int depth=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getPointer           </td>
+          <td class="memname">const TYPE * <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getPointer           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>axis</em>, </td>
@@ -521,14 +521,14 @@ Get a const pointer to the beginning of a particular axis, face normal, side, an
 
 </div>
 </div><p>
-<a class="anchor" name="e659bbd84250853583c036ea94bae473"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::operator()" ref="e659bbd84250853583c036ea94bae473" args="(const EdgeIndex &amp;i, int depth=0)" -->
+<a class="anchor" name="f31f9a116493289a6fb451dcd28ec474"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::operator()" ref="f31f9a116493289a6fb451dcd28ec474" args="(const EdgeIndex &amp;i, int depth=0)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::operator()           </td>
+          <td class="memname">TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::operator()           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>i</em>, </td>
@@ -560,14 +560,14 @@ Return a reference to data entry corresponding to a given edge index and depth.
 
 </div>
 </div><p>
-<a class="anchor" name="1ac01c1a4fa33959274366ef3836269d"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::operator()" ref="1ac01c1a4fa33959274366ef3836269d" args="(const EdgeIndex &amp;i, int depth=0) const " -->
+<a class="anchor" name="5959db31342f0be1678f811b8ac7a9b9"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::operator()" ref="5959db31342f0be1678f811b8ac7a9b9" args="(const EdgeIndex &amp;i, int depth=0) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::operator()           </td>
+          <td class="memname">const TYPE &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::operator()           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeIndex.html">EdgeIndex</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>i</em>, </td>
@@ -599,14 +599,14 @@ Return a const reference to data entry corresponding to a given edge index and d
 
 </div>
 </div><p>
-<a class="anchor" name="8f397d69bda5ab01abdfe451a9d40416"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getArrayData" ref="8f397d69bda5ab01abdfe451a9d40416" args="(int axis, int face_normal, int side)" -->
+<a class="anchor" name="b2763c86f66103d739cb217311a0016f"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getArrayData" ref="b2763c86f66103d739cb217311a0016f" args="(int axis, int face_normal, int side)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getArrayData           </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getArrayData           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>axis</em>, </td>
@@ -645,14 +645,14 @@ Return a reference to the array data object for given axis, face normal, and sid
 
 </div>
 </div><p>
-<a class="anchor" name="250480802ff6f536436baf0aa56f0a50"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getArrayData" ref="250480802ff6f536436baf0aa56f0a50" args="(int axis, int face_normal, int side) const " -->
+<a class="anchor" name="e41002bb7935f44678695d394d67b55d"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getArrayData" ref="e41002bb7935f44678695d394d67b55d" args="(int axis, int face_normal, int side) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getArrayData           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1pdat_1_1ArrayData.html">ArrayData</a>&lt; TYPE &gt; &amp; <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getArrayData           </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>axis</em>, </td>
@@ -1447,7 +1447,7 @@ Print all outeredge centered data values for specified axis, face_normal, side, 
 
 </div>
 </div><p>
-<a class="anchor" name="8175f8b0c8b9dff0282e1f3e2c96cff7"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getSpecializedFromDatabase" ref="8175f8b0c8b9dff0282e1f3e2c96cff7" args="(tbox::Pointer&lt; tbox::Database &gt; database)" -->
+<a class="anchor" name="3cc415b4c77ee6af117beded349522bf"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::getSpecializedFromDatabase" ref="3cc415b4c77ee6af117beded349522bf" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1456,7 +1456,7 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::getSpecializedFromDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -1470,10 +1470,10 @@ Check that class version and restart file version are equal. If so, read data me
 <p>
 Assertions: database must be a non-null pointer. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5fb8db1f58940d0fd1f130ea857037a4">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1cf0a7a7a58668744601638c036103a1">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="e53f7156393862b98eff9b35ddca1202"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::putSpecializedToDatabase" ref="e53f7156393862b98eff9b35ddca1202" args="(tbox::Pointer&lt; tbox::Database &gt; database)" -->
+<a class="anchor" name="1ce497c1efdca6dd4fd4a3d262b79a61"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeData::putSpecializedToDatabase" ref="1ce497c1efdca6dd4fd4a3d262b79a61" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1482,10 +1482,10 @@ template&lt;class TYPE&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeData.html">SAMRAI::pdat::OuteredgeData</a>&lt; TYPE &gt;::putSpecializedToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -1496,12 +1496,12 @@ Write out the class version number and other data members to the database.
 <p>
 Assertions: database must be a non-null pointer. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#aa793038dcc04fee9bf96943b35951ee">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e0de5996e1ec46a9c409ab9d87df58f2">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8h.html">OuteredgeData.h</a><li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8C.html">OuteredgeData.C</a><li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8I.html">OuteredgeData.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8h.html">OuteredgeData.h</a><li>source/SAMRAI/pdat/<a class="el" href="OuteredgeData_8C.html">OuteredgeData.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

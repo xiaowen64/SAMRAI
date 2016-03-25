@@ -29,59 +29,59 @@
 <a href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#14565f7393f0c96dced7c519ecf4f8e0">CellPoissonHypreSolver</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;(NULL))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#7f5098f2bdfd431822b6d9075a49aa04">CellPoissonHypreSolver</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#14565f7393f0c96dced7c519ecf4f8e0"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#7f5098f2bdfd431822b6d9075a49aa04"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#27aadf4b57f2cd421e53eb5bc6492bd4">~CellPoissonHypreSolver</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#c860543f853c46126b4d38029e9c109d">initializeSolverState</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, int ln=0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#ed19e4a73ace9053a7c5151702855404">initializeSolverState</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, int ln=0)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize to a given hierarchy.  <a href="#c860543f853c46126b4d38029e9c109d"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initialize to a given hierarchy.  <a href="#ed19e4a73ace9053a7c5151702855404"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#eb70d7f18894dd893d6fe06b043930f8">deallocateSolverState</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reset to an uninitialized state.  <a href="#eb70d7f18894dd893d6fe06b043930f8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a> &amp;spec)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the matrix coefficients.  <a href="#81ca361f779559875db5b6d04e52855a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#ab9bd42212c2766ab5bfa1791060f803">setSolnIdDepth</a> (const int depth)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#3b90be3dcc5bcdfe99014158cd935d49">setSolnIdDepth</a> (const int depth)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the solution data involved in the solve.  <a href="#ab9bd42212c2766ab5bfa1791060f803"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#030a8245aa02cf216c1e6e29e1da36ac">setRhsIdDepth</a> (const int depth)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the solution data involved in the solve.  <a href="#3b90be3dcc5bcdfe99014158cd935d49"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#b51eb373614f6a5200493549e47c078f">setRhsIdDepth</a> (const int depth)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the rhs data involved in the solve.  <a href="#030a8245aa02cf216c1e6e29e1da36ac"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#5272fe4eb257823aa71b758973bec861">setStoppingCriteria</a> (const int max_iterations=10, const double relative_residual_tol=1.0e-6)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set default depth of the rhs data involved in the solve.  <a href="#b51eb373614f6a5200493549e47c078f"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#e0244b9945f14ba5727cab8f3eed6344">setStoppingCriteria</a> (const int max_iterations=10, const double relative_residual_tol=1.0e-6)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the stopping criteria (max iterations and residual tolerance) for the linear solver.  <a href="#5272fe4eb257823aa71b758973bec861"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the stopping criteria (max iterations and residual tolerance) for the linear solver.  <a href="#e0244b9945f14ba5727cab8f3eed6344"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#b09ca8a5eeb29ef4c877a5e20d3a5ea4">solveSystem</a> (const int u, const int f, bool homogeneous_bc=false)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Solve the linear system Au=f.  <a href="#b09ca8a5eeb29ef4c877a5e20d3a5ea4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#6bbaae36b504c5232bd1de3b0754aab3">getNumberOfIterations</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#b094dfd3f9e9cc8aaf5dcf43e91e4b1b">getNumberOfIterations</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of iterations taken by the solver to converge.  <a href="#6bbaae36b504c5232bd1de3b0754aab3"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#486ebdf87f584f9b946dfa32bcad19e6">setNumPreRelaxSteps</a> (const int steps)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of iterations taken by the solver to converge.  <a href="#b094dfd3f9e9cc8aaf5dcf43e91e4b1b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#1b013e16aa740252e88b75f43b298570">setNumPreRelaxSteps</a> (const int steps)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of pre-relax steps used by the Hypre solve.  <a href="#486ebdf87f584f9b946dfa32bcad19e6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#598c62a7ea15a2e433e0c20cbe350faf">setNumPostRelaxSteps</a> (const int steps)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of pre-relax steps used by the Hypre solve.  <a href="#1b013e16aa740252e88b75f43b298570"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#92fcc2448fb50092f1cf8a879aceab21">setNumPostRelaxSteps</a> (const int steps)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of post-relax steps used by the Hypre solve.  <a href="#598c62a7ea15a2e433e0c20cbe350faf"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#2cc9ecb14bf284319aae8e2fa33c3c0a">getRelativeResidualNorm</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the number of post-relax steps used by the Hypre solve.  <a href="#92fcc2448fb50092f1cf8a879aceab21"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#cdef8bd6205dcfaaeb62e4ecfc1ced19">getRelativeResidualNorm</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the final residual norm returned by the Hypre solve.  <a href="#2cc9ecb14bf284319aae8e2fa33c3c0a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#4fc42c12441eede9576195fbe606fc7e">setUseSMG</a> (bool use_smg)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the final residual norm returned by the Hypre solve.  <a href="#cdef8bd6205dcfaaeb62e4ecfc1ced19"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#70680b27d4926d6c7ba8c011697f198c">setUseSMG</a> (bool use_smg)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use Hypre's PFMG algorithm instead of the SMG algorithm.  <a href="#4fc42c12441eede9576195fbe606fc7e"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#72c882ab9773d37c2ac5d0ce137b88e6">setBoundaries</a> (const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set whether to use Hypre's PFMG algorithm instead of the SMG algorithm.  <a href="#70680b27d4926d6c7ba8c011697f198c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#065a548e3cd504ee03fc2fa3282becc0">setBoundaries</a> (const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify boundary condition directly, without using a <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> object.  <a href="#72c882ab9773d37c2ac5d0ce137b88e6"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#2799873c3e747c0f8ba8ebb895a80758">setPhysicalBcCoefObject</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *physical_bc_coef_strategy, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; variable=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;(NULL))</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify boundary condition directly, without using a <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> object.  <a href="#065a548e3cd504ee03fc2fa3282becc0"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8eee715dbe6bc546565b3517d8575acb">setPhysicalBcCoefObject</a> (const <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *physical_bc_coef_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;variable=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;())</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify boundary condition through the use of a Robin boundary condition object.  <a href="#2799873c3e747c0f8ba8ebb895a80758"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#5d4975b2d30c26c6cce0c849f9548ee4">setPrintSolverInfo</a> (const bool print)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Specify boundary condition through the use of a Robin boundary condition object.  <a href="#8eee715dbe6bc546565b3517d8575acb"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8d6ea61b07039c74b158a926224c3cb2">setPrintSolverInfo</a> (const bool print)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the flag for printing solver information.  <a href="#5d4975b2d30c26c6cce0c849f9548ee4"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#1e982f9375753c0df28c4002002f1783">getObjectName</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the flag for printing solver information.  <a href="#8d6ea61b07039c74b158a926224c3cb2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#e269ac2ce2d19be7b4d9a9c50ec58f31">getObjectName</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#1e982f9375753c0df28c4002002f1783"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the name of this object.  <a href="#e269ac2ce2d19be7b4d9a9c50ec58f31"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Use the HYPRE preconditioner library to solve (the cell-centered) Poisson's equation on a single level in a hierarchy. 
@@ -89,7 +89,7 @@ Use the HYPRE preconditioner library to solve (the cell-centered) Poisson's equa
 Class <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> uses the HYPRE preconditioner library to solve linear equations of the form <img class="formulaInl" alt="$ \nabla ( D \nabla u ) + C u = f $" src="form_57.png">, where C is a cell-centered array, D is a face-centered array, and u and f are cell-centered arrays (see <a class="el" href="classSAMRAI_1_1solv_1_1PoissonSpecifications.html">PoissonSpecifications</a>). The discretization is the standard second order finite difference stencil.<p>
 Robin boundary conditions are used through the interface class <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a>. Periodic boundary conditions are not supported yet.<p>
 The user must perform the following steps to use <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a>:<ul>
-<li>Create a <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> object.</li><li>Initialize <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> object with a patch hierarchy, using the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#c860543f853c46126b4d38029e9c109d">initializeSolverState()</a>.</li><li>Use the functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#2799873c3e747c0f8ba8ebb895a80758">setPhysicalBcCoefObject()</a> to provide implementations of <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a>. (For most problems you can probably find a suitable implementation to use without implementing the strategy yourself. See for example <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html">SimpleCellRobinBcCoefs</a> and <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.html">GhostCellRobinBcCoefs</a>.)</li><li>Set the matrix coefficients in the linear system, using the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients()</a>.</li><li>Specify the stopping criteria using <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#5272fe4eb257823aa71b758973bec861">setStoppingCriteria()</a>.</li><li>Solve the linear system, passing in u and f as the patch indices of the solution and the right hand side, respectively.</li></ul>
+<li>Create a <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> object.</li><li>Initialize <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html">CellPoissonHypreSolver</a> object with a patch hierarchy, using the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#ed19e4a73ace9053a7c5151702855404">initializeSolverState()</a>.</li><li>Use the functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8eee715dbe6bc546565b3517d8575acb">setPhysicalBcCoefObject()</a> to provide implementations of <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a>. (For most problems you can probably find a suitable implementation to use without implementing the strategy yourself. See for example <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html">SimpleCellRobinBcCoefs</a> and <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.html">GhostCellRobinBcCoefs</a>.)</li><li>Set the matrix coefficients in the linear system, using the function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients()</a>.</li><li>Specify the stopping criteria using <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#e0244b9945f14ba5727cab8f3eed6344">setStoppingCriteria()</a>.</li><li>Solve the linear system, passing in u and f as the patch indices of the solution and the right hand side, respectively.</li></ul>
 <p>
 Sample parameters for initialization from database (and their default values): <div class="fragment"><pre class="fragment"> *     print_solver_info = FALSE      // Whether to print some data for debugging
  *     max_iterations = 10            // Max iterations used by Hypre
@@ -101,7 +101,7 @@ Sample parameters for initialization from database (and their default values): <
  * </pre></div> 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="14565f7393f0c96dced7c519ecf4f8e0"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::CellPoissonHypreSolver" ref="14565f7393f0c96dced7c519ecf4f8e0" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; database=tbox::Pointer&lt; tbox::Database &gt;(NULL))" -->
+<a class="anchor" name="7f5098f2bdfd431822b6d9075a49aa04"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::CellPoissonHypreSolver" ref="7f5098f2bdfd431822b6d9075a49aa04" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;database=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -120,8 +120,8 @@ Sample parameters for initialization from database (and their default values): <
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>database</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>database</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -137,6 +137,7 @@ Constructor.
 <p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"></td><td valign="top"><em>dim</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"></td><td valign="top"><em>object_name</em>&nbsp;</td><td>Name of object. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>database</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> for input. </td></tr>
   </table>
@@ -164,14 +165,14 @@ The Poisson destructor releases all internally managed data.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="c860543f853c46126b4d38029e9c109d"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::initializeSolverState" ref="c860543f853c46126b4d38029e9c109d" args="(tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, int ln=0)" -->
+<a class="anchor" name="ed19e4a73ace9053a7c5151702855404"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::initializeSolverState" ref="ed19e4a73ace9053a7c5151702855404" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, int ln=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::initializeSolverState           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -246,17 +247,17 @@ For information describing the Poisson equation parameters, see the light-weight
 This method must be called before <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#b09ca8a5eeb29ef4c877a5e20d3a5ea4">solveSystem()</a>. 
 </div>
 </div><p>
-<a class="anchor" name="ab9bd42212c2766ab5bfa1791060f803"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setSolnIdDepth" ref="ab9bd42212c2766ab5bfa1791060f803" args="(const int depth)" -->
+<a class="anchor" name="3b90be3dcc5bcdfe99014158cd935d49"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setSolnIdDepth" ref="3b90be3dcc5bcdfe99014158cd935d49" args="(const int depth)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setSolnIdDepth           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setSolnIdDepth           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>depth</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -269,17 +270,17 @@ If the solution data has multiple depths, the solver uses just one depth at a ti
 Changing the depth after setting up the matrix is permissible, as the solution data does not affect the matrix. 
 </div>
 </div><p>
-<a class="anchor" name="030a8245aa02cf216c1e6e29e1da36ac"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setRhsIdDepth" ref="030a8245aa02cf216c1e6e29e1da36ac" args="(const int depth)" -->
+<a class="anchor" name="b51eb373614f6a5200493549e47c078f"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setRhsIdDepth" ref="b51eb373614f6a5200493549e47c078f" args="(const int depth)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setRhsIdDepth           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setRhsIdDepth           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>depth</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -292,12 +293,12 @@ If the rhs data has multiple depths, the solver uses just one depth at a time. T
 Changing the depth after setting up the matrix is permissible, as the rhs data does not affect the matrix. 
 </div>
 </div><p>
-<a class="anchor" name="5272fe4eb257823aa71b758973bec861"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setStoppingCriteria" ref="5272fe4eb257823aa71b758973bec861" args="(const int max_iterations=10, const double relative_residual_tol=1.0e-6)" -->
+<a class="anchor" name="e0244b9945f14ba5727cab8f3eed6344"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setStoppingCriteria" ref="e0244b9945f14ba5727cab8f3eed6344" args="(const int max_iterations=10, const double relative_residual_tol=1.0e-6)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setStoppingCriteria           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setStoppingCriteria           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>max_iterations</em> = <code>10</code>, </td>
@@ -311,7 +312,7 @@ Changing the depth after setting up the matrix is permissible, as the rhs data d
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -364,7 +365,7 @@ Set the stopping criteria (max iterations and residual tolerance) for the linear
 Solve the linear system Au=f. 
 <p>
 The solution u and the right hand side f are specified via patch indices on the patch hierarchy.<p>
-Member functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#6bbaae36b504c5232bd1de3b0754aab3">getNumberOfIterations()</a> return the iterations from the solver. Note that the matrix coefficients and boundary condition object must have been set up before this function is called. As long as the matrix coefficients do not change, this routine may be called repeatedly to solve any number of linear systems (with the right-hand side varying). If the boundary conditions or matrix coefficients are changed then function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients()</a> must be called again.<p>
+Member functions <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#b094dfd3f9e9cc8aaf5dcf43e91e4b1b">getNumberOfIterations()</a> return the iterations from the solver. Note that the matrix coefficients and boundary condition object must have been set up before this function is called. As long as the matrix coefficients do not change, this routine may be called repeatedly to solve any number of linear systems (with the right-hand side varying). If the boundary conditions or matrix coefficients are changed then function <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients()</a> must be called again.<p>
 When computing the matrix coefficients in <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients()</a>, the inhomogeneous portion of the boundary condition (constant terms, independent of u and thus having no effect on the matrix) are saved and added to the source term, f, before performing the matrix solve. In some situations, it may be useful to not add the inhomogeneous portion to f. The flag argument <code>homoegneous_bc</code> is used for this. (This is a sort of optimization, to avoid having to re-call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#81ca361f779559875db5b6d04e52855a">setMatrixCoefficients()</a> to change the inhomogeneous portion.)<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -377,16 +378,16 @@ When computing the matrix coefficients in <a class="el" href="classSAMRAI_1_1sol
 
 </div>
 </div><p>
-<a class="anchor" name="6bbaae36b504c5232bd1de3b0754aab3"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getNumberOfIterations" ref="6bbaae36b504c5232bd1de3b0754aab3" args="() const " -->
+<a class="anchor" name="b094dfd3f9e9cc8aaf5dcf43e91e4b1b"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getNumberOfIterations" ref="b094dfd3f9e9cc8aaf5dcf43e91e4b1b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::solv::CellPoissonHypreSolver::getNumberOfIterations           </td>
+          <td class="memname">int SAMRAI::solv::CellPoissonHypreSolver::getNumberOfIterations           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -399,17 +400,17 @@ Return the number of iterations taken by the solver to converge.
 
 </div>
 </div><p>
-<a class="anchor" name="486ebdf87f584f9b946dfa32bcad19e6"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setNumPreRelaxSteps" ref="486ebdf87f584f9b946dfa32bcad19e6" args="(const int steps)" -->
+<a class="anchor" name="1b013e16aa740252e88b75f43b298570"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setNumPreRelaxSteps" ref="1b013e16aa740252e88b75f43b298570" args="(const int steps)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setNumPreRelaxSteps           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setNumPreRelaxSteps           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>steps</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -421,17 +422,17 @@ Set the number of pre-relax steps used by the Hypre solve.
 
 </div>
 </div><p>
-<a class="anchor" name="598c62a7ea15a2e433e0c20cbe350faf"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setNumPostRelaxSteps" ref="598c62a7ea15a2e433e0c20cbe350faf" args="(const int steps)" -->
+<a class="anchor" name="92fcc2448fb50092f1cf8a879aceab21"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setNumPostRelaxSteps" ref="92fcc2448fb50092f1cf8a879aceab21" args="(const int steps)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setNumPostRelaxSteps           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setNumPostRelaxSteps           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>steps</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -443,16 +444,16 @@ Set the number of post-relax steps used by the Hypre solve.
 
 </div>
 </div><p>
-<a class="anchor" name="2cc9ecb14bf284319aae8e2fa33c3c0a"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getRelativeResidualNorm" ref="2cc9ecb14bf284319aae8e2fa33c3c0a" args="() const " -->
+<a class="anchor" name="cdef8bd6205dcfaaeb62e4ecfc1ced19"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getRelativeResidualNorm" ref="cdef8bd6205dcfaaeb62e4ecfc1ced19" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::solv::CellPoissonHypreSolver::getRelativeResidualNorm           </td>
+          <td class="memname">double SAMRAI::solv::CellPoissonHypreSolver::getRelativeResidualNorm           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -465,17 +466,17 @@ Return the final residual norm returned by the Hypre solve.
 
 </div>
 </div><p>
-<a class="anchor" name="4fc42c12441eede9576195fbe606fc7e"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setUseSMG" ref="4fc42c12441eede9576195fbe606fc7e" args="(bool use_smg)" -->
+<a class="anchor" name="70680b27d4926d6c7ba8c011697f198c"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setUseSMG" ref="70680b27d4926d6c7ba8c011697f198c" args="(bool use_smg)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setUseSMG           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setUseSMG           </td>
           <td>(</td>
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>use_smg</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -488,12 +489,12 @@ The flag is used to select which of HYPRE's linear solver algorithms to use if t
 Changing the algorithm must be done before setting up the matrix coefficients. 
 </div>
 </div><p>
-<a class="anchor" name="72c882ab9773d37c2ac5d0ce137b88e6"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setBoundaries" ref="72c882ab9773d37c2ac5d0ce137b88e6" args="(const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)" -->
+<a class="anchor" name="065a548e3cd504ee03fc2fa3282becc0"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setBoundaries" ref="065a548e3cd504ee03fc2fa3282becc0" args="(const std::string &amp;boundary_type, const int fluxes=-1, const int flags=-1, int *bdry_types=NULL)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setBoundaries           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setBoundaries           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>boundary_type</em>, </td>
@@ -519,7 +520,7 @@ Changing the algorithm must be done before setting up the matrix coefficients.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -528,16 +529,16 @@ Changing the algorithm must be done before setting up the matrix coefficients.
 <p>
 Specify boundary condition directly, without using a <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> object. 
 <p>
-Use <em>either</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#72c882ab9773d37c2ac5d0ce137b88e6">setBoundaries()</a> <em>or</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#2799873c3e747c0f8ba8ebb895a80758">setPhysicalBcCoefObject()</a>, but not both.<p>
+Use <em>either</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#065a548e3cd504ee03fc2fa3282becc0">setBoundaries()</a> <em>or</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8eee715dbe6bc546565b3517d8575acb">setPhysicalBcCoefObject()</a>, but not both.<p>
 A SimpleCelBcCoef object is used to interpret and implement the specified boundary conditions. See <a class="el" href="classSAMRAI_1_1solv_1_1SimpleCellRobinBcCoefs.html#6f10285acdd4c9006fc550dbca198c46">SimpleCellRobinBcCoefs::setBoundaries()</a> for an explanation of the arguments. 
 </div>
 </div><p>
-<a class="anchor" name="2799873c3e747c0f8ba8ebb895a80758"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setPhysicalBcCoefObject" ref="2799873c3e747c0f8ba8ebb895a80758" args="(const RobinBcCoefStrategy *physical_bc_coef_strategy, const tbox::Pointer&lt; hier::Variable &gt; variable=tbox::Pointer&lt; hier::Variable &gt;(NULL))" -->
+<a class="anchor" name="8eee715dbe6bc546565b3517d8575acb"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setPhysicalBcCoefObject" ref="8eee715dbe6bc546565b3517d8575acb" args="(const RobinBcCoefStrategy *physical_bc_coef_strategy, const boost::shared_ptr&lt; hier::Variable &gt; &amp;variable=boost::shared_ptr&lt; hier::Variable &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setPhysicalBcCoefObject           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setPhysicalBcCoefObject           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> *&nbsp;</td>
           <td class="paramname"> <em>physical_bc_coef_strategy</em>, </td>
@@ -545,13 +546,13 @@ A SimpleCelBcCoef object is used to interpret and implement the specified bounda
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>variable</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>variable</em> = <code>boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a>&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -560,28 +561,28 @@ A SimpleCelBcCoef object is used to interpret and implement the specified bounda
 <p>
 Specify boundary condition through the use of a Robin boundary condition object. 
 <p>
-Use <em>either</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#72c882ab9773d37c2ac5d0ce137b88e6">setBoundaries()</a> <em>or</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#2799873c3e747c0f8ba8ebb895a80758">setPhysicalBcCoefObject()</a>, but not both.<p>
+Use <em>either</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#065a548e3cd504ee03fc2fa3282becc0">setBoundaries()</a> <em>or</em> <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonHypreSolver.html#8eee715dbe6bc546565b3517d8575acb">setPhysicalBcCoefObject()</a>, but not both.<p>
 The Robin boundary condition object is used when setting the matrix coefficient and when solving the system. If your boundary conditions are fixed values at ghost cell centers, use the <a class="el" href="classSAMRAI_1_1solv_1_1GhostCellRobinBcCoefs.html">GhostCellRobinBcCoefs</a> implementation of the <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html">RobinBcCoefStrategy</a> strategy.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>physical_bc_coef_strategy</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> a concrete implementation of the Robin bc strategy. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> pointer to be passed to <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#671dfede517f55cd2cf80d2ced9b4096">RobinBcCoefStrategy::setBcCoefs()</a>, but otherwise unused by this class. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>physical_bc_coef_strategy</em>&nbsp;</td><td>Pointer to a concrete implementation of the Robin bc strategy. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>variable</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> pointer to be passed to <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#54914559ce4f99d57de210b448a92364">RobinBcCoefStrategy::setBcCoefs()</a>, but otherwise unused by this class. </td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="5d4975b2d30c26c6cce0c849f9548ee4"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setPrintSolverInfo" ref="5d4975b2d30c26c6cce0c849f9548ee4" args="(const bool print)" -->
+<a class="anchor" name="8d6ea61b07039c74b158a926224c3cb2"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::setPrintSolverInfo" ref="8d6ea61b07039c74b158a926224c3cb2" args="(const bool print)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::solv::CellPoissonHypreSolver::setPrintSolverInfo           </td>
+          <td class="memname">void SAMRAI::solv::CellPoissonHypreSolver::setPrintSolverInfo           </td>
           <td>(</td>
           <td class="paramtype">const bool&nbsp;</td>
           <td class="paramname"> <em>print</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -598,16 +599,16 @@ If set true, it will print the HYPRE matrix information to the following files:<
 If this method is not called, or the flag is set false, no printing will occur. 
 </div>
 </div><p>
-<a class="anchor" name="1e982f9375753c0df28c4002002f1783"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getObjectName" ref="1e982f9375753c0df28c4002002f1783" args="() const " -->
+<a class="anchor" name="e269ac2ce2d19be7b4d9a9c50ec58f31"></a><!-- doxytag: member="SAMRAI::solv::CellPoissonHypreSolver::getObjectName" ref="e269ac2ce2d19be7b4d9a9c50ec58f31" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::solv::CellPoissonHypreSolver::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::solv::CellPoissonHypreSolver::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -620,9 +621,9 @@ Get the name of this object.
 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/solv/<a class="el" href="CellPoissonHypreSolver_8h.html">CellPoissonHypreSolver.h</a><li>source/SAMRAI/solv/<a class="el" href="CellPoissonHypreSolver_8I.html">CellPoissonHypreSolver.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following file:<ul>
+<li>source/SAMRAI/solv/<a class="el" href="CellPoissonHypreSolver_8h.html">CellPoissonHypreSolver.h</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

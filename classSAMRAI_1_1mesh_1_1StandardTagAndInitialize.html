@@ -31,43 +31,43 @@
 <a href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#a5b9ac0af62f8c590d9cdca466425bcf">StandardTagAndInitialize</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> *tag_strategy, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;(NULL))</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#847f63c01798a7f77b399e81fcf47bc7">StandardTagAndInitialize</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;dim, const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> *tag_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#fa66321f6dd6adfae5f2b7c64e4bd4c1">~StandardTagAndInitialize</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#8536bedec72c52438dbef8d42932553e">usesTimeIntegration</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#ec4d14ae2950e37929db98aaa1ce6033">usesTimeIntegration</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#bfec66b75a55c559f8718203a58f3fff">getErrorCoarsenRatio</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#3cbc80e707260a6e1deea7d704b94f6d">getErrorCoarsenRatio</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#f13c83e518e62495ba9402f96a8a7bd4">checkCoarsenRatios</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &gt; &amp;ratio_to_coarser)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#96f01ee0ea7bd58805101efaab8d739f">initializeLevelData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; old_level=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;(NULL), const bool allocate_data=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#4421aaf92bc2189e33394e3072850c5c">initializeLevelData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;(), const bool allocate_data=true)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#dbc8775e5d2f5335007891b93d95071c">resetHierarchyConfiguration</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#08d15705b906836046ce8fc4e667ab85">resetHierarchyConfiguration</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#694f1e444e31fbebac07b0b61f556efb">preprocessErrorEstimation</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int level_number, const double regrid_time, const double regrid_start_time, const bool initial_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#3c3189ef5d07b0ce22bf2e7e411fd392">preprocessErrorEstimation</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const double regrid_time, const double regrid_start_time, const bool initial_time)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#71cb4062eb56d7dc8d385e0862eadda2">tagCellsForRefinement</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; level, const int level_number, const double regrid_time, const int tag_index, const bool initial_time, const bool coarsest_sync_level, const bool can_be_refined, const double regrid_start_time=0)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#6217af194cb25de551e481392aae2140">tagCellsForRefinement</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;level, const int level_number, const double regrid_time, const int tag_index, const bool initial_time, const bool coarsest_sync_level, const bool can_be_refined, const double regrid_start_time=0)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#27726ae7a200aecb74ac1ebaed1b4540">coarsestLevelBoxesOK</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#966ff63d9270d272d6e4be78b081c113">refineUserBoxInputOnly</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#63fe205f92c883bc51ec093edee295cd">refineUserBoxInputOnly</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#850761c6f129e69c2f6ea41fca691b49">turnOnGradientDetector</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#1e5c2ed5bdcade1c139b492c03c1e7b1">turnOnGradientDetector</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#71bdb2c6d4ab687b88428eefe72ebbc9">turnOffGradientDetector</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#28936819415c0ce775a7b688bea23e51">turnOffGradientDetector</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#a37bf3638b6da5310661c97b417bde5f">turnOnRichardsonExtrapolation</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#6d2645207f91147e7f2436b7ec28d676">turnOnRichardsonExtrapolation</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#07a1e663237b71658cbb0c6348ce3b10">turnOffRichardsonExtrapolation</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#bad7f134d1578a3e641b7450f040481a">turnOffRichardsonExtrapolation</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#e69a0d4c50673cd651354f182a86d9b1">turnOnRefineBoxes</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#0a5e7efd2bd74e7c93da7030a1b41346">turnOnRefineBoxes</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#cf580a93847708cb5c42b81587dc16f9">turnOffRefineBoxes</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#d49473db09cabe5741cd5cb2bfbeac0b">turnOffRefineBoxes</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#bbe10b79558c95c7171e593a6fe735f8">getFromInput</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#146bced04b3438e9c6130195571561d8">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitializeConnectorWidthRequestor.html">StandardTagAndInitializeConnectorWidthRequestor</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#968e8d7b61c9d5e883871fd5b085d2c1">getConnectorWidthRequestor</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitializeConnectorWidthRequestor.html">StandardTagAndInitializeConnectorWidthRequestor</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#d3903391fbf91e75bdb7b9d1cfebeb94">getConnectorWidthRequestor</a> () const </td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -99,7 +99,7 @@ This class supplies the routines for tagging cells and invoking problem-specific
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="a5b9ac0af62f8c590d9cdca466425bcf"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::StandardTagAndInitialize" ref="a5b9ac0af62f8c590d9cdca466425bcf" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, StandardTagAndInitStrategy *tag_strategy, tbox::Pointer&lt; tbox::Database &gt; input_db=tbox::Pointer&lt; tbox::Database &gt;(NULL))" -->
+<a class="anchor" name="847f63c01798a7f77b399e81fcf47bc7"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::StandardTagAndInitialize" ref="847f63c01798a7f77b399e81fcf47bc7" args="(const tbox::Dimension &amp;dim, const std::string &amp;object_name, StandardTagAndInitStrategy *tag_strategy, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db=boost::shared_ptr&lt; tbox::Database &gt;())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -124,8 +124,8 @@ This class supplies the routines for tagging cells and invoking problem-specific
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>input_db</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;(NULL)</code></td><td>&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>input_db</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a>&nbsp;&gt;()</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -160,12 +160,12 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAnd
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="8536bedec72c52438dbef8d42932553e"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::usesTimeIntegration" ref="8536bedec72c52438dbef8d42932553e" args="() const " -->
+<a class="anchor" name="ec4d14ae2950e37929db98aaa1ce6033"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::usesTimeIntegration" ref="ec4d14ae2950e37929db98aaa1ce6033" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::mesh::StandardTagAndInitialize::usesTimeIntegration           </td>
+          <td class="memname">bool SAMRAI::mesh::StandardTagAndInitialize::usesTimeIntegration           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -181,12 +181,12 @@ Specifies whether the chosen method advances the solution data in the regridding
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#f4538967ed8d64c0dc0cf16258433e50">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="bfec66b75a55c559f8718203a58f3fff"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::getErrorCoarsenRatio" ref="bfec66b75a55c559f8718203a58f3fff" args="() const " -->
+<a class="anchor" name="3cbc80e707260a6e1deea7d704b94f6d"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::getErrorCoarsenRatio" ref="3cbc80e707260a6e1deea7d704b94f6d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD int SAMRAI::mesh::StandardTagAndInitialize::getErrorCoarsenRatio           </td>
+          <td class="memname">int SAMRAI::mesh::StandardTagAndInitialize::getErrorCoarsenRatio           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -224,14 +224,14 @@ Some restrictions may be placed on the coarsen ratio used for cell tagging. Chec
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#8a4ff2059aae80bf0fa72f1d753f089c">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="96f01ee0ea7bd58805101efaab8d739f"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::initializeLevelData" ref="96f01ee0ea7bd58805101efaab8d739f" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const tbox::Pointer&lt; hier::PatchLevel &gt; old_level=tbox::Pointer&lt; hier::PatchLevel &gt;(NULL), const bool allocate_data=true)" -->
+<a class="anchor" name="4421aaf92bc2189e33394e3072850c5c"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::initializeLevelData" ref="4421aaf92bc2189e33394e3072850c5c" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;(), const bool allocate_data=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::initializeLevelData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -261,8 +261,8 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>old_level</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&nbsp;&gt;(NULL)</code>, </td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>old_level</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&nbsp;&gt;()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -280,19 +280,19 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
 <div class="memdoc">
 
 <p>
-Pass the request to initialize the data on a new level in the hierarchy to the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> data member. Required arguments specify the grid hierarchy, level number being initialized, simulation time at which the data is initialized, whether the level can be refined, and whether it is the initial time. Optional arguments include an old level, from which data may be used to initialize this level, and a flag that indicates whether data on the initialized level must first be allocated. For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#5469402af829dc611491b532f10c8373">TagAndInitializeStrategy::initializeLevelData()</a> method. 
+Pass the request to initialize the data on a new level in the hierarchy to the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> data member. Required arguments specify the grid hierarchy, level number being initialized, simulation time at which the data is initialized, whether the level can be refined, and whether it is the initial time. Optional arguments include an old level, from which data may be used to initialize this level, and a flag that indicates whether data on the initialized level must first be allocated. For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#fb04d8682e4244e6f9917fdcf6215079">TagAndInitializeStrategy::initializeLevelData()</a> method. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#5469402af829dc611491b532f10c8373">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#fb04d8682e4244e6f9917fdcf6215079">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="dbc8775e5d2f5335007891b93d95071c"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::resetHierarchyConfiguration" ref="dbc8775e5d2f5335007891b93d95071c" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level)" -->
+<a class="anchor" name="08d15705b906836046ce8fc4e667ab85"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::resetHierarchyConfiguration" ref="08d15705b906836046ce8fc4e667ab85" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::resetHierarchyConfiguration           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -317,19 +317,19 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
 <div class="memdoc">
 
 <p>
-Pass the request to reset information that depends on the hierarchy configuration to the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> data member. For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#8726e9d47089519dc96c7f60fe85d5f6">TagAndInitializeStrategy::resetHierarchyConfiguration()</a> method. 
+Pass the request to reset information that depends on the hierarchy configuration to the <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">StandardTagAndInitStrategy</a> data member. For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#65915d56769a6701388456e517296aed">TagAndInitializeStrategy::resetHierarchyConfiguration()</a> method. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#8726e9d47089519dc96c7f60fe85d5f6">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#65915d56769a6701388456e517296aed">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="694f1e444e31fbebac07b0b61f556efb"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::preprocessErrorEstimation" ref="694f1e444e31fbebac07b0b61f556efb" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int level_number, const double regrid_time, const double regrid_start_time, const bool initial_time)" -->
+<a class="anchor" name="3c3189ef5d07b0ce22bf2e7e411fd392"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::preprocessErrorEstimation" ref="3c3189ef5d07b0ce22bf2e7e411fd392" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const double regrid_time, const double regrid_start_time, const bool initial_time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::preprocessErrorEstimation           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -366,19 +366,19 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
 <div class="memdoc">
 
 <p>
-Certain cases may require pre-processing of error estimation data before tagging cells, which is handled by this method. For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#55f48c415ff91eb2116747f9a575129c">TagAndInitializeStrategy::preprocessErrorEstimation()</a> method 
+Certain cases may require pre-processing of error estimation data before tagging cells, which is handled by this method. For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#44f6796f04ba4a442c1a980a6e42cd88">TagAndInitializeStrategy::preprocessErrorEstimation()</a> method 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#55f48c415ff91eb2116747f9a575129c">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#44f6796f04ba4a442c1a980a6e42cd88">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="71cb4062eb56d7dc8d385e0862eadda2"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::tagCellsForRefinement" ref="71cb4062eb56d7dc8d385e0862eadda2" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; level, const int level_number, const double regrid_time, const int tag_index, const bool initial_time, const bool coarsest_sync_level, const bool can_be_refined, const double regrid_start_time=0)" -->
+<a class="anchor" name="6217af194cb25de551e481392aae2140"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::tagCellsForRefinement" ref="6217af194cb25de551e481392aae2140" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;level, const int level_number, const double regrid_time, const int tag_index, const bool initial_time, const bool coarsest_sync_level, const bool can_be_refined, const double regrid_start_time=0)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::tagCellsForRefinement           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -434,9 +434,9 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
 
 <p>
 Pass the request to set tags on the given level where refinement of that level should occur. Gradient detection, Richardson extrapolation, and tagging on static refine boxes is performed here.<p>
-For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#68598fdcc9722675cbc91ec8e5dbff13">TagAndInitializeStrategy::tagCellsForRefinement()</a> routine. 
+For more information on the operations that must be performed, see the <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#af45b2199805fcc5444b03dc691ddef9">TagAndInitializeStrategy::tagCellsForRefinement()</a> routine. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#68598fdcc9722675cbc91ec8e5dbff13">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#af45b2199805fcc5444b03dc691ddef9">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="27726ae7a200aecb74ac1ebaed1b4540"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::coarsestLevelBoxesOK" ref="27726ae7a200aecb74ac1ebaed1b4540" args="(const hier::BoxContainer &amp;boxes) const " -->
@@ -461,12 +461,12 @@ Return true if boxes for coarsest hierarchy level are not appropriate for griddi
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#a1d900010c5faafb5efc2c6c4e7d0285">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="966ff63d9270d272d6e4be78b081c113"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::refineUserBoxInputOnly" ref="966ff63d9270d272d6e4be78b081c113" args="() const " -->
+<a class="anchor" name="63fe205f92c883bc51ec093edee295cd"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::refineUserBoxInputOnly" ref="63fe205f92c883bc51ec093edee295cd" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::mesh::StandardTagAndInitialize::refineUserBoxInputOnly           </td>
+          <td class="memname">bool SAMRAI::mesh::StandardTagAndInitialize::refineUserBoxInputOnly           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -482,16 +482,16 @@ Return whether refinement is being performed using ONLY user-supplied refine box
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#334bd9f56a82d870233167b6e8f9ee67">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="850761c6f129e69c2f6ea41fca691b49"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnGradientDetector" ref="850761c6f129e69c2f6ea41fca691b49" args="()" -->
+<a class="anchor" name="1e5c2ed5bdcade1c139b492c03c1e7b1"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnGradientDetector" ref="1e5c2ed5bdcade1c139b492c03c1e7b1" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::StandardTagAndInitialize::turnOnGradientDetector           </td>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOnGradientDetector           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -501,16 +501,16 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.h
 Turn on gradient detector to tag cells for refinement. 
 </div>
 </div><p>
-<a class="anchor" name="71bdb2c6d4ab687b88428eefe72ebbc9"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffGradientDetector" ref="71bdb2c6d4ab687b88428eefe72ebbc9" args="()" -->
+<a class="anchor" name="28936819415c0ce775a7b688bea23e51"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffGradientDetector" ref="28936819415c0ce775a7b688bea23e51" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::StandardTagAndInitialize::turnOffGradientDetector           </td>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOffGradientDetector           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -520,16 +520,16 @@ Turn on gradient detector to tag cells for refinement.
 Turn off gradient detector. 
 </div>
 </div><p>
-<a class="anchor" name="a37bf3638b6da5310661c97b417bde5f"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnRichardsonExtrapolation" ref="a37bf3638b6da5310661c97b417bde5f" args="()" -->
+<a class="anchor" name="6d2645207f91147e7f2436b7ec28d676"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnRichardsonExtrapolation" ref="6d2645207f91147e7f2436b7ec28d676" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::StandardTagAndInitialize::turnOnRichardsonExtrapolation           </td>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOnRichardsonExtrapolation           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -539,16 +539,16 @@ Turn off gradient detector.
 Turn on Richardson extrapolation to tag cells for refinement. 
 </div>
 </div><p>
-<a class="anchor" name="07a1e663237b71658cbb0c6348ce3b10"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffRichardsonExtrapolation" ref="07a1e663237b71658cbb0c6348ce3b10" args="()" -->
+<a class="anchor" name="bad7f134d1578a3e641b7450f040481a"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffRichardsonExtrapolation" ref="bad7f134d1578a3e641b7450f040481a" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::StandardTagAndInitialize::turnOffRichardsonExtrapolation           </td>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOffRichardsonExtrapolation           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -558,16 +558,16 @@ Turn on Richardson extrapolation to tag cells for refinement.
 Turn off Richardson extrapolation. 
 </div>
 </div><p>
-<a class="anchor" name="e69a0d4c50673cd651354f182a86d9b1"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnRefineBoxes" ref="e69a0d4c50673cd651354f182a86d9b1" args="()" -->
+<a class="anchor" name="0a5e7efd2bd74e7c93da7030a1b41346"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOnRefineBoxes" ref="0a5e7efd2bd74e7c93da7030a1b41346" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::StandardTagAndInitialize::turnOnRefineBoxes           </td>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOnRefineBoxes           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -577,16 +577,16 @@ Turn off Richardson extrapolation.
 Turn on static refine box regions where refinement should occur. 
 </div>
 </div><p>
-<a class="anchor" name="cf580a93847708cb5c42b81587dc16f9"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffRefineBoxes" ref="cf580a93847708cb5c42b81587dc16f9" args="()" -->
+<a class="anchor" name="d49473db09cabe5741cd5cb2bfbeac0b"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::turnOffRefineBoxes" ref="d49473db09cabe5741cd5cb2bfbeac0b" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::StandardTagAndInitialize::turnOffRefineBoxes           </td>
+          <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::turnOffRefineBoxes           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -596,14 +596,14 @@ Turn on static refine box regions where refinement should occur.
 Turn off static refine box regions. 
 </div>
 </div><p>
-<a class="anchor" name="bbe10b79558c95c7171e593a6fe735f8"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::getFromInput" ref="bbe10b79558c95c7171e593a6fe735f8" args="(tbox::Pointer&lt; tbox::Database &gt; db)" -->
+<a class="anchor" name="146bced04b3438e9c6130195571561d8"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::getFromInput" ref="146bced04b3438e9c6130195571561d8" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::StandardTagAndInitialize::getFromInput           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -616,19 +616,19 @@ Turn off static refine box regions.
 Read input values, indicated above, from given database.<p>
 When assertion checking is active, the database pointer must be non-null. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#ab75c31f1017bc056738d5ae20364fe3">SAMRAI::mesh::TagAndInitializeStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#b43817706d04e891174961d1c0490263">SAMRAI::mesh::TagAndInitializeStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="968e8d7b61c9d5e883871fd5b085d2c1"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::getConnectorWidthRequestor" ref="968e8d7b61c9d5e883871fd5b085d2c1" args="() const " -->
+<a class="anchor" name="d3903391fbf91e75bdb7b9d1cfebeb94"></a><!-- doxytag: member="SAMRAI::mesh::StandardTagAndInitialize::getConnectorWidthRequestor" ref="d3903391fbf91e75bdb7b9d1cfebeb94" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitializeConnectorWidthRequestor.html">StandardTagAndInitializeConnectorWidthRequestor</a> &amp; SAMRAI::mesh::StandardTagAndInitialize::getConnectorWidthRequestor           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitializeConnectorWidthRequestor.html">StandardTagAndInitializeConnectorWidthRequestor</a>&amp; SAMRAI::mesh::StandardTagAndInitialize::getConnectorWidthRequestor           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -638,9 +638,9 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeSt
 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitialize_8h.html">StandardTagAndInitialize.h</a><li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitialize_8I.html">StandardTagAndInitialize.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following file:<ul>
+<li>source/SAMRAI/mesh/<a class="el" href="StandardTagAndInitialize_8h.html">StandardTagAndInitialize.h</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

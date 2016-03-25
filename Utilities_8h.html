@@ -81,9 +81,9 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#cf707e13a600c48604114210264d660a">TBOX_DIM_ASSERT_CHECK_DIM_ARGS6</a>(dim, arg1, arg2, arg3, arg4, arg5, arg6)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#15af5ded649d9364e4adb48e8b180b47">TBOX_DIM_ASSERT_CHECK_DIM_ARGS7</a>(dim, arg1, arg2, arg3, arg4, arg5, arg6, arg7)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#53720ed8564f5c3c5eadf04c5b0d26f7">TBOX_DIM_ASSERT_CHECK_DIM_ARGS7</a>(dim,arg1, arg2, arg3, arg4, arg5, arg6, arg7)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#8a37f80668b175e784df274bb303506b">TBOX_DIM_ASSERT_CHECK_DIM_ARGS8</a>(dim, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#d000326e3a5608c340b1b88a2f96a17b">TBOX_DIM_ASSERT_CHECK_DIM_ARGS8</a>(dim,arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(EXP)</td></tr>
 
@@ -123,7 +123,7 @@ A statement that does nothing, for insure++ make it something more complex than 
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> { \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                                  \
       <span class="keywordflow">if</span> (0) { <span class="keywordtype">char</span>* temp = (<span class="keywordtype">char</span> *)&amp;variable; temp++; } \
    } <span class="keywordflow">while</span> (0)
 </pre></div>A null use of a variable, use to avoid GNU compiler warnings about unused variables. 
@@ -146,10 +146,10 @@ A statement that does nothing, for insure++ make it something more complex than 
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                      \
-      std::ostringstream tboxos;                                        \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                                         \
+      std::ostringstream tboxos;                                \
       tboxos &lt;&lt; X &lt;&lt; std::ends;                                 \
-      <a class="code" href="structSAMRAI_1_1tbox_1_1Utilities.html#0cef31cdc1daf883502f45eddf0cde84">SAMRAI::tbox::Utilities::abort</a>(tboxos.str(), __FILE__, __LINE__); \
+      tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
    } <span class="keywordflow">while</span> (0)
 </pre></div>Throw an error assertion from within any C++ source code. The macro argument may be any standard ostream expression. The file and line number of the abort are also printed. 
 </div>
@@ -171,11 +171,11 @@ A statement that does nothing, for insure++ make it something more complex than 
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                    \
-      std::ostringstream tboxos;                                        \
-      tboxos &lt;&lt; X &lt;&lt; std::ends;                                 \
-      <a class="code" href="classSAMRAI_1_1tbox_1_1Logger.html#4438235cd584371ee9d074670163f0df">SAMRAI::tbox::Logger::getInstance</a>()-&gt;logWarning( \
-         tboxos.str(), __FILE__, __LINE__); \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                        \
+      std::ostringstream tboxos;               \
+      tboxos &lt;&lt; X &lt;&lt; std::ends;                \
+      tbox::Logger::getInstance()-&gt;logWarning( \
+         tboxos.str(), __FILE__, __LINE__);    \
    } <span class="keywordflow">while</span> (0)
 </pre></div>Print a warning without exit. Print file and line number of the warning. 
 </div>
@@ -198,10 +198,10 @@ A statement that does nothing, for insure++ make it something more complex than 
 
 <p>
 <b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                      \
-      std::ostringstream tboxos;                                        \
-      tboxos &lt;&lt; X &lt;&lt; std::ends;                                 \
-      <a class="code" href="classSAMRAI_1_1tbox_1_1Logger.html#4438235cd584371ee9d074670163f0df">SAMRAI::tbox::Logger::getInstance</a>()-&gt;logDebug( \
-         tboxos.str(), __FILE__, __LINE__); \
+      std::ostringstream tboxos;             \
+      tboxos &lt;&lt; X &lt;&lt; std::ends;              \
+      tbox::Logger::getInstance()-&gt;logDebug( \
+         tboxos.str(), __FILE__, __LINE__);  \
    } <span class="keywordflow">while</span> (0)
 </pre></div>Print a debug without exit. Print file and line number of the debug. 
 </div>
@@ -287,8 +287,8 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                       \
-   (dim).isValid()                     \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                     \
+   (dim).isValid()                      \
    )
 </pre></div>
 </div>
@@ -310,8 +310,8 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                               \
-   !(dim).isInitialized || (dim).isValid()                     \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                         \
+   !(dim).isInitialized || (dim).isValid()                  \
    )
 </pre></div>
 </div>
@@ -333,8 +333,8 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                       \
-   (arg1).getDim().isValid()           \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                        \
+   (arg1).getDim().isValid()               \
    )
 </pre></div>
 </div>
@@ -359,9 +359,9 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                       \
-   (arg1).getDim().isValid() &amp;&amp;                 \
-   ((arg1).getDim() == (arg2).getDim())         \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                              \
+   (arg1).getDim().isValid() &amp;&amp;                  \
+   ((arg1).getDim() == (arg2).getDim())          \
    )
 </pre></div>
 </div>
@@ -390,9 +390,9 @@ This is a parallel-friendly version of assert. The file and line number of the a
 
 <p>
 <b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                     \
-   (arg1).getDim().isValid() &amp;&amp;                      \
-   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;           \
-   ((arg1).getDim() == (arg3).getDim())              \
+   (arg1).getDim().isValid() &amp;&amp;                         \
+   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;              \
+   ((arg1).getDim() == (arg3).getDim())                 \
    )
 </pre></div>
 </div>
@@ -423,7 +423,7 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                             \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                          \
    (arg1).getDim().isValid() &amp;&amp;                              \
    ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                   \
    ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                   \
@@ -461,12 +461,12 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                       \
-   (arg1).getDim().isValid() &amp;&amp;                              \
-   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg4).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg5).getDim())                      \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                \
+   (arg1).getDim().isValid() &amp;&amp;                                    \
+   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                         \
+   ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                         \
+   ((arg1).getDim() == (arg4).getDim()) &amp;&amp;                         \
+   ((arg1).getDim() == (arg5).getDim())                            \
    )
 </pre></div>
 </div>
@@ -503,13 +503,13 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                       \
-   (arg1).getDim().isValid() &amp;&amp;                              \
-   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg4).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg5).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg6).getDim())                      \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                      \
+   (arg1).getDim().isValid() &amp;&amp;                                          \
+   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                               \
+   ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                               \
+   ((arg1).getDim() == (arg4).getDim()) &amp;&amp;                               \
+   ((arg1).getDim() == (arg5).getDim()) &amp;&amp;                               \
+   ((arg1).getDim() == (arg6).getDim())                                  \
    )
 </pre></div>
 </div>
@@ -549,14 +549,14 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                       \
-   (arg1).getDim().isValid() &amp;&amp;                              \
-   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg4).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg5).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg6).getDim()) &amp;&amp;                   \
-   ((arg1).getDim() == (arg7).getDim())                      \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                           \
+   (arg1).getDim().isValid() &amp;&amp;                                               \
+   ((arg1).getDim() == (arg2).getDim()) &amp;&amp;                                    \
+   ((arg1).getDim() == (arg3).getDim()) &amp;&amp;                                    \
+   ((arg1).getDim() == (arg4).getDim()) &amp;&amp;                                    \
+   ((arg1).getDim() == (arg5).getDim()) &amp;&amp;                                    \
+   ((arg1).getDim() == (arg6).getDim()) &amp;&amp;                                    \
+   ((arg1).getDim() == (arg7).getDim())                                       \
    )
 </pre></div>
 </div>
@@ -581,10 +581,10 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                     \
-   (dim).isValid() &amp;&amp;                                \
-   ((dim) == (arg1).getDim())                        \
-   )                                                 \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                 \
+   (dim).isValid() &amp;&amp;                               \
+   ((dim) == (arg1).getDim())                       \
+   )                                                \
 </pre></div>
 </div>
 </div><p>
@@ -611,10 +611,10 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                             \
-   (dim).isValid() &amp;&amp;                                        \
-   ((dim) == (arg1).getDim()) &amp;&amp;                             \
-   ((dim) == (arg2).getDim())                                \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                       \
+   (dim).isValid() &amp;&amp;                                     \
+   ((dim) == (arg1).getDim()) &amp;&amp;                          \
+   ((dim) == (arg2).getDim())                             \
    )
 </pre></div>
 </div>
@@ -645,11 +645,11 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                     \
-   (dim).isValid() &amp;&amp;                                                \
-   ((dim) == (arg1).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg2).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg3).getDim())                                        \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                             \
+   (dim).isValid() &amp;&amp;                                           \
+   ((dim) == (arg1).getDim()) &amp;&amp;                                \
+   ((dim) == (arg2).getDim()) &amp;&amp;                                \
+   ((dim) == (arg3).getDim())                                   \
    )
 </pre></div>
 </div>
@@ -683,12 +683,12 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                     \
-   (dim).isValid() &amp;&amp;                                                \
-   ((dim) == (arg1).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg2).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg3).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg4).getDim())                                        \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                   \
+   (dim).isValid() &amp;&amp;                                                 \
+   ((dim) == (arg1).getDim()) &amp;&amp;                                      \
+   ((dim) == (arg2).getDim()) &amp;&amp;                                      \
+   ((dim) == (arg3).getDim()) &amp;&amp;                                      \
+   ((dim) == (arg4).getDim())                                         \
    )
 </pre></div>
 </div>
@@ -725,13 +725,13 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                     \
-   (dim).isValid() &amp;&amp;                                                \
-   ((dim) == (arg1).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg2).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg3).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg4).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg5).getDim())                                        \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                         \
+   (dim).isValid() &amp;&amp;                                                       \
+   ((dim) == (arg1).getDim()) &amp;&amp;                                            \
+   ((dim) == (arg2).getDim()) &amp;&amp;                                            \
+   ((dim) == (arg3).getDim()) &amp;&amp;                                            \
+   ((dim) == (arg4).getDim()) &amp;&amp;                                            \
+   ((dim) == (arg5).getDim())                                               \
    )
 </pre></div>
 </div>
@@ -771,7 +771,7 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                     \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                  \
    (dim).isValid() &amp;&amp;                                                \
    ((dim) == (arg1).getDim()) &amp;&amp;                                     \
    ((dim) == (arg2).getDim()) &amp;&amp;                                     \
@@ -783,7 +783,7 @@ This is a parallel-friendly version of assert. The file and line number of the a
 </pre></div>
 </div>
 </div><p>
-<a class="anchor" name="15af5ded649d9364e4adb48e8b180b47"></a><!-- doxytag: member="Utilities.h::TBOX_DIM_ASSERT_CHECK_DIM_ARGS7" ref="15af5ded649d9364e4adb48e8b180b47" args="(dim, arg1, arg2, arg3, arg4, arg5, arg6, arg7)" -->
+<a class="anchor" name="53720ed8564f5c3c5eadf04c5b0d26f7"></a><!-- doxytag: member="Utilities.h::TBOX_DIM_ASSERT_CHECK_DIM_ARGS7" ref="53720ed8564f5c3c5eadf04c5b0d26f7" args="(dim,arg1, arg2, arg3, arg4, arg5, arg6, arg7)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -821,20 +821,20 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                     \
-   (dim).isValid() &amp;&amp;                                                \
-   ((dim) == (arg1).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg2).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg3).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg4).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg5).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg6).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg7).getDim())                                        \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                           \
+   (dim).isValid() &amp;&amp;                         \
+   ((dim) == (arg1).getDim()) &amp;&amp;              \
+   ((dim) == (arg2).getDim()) &amp;&amp;              \
+   ((dim) == (arg3).getDim()) &amp;&amp;              \
+   ((dim) == (arg4).getDim()) &amp;&amp;              \
+   ((dim) == (arg5).getDim()) &amp;&amp;              \
+   ((dim) == (arg6).getDim()) &amp;&amp;              \
+   ((dim) == (arg7).getDim())                 \
    )
 </pre></div>
 </div>
 </div><p>
-<a class="anchor" name="8a37f80668b175e784df274bb303506b"></a><!-- doxytag: member="Utilities.h::TBOX_DIM_ASSERT_CHECK_DIM_ARGS8" ref="8a37f80668b175e784df274bb303506b" args="(dim, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)" -->
+<a class="anchor" name="d000326e3a5608c340b1b88a2f96a17b"></a><!-- doxytag: member="Utilities.h::TBOX_DIM_ASSERT_CHECK_DIM_ARGS8" ref="d000326e3a5608c340b1b88a2f96a17b" args="(dim,arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -875,16 +875,16 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                                                     \
-   (dim).isValid() &amp;&amp;                                                \
-   ((dim) == (arg1).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg2).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg3).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg4).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg5).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg6).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg7).getDim()) &amp;&amp;                                     \
-   ((dim) == (arg8).getDim())                                        \
+<b>Value:</b><div class="fragment"><pre class="fragment"><a class="code" href="Utilities_8h.html#3e8d6eee81149cc8aed08d81723b3afb">TBOX_DIM_ASSERT</a>(                           \
+   (dim).isValid() &amp;&amp;                         \
+   ((dim) == (arg1).getDim()) &amp;&amp;              \
+   ((dim) == (arg2).getDim()) &amp;&amp;              \
+   ((dim) == (arg3).getDim()) &amp;&amp;              \
+   ((dim) == (arg4).getDim()) &amp;&amp;              \
+   ((dim) == (arg5).getDim()) &amp;&amp;              \
+   ((dim) == (arg6).getDim()) &amp;&amp;              \
+   ((dim) == (arg7).getDim()) &amp;&amp;              \
+   ((dim) == (arg8).getDim())                 \
    )
 </pre></div>
 </div>
@@ -926,16 +926,16 @@ This is a parallel-friendly version of assert. The file and line number of the a
 <div class="memdoc">
 
 <p>
-<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                           \
-      <span class="keywordflow">if</span> (ierr) {                                                               \
-         std::ostringstream tboxos;                                                     \
-         <a class="code" href="structSAMRAI_1_1tbox_1_1Utilities.html#0cef31cdc1daf883502f45eddf0cde84">SAMRAI::tbox::Utilities::abort</a>(tboxos.str(), __FILE__, __LINE__);      \
-      }                                                                         \
+<b>Value:</b><div class="fragment"><pre class="fragment"><span class="keywordflow">do</span> {                                                            \
+      <span class="keywordflow">if</span> (ierr) {                                                  \
+         std::ostringstream tboxos;                                \
+         tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__); \
+      }                                                            \
    } <span class="keywordflow">while</span> (0)
 </pre></div>Throw an error assertion from within any C++ source code. This is is similar to <a class="el" href="Utilities_8h.html#0f7312139c387188f90b7d326801f51a">TBOX_ERROR()</a>, but is designed to be invoked after a call to a PETSc library function. In other words, it acts similarly to the PETSc CHKERRQ(ierr) macro. 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

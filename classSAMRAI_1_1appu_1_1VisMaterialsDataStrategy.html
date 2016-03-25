@@ -259,7 +259,7 @@ This method will be called once for each patch.<p>
 A enumerated PACK_RETURN_TYPE is used for a return value. To save space in the visit data file, you may choose to set the return value to ALL_ONE to indicate that a single material occupies 100% of each cell on the patch. Otherwise, MIXTURE should be returned even if individual cells are not mixed, as this indicates that the patch contains multiple materials.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>buffer</em>&nbsp;</td><td>Double precision array into which the material numbers (or negative indices) are packed. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>mat_list</em>&nbsp;</td><td>Double precision array into which the material numbers (or negative indices) are packed. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>mix_zones</em>&nbsp;</td><td>std::vector&lt;int&gt; into which the cell number associated with the mixed components are packed. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>mix_mat</em>&nbsp;</td><td>std::vector&lt;int&gt; into which the material numbers of the mixed components are packed. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>vol_fracs</em>&nbsp;</td><td>std::vector&lt;double&gt; into which the volume fractions (between 0.0 and 1.0) of the mixed components are packed. </td></tr>
@@ -336,7 +336,7 @@ The method must return a PACK_RETURN_TYPE of ALL_ONE, ALL_ZERO, or MIXED. See th
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/appu/<a class="el" href="VisMaterialsDataStrategy_8h.html">VisMaterialsDataStrategy.h</a><li>source/SAMRAI/appu/<a class="el" href="VisMaterialsDataStrategy_8C.html">VisMaterialsDataStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

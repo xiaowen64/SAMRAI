@@ -40,31 +40,33 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#68e469112a588ababebb2f969bf1f0ed">~NodeGeometry</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor does nothing interesting.  <a href="#68e469112a588ababebb2f969bf1f0ed"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#5dada26267fc217d0761cb68351c5c4b">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#d15774e76ee481cddc72444b4e8fb038">calculateOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;dst_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const bool retry, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in node-centered index space between the source box geometry and the destination box geometry.  <a href="#5dada26267fc217d0761cb68351c5c4b"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the overlap in node-centered index space between the source box geometry and the destination box geometry.  <a href="#d15774e76ee481cddc72444b4e8fb038"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#416a6f5b0d6c320f93b7d8dd36242813">computeDestinationBoxes</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_boxes, const <a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html">NodeGeometry</a> &amp;src_geometry, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;src_mask, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;fill_box, const bool overwrite_interior, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;dst_restrict_boxes=<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a>()) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute the node-centered destination boxes that represent the overlap between the source box geometry and the destination box geometry.  <a href="#416a6f5b0d6c320f93b7d8dd36242813"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#216d6091653b0400cf0a8e062d280883">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#6719a9c4c0458ca2f99c53ce3dfa1cea">setUpOverlap</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up a <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> object based on the given boxes and the transformation.  <a href="#216d6091653b0400cf0a8e062d280883"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#686b77b79152cf38c3e80d4895334f4a">getBox</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set up a <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverlap</a> object based on the given boxes and the transformation.  <a href="#6719a9c4c0458ca2f99c53ce3dfa1cea"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#23b99f5eb14d617c796f197014a0b9a2">getBox</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the box for this node centered box geometry object.  <a href="#686b77b79152cf38c3e80d4895334f4a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#26058d0f2dfb44827984369c0b34c494">getGhosts</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the box for this node centered box geometry object.  <a href="#23b99f5eb14d617c796f197014a0b9a2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#1588bdeb81b793b68f40c8155889588b">getGhosts</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the ghost cell width for this node centered box geometry object.  <a href="#26058d0f2dfb44827984369c0b34c494"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the ghost cell width for this node centered box geometry object.  <a href="#1588bdeb81b793b68f40c8155889588b"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#28e27de6fbc5d3f60d8897fa20cf2403">toNodeBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#6239818309aafa32afd62635d45ce767">toNodeBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into a node geometry box. A node geometry box is extends the given AMR index box space box by one in upper dimension for each coordinate direction.  <a href="#28e27de6fbc5d3f60d8897fa20cf2403"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Convert an AMR index box space box into a node geometry box. A node geometry box is extends the given AMR index box space box by one in upper dimension for each coordinate direction.  <a href="#6239818309aafa32afd62635d45ce767"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#5f90baa607bb2055fb7ce2dd08cd9d4b">transform</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a node-centered box.  <a href="#5f90baa607bb2055fb7ce2dd08cd9d4b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#d55a995ded55e6b80ff297755367a021">transform</a> (<a class="el" href="classSAMRAI_1_1pdat_1_1NodeIndex.html">pdat::NodeIndex</a> &amp;index, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html#d12f005015b0d1d89dfa5807134efd96">transform</a> (<a class="el" href="classSAMRAI_1_1pdat_1_1NodeIndex.html">NodeIndex</a> &amp;index, const <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html">hier::Transformation</a> &amp;transformation)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a <a class="el" href="classSAMRAI_1_1pdat_1_1NodeIndex.html">NodeIndex</a>.  <a href="#d55a995ded55e6b80ff297755367a021"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Transform a <a class="el" href="classSAMRAI_1_1pdat_1_1NodeIndex.html">NodeIndex</a>.  <a href="#d12f005015b0d1d89dfa5807134efd96"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1pdat_1_1NodeGeometry.html">NodeGeometry</a> manages the mapping between the AMR index space and the node-centered geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between node- centered box geometries for communication operations.<p>
@@ -109,7 +111,7 @@ The BoxOverlap implemenation for this geometry.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -143,17 +145,17 @@ The virtual destructor does nothing interesting.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="28e27de6fbc5d3f60d8897fa20cf2403"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::toNodeBox" ref="28e27de6fbc5d3f60d8897fa20cf2403" args="(const hier::Box &amp;box)" -->
+<a class="anchor" name="6239818309aafa32afd62635d45ce767"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::toNodeBox" ref="6239818309aafa32afd62635d45ce767" args="(const hier::Box &amp;box)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> SAMRAI::pdat::NodeGeometry::toNodeBox           </td>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> SAMRAI::pdat::NodeGeometry::toNodeBox           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>box</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [static]</code></td>
+          <td width="100%"><code> [inline, static]</code></td>
         </tr>
       </table>
 </div>
@@ -197,21 +199,20 @@ At input, the Box is assumed to represent an node-centered box. The Box will be 
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>box</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>normal_direction</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transformation</em>&nbsp;</td><td></td></tr>
   </table>
 </dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d55a995ded55e6b80ff297755367a021"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::transform" ref="d55a995ded55e6b80ff297755367a021" args="(pdat::NodeIndex &amp;index, const hier::Transformation &amp;transformation)" -->
+<a class="anchor" name="d12f005015b0d1d89dfa5807134efd96"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::transform" ref="d12f005015b0d1d89dfa5807134efd96" args="(NodeIndex &amp;index, const hier::Transformation &amp;transformation)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::pdat::NodeGeometry::transform           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeIndex.html">pdat::NodeIndex</a> &amp;&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeIndex.html">NodeIndex</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>index</em>, </td>
         </tr>
         <tr>
@@ -242,12 +243,12 @@ This static method applies a coordinate system transformation to the given <a cl
 
 </div>
 </div><p>
-<a class="anchor" name="5dada26267fc217d0761cb68351c5c4b"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::calculateOverlap" ref="5dada26267fc217d0761cb68351c5c4b" args="(const hier::BoxGeometry &amp;dst_geometry, const hier::BoxGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const bool retry, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
+<a class="anchor" name="d15774e76ee481cddc72444b4e8fb038"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::calculateOverlap" ref="d15774e76ee481cddc72444b4e8fb038" args="(const hier::BoxGeometry &amp;dst_geometry, const hier::BoxGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const bool retry, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::NodeGeometry::calculateOverlap           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::NodeGeometry::calculateOverlap           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_geometry</em>, </td>
@@ -308,7 +309,7 @@ Compute the overlap in node-centered index space between the source box geometry
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#29665dece6037638c48af693e615b87e">SAMRAI::hier::BoxGeometry</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#08c975c0464b5501773b1cdc4083b167">SAMRAI::hier::BoxGeometry</a>.
 </div>
 </div><p>
 <a class="anchor" name="416a6f5b0d6c320f93b7d8dd36242813"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::computeDestinationBoxes" ref="416a6f5b0d6c320f93b7d8dd36242813" args="(hier::BoxContainer &amp;dst_boxes, const NodeGeometry &amp;src_geometry, const hier::Box &amp;src_mask, const hier::Box &amp;fill_box, const bool overwrite_interior, const hier::Transformation &amp;transformation, const hier::BoxContainer &amp;dst_restrict_boxes=hier::BoxContainer()) const " -->
@@ -372,12 +373,12 @@ Compute the node-centered destination boxes that represent the overlap between t
 
 </div>
 </div><p>
-<a class="anchor" name="216d6091653b0400cf0a8e062d280883"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::setUpOverlap" ref="216d6091653b0400cf0a8e062d280883" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
+<a class="anchor" name="6719a9c4c0458ca2f99c53ce3dfa1cea"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::setUpOverlap" ref="6719a9c4c0458ca2f99c53ce3dfa1cea" args="(const hier::BoxContainer &amp;boxes, const hier::Transformation &amp;transformation) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::NodeGeometry::setUpOverlap           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &gt; SAMRAI::pdat::NodeGeometry::setUpOverlap           </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">hier::BoxContainer</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>boxes</em>, </td>
@@ -402,19 +403,19 @@ Set up a <a class="el" href="classSAMRAI_1_1pdat_1_1EdgeOverlap.html">EdgeOverla
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#e78d82615211c06087ee3d63cda98a56">SAMRAI::hier::BoxGeometry</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#4725975261e356cb3ebc7450aae8e856">SAMRAI::hier::BoxGeometry</a>.
 </div>
 </div><p>
-<a class="anchor" name="686b77b79152cf38c3e80d4895334f4a"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::getBox" ref="686b77b79152cf38c3e80d4895334f4a" args="() const " -->
+<a class="anchor" name="23b99f5eb14d617c796f197014a0b9a2"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::getBox" ref="23b99f5eb14d617c796f197014a0b9a2" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp; SAMRAI::pdat::NodeGeometry::getBox           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&amp; SAMRAI::pdat::NodeGeometry::getBox           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -426,16 +427,16 @@ Return the box for this node centered box geometry object.
 
 </div>
 </div><p>
-<a class="anchor" name="26058d0f2dfb44827984369c0b34c494"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::getGhosts" ref="26058d0f2dfb44827984369c0b34c494" args="() const " -->
+<a class="anchor" name="1588bdeb81b793b68f40c8155889588b"></a><!-- doxytag: member="SAMRAI::pdat::NodeGeometry::getGhosts" ref="1588bdeb81b793b68f40c8155889588b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp; SAMRAI::pdat::NodeGeometry::getGhosts           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; SAMRAI::pdat::NodeGeometry::getGhosts           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -448,8 +449,8 @@ Return the ghost cell width for this node centered box geometry object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8h.html">NodeGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8C.html">NodeGeometry.C</a><li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8I.html">NodeGeometry.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8h.html">NodeGeometry.h</a><li>source/SAMRAI/pdat/<a class="el" href="NodeGeometry_8C.html">NodeGeometry.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

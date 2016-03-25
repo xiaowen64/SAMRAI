@@ -21,7 +21,7 @@
   </ul></div>
 <div class="nav">
 <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>::<a class="el" href="namespaceSAMRAI_1_1tbox.html">tbox</a>::<a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html">DatabaseFactory</a></div>
-<h1>SAMRAI::tbox::DatabaseFactory Class Reference</h1><!-- doxytag: class="SAMRAI::tbox::DatabaseFactory" --><!-- doxytag: inherits="tbox::DescribedClass" -->Abstract base class factory used to build <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> objects.  
+<h1>SAMRAI::tbox::DatabaseFactory Class Reference</h1><!-- doxytag: class="SAMRAI::tbox::DatabaseFactory" -->Abstract base class factory used to build <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> objects.  
 <a href="#_details">More...</a>
 <p>
 <code>#include &lt;source/SAMRAI/tbox/DatabaseFactory.h&gt;</code>
@@ -29,15 +29,19 @@
 <p>Inheritance diagram for SAMRAI::tbox::DatabaseFactory:
 <p><center><img src="classSAMRAI_1_1tbox_1_1DatabaseFactory.png" usemap="#SAMRAI::tbox::DatabaseFactory_map" border="0" alt=""></center>
 <map name="SAMRAI::tbox::DatabaseFactory_map">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="248,0,486,24">
-<area href="classSAMRAI_1_1tbox_1_1HDFDatabaseFactory.html" alt="SAMRAI::tbox::HDFDatabaseFactory" shape="rect" coords="0,112,238,136">
-<area href="classSAMRAI_1_1tbox_1_1MemoryDatabaseFactory.html" alt="SAMRAI::tbox::MemoryDatabaseFactory" shape="rect" coords="248,112,486,136">
-<area href="classSAMRAI_1_1tbox_1_1SiloDatabaseFactory.html" alt="SAMRAI::tbox::SiloDatabaseFactory" shape="rect" coords="496,112,734,136">
+<area href="classSAMRAI_1_1tbox_1_1HDFDatabaseFactory.html" alt="SAMRAI::tbox::HDFDatabaseFactory" shape="rect" coords="0,56,238,80">
+<area href="classSAMRAI_1_1tbox_1_1MemoryDatabaseFactory.html" alt="SAMRAI::tbox::MemoryDatabaseFactory" shape="rect" coords="248,56,486,80">
+<area href="classSAMRAI_1_1tbox_1_1SiloDatabaseFactory.html" alt="SAMRAI::tbox::SiloDatabaseFactory" shape="rect" coords="496,56,734,80">
 </map>
 <a href="classSAMRAI_1_1tbox_1_1DatabaseFactory-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html#4683f0d87fb0816fbb4f58290f7dfaed">allocate</a> (const std::string &amp;name)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html#971251cb5bd1b375cb495e831afa1903">DatabaseFactory</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html#c6ac20616f5687ac41faaa101d169d4b">~DatabaseFactory</a> ()</td></tr>
+
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html#573491db611630b17849becb543c5b9b">allocate</a> (const std::string &amp;name)=0</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -45,13 +49,52 @@ Abstract base class factory used to build <a class="el" href="classSAMRAI_1_1tbo
 <p>
 Used to build database objects. For example, <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a> may use a <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html">DatabaseFactory</a> to build databases when creating a restart file. 
 <p>
-<hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="4683f0d87fb0816fbb4f58290f7dfaed"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseFactory::allocate" ref="4683f0d87fb0816fbb4f58290f7dfaed" args="(const std::string &amp;name)=0" -->
+<hr><h2>Constructor &amp; Destructor Documentation</h2>
+<a class="anchor" name="971251cb5bd1b375cb495e831afa1903"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseFactory::DatabaseFactory" ref="971251cb5bd1b375cb495e831afa1903" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a>&gt; SAMRAI::tbox::DatabaseFactory::allocate           </td>
+          <td class="memname">SAMRAI::tbox::DatabaseFactory::DatabaseFactory           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Default constructor 
+</div>
+</div><p>
+<a class="anchor" name="c6ac20616f5687ac41faaa101d169d4b"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseFactory::~DatabaseFactory" ref="c6ac20616f5687ac41faaa101d169d4b" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::tbox::DatabaseFactory::~DatabaseFactory           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Destructor 
+</div>
+</div><p>
+<hr><h2>Member Function Documentation</h2>
+<a class="anchor" name="573491db611630b17849becb543c5b9b"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseFactory::allocate" ref="573491db611630b17849becb543c5b9b" args="(const std::string &amp;name)=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a>&gt; SAMRAI::tbox::DatabaseFactory::allocate           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>name</em>          </td>
@@ -63,12 +106,12 @@ Used to build database objects. For example, <a class="el" href="classSAMRAI_1_1
 <div class="memdoc">
 
 <p>
-
+Build a new <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> instance. 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li>source/SAMRAI/tbox/<a class="el" href="DatabaseFactory_8h.html">DatabaseFactory.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following files:<ul>
+<li>source/SAMRAI/tbox/<a class="el" href="DatabaseFactory_8h.html">DatabaseFactory.h</a><li>source/SAMRAI/tbox/<a class="el" href="DatabaseFactory_8C.html">DatabaseFactory.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -29,17 +29,16 @@
 <p>Inheritance diagram for SAMRAI::mesh::GriddingAlgorithm:
 <p><center><img src="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.png" usemap="#SAMRAI::mesh::GriddingAlgorithm_map" border="0" alt=""></center>
 <map name="SAMRAI::mesh::GriddingAlgorithm_map">
-<area href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html" alt="SAMRAI::mesh::GriddingAlgorithmStrategy" shape="rect" coords="0,56,249,80">
-<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="259,56,508,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="259,0,508,24">
+<area href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html" alt="SAMRAI::mesh::GriddingAlgorithmStrategy" shape="rect" coords="0,0,249,24">
+<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="259,0,508,24">
 </map>
 <a href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0be1a5923a05bb72a8f7fae6698a1dc7">GriddingAlgorithm</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; level_strategy, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> &gt; generator, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; balancer, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; balancer_zero=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;(NULL), bool register_for_restart=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#17aa0c34d733a3118c6c8688ed349000">GriddingAlgorithm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; &amp;level_strategy, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> &gt; &amp;generator, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;balancer, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;balancer_zero=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;(), bool register_for_restart=true)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> configures the gridding algorithm with the patch hierarchy and concrete algorithm strategy objects in the argument list.  <a href="#0be1a5923a05bb72a8f7fae6698a1dc7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d564619fa83f3ec37d0349a31a7c0a30">~GriddingAlgorithm</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The constructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html">GriddingAlgorithm</a> configures the gridding algorithm with the patch hierarchy and concrete algorithm strategy objects in the argument list.  <a href="#17aa0c34d733a3118c6c8688ed349000"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d564619fa83f3ec37d0349a31a7c0a30">~GriddingAlgorithm</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor.  <a href="#d564619fa83f3ec37d0349a31a7c0a30"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d1846e119aeff11f5f40c7dd2aa2e7f5">makeCoarsestLevel</a> (const double level_time)</td></tr>
@@ -51,33 +50,36 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#5d2ef5face4b4c3b40ba814906916089">regridAllFinerLevels</a> (const int level_number, const double regrid_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;tag_buffer, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; regrid_start_time=<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to regrid each level in the PatchHierarchy that is finer than the specified level.  <a href="#5d2ef5face4b4c3b40ba814906916089"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d1f0fc38f40da4490b226fec0de54bb7">getTagAndInitializeStrategy</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#f6477d7887a8b2b5fc734fb824242b0c">getTagAndInitializeStrategy</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to level gridding strategy data member.  <a href="#d1f0fc38f40da4490b226fec0de54bb7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#40d3fb9125b7352b97a3a380818d6e84">getLoadBalanceStrategy</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to level gridding strategy data member.  <a href="#f6477d7887a8b2b5fc734fb824242b0c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#9b4dd040917cb16df8e54065e36aa773">getLoadBalanceStrategy</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to load balance strategy data member.  <a href="#40d3fb9125b7352b97a3a380818d6e84"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#c4fe554dc5b0daaca35fb5dec098f72b">getLoadBalanceStrategyZero</a> () const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to load balance strategy data member.  <a href="#9b4dd040917cb16df8e54065e36aa773"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#b4a1c5d1841dbf69a16697c1138d1ff9">getLoadBalanceStrategyZero</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to load balance strategy specialized for balancing level zero.  <a href="#c4fe554dc5b0daaca35fb5dec098f72b"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#eb02272242cae556e6cf1d30bb7dc51c">setEfficiencyTolerance</a> (const double efficiency_tolerance, const int level_number)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to load balance strategy specialized for balancing level zero.  <a href="#b4a1c5d1841dbf69a16697c1138d1ff9"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#35b763f62f454e6ca5ec378fd17c902c">setEfficiencyTolerance</a> (const double efficiency_tolerance, const int level_number)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set efficiency tolerance for clustering tags on level.  <a href="#eb02272242cae556e6cf1d30bb7dc51c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d358b372179521cacb81f431d4e28f03">getEfficiencyTolerance</a> (const int level_number) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set efficiency tolerance for clustering tags on level.  <a href="#35b763f62f454e6ca5ec378fd17c902c"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#96821580fc68c90c74524ddf2d9a88e4">getEfficiencyTolerance</a> (const int level_number) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return efficiency tolerance for clustering tags on level.  <a href="#d358b372179521cacb81f431d4e28f03"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#73e212c91812d1a433ca0793576fc2da">setCombineEfficiency</a> (const double combine_efficiency, const int level_number)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return efficiency tolerance for clustering tags on level.  <a href="#96821580fc68c90c74524ddf2d9a88e4"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d341fca2cb1b41be294f425756cc0d18">setCombineEfficiency</a> (const double combine_efficiency, const int level_number)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set combine efficiency for clustering tags on level.  <a href="#73e212c91812d1a433ca0793576fc2da"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#2eeb7aef9d8cbca616a02f8ba70e3d6f">getCombineEfficiency</a> (const int level_number) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set combine efficiency for clustering tags on level.  <a href="#d341fca2cb1b41be294f425756cc0d18"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#fc2fd44971acda946482046ae13c9d84">getCombineEfficiency</a> (const int level_number) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return combine efficiency for clustering tags on level.  <a href="#2eeb7aef9d8cbca616a02f8ba70e3d6f"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return combine efficiency for clustering tags on level.  <a href="#fc2fd44971acda946482046ae13c9d84"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#8f18dca77480c966b2253020162a31c0">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all data members of the class instance to given output stream.  <a href="#8f18dca77480c966b2253020162a31c0"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#0f1c520afe49b00e2458c63ecf1582a6">putToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#b59a959a4dd4328b432d3e194cedd93e">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write object state out to the gien database.  <a href="#0f1c520afe49b00e2458c63ecf1582a6"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write object state out to the gien database.  <a href="#b59a959a4dd4328b432d3e194cedd93e"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#b412d10052255cff13ffa3f104dd8a09">printStatistics</a> (std::ostream &amp;s=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>) const </td></tr>
 
 </table>
@@ -120,6 +122,9 @@ Set to one of these strings: <b>"IGNORE"</b> - violating tags will be quietly di
 <ul>
 <li><b>sequentialize_patch_indices</b> A flag to specify whether patch indices will be globally sequentialized. This is not scalable, but is required for writing correct VisIt files. Due to the current VisIt requirement, this is currently true by default. It will evetually be set back to false after we remove the VisIt requirement.</li></ul>
 <p>
+<ul>
+<li><b>log_metadata_statistics</b> = FALSE Whether to log metadata statistics after generating a new level. This flag writes out data that would be of interest to analyzing how metadata statistics affects performance.</li></ul>
+<p>
 Note that when continuing from restart, the input values in the input file override all values read in from the restart database.<p>
 The following represents sample input data for a three-level problem:<p>
 <div class="fragment"><pre class="fragment"> *
@@ -136,14 +141,14 @@ The following represents sample input data for a three-level problem:<p>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="0be1a5923a05bb72a8f7fae6698a1dc7"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm" ref="0be1a5923a05bb72a8f7fae6698a1dc7" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; input_db, tbox::Pointer&lt; TagAndInitializeStrategy &gt; level_strategy, tbox::Pointer&lt; BoxGeneratorStrategy &gt; generator, tbox::Pointer&lt; LoadBalanceStrategy &gt; balancer, tbox::Pointer&lt; LoadBalanceStrategy &gt; balancer_zero=tbox::Pointer&lt; LoadBalanceStrategy &gt;(NULL), bool register_for_restart=true)" -->
+<a class="anchor" name="17aa0c34d733a3118c6c8688ed349000"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm" ref="17aa0c34d733a3118c6c8688ed349000" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, const boost::shared_ptr&lt; TagAndInitializeStrategy &gt; &amp;level_strategy, const boost::shared_ptr&lt; BoxGeneratorStrategy &gt; &amp;generator, const boost::shared_ptr&lt; LoadBalanceStrategy &gt; &amp;balancer, const boost::shared_ptr&lt; LoadBalanceStrategy &gt; &amp;balancer_zero=boost::shared_ptr&lt; LoadBalanceStrategy &gt;(), bool register_for_restart=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -155,32 +160,32 @@ The following represents sample input data for a three-level problem:<p>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_db</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level_strategy</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1BoxGeneratorStrategy.html">BoxGeneratorStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>generator</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>balancer</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>balancer_zero</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a>&nbsp;&gt;(NULL)</code>, </td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>balancer_zero</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a>&nbsp;&gt;()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -226,7 +231,7 @@ If assertion checking is turned on, an unrecoverable assertion will result if an
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -318,7 +323,7 @@ The tag buffer indicates the number of cells by which cells selected for refinem
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_time</em>&nbsp;</td><td>See above text.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>initial_time</em>&nbsp;</td><td>See above text.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>tag_buffer</em>&nbsp;</td><td>See above text.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>regrid_start_time[in]</em>&nbsp;</td><td>The simulation time when the regridding operation began (this parameter is ignored except when using Richardson extrapolation) </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>regrid_start_time</em>&nbsp;</td><td>The simulation time when the regridding operation began (this parameter is ignored except when using Richardson extrapolation) </td></tr>
   </table>
 </dl>
 
@@ -390,12 +395,12 @@ Important note: If assertion checking is activated, several checks are applied t
 Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#2ca0e474cc71e77856d09344e1566cb7">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="d1f0fc38f40da4490b226fec0de54bb7"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getTagAndInitializeStrategy" ref="d1f0fc38f40da4490b226fec0de54bb7" args="() const " -->
+<a class="anchor" name="f6477d7887a8b2b5fc734fb824242b0c"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getTagAndInitializeStrategy" ref="f6477d7887a8b2b5fc734fb824242b0c" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; SAMRAI::mesh::GriddingAlgorithm::getTagAndInitializeStrategy           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt; SAMRAI::mesh::GriddingAlgorithm::getTagAndInitializeStrategy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -412,15 +417,15 @@ Access to this member is useful when an integrator implementation needs to know 
 <dl compact><dt><b>Returns:</b></dt><dd>pointer to <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> data member. </dd></dl>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#1ef20da31b373f91a2876f6b3e495ae9">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#3ffee71426ab6aeba38f2eefce9ab25a">SAMRAI::mesh::GriddingAlgorithmStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="40d3fb9125b7352b97a3a380818d6e84"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategy" ref="40d3fb9125b7352b97a3a380818d6e84" args="() const " -->
+<a class="anchor" name="9b4dd040917cb16df8e54065e36aa773"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategy" ref="9b4dd040917cb16df8e54065e36aa773" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategy           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -436,12 +441,12 @@ Return pointer to load balance strategy data member.
 
 </div>
 </div><p>
-<a class="anchor" name="c4fe554dc5b0daaca35fb5dec098f72b"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategyZero" ref="c4fe554dc5b0daaca35fb5dec098f72b" args="() const " -->
+<a class="anchor" name="b4a1c5d1841dbf69a16697c1138d1ff9"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategyZero" ref="b4a1c5d1841dbf69a16697c1138d1ff9" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategyZero           </td>
+          <td class="memname">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html">LoadBalanceStrategy</a> &gt; SAMRAI::mesh::GriddingAlgorithm::getLoadBalanceStrategyZero           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -458,12 +463,12 @@ Return pointer to load balance strategy specialized for balancing level zero.
 
 </div>
 </div><p>
-<a class="anchor" name="eb02272242cae556e6cf1d30bb7dc51c"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::setEfficiencyTolerance" ref="eb02272242cae556e6cf1d30bb7dc51c" args="(const double efficiency_tolerance, const int level_number)" -->
+<a class="anchor" name="35b763f62f454e6ca5ec378fd17c902c"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::setEfficiencyTolerance" ref="35b763f62f454e6ca5ec378fd17c902c" args="(const double efficiency_tolerance, const int level_number)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::GriddingAlgorithm::setEfficiencyTolerance           </td>
+          <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::setEfficiencyTolerance           </td>
           <td>(</td>
           <td class="paramtype">const double&nbsp;</td>
           <td class="paramname"> <em>efficiency_tolerance</em>, </td>
@@ -477,7 +482,7 @@ Return pointer to load balance strategy specialized for balancing level zero.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -495,17 +500,17 @@ Set efficiency tolerance for clustering tags on level.
 
 </div>
 </div><p>
-<a class="anchor" name="d358b372179521cacb81f431d4e28f03"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getEfficiencyTolerance" ref="d358b372179521cacb81f431d4e28f03" args="(const int level_number) const " -->
+<a class="anchor" name="96821580fc68c90c74524ddf2d9a88e4"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getEfficiencyTolerance" ref="96821580fc68c90c74524ddf2d9a88e4" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::mesh::GriddingAlgorithm::getEfficiencyTolerance           </td>
+          <td class="memname">double SAMRAI::mesh::GriddingAlgorithm::getEfficiencyTolerance           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -518,12 +523,12 @@ Return efficiency tolerance for clustering tags on level.
 
 </div>
 </div><p>
-<a class="anchor" name="73e212c91812d1a433ca0793576fc2da"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::setCombineEfficiency" ref="73e212c91812d1a433ca0793576fc2da" args="(const double combine_efficiency, const int level_number)" -->
+<a class="anchor" name="d341fca2cb1b41be294f425756cc0d18"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::setCombineEfficiency" ref="d341fca2cb1b41be294f425756cc0d18" args="(const double combine_efficiency, const int level_number)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::mesh::GriddingAlgorithm::setCombineEfficiency           </td>
+          <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::setCombineEfficiency           </td>
           <td>(</td>
           <td class="paramtype">const double&nbsp;</td>
           <td class="paramname"> <em>combine_efficiency</em>, </td>
@@ -537,7 +542,7 @@ Return efficiency tolerance for clustering tags on level.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -555,17 +560,17 @@ Set combine efficiency for clustering tags on level.
 
 </div>
 </div><p>
-<a class="anchor" name="2eeb7aef9d8cbca616a02f8ba70e3d6f"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getCombineEfficiency" ref="2eeb7aef9d8cbca616a02f8ba70e3d6f" args="(const int level_number) const " -->
+<a class="anchor" name="fc2fd44971acda946482046ae13c9d84"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::getCombineEfficiency" ref="fc2fd44971acda946482046ae13c9d84" args="(const int level_number) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD double SAMRAI::mesh::GriddingAlgorithm::getCombineEfficiency           </td>
+          <td class="memname">double SAMRAI::mesh::GriddingAlgorithm::getCombineEfficiency           </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>level_number</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -600,17 +605,17 @@ Print all data members of the class instance to given output stream.
 
 </div>
 </div><p>
-<a class="anchor" name="0f1c520afe49b00e2458c63ecf1582a6"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::putToDatabase" ref="0f1c520afe49b00e2458c63ecf1582a6" args="(tbox::Pointer&lt; tbox::Database &gt; db)" -->
+<a class="anchor" name="b59a959a4dd4328b432d3e194cedd93e"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::putToDatabase" ref="b59a959a4dd4328b432d3e194cedd93e" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::mesh::GriddingAlgorithm::putToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -620,8 +625,6 @@ Print all data members of the class instance to given output stream.
 Write object state out to the gien database. 
 <p>
 When assertion checking is active, the database pointer must be non-null. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6fd7a9046bd2f60ad716c21293">SAMRAI::tbox::Serializable</a>.
 </div>
 </div><p>
 <a class="anchor" name="b412d10052255cff13ffa3f104dd8a09"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithm::printStatistics" ref="b412d10052255cff13ffa3f104dd8a09" args="(std::ostream &amp;s=tbox::plog) const " -->
@@ -645,8 +648,8 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6f
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8h.html">GriddingAlgorithm.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8C.html">GriddingAlgorithm.C</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8I.html">GriddingAlgorithm.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8h.html">GriddingAlgorithm.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithm_8C.html">GriddingAlgorithm.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

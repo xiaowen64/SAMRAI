@@ -48,13 +48,13 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#932547caed02bc084f8efce9e2d1d1e8">conservativeDifferenceOnPatch</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double time, const double dt, bool at_syncronization)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#df9cb776823440d62de812382fffb86d">preprocessAdvanceLevelState</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#914cfbc361021cd410cc0da391967e69">preprocessAdvanceLevelState</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#41982c51ee4f02590de5ea26c79fbaa3">postprocessAdvanceLevelState</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#39624f7f174472133cd64db8f0c589e2">postprocessAdvanceLevelState</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#780ff3b9eb4b2b686bd152a381ab80ec">tagGradientDetectorCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double regrid_time, const bool initial_error, const int tag_index, const bool uses_richardson_extrapolation_too)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#6fb37f917f199c5f10f6501414d5291c">tagRichardsonExtrapolationCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const int error_level_number, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; coarsened_fine, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; advanced_coarse, const double regrid_time, const double deltat, const int error_coarsen_ratio, const bool initial_error, const int tag_index, const bool uses_gradient_detector_too)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#5c1716e442374b9b86f33f08f46fdbcf">tagRichardsonExtrapolationCells</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const int error_level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;coarsened_fine, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;advanced_coarse, const double regrid_time, const double deltat, const int error_coarsen_ratio, const bool initial_error, const int tag_index, const bool uses_gradient_detector_too)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#31f097ee69de5a175f4b34d31c469bf8">setPhysicalBoundaryConditions</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const double fill_time, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghost_width_to_fill)=0</td></tr>
 
@@ -72,19 +72,19 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c049b88562fdf98350513952fb604176">postprocessCoarsen</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;coarse, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;fine, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;coarse_box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Perform user-defined patch data coarsening operations.  <a href="#c049b88562fdf98350513952fb604176"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#e77e049ab5a575dc4eef7b870e8e428a">getDataContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c4fb45ce3991d0e96eaf2599ebe4e812">getDataContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#abb02eb6de95b63c5dd7d54c4b5cf340">setDataContext</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#40c4149ef116540dd41c86d7403642f8">setDataContext</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;context)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#bd85a561841ad406095e47db1d6d7e64">clearDataContext</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#81deadcfc673b84af5ca41898f4cd8c2">getDim</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#e438e481350988a0026dad9aa8bec517">getDim</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#81deadcfc673b84af5ca41898f4cd8c2"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the dimension of this object.  <a href="#e438e481350988a0026dad9aa8bec517"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> is an abstract base class defining the interface between an <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> object and operations applied to a single patch in a structured AMR hierarchy. The operations include patch initialization, dt calculation, flux computation, conservative differencing, and error estimation. This class is derived from the <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> and <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a> abstract base classes. These base classes provide the interface for user-defined interlevel data refining and coarsening operations and the specification of physical boundary conditions. The functions <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#31f097ee69de5a175f4b34d31c469bf8">setPhysicalBoundaryConditions()</a>, and pre/postprocessRefine() are overloaded from the class <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a>. The operations pre/postprocessCoarsen() are overloaded from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a>. The pre/postprocessCoarsen/Refine() operations are given empty implementations here so that the user does not need to proovide them if the operations are not needed.<p>
-It is important to recognize that for the concrete patch strategy subclass and the <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> to work together, the concrete strategy must know which patch data to operate on. The patch data storage is manipulated by the level integrator. The set/clearDataContext() methods allow the integrator to inform the patch strategy of the correct data context. The concrete patch strategy subclass can access the appropriate context via the <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#e77e049ab5a575dc4eef7b870e8e428a">getDataContext()</a> method.<p>
+It is important to recognize that for the concrete patch strategy subclass and the <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> to work together, the concrete strategy must know which patch data to operate on. The patch data storage is manipulated by the level integrator. The set/clearDataContext() methods allow the integrator to inform the patch strategy of the correct data context. The concrete patch strategy subclass can access the appropriate context via the <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c4fb45ce3991d0e96eaf2599ebe4e812">getDataContext()</a> method.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">algs::HyperbolicLevelIntegrator</a> <p>
 <a class="el" href="classSAMRAI_1_1xfer_1_1RefinePatchStrategy.html">xfer::RefinePatchStrategy</a> <p>
 <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a> </dd></dl>
@@ -101,7 +101,7 @@ It is important to recognize that for the concrete patch strategy subclass and t
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>dim</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [explicit]</code></td>
         </tr>
       </table>
 </div>
@@ -329,14 +329,14 @@ Note that the numerical routines in this method generally require ghost cells. G
 Update patch data with a conservative difference (approximating the divergence theorem) using the flux integrals computed in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c6440f00550554375dc58e31fe4bfb97">computeFluxesOnPatch()</a> routine. The boolean flag is true when this routine is called during a flux synchronization step. Otherwise, it is false. Note that the <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#c6440f00550554375dc58e31fe4bfb97">computeFluxesOnPatch()</a> routine computes TIME INTEGRALs of the numerical fluxes (e.g., they have been multiplied by dt). So the conservative difference routine should be consistent with this. 
 </div>
 </div><p>
-<a class="anchor" name="df9cb776823440d62de812382fffb86d"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::preprocessAdvanceLevelState" ref="df9cb776823440d62de812382fffb86d" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)" -->
+<a class="anchor" name="914cfbc361021cd410cc0da391967e69"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::preprocessAdvanceLevelState" ref="914cfbc361021cd410cc0da391967e69" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::preprocessAdvanceLevelState           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -384,14 +384,14 @@ Note that when this routine is called, the scratch data is filled on all patches
 Note that this function is not pure virtual. It is given a dummy implementation here so that users may ignore it when inheriting from this class. 
 </div>
 </div><p>
-<a class="anchor" name="41982c51ee4f02590de5ea26c79fbaa3"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::postprocessAdvanceLevelState" ref="41982c51ee4f02590de5ea26c79fbaa3" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)" -->
+<a class="anchor" name="39624f7f174472133cd64db8f0c589e2"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::postprocessAdvanceLevelState" ref="39624f7f174472133cd64db8f0c589e2" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, double current_time, double dt, bool first_step, bool last_step, bool regrid_advance)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::postprocessAdvanceLevelState           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -487,7 +487,7 @@ Tag cells on the given patch that require refinement based on application-specif
 Note that this function is not pure virtual. It is given a dummy implementation here so that users may ignore it when inheriting from this class. 
 </div>
 </div><p>
-<a class="anchor" name="6fb37f917f199c5f10f6501414d5291c"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::tagRichardsonExtrapolationCells" ref="6fb37f917f199c5f10f6501414d5291c" args="(hier::Patch &amp;patch, const int error_level_number, const tbox::Pointer&lt; hier::VariableContext &gt; coarsened_fine, const tbox::Pointer&lt; hier::VariableContext &gt; advanced_coarse, const double regrid_time, const double deltat, const int error_coarsen_ratio, const bool initial_error, const int tag_index, const bool uses_gradient_detector_too)" -->
+<a class="anchor" name="5c1716e442374b9b86f33f08f46fdbcf"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::tagRichardsonExtrapolationCells" ref="5c1716e442374b9b86f33f08f46fdbcf" args="(hier::Patch &amp;patch, const int error_level_number, const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;coarsened_fine, const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;advanced_coarse, const double regrid_time, const double deltat, const int error_coarsen_ratio, const bool initial_error, const int tag_index, const bool uses_gradient_detector_too)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -506,13 +506,13 @@ Note that this function is not pure virtual. It is given a dummy implementation 
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>coarsened_fine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>advanced_coarse</em>, </td>
         </tr>
         <tr>
@@ -848,10 +848,10 @@ Perform user-defined patch data coarsening operations.
 This member function is called after standard coarsening operations (expressed using concrete subclasses of the CoarsenOperator base class). The postprocess function should move data from the source components on the fine patch into the source components on the coarse patch in the specified coarse box region. Recall that the source components are specified in calls to the registerCoarsen() function in the CoarsenAlgorithm class.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>coarse[out]</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>fine[in]</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>coarse_box[in]</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>ratio[in]</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
+    <tr><td valign="top"><tt>[out]</tt>&nbsp;</td><td valign="top"><em>coarse</em>&nbsp;</td><td>Coarse patch that will receive coarsened data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine</em>&nbsp;</td><td>Fine patch containing source data. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarse_box</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region on coarse patch into which data is coarsened. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>ratio</em>&nbsp;</td><td>Refinement ratio between coarse and fine patches. </td></tr>
   </table>
 </dl>
 
@@ -859,16 +859,16 @@ This member function is called after standard coarsening operations (expressed u
 Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#a2d42bd7e5e5b39581df0d5a15059a33">SAMRAI::xfer::CoarsenPatchStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="e77e049ab5a575dc4eef7b870e8e428a"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getDataContext" ref="e77e049ab5a575dc4eef7b870e8e428a" args="() const " -->
+<a class="anchor" name="c4fb45ce3991d0e96eaf2599ebe4e812"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getDataContext" ref="c4fb45ce3991d0e96eaf2599ebe4e812" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; SAMRAI::algs::HyperbolicPatchStrategy::getDataContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicPatchStrategy::getDataContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -878,24 +878,24 @@ Implements <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#
 Return pointer to patch data context. 
 </div>
 </div><p>
-<a class="anchor" name="abb02eb6de95b63c5dd7d54c4b5cf340"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::setDataContext" ref="abb02eb6de95b63c5dd7d54c4b5cf340" args="(tbox::Pointer&lt; hier::VariableContext &gt; context)" -->
+<a class="anchor" name="40c4149ef116540dd41c86d7403642f8"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::setDataContext" ref="40c4149ef116540dd41c86d7403642f8" args="(const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::algs::HyperbolicPatchStrategy::setDataContext           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>context</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-The hyperbolic integrator controls the context for the data to be used in the numerical routines implemented in the concrete patch strategy. The <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#abb02eb6de95b63c5dd7d54c4b5cf340">setDataContext()</a> allows the integrator to set the context for data on a patch on which to operate. 
+The hyperbolic integrator controls the context for the data to be used in the numerical routines implemented in the concrete patch strategy. The <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#40c4149ef116540dd41c86d7403642f8">setDataContext()</a> allows the integrator to set the context for data on a patch on which to operate. 
 </div>
 </div><p>
 <a class="anchor" name="bd85a561841ad406095e47db1d6d7e64"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::clearDataContext" ref="bd85a561841ad406095e47db1d6d7e64" args="()" -->
@@ -907,7 +907,7 @@ The hyperbolic integrator controls the context for the data to be used in the nu
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -917,16 +917,16 @@ The hyperbolic integrator controls the context for the data to be used in the nu
 The <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html#bd85a561841ad406095e47db1d6d7e64">clearDataContext()</a> routine resets the data context to be null. 
 </div>
 </div><p>
-<a class="anchor" name="81deadcfc673b84af5ca41898f4cd8c2"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getDim" ref="81deadcfc673b84af5ca41898f4cd8c2" args="() const " -->
+<a class="anchor" name="e438e481350988a0026dad9aa8bec517"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicPatchStrategy::getDim" ref="e438e481350988a0026dad9aa8bec517" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a> &amp; SAMRAI::algs::HyperbolicPatchStrategy::getDim           </td>
+          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">tbox::Dimension</a>&amp; SAMRAI::algs::HyperbolicPatchStrategy::getDim           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -937,12 +937,12 @@ Return the dimension of this object.
 <p>
 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#65bb799b527cc3099d996eb38d6670ae">SAMRAI::xfer::CoarsenPatchStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html#9124cea2ea7dc4a41eee08ce5c9c89a7">SAMRAI::xfer::CoarsenPatchStrategy</a>.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="HyperbolicPatchStrategy_8h.html">HyperbolicPatchStrategy.h</a><li>source/SAMRAI/algs/<a class="el" href="HyperbolicPatchStrategy_8C.html">HyperbolicPatchStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

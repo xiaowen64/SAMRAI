@@ -20,7 +20,6 @@
   </ul></div>
 <h1>source/SAMRAI/geom/CartesianGridGeometry.C File Reference</h1><code>#include &quot;<a class="el" href="CartesianGridGeometry_8h.html">SAMRAI/geom/CartesianGridGeometry.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianPatchGeometry_8h.html">SAMRAI/geom/CartesianPatchGeometry.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SAMRAITransferOperatorRegistry_8h.html">SAMRAI/geom/SAMRAITransferOperatorRegistry.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianCellComplexWeightedAverage_8h.html">SAMRAI/geom/CartesianCellComplexWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianCellDoubleWeightedAverage_8h.html">SAMRAI/geom/CartesianCellDoubleWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianCellFloatWeightedAverage_8h.html">SAMRAI/geom/CartesianCellFloatWeightedAverage.h</a>&quot;</code><br>
@@ -30,78 +29,38 @@
 <code>#include &quot;<a class="el" href="CartesianCellDoubleLinearRefine_8h.html">SAMRAI/geom/CartesianCellDoubleLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianCellFloatConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianCellFloatConservativeLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianCellFloatLinearRefine_8h.html">SAMRAI/geom/CartesianCellFloatLinearRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellComplexConstantRefine_8h.html">SAMRAI/pdat/CellComplexConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellDoubleConstantRefine_8h.html">SAMRAI/pdat/CellDoubleConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellFloatConstantRefine_8h.html">SAMRAI/pdat/CellFloatConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellIntegerConstantRefine_8h.html">SAMRAI/pdat/CellIntegerConstantRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianEdgeComplexWeightedAverage_8h.html">SAMRAI/geom/CartesianEdgeComplexWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianEdgeDoubleWeightedAverage_8h.html">SAMRAI/geom/CartesianEdgeDoubleWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianEdgeFloatWeightedAverage_8h.html">SAMRAI/geom/CartesianEdgeFloatWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianEdgeDoubleConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianEdgeDoubleConservativeLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianEdgeFloatConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianEdgeFloatConservativeLinearRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeComplexConstantRefine_8h.html">SAMRAI/pdat/EdgeComplexConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeDoubleConstantRefine_8h.html">SAMRAI/pdat/EdgeDoubleConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeFloatConstantRefine_8h.html">SAMRAI/pdat/EdgeFloatConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeIntegerConstantRefine_8h.html">SAMRAI/pdat/EdgeIntegerConstantRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianFaceComplexWeightedAverage_8h.html">SAMRAI/geom/CartesianFaceComplexWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianFaceDoubleWeightedAverage_8h.html">SAMRAI/geom/CartesianFaceDoubleWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianFaceFloatWeightedAverage_8h.html">SAMRAI/geom/CartesianFaceFloatWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianFaceDoubleConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianFaceDoubleConservativeLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianFaceFloatConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianFaceFloatConservativeLinearRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceComplexConstantRefine_8h.html">SAMRAI/pdat/FaceComplexConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceDoubleConstantRefine_8h.html">SAMRAI/pdat/FaceDoubleConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceFloatConstantRefine_8h.html">SAMRAI/pdat/FaceFloatConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceIntegerConstantRefine_8h.html">SAMRAI/pdat/FaceIntegerConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeComplexInjection_8h.html">SAMRAI/pdat/NodeComplexInjection.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeDoubleInjection_8h.html">SAMRAI/pdat/NodeDoubleInjection.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeFloatInjection_8h.html">SAMRAI/pdat/NodeFloatInjection.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeIntegerInjection_8h.html">SAMRAI/pdat/NodeIntegerInjection.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianNodeComplexLinearRefine_8h.html">SAMRAI/geom/CartesianNodeComplexLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianNodeDoubleLinearRefine_8h.html">SAMRAI/geom/CartesianNodeDoubleLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianNodeFloatLinearRefine_8h.html">SAMRAI/geom/CartesianNodeFloatLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianOuterfaceComplexWeightedAverage_8h.html">SAMRAI/geom/CartesianOuterfaceComplexWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianOuterfaceDoubleWeightedAverage_8h.html">SAMRAI/geom/CartesianOuterfaceDoubleWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianOuterfaceFloatWeightedAverage_8h.html">SAMRAI/geom/CartesianOuterfaceFloatWeightedAverage.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceComplexConstantRefine_8h.html">SAMRAI/pdat/OuterfaceComplexConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceDoubleConstantRefine_8h.html">SAMRAI/pdat/OuterfaceDoubleConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceFloatConstantRefine_8h.html">SAMRAI/pdat/OuterfaceFloatConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceIntegerConstantRefine_8h.html">SAMRAI/pdat/OuterfaceIntegerConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuternodeDoubleConstantCoarsen_8h.html">SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianOutersideDoubleWeightedAverage_8h.html">SAMRAI/geom/CartesianOutersideDoubleWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianSideComplexWeightedAverage_8h.html">SAMRAI/geom/CartesianSideComplexWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianSideDoubleWeightedAverage_8h.html">SAMRAI/geom/CartesianSideDoubleWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianSideFloatWeightedAverage_8h.html">SAMRAI/geom/CartesianSideFloatWeightedAverage.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianSideDoubleConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianSideDoubleConservativeLinearRefine.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="CartesianSideFloatConservativeLinearRefine_8h.html">SAMRAI/geom/CartesianSideFloatConservativeLinearRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideComplexConstantRefine_8h.html">SAMRAI/pdat/SideComplexConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideDoubleConstantRefine_8h.html">SAMRAI/pdat/SideDoubleConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideFloatConstantRefine_8h.html">SAMRAI/pdat/SideFloatConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideIntegerConstantRefine_8h.html">SAMRAI/pdat/SideIntegerConstantRefine.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/CellComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="CellFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/CellFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/EdgeComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/EdgeDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="EdgeFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/FaceDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="FaceFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/FaceFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/NodeComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="NodeFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/NodeFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OuterfaceComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OuterfaceFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OuterfaceFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OutersideComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OutersideComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OutersideDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OutersideDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="OutersideFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OutersideFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SideFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/SideFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellVariable_8h.html">SAMRAI/pdat/CellVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeVariable_8h.html">SAMRAI/pdat/EdgeVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceVariable_8h.html">SAMRAI/pdat/FaceVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeVariable_8h.html">SAMRAI/pdat/NodeVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceVariable_8h.html">SAMRAI/pdat/OuterfaceVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OutersideVariable_8h.html">SAMRAI/pdat/OutersideVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideVariable_8h.html">SAMRAI/pdat/SideVariable.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="BoundaryLookupTable_8h.html">SAMRAI/hier/BoundaryLookupTable.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Box_8h.html">SAMRAI/hier/Box.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxContainerConstIterator_8h.html">SAMRAI/hier/BoxContainerConstIterator.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxContainerIterator_8h.html">SAMRAI/hier/BoxContainerIterator.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="BoxContainer_8h.html">SAMRAI/hier/BoxContainer.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Index_8h.html">SAMRAI/hier/Index.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="IntVector_8h.html">SAMRAI/hier/IntVector.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Patch_8h.html">SAMRAI/hier/Patch.h</a>&quot;</code><br>
@@ -111,9 +70,10 @@
 <code>#include &quot;<a class="el" href="RestartManager_8h.html">SAMRAI/tbox/RestartManager.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="MathUtilities_8h.html">SAMRAI/tbox/MathUtilities.h</a>&quot;</code><br>
+<code>#include &lt;boost/make_shared.hpp&gt;</code><br>
 <code>#include &lt;cstdlib&gt;</code><br>
 <code>#include &lt;fstream&gt;</code><br>
-<code>#include &quot;<a class="el" href="CartesianGridGeometry_8I.html">SAMRAI/geom/CartesianGridGeometry.I</a>&quot;</code><br>
+<code>#include &lt;typeinfo&gt;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
@@ -122,7 +82,7 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1geom.html">SAMRAI::geom</a></td></tr>
 
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:14 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

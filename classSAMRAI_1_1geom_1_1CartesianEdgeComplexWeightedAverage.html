@@ -35,8 +35,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#460b7cae89aeacc6268274d940c5d6b9">~CartesianEdgeComplexWeightedAverage</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#e4b9bf1c489191fcaf554ee5d4ed3faf">findCoarsenOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const std::string &amp;op_name) const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#baf183391e844e273cc47632ebb94c96">getOperatorPriority</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#03897fcddb9fcc7ac7deb9f2522b68ac">getStencilWidth</a> () const </td></tr>
@@ -46,7 +44,6 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html">CartesianEdgeComplexWeightedAverage</a> implements conservative edge-weighted averaging for edge-centered complex patch data defined over a Cartesian mesh. It is derived from the <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a> base class. The numerical operations for theaveraging use FORTRAN numerical routines.<p>
-The <a class="el" href="classSAMRAI_1_1geom_1_1CartesianEdgeComplexWeightedAverage.html#e4b9bf1c489191fcaf554ee5d4ed3faf">findCoarsenOperator()</a> operator function returns true if the input variable is edge-centered complex, and the std::string is "CONSERVATIVE_COARSEN".<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html">hier::CoarsenOperator</a> </dd></dl>
 
 <p>
@@ -91,37 +88,6 @@ Uninteresting virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="e4b9bf1c489191fcaf554ee5d4ed3faf"></a><!-- doxytag: member="SAMRAI::geom::CartesianEdgeComplexWeightedAverage::findCoarsenOperator" ref="e4b9bf1c489191fcaf554ee5d4ed3faf" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;var, const std::string &amp;op_name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::geom::CartesianEdgeComplexWeightedAverage::findCoarsenOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return true if the variable and name std::string match the edge-centered complex weighted averaging; otherwise, return false. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#45028db865f82444809773a07cb28138">SAMRAI::hier::CoarsenOperator</a>.
-</div>
-</div><p>
 <a class="anchor" name="baf183391e844e273cc47632ebb94c96"></a><!-- doxytag: member="SAMRAI::geom::CartesianEdgeComplexWeightedAverage::getOperatorPriority" ref="baf183391e844e273cc47632ebb94c96" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -221,7 +187,7 @@ Implements <a class="el" href="classSAMRAI_1_1hier_1_1CoarsenOperator.html#29396
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianEdgeComplexWeightedAverage_8h.html">CartesianEdgeComplexWeightedAverage.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

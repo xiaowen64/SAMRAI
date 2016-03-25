@@ -35,8 +35,6 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexConservativeLinearRefine.html#1f313a9a2b6d2d45ef19f5ef834e92fc">~CartesianCellComplexConservativeLinearRefine</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexConservativeLinearRefine.html#27a26ea7ff581193334a5b6a67d9332f">findRefineOperator</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const std::string &amp;op_name) const </td></tr>
-
 <tr><td class="memItemLeft" nowrap align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexConservativeLinearRefine.html#30f07f2fe32c3bd314c5d4cf208edd2d">getOperatorPriority</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexConservativeLinearRefine.html#09728b2fd3f86149f9a93789f4dc17b7">getStencilWidth</a> () const </td></tr>
@@ -48,7 +46,6 @@
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexConservativeLinearRefine.html">CartesianCellComplexConservativeLinearRefine</a> implements conservative linear interpolation for cell-centered complex patch data defined over a Cartesian mesh. In particular, the interpolation is implemented by applying the standard conservative linear interpolation to each of the real and imaginary parts of the complex data array independently. This operator is derived from the base class <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a>. The numerical operations for the interpolation use FORTRAN numerical routines.<p>
-The <a class="el" href="classSAMRAI_1_1geom_1_1CartesianCellComplexConservativeLinearRefine.html#27a26ea7ff581193334a5b6a67d9332f">findRefineOperator()</a> operator function returns true if the input variable is cell-centered complex, and the std::string is "CONSERVATIVE_LINEAR_REFINE".<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html">hier::RefineOperator</a> </dd></dl>
 
 <p>
@@ -93,37 +90,6 @@ Uninteresting virtual destructor.
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="27a26ea7ff581193334a5b6a67d9332f"></a><!-- doxytag: member="SAMRAI::geom::CartesianCellComplexConservativeLinearRefine::findRefineOperator" ref="27a26ea7ff581193334a5b6a67d9332f" args="(const tbox::Pointer&lt; hier::Variable &gt; &amp;var, const std::string &amp;op_name) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool SAMRAI::geom::CartesianCellComplexConservativeLinearRefine::findRefineOperator           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>var</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const std::string &amp;&nbsp;</td>
-          <td class="paramname"> <em>op_name</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"> const<code> [virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Return true if the variable and name std::string match cell-centered complex conservative linear interpolation; otherwise, return false. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1RefineOperator.html#179871a2379def0a0979981db947a011">SAMRAI::hier::RefineOperator</a>.
-</div>
-</div><p>
 <a class="anchor" name="30f07f2fe32c3bd314c5d4cf208edd2d"></a><!-- doxytag: member="SAMRAI::geom::CartesianCellComplexConservativeLinearRefine::getOperatorPriority" ref="30f07f2fe32c3bd314c5d4cf208edd2d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
@@ -276,7 +242,7 @@ Refine the source component on the coarse patch to the destination component on 
 </div><p>
 <hr>The documentation for this class was generated from the following file:<ul>
 <li>source/SAMRAI/geom/<a class="el" href="CartesianCellComplexConservativeLinearRefine_8h.html">CartesianCellComplexConservativeLinearRefine.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:17 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

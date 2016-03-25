@@ -37,9 +37,9 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#dd9fd1f0c39e245a73d42a18d57f0854">GriddingAlgorithmStrategy</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#dd9fd1f0c39e245a73d42a18d57f0854"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#4bc60f2d0f7421f397d55984fbbecde8">~GriddingAlgorithmStrategy</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#f9fc20502c23884ef353c7c4da7fd7b6">~GriddingAlgorithmStrategy</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">GriddingAlgorithmStrategy</a>.  <a href="#4bc60f2d0f7421f397d55984fbbecde8"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Virtual destructor for <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">GriddingAlgorithmStrategy</a>.  <a href="#f9fc20502c23884ef353c7c4da7fd7b6"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#719a01e9347f418653d860d1460762da">makeCoarsestLevel</a> (const double level_time)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct the coarsest level in the hierarchy (i.e., level 0).  <a href="#719a01e9347f418653d860d1460762da"></a><br></td></tr>
@@ -49,9 +49,10 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#2ca0e474cc71e77856d09344e1566cb7">regridAllFinerLevels</a> (const int level_number, const double regrid_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; int &gt; &amp;tag_buffer, <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; regrid_start_time=<a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt;(), const bool level_is_coarsest_to_sync=true)=0</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Attempt to regrid each level in the PatchHierarchy that is finer than the specified level.  <a href="#2ca0e474cc71e77856d09344e1566cb7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#1ef20da31b373f91a2876f6b3e495ae9">getTagAndInitializeStrategy</a> () const =0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual boost::shared_ptr&lt;<br>
+ <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#3ffee71426ab6aeba38f2eefce9ab25a">getTagAndInitializeStrategy</a> () const =0</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to level gridding strategy data member.  <a href="#1ef20da31b373f91a2876f6b3e495ae9"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return pointer to level gridding strategy data member.  <a href="#3ffee71426ab6aeba38f2eefce9ab25a"></a><br></td></tr>
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Virtual base class providing interface for gridding algorithms. 
@@ -70,7 +71,7 @@ This class defines operations for building and regridding hierarchies. The inter
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -82,16 +83,16 @@ Constructor.
 
 </div>
 </div><p>
-<a class="anchor" name="4bc60f2d0f7421f397d55984fbbecde8"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy" ref="4bc60f2d0f7421f397d55984fbbecde8" args="()" -->
+<a class="anchor" name="f9fc20502c23884ef353c7c4da7fd7b6"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy" ref="f9fc20502c23884ef353c7c4da7fd7b6" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual SAMRAI::mesh::GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy           </td>
+          <td class="memname">SAMRAI::mesh::GriddingAlgorithmStrategy::~GriddingAlgorithmStrategy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [inline, virtual]</code></td>
+          <td width="100%"><code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -251,12 +252,12 @@ The boolean level_is_coarsest_to_sync is used for regridding in time-dependent p
 Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#5d2ef5face4b4c3b40ba814906916089">SAMRAI::mesh::GriddingAlgorithm</a>.
 </div>
 </div><p>
-<a class="anchor" name="1ef20da31b373f91a2876f6b3e495ae9"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::getTagAndInitializeStrategy" ref="1ef20da31b373f91a2876f6b3e495ae9" args="() const =0" -->
+<a class="anchor" name="3ffee71426ab6aeba38f2eefce9ab25a"></a><!-- doxytag: member="SAMRAI::mesh::GriddingAlgorithmStrategy::getTagAndInitializeStrategy" ref="3ffee71426ab6aeba38f2eefce9ab25a" args="() const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a>&gt; SAMRAI::mesh::GriddingAlgorithmStrategy::getTagAndInitializeStrategy           </td>
+          <td class="memname">virtual boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html">TagAndInitializeStrategy</a>&gt; SAMRAI::mesh::GriddingAlgorithmStrategy::getTagAndInitializeStrategy           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -271,12 +272,12 @@ Return pointer to level gridding strategy data member.
 <p>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#d1f0fc38f40da4490b226fec0de54bb7">SAMRAI::mesh::GriddingAlgorithm</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#f6477d7887a8b2b5fc734fb824242b0c">SAMRAI::mesh::GriddingAlgorithm</a>.
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following file:<ul>
-<li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmStrategy_8h.html">GriddingAlgorithmStrategy.h</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:19 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following files:<ul>
+<li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmStrategy_8h.html">GriddingAlgorithmStrategy.h</a><li>source/SAMRAI/mesh/<a class="el" href="GriddingAlgorithmStrategy_8C.html">GriddingAlgorithmStrategy.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:57 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

@@ -21,10 +21,11 @@
 <h1>source/SAMRAI/hier/PatchLevel.C File Reference</h1><code>#include &quot;<a class="el" href="PatchLevel_8h.html">SAMRAI/hier/PatchLevel.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="MathUtilities_8h.html">SAMRAI/tbox/MathUtilities.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="TimerManager_8h.html">SAMRAI/tbox/TimerManager.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="GridGeometry_8h.html">SAMRAI/hier/GridGeometry.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="BaseGridGeometry_8h.html">SAMRAI/hier/BaseGridGeometry.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="BoxContainer_8h.html">SAMRAI/hier/BoxContainer.h</a>&quot;</code><br>
 <code>#include &quot;<a class="el" href="RealBoxConstIterator_8h.html">SAMRAI/hier/RealBoxConstIterator.h</a>&quot;</code><br>
+<code>#include &lt;boost/make_shared.hpp&gt;</code><br>
 <code>#include &lt;cstdio&gt;</code><br>
-<code>#include &quot;<a class="el" href="PatchLevel_8I.html">SAMRAI/hier/PatchLevel.I</a>&quot;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
@@ -33,22 +34,29 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html">SAMRAI::hier</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Variables</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#8fa3a09c400b40492b9c38f332bdccd0">SAMRAI::hier::t_level_constructor</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#ae1012c1662d07f304d3fea3317ddbaf">SAMRAI::hier::t_level_constructor</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#7dd3a83a389a5a94fa51b5874aaf52d8">SAMRAI::hier::t_constructor_setup</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#9465d426b46607013895af4511eb5a0e">SAMRAI::hier::t_constructor_setup</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#695c20a8bc76d6714d6328b1cb050543">SAMRAI::hier::t_constructor_phys_domain</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#a1a90440b94dfe773d009dd5b7da08a8">SAMRAI::hier::t_constructor_phys_domain</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#1b24774454386ecdbca73a2156c7f6a8">SAMRAI::hier::t_constructor_touch_boundaries</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#052a7ab892a4e9fa37b8f74b8d22e3dc">SAMRAI::hier::t_constructor_touch_boundaries</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#3213594eb9aa2486f656c934f313a176">SAMRAI::hier::t_constructor_set_geometry</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#49f11104263c57d01b6b7dc14c36a33c">SAMRAI::hier::t_constructor_set_geometry</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#f98b9666f0a2d02e84d94bd08ca6f1b1">SAMRAI::hier::t_set_patch_touches</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#fe82fd3c78cfa3379c8332db38415fba">SAMRAI::hier::t_set_patch_touches</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">static tbox::Pointer&lt; tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#3339f4401b64dcb352a1da65dc4a96c6">SAMRAI::hier::t_constructor_compute_shifts</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">static boost::shared_ptr&lt;<br>
+ tbox::Timer &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html#e0f82ec427c9ce1c2e025f5d9d93970f">SAMRAI::hier::t_constructor_compute_shifts</a></td></tr>
 
 </table>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:14 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

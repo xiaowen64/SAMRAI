@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html><head><meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1">
-<title>SAMRAI: source/SAMRAI/hier/GridGeometry.C File Reference</title>
+<title>SAMRAI: source/SAMRAI/geom/GridGeometry.C File Reference</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
 <link href="tabs.css" rel="stylesheet" type="text/css">
 </head><body>
@@ -18,49 +18,82 @@
     <li><a href="files.html"><span>File&nbsp;List</span></a></li>
     <li><a href="globals.html"><span>File&nbsp;Members</span></a></li>
   </ul></div>
-<h1>source/SAMRAI/hier/GridGeometry.C File Reference</h1><code>#include &quot;SAMRAI/SAMRAI_config.h&quot;</code><br>
-<code>#include &quot;<a class="el" href="GridGeometry_8h.html">SAMRAI/hier/GridGeometry.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoundaryLookupTable_8h.html">SAMRAI/hier/BoundaryLookupTable.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Box_8h.html">SAMRAI/hier/Box.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxContainerIterator_8h.html">SAMRAI/hier/BoxContainerIterator.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxContainerConstIterator_8h.html">SAMRAI/hier/BoxContainerConstIterator.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxContainerSingleBlockIterator_8h.html">SAMRAI/hier/BoxContainerSingleBlockIterator.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxLevel_8h.html">SAMRAI/hier/BoxLevel.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="BoxTree_8h.html">SAMRAI/hier/BoxTree.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="IntVector_8h.html">SAMRAI/hier/IntVector.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Patch_8h.html">SAMRAI/hier/Patch.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="PatchDescriptor_8h.html">SAMRAI/hier/PatchDescriptor.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="PatchLevel_8h.html">SAMRAI/hier/PatchLevel.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="PeriodicShiftCatalog_8h.html">SAMRAI/hier/PeriodicShiftCatalog.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="RealBoxConstIterator_8h.html">SAMRAI/hier/RealBoxConstIterator.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="SAMRAI__MPI_8h.html">SAMRAI/tbox/SAMRAI_MPI.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Pointer_8h.html">SAMRAI/tbox/Pointer.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="RestartManager_8h.html">SAMRAI/tbox/RestartManager.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="StartupShutdownManager_8h.html">SAMRAI/tbox/StartupShutdownManager.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="TimerManager_8h.html">SAMRAI/tbox/TimerManager.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Timer_8h.html">SAMRAI/tbox/Timer.h</a>&quot;</code><br>
-<code>#include &quot;<a class="el" href="Utilities_8h.html">SAMRAI/tbox/Utilities.h</a>&quot;</code><br>
-<code>#include &lt;map&gt;</code><br>
+<h1>source/SAMRAI/geom/GridGeometry.C File Reference</h1><code>#include &quot;<a class="el" href="GridGeometry_8h.html">SAMRAI/geom/GridGeometry.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeComplexInjection_8h.html">SAMRAI/pdat/NodeComplexInjection.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeDoubleInjection_8h.html">SAMRAI/pdat/NodeDoubleInjection.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeFloatInjection_8h.html">SAMRAI/pdat/NodeFloatInjection.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeIntegerInjection_8h.html">SAMRAI/pdat/NodeIntegerInjection.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuternodeDoubleConstantCoarsen_8h.html">SAMRAI/pdat/OuternodeDoubleConstantCoarsen.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellComplexConstantRefine_8h.html">SAMRAI/pdat/CellComplexConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellDoubleConstantRefine_8h.html">SAMRAI/pdat/CellDoubleConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellFloatConstantRefine_8h.html">SAMRAI/pdat/CellFloatConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellIntegerConstantRefine_8h.html">SAMRAI/pdat/CellIntegerConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeComplexConstantRefine_8h.html">SAMRAI/pdat/EdgeComplexConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeDoubleConstantRefine_8h.html">SAMRAI/pdat/EdgeDoubleConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeFloatConstantRefine_8h.html">SAMRAI/pdat/EdgeFloatConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeIntegerConstantRefine_8h.html">SAMRAI/pdat/EdgeIntegerConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceComplexConstantRefine_8h.html">SAMRAI/pdat/FaceComplexConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceDoubleConstantRefine_8h.html">SAMRAI/pdat/FaceDoubleConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceFloatConstantRefine_8h.html">SAMRAI/pdat/FaceFloatConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceIntegerConstantRefine_8h.html">SAMRAI/pdat/FaceIntegerConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceComplexConstantRefine_8h.html">SAMRAI/pdat/OuterfaceComplexConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceDoubleConstantRefine_8h.html">SAMRAI/pdat/OuterfaceDoubleConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceFloatConstantRefine_8h.html">SAMRAI/pdat/OuterfaceFloatConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceIntegerConstantRefine_8h.html">SAMRAI/pdat/OuterfaceIntegerConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideComplexConstantRefine_8h.html">SAMRAI/pdat/SideComplexConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideDoubleConstantRefine_8h.html">SAMRAI/pdat/SideDoubleConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideFloatConstantRefine_8h.html">SAMRAI/pdat/SideFloatConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideIntegerConstantRefine_8h.html">SAMRAI/pdat/SideIntegerConstantRefine.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/CellComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/CellDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/CellFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/EdgeComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/EdgeDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/EdgeFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/FaceComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/FaceDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/FaceFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/NodeComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/NodeDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/NodeFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OuterfaceComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OuterfaceDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OuterfaceFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OutersideComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OutersideComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OutersideDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OutersideDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OutersideFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/OutersideFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideComplexLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/SideComplexLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideDoubleLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/SideDoubleLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideFloatLinearTimeInterpolateOp_8h.html">SAMRAI/pdat/SideFloatLinearTimeInterpolateOp.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="CellVariable_8h.html">SAMRAI/pdat/CellVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="EdgeVariable_8h.html">SAMRAI/pdat/EdgeVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="FaceVariable_8h.html">SAMRAI/pdat/FaceVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="NodeVariable_8h.html">SAMRAI/pdat/NodeVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuterfaceVariable_8h.html">SAMRAI/pdat/OuterfaceVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OuternodeVariable_8h.html">SAMRAI/pdat/OuternodeVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="OutersideVariable_8h.html">SAMRAI/pdat/OutersideVariable.h</a>&quot;</code><br>
+<code>#include &quot;<a class="el" href="SideVariable_8h.html">SAMRAI/pdat/SideVariable.h</a>&quot;</code><br>
+<code>#include &lt;typeinfo&gt;</code><br>
 <code>#include &lt;stdlib.h&gt;</code><br>
-<code>#include &quot;<a class="el" href="GridGeometry_8I.html">SAMRAI/hier/GridGeometry.I</a>&quot;</code><br>
+<code>#include &lt;boost/make_shared.hpp&gt;</code><br>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Namespaces</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI.html">SAMRAI</a></td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1hier.html">SAMRAI::hier</a></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">namespace &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceSAMRAI_1_1geom.html">SAMRAI::geom</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Defines</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="GridGeometry_8C.html#75ed87dc0a379d04680cc7c35ff95251">HIER_GRID_GEOMETRY_VERSION</a>&nbsp;&nbsp;&nbsp;(3)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">#define&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="GridGeometry_8C.html#958ca9ee4e92d487f7329b33a27515fe">GEOM_BLOCK_GRID_GEOMETRY_VERSION</a>&nbsp;&nbsp;&nbsp;(1)</td></tr>
 
 </table>
 <hr><h2>Define Documentation</h2>
-<a class="anchor" name="75ed87dc0a379d04680cc7c35ff95251"></a><!-- doxytag: member="GridGeometry.C::HIER_GRID_GEOMETRY_VERSION" ref="75ed87dc0a379d04680cc7c35ff95251" args="" -->
+<a class="anchor" name="958ca9ee4e92d487f7329b33a27515fe"></a><!-- doxytag: member="GridGeometry.C::GEOM_BLOCK_GRID_GEOMETRY_VERSION" ref="958ca9ee4e92d487f7329b33a27515fe" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define HIER_GRID_GEOMETRY_VERSION&nbsp;&nbsp;&nbsp;(3)          </td>
+          <td class="memname">#define GEOM_BLOCK_GRID_GEOMETRY_VERSION&nbsp;&nbsp;&nbsp;(1)          </td>
         </tr>
       </table>
 </div>
@@ -70,7 +103,7 @@
 
 </div>
 </div><p>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:14 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:55 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

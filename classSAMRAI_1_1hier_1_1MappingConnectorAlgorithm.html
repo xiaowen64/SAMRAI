@@ -77,7 +77,7 @@ Algorithms for using Connectors representing changes to a <a class="el" href="cl
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [explicit]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -429,8 +429,7 @@ If mutable_new points to the old <a class="el" href="classSAMRAI_1_1hier_1_1BoxL
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>anchor_to_mapped</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> to be modified. On input, this points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mapped_to_anchor</em>&nbsp;</td><td>Reverse (transpose) of anchor_to_mapped. points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>new_to_old</em>&nbsp;</td><td>Reverse (transpose) of old_to_new. </td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>old_to_new</em>&nbsp;</td><td>Reverse (transpose) of anchor_to_mapped. points to the <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> being mapped. </td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_new</em>&nbsp;</td><td>See comments. </td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>mutable_old</em>&nbsp;</td><td>See comments. </td></tr>
   </table>
@@ -516,7 +515,7 @@ Run findMappingErrors and abort if any errors are found.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/hier/<a class="el" href="MappingConnectorAlgorithm_8h.html">MappingConnectorAlgorithm.h</a><li>source/SAMRAI/hier/<a class="el" href="MappingConnectorAlgorithm_8C.html">MappingConnectorAlgorithm.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:18 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

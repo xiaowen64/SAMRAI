@@ -29,22 +29,22 @@
 <a href="classSAMRAI_1_1xfer_1_1CoarsenSchedule-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#0f5245a0cef3ba9190aad5a3c538a51c">CoarsenSchedule</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; crse_level, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; fine_level, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">xfer::CoarsenClasses</a> &gt; coarsen_classes, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">xfer::CoarsenTransactionFactory</a> &gt; transaction_factory, <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a> *patch_strategy, bool fill_coarse_data)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#6998d0db058322e2f9d7e095eeb52aed">CoarsenSchedule</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;crse_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;fine_level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> &gt; &amp;coarsen_classes, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> &gt; &amp;transaction_factory, <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> *patch_strategy, bool fill_coarse_data)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#0f5245a0cef3ba9190aad5a3c538a51c"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#fe80b33470fe593c2ec6e939b695e65a">~CoarsenSchedule</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#6998d0db058322e2f9d7e095eeb52aed"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#fe80b33470fe593c2ec6e939b695e65a">~CoarsenSchedule</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The virtual destructor for the schedule releases all internal storage.  <a href="#fe80b33470fe593c2ec6e939b695e65a"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#9365b55752b7c22cc47acaeb467a132c">reset</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">xfer::CoarsenClasses</a> &gt; coarsen_classes)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">The destructor for the schedule releases all internal storage.  <a href="#fe80b33470fe593c2ec6e939b695e65a"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#0300371c6bb6b4e8e2c4283c2b2edea0">reset</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> &gt; &amp;coarsen_classes)</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reset this coarsen schedule to perform data transfers asssociated items in the given <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> argument.  <a href="#9365b55752b7c22cc47acaeb467a132c"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Reset this coarsen schedule to perform data transfers asssociated items in the given <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> argument.  <a href="#0300371c6bb6b4e8e2c4283c2b2edea0"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#6e61b631122e7e47b7ac1e9b72b0b853">coarsenData</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Execute the stored communication schedule and perform the data movement.  <a href="#6e61b631122e7e47b7ac1e9b72b0b853"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">xfer::CoarsenClasses</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#2a649609bbdc838016283bc5a115f70f">getEquivalenceClasses</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#9f2dbc6af9c7f2ef3bb99ca1720d512b">getEquivalenceClasses</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the coarsen equivalence classes used in the schedule.  <a href="#2a649609bbdc838016283bc5a115f70f"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#58d0def5caae18b43c9034a112f30d16">printClassData</a> (std::ostream &amp;stream) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the coarsen equivalence classes used in the schedule.  <a href="#9f2dbc6af9c7f2ef3bb99ca1720d512b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#58d0def5caae18b43c9034a112f30d16">printClassData</a> (std::ostream &amp;stream) const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print the coarsen schedule state to the specified data stream.  <a href="#58d0def5caae18b43c9034a112f30d16"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
@@ -64,38 +64,38 @@ NOTE: Algorithmic variations are available by calling the static method <a class
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="0f5245a0cef3ba9190aad5a3c538a51c"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::CoarsenSchedule" ref="0f5245a0cef3ba9190aad5a3c538a51c" args="(tbox::Pointer&lt; hier::PatchLevel &gt; crse_level, tbox::Pointer&lt; hier::PatchLevel &gt; fine_level, const tbox::Pointer&lt; xfer::CoarsenClasses &gt; coarsen_classes, tbox::Pointer&lt; xfer::CoarsenTransactionFactory &gt; transaction_factory, xfer::CoarsenPatchStrategy *patch_strategy, bool fill_coarse_data)" -->
+<a class="anchor" name="6998d0db058322e2f9d7e095eeb52aed"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::CoarsenSchedule" ref="6998d0db058322e2f9d7e095eeb52aed" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;crse_level, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;fine_level, const boost::shared_ptr&lt; CoarsenClasses &gt; &amp;coarsen_classes, const boost::shared_ptr&lt; CoarsenTransactionFactory &gt; &amp;transaction_factory, CoarsenPatchStrategy *patch_strategy, bool fill_coarse_data)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::xfer::CoarsenSchedule::CoarsenSchedule           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>crse_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fine_level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">xfer::CoarsenClasses</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>coarsen_classes</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">xfer::CoarsenTransactionFactory</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenTransactionFactory.html">CoarsenTransactionFactory</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>transaction_factory</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">xfer::CoarsenPatchStrategy</a> *&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenPatchStrategy.html">CoarsenPatchStrategy</a> *&nbsp;</td>
           <td class="paramname"> <em>patch_strategy</em>, </td>
         </tr>
         <tr>
@@ -107,7 +107,7 @@ NOTE: Algorithmic variations are available by calling the static method <a class
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -122,11 +122,11 @@ If the coarsening operators require data from ghost cells, then the associated s
 When assertion checking is active, unrecoverable assertions will result if either patch level pointer, the refine classes pointer, or the transaction factory pointer, is null.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>crse_level</em>&nbsp;</td><td>Pointer to coarse (destination) patch level. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_level</em>&nbsp;</td><td>Pointer to fine (source) patch level. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_classes</em>&nbsp;</td><td>Pointer to structure containing patch data and operator information. In general, this is constructed by the calling <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> object. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>Pointer to a factory object that will create data transactions. </td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>Pointer to a coarsen patch strategy object that provides user-defined coarsen operations. This pointer may be null, in which case no user-defined coarsen operations will be performed. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>crse_level</em>&nbsp;</td><td>boost::shared_ptr to coarse (destination) patch level. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fine_level</em>&nbsp;</td><td>boost::shared_ptr to fine (source) patch level. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_classes</em>&nbsp;</td><td>boost::shared_ptr to structure containing patch data and operator information. In general, this is constructed by the calling <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> object. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>transaction_factory</em>&nbsp;</td><td>boost::shared_ptr to a factory object that will create data transactions. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>patch_strategy</em>&nbsp;</td><td>boost::shared_ptr to a coarsen patch strategy object that provides user-defined coarsen operations. This pointer may be null, in which case no user-defined coarsen operations will be performed. </td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>fill_coarse_data</em>&nbsp;</td><td>Boolean indicating whether coarse data should be filled before coarsening operations are done. </td></tr>
   </table>
 </dl>
@@ -142,27 +142,27 @@ When assertion checking is active, unrecoverable assertions will result if eithe
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-The virtual destructor for the schedule releases all internal storage. 
+The destructor for the schedule releases all internal storage. 
 <p>
 
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="9365b55752b7c22cc47acaeb467a132c"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::reset" ref="9365b55752b7c22cc47acaeb467a132c" args="(const tbox::Pointer&lt; xfer::CoarsenClasses &gt; coarsen_classes)" -->
+<a class="anchor" name="0300371c6bb6b4e8e2c4283c2b2edea0"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::reset" ref="0300371c6bb6b4e8e2c4283c2b2edea0" args="(const boost::shared_ptr&lt; CoarsenClasses &gt; &amp;coarsen_classes)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::xfer::CoarsenSchedule::reset           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">xfer::CoarsenClasses</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>coarsen_classes</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
@@ -177,7 +177,7 @@ Reset this coarsen schedule to perform data transfers asssociated items in the g
 The schedule will be changed to operate on data given by the coarsen_classes argument rather than the data it has previously been set to operate on.<p>
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_classes</em>&nbsp;</td><td>Pointer to structure containing patch data and operator information. In general, this is constructed by the calling <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> object. This pointer must be non-null. </td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>coarsen_classes</em>&nbsp;</td><td>boost::shared_ptr to structure containing patch data and operator information. In general, this is constructed by the calling <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html">CoarsenAlgorithm</a> object. This pointer must be non-null. </td></tr>
   </table>
 </dl>
 
@@ -204,16 +204,16 @@ Execute the stored communication schedule and perform the data movement.
 
 </div>
 </div><p>
-<a class="anchor" name="2a649609bbdc838016283bc5a115f70f"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::getEquivalenceClasses" ref="2a649609bbdc838016283bc5a115f70f" args="() const " -->
+<a class="anchor" name="9f2dbc6af9c7f2ef3bb99ca1720d512b"></a><!-- doxytag: member="SAMRAI::xfer::CoarsenSchedule::getEquivalenceClasses" ref="9f2dbc6af9c7f2ef3bb99ca1720d512b" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">xfer::CoarsenClasses</a> &gt; &amp; SAMRAI::xfer::CoarsenSchedule::getEquivalenceClasses           </td>
+          <td class="memname">const boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenClasses.html">CoarsenClasses</a>&gt;&amp; SAMRAI::xfer::CoarsenSchedule::getEquivalenceClasses           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -263,7 +263,7 @@ If this method is not called, the default will be used. If an invalid string is 
           <td class="paramtype">std::ostream &amp;&nbsp;</td>
           <td class="paramname"> <em>stream</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [virtual]</code></td>
+          <td width="100%"> const</td>
         </tr>
       </table>
 </div>
@@ -282,7 +282,7 @@ Print the coarsen schedule state to the specified data stream.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/xfer/<a class="el" href="CoarsenSchedule_8h.html">CoarsenSchedule.h</a><li>source/SAMRAI/xfer/<a class="el" href="CoarsenSchedule_8C.html">CoarsenSchedule.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

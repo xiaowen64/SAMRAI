@@ -26,10 +26,9 @@
 <p>Inheritance diagram for SAMRAI::algs::HyperbolicLevelIntegrator:
 <p><center><img src="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.png" usemap="#SAMRAI::algs::HyperbolicLevelIntegrator_map" border="0" alt=""></center>
 <map name="SAMRAI::algs::HyperbolicLevelIntegrator_map">
-<area href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html" alt="SAMRAI::algs::TimeRefinementLevelStrategy" shape="rect" coords="0,56,261,80">
-<area href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html" alt="SAMRAI::mesh::StandardTagAndInitStrategy" shape="rect" coords="271,56,532,80">
-<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="542,56,803,80">
-<area href="classtbox_1_1DescribedClass.html" alt="DescribedClass" shape="rect" coords="542,0,803,24">
+<area href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html" alt="SAMRAI::algs::TimeRefinementLevelStrategy" shape="rect" coords="0,0,261,24">
+<area href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html" alt="SAMRAI::mesh::StandardTagAndInitStrategy" shape="rect" coords="271,0,532,24">
+<area href="classSAMRAI_1_1tbox_1_1Serializable.html" alt="SAMRAI::tbox::Serializable" shape="rect" coords="542,0,803,24">
 </map>
 <a href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
@@ -55,78 +54,78 @@
  }</td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#b4594686f79f8f63b9280c7032eb0197">HyperbolicLevelIntegrator</a> (const std::string &amp;object_name, <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; input_db, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> *patch_strategy, bool register_for_restart=true, bool use_time_refinement=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e6b24678a411b0379cd2b3a8847ee07a">HyperbolicLevelIntegrator</a> (const std::string &amp;object_name, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;input_db, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> *patch_strategy, bool register_for_restart=true, bool use_time_refinement=true)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#5fadd040b4f9c84bf087d6370587ef14">~HyperbolicLevelIntegrator</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a3a6220ab9d1de88aa69078b15ebccb0">initializeLevelIntegrator</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; gridding_alg_strategy)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8e5e72e2dd271d10414bd09f9ebfe430">initializeLevelIntegrator</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; &amp;gridding_alg_strategy)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#efcfb08640f90d177afec27578f3230a">getLevelDt</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const double dt_time, const bool initial_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e9b75492d96b5093e1dc8cee0f785f6c">getLevelDt</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const double dt_time, const bool initial_time)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#6bbc66a488be69a0733b39c1ff547af0">getMaxFinerLevelDt</a> (const int finer_level_number, const double coarse_dt, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio_to_coarser)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#1e8d1d2af92879c496919d7b7aa98130">advanceLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3b435202a1447097c172ad489c0b11ac">advanceLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#cdd1fd593debe48b8d8caf1b654ec072">standardLevelSynchronization</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;old_times)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#248d34687e92f86b57655d32c3276371">standardLevelSynchronization</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;old_times)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#aa1879d7bb828f59c9cdf3a04b2ff7cb">standardLevelSynchronization</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const double old_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3e01b1369bf15ff0fcbc36b29c5bc99b">standardLevelSynchronization</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const double old_time)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3a7dbaee9b714a7b79271c23534edf4e">synchronizeNewLevels</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4be82c1079e0ff71fa9fc9e85f14f2eb">synchronizeNewLevels</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#651c978f4add72a6708a5c75f5c12144">resetTimeDependentData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const double new_time, const bool can_be_refined)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#480a54f62456a05df563a354eb09c74e">resetTimeDependentData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const double new_time, const bool can_be_refined)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#735626a720099f6f07d1b6ab25467e63">resetDataToPreadvanceState</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8490505359d50fe85ec79cb3f21d7b84">resetDataToPreadvanceState</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#ed4620fa421e552208bb87e1cfe868a8">initializeLevelData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; old_level=<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;(NULL), const bool allocate_data=true)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#17df2f5fea9350f8caccea9151f89fa7">initializeLevelData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;old_level=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;(), const bool allocate_data=true)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3c3007887659d95bb02a2f36108e4d14">resetHierarchyConfiguration</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#63f028cae8941fb217f61f346aa9ba35">resetHierarchyConfiguration</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#41b0368dce99165b8657dd7572854d29">applyGradientDetector</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int level_number, const double error_data_time, const int tag_index, const bool initial_time, const bool uses_richardson_extrapolation_too)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#1cf5e972f7913a3917b16435bb109f7d">applyGradientDetector</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const double error_data_time, const int tag_index, const bool initial_time, const bool uses_richardson_extrapolation_too)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#268311866981c9a8060ef998219d37f5">applyRichardsonExtrapolation</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const double error_data_time, const int tag_index, const double deltat, const int error_coarsen_ratio, const bool initial_time, const bool uses_gradient_detector_too)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#55704d04ba3db16e592fc8bca800b4e3">applyRichardsonExtrapolation</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const double error_data_time, const int tag_index, const double deltat, const int error_coarsen_ratio, const bool initial_time, const bool uses_gradient_detector_too)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#26ae03e8f3285baf05b3ab03ec39bd92">coarsenDataForRichardsonExtrapolation</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int level_number, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; coarse_level, const double coarsen_data_time, const bool before_advance)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#887481dfdc2307a7ee8e76ac95e7232f">coarsenDataForRichardsonExtrapolation</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;coarse_level, const double coarsen_data_time, const bool before_advance)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#d79d20a42da8b714a6e6d1723c9060b0">registerVariable</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; var, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> ghosts, const <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#661bc39ea32eef6aa99d475b213de013">HYP_VAR_TYPE</a> h_v_type, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt; transfer_geom, const std::string &amp;coarsen_name=std::string(), const std::string &amp;refine_name=std::string())</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4b6ef6f341445e7f06c0246880f9cb31">registerVariable</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;var, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> ghosts, const <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#661bc39ea32eef6aa99d475b213de013">HYP_VAR_TYPE</a> h_v_type, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;transfer_geom, const std::string &amp;coarsen_name=std::string(), const std::string &amp;refine_name=std::string())</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#ab6ddbc74f8d314d2b337b07d55cc5d3">printClassData</a> (std::ostream &amp;os) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#c5d65dfaa51d02801bf3ee652be19655">putToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3fd3a76f4ade3ee00e19cb3cbb4a3d19">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a3ec6348557e3ff3b0b190e5e00eb8ae">getCurrentContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#b82cec33facb2e10c02ee9c1d89e0184">getCurrentContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#31a862b003f2e2baddcf2f782085c13b">getNewContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#d58a730d4076e36dbb1c9f9fc5b1a0a9">getNewContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#718834a1f8c9a264a00aad1408b15016">getOldContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#be93b03af3c330bf88a255b4eafc1a0f">getOldContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#af0d7af99d5f8bfe37b4d1fc9bfa127d">getScratchContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#c4f8110b3370c067f60824760a9cb974">getScratchContext</a> () const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#2a68e8e4d1e9baf7bcc7c9b09692cb78">getPlotContext</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#94fbae7b91bf67fec816968388625eff">getPlotContext</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#d9d82dbde4959be5801b25950cffc756">usingRefinedTimestepping</a> () const </td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#b04c05a8a083d1f5d6939e655074912f">printStatistics</a> (std::ostream &amp;s=<a class="el" href="namespaceSAMRAI_1_1tbox.html#48a363c43ec1479b41d6c9c560ba446d">tbox::plog</a>) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3cf3d75740f6fdd913ce9b95850f3fb0">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e1c22b581e40675a0a117625b94216ff">getObjectName</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#fed4a49137cf27b3e1ce1b6498ede6e2">getFromInput</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; db, bool is_from_restart)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4e3f2b0e3a052779db72df2783b00aee">getFromInput</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;db, bool is_from_restart)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#45c4587705db88fdfd7b99be974ee0fd">getFromRestart</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a07020501cae066e5927dab7ae4ec779">preprocessFluxData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const double cur_time, const double new_time, const bool regrid_advance, const bool first_step, const bool last_step)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#531889c84c2f4a67192b4273804cec9c">preprocessFluxData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const double cur_time, const double new_time, const bool regrid_advance, const bool first_step, const bool last_step)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#fdd90fd55b77042d1d45490c051fa947">postprocessFluxData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const bool regrid_advance, const bool first_step, const bool last_step)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#587a0a8756681f821cb4fc26acda14f5">postprocessFluxData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const bool regrid_advance, const bool first_step, const bool last_step)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#40afeea91d70caf9e582478e18177051">copyTimeDependentData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; src_context, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; dst_context)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8c74d7eb71caf35b28d6dc96417b5c21">copyTimeDependentData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;src_context, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;dst_context)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a5690948ea711054280c718d57a10b9b">synchronizeLevelWithCoarser</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; fine, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; coarse, const double sync_time, const double coarse_sim_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#13bcac2f2d81018270d0a6e64b8a3dfd">synchronizeLevelWithCoarser</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;fine, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;coarse, const double sync_time, const double coarse_sim_time)</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html">HyperbolicLevelIntegrator</a> provides routines needed to integrate a system of hyperbolic conservation laws on a structured AMR patch hierarchy using local time refinement. The routines include initializing a level, advance a level, and synchronize levels in a time-dependent AMR application. The AMR timestepping algorithm that cycles through the patch levels and calls these routines is provided by the <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">TimeRefinementIntegrator</a> class. Together, that hierarchy integration class and this single level integration class produce the common AMR algorithm due to Berger, Colella and Oliger (see e.g., Berger and Colella, J. Comp. Phys. (82)1:64-84, 1989). The operations performed on single patches on each level are implemented in the user-defined, problem-specific class derived from the abstract base class <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a>.<p>
 It is important to note that the variable contexts used by the concrete patch strategy subclass must be consistent with those defined in this class which manages the data for the variables.<p>
-This class is derived from the abstract base class <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a>, which defines routines needed by the time refinement integrator. There is an argument in the constructor that determines whether this class will be used by the time refinement integrator for refined timestepping or synchronized timestepping. The routines overloaded in <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> are: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a3a6220ab9d1de88aa69078b15ebccb0">initializeLevelIntegrator()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#efcfb08640f90d177afec27578f3230a">getLevelDt()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#6bbc66a488be69a0733b39c1ff547af0">getMaxFinerLevelDt()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#1e8d1d2af92879c496919d7b7aa98130">advanceLevel()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#cdd1fd593debe48b8d8caf1b654ec072">standardLevelSynchronization()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3a7dbaee9b714a7b79271c23534edf4e">synchronizeNewLevels()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#651c978f4add72a6708a5c75f5c12144">resetTimeDependentData()</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#735626a720099f6f07d1b6ab25467e63">resetDataToPreadvanceState()</a>. This class is also derived from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a>, which defines routines needed by the gridding algorithm classes. The routines overloaded in <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> are: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#ed4620fa421e552208bb87e1cfe868a8">initializeLevelData()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3c3007887659d95bb02a2f36108e4d14">resetHierarchyConfiguration()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#41b0368dce99165b8657dd7572854d29">applyGradientDetector()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#268311866981c9a8060ef998219d37f5">applyRichardsonExtrapolation()</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#26ae03e8f3285baf05b3ab03ec39bd92">coarsenDataForRichardsonExtrapolation()</a>.<p>
+This class is derived from the abstract base class <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a>, which defines routines needed by the time refinement integrator. There is an argument in the constructor that determines whether this class will be used by the time refinement integrator for refined timestepping or synchronized timestepping. The routines overloaded in <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> are: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8e5e72e2dd271d10414bd09f9ebfe430">initializeLevelIntegrator()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e9b75492d96b5093e1dc8cee0f785f6c">getLevelDt()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#6bbc66a488be69a0733b39c1ff547af0">getMaxFinerLevelDt()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3b435202a1447097c172ad489c0b11ac">advanceLevel()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#248d34687e92f86b57655d32c3276371">standardLevelSynchronization()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4be82c1079e0ff71fa9fc9e85f14f2eb">synchronizeNewLevels()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#480a54f62456a05df563a354eb09c74e">resetTimeDependentData()</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8490505359d50fe85ec79cb3f21d7b84">resetDataToPreadvanceState()</a>. This class is also derived from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a>, which defines routines needed by the gridding algorithm classes. The routines overloaded in <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html">mesh::StandardTagAndInitStrategy</a> are: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#17df2f5fea9350f8caccea9151f89fa7">initializeLevelData()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#63f028cae8941fb217f61f346aa9ba35">resetHierarchyConfiguration()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#1cf5e972f7913a3917b16435bb109f7d">applyGradientDetector()</a>, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#55704d04ba3db16e592fc8bca800b4e3">applyRichardsonExtrapolation()</a>, and <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#887481dfdc2307a7ee8e76ac95e7232f">coarsenDataForRichardsonExtrapolation()</a>.<p>
 An object of this class requires numerous parameters to be read from input. Also, data must be written to and read from files for restart. The input and restart data are summarized as follows.<p>
 Required input keys and data types: NONE<p>
 Optional input keys, data types, and defaults:<p>
@@ -194,7 +193,7 @@ Enumerated type for the different ways in which variable storage can be manipula
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="b4594686f79f8f63b9280c7032eb0197"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::HyperbolicLevelIntegrator" ref="b4594686f79f8f63b9280c7032eb0197" args="(const std::string &amp;object_name, tbox::Pointer&lt; tbox::Database &gt; input_db, HyperbolicPatchStrategy *patch_strategy, bool register_for_restart=true, bool use_time_refinement=true)" -->
+<a class="anchor" name="e6b24678a411b0379cd2b3a8847ee07a"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::HyperbolicLevelIntegrator" ref="e6b24678a411b0379cd2b3a8847ee07a" args="(const std::string &amp;object_name, const boost::shared_ptr&lt; tbox::Database &gt; &amp;input_db, HyperbolicPatchStrategy *patch_strategy, bool register_for_restart=true, bool use_time_refinement=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -207,7 +206,7 @@ Enumerated type for the different ways in which variable storage can be manipula
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>input_db</em>, </td>
         </tr>
         <tr>
@@ -262,14 +261,14 @@ The destructor for <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelInt
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="a3a6220ab9d1de88aa69078b15ebccb0"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::initializeLevelIntegrator" ref="a3a6220ab9d1de88aa69078b15ebccb0" args="(tbox::Pointer&lt; mesh::GriddingAlgorithmStrategy &gt; gridding_alg_strategy)" -->
+<a class="anchor" name="8e5e72e2dd271d10414bd09f9ebfe430"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::initializeLevelIntegrator" ref="8e5e72e2dd271d10414bd09f9ebfe430" args="(const boost::shared_ptr&lt; mesh::GriddingAlgorithmStrategy &gt; &amp;gridding_alg_strategy)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::initializeLevelIntegrator           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>gridding_alg_strategy</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -283,17 +282,17 @@ Initialize level integrator by by setting the number of time levels of data need
 This routine also invokes variable registration in the patch strategy.<p>
 Assertion checking will throw unrecoverable assertions if either pointer is null. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#7624a7a4dd9971d187e4a5b4b66387c5">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#6a0593d3236283f41c3df265a897b2b4">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="efcfb08640f90d177afec27578f3230a"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getLevelDt" ref="efcfb08640f90d177afec27578f3230a" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const double dt_time, const bool initial_time)" -->
+<a class="anchor" name="e9b75492d96b5093e1dc8cee0f785f6c"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getLevelDt" ref="e9b75492d96b5093e1dc8cee0f785f6c" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const double dt_time, const bool initial_time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual double SAMRAI::algs::HyperbolicLevelIntegrator::getLevelDt           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -321,7 +320,7 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 Determine time increment to advance data on level and return that value. The double dt_time argument is the simulation time when the routine is called. The initial_time boolean is true if this routine is called during hierarchy initialization (i.e., at the initial simulation time). Otherwise, it is false. The recompute_dt option specifies whether to compute the timestep using the current level data or to return the value stored by the time integrator. The default true setting means the timestep will be computed if no value is supplied.<p>
 When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#fa310e18f96f72353f27789e7593e67c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#26e5a13a6a362ec056f7dcab1d234392">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
 <a class="anchor" name="6bbc66a488be69a0733b39c1ff547af0"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getMaxFinerLevelDt" ref="6bbc66a488be69a0733b39c1ff547af0" args="(const int finer_level_number, const double coarse_dt, const hier::IntVector &amp;ratio_to_coarser)" -->
@@ -359,23 +358,23 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 Return the maximum allowable time increment for the level with the specified level number based on the time increment for the next coarser level and the mesh refinement ratio between the two levels. For the common explicit integration methods for hyperbolic conservation laws (constrained by a CFL limit), the fine time increment is typically the coarse increment divided by the refinement ratio.<p>
 When assertion checking is active, an unrecoverable assertion will result if the ratio vector is not acceptable (i.e., all values &gt; 0). 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#c96eb05681ab7c0dfd03bb2f1ef9bbb0">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#74e3d16e1b61f1ed51249d44b30fb818">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="1e8d1d2af92879c496919d7b7aa98130"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::advanceLevel" ref="1e8d1d2af92879c496919d7b7aa98130" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)" -->
+<a class="anchor" name="3b435202a1447097c172ad489c0b11ac"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::advanceLevel" ref="3b435202a1447097c172ad489c0b11ac" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual double SAMRAI::algs::HyperbolicLevelIntegrator::advanceLevel           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -437,17 +436,17 @@ In the second case, the values of the boolean flags are:<p>
 <p>
 When assertion checking is active, an unrecoverable assertion will result if either the level or hierarchy pointer is null, or the new time is not greater than the given time. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#5528e0853c0234f0ae004605e9e13fbb">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#588799fb49e303c9090cd375eec52213">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="cdd1fd593debe48b8d8caf1b654ec072"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::standardLevelSynchronization" ref="cdd1fd593debe48b8d8caf1b654ec072" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const tbox::Array&lt; double &gt; &amp;old_times)" -->
+<a class="anchor" name="248d34687e92f86b57655d32c3276371"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::standardLevelSynchronization" ref="248d34687e92f86b57655d32c3276371" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const tbox::Array&lt; double &gt; &amp;old_times)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::standardLevelSynchronization           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -487,17 +486,17 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 Synchronize data between given patch levels in patch hierarchy according to the standard hyperbolic AMR flux correction algorithm. This routine synchronizes data between two levels at a time from the level with index finest_level down to the level with index coarsest_level. The array of old time values are used in the re-integration of the time-dependent data.<p>
 When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, the level numbers do not properly match existing levels in the hierarchy (either coarsest_level &gt; finest_level or some level is null), or all of the old time values are less than the value of sync_time. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#556f0b8cbf9c3b4462006470bcad863a">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#082f1db97866f9369be09af29fed69ba">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="aa1879d7bb828f59c9cdf3a04b2ff7cb"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::standardLevelSynchronization" ref="aa1879d7bb828f59c9cdf3a04b2ff7cb" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const double old_time)" -->
+<a class="anchor" name="3e01b1369bf15ff0fcbc36b29c5bc99b"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::standardLevelSynchronization" ref="3e01b1369bf15ff0fcbc36b29c5bc99b" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const double old_time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::standardLevelSynchronization           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -535,18 +534,16 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLeve
 
 <p>
 This overloaded version of standardLevelSynchronization implements a routine used for synchronized timestepping. Only a single value for the old time is needed, since all levels would have the same old time. 
-<p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#77170fea2c25115bb2207400b17c6183">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="3a7dbaee9b714a7b79271c23534edf4e"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeNewLevels" ref="3a7dbaee9b714a7b79271c23534edf4e" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)" -->
+<a class="anchor" name="4be82c1079e0ff71fa9fc9e85f14f2eb"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeNewLevels" ref="4be82c1079e0ff71fa9fc9e85f14f2eb" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeNewLevels           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -587,17 +584,17 @@ Coarsen current solution data from finest hierarchy level specified down through
 When initial_time is false, this routine does nothing since the standard hyperbolic AMR algorithm for conservation laws requires no data synchronization after regridding beyond interpolation of data from coarser levels in the hierarchy in some conservative fashion.<p>
 When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, the level numbers do not properly match existing levels in the hierarchy (either coarsest_level &gt; finest_level or some level is null). 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#cdcd8c55189dab25cb3af79c7fd78621">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#b7b667458e9879e28cffe41a10048de3">SAMRAI::algs::TimeRefinementLevelStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="651c978f4add72a6708a5c75f5c12144"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::resetTimeDependentData" ref="651c978f4add72a6708a5c75f5c12144" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const double new_time, const bool can_be_refined)" -->
+<a class="anchor" name="480a54f62456a05df563a354eb09c74e"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::resetTimeDependentData" ref="480a54f62456a05df563a354eb09c74e" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const double new_time, const bool can_be_refined)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::resetTimeDependentData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -625,17 +622,17 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 Resets time-dependent data storage and update time for patch level.<p>
 When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#78a7cf6f0f9505b24caed3f5f3fd50f4">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#faf83467054094bebf574b27f6a7abc0">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="735626a720099f6f07d1b6ab25467e63"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::resetDataToPreadvanceState" ref="735626a720099f6f07d1b6ab25467e63" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level)" -->
+<a class="anchor" name="8490505359d50fe85ec79cb3f21d7b84"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::resetDataToPreadvanceState" ref="8490505359d50fe85ec79cb3f21d7b84" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::resetDataToPreadvanceState           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -648,17 +645,17 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 Deallocate all new simulation data on the given level. This may be necessary during regridding, or setting up levels initially.<p>
 When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#bf90e2ddf1799873bc0826622c1d3021">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#5933790b5142258ae5db3353637c48bc">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="ed4620fa421e552208bb87e1cfe868a8"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::initializeLevelData" ref="ed4620fa421e552208bb87e1cfe868a8" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const tbox::Pointer&lt; hier::PatchLevel &gt; old_level=tbox::Pointer&lt; hier::PatchLevel &gt;(NULL), const bool allocate_data=true)" -->
+<a class="anchor" name="17df2f5fea9350f8caccea9151f89fa7"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::initializeLevelData" ref="17df2f5fea9350f8caccea9151f89fa7" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const double init_data_time, const bool can_be_refined, const bool initial_time, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;old_level=boost::shared_ptr&lt; hier::PatchLevel &gt;(), const bool allocate_data=true)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::initializeLevelData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -688,8 +685,8 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>old_level</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&nbsp;&gt;(NULL)</code>, </td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
+          <td class="paramname"> <em>old_level</em> = <code>boost::shared_ptr&lt;&nbsp;<a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a>&nbsp;&gt;()</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -712,17 +709,17 @@ Typically, when data is set, it is interpolated from coarser levels in the hiera
 The boolean argument initial_time indicates whether the level is being introduced for the first time (i.e., at initialization time), or after some regrid process during the calculation beyond the initial hierarchy construction. This information is provided since the initialization of the data on a patch may be different in each of those circumstances. The can_be_refined boolean argument indicates whether the level is the finest level allowed in the hierarchy. This may or may not affect the data initialization process depending on the problem.<p>
 When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, the level number does not match any level in the hierarchy, or the old level number does not match the level number (if the old level pointer is non-null). 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#8318865f10c2486f224cfd72cd80bd8c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#43aab4033b5be85ecee18f52c8e4980c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="3c3007887659d95bb02a2f36108e4d14"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::resetHierarchyConfiguration" ref="3c3007887659d95bb02a2f36108e4d14" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level)" -->
+<a class="anchor" name="63f028cae8941fb217f61f346aa9ba35"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::resetHierarchyConfiguration" ref="63f028cae8941fb217f61f346aa9ba35" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::resetHierarchyConfiguration           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -750,17 +747,17 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy
 Reset cached communication schedules after the hierarchy has changed (due to regidding, for example) and the data has been initialized on the new levels. The intent is that the cost of data movement on the hierarchy will be amortized across multiple communication cycles, if possible. The level numbers indicate the range of levels in the hierarchy that have changed. However, this routine updates communication schedules every level finer than and including that indexed by the coarsest level number given.<p>
 When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null, any pointer to a level in the hierarchy that is coarser than the finest level is null, or the given level numbers not specified properly; e.g., coarsest_level &gt; finest_level. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#17a979caefe65be8393f8b4771d36cf0">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#fe20d86963726d6aa8fa80cf0417c27c">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="41b0368dce99165b8657dd7572854d29"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::applyGradientDetector" ref="41b0368dce99165b8657dd7572854d29" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int level_number, const double error_data_time, const int tag_index, const bool initial_time, const bool uses_richardson_extrapolation_too)" -->
+<a class="anchor" name="1cf5e972f7913a3917b16435bb109f7d"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::applyGradientDetector" ref="1cf5e972f7913a3917b16435bb109f7d" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const double error_data_time, const int tag_index, const bool initial_time, const bool uses_richardson_extrapolation_too)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::applyGradientDetector           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -806,17 +803,17 @@ Implements <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy
 Set integer tags to "one" in cells where refinement of the given level should occur according to some user-supplied gradient criteria. The double time argument is the regrid time. The integer "tag_index" argument is the patch descriptor index of the cell-centered integer tag array on each patch in the hierarchy. The boolean argument initial_time indicates whether the level is being subject to refinement at the initial simulation time. If it is false, then the error estimation process is being invoked at some later time after the AMR hierarchy was initially constructed. The boolean argument uses_richardson_extrapolation_too is true when Richardson extrapolation error estimation is used in addition to the gradient detector, and false otherwise. This argument helps the user to manage multiple regridding criteria. This information is passed along to the user's patch tagging routines since the application of the gradient detector may be different in each case.<p>
 When assertion checking is active, an unrecoverable assertion will result if the hierarchy pointer is null or the level number does not match any existing level in the hierarchy. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#f21373b9963b3978169521ee83867c06">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#9d335c20033ca83646f72980d5d7715b">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="268311866981c9a8060ef998219d37f5"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::applyRichardsonExtrapolation" ref="268311866981c9a8060ef998219d37f5" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const double error_data_time, const int tag_index, const double deltat, const int error_coarsen_ratio, const bool initial_time, const bool uses_gradient_detector_too)" -->
+<a class="anchor" name="55704d04ba3db16e592fc8bca800b4e3"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::applyRichardsonExtrapolation" ref="55704d04ba3db16e592fc8bca800b4e3" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const double error_data_time, const int tag_index, const double deltat, const int error_coarsen_ratio, const bool initial_time, const bool uses_gradient_detector_too)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::applyRichardsonExtrapolation           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -871,17 +868,17 @@ The boolean argument initial_time indicates whether the level is being subject t
 The boolean uses_gradient_detector_too is true when a gradient detector procedure is used in addition to Richardson extrapolation, and false otherwise. This argument helps the user to manage multiple regridding criteria.<p>
 When assertion checking is active, an unrecoverable assertion will result if the level pointer is null. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#93aaf63b2cebd101b48bd1a85837df19">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#4b10f6d805a1293a1e5151c8f5ec11bd">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="26ae03e8f3285baf05b3ab03ec39bd92"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation" ref="26ae03e8f3285baf05b3ab03ec39bd92" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int level_number, const tbox::Pointer&lt; hier::PatchLevel &gt; coarse_level, const double coarsen_data_time, const bool before_advance)" -->
+<a class="anchor" name="887481dfdc2307a7ee8e76ac95e7232f"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation" ref="887481dfdc2307a7ee8e76ac95e7232f" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int level_number, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;coarse_level, const double coarsen_data_time, const bool before_advance)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::coarsenDataForRichardsonExtrapolation           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -893,7 +890,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>coarse_level</em>, </td>
         </tr>
         <tr>
@@ -921,17 +918,17 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 Coarsen solution data from level to coarse_level for Richardson extrapolation. Note that this routine will be called twice during the Richardson extrapolation error estimation process. The before_advance boolean argument indicates whether data is set on the coarse level by coarsening the "old" time level solution (i.e., before it has been advanced) or by coarsening the "new" solution on the fine level (i.e., after it has been advanced).<p>
 When assertion checking is active, an unrecoverable assertion will result if either level pointer is null. 
 <p>
-Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#75b71c567a4e34c2aac81a4075d08e77">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
+Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#50a405d10f8076640d9aa52b2c8d8282">SAMRAI::mesh::StandardTagAndInitStrategy</a>.
 </div>
 </div><p>
-<a class="anchor" name="d79d20a42da8b714a6e6d1723c9060b0"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::registerVariable" ref="d79d20a42da8b714a6e6d1723c9060b0" args="(const tbox::Pointer&lt; hier::Variable &gt; var, const hier::IntVector ghosts, const HYP_VAR_TYPE h_v_type, const tbox::Pointer&lt; hier::GridGeometry &gt; transfer_geom, const std::string &amp;coarsen_name=std::string(), const std::string &amp;refine_name=std::string())" -->
+<a class="anchor" name="4b6ef6f341445e7f06c0246880f9cb31"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::registerVariable" ref="4b6ef6f341445e7f06c0246880f9cb31" args="(const boost::shared_ptr&lt; hier::Variable &gt; &amp;var, const hier::IntVector ghosts, const HYP_VAR_TYPE h_v_type, const boost::shared_ptr&lt; hier::BaseGridGeometry &gt; &amp;transfer_geom, const std::string &amp;coarsen_name=std::string(), const std::string &amp;refine_name=std::string())" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::registerVariable           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Variable.html">hier::Variable</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>var</em>, </td>
         </tr>
         <tr>
@@ -949,7 +946,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1GridGeometry.html">hier::GridGeometry</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">hier::BaseGridGeometry</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>transfer_geom</em>, </td>
         </tr>
         <tr>
@@ -974,7 +971,7 @@ Reimplemented from <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInit
 <div class="memdoc">
 
 <p>
-Register a variable with the hyperbolic integration algorithm. The variable type must be one of the options defined by the enumerated type defined above. Typically, this routine is called from the hyperbolic patch model when the variable registration process is invoked by calling the function <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a3a6220ab9d1de88aa69078b15ebccb0">initializeLevelIntegrator()</a> above. In fact, that function should be called before this routine is called.<p>
+Register a variable with the hyperbolic integration algorithm. The variable type must be one of the options defined by the enumerated type defined above. Typically, this routine is called from the hyperbolic patch model when the variable registration process is invoked by calling the function <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8e5e72e2dd271d10414bd09f9ebfe430">initializeLevelIntegrator()</a> above. In fact, that function should be called before this routine is called.<p>
 When assertion checking is active, an unrecoverable assertion will result if the variable pointer or geometry pointer is null. 
 </div>
 </div><p>
@@ -998,17 +995,17 @@ When assertion checking is active, an unrecoverable assertion will result if the
 Print class data representation for hyperbolic level integrator object. This is done automatically, when an unrecoverable run-time assertion is thrown within some member function of this class. 
 </div>
 </div><p>
-<a class="anchor" name="c5d65dfaa51d02801bf3ee652be19655"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::putToDatabase" ref="c5d65dfaa51d02801bf3ee652be19655" args="(tbox::Pointer&lt; tbox::Database &gt; db)" -->
+<a class="anchor" name="3fd3a76f4ade3ee00e19cb3cbb4a3d19"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::putToDatabase" ref="3fd3a76f4ade3ee00e19cb3cbb4a3d19" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::putToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -1017,20 +1014,18 @@ Print class data representation for hyperbolic level integrator object. This is 
 <p>
 Write out object state to the given database.<p>
 When assertion checking is active, database point must be non-null. 
-<p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6fd7a9046bd2f60ad716c21293">SAMRAI::tbox::Serializable</a>.
 </div>
 </div><p>
-<a class="anchor" name="a3ec6348557e3ff3b0b190e5e00eb8ae"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getCurrentContext" ref="a3ec6348557e3ff3b0b190e5e00eb8ae" args="() const " -->
+<a class="anchor" name="b82cec33facb2e10c02ee9c1d89e0184"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getCurrentContext" ref="b82cec33facb2e10c02ee9c1d89e0184" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getCurrentContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getCurrentContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1040,16 +1035,16 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6f
 Return pointer to "current" variable context used by integrator. Current data corresponds to state data at the beginning of a timestep, or when a new level is initialized. 
 </div>
 </div><p>
-<a class="anchor" name="31a862b003f2e2baddcf2f782085c13b"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getNewContext" ref="31a862b003f2e2baddcf2f782085c13b" args="() const " -->
+<a class="anchor" name="d58a730d4076e36dbb1c9f9fc5b1a0a9"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getNewContext" ref="d58a730d4076e36dbb1c9f9fc5b1a0a9" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getNewContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getNewContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1059,16 +1054,16 @@ Return pointer to "current" variable context used by integrator. Current data co
 Return pointer to "new" variable context used by integrator. New data corresponds to advanced state data at the end of a timestep. The data is one timestep later than the "current" data. 
 </div>
 </div><p>
-<a class="anchor" name="718834a1f8c9a264a00aad1408b15016"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getOldContext" ref="718834a1f8c9a264a00aad1408b15016" args="() const " -->
+<a class="anchor" name="be93b03af3c330bf88a255b4eafc1a0f"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getOldContext" ref="be93b03af3c330bf88a255b4eafc1a0f" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getOldContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getOldContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1079,16 +1074,16 @@ Return pointer to "old" variable context used by integrator. Old data correspond
 Note that only in certain cases when using time-dependent error estimation, such as Richardson extrapolation, is the returned pointer will non-null. See contructor for more information. 
 </div>
 </div><p>
-<a class="anchor" name="af0d7af99d5f8bfe37b4d1fc9bfa127d"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getScratchContext" ref="af0d7af99d5f8bfe37b4d1fc9bfa127d" args="() const " -->
+<a class="anchor" name="c4f8110b3370c067f60824760a9cb974"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getScratchContext" ref="c4f8110b3370c067f60824760a9cb974" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getScratchContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getScratchContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1098,16 +1093,16 @@ Note that only in certain cases when using time-dependent error estimation, such
 Return pointer to "scratch" variable context used by integrator. Scratch data typically corresponds to storage that user-routines in the concrete <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicPatchStrategy.html">HyperbolicPatchStrategy</a> object manipulate; in particular, scratch data contains ghost cells. 
 </div>
 </div><p>
-<a class="anchor" name="2a68e8e4d1e9baf7bcc7c9b09692cb78"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getPlotContext" ref="2a68e8e4d1e9baf7bcc7c9b09692cb78" args="() const " -->
+<a class="anchor" name="94fbae7b91bf67fec816968388625eff"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getPlotContext" ref="94fbae7b91bf67fec816968388625eff" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getPlotContext           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a>&gt; SAMRAI::algs::HyperbolicLevelIntegrator::getPlotContext           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1126,7 +1121,7 @@ Return pointer to variable context used for plotting. This context corresponds t
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const<code> [virtual]</code></td>
+          <td width="100%"> const<code> [inline, virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -1158,16 +1153,16 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 
 </div>
 </div><p>
-<a class="anchor" name="3cf3d75740f6fdd913ce9b95850f3fb0"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getObjectName" ref="3cf3d75740f6fdd913ce9b95850f3fb0" args="() const " -->
+<a class="anchor" name="e1c22b581e40675a0a117625b94216ff"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getObjectName" ref="e1c22b581e40675a0a117625b94216ff" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::algs::HyperbolicLevelIntegrator::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::algs::HyperbolicLevelIntegrator::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -1177,14 +1172,14 @@ Implements <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrateg
 Returns the object name. 
 </div>
 </div><p>
-<a class="anchor" name="fed4a49137cf27b3e1ce1b6498ede6e2"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput" ref="fed4a49137cf27b3e1ce1b6498ede6e2" args="(tbox::Pointer&lt; tbox::Database &gt; db, bool is_from_restart)" -->
+<a class="anchor" name="4e3f2b0e3a052779db72df2783b00aee"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput" ref="4e3f2b0e3a052779db72df2783b00aee" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;db, bool is_from_restart)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::getFromInput           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>, </td>
         </tr>
         <tr>
@@ -1233,14 +1228,14 @@ Unrecoverable Errors:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="a07020501cae066e5927dab7ae4ec779"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::preprocessFluxData" ref="a07020501cae066e5927dab7ae4ec779" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const double cur_time, const double new_time, const bool regrid_advance, const bool first_step, const bool last_step)" -->
+<a class="anchor" name="531889c84c2f4a67192b4273804cec9c"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::preprocessFluxData" ref="531889c84c2f4a67192b4273804cec9c" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const double cur_time, const double new_time, const bool regrid_advance, const bool first_step, const bool last_step)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::preprocessFluxData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -1286,14 +1281,14 @@ Unrecoverable Errors:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="fdd90fd55b77042d1d45490c051fa947"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::postprocessFluxData" ref="fdd90fd55b77042d1d45490c051fa947" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const bool regrid_advance, const bool first_step, const bool last_step)" -->
+<a class="anchor" name="587a0a8756681f821cb4fc26acda14f5"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::postprocessFluxData" ref="587a0a8756681f821cb4fc26acda14f5" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const bool regrid_advance, const bool first_step, const bool last_step)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::postprocessFluxData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -1327,26 +1322,26 @@ Unrecoverable Errors:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="40afeea91d70caf9e582478e18177051"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::copyTimeDependentData" ref="40afeea91d70caf9e582478e18177051" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const tbox::Pointer&lt; hier::VariableContext &gt; src_context, const tbox::Pointer&lt; hier::VariableContext &gt; dst_context)" -->
+<a class="anchor" name="8c74d7eb71caf35b28d6dc96417b5c21"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::copyTimeDependentData" ref="8c74d7eb71caf35b28d6dc96417b5c21" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;src_context, const boost::shared_ptr&lt; hier::VariableContext &gt; &amp;dst_context)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::copyTimeDependentData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>src_context</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1VariableContext.html">hier::VariableContext</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>dst_context</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -1362,20 +1357,20 @@ Unrecoverable Errors:<p>
 
 </div>
 </div><p>
-<a class="anchor" name="a5690948ea711054280c718d57a10b9b"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeLevelWithCoarser" ref="a5690948ea711054280c718d57a10b9b" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; fine, const tbox::Pointer&lt; hier::PatchLevel &gt; coarse, const double sync_time, const double coarse_sim_time)" -->
+<a class="anchor" name="13bcac2f2d81018270d0a6e64b8a3dfd"></a><!-- doxytag: member="SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeLevelWithCoarser" ref="13bcac2f2d81018270d0a6e64b8a3dfd" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;fine, const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;coarse, const double sync_time, const double coarse_sim_time)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::HyperbolicLevelIntegrator::synchronizeLevelWithCoarser           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>fine</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>coarse</em>, </td>
         </tr>
         <tr>
@@ -1404,9 +1399,9 @@ Apply the standard AMR hyperbolic flux synchronization process preserve conserva
 When assertion checking is turned on, an unrecoverable assertion will result if either level pointer is null, the levels are not consecutive in the AMR hierarchy, or the coarse sim time is not less than the sync time. 
 </div>
 </div><p>
-<hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/algs/<a class="el" href="HyperbolicLevelIntegrator_8h.html">HyperbolicLevelIntegrator.h</a><li>source/SAMRAI/algs/<a class="el" href="HyperbolicLevelIntegrator_8I.html">HyperbolicLevelIntegrator.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr>The documentation for this class was generated from the following file:<ul>
+<li>source/SAMRAI/algs/<a class="el" href="HyperbolicLevelIntegrator_8h.html">HyperbolicLevelIntegrator.h</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

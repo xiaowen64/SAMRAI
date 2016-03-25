@@ -32,10 +32,7 @@
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt; TYPE,<br>
- BOX_GEOMETRY &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#8c304e3a278c7664762471826e0e96e2">Iterator</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef ConstIndexIterator&lt;<br>
- TYPE, BOX_GEOMETRY &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#dca6eb4b647bf4e89c72fca267ef7fbe">ConstIterator</a></td></tr>
+ BOX_GEOMETRY &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#2f5cf207f8e3def5db3e2214d2574f56">iterator</a></td></tr>
 
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#acb21d1fd4d0bc937f5cc15d11580102">IndexData</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ghosts)</td></tr>
@@ -90,14 +87,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">TYPE *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#41ce4e137f2e60525668faf4b6af9382">getItem</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> &amp;index) const </td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#4e6bb1f79c39d3a9281ea64bf43e72e4">getSpecializedFromDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#74e546cc71f436939d4fc174417a99ad">getSpecializedFromDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#8e3a66737856e996a86cb95a1afcbd07">putSpecializedToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#dd5879287dc1945636ebb27b42ee9ef9">putSpecializedToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;database) const </td></tr>
 
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#29bf18abb486c1b3ee1fb5a3b425af36">IndexIterator&lt; TYPE, BOX_GEOMETRY &gt;</a></td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#7a8cb872a5fba9172bdab35a5a5c86f9">ConstIndexIterator&lt; TYPE, BOX_GEOMETRY &gt;</a></td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
@@ -113,7 +108,7 @@ If one does not care about the iteration order and is frequently updating the it
 The template parameter TYPE * defines the storage at each index location. IndexDaga is derived from * <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a>.<p>
 The data type TYPE must define the following five methods which are require by this class:<p>
 <ul>
-<li><b>-</b> Default constructor (taking no arguments).</li><li><b>-</b> Assignment operator; i.e., TYPE&amp; operator=(const TYPE&amp; rhs)</li><li><b>-</b> Copy; copySourceItem(const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&amp; index, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; src_offset, const TYPE&amp; src_item)</li><li><b>-</b> Return size of data; size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a2b0401e571b5f725770daf5f270592e">getDataStreamSize()</a></li><li><b>-</b> Pack data into message stream; i.e., packStream(MessageStream&amp; stream,</li><li><b>-</b> Unpack data from message stream; i.e., unpackStream(MessageStream&amp; stream, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; offset)</li><li><b>-</b> Write to restart; putToDatabase(tbox::Pointer&lt;tbox::Database&gt;&amp; database)</li><li><b>-</b> Retrieve from restart; getFromDatabase(tbox::Pointer&lt;tbox::Database&gt;&amp; database)</li></ul>
+<li><b>-</b> Default constructor (taking no arguments).</li><li><b>-</b> Assignment operator; i.e., TYPE&amp; operator=(const TYPE&amp; rhs)</li><li><b>-</b> Copy; copySourceItem(const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&amp; index, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; src_offset, const TYPE&amp; src_item)</li><li><b>-</b> Return size of data; size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a2b0401e571b5f725770daf5f270592e">getDataStreamSize()</a></li><li><b>-</b> Pack data into message stream; i.e., packStream(MessageStream&amp; stream,</li><li><b>-</b> Unpack data from message stream; i.e., unpackStream(MessageStream&amp; stream, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; offset)</li><li><b>-</b> Write to restart; putToDatabase(boost::shared_ptr&lt;tbox::Database&gt;&amp; database)</li><li><b>-</b> Retrieve from restart; getFromDatabase(boost::shared_ptr&lt;tbox::Database&gt;&amp; database)</li></ul>
 <p>
 The BOX_GEOMETRY template parameter defines the geometry. BOX_GEOMETRY must have a nested class name Overlap that implements he following methods:<p>
 <ul>
@@ -127,14 +122,14 @@ IndexData&lt;DIM&gt; objects are created by the IndexDataFactory&lt;DIM&gt; fact
 
 <p>
 <hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="8c304e3a278c7664762471826e0e96e2"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::Iterator" ref="8c304e3a278c7664762471826e0e96e2" args="" -->
+<a class="anchor" name="2f5cf207f8e3def5db3e2214d2574f56"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::iterator" ref="2f5cf207f8e3def5db3e2214d2574f56" args="" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt;TYPE, BOX_GEOMETRY&gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">Iterator</a>          </td>
+          <td class="memname">typedef <a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">IndexIterator</a>&lt;TYPE, BOX_GEOMETRY&gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexIterator.html">iterator</a>          </td>
         </tr>
       </table>
 </div>
@@ -142,23 +137,6 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 
 <p>
 Define the iterator. 
-</div>
-</div><p>
-<a class="anchor" name="dca6eb4b647bf4e89c72fca267ef7fbe"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::ConstIterator" ref="dca6eb4b647bf4e89c72fca267ef7fbe" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef ConstIndexIterator&lt;TYPE, BOX_GEOMETRY&gt; <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::<a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#dca6eb4b647bf4e89c72fca267ef7fbe">ConstIterator</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
 </div>
 </div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
@@ -183,7 +161,7 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [explicit]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -875,7 +853,7 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 Given an index, return a pointer to the item located at that index. If there is no item at the index, null is returned. 
 </div>
 </div><p>
-<a class="anchor" name="4e6bb1f79c39d3a9281ea64bf43e72e4"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getSpecializedFromDatabase" ref="4e6bb1f79c39d3a9281ea64bf43e72e4" args="(tbox::Pointer&lt; tbox::Database &gt; database)" -->
+<a class="anchor" name="74e546cc71f436939d4fc174417a99ad"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getSpecializedFromDatabase" ref="74e546cc71f436939d4fc174417a99ad" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -884,7 +862,7 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getSpecializedFromDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [virtual]</code></td>
@@ -897,10 +875,10 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 Check to make sure that the class version number is the same as the restart file version number.<p>
 Assertions: database must be a non-null pointer. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#5fb8db1f58940d0fd1f130ea857037a4">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#1cf0a7a7a58668744601638c036103a1">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
-<a class="anchor" name="8e3a66737856e996a86cb95a1afcbd07"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::putSpecializedToDatabase" ref="8e3a66737856e996a86cb95a1afcbd07" args="(tbox::Pointer&lt; tbox::Database &gt; database)" -->
+<a class="anchor" name="dd5879287dc1945636ebb27b42ee9ef9"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::putSpecializedToDatabase" ref="dd5879287dc1945636ebb27b42ee9ef9" args="(const boost::shared_ptr&lt; tbox::Database &gt; &amp;database) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -909,10 +887,10 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::putSpecializedToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -922,7 +900,7 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 Write out the class version number to the database.<p>
 Assertions: database must be a non-null pointer. 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#aa793038dcc04fee9bf96943b35951ee">SAMRAI::hier::PatchData</a>.
+Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#e0de5996e1ec46a9c409ab9d87df58f2">SAMRAI::hier::PatchData</a>.
 </div>
 </div><p>
 <hr><h2>Friends And Related Function Documentation</h2>
@@ -943,26 +921,9 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 
 </div>
 </div><p>
-<a class="anchor" name="7a8cb872a5fba9172bdab35a5a5c86f9"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::ConstIndexIterator&lt; TYPE, BOX_GEOMETRY &gt;" ref="7a8cb872a5fba9172bdab35a5a5c86f9" args="" -->
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">friend class ConstIndexIterator&lt; TYPE, BOX_GEOMETRY &gt;<code> [friend]</code>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-
-</div>
-</div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/pdat/<a class="el" href="IndexData_8h.html">IndexData.h</a><li>source/SAMRAI/pdat/<a class="el" href="IndexData_8C.html">IndexData.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:20 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

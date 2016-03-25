@@ -35,30 +35,27 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#bb6b67834d2bc075d58f41a25fa8aa26">~TimeRefinementLevelStrategy</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#7624a7a4dd9971d187e4a5b4b66387c5">initializeLevelIntegrator</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; gridding_alg)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#6a0593d3236283f41c3df265a897b2b4">initializeLevelIntegrator</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; &amp;gridding_alg)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#b1f019ba7e3b830a1f4e90305f731097">getLevelDt</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const double dt_time, const bool initial_time)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#98363bc4c18417e2841c31d5f64cd9d2">getLevelDt</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const double dt_time, const bool initial_time)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#c96eb05681ab7c0dfd03bb2f1ef9bbb0">getMaxFinerLevelDt</a> (const int finer_level_number, const double coarse_dt, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#74e3d16e1b61f1ed51249d44b30fb818">getMaxFinerLevelDt</a> (const int finer_level_number, const double coarse_dt, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;ratio)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#eda0400e68313c0365dee1a53f0130e6">advanceLevel</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#9c66646b85af83a4822ea8db50babd84">advanceLevel</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#556f0b8cbf9c3b4462006470bcad863a">standardLevelSynchronization</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;old_times)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#082f1db97866f9369be09af29fed69ba">standardLevelSynchronization</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a>&lt; double &gt; &amp;old_times)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#77170fea2c25115bb2207400b17c6183">standardLevelSynchronization</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const double old_time)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#b7b667458e9879e28cffe41a10048de3">synchronizeNewLevels</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#cdcd8c55189dab25cb3af79c7fd78621">synchronizeNewLevels</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#30c03a75f51a57c3187320db04e62223">resetTimeDependentData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level, const double new_time, const bool can_be_refined)=0</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#4b199ba4374d995ded1b68cc14ca2fee">resetTimeDependentData</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level, const double new_time, const bool can_be_refined)=0</td></tr>
-
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#8c4a7fb0107db830c186e372761db50a">resetDataToPreadvanceState</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; level)=0</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#742f83055102c3a070315cee17882d9b">resetDataToPreadvanceState</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;level)=0</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#1b4f253112df684c60c8769d51bc5115">usingRefinedTimestepping</a> () const =0</td></tr>
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
 Class <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html">TimeRefinementLevelStrategy</a> is an abstract base class that defines the interface to level integration and synchronization routines needed by the hierarchy integration class <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">TimeRefinementIntegrator</a>. In particular, this class insulates the hierarchy integrator from the routines that manipulate data on the hierarchy levels in a problem-specific fashion. When the AMR hierarchy integration and regridding sequence provided by the class <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">TimeRefinementIntegrator</a> are appropriate for some computational problem, a subclass of this base class can be used to provide the necessary operations to the hierarchy integrator. That is, a <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">TimeRefinementIntegrator</a> object may be configured with a concrete implementation of this base class by passing the concrete object into the to the time refinement integrator constructor.<p>
-Three functions in this class are defined as virtual rather than pure virtual, and default implementations are provided. This is done to allow for an implementation of this strategy class that is used by the time refinement integrator only for refined timestepping or only for synchronized timestepping. If an implementation is only used for refined timestepping, getMaxLevelDt() and one version of <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#556f0b8cbf9c3b4462006470bcad863a">standardLevelSynchronization()</a> must be overloaded in the concrete class. If an implementation is only used for synchronized timestepping, the other version of standardLevelSynchronization must be overloaded. If an implementation supports both refined and synchronized timestepping, all three virtual functions must be overloaded.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">algs::TimeRefinementIntegrator</a> </dd></dl>
 
 <p>
@@ -102,14 +99,14 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinement
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="7624a7a4dd9971d187e4a5b4b66387c5"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::initializeLevelIntegrator" ref="7624a7a4dd9971d187e4a5b4b66387c5" args="(tbox::Pointer&lt; mesh::GriddingAlgorithmStrategy &gt; gridding_alg)=0" -->
+<a class="anchor" name="6a0593d3236283f41c3df265a897b2b4"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::initializeLevelIntegrator" ref="6a0593d3236283f41c3df265a897b2b4" args="(const boost::shared_ptr&lt; mesh::GriddingAlgorithmStrategy &gt; &amp;gridding_alg)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::TimeRefinementLevelStrategy::initializeLevelIntegrator           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html">mesh::GriddingAlgorithmStrategy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>gridding_alg</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [pure virtual]</code></td>
@@ -121,17 +118,17 @@ Virtual destructor for <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinement
 <p>
 Initialize the state of the integrator that performs time advances on the levels of the hierarchy. Typically, this involves setting up information, such as communication algorithms, to manage variable storage. The pointer to the gridding algorithm is provided so that the integrator may access information about regridding procedures or the structure the hierarchy, which is not yet created. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a3a6220ab9d1de88aa69078b15ebccb0">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8e5e72e2dd271d10414bd09f9ebfe430">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="b1f019ba7e3b830a1f4e90305f731097"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::getLevelDt" ref="b1f019ba7e3b830a1f4e90305f731097" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const double dt_time, const bool initial_time)=0" -->
+<a class="anchor" name="98363bc4c18417e2841c31d5f64cd9d2"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::getLevelDt" ref="98363bc4c18417e2841c31d5f64cd9d2" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const double dt_time, const bool initial_time)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual double SAMRAI::algs::TimeRefinementLevelStrategy::getLevelDt           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -159,10 +156,10 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
 Return appropriate time increment for given level in the patch hierarchy. This routine is called during the initial generation of the AMR patch hierarchy and possibly during regridding if time regridding uses a time advance. It should be assumed that the only data that exists on the level when this routine is called is that which is needed to initialize the level. The initial_time boolean flag is true if this routine is called at the initial simulation time (i.e., when hierarchy is generated for first time); otherwise (e.g., at an advance step) it is false.<p>
 The recompute_dt option specifies whether to compute the timestep using the current level data or to return the value stored by the time integrator. The default true setting means the timestep will be computed if no value is supplied. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#efcfb08640f90d177afec27578f3230a">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#e9b75492d96b5093e1dc8cee0f785f6c">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="c96eb05681ab7c0dfd03bb2f1ef9bbb0"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::getMaxFinerLevelDt" ref="c96eb05681ab7c0dfd03bb2f1ef9bbb0" args="(const int finer_level_number, const double coarse_dt, const hier::IntVector &amp;ratio)" -->
+<a class="anchor" name="74e3d16e1b61f1ed51249d44b30fb818"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::getMaxFinerLevelDt" ref="74e3d16e1b61f1ed51249d44b30fb818" args="(const int finer_level_number, const double coarse_dt, const hier::IntVector &amp;ratio)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -187,7 +184,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -195,25 +192,25 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
 
 <p>
 Return the maximum allowable time increment for level in the hierarchy with the given level number. The point of this routine is to determine the increment for that level based on the current time increment used on the next coarser level. The coarse dt is the current time step size for the next coarser level. The ratio is the mesh refinement ratio between the two levels.<p>
-This is defined as a virtual function, and it is only used by the time refinement integrator for refined timestepping. It should be overloaded in any concrete implementation of this class that is used for refined timestepping, but need not be overloaded in an implementation that is used only for synchronized timestepping. 
+If the concrete implentation of this class only supports synchronized timestepping, this should return the time increment that is applicable on all levels of the hierarchy. 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#6bbc66a488be69a0733b39c1ff547af0">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#6bbc66a488be69a0733b39c1ff547af0">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="eda0400e68313c0365dee1a53f0130e6"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::advanceLevel" ref="eda0400e68313c0365dee1a53f0130e6" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)=0" -->
+<a class="anchor" name="9c66646b85af83a4822ea8db50babd84"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::advanceLevel" ref="9c66646b85af83a4822ea8db50babd84" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const double current_time, const double new_time, const bool first_step, const bool last_step, const bool regrid_advance=false)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual double SAMRAI::algs::TimeRefinementLevelStrategy::advanceLevel           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -257,7 +254,7 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelInteg
 
 <p>
 Advance data on all patches on specified patch level from current time (current_time) to new time (new_time). The boolean value first_step indicates whether the advance step is the first in a time sequence on the level. The boolean value last_step indicates whether the advance step is the last in a time sequence on the level. Usually, the timestep sequence refers to the steps taken to advance the solution through the time interval of the most recent advance on the next coarser level, if such a level exists. The boolean regrid_advance is false when the advance is part of the actual hierarchy integration process and true when the advance is called during time-dependent regridding (e.g., when using Richardson extrapolation). The default value is false. The last boolean argument is true when the level is in the hierarchy, and false otherwise. The default value is true. Usually, this value is false only during time-dependent regridding operations performed on some temporary level; thus, a schedule must be generated for the level before the advance can occur, for example.<p>
-When this function is called, the level data required to begin the advance must be allocated and be defined appropriately. Typically, this is equivalent to what is needed to initialize a new level after regridding. Upon exiting this routine, both current and new data may exist on the level. This data is needed until level synchronization occurs, in general. Current and new data may be reset by calling the member function <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#4b199ba4374d995ded1b68cc14ca2fee">resetTimeDependentData()</a>.<p>
+When this function is called, the level data required to begin the advance must be allocated and be defined appropriately. Typically, this is equivalent to what is needed to initialize a new level after regridding. Upon exiting this routine, both current and new data may exist on the level. This data is needed until level synchronization occurs, in general. Current and new data may be reset by calling the member function <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#30c03a75f51a57c3187320db04e62223">resetTimeDependentData()</a>.<p>
 This routine is called from two different points within the <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementIntegrator.html">TimeRefinementIntegrator</a> class: during the regular time advance sequence, and at the initial simulation time. The second call is made to advance the solution on a coarser level ahead in time to provide time-dependent boundary values for some finer level when time-dependent regridding is used. In the first case, the values of the boolean flags are:<p>
 <ul>
 <li><b>first_step</b> = true for first step in level time step sequence; else, false.</li><li><b>last_step</b> = true for last step in level time step sequence; else, false.</li><li><b>regrid_advance</b> = false.</li></ul>
@@ -267,17 +264,17 @@ In the second case, the values of the boolean flags are:<p>
 <li><b>first_step</b> = true.</li><li><b>last_step</b> = false.</li><li><b>regrid_advance</b> = true. </li></ul>
 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#1e8d1d2af92879c496919d7b7aa98130">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3b435202a1447097c172ad489c0b11ac">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="556f0b8cbf9c3b4462006470bcad863a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::standardLevelSynchronization" ref="556f0b8cbf9c3b4462006470bcad863a" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const tbox::Array&lt; double &gt; &amp;old_times)" -->
+<a class="anchor" name="082f1db97866f9369be09af29fed69ba"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::standardLevelSynchronization" ref="082f1db97866f9369be09af29fed69ba" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const tbox::Array&lt; double &gt; &amp;old_times)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::TimeRefinementLevelStrategy::standardLevelSynchronization           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -307,7 +304,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
+          <td></td><td></td><td width="100%"><code> [pure virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -316,69 +313,20 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
 <p>
 Synchronize data on specified patch levels in AMR hierarchy at the given synchronization time. The array of time values provides the previous integration time for each level involved in the synchronization. In other words, (sync_time - old_times[ln]) is the most recent time increment used to advance data on level ln. These times are used when the synchronization process requires re-integration of the data. Note that other synchronization routines are defined below for other points in the hierarchy integration sequence.<p>
 When this routine is called, both current and new data may exist on each level involved in the synchronization. The new data on each level corresponds to the synchronization time. Each entry in the array of time values specifies the time to which the current data on each level corresponds. It is assumed that this routine will reset the synchronized data on each level so that only the current data will exist on each level when done.<p>
-Note that this routine is distinct from the <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#cdcd8c55189dab25cb3af79c7fd78621">synchronizeNewLevels()</a> function below. This routine is used to synchronize levels during the time integration process. The other routine is used to synchronize new levels in the hierarchy, either at initialization time or after regridding.<p>
-This function must be overloaded in a concrete implementation that is used by the time refinement integrator for refined timestepping 
+Note that this routine is distinct from the <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#b7b667458e9879e28cffe41a10048de3">synchronizeNewLevels()</a> function below. This routine is used to synchronize levels during the time integration process. The other routine is used to synchronize new levels in the hierarchy, either at initialization time or after regridding.<p>
+In the case of the time refinement integrator using synchronized timestepping, the old_times argument should be an array containing the same time value for all levels, since all levels are advanced with the same timestep. 
 <p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#cdd1fd593debe48b8d8caf1b654ec072">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#248d34687e92f86b57655d32c3276371">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="77170fea2c25115bb2207400b17c6183"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::standardLevelSynchronization" ref="77170fea2c25115bb2207400b17c6183" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const double old_time)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual void SAMRAI::algs::TimeRefinementLevelStrategy::standardLevelSynchronization           </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
-          <td class="paramname"> <em>hierarchy</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>coarsest_level</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const int&nbsp;</td>
-          <td class="paramname"> <em>finest_level</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>sync_time</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const double&nbsp;</td>
-          <td class="paramname"> <em>old_time</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td width="100%"><code> [inline, virtual]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-This version of standardLevelSynchronization must be overloaded for implementations that support synchronized timestepping. The interface is the same as the other version of this function, except for the old_time argument. In synchronized timestepping all levels advance the same timestep, so only a single old time is required, rather than an array. 
-<p>
-Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#aa1879d7bb828f59c9cdf3a04b2ff7cb">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
-</div>
-</div><p>
-<a class="anchor" name="cdcd8c55189dab25cb3af79c7fd78621"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::synchronizeNewLevels" ref="cdcd8c55189dab25cb3af79c7fd78621" args="(const tbox::Pointer&lt; hier::PatchHierarchy &gt; hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)=0" -->
+<a class="anchor" name="b7b667458e9879e28cffe41a10048de3"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::synchronizeNewLevels" ref="b7b667458e9879e28cffe41a10048de3" args="(const boost::shared_ptr&lt; hier::PatchHierarchy &gt; &amp;hierarchy, const int coarsest_level, const int finest_level, const double sync_time, const bool initial_time)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::TimeRefinementLevelStrategy::synchronizeNewLevels           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>hierarchy</em>, </td>
         </tr>
         <tr>
@@ -415,20 +363,20 @@ Reimplemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelInteg
 <div class="memdoc">
 
 <p>
-Synchronize specified levels after regridding has occurred or during initial construction of the AMR patch hierarchy. Note that this synchronization may be different than the standard time-dependent synchronization (above in <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#556f0b8cbf9c3b4462006470bcad863a">standardLevelSynchronization()</a>) depending on the level integration algorithm.<p>
+Synchronize specified levels after regridding has occurred or during initial construction of the AMR patch hierarchy. Note that this synchronization may be different than the standard time-dependent synchronization (above in <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#082f1db97866f9369be09af29fed69ba">standardLevelSynchronization()</a>) depending on the level integration algorithm.<p>
 Before this routine is called, all time-dependent data on all levels involved in the synchronization has been reset. Thus, this routine must only synchronize the current data on each level. On return from this function, only the current data on each level must be present. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#3a7dbaee9b714a7b79271c23534edf4e">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#4be82c1079e0ff71fa9fc9e85f14f2eb">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="4b199ba4374d995ded1b68cc14ca2fee"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::resetTimeDependentData" ref="4b199ba4374d995ded1b68cc14ca2fee" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level, const double new_time, const bool can_be_refined)=0" -->
+<a class="anchor" name="30c03a75f51a57c3187320db04e62223"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::resetTimeDependentData" ref="30c03a75f51a57c3187320db04e62223" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level, const double new_time, const bool can_be_refined)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::TimeRefinementLevelStrategy::resetTimeDependentData           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>, </td>
         </tr>
         <tr>
@@ -455,17 +403,17 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
 <p>
 Reset time-dependent data storage for the specified patch level. This routine is called when the current level data is no longer needed and it is appropriate to replace the current data with the new data on the level, if such data exists. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#651c978f4add72a6708a5c75f5c12144">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#480a54f62456a05df563a354eb09c74e">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
-<a class="anchor" name="8c4a7fb0107db830c186e372761db50a"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::resetDataToPreadvanceState" ref="8c4a7fb0107db830c186e372761db50a" args="(const tbox::Pointer&lt; hier::PatchLevel &gt; level)=0" -->
+<a class="anchor" name="742f83055102c3a070315cee17882d9b"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::resetDataToPreadvanceState" ref="742f83055102c3a070315cee17882d9b" args="(const boost::shared_ptr&lt; hier::PatchLevel &gt; &amp;level)=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">virtual void SAMRAI::algs::TimeRefinementLevelStrategy::resetDataToPreadvanceState           </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html">hier::PatchLevel</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>level</em>          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"><code> [pure virtual]</code></td>
@@ -477,7 +425,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
 <p>
 Reset data on the patch level to state before time advance. This is needed whenever the solution on a level is advanced beyond the new time on a level. For example, during time-dependent regridding (Richardson extrapolation) or initialization, it is necessary to do such an advance. This routine is called to discard the new solution data so that subsequent calls to advance are provided proper data at the correct time. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#735626a720099f6f07d1b6ab25467e63">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#8490505359d50fe85ec79cb3f21d7b84">SAMRAI::algs::HyperbolicLevelIntegrator</a>.
 </div>
 </div><p>
 <a class="anchor" name="1b4f253112df684c60c8769d51bc5115"></a><!-- doxytag: member="SAMRAI::algs::TimeRefinementLevelStrategy::usingRefinedTimestepping" ref="1b4f253112df684c60c8769d51bc5115" args="() const =0" -->
@@ -503,7 +451,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegra
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/algs/<a class="el" href="TimeRefinementLevelStrategy_8h.html">TimeRefinementLevelStrategy.h</a><li>source/SAMRAI/algs/<a class="el" href="TimeRefinementLevelStrategy_8C.html">TimeRefinementLevelStrategy.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:16 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:56 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

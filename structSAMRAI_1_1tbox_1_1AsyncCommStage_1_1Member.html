@@ -65,8 +65,15 @@
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#802962610579c1219ce1270f3aafa9aa">setHandler</a> (<a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a> *handler)</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set a user-defined <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a>.  <a href="#802962610579c1219ce1270f3aafa9aa"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#5a3dc36f900494f54933a589b8481fe7">getHandler</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#493c2bad47b87893b6b38454a3c6461d">getHandler</a> () const </td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Regurgitate the handler from <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#802962610579c1219ce1270f3aafa9aa">setHandler()</a>.  <a href="#493c2bad47b87893b6b38454a3c6461d"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#83fc382b1b4736460d4c219d8ccccfbc">pushToCompletionQueue</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Push this onto the stage's list of completed Members.  <a href="#83fc382b1b4736460d4c219d8ccccfbc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#25934e154e854231af0bea35dd2e477d">yankFromCompletionQueue</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Yank this member from the stage's list of completed Members.  <a href="#25934e154e854231af0bea35dd2e477d"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#256227067813bd108e266af0ea3de627">attachStage</a> (const size_t nreq, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a> *stage)</td></tr>
 
@@ -76,6 +83,7 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Disassociate the member from its stage (undo <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#256227067813bd108e266af0ea3de627">attachStage()</a>).  <a href="#a75087df475b4c302485e8f3656ae098"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#c169fbf960f2aa301ef2e7fa6571e272">SAMRAI_MPI::Request</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#085052a023ec4ffca7dacbbdc5fbf996">getRequestPointer</a> () const </td></tr>
 
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the MPI requests provided by the stage for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.  <a href="#085052a023ec4ffca7dacbbdc5fbf996"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAI__MPI_1_1Status.html">SAMRAI_MPI::Status</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#0dd6c3c1d26b75b319dd16efd9c06224">getStatusPointer</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return MPI statuses for this <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> of the stage.  <a href="#0dd6c3c1d26b75b319dd16efd9c06224"></a><br></td></tr>
@@ -179,7 +187,7 @@ Destructor detach the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -253,7 +261,7 @@ Check whether entire operation is done.
 <p>
 This should not just check the MPI requests--that is the job for <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#c0a4ce0d28f253c9b3c909178c8e889a">hasPendingRequests()</a>. It should check the entire communication operation (which may have follow-up communications and computations). If MPI communications are completed but have not been followed through by a <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#656fcd6b8b0ac508d5b0134acc92b7b7">completeCurrentOperation()</a>, it should return false. 
 <p>
-Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#693ccf3a0b648a27baebba6263129746">SAMRAI::tbox::AsyncCommGroup</a>, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html#d27bc3d378d2253c9bc370158e0809db">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html#d27bc3d378d2253c9bc370158e0809db">SAMRAI::tbox::AsyncCommPeer&lt; char &gt;</a>.
+Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#a7fc4d297537864970dd318677d7a220">SAMRAI::tbox::AsyncCommGroup</a>, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html#3807cdb2d5772180fa2d10cdebe64749">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html#3807cdb2d5772180fa2d10cdebe64749">SAMRAI::tbox::AsyncCommPeer&lt; char &gt;</a>.
 </div>
 </div><p>
 <a class="anchor" name="cfd165b72b53fc4c7dd206bfd5490049"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member::proceedToNextWait" ref="cfd165b72b53fc4c7dd206bfd5490049" args="()=0" -->
@@ -297,8 +305,8 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#de
 <p>
 Complete entire operation, including waiting for messages perform follow-up operations and waiting for follow-ups to complete. 
 <p>
-After this method, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#89d4ecc764d1b91a1082caaf08f008da">isDone()</a> should return true.<p>
-This method should assume that all communications can finish. Otherwise communications may hang. 
+After this method completes, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#89d4ecc764d1b91a1082caaf08f008da">isDone()</a> should return true.<p>
+This method should assume that all needed communications can finish within this method. Otherwise the method may hang. 
 <p>
 Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#a2e47f7dd4a2b518723664ebef6796a1">SAMRAI::tbox::AsyncCommGroup</a>, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html#29b4a58cec656d3b80463cf692412aa8">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommPeer.html#29b4a58cec656d3b80463cf692412aa8">SAMRAI::tbox::AsyncCommPeer&lt; char &gt;</a>.
 </div>
@@ -313,7 +321,7 @@ Implemented in <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommGroup.html#a2
           <td class="paramtype"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a> *&nbsp;</td>
           <td class="paramname"> <em>handler</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -327,21 +335,65 @@ When the stage returns completed Members, the <a class="el" href="structSAMRAI_1
 By design, a non-const <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a> is returned, even by a const <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>. This is because the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a> is expected to follow the communication operation with something non-trivial and possibly state-changing. 
 </div>
 </div><p>
-<a class="anchor" name="5a3dc36f900494f54933a589b8481fe7"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member::getHandler" ref="5a3dc36f900494f54933a589b8481fe7" args="() const " -->
+<a class="anchor" name="493c2bad47b87893b6b38454a3c6461d"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member::getHandler" ref="493c2bad47b87893b6b38454a3c6461d" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">AsyncCommStage::Handler</a> * SAMRAI::tbox::AsyncCommStage::Member::getHandler           </td>
+          <td class="memname"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Handler.html">Handler</a>* SAMRAI::tbox::AsyncCommStage::Member::getHandler           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
+<p>
+Regurgitate the handler from <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#802962610579c1219ce1270f3aafa9aa">setHandler()</a>. 
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="83fc382b1b4736460d4c219d8ccccfbc"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member::pushToCompletionQueue" ref="83fc382b1b4736460d4c219d8ccccfbc" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::tbox::AsyncCommStage::Member::pushToCompletionQueue           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Push this onto the stage's list of completed Members. 
+<p>
+This causes the member to be returned by a call to <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">AsyncCommStage::popCompletionQueue()</a>, eventually. 
+</div>
+</div><p>
+<a class="anchor" name="25934e154e854231af0bea35dd2e477d"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member::yankFromCompletionQueue" ref="25934e154e854231af0bea35dd2e477d" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::tbox::AsyncCommStage::Member::yankFromCompletionQueue           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Yank this member from the stage's list of completed Members. 
 <p>
 
 </div>
@@ -378,8 +430,7 @@ Specify the stage to use and the number of <a class="el" href="classSAMRAI_1_1tb
 <dl compact><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>nreq</em>&nbsp;</td><td>Number of SAMRAI_MPI::Requests needed by the member.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>stage</em>&nbsp;</td><td>Register with this <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a>.</td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>handler</em>&nbsp;</td><td>See <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#5a3dc36f900494f54933a589b8481fe7">getHandler()</a> </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>stage</em>&nbsp;</td><td>Register with this <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a>. </td></tr>
   </table>
 </dl>
 
@@ -422,7 +473,8 @@ Disassociate the member from its stage (undo <a class="el" href="structSAMRAI_1_
 <div class="memdoc">
 
 <p>
-Return the MPI requests provided by the stage for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.<p>
+Return the MPI requests provided by the stage for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>. 
+<p>
 To work on the stage, you must use these requests in your non-blocking MPI calls. The requests are a part of an array of requests for all Members on the stage. Use only getNumberOfRequests() requests. Terrible bugs will strike if you modify more than what was allocated for the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>.<p>
 <b>Important:</b> Do not save the pointer returned by this method. The stage's dynamic memory actions may render old pointers invalid. 
 </div>
@@ -469,7 +521,7 @@ To work on the stage, you must use these statuses in your MPI calls. The status 
 </div><p>
 <hr>The documentation for this struct was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8h.html">AsyncCommStage.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8C.html">AsyncCommStage.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

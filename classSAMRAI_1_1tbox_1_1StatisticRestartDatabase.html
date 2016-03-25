@@ -35,12 +35,12 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#88a02af8ceefc4cd8a5fae7905c2d435">~StatisticRestartDatabase</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#1578009e52e7d316bef1e6e48f19b05e">putToDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; db)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#687f44072ec3b75673f7f438820221c8">putToDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;db) const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Serializes the object by writing necessary state to the specified database.  <a href="#1578009e52e7d316bef1e6e48f19b05e"></a><br></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Serializes the object by writing necessary state to the specified database.  <a href="#687f44072ec3b75673f7f438820221c8"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#9675544485009ba502efd307af9871e0">getFromRestart</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#9ec9dd9e778b41c8be59562209c79f9b">getObjectName</a> () const </td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">const std::string &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#d1b580a85846f31d94c2d81ef0a32737">getObjectName</a> () const </td></tr>
 
 <tr><td colspan="2"><br><h2>Friends</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1StatisticRestartDatabase.html#e5dc7e33f20970a2e93e6aa0150d629c">Statistician</a></td></tr>
@@ -102,17 +102,17 @@
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="1578009e52e7d316bef1e6e48f19b05e"></a><!-- doxytag: member="SAMRAI::tbox::StatisticRestartDatabase::putToDatabase" ref="1578009e52e7d316bef1e6e48f19b05e" args="(Pointer&lt; Database &gt; db)" -->
+<a class="anchor" name="687f44072ec3b75673f7f438820221c8"></a><!-- doxytag: member="SAMRAI::tbox::StatisticRestartDatabase::putToDatabase" ref="687f44072ec3b75673f7f438820221c8" args="(const boost::shared_ptr&lt; Database &gt; &amp;db) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::StatisticRestartDatabase::putToDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>db</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"> const<code> [virtual]</code></td>
         </tr>
       </table>
 </div>
@@ -123,7 +123,7 @@ Serializes the object by writing necessary state to the specified database.
 <p>
 
 <p>
-Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6fd7a9046bd2f60ad716c21293">SAMRAI::tbox::Serializable</a>.
+Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#5ed1f54228ad961855a8398801da99f3">SAMRAI::tbox::Serializable</a>.
 </div>
 </div><p>
 <a class="anchor" name="9675544485009ba502efd307af9871e0"></a><!-- doxytag: member="SAMRAI::tbox::StatisticRestartDatabase::getFromRestart" ref="9675544485009ba502efd307af9871e0" args="()" -->
@@ -145,16 +145,16 @@ Implements <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html#b6a4bd6f
 
 </div>
 </div><p>
-<a class="anchor" name="9ec9dd9e778b41c8be59562209c79f9b"></a><!-- doxytag: member="SAMRAI::tbox::StatisticRestartDatabase::getObjectName" ref="9ec9dd9e778b41c8be59562209c79f9b" args="() const " -->
+<a class="anchor" name="d1b580a85846f31d94c2d81ef0a32737"></a><!-- doxytag: member="SAMRAI::tbox::StatisticRestartDatabase::getObjectName" ref="d1b580a85846f31d94c2d81ef0a32737" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD const std::string &amp; SAMRAI::tbox::StatisticRestartDatabase::getObjectName           </td>
+          <td class="memname">const std::string&amp; SAMRAI::tbox::StatisticRestartDatabase::getObjectName           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -181,8 +181,8 @@ Return string name identifier for statistic object.
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/tbox/<a class="el" href="Statistician_8h.html">Statistician.h</a><li>source/SAMRAI/tbox/<a class="el" href="Statistician_8C.html">Statistician.C</a><li>source/SAMRAI/tbox/<a class="el" href="Statistician_8I.html">Statistician.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:22 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/tbox/<a class="el" href="Statistician_8h.html">Statistician.h</a><li>source/SAMRAI/tbox/<a class="el" href="Statistician_8C.html">Statistician.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

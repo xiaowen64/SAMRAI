@@ -26,13 +26,13 @@
 <a href="classSAMRAI_1_1tbox_1_1ReferenceCounter-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#62edcd346d69722a0e2bc0c588f854f1">ReferenceCounter</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#ad76d9099baa0003e8515c57f12303d1">ReferenceCounter</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#2f11b3f1f2dd0bc9eebbad48a6a98a94">~ReferenceCounter</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#46aba9a8854f4636352742637071062c">~ReferenceCounter</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#c84a4611b6ffbec3572c966f8b0fdd71">deleteReference</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#944b71ae35db5440f1a1dc872c6b4e12">deleteReference</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#106985160ff342e925c43a345fccde24">addReference</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#903882d8b13b6c0eaae277244ca4fdf8">addReference</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#4f6d817f9fec02b0dcec354de818c8c8">operator new</a> (size_t bytes)</td></tr>
 
@@ -43,19 +43,18 @@
 
 </table>
 <hr><a name="_details"></a><h2>Detailed Description</h2>
-Class <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html">ReferenceCounter</a> manages the shared reference counter and arena resources used by <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a> and <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>. It uses a local free pool of objects to speed memory allocation and deallocation. The locally cached free pool can be freed by calling freeCachedCopies().<p>
+Class <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html">ReferenceCounter</a> manages the shared reference counter and arena resources used by <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a>. It uses a local free pool of objects to speed memory allocation and deallocation. The locally cached free pool can be freed by calling freeCachedCopies().<p>
 {<b>Do</b> not subclass!} Changing the size of a <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html">ReferenceCounter</a> object will cause my simple memory allocation mechanism to break in horrible and disgusting ways.<p>
-<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> <p>
-<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a> </dd></dl>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">tbox::Array</a> </dd></dl>
 
 <p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
-<a class="anchor" name="62edcd346d69722a0e2bc0c588f854f1"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::ReferenceCounter" ref="62edcd346d69722a0e2bc0c588f854f1" args="()" -->
+<a class="anchor" name="ad76d9099baa0003e8515c57f12303d1"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::ReferenceCounter" ref="ad76d9099baa0003e8515c57f12303d1" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::tbox::ReferenceCounter::ReferenceCounter           </td>
+          <td class="memname">SAMRAI::tbox::ReferenceCounter::ReferenceCounter           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -69,12 +68,12 @@ Class <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html">Referenc
 Create a <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html">ReferenceCounter</a>. The number of references is set to one. 
 </div>
 </div><p>
-<a class="anchor" name="2f11b3f1f2dd0bc9eebbad48a6a98a94"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::~ReferenceCounter" ref="2f11b3f1f2dd0bc9eebbad48a6a98a94" args="()" -->
+<a class="anchor" name="46aba9a8854f4636352742637071062c"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::~ReferenceCounter" ref="46aba9a8854f4636352742637071062c" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::tbox::ReferenceCounter::~ReferenceCounter           </td>
+          <td class="memname">SAMRAI::tbox::ReferenceCounter::~ReferenceCounter           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -89,16 +88,16 @@ Destructor for <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html"
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="c84a4611b6ffbec3572c966f8b0fdd71"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::deleteReference" ref="c84a4611b6ffbec3572c966f8b0fdd71" args="()" -->
+<a class="anchor" name="944b71ae35db5440f1a1dc872c6b4e12"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::deleteReference" ref="944b71ae35db5440f1a1dc872c6b4e12" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::tbox::ReferenceCounter::deleteReference           </td>
+          <td class="memname">bool SAMRAI::tbox::ReferenceCounter::deleteReference           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -108,16 +107,16 @@ Destructor for <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html"
 Decrement the number of references. True is returned if the reference count has gone to zero; false otherwise. 
 </div>
 </div><p>
-<a class="anchor" name="106985160ff342e925c43a345fccde24"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::addReference" ref="106985160ff342e925c43a345fccde24" args="()" -->
+<a class="anchor" name="903882d8b13b6c0eaae277244ca4fdf8"></a><!-- doxytag: member="SAMRAI::tbox::ReferenceCounter::addReference" ref="903882d8b13b6c0eaae277244ca4fdf8" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::ReferenceCounter::addReference           </td>
+          <td class="memname">void SAMRAI::tbox::ReferenceCounter::addReference           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -187,8 +186,8 @@ Returns true if <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/tbox/<a class="el" href="ReferenceCounter_8h.html">ReferenceCounter.h</a><li>source/SAMRAI/tbox/<a class="el" href="ReferenceCounter_8C.html">ReferenceCounter.C</a><li>source/SAMRAI/tbox/<a class="el" href="ReferenceCounter_8I.html">ReferenceCounter.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/tbox/<a class="el" href="ReferenceCounter_8h.html">ReferenceCounter.h</a><li>source/SAMRAI/tbox/<a class="el" href="ReferenceCounter_8C.html">ReferenceCounter.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

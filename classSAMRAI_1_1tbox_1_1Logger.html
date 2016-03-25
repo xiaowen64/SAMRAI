@@ -32,11 +32,11 @@
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#5b91ea998046eb218f626923db84bd3d">logDebug</a> (const std::string &amp;message, const std::string &amp;filename, const int line)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#c48670747266f2ce85fe78fda00f312a">setAbortAppender</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; appender)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#ea94bfb08af5ee8e7d0d1b4043ece105">setAbortAppender</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; &amp;appender)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#30dbc36b8f6eaece1147482e9a7698aa">setWarningAppender</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; appender)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#7cbcc6843269a10fc17c4a304474a3a8">setWarningAppender</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; &amp;appender)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#74f56a3780d29ee8a1012fee311aa720">setDebugAppender</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; appender)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#249b465b83158faaf56b57d7944d51a7">setDebugAppender</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; &amp;appender)</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#9d1cce05b2955c15826059d26a29a6a2">setWarning</a> (bool onoff)</td></tr>
 
@@ -74,7 +74,7 @@ For example to log to a stream simply inherit from LoggerAppender and implement 
       ostream *d_stream;
    };
 </pre></div><p>
-This <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> could be use to log warning message using: tbox::Pointer&lt;tbox::Logger::Appender&gt; appender = new ConsoleAppender() <a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#4438235cd584371ee9d074670163f0df">tbox::Logger.getInstance()</a> -&gt; setWarningAppender(appender);<p>
+This <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> could be use to log warning message using: boost::shared_ptr&lt;tbox::Logger::Appender&gt; appender = new ConsoleAppender() <a class="el" href="classSAMRAI_1_1tbox_1_1Logger.html#4438235cd584371ee9d074670163f0df">tbox::Logger.getInstance()</a> -&gt; setWarningAppender(appender);<p>
 Normally this would be done at the start of an application. 
 <p>
 <hr><h2>Member Function Documentation</h2>
@@ -122,7 +122,7 @@ Gets the instance of the singleton logger.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -157,7 +157,7 @@ Logs an abort message with file &amp; location
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -192,7 +192,7 @@ Logs warning message with file &amp; location.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"></td>
+          <td></td><td></td><td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -202,17 +202,17 @@ Logs warning message with file &amp; location.
 Logs debug message with file &amp; location. 
 </div>
 </div><p>
-<a class="anchor" name="c48670747266f2ce85fe78fda00f312a"></a><!-- doxytag: member="SAMRAI::tbox::Logger::setAbortAppender" ref="c48670747266f2ce85fe78fda00f312a" args="(tbox::Pointer&lt; Appender &gt; appender)" -->
+<a class="anchor" name="ea94bfb08af5ee8e7d0d1b4043ece105"></a><!-- doxytag: member="SAMRAI::tbox::Logger::setAbortAppender" ref="ea94bfb08af5ee8e7d0d1b4043ece105" args="(const boost::shared_ptr&lt; Appender &gt; &amp;appender)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::Logger::setAbortAppender           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>appender</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -223,17 +223,17 @@ Set the <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appe
 Default is to log to perr. 
 </div>
 </div><p>
-<a class="anchor" name="30dbc36b8f6eaece1147482e9a7698aa"></a><!-- doxytag: member="SAMRAI::tbox::Logger::setWarningAppender" ref="30dbc36b8f6eaece1147482e9a7698aa" args="(tbox::Pointer&lt; Appender &gt; appender)" -->
+<a class="anchor" name="7cbcc6843269a10fc17c4a304474a3a8"></a><!-- doxytag: member="SAMRAI::tbox::Logger::setWarningAppender" ref="7cbcc6843269a10fc17c4a304474a3a8" args="(const boost::shared_ptr&lt; Appender &gt; &amp;appender)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::Logger::setWarningAppender           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>appender</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -244,17 +244,17 @@ Set the <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appe
 Default is to log to plog. 
 </div>
 </div><p>
-<a class="anchor" name="74f56a3780d29ee8a1012fee311aa720"></a><!-- doxytag: member="SAMRAI::tbox::Logger::setDebugAppender" ref="74f56a3780d29ee8a1012fee311aa720" args="(tbox::Pointer&lt; Appender &gt; appender)" -->
+<a class="anchor" name="249b465b83158faaf56b57d7944d51a7"></a><!-- doxytag: member="SAMRAI::tbox::Logger::setDebugAppender" ref="249b465b83158faaf56b57d7944d51a7" args="(const boost::shared_ptr&lt; Appender &gt; &amp;appender)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::Logger::setDebugAppender           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">tbox::Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Logger_1_1Appender.html">Appender</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>appender</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -275,7 +275,7 @@ Default is to log to plog.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>onoff</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -296,7 +296,7 @@ Default is on.
           <td class="paramtype">bool&nbsp;</td>
           <td class="paramname"> <em>onoff</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -309,7 +309,7 @@ Default is off.
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="Logger_8h.html">Logger.h</a><li>source/SAMRAI/tbox/<a class="el" href="Logger_8C.html">Logger.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

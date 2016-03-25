@@ -26,29 +26,29 @@
 <a href="classSAMRAI_1_1tbox_1_1RestartManager-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#9a39097cae3d8c8a76da36f685e8fbdd">isFromRestart</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#73e76b45bb88785aad20114a6510e9d1">isFromRestart</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#9fb661b285137e9413ae5e6f66743db8">openRestartFile</a> (const std::string &amp;root_dirname, const int restore_num, const int num_nodes)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#9fb661b285137e9413ae5e6f66743db8">openRestartFile</a> (const std::string &amp;root_dirname, const int restore_num, const int num_nodes)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#692996400cc2723ee513b4293eef14e3">closeRestartFile</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#692996400cc2723ee513b4293eef14e3">closeRestartFile</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#efccc2eb24a383799e5acda7a0b0ad65">getRootDatabase</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#7fdec5392c0860b0e7f2075ca91b58d8">getRootDatabase</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#d8aa911028747f7dd6ccae28b04a4e04">setRootDatabase</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; database)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#c64f647bc469d78818778f6c599b20ea">setRootDatabase</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;database)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#69c1fcea7eea5c04d6960e6ea389a76b">setDatabaseFactory</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html">DatabaseFactory</a> &gt; database_factory)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#2d6a007ad9dde9e950ed10c4d8eb184e">setDatabaseFactory</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html">DatabaseFactory</a> &gt; &amp;database_factory)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#053cc42ea23aa9d8ba03a820081a6499">registerRestartItem</a> (const std::string &amp;name, <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a> *obj)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#053cc42ea23aa9d8ba03a820081a6499">registerRestartItem</a> (const std::string &amp;name, <a class="el" href="classSAMRAI_1_1tbox_1_1Serializable.html">Serializable</a> *obj)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#b74411ccfcab58fb4f6a4106c2b0f9ed">unregisterRestartItem</a> (const std::string &amp;name)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#b74411ccfcab58fb4f6a4106c2b0f9ed">unregisterRestartItem</a> (const std::string &amp;name)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#86dbbeeadbcb84ac86e8b06637c83231">clearRestartItems</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#86dbbeeadbcb84ac86e8b06637c83231">clearRestartItems</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#1a9da7fec787ecaee6c44f22572b2366">writeRestartFile</a> (const std::string &amp;root_dirname)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#88923fddebfa19f8ac3741ac1c4c1a64">writeRestartFile</a> (const std::string &amp;root_dirname)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#87cc6d94cea91de00e2d03e5c47941fb">writeRestartFile</a> (const std::string &amp;root_dirname, const int restore_num)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#87cc6d94cea91de00e2d03e5c47941fb">writeRestartFile</a> (const std::string &amp;root_dirname, const int restore_num)</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#7e3ee5b7860883ceb35ae43f5c263281">writeRestartToDatabase</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#7e3ee5b7860883ceb35ae43f5c263281">writeRestartToDatabase</a> ()</td></tr>
 
 <tr><td colspan="2"><br><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">static <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#2c11940faf3aed184347c84c5cf2cf30">getManager</a> ()</td></tr>
@@ -56,7 +56,7 @@
 <tr><td colspan="2"><br><h2>Protected Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#318cc12a9103249dcb2926c8802522c3">RestartManager</a> ()</td></tr>
 
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#695ae0fbc254a87af86ddbdf80835b8f">~RestartManager</a> ()</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#77772de99ce562d9a208f29576869703">~RestartManager</a> ()</td></tr>
 
 <tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#39b95c2040f9be6dbba61e577d014d17">registerSingletonSubclassInstance</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a> *subclass_instance)</td></tr>
 
@@ -66,7 +66,7 @@ Class <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartMan
 The general procedure for starting a simulation from a restart file is as follows.<p>
 <ul>
 <li>Open the restart file using openRestartFile("filename"). </li>
-<li>Get root of restart database using <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#efccc2eb24a383799e5acda7a0b0ad65">getRootDatabase()</a>. </li>
+<li>Get root of restart database using <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#7fdec5392c0860b0e7f2075ca91b58d8">getRootDatabase()</a>. </li>
 <li>Initialize simulation objects using the restart constructor for the objects. </li>
 <li>Close the restart file using <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#692996400cc2723ee513b4293eef14e3">closeRestartFile()</a>.</li>
 </ul>
@@ -78,7 +78,7 @@ The process for writing out state to a restart file is somewhat more complicated
 <li>Any object that needs to save its state to the restart file must be registered with the restart manager using the <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#053cc42ea23aa9d8ba03a820081a6499">registerRestartItem()</a> method. NOTE THAT NO TWO RESTARTABLE OBJECTS ARE ALLOWED TO HAVE THE SAME NAME STRING IDENTIFIER. </li>
 <li>The patchdata to be written to restart need to be specified using the VariableDatabase::setPatchdataForRestart() method. This is usually taken care of by the numerical algorithm object.</li>
 </ul>
-When all these items are accounted for, writing to the restart file is accomplished using a <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#1a9da7fec787ecaee6c44f22572b2366">writeRestartFile()</a> method. There are two <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#1a9da7fec787ecaee6c44f22572b2366">writeRestartFile()</a> methods available. One takes only a restart directory name as an argument whereas the other takes both a restart directory name and a restore number for its arguments. See comments for member functions for more details.<p>
+When all these items are accounted for, writing to the restart file is accomplished using a <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#88923fddebfa19f8ac3741ac1c4c1a64">writeRestartFile()</a> method. There are two <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#88923fddebfa19f8ac3741ac1c4c1a64">writeRestartFile()</a> methods available. One takes only a restart directory name as an argument whereas the other takes both a restart directory name and a restore number for its arguments. See comments for member functions for more details.<p>
 <dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> </dd></dl>
 
 <p>
@@ -103,16 +103,16 @@ The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.ht
 The constructor for <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html">RestartManager</a> initializes the root data base to a <a class="el" href="classSAMRAI_1_1tbox_1_1NullDatabase.html">NullDatabase</a> and sets the restart flag to false. 
 </div>
 </div><p>
-<a class="anchor" name="695ae0fbc254a87af86ddbdf80835b8f"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::~RestartManager" ref="695ae0fbc254a87af86ddbdf80835b8f" args="()" -->
+<a class="anchor" name="77772de99ce562d9a208f29576869703"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::~RestartManager" ref="77772de99ce562d9a208f29576869703" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD SAMRAI::tbox::RestartManager::~RestartManager           </td>
+          <td class="memname">SAMRAI::tbox::RestartManager::~RestartManager           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [protected, virtual]</code></td>
+          <td width="100%"><code> [protected]</code></td>
         </tr>
       </table>
 </div>
@@ -143,16 +143,16 @@ Return a pointer to the single instance of the restart manager. All access to th
 Note that when the manager is accessed for the first time, the Singleton instance is registered with the <a class="el" href="classSAMRAI_1_1tbox_1_1StartupShutdownManager.html">StartupShutdownManager</a> class which destroys such objects at program completion. Thus, users of this class do not explicitly allocate or deallocate the Singleton instance. 
 </div>
 </div><p>
-<a class="anchor" name="9a39097cae3d8c8a76da36f685e8fbdd"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::isFromRestart" ref="9a39097cae3d8c8a76da36f685e8fbdd" args="()" -->
+<a class="anchor" name="73e76b45bb88785aad20114a6510e9d1"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::isFromRestart" ref="73e76b45bb88785aad20114a6510e9d1" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD bool SAMRAI::tbox::RestartManager::isFromRestart           </td>
+          <td class="memname">bool SAMRAI::tbox::RestartManager::isFromRestart           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -187,7 +187,7 @@ Returns true if the run is from a restart file (i.e. a restart file has been ope
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -206,7 +206,7 @@ Attempts to mount, for reading, the restart file for the processor. If there is 
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -216,36 +216,36 @@ Attempts to mount, for reading, the restart file for the processor. If there is 
 Closes the restart file. 
 </div>
 </div><p>
-<a class="anchor" name="efccc2eb24a383799e5acda7a0b0ad65"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::getRootDatabase" ref="efccc2eb24a383799e5acda7a0b0ad65" args="()" -->
+<a class="anchor" name="7fdec5392c0860b0e7f2075ca91b58d8"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::getRootDatabase" ref="7fdec5392c0860b0e7f2075ca91b58d8" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; SAMRAI::tbox::RestartManager::getRootDatabase           </td>
+          <td class="memname">boost::shared_ptr&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a>&gt; SAMRAI::tbox::RestartManager::getRootDatabase           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
 <div class="memdoc">
 
 <p>
-Returns a <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a> to the root of the database. 
+Returns a boost::shared_ptr to the root of the database. 
 </div>
 </div><p>
-<a class="anchor" name="d8aa911028747f7dd6ccae28b04a4e04"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::setRootDatabase" ref="d8aa911028747f7dd6ccae28b04a4e04" args="(Pointer&lt; Database &gt; database)" -->
+<a class="anchor" name="c64f647bc469d78818778f6c599b20ea"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::setRootDatabase" ref="c64f647bc469d78818778f6c599b20ea" args="(const boost::shared_ptr&lt; Database &gt; &amp;database)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::RestartManager::setRootDatabase           </td>
+          <td class="memname">void SAMRAI::tbox::RestartManager::setRootDatabase           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">Database</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -255,17 +255,17 @@ Returns a <a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a> t
 Sets the database for restore or dumps. 
 </div>
 </div><p>
-<a class="anchor" name="69c1fcea7eea5c04d6960e6ea389a76b"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::setDatabaseFactory" ref="69c1fcea7eea5c04d6960e6ea389a76b" args="(Pointer&lt; DatabaseFactory &gt; database_factory)" -->
+<a class="anchor" name="2d6a007ad9dde9e950ed10c4d8eb184e"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::setDatabaseFactory" ref="2d6a007ad9dde9e950ed10c4d8eb184e" args="(const boost::shared_ptr&lt; DatabaseFactory &gt; &amp;database_factory)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::RestartManager::setDatabaseFactory           </td>
+          <td class="memname">void SAMRAI::tbox::RestartManager::setDatabaseFactory           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html">DatabaseFactory</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseFactory.html">DatabaseFactory</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>database_factory</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -294,7 +294,7 @@ Sets the database for restore or dumps.
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -315,7 +315,7 @@ When assertion checking is active, an unrecoverable assertion will result if eit
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>name</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -335,7 +335,7 @@ When assertion checking is active, an unrecoverable assertion will result if the
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -345,17 +345,17 @@ When assertion checking is active, an unrecoverable assertion will result if the
 Clear all restart items managed by the restart manager. 
 </div>
 </div><p>
-<a class="anchor" name="1a9da7fec787ecaee6c44f22572b2366"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::writeRestartFile" ref="1a9da7fec787ecaee6c44f22572b2366" args="(const std::string &amp;root_dirname)" -->
+<a class="anchor" name="88923fddebfa19f8ac3741ac1c4c1a64"></a><!-- doxytag: member="SAMRAI::tbox::RestartManager::writeRestartFile" ref="88923fddebfa19f8ac3741ac1c4c1a64" args="(const std::string &amp;root_dirname)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">SAMRAI_INLINE_KEYWORD void SAMRAI::tbox::RestartManager::writeRestartFile           </td>
+          <td class="memname">void SAMRAI::tbox::RestartManager::writeRestartFile           </td>
           <td>(</td>
           <td class="paramtype">const std::string &amp;&nbsp;</td>
           <td class="paramname"> <em>root_dirname</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -385,7 +385,7 @@ Note: This method creates/uses a restart directory structure with 00000 as the r
         <tr>
           <td></td>
           <td>)</td>
-          <td></td><td></td><td width="100%"><code> [virtual]</code></td>
+          <td></td><td></td><td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -404,7 +404,7 @@ Write all objects registered to as restart objects to the restart database. The 
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -435,8 +435,8 @@ Initialize Singleton instance with instance of subclass. This function is used t
 </div>
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
-<li>source/SAMRAI/tbox/<a class="el" href="RestartManager_8h.html">RestartManager.h</a><li>source/SAMRAI/tbox/<a class="el" href="RestartManager_8C.html">RestartManager.C</a><li>source/SAMRAI/tbox/<a class="el" href="RestartManager_8I.html">RestartManager.I</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<li>source/SAMRAI/tbox/<a class="el" href="RestartManager_8h.html">RestartManager.h</a><li>source/SAMRAI/tbox/<a class="el" href="RestartManager_8C.html">RestartManager.C</a></ul>
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>

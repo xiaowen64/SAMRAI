@@ -28,32 +28,32 @@
 <p>
 <a href="classSAMRAI_1_1tbox_1_1AsyncCommStage-members.html">List of all members.</a><table border="0" cellpadding="0" cellspacing="0">
 <tr><td></td></tr>
-<tr><td colspan="2"><br><h2>Public Types</h2></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">typedef std::vector&lt; <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> * &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a></td></tr>
-
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Container of pointers to Members.  <a href="#722d21a1ce8ba11519d71d44f7d021a8"></a><br></td></tr>
 <tr><td colspan="2"><br><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#7dc4146a96184faf0bd076437ec86fe7">AsyncCommStage</a> ()</td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Construct a stage that may begin allocating and managing Members.  <a href="#7dc4146a96184faf0bd076437ec86fe7"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#810a5fbee3a93afd0b01343efbb54b16">~AsyncCommStage</a> (void)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#e8738aafe2613cdd1fcd889e39983432">~AsyncCommStage</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deallocate Members remaining in the stage and all internal data used to manage Members.  <a href="#810a5fbee3a93afd0b01343efbb54b16"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ff939a5759c70e520dfd8a4f9f610520">advanceAny</a> ()</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Deallocate Members remaining in the stage and all internal data used to manage Members.  <a href="#e8738aafe2613cdd1fcd889e39983432"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ace7bb05b85804aae01a21d05e71d74b">advanceAny</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance to completion one <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> (any <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>) that is currently waiting for communication to complete.  <a href="#ff939a5759c70e520dfd8a4f9f610520"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#f0dc1a32cbeae4306a4e023f28f8a686">advanceAny</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a> &amp;completed)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance to completion one <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> (any <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>) that is currently waiting for communication to complete.  <a href="#ace7bb05b85804aae01a21d05e71d74b"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#704955860c9392e0329168943100f9cc">advanceSome</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Alternate interface for advanceAny to appear similar to other advancing interfaces.  <a href="#f0dc1a32cbeae4306a4e023f28f8a686"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#315e118339a4c157a9af744b39cc3047">advanceSome</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a> &amp;completed)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance to completion one or more Members (any Members) that are currently waiting for communication to complete.  <a href="#704955860c9392e0329168943100f9cc"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#aeea8b213992f84eec70a01945765c75">advanceAll</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance to completion one or more Members (any Members) that are currently waiting for communication to complete.  <a href="#315e118339a4c157a9af744b39cc3047"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#8723c9c741f75bf750da39de7f09a408">advanceAll</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a> &amp;completed)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance all pending communications to operations.  <a href="#aeea8b213992f84eec70a01945765c75"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a907a7913e1fcb2130d684b1e734ff70">numberOfCompletedMembers</a> () const </td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Advance all pending communications to operations.  <a href="#8723c9c741f75bf750da39de7f09a408"></a><br></td></tr>
-<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#d2482711e0e19587d54029bef58eff47">setCommunicationWaitTimer</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; communication_timer)</td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> *&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">popCompletionQueue</a> ()</td></tr>
 
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set optional timer for timing communication wait.  <a href="#d2482711e0e19587d54029bef58eff47"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#92679b23ff957b5da5987856ed40b5e2">clearCompletionQueue</a> ()</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Clear the internal completion queue.  <a href="#92679b23ff957b5da5987856ed40b5e2"></a><br></td></tr>
+<tr><td class="memItemLeft" nowrap align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a87be2d02509399353898163887c7f73">setCommunicationWaitTimer</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; &amp;communication_timer)</td></tr>
+
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set optional timer for timing communication wait.  <a href="#a87be2d02509399353898163887c7f73"></a><br></td></tr>
 <tr><td class="memItemLeft" nowrap align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#8095fd717fe4c99045dffb7183d9237a">numberOfMembers</a> () const </td></tr>
 
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get the number of Members on this stage.  <a href="#8095fd717fe4c99045dffb7183d9237a"></a><br></td></tr>
@@ -88,27 +88,9 @@ Use this class when you:<ul>
 <li>Have multiple communications, each performed by a different and independent <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">AsyncCommStage::Member</a> object.</li><li>Want the multiple communications to proceed independently and asynchronously.</li></ul>
 <p>
 Each <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html">AsyncCommStage</a> is a registry of <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> objects on the stage. To overlap the Members' communications, the stage manages space for their <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#c169fbf960f2aa301ef2e7fa6571e272">SAMRAI_MPI::Request</a>'s and <a class="el" href="structSAMRAI_1_1tbox_1_1SAMRAI__MPI_1_1Status.html">SAMRAI_MPI::Status</a>'es. The requests are allocated such that a single MPI_Waitany or MPI_Waitsome represents all Members registered with the stage. Thus the communications performed by the <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> objects can complete in the order allowed by the arrival of MPI messages. The exact order is NOT deterministic!<p>
-To advance the communication operation of any of the allocated <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> objects, use <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ff939a5759c70e520dfd8a4f9f610520">advanceAny()</a> or <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#315e118339a4c157a9af744b39cc3047">advanceSome()</a>. In general, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#315e118339a4c157a9af744b39cc3047">advanceSome()</a> has better performance than <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ff939a5759c70e520dfd8a4f9f610520">advanceAny()</a> because it gets around the "starvation" problem. See the MPI documentation for a discussion of starvation.<p>
+To advance the communication operation of any of the allocated <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> objects, use <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ace7bb05b85804aae01a21d05e71d74b">advanceAny()</a> or <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#704955860c9392e0329168943100f9cc">advanceSome()</a>. In general, <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#704955860c9392e0329168943100f9cc">advanceSome()</a> has better performance than <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#ace7bb05b85804aae01a21d05e71d74b">advanceAny()</a> because it gets around the "starvation" problem. See the MPI documentation for a discussion of starvation.<p>
 This class supports communication and uses MPI for message passing. If MPI is disabled, the job of this class disappears and the class is effectively empty, except for managing the registration of <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> objects. The public interfaces still remain so the class can compile, but the implementations are trivial. 
 <p>
-<hr><h2>Member Typedef Documentation</h2>
-<a class="anchor" name="722d21a1ce8ba11519d71d44f7d021a8"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::MemberVec" ref="722d21a1ce8ba11519d71d44f7d021a8" args="" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">typedef std::vector&lt;<a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> *&gt; <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">SAMRAI::tbox::AsyncCommStage::MemberVec</a>          </td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Container of pointers to Members. 
-<p>
-This container is used in some interfaces and is instantiated in the <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> library. 
-</div>
-</div><p>
 <hr><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" name="7dc4146a96184faf0bd076437ec86fe7"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::AsyncCommStage" ref="7dc4146a96184faf0bd076437ec86fe7" args="()" -->
 <div class="memitem">
@@ -131,17 +113,16 @@ Construct a stage that may begin allocating and managing Members.
 
 </div>
 </div><p>
-<a class="anchor" name="810a5fbee3a93afd0b01343efbb54b16"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::~AsyncCommStage" ref="810a5fbee3a93afd0b01343efbb54b16" args="(void)" -->
+<a class="anchor" name="e8738aafe2613cdd1fcd889e39983432"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::~AsyncCommStage" ref="e8738aafe2613cdd1fcd889e39983432" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">SAMRAI::tbox::AsyncCommStage::~AsyncCommStage           </td>
           <td>(</td>
-          <td class="paramtype">void&nbsp;</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"><code> [virtual]</code></td>
+          <td width="100%"></td>
         </tr>
       </table>
 </div>
@@ -154,12 +135,12 @@ Deallocate Members remaining in the stage and all internal data used to manage M
 </div>
 </div><p>
 <hr><h2>Member Function Documentation</h2>
-<a class="anchor" name="ff939a5759c70e520dfd8a4f9f610520"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceAny" ref="ff939a5759c70e520dfd8a4f9f610520" args="()" -->
+<a class="anchor" name="ace7bb05b85804aae01a21d05e71d74b"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceAny" ref="ace7bb05b85804aae01a21d05e71d74b" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">AsyncCommStage::Member</a> * SAMRAI::tbox::AsyncCommStage::advanceAny           </td>
+          <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::advanceAny           </td>
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
@@ -172,48 +153,20 @@ Deallocate Members remaining in the stage and all internal data used to manage M
 <p>
 Advance to completion one <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> (any <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>) that is currently waiting for communication to complete. 
 <p>
-This method uses MPI_Waitany, which may be prone to starvation. When a process is potentially receiving multiple messages from another processor, it is better to use <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#315e118339a4c157a9af744b39cc3047">advanceSome()</a>, which uses MPI_Waitsome, which avoids starvation.<p>
-<dl compact><dt><b>Returns:</b></dt><dd>completed <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a>, or NULL if no <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> in the stage had incomplete communication, or there are no Members on the stage. </dd></dl>
+The completed <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a> is accessible through <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">popCompletionQueue()</a>.<p>
+This method uses MPI_Waitany, which may be prone to starvation. When a process is potentially receiving multiple messages from another processor, it is better to use <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#704955860c9392e0329168943100f9cc">advanceSome()</a>, which uses MPI_Waitsome, which avoids starvation.<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Number of completed Members in the completion queue. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="f0dc1a32cbeae4306a4e023f28f8a686"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceAny" ref="f0dc1a32cbeae4306a4e023f28f8a686" args="(MemberVec &amp;completed)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::advanceAny           </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>completed</em>          </td>
-          <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>
-Alternate interface for advanceAny to appear similar to other advancing interfaces. 
-<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>completed</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> space to put addresses of Member's associated with the completed communications. The array has length 0 or 1 on return.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>number of Members completed or 0 if none have pending communication. The strategy pointers corresponding to the completed Members are set in the <code>completed</code> array. </dd></dl>
-
-</div>
-</div><p>
-<a class="anchor" name="315e118339a4c157a9af744b39cc3047"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceSome" ref="315e118339a4c157a9af744b39cc3047" args="(MemberVec &amp;completed)" -->
+<a class="anchor" name="704955860c9392e0329168943100f9cc"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceSome" ref="704955860c9392e0329168943100f9cc" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::advanceSome           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>completed</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -224,24 +177,19 @@ Alternate interface for advanceAny to appear similar to other advancing interfac
 <p>
 Advance to completion one or more Members (any Members) that are currently waiting for communication to complete. 
 <p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>completed</em>&nbsp;</td><td>Space to put addresses of Member's associated with the completed communications.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>number of Members completed or 0 if none have pending communication. </dd></dl>
+The completed Members are accessible through <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">popCompletionQueue()</a>.<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Number of completed Members in the completion queue. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="8723c9c741f75bf750da39de7f09a408"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceAll" ref="8723c9c741f75bf750da39de7f09a408" args="(MemberVec &amp;completed)" -->
+<a class="anchor" name="aeea8b213992f84eec70a01945765c75"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::advanceAll" ref="aeea8b213992f84eec70a01945765c75" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::advanceAll           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#722d21a1ce8ba11519d71d44f7d021a8">MemberVec</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>completed</em>          </td>
+          <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
           <td width="100%"></td>
         </tr>
@@ -252,27 +200,82 @@ Advance to completion one or more Members (any Members) that are currently waiti
 <p>
 Advance all pending communications to operations. 
 <p>
-This method just calls <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#315e118339a4c157a9af744b39cc3047">advanceSome()</a> repeatedly until all operations complete.<p>
-<dl compact><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>completed</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1tbox_1_1Array.html">Array</a> space to put addresses of Member's associated with the completed communications.</td></tr>
-  </table>
-</dl>
-<dl compact><dt><b>Returns:</b></dt><dd>number of Members completed or 0 if none have pending communication. </dd></dl>
+The completed Members are accessible through <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">popCompletionQueue()</a>.<p>
+<dl compact><dt><b>Returns:</b></dt><dd>Number of completed Members in the completion queue. </dd></dl>
 
 </div>
 </div><p>
-<a class="anchor" name="d2482711e0e19587d54029bef58eff47"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::setCommunicationWaitTimer" ref="d2482711e0e19587d54029bef58eff47" args="(Pointer&lt; Timer &gt; communication_timer)" -->
+<a class="anchor" name="a907a7913e1fcb2130d684b1e734ff70"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::numberOfCompletedMembers" ref="a907a7913e1fcb2130d684b1e734ff70" args="() const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">size_t SAMRAI::tbox::AsyncCommStage::numberOfCompletedMembers           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="621692278fc45d0f8636aa7950f9511a"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::popCompletionQueue" ref="621692278fc45d0f8636aa7950f9511a" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">AsyncCommStage::Member</a> * SAMRAI::tbox::AsyncCommStage::popCompletionQueue           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+
+</div>
+</div><p>
+<a class="anchor" name="92679b23ff957b5da5987856ed40b5e2"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::clearCompletionQueue" ref="92679b23ff957b5da5987856ed40b5e2" args="()" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::tbox::AsyncCommStage::clearCompletionQueue           </td>
+          <td>(</td>
+          <td class="paramname">          </td>
+          <td>&nbsp;)&nbsp;</td>
+          <td width="100%"><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>
+Clear the internal completion queue. 
+<p>
+<dl compact><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#621692278fc45d0f8636aa7950f9511a">popCompletionQueue()</a>, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#83fc382b1b4736460d4c219d8ccccfbc">Member::pushToCompletionQueue()</a>. </dd></dl>
+
+</div>
+</div><p>
+<a class="anchor" name="a87be2d02509399353898163887c7f73"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::setCommunicationWaitTimer" ref="a87be2d02509399353898163887c7f73" args="(const boost::shared_ptr&lt; Timer &gt; &amp;communication_timer)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::tbox::AsyncCommStage::setCommunicationWaitTimer           </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Pointer.html">Pointer</a>&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt;&nbsp;</td>
+          <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html">Timer</a> &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>communication_timer</em>          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"></td>
+          <td width="100%"><code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -294,7 +297,7 @@ If not set, or NULL is given, none will be used.
           <td>(</td>
           <td class="paramname">          </td>
           <td>&nbsp;)&nbsp;</td>
-          <td width="100%"> const</td>
+          <td width="100%"> const<code> [inline]</code></td>
         </tr>
       </table>
 </div>
@@ -389,7 +392,7 @@ Return the number of pending <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__
 </div><p>
 <hr>The documentation for this class was generated from the following files:<ul>
 <li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8h.html">AsyncCommStage.h</a><li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8C.html">AsyncCommStage.C</a></ul>
-<hr size="1"><address style="align: right;"><small>Generated on Fri Mar 16 14:34:21 2012 for SAMRAI by&nbsp;
+<hr size="1"><address style="align: right;"><small>Generated on Thu Jun 21 13:42:58 2012 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img src="doxygen.png" alt="doxygen" align="middle" border="0"></a> 1.4.7 </small></address>
 </body>
