@@ -297,7 +297,7 @@ void CascadePartitionerTree::distributeLoad()
        */
       if ( static_cast<int>(top_gen_number/connector_update_interval) !=
            static_cast<int>((top_gen_number+1)/connector_update_interval) ||
-           top_gen_number == tree_depth-2 ) {
+           (top_gen_number == tree_depth-2 && !d_common->d_pparams->usingVouchers()) ) {
          if ( d_common->d_print_steps ) {
             tbox::plog << d_common->d_object_name << "::distributeLoad updating Connectors after balancing generation "
                        << top_group->d_gen_num << std::endl;
@@ -306,8 +306,8 @@ void CascadePartitionerTree::distributeLoad()
          d_common->updateConnectors();
          d_common->t_distribute_load->start();
          if (top_group != d_leaf->d_parent) {
-            d_common->d_local_load->clear();
-            d_common->d_local_load->insertAll(d_common->d_balance_box_level->getBoxes());
+            d_common->d_local_load->insertAllWithExistingLoads(
+               d_common->d_balance_box_level->getBoxes());
          }
       }
 

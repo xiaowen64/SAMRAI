@@ -145,8 +145,8 @@ cat <<-EOF
 	--with-zlib
 	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
 	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.55.0
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt-mvapich2
+	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.58.0
 	--without-tbb
 EOF
 # Maintained by Noah Elliott
@@ -158,13 +158,13 @@ EOF
 
 chaos5_clang) # CHAOS5, clang compilers and MPI2
 cat <<-EOF
-	--with-CC=clang
-	--with-CXX=clang++
-	--with-F77=ifort
+	--with-CC=/usr/apps/gnu/clang/bin/clang
+	--with-CXX=/usr/apps/gnu/clang/bin/clang++
+	--with-F77=/usr/local/bin/gfortran-4.6.1
 	--without-petsc
         --without-blas
         --without-lapack
-        --without-hypre
+	--without-hypre
 	--without-x
 	--without-sundials
 	--disable-shared
@@ -179,12 +179,19 @@ cat <<-EOF
         --with-mpi-lib-dirs=/usr/local/tools/mvapich2-intel/lib
         --with-mpi-libs="mpichcxx mpich opa mpl pmi"
 EOF
-# Maintained by Bill Arrighi
+# Maintained by Bob Anderson
 ;;
-# With the above configure options, these "use" commands must precede the
-# use of configure
-# % use clang
-# % use gcc-4.6.1
+
+surface_pgi_15) # Surface using pgi accelerator compilers
+cat <<-EOF
+        --with-CXX=/usr/local/tools/pgi-15.5-accelerator/linux86-64/15.5/bin/pgCC
+        --with-CC=/usr/local/tools/pgi-15.5-accelerator/linux86-64/15.5/bin/pgcc
+        --with-F77=/usr/local/tools/pgi-15.5-accelerator/linux86-64/15.5/bin/pgf77
+        --with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
+        --with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.58.0
+EOF
+# Maintained by Bob Anderson
+;;
 
 edge_gcc) # Edge with default GNU GCC compilers
 cat <<-EOF

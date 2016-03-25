@@ -84,7 +84,7 @@ public:
       const hier::BoxContainer& other) = 0;
 
    /*!
-    * @brief Insert all boxes from the given TransitSet.
+    * @brief Insert all boxes from the given TransitLoad.
     *
     * Changes to other as an implementation side-effect is allowed.
     * This and other are guaranteed to be the same concrete type.
@@ -95,6 +95,25 @@ public:
    virtual void
    insertAll(
       TransitLoad& other) = 0;
+
+   /*!
+    * @brief Insert Boxes from the given container but preserve
+    * load values currently held by the TransitLoad.
+    */
+   virtual void
+   insertAllWithExistingLoads(
+      const hier::BoxContainer& box_container) = 0;
+
+   /*!
+    * @brief Set Workload values in the the TransitLoad object
+    *
+    * @param patch_level  Level holding workload data
+    * @param work_data_id Patch data id for workload data
+    */
+   virtual void
+   setWorkload(
+      const hier::PatchLevel& patch_level,
+      const int work_data_id) = 0;
 
    //! @brief Return number of items in this container.
    virtual size_t

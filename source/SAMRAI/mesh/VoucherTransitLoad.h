@@ -84,6 +84,21 @@ public:
    insertAll(
       TransitLoad& other);
 
+   //! @copydoc TransitLoad::insertAllWithExisitngLoads( const hier::BoxContainer & )
+   void
+   insertAllWithExistingLoads(
+      const hier::BoxContainer& box_container)
+   {
+      clear();
+      insertAll(box_container);
+   }
+
+   //! @copydoc TransitLoad::setWorkload( const hier::PatchLevel&, const int )
+   void
+   setWorkload(
+      const hier::PatchLevel& patch_level,
+      const int work_data_id);
+
    //! @copydoc TransitLoad::getNumberOfItems()
    size_t
    getNumberOfItems() const;

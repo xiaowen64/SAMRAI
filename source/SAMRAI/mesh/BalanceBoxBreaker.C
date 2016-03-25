@@ -74,6 +74,8 @@ BalanceBoxBreaker::breakOffLoad(
    hier::BoxContainer& leftover,
    double& brk_load,
    const hier::Box& box,
+   double box_load,
+   const std::vector<double>& corner_weights,
    double ideal_load_to_break,
    double low_load,
    double high_load,
@@ -132,7 +134,7 @@ BalanceBoxBreaker::breakOffLoad(
    }
 
    TrialBreak best_trial(*d_pparams, threshold_width,
-                         box, bad_cuts,
+                         box, box_load, corner_weights, bad_cuts,
                          ideal_load_to_break, low_load, high_load);
 
    /*
@@ -140,7 +142,7 @@ BalanceBoxBreaker::breakOffLoad(
     */
 
    TrialBreak planar_trial(*d_pparams, threshold_width,
-                           box, bad_cuts,
+                           box, box_load, corner_weights, bad_cuts,
                            ideal_load_to_break, low_load, high_load);
 
    if (breakOffLoad_planar(planar_trial)) {
@@ -200,7 +202,7 @@ BalanceBoxBreaker::breakOffLoad(
     */
 
    TrialBreak cubic_trial(*d_pparams, threshold_width,
-                          box, bad_cuts,
+                          box, box_load, corner_weights, bad_cuts,
                           ideal_load_to_break, low_load, high_load);
 
    if (breakOffLoad_cubic(cubic_trial)) {
@@ -312,7 +314,7 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
    const size_t box_vol = box_dims.getProduct();
 
-   if (box_vol <= trial.d_ideal_load) {
+   if (trial.d_whole_box_load <= trial.d_ideal_load) {
       // Easy: break off everything.
       trial.computeBreakData(trial.d_whole_box);
       if (d_print_break_steps) {
@@ -349,7 +351,10 @@ BalanceBoxBreaker::breakOffLoad_planar(TrialBreak& trial) const
 
       const std::vector<bool>& bad = trial.d_bad_cuts[brk_dir];
 
-      const double ideal_cut_length = double(trial.d_ideal_load) / static_cast<double>(brk_area);
+      const double ideal_fraction = static_cast<double>(trial.d_ideal_load) /
+                                    static_cast<double>(trial.d_whole_box_load);
+      const double ideal_cut_length = ideal_fraction *
+                                      static_cast<double>(box_dims(brk_dir));
 
       /*
        * Try 4 different cuts for direction brk_dir:
@@ -551,9 +556,12 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
 
    const hier::IntVector box_dims(trial.d_whole_box.numberCells());
 
-   const double box_load(static_cast<double>(box_dims.getProduct()));
+   const size_t box_vol = box_dims.getProduct();
 
-   if (trial.d_ideal_load >= box_load) {
+   double box_load_ratio = trial.d_whole_box_load /
+                           static_cast<double>(box_vol);
+
+   if (trial.d_ideal_load >= trial.d_whole_box_load) {
       // Easy: break off everything.
       trial.computeBreakData(trial.d_whole_box);
       if (d_print_break_steps) {
@@ -564,7 +572,8 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       return true;
    }
 
-   if (trial.d_ideal_load > 0.5 * box_load) {
+   if (trial.d_ideal_load > 0.5 * trial.d_whole_box_load &&
+       !tbox::MathUtilities<double>::equalEps(trial.d_ideal_load, 0.5 * trial.d_whole_box_load)) {
       /*
        * This algorithm is better when breaking off a small portion.
        * Since the ideal is a bigger portion, switch breakoff with leftover.
@@ -707,7 +716,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
       }
 
       corner_box_size = corner_box.numberCells();
-      corner_box_load = static_cast<double>(corner_box.size());
+      corner_box_load = trial.computeBreakOffLoad(corner_box);
 
       if (d_print_break_steps) {
          tbox::plog << "Initial corner box " << bn << " is " << corner_box
@@ -792,7 +801,7 @@ BalanceBoxBreaker::breakOffLoad_cubic(TrialBreak& trial) const
             growable(inc_dir) = corner_box.lower() (inc_dir) > trial.d_whole_box.lower() (inc_dir);
          }
          corner_box_size = corner_box.numberCells();
-         corner_box_load = static_cast<double>(corner_box.size());
+         corner_box_load = trial.computeBreakOffLoad(corner_box);
 
          const bool accept_break = BalanceUtilities::compareLoads(
                break_acceptance_flags, best_breakoff_load, corner_box_load,
@@ -987,6 +996,8 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
    const PartitioningParams& pparams,
    double threshold_width,
    const hier::Box& whole_box,
+   double whole_box_load,
+   const std::vector<double>& corner_weights,
    const std::vector<std::vector<bool> >& bad_cuts,
    double ideal_load,
    double low_load,
@@ -1002,6 +1013,8 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
    d_pparams(&pparams),
    d_threshold_width(threshold_width),
    d_whole_box(whole_box),
+   d_whole_box_load(whole_box_load),
+   d_corner_weights(corner_weights),
    d_bad_cuts(bad_cuts)
 {
    computeMerits(); // This is the merits of doing nothing.
@@ -1017,14 +1030,16 @@ BalanceBoxBreaker::TrialBreak::TrialBreak(
    d_breakoff_load(0.0),
    d_breakoff(),
    d_leftover(),
-   d_ideal_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_ideal_load),
-   d_low_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_high_load),
-   d_high_load(static_cast<double>(orig.d_whole_box.size()) - orig.d_low_load),
+   d_ideal_load(orig.d_whole_box_load - orig.d_ideal_load),
+   d_low_load(orig.d_whole_box_load - orig.d_high_load),
+   d_high_load(orig.d_whole_box_load - orig.d_low_load),
    d_width_score(orig.d_width_score),
    d_balance_penalty(orig.d_balance_penalty),
    d_pparams(orig.d_pparams),
    d_threshold_width(orig.d_threshold_width),
    d_whole_box(orig.d_whole_box),
+   d_whole_box_load(orig.d_whole_box_load),
+   d_corner_weights(orig.d_corner_weights),
    d_bad_cuts(orig.d_bad_cuts)
 {
    // make_reverse only prevents this from being mistaken for a copy constructor.
@@ -1044,9 +1059,94 @@ void BalanceBoxBreaker::TrialBreak::computeBreakData(
    d_leftover.clear();
    burstBox(d_leftover, d_whole_box, box);
    d_breakoff.push_back(box);
-   d_breakoff_load = double(box.size());
+   d_breakoff_load = computeBreakOffLoad(box);
    computeMerits();
 }
+
+/*
+ *************************************************************************
+ * Compute the load total represent by the Box if it is broken off of
+ * d_whole_box.
+ *************************************************************************
+ */
+double BalanceBoxBreaker::TrialBreak::computeBreakOffLoad(
+   const hier::Box& box)
+{
+   double breakoff_load = 0.0;
+
+   if (d_corner_weights.empty()) {
+      /*
+       * If there is no corner weight information, the breakoff load is
+       * box.size() multiplied by the ratio of the whole load to the whole
+       * box size.
+       */
+      breakoff_load = (d_whole_box_load /
+                       static_cast<double>(d_whole_box.size())) *
+                      static_cast<double>(box.size());
+   } else {
+      /*
+       * If their are corner weights, use them in the load computation.
+       */
+      const tbox::Dimension& dim = box.getDim();
+      hier::IntVector mid_point(d_whole_box.numberCells()/2);
+      hier::IntVector corner_id(hier::IntVector::getZero(dim));
+      unsigned int i = 0;
+      /*
+       * loop over all the corners.
+       */
+      do {
+         /*
+          * d_corner_box stores the corner boxes for repeated calls of this
+          * method.
+          */
+         if (d_corner_box.size() == i) {
+            d_corner_box.push_back(d_whole_box);
+            hier::Box& current_box = d_corner_box[i];
+            for (unsigned int d = 0; d < dim.getValue(); ++d) {
+               if (corner_id[d] == 0) {
+                  current_box.setLower(d, d_whole_box.lower()[d]);
+                  current_box.setUpper(d, d_whole_box.lower()[d] + mid_point[d] - 1);
+               } else {
+                  current_box.setLower(d, d_whole_box.lower()[d] + mid_point[d]);
+                  current_box.setUpper(d, d_whole_box.upper()[d]);
+               }
+            }
+         }
+
+         /*
+          * Increment n-dimensional corner id
+          */
+         for (unsigned int d = 0; d < dim.getValue(); ++d) {
+            if (corner_id[d] == 0) {
+               corner_id[d] = 1;
+               break;
+            } else {
+               corner_id[d] = 0;
+            }
+         }
+
+         /*
+          * Compute the load for the intersection of the input box and
+          * the current corner box.  If the intersection is equal to the
+          * input box, we don't need to look at any more corner boxes and
+          * can break out of the do-while loop.
+          */
+         hier::Box intersection(box * d_corner_box[i]);
+         if (!intersection.empty()) {
+            double corner_load = d_corner_weights[i] * d_whole_box_load;
+            breakoff_load += (corner_load /
+                              static_cast<double>(d_corner_box[i].size())) *
+                             static_cast<double>(intersection.size());
+            if (intersection.isSpatiallyEqual(box)) {
+               break;
+            }
+         }
+         ++i;
+      } while (corner_id != hier::IntVector::getZero(dim));
+   }
+   return breakoff_load;
+}
+
 
 /*
  *************************************************************************
@@ -1069,7 +1169,8 @@ void BalanceBoxBreaker::TrialBreak::swapWithReversedTrial(
 
    d_breakoff.swap(reversed.d_leftover);
    d_leftover.swap(reversed.d_breakoff);
-   d_breakoff_load = double(d_whole_box.size()) - reversed.d_breakoff_load;
+   d_corner_box.swap(reversed.d_corner_box);
+   d_breakoff_load = d_whole_box_load - reversed.d_breakoff_load;
    computeMerits();
 }
 
@@ -1152,6 +1253,7 @@ void BalanceBoxBreaker::TrialBreak::swap(TrialBreak& other)
 
    d_breakoff.swap(other.d_breakoff);
    d_leftover.swap(other.d_leftover);
+   d_corner_box.swap(other.d_corner_box);
 
    double tmpd;
 

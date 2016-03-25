@@ -21,7 +21,7 @@
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 #include "SAMRAI/algs/HyperbolicLevelIntegrator.h"
-#include "SAMRAI/mesh/TreeLoadBalancer.h"
+#include "SAMRAI/mesh/CascadePartitioner.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
@@ -372,12 +372,11 @@ int main(
                   boost::shared_ptr<tbox::Database>())));
          box_generator->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-         boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
-            new mesh::TreeLoadBalancer(
+         boost::shared_ptr<mesh::CascadePartitioner> load_balancer(
+            new mesh::CascadePartitioner(
                dim,
                "LoadBalancer",
-               input_db->getDatabase("LoadBalancer"),
-               boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
+               input_db->getDatabase("LoadBalancer")));
          load_balancer->setSAMRAI_MPI(
             tbox::SAMRAI_MPI::getSAMRAIWorld());
 

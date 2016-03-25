@@ -581,6 +581,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnector.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/MappingConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/MultiblockBoxTree.h			\
+	$(INCLUDE_SAM)/SAMRAI/hier/OverlapConnectorAlgorithm.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/Patch.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchBoundaries.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/PatchData.h				\
@@ -622,6 +623,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellDataFactory.h			\
+	$(INCLUDE_SAM)/SAMRAI/pdat/CellDoubleConstantRefine.h		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellGeometry.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIndex.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellIterator.h			\
@@ -651,11 +653,22 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/RankTreeStrategy.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAIManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Schedule.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
-	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h CascadePartitioner.C
+	$(INCLUDE_SAM)/SAMRAI/tbox/Transaction.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
+	$(INCLUDE_SAM)/SAMRAI/xfer/PatchLevelFillPattern.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineAlgorithm.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineClasses.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
+	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h		\
+	CascadePartitioner.C
 
 DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\

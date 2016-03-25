@@ -423,6 +423,10 @@ public:
    printClassData(
       std::ostream& os) const;
 
+   void
+   printStatistics(
+      std::ostream& output_stream = tbox::plog) const;
+
    /*!
     * Returns the name of this object.
     *
@@ -698,6 +702,8 @@ private:
     * Set to 1 when not restricting.
     */
    hier::IntVector d_tile_size;
+
+   mutable std::vector<double> d_load_stat;
 
    /*
     * Performance timers.

@@ -282,7 +282,7 @@ struct BalanceUtilities {
     * intersection of argument box and box over which data associated with
     * workload is defined.
     *
-    * @return          Double-valued sum of workload values in box region.
+    * @return          Sum of workload values in box region.
     *
     * @param patch     Input patch on which workload data is defined.
     * @param wrk_indx  Input integer patch data identifier for work data.
@@ -290,11 +290,38 @@ struct BalanceUtilities {
     *
     * Note that wrk_indx must refer to a valid cell-centered patch data entry.
     *
-    * @pre param
-    * @pre param->getDim() == box.getDim()
+    * @pre patch
+    * @pre patch->getDim() == box.getDim()
     */
    static double
    computeNonUniformWorkload(
+      const boost::shared_ptr<hier::Patch>& patch,
+      int wrk_indx,
+      const hier::Box& box);
+
+   /*!
+    * @brief Compute total workload in region of argument box based on patch
+    * data defined by given integer index, while also associating weights with
+    * corners of the box.
+    *
+    * The corner weights are fractional values that identify how much of the
+    * workload is located in each quadrant or octant of the box.
+    *
+    * @return          Sum of workload values in the box.
+    *
+    * @param[out] corner_weights  Fraction of weights associated with
+    *                             each corner of the patch. Vector must be
+    *                             empty on input. 
+    * @param[in]  patch     Patch on which workload data is defined.
+    * @param[in]  wrk_indx  Patch data identifier for work data.
+    * @param[in]  box       Box on which workload is computed
+    *
+    * @pre box.getBlockId() == patch->getBox().getBlockId()
+    * @pre box.isSpatiallyEqual(box * patch->getBox())
+    */
+   static double
+   computeNonUniformWorkloadOnCorners(
+      std::vector<double>& corner_weights,
       const boost::shared_ptr<hier::Patch>& patch,
       int wrk_indx,
       const hier::Box& box);

@@ -76,6 +76,33 @@ public:
       return d_load_comparison_tol;
    }
 
+   const bool& usingVouchers() const {
+      return d_using_vouchers;
+   }
+
+   void setUsingVouchers(bool using_vouchers) {
+      d_using_vouchers = using_vouchers;
+   }
+
+   const int& getWorkloadDataId() const {
+      return d_work_data_id;
+   }
+
+   void setWorkloadDataId(int work_data_id) {
+      TBOX_ASSERT(work_data_id >= 0);
+      d_work_data_id = work_data_id;
+   }
+
+   const hier::PatchLevel& getWorkloadPatchLevel() const {
+      return *d_workload_level;
+   }
+
+   void setWorkloadPatchLevel(boost::shared_ptr<hier::PatchLevel>& level) {
+      TBOX_ASSERT(level.get());
+      d_workload_level = level;
+   }
+
+
    friend std::ostream&
    operator << (
       std::ostream& os,
@@ -103,6 +130,20 @@ private:
     */
    double d_load_comparison_tol;
 
+   /*!
+    * @brief Flag for using voucher method or not.
+    */
+   bool d_using_vouchers;
+
+   /*!
+    * @brief Patch data id for nonuniform workload
+    */
+   int d_work_data_id;
+
+   /*!
+    * @brief Pointer to level holding nonuniform workload
+    */
+   boost::shared_ptr<hier::PatchLevel> d_workload_level;
 };
 
 }
