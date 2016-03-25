@@ -1,0 +1,23 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace geom {
+
+/*!
+  @page package_geometry_skeleton_grid_geom Skeleton Grid Geometry
+
+  This is a concrete grid geometry class that serves as a grid geometry
+  placeholder for applications that manage the physical domain and mesh in 
+  the user-supplied application code.
+  - SAMRAI::geom::SkeletonGridGeometry
+*/
+
+}
+}

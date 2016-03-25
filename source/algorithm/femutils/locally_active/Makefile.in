@@ -1,0 +1,41 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI communication and data transfer package
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 658 $
+## Modified:	$Date: 2005-10-07 09:48:03 -0700 (Fri, 07 Oct 2005) $
+## Description:	makefile for library directory 
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/algorithm/femutils/locally_active
+VPATH	      =	@srcdir@
+OBJECT        = ../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library: lib1d lib2d lib3d
+
+# These are for the standard dimensions
+# E.G. make lib2d
+lib1d:
+	$(MAKE) NDIM=1 libXd
+
+lib2d:
+	$(MAKE) NDIM=2 libXd
+
+lib3d:
+	$(MAKE) NDIM=3 libXd
+
+
+# This will work for whatever the user sets NDIM to be.
+# E.G. make NDIM=5
+libXd:	$(OBJS)
+
+clean:
+	$(SAMCLEAN)
+
+#include $(SRCDIR)/Makefile.depend

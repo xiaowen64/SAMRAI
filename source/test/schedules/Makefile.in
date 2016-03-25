@@ -1,0 +1,110 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI applications
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for Euler gas dynamics sample application
+##
+
+SAMRAI	      = @top_srcdir@
+SRCDIR        = @top_srcdir@/examples/Euler
+SUBDIR        = source/test/schedules
+VPATH         = @top_srcdir@/examples/Euler
+OBJECT        = ../../..
+
+default: check
+
+include $(OBJECT)/config/Makefile.config
+
+AUTOTEST      = $(SAMRAI)/source/test/applications
+CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o Euler.o AutoTester.o
+F2D_OBJS      = avgint.o flaten1d.o flux.o grad.o init.o stable.o \
+		stufprobc.o trace.o trace1d.o
+F3D_OBJS      = $(F2D_OBJS) fluxcorner.o 
+
+main2d:
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS)	\
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:        main2d
+		sh gen-input-files.sh
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main2d test-2d-append-1.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main2d test-2d-append-2.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+		./main2d test-2d-append-3.input
+
+check3d:
+
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) main* 
+		$(RM) -r restart-*
+
+include $(SRCDIR)/Makefile.depend
+
+FORTRAN       = $(SRCDIR)/fortran/$(PDIM)d
+M4DIRS        = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+
+AutoTester.o:	$(AUTOTEST)/AutoTester.C
+		$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(AUTOTEST)/AutoTester.C \
+		-o $@
+
+avgint.o:	$(FORTRAN)/avgint.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/avgint.m4 > avgint.f
+		$(F77) $(FFLAGS) -c avgint.f -o $@
+
+flaten1d.o:	$(FORTRAN)/flaten1d.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/flaten1d.m4 > flaten1d.f
+		$(F77) $(FFLAGS) -c flaten1d.f -o $@
+
+flux.o:		$(FORTRAN)/flux.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/flux.m4 > flux.f
+		$(F77) $(FFLAGS) -c flux.f -o $@
+
+fluxcorner.o:	$(FORTRAN)/fluxcorner.m4
+		$(M4) -B8096 $(M4DIRS) $(FORTRAN)/fluxcorner.m4 > fluxcorner.f
+		$(F77) $(FFLAGS) -c fluxcorner.f -o $@
+
+grad.o:		$(FORTRAN)/grad.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/grad.m4 > grad.f
+		$(F77) $(FFLAGS) -c grad.f -o $@
+
+init.o:		$(FORTRAN)/init.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/init.m4 > init.f
+		$(F77) $(FFLAGS) -c init.f -o $@
+
+stable.o:	$(FORTRAN)/stable.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/stable.m4 > stable.f
+		$(F77) $(FFLAGS) -c stable.f -o $@
+
+stufprobc.o:	$(FORTRAN)/../stufprobc.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/../stufprobc.m4 > stufprobc.f
+		$(F77) $(FFLAGS) -c stufprobc.f -o $@
+
+trace.o:	$(FORTRAN)/trace.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/trace.m4 > trace.f
+		$(F77) $(FFLAGS) -c trace.f -o $@
+
+trace1d.o:	$(FORTRAN)/trace1d.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/trace1d.m4 > trace1d.f
+		$(F77) $(FFLAGS) -c trace1d.f -o $@

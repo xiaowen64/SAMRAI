@@ -1,0 +1,34 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+    namespace hier {
+
+/*!
+  @page package_hierarchy_patches AMR Patch Hierarchy Management
+
+  The AMR hierarchy management classes implement the patch hierarchy,
+  patch levels, and patches used to represent the multi-resolution AMR grid.
+  - SAMRAI::hier::BasePatchHierarchy
+  - SAMRAI::hier::BasePatchLevel
+  - SAMRAI::hier::BoundaryBox
+  - SAMRAI::hier::BoundaryLookupTable
+  - SAMRAI::hier::CoarseFineGeometry
+  - SAMRAI::hier::GridGeometry
+  - SAMRAI::hier::Patch
+  - SAMRAI::hier::PatchFactory
+  - SAMRAI::hier::PatchGeometry
+  - SAMRAI::hier::PatchHierarchy
+  - SAMRAI::hier::PatchLevelFactory
+  - SAMRAI::hier::PatchLevel
+  - SAMRAI::hier::ProcessorMapping
+*/
+
+}
+}

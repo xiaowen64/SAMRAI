@@ -1,0 +1,218 @@
+//
+// File:	CartesianCellDoubleConservativeLinearRefine.C
+// Package:	SAMRAI geometry
+// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Revision:	$Revision: 173 $
+// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Description: Conservative linear refine operator for cell-centered 
+//              double data on a Cartesian mesh.
+//
+
+#ifndef included_geom_CartesianCellDoubleConservativeLinearRefine_C
+#define included_geom_CartesianCellDoubleConservativeLinearRefine_C
+
+#include "CartesianCellDoubleConservativeLinearRefine.h"
+#include<float.h>
+#include<math.h>
+#ifdef DEBUG_CHECK_ASSERTIONS
+#ifndef included_assert
+#define included_assert
+#include <assert.h>
+#endif
+#endif
+#include "CartesianPatchGeometry.h"
+#include "Index.h"
+#include "CellData.h"
+#include "CellVariable.h"
+#include "tbox/ArenaManager.h"
+#include "tbox/Array.h"
+#include "tbox/Utilities.h"
+
+/*
+*************************************************************************
+*                                                                       *
+* External declarations for FORTRAN  routines.                          *
+*                                                                       *
+*************************************************************************
+*/
+
+extern "C" {
+// in cartrefine1d.f:
+   void cartclinrefcelldoub1d_( const int&, const int&,
+                                const int&, const int&,
+                                const int&, const int&,
+                                const int&, const int&,
+                                const int*, const double*, const double*,
+                                const double*, double*,
+                                double*, double* );
+// in cartrefine2d.f:
+   void cartclinrefcelldoub2d_( const int&, const int&, const int&, const int&,
+                                const int&, const int&, const int&, const int&,
+                                const int&, const int&, const int&, const int&,
+                                const int&, const int&, const int&, const int&,
+                                const int*, const double*, const double*,
+                                const double*, double*,
+                                double*, double*, double*, double* );
+// in cartrefine3d.f:
+   void cartclinrefcelldoub3d_( const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int&, const int&, const int&,
+                                const int*, const double*, const double*,
+                                const double*, double*,
+                                double*, double*, double*,
+                                double*, double*, double* );
+}
+
+namespace SAMRAI {
+    namespace geom {
+
+template<int DIM> CartesianCellDoubleConservativeLinearRefine<DIM>::CartesianCellDoubleConservativeLinearRefine()
+: xfer::RefineOperator<DIM>()
+{
+   d_name_id = "CONSERVATIVE_LINEAR_REFINE";
+}
+
+template<int DIM> CartesianCellDoubleConservativeLinearRefine<DIM>::~CartesianCellDoubleConservativeLinearRefine()
+{
+}
+
+template<int DIM> bool CartesianCellDoubleConservativeLinearRefine<DIM>::findRefineOperator(
+   const tbox::Pointer< hier::Variable<DIM> >& var,
+   const string &op_name) const
+{
+   const tbox::Pointer< pdat::CellVariable<DIM,double> > cast_var(var);
+   if ( !cast_var.isNull() && (op_name == d_name_id) ) {
+      return(true);
+   } else {
+      return(false);
+   }
+}
+
+template<int DIM> const string&
+CartesianCellDoubleConservativeLinearRefine<DIM>::getOperatorName() const
+{
+   return(d_name_id);
+}
+
+template<int DIM> int 
+CartesianCellDoubleConservativeLinearRefine<DIM>::getOperatorPriority() const
+{
+   return(0);
+}
+
+template<int DIM> hier::IntVector<DIM> 
+CartesianCellDoubleConservativeLinearRefine<DIM>::getStencilWidth() const {
+   return(hier::IntVector<DIM>(1));
+}
+
+template<int DIM> void CartesianCellDoubleConservativeLinearRefine<DIM>::refine(
+   hier::Patch<DIM>& fine, 
+   const hier::Patch<DIM>& coarse, 
+   const int dst_component, 
+   const int src_component, 
+   const hier::Box<DIM>& fine_box, 
+   const hier::IntVector<DIM>& ratio) const
+{
+   tbox::Pointer< pdat::CellData<DIM,double> >
+      cdata = coarse.getPatchData(src_component);
+   tbox::Pointer< pdat::CellData<DIM,double> >
+      fdata = fine.getPatchData(dst_component);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   assert(!cdata.isNull());
+   assert(!fdata.isNull());
+   assert(cdata->getDepth() == fdata->getDepth());
+#endif
+
+   const hier::Box<DIM> cgbox(cdata->getGhostBox());
+
+   const hier::Index<DIM> cilo = cgbox.lower();
+   const hier::Index<DIM> cihi = cgbox.upper();
+   const hier::Index<DIM> filo = fdata->getGhostBox().lower();
+   const hier::Index<DIM> fihi = fdata->getGhostBox().upper();
+
+   const tbox::Pointer<CartesianPatchGeometry<DIM> > cgeom =
+                                                    coarse.getPatchGeometry();
+   const tbox::Pointer<CartesianPatchGeometry<DIM> > fgeom =
+                                                    fine.getPatchGeometry();
+
+   const hier::Box<DIM> coarse_box = hier::Box<DIM>::coarsen(fine_box, ratio);
+   const hier::Index<DIM> ifirstc = coarse_box.lower();
+   const hier::Index<DIM> ilastc = coarse_box.upper();
+   const hier::Index<DIM> ifirstf = fine_box.lower();
+   const hier::Index<DIM> ilastf = fine_box.upper();    
+
+   tbox::Pointer<tbox::Arena> 
+   memory_arena = tbox::ArenaManager::getManager()->getScratchAllocator();
+
+   const hier::IntVector<DIM> tmp_ghosts(0);
+   tbox::Array<double> diff0(cgbox.numberCells(0)+1, memory_arena);
+   pdat::CellData<DIM,double> slope0(cgbox, 1, tmp_ghosts, memory_arena);
+
+   for (int d = 0; d < fdata->getDepth(); d++) {
+      if (DIM == 1) {
+	 cartclinrefcelldoub1d_(ifirstc(0),ilastc(0),
+				ifirstf(0),ilastf(0),
+				cilo(0),cihi(0),
+				filo(0),fihi(0),
+				ratio,
+				cgeom->getDx(),
+				fgeom->getDx(),
+				cdata->getPointer(d),
+				fdata->getPointer(d),
+				diff0.getPointer(),slope0.getPointer());
+      } else if (DIM == 2) {
+	 
+	 tbox::Array<double> diff1(cgbox.numberCells(1)+1, memory_arena);
+	 pdat::CellData<DIM,double> slope1(cgbox, 1, tmp_ghosts, memory_arena);
+
+	 cartclinrefcelldoub2d_(ifirstc(0),ifirstc(1),ilastc(0),ilastc(1),
+				ifirstf(0),ifirstf(1),ilastf(0),ilastf(1),
+				cilo(0),cilo(1),cihi(0),cihi(1),
+				filo(0),filo(1),fihi(0),fihi(1),
+				ratio,
+				cgeom->getDx(),
+				fgeom->getDx(),
+                             cdata->getPointer(d),
+				fdata->getPointer(d),
+				diff0.getPointer(),slope0.getPointer(),
+				diff1.getPointer(),slope1.getPointer());
+      } else if (DIM == 3) {
+
+	 tbox::Array<double> diff1(cgbox.numberCells(1)+1, memory_arena);
+	 pdat::CellData<DIM,double> slope1(cgbox, 1, tmp_ghosts, memory_arena);
+
+	 tbox::Array<double> diff2(cgbox.numberCells(2)+1, memory_arena);
+	 pdat::CellData<DIM,double> slope2(cgbox, 1, tmp_ghosts, memory_arena);
+
+	 cartclinrefcelldoub3d_(ifirstc(0),ifirstc(1),ifirstc(2),
+				ilastc(0),ilastc(1),ilastc(2),
+				ifirstf(0),ifirstf(1),ifirstf(2),
+				ilastf(0),ilastf(1),ilastf(2),
+				cilo(0),cilo(1),cilo(2),
+				cihi(0),cihi(1),cihi(2),
+				filo(0),filo(1),filo(2),
+				fihi(0),fihi(1),fihi(2),
+				ratio,
+				cgeom->getDx(),
+				fgeom->getDx(),
+				cdata->getPointer(d),
+				fdata->getPointer(d),
+				diff0.getPointer(),slope0.getPointer(),
+				diff1.getPointer(),slope1.getPointer(),
+				diff2.getPointer(),slope2.getPointer());
+      } else {
+	 TBOX_ERROR("CartesianCellDoubleConservativeLinearRefine error...\n"
+		    << "DIM > 3 not supported." << endl);
+
+      }
+   }
+}
+
+}
+}
+#endif

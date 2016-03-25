@@ -1,0 +1,76 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI applications
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 296 $
+## Modified:	$Date: 2005-04-14 16:39:17 -0700 (Thu, 14 Apr 2005) $
+## Description:	makefile for asynchronous Berger-Rigoutsos test
+##
+
+SAMRAI	      = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/test/dlbg
+VPATH         = @top_srcdir@/source/test/dlbg
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM) -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o DLBGTest.o SinusoidalFrontTagger.o MDA_Access_instances.o intToString.o get-input-filename.o
+
+main2d:
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS)	\
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS)	\
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:		
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	main2d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d front2d.input;
+
+check3d:	main3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d front3d.input;
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:
+		$(SAMCLEAN)
+		$(RM) *.f *main*
+		$(RM) -rf restart-*d*
+
+xmain2d:
+		$(RM) main2d
+		$(MAKE) main2d
+
+xmain3d:
+		$(RM) main3d
+		$(MAKE) main3d
+
+lib2d lib3d:
+		cd $(OBJECT) && make $@
+
+include $(SRCDIR)/Makefile.depend

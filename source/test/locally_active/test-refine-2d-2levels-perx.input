@@ -1,0 +1,86 @@
+//
+// File:        test-refine-2d-2levels-perx.input
+// Package:     SAMRAI tests
+// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Revision:    $Revision$
+// Modified:    $Date$
+// Description: input file for testing locally-active data
+//
+
+Main {
+// VisIt writer information
+   dump_viz_data        = TRUE
+   visit_dump_dirname = "test-refine-2d-2levels-perx_viz"
+   visit_number_procs_per_file = 1
+
+// log file parameters 
+   dump_databases_to_log     = TRUE  
+   dump_hierarchy_to_log     = TRUE
+   dump_patchdata_to_log     = FALSE
+   log_file_name    = "test-refine-2d-2levels-perx.log"
+   log_all_nodes    = TRUE
+}
+
+LocallyActiveDataTester {
+
+   test_to_run = "REFINE_TEST"
+   check_results = TRUE
+
+// Required function distrution to use
+   function_distribution = "EXPLICIT_FUNCTIONS"
+
+// View locally-active data in VisIt until fixed
+   check_function_definitions = FALSE
+
+   nghosts_function = 1 , 1   
+   nghosts_solution = 0 , 0
+
+   GriddingParameters {
+      num_levels = 2          // number of levels in hierarchy
+
+      ratio_to_coarser {      // vector ratio to next coarser level
+         level_1 = 2 , 2
+      }
+
+      // use for COARSEN_TEST or REFINE_TEST
+      npatches_on_coarsest = 4 , 4 
+   }
+
+   // This is used only for "EXPLICIT_FUNCTIONS"
+   ExplicitFunctionData {
+      function_spec = "CONSTANT_TEST" 
+      Function_0 {
+         centroid         = 8.0 , 8.0
+         radius           = 6.00
+         alpha            = 0.5
+      }
+      Function_1 {
+         centroid         = 16.0 , 16.0
+         radius           = 3.00
+         alpha            = 0.5
+      }
+      Function_2 {
+         centroid         = 26.0 , 26.0
+         radius           = 4.00
+         alpha            = 0.5
+      }
+   }
+
+}
+
+CartesianGeometry{
+     domain_boxes	= [(0,0),(31,31)]
+     x_lo = 0.e0 , 0.e0   // lower end of computational domain.
+     x_up = 32.e0 , 32.e0 // upper end of computational domain.
+
+     periodic_dimension = 1, 0
+}
+
+TimerManager {
+   //print_exclusive = TRUE
+   print_summed = TRUE
+   print_max = TRUE
+   timer_list = "apps::main::*",
+                "apps::LocallyActiveDataTester::*",
+                "xfer::LocallyActiveDataRefineSchedule::*"
+}

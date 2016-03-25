@@ -1,0 +1,62 @@
+//
+// File:	tbox_String.C
+// Package:	SAMRAI templates
+// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Revision:	$Revision: 173 $
+// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Description:	special template file for strings on SGI with CC
+//
+
+#include <string>
+using namespace std;
+
+#if __KCC_VERSION > 3400   // KCC v3.4
+#include <iomanip>
+#endif
+
+#ifdef HAVE_SPECIAL_STRING_OSTREAM_INSTANTIATION
+template ostream& std::operator<<(ostream& os, const std::basic_string<char>&);
+#endif
+
+/*
+ * << operator for complex type requires explicit instantiation with KCC
+ * versions 3.4 and higher.  AMW 2/00
+ */
+#if __KCC_VERSION > 3400   // KCC v3.4
+//template std::basic_ostream< char,std::char_traits<char> > &std::operator <<
+//     <double, char, std::char_traits<char> >
+//     (std::basic_ostream<char,std::char_traits<char> > &,
+//      const std::complex<double> &);
+//template std::basic_ostream< char,std::char_traits<char> > &std::operator <<
+//     <char, std::char_traits<char> >
+//     (std::basic_ostream<char,std::char_traits<char> > &, char);
+//template std::basic_ostream< char,std::char_traits<char> > &std::operator <<
+//     <char, std::char_traits<char> >
+//     (std::basic_ostream<char,std::char_traits<char> > &, const char *);
+template std::basic_ostream< char,std::char_traits<char> > &std::flush 
+     <char, std::char_traits<char> >
+     (std::basic_ostream<char,std::char_traits<char> > &);
+//template std::basic_string< char,std::char_traits<char>,allocator<char> > 
+//     basic_string<char, std::char_traits<char>, std::allocator<char>>
+//     (const std::allocator<char> &);
+template __kai::omanip_setfill<char> std::setfill<char>(char);
+#endif
+
+#ifdef __DECCXX
+#include <sstream>
+#include <fstream>
+template class std::basic_ostringstream<char, std::char_traits<char>, std::allocator<char> >;
+template class std::basic_string<char, std::char_traits<char>, std::allocator<char> >;
+template class std::basic_stringbuf<char, std::char_traits<char> >;
+template class std::basic_ostream<char, std::char_traits<char> >;
+template class std::basic_ofstream<char, std::char_traits<char> >;
+template class std::basic_ios<char, std::char_traits<char> >;
+template class std::basic_streambuf<char, std::char_traits<char> >;
+template class std::basic_filebuf<char, std::char_traits<char> >;
+#endif
+
+#if defined(__GNUC__) && (__GNUC__ == 3 && __GNUC_MINOR__ >= 2)
+// Templates for complex functions
+template std::basic_string<char, std::char_traits<char>, std::allocator<char> > std::operator+<char, std::char_traits<char>, std::allocator<char> >(std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::basic_string<char, std::char_traits<char>, std::allocator<char> > const&);
+#endif
+

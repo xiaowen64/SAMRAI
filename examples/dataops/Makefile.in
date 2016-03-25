@@ -1,0 +1,51 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI algorithm
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for testing patch data operations
+##
+
+#SAMVER        = /home/wissink/SAMRAI-stuff
+#SAMRAI        = $(SAMVER)/SAMRAI
+#OBJECT        = $(SAMVER)/linux-g++-debug
+SAMRAI	      =	@top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = examples/dataops
+OBJECT        = ../..
+
+default:        cellhierops
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=2  
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+cellhierops:
+		$(MAKE) cell_hierops
+
+nodehierops:
+		$(MAKE) node_hierops 
+
+indxdataops:
+		$(MAKE) indx_dataops
+
+
+cell_hierops:	cell_hierops.o  $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_hierops.o $(LIBSAMRAI2D) \
+		$(LIBSAMRAI) $(LDLIBS) -o $@
+
+node_hierops:	node_hierops.o  $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) node_hierops.o $(LIBSAMRAI2D) \
+		$(LIBSAMRAI) $(LDLIBS) -o $@
+
+indx_dataops:	indx_dataops.o  SampleIndexData.o $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) indx_dataops.o SampleIndexData.o \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+clean:
+		$(SAMCLEAN)
+		$(RM) *.f cell_hierops node_hierops indx_dataops
+
+
+include Makefile.depend

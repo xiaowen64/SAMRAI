@@ -1,0 +1,49 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.73 [en] (WinNT; U) [Netscape]">
+   <title>Vizamrai Help</title>
+</head>
+<body bgcolor="#FFFFFF" link="#0000FF" vlink="#A0B0E0" alink="#FF0000">
+
+<blockquote>
+<hr size=3 width=95% align=center noshade>
+<h2>
+Command Line Options</h2>
+</blockquote>
+The following command line arguments are available when starting a Vizamrai
+script:
+<h3>
+-camera &lt;filename></h3>
+Loads a saved camera file to set the intial rendering view.
+<h3>
+-restart &lt;filename></h3>
+Loads the Vizamrai saved state file to set the user interface controls.
+<h3>
+-lowmem</h3>
+Uses less memory at the expense of recalculating more frequently.
+If you are running out of memory, try this option. It can cut memory
+use by 30% in some cases.
+<h3>
+&lt;filename></h3>
+Loads the specified Vizamrai datafile when the tool starts up.
+<br>
+<h2>
+Important Note</h2>
+The "-restart" option overrides the camera and filename options and should
+not be used in combination with them, it won't due any harm but you will
+just load things twice.
+<h2>
+Example Usage</h2>
+
+<p><br>vizamrai.3slice -camera niceview.cam euler.vis
+<p>Loads the euler data and sets the camera view.
+<p>vizamrai.3slice -restart workingstate.vstate
+<p>Restores the saved working state from the "workingstate.vstate" file.
+<br>
+<blockquote>
+<hr size=3 width=95% align=center noshade></blockquote>
+
+</body>
+</html>

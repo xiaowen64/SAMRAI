@@ -1,0 +1,47 @@
+This directory contains a Makefile to build an Automatic testing
+version of the Euler application.  It is used in the autotest
+suite of SAMRAI.
+
+The Makefile operates on the Euler code in the applications
+directory.  However, it performs two functions not done in the
+standard Euler application.  First, it builds and links the 
+AutoTester class, located in /SAMRAI/source/test/applications.
+This class reads information from input and performs an
+"evaluate" function to assure the computed information is 
+correct.  Second, it sets to TRUE the TESTING preprocessor
+option so that the autotest part of Euler is included.
+
+The following segment should be added to the input file 
+to satisfy the input requirements for AutoTester:
+
+// Automated testing arguments.
+//    test_iter_num  -- (int) iteration number (i.e. coarse-grid
+//                      timestep) for which to check result [10].
+//    test_fluxes    -- (bool) test Riemann solver.
+//                      If TRUE, it outputs primitive variables to a
+//                      file which can then be verified against some
+//                      known "correct" result.  If FALSE, it will
+//                      simply check timesteps in the
+//                      HyperbolicLevelIntegrator. [FALSE]
+//    correct_result -- (double array) specification of correct result
+//                      for the different test performed.  If the
+//                      computed result does not match the specified
+//                      result, the code will report an error [0].
+//    output_correct -- (bool) output computed result.  Useful for
+//                      setting baseline "correct_result" values for a
+//                      new problem.  That is, set to TRUE and run the
+//                      case. Enter the output values in the
+//                      correct_result array in input, and use the
+//                      input file for automated testing. [FALSE]
+AutoTester {
+   test_iter_num = 10
+   test_fluxes = FALSE
+   correct_result = 2.25, 0.0140625, 0.0140625
+   output_correct = FALSE
+}
+
+A 2D and a 3D test input file are included with Euler:
+   test-2d.input - contains input and "correct" output data for 2D
+                   test of Euler
+   test-3d.input - same, but for 3D test. 
+

@@ -1,0 +1,29 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace solv {
+
+/*!
+  @page package_solvers_packages_pvode_trio_vector PVode Trio Vector Interface
+
+  The abstract PVodeTrio vector class provides an interface through which a 
+  vector kernel and operations may be supplied to the KINSOL nonlinear 
+  algebraic equation and CVODE ODE system solver packages.  Apart from 
+  some minor preprocessor stuff, this interface is completeley 
+  independent of the SAMRAI package.  A vector kernel derived from 
+  this interface that may be used with the SAMRAI framework is provided 
+  elsewhere in this SAMRAI "solvers" package.
+
+  Note: These vector interface routines assume {\tt double}-valued vectors.
+  - PVodeTrioAbstractVector
+*/
+
+}
+}

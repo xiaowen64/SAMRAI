@@ -1,0 +1,21 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace pdat {
+/*!
+  @page package_patchdata_fortran Support for Patch Data Numerical Routines in FORTRAN 
+
+  Macros and basic debugging support to facilitate the interaction of 
+  SAMRAI data management (in C++) with FORTRAN numerical routines 
+  are located in the directory {\tt SAMRAI/source/patchdata/fortran}.
+*/
+
+}
+}

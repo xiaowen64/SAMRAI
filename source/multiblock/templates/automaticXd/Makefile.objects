@@ -1,0 +1,52 @@
+##
+## File:	Makefile.objects
+## Package:	SAMRAI
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Release:	$Name:  $
+## Revision:	$Revision: $
+## Modified:	$Date: $
+## Description:	makefile objects
+##
+
+
+
+libdefault:	MBUtilities-NDIM${NDIM}.o					\
+	MultiblockCoarsenAlgorithm-NDIM${NDIM}.o			\
+	MultiblockCoarsenPatchStrategy-NDIM${NDIM}.o			\
+	MultiblockCoarsenSchedule-NDIM${NDIM}.o				\
+	MultiblockGriddingAlgorithm-NDIM${NDIM}.o			\
+	MultiblockGriddingTagger-NDIM${NDIM}.o				\
+	MultiblockPatchHierarchy-NDIM${NDIM}.o				\
+	MultiblockPatchLevel-NDIM${NDIM}.o				\
+	MultiblockRefineAlgorithm-NDIM${NDIM}.o				\
+	MultiblockRefinePatchStrategy-NDIM${NDIM}.o			\
+	MultiblockRefineSchedule-NDIM${NDIM}.o				\
+	mblk__MBDataUtilities-NDIM_double${NDIM}.o			\
+	mblk__MBDataUtilities-NDIM_int${NDIM}.o				\
+	tbox__List-mblk__MultiblockPatchHierarchy_NDIM___Neighbor${NDIM}.o\
+	tbox__List-mblk__MultiblockRefineSchedule_NDIM___SingularityPatch${NDIM}.o\
+	tbox__Array-tbox__List-mblk__MultiblockPatchHierarchy_NDIM___Neighbor${NDIM}.o\
+	tbox__Array-tbox__List-mblk__MultiblockRefineSchedule_NDIM___SingularityPatch${NDIM}.o\
+	tbox__Pointer-mblk__MultiblockCoarsenAlgorithm-NDIM${NDIM}.o	\
+	tbox__Pointer-mblk__MultiblockCoarsenSchedule-NDIM${NDIM}.o	\
+	tbox__Pointer-mblk__MultiblockGriddingAlgorithm-NDIM${NDIM}.o	\
+	tbox__Pointer-mblk__MultiblockPatchHierarchy-NDIM${NDIM}.o	\
+	tbox__Pointer-mblk__MultiblockPatchLevel-NDIM${NDIM}.o		\
+	tbox__Pointer-mblk__MultiblockRefineAlgorithm-NDIM${NDIM}.o	\
+	tbox__Pointer-mblk__MultiblockRefineSchedule-NDIM${NDIM}.o	\
+	tbox__Array-tbox__Pointer-mblk__MultiblockPatchLevel-NDIM${NDIM}.o\
+	tbox__Array-tbox__Pointer-mblk__MultiblockRefineSchedule-NDIM${NDIM}.o\
+	tbox__Array-tbox__Array-tbox__Pointer-mblk__MultiblockPatchLevel-NDIM${NDIM}.o\
+	tbox__Array-tbox__Array-tbox__Pointer-mblk__MultiblockRefineSchedule-NDIM${NDIM}.o
+
+
+libchar:	
+
+
+libbool:	mblk__MBDataUtilities-NDIM_bool${NDIM}.o
+
+
+libfloat:	mblk__MBDataUtilities-NDIM_float${NDIM}.o
+
+
+libdcomplex:	mblk__MBDataUtilities-NDIM_dcomplex${NDIM}.o

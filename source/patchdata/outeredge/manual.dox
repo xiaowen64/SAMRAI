@@ -1,0 +1,23 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Release:     $Name$
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+
+/*!
+  @page package_patchdata_outeredge Outeredge Patch Data
+
+  These classes implement a node centered patch data type; however, the
+  domain is restricted to the boundary of each patch.
+  - SAMRAI::pdat::OuteredgeDataFactory
+  - SAMRAI::pdat::OuteredgeData
+  - SAMRAI::pdat::OuteredgeVariable
+*/
+
+}

@@ -1,0 +1,33 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI templates
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the template classes
+##
+
+SUBDIR        = source/multiblock/templates
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+OBJECT        = ../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+
+SUBDIRS = automaticXd  
+
+library:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+lib1d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+lib2d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+lib3d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+libXd:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+clean:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done

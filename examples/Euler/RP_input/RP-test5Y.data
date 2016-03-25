@@ -1,0 +1,24 @@
+//
+// File:        RP-test5Y.data
+// Package:     SAMRAI application
+// Copyright:   (c) 1997-2005 The Regents of the University of California
+// Revision:    $Revision$
+// Modified:    $Date$
+// Description: Input for testing Euler Riemann solvers 
+//
+
+//
+// Test #5Y: two shocks colliding 
+//          NOTE: to get reasonable wave profiles, run for about 125 steps
+//
+      front_position = 0.0
+      interval_0 {
+         density      = 5.99924
+         velocity     = 0.0, 19.5975 , 0.0
+         pressure     = 460.894
+      }
+      interval_1 {
+         density      = 5.99242
+         velocity     = 0.0, -6.19633 , 0.0
+         pressure     = 46.0950
+      }

@@ -1,0 +1,49 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace solv {
+
+/*!
+  @page package_solvers_packages_pvode_trio_pvode PVODE ODE solver interface
+
+  The abstract PVODE interface contains wrapper classes that make it 
+  easier to use the PVODE ODE solver package with C++ 
+  code in general, and SAMRAI in particular.  There exist wrappers for
+  PVodeTrio vectors as well as the complete PVODE ODE solver.
+  Apart from some minor preprocessor features, these interfaces are 
+  completely independent of the SAMRAI.  The code which maps the vector 
+  interface included here to the SAMRAI framework can be found in the 
+  SAMRAI "Solvers" package.
+
+  Important note: the vector kernel that is included with the PVODE library
+  cannot be replaced by linking to a compiled version of the PVODE library.
+  Due to the way in which PVODE is implemented, the PVODE source code 
+  must be recompiled with the new vector kernel header files in place of 
+  the standard PVODE vector header file.  To use PVODE with SAMRAI,
+  therefore, the PVODE library must be acquired and compiled along with
+  SAMRAI.  To make this easier, we have provided a configuration option
+  for SAMRAI ("--with-PVODE=[dir]) that copies source and header files from
+  the PVODE distribution to the directories "[samrai-build-dir]/include"
+  "[samrai-build-dir]/source/solvers/packages/pvode_trio/pvode/pvode".  
+  Here, "samrai-build-dir" is the top level directory in which the SAMRAI 
+  library is compiled.
+
+  CVODE/PVODE was developed in the Center for Applied Scientific Computing 
+  (CASC) at Lawrence Livermore National Laboratory (LLNL).  For more 
+  information about PVODE and a complete description of the operations 
+  and data structures used by this class, see S.D. Cohen and A.C. 
+  Hindmarsh, "CVODE User Guide", UCRL-MA-118618, Lawrence Livermore National
+  Laboratory, 1994.
+  - @ref package_solvers_packages_pvode_trio_pvode_wrapper "wrapper"
+  - @ref package_solvers_packages_pvode_trio_vector "vector"
+*/
+
+}
+}

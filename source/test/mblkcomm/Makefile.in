@@ -1,0 +1,100 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI tests
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 1.31 $
+## Modified:    $Date: 2004/09/28 22:15:25 $
+## Description: makefile for SAMRAI multiblock tests
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @top_srcdir@/examples/mblkcomm
+SUBDIR        = source/test/mblkcomm
+VPATH         = @top_srcdir@/examples/mblkcomm
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = MultiblockTester.o PatchMultiblockTestStrategy.o main.o \
+		CellMultiblockTest.o \
+		EdgeMultiblockTest.o \
+		FaceMultiblockTest.o \
+		NodeMultiblockTest.o \
+		Pointer-MultiblockTester.o \
+		SideMultiblockTest.o
+
+test1d:
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-1d
+		$(MAKE) PDIM=1 main-1d
+
+main-1d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI1D) $(LIBSAMRAI) $(LDLIBS) -o test1d
+
+test2d:
+		if test -f stamp-1d; then $(MAKE) clean-check; fi
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o test2d
+
+test3d:
+		if test -f stamp-1d; then $(MAKE) clean-check; fi
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 test-3d
+
+test-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	test2d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d cell-2d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d edge-2d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d face-2d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d node-2d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d side-2d.input;
+
+check3d:	test3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d cell-3d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d edge-3d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d face-3d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d node-3d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d side-3d.input;
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) stamp-*d test*d
+
+redo:
+		$(RM) core test*d
+
+include $(SRCDIR)/Makefile.depend

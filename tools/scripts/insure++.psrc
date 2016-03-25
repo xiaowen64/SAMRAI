@@ -1,0 +1,103 @@
+##############################################################################
+# Change cache dirs, admins have them set to be read only
+##############################################################################
+
+insure++.GusCacheDir $HOME/guscache
+insure++.lrtCacheDir $HOME/guscache
+
+
+# Record all output to a single file
+insure++.report_file $HOME/insure.out
+insure++.report_banner off
+insure++.report_overwrite false
+
+insure++.summarize leaks
+
+# Additional things to check beyond the default
+insure++.summarize bugs
+insure++.checking_uninit on
+insure++.unsuppress COPY_DANGLING
+insure++.unsuppress RETURN_FAILURE
+insure++.unsuppress FREE_DANGLING
+insure++.unsuppress ALLOC_CONFLICT
+insure++.unsuppress DELETE_MISMATCH
+insure++.unsuppress DEAD_CODE
+insure++.unsuppress READ_BAD_INDEX
+insure++.unsuppress WRITE_BAD_INDEX
+insure++.unsuppress RETURN_INCONSISTENT
+insure++.unsuppress FREE_NULL
+
+
+##############################################################################
+# Suppress OS, compiler, and external library problems
+##############################################################################
+
+##############################################################################
+# GCC internal problems
+##############################################################################
+
+# SGS 5/20/04
+insure++.suppress RETURN_FAILURE { getenv * __libc_start_main }
+
+
+# Strings in g++ are very badly damaged
+# SGS 5/20/04
+insure++.leaksummaryfilter -! * std::string::_Rep::_S_create *
+
+# Did not work
+# insure++.file_ignore complex
+# insure++.suppress_output complex:632
+# insure++.suppress parserwarning in complex
+
+# MPI 1.2.4
+# SGS 5/20/04
+insure++.suppress RETURN_FAILURE { read *  } 
+insure++.suppress RETURN_FAILURE { write *  } 
+insure++.suppress RETURN_FAILURE { * MPI_Init *  } 
+insure++.leaksummaryfilter -! * MPI_Init *
+
+# HDF
+# insure++.suppress RETURN_FAILURE { getenv H5_init_library * }
+# SGS 5/20/04
+insure++.suppress USER_ERROR { qsort H5AC_flush * }
+insure++.leaksummaryfilter -! * qsort H5AC_flush *
+insure++.leaksummaryfilter -! * H5O_mtime_decode *
+
+# SGS 6/22/04
+# This does not appear in gcc 3.3.2 but is present in 3.2.2
+insure++.leaksummaryfilter -! * gmtime *
+
+
+# hypre 
+# Calling realloc with NULL pointer.  According to realloc docs this is
+# not an error.
+# SGS 5/20/04
+insure++.suppress FREE_NULL { realloc hypre_ReAlloc * }
+
+
+##############################################################################
+# Suppress warnings in SAMRAI
+# 	These should all include documentation on why it is valid to
+#	suppress the warning.
+##############################################################################
+
+# 
+# This is not really a bug.  This error is signaling the end of file.
+# Reads that are smaller than maxsize are handled correctly by the parser code.
+#
+# SGS 5/20/04
+insure++.suppress RETURN_FAILURE at Parser.C:313
+
+# SGS 1/4/05
+insure++.suppress RETURN_FAILURE { fread * std::istream::sentry::sentry * }
+
+
+
+
+
+
+
+
+
+
+

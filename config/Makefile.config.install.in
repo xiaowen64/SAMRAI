@@ -1,0 +1,11 @@
+##
+## File:        Makefile.config.install.in
+## Package:     SAMRAI makefile system
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: part of configuration makefile added for installations
+##
+
+SAMRAI		= @INSTDIR@
+OBJECT		= @INSTDIR@

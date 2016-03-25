@@ -1,0 +1,44 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the pointer tests 
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/pointer
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+CPPFLAGS_EXTRA =  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+default: check
+
+include $(OBJECT)/config/Makefile.config
+
+testpointer:
+		$(MAKE) main-pointer
+
+main-pointer:	main-pointer.o $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) main-pointer.o $(LIBSAMRAI) $(LDLIBS) -o testpointer
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:		testpointer
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testpointer  
+
+check2d:
+		$(MAKE) check
+
+check3d:
+		$(MAKE) check
+
+clean: 
+		$(SAMCLEAN)
+		$(RM) testpointer
+
+include $(SRCDIR)/Makefile.depend

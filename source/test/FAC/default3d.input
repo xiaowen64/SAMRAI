@@ -1,0 +1,76 @@
+Main {
+  base_name = "default3d"
+  do_plot = TRUE
+  max_cycles = 15
+  residual_tol = 1e-10
+  pre_sweeps = 1
+  post_sweeps = 3
+  max_adaptions = 4
+}
+
+AdaptivePoisson {
+  problem_name = "multigauss"
+    // finest_dbg_plot_ln = 0
+  ScalarPoissonOps {
+    enable_logging = TRUE
+    coarse_solver_choice = "hypre"
+    coarse_solver_tolerance = 1e-14
+    coarse_solver_max_iterations = 10
+    smoothing_choice = "redblack"
+    cf_discretization = "Ewing"
+    prolongation_method = "LINEAR_REFINE"
+  }
+  multigaussian_solution {
+    GaussianFcnControl_0 = "{ lambda=-50 cx=0.5 cy=0.5 cz=0.0 }"
+    GaussianFcnControl_1 = "{ lambda=-20 cx=0.0 cy=0.0 cz=1.0 }"
+  }
+  // finest_plot_level = 0
+  adaption_threshold = .0200
+}
+
+
+CartesianGridGeometry {
+  domain_boxes = [(0,0,0), (9,9,9)]
+  x_lo         = 0, 0, 0
+  x_up         = 1, 1, 1.5
+}
+
+StandardTagAndInitialize {
+  tagging_method = "GRADIENT_DETECTOR"
+}
+
+LoadBalancer{
+  processors = 1, 1, 1
+  use_spatial_bin_pack = TRUE
+}
+
+GriddingAlgorithm {
+   max_levels = 6
+   largest_patch_size {
+     level_0 = 64, 64, 64
+      // all finer levels will use same values as level_0...
+   }
+
+ smallest_patch_size {
+   level_0 = 4,4,4
+      // all finer levels will use same values as level_0...
+   }
+   ratio_to_coarser {
+     level_1            = 2, 2, 2
+     level_2            = 2, 2, 2
+     level_3            = 2, 2, 2
+     level_4            = 2, 2, 2
+     level_5            = 2, 2, 2
+     level_6            = 2, 2, 2
+     level_7            = 2, 2, 2
+   }
+   combine_efficiency = 0.75
+   efficiency_tolerance = 0.75
+}
+
+
+TimerManager{
+  timer_list = "solv::FACPreconditionerX::*", "solv::ScalarPoissonFacOpsX::*", "solv::CartesianRobinBcHelperX::setBoundaryValuesInCells()_setBcCoefs()"
+  print_user = TRUE
+  // print_timer_overhead = TRUE
+}

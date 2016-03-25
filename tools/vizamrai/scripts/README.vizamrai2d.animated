@@ -1,0 +1,75 @@
+			Running vizamrai2d.animated
+
+I have tested this only on nyx, it should work on the Ultra10's if
+you don't use the Xvfb stuff.
+
+These are preliminary docs to get things rolling.
+
+=============================================================================
+Two files must be present in the directory where you execute the script.
+
+default.cam - The default camera.
+
+		Copy from /home/casc/vizamrai/default.cam
+		Later I will set things up so you can save camera views.
+
+defaults.tcl - Defaults for various inputs.  
+
+		Copy from /home/casc/vizamrai/defaults.tcl and edit
+		what you want.   
+
+To execute:
+
+/home/casc/bin/vizamrai2d.animated light.*.vis
+
+Wait...
+
+The output images are stored in PPM format and each image is named
+after the input file with the ".vis" extension replaced with ".ppm".
+
+[Note input files can also be specified in the defaults.tcl file]
+
+=============================================================================
+To create a mpeg, copy the mpeg parameter file from
+
+	/home/casc/vizamrai/mpeg.param 
+
+and edit.  Things you might want to change are the temp.mpg output 
+filename, the input filenames, and the input directory.  
+
+	mpeg_encode mpeg.param
+
+Wait...
+
+=============================================================================
+
+XVFB
+
+Since it is rather inconvenient to have this being displayed for the
+hours that it takes to generate a video, you can use XVFB (virtual frame
+buffer) to hide it.  What this does is create a "fake" X display which you
+can use to render the images.
+
+This works on nyx only.  Xvfb has not been installed on the Sparcs.
+
+	# create a X server on display 15 screen 0 with 24 bit resolution
+	/usr/local/X11R6.4/bin/Xvfb :15 -screen 0 2560x2048x24  &
+	DISPLAY=:15
+	export DISPLAY
+	# or setenv DISPLAY=:15 for csh/tcsh
+	/home/casc/bin/vizamrai2d.animated light.*.vis
+
+Remember to kill the Xvfb process and reset DISPLAY when done.
+
+
+
+
+
+
+
+
+
+
+
+
+	

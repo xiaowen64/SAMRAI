@@ -1,0 +1,48 @@
+This directory contains files to execute a test of the different 
+algorithms used for clustering operations in SAMRAI.  The tests
+use the accuracy verification done in the "Euler" test problem 
+(located in source/test/applications/Euler) to verify that all
+the different clustering options generate identical results.  
+
+Running the test involves two steps:
+
+   1. Generating the input files:
+        sh gen-input-files.sh 
+
+        -> creates set of test-2d-append-N.input
+    
+   2. Executing the code
+        make main2d 
+        main2d test-2d-append-1.input
+        main2d test-2d-append-2.input
+        ...
+
+Alternatively, you can simply do "make check" (or "make check2d"
+or "make check3d") which will do these steps automatically.
+
+Step 1 above takes an input file from the Euler test case
+(test-2d.input) and appends to it a file (e.g. append-1.input)
+which contains the particular "GlobalInputs{}" input entries
+to specify the clustering option.  For example, the contents
+of the different "append-N.input" files are as follows:
+
+append-1.input:
+^^^^^^^^^^^^^^^
+   GlobalInputs {
+      tag_clustering_method = "ORIGINAL"
+   }
+        
+append-2.input:
+^^^^^^^^^^^^^^^
+   GlobalInputs {
+      tag_clustering_method = "COMMUNICATOR"
+   }
+
+append-3.input:
+^^^^^^^^^^^^^^^
+   GlobalInputs {
+      tag_clustering_method = "ORIG_FAST_REDUCE"
+   }
+
+The resulting file - test-2d-append-[N].input - contains the modified test
+option without having to maintain many input files.

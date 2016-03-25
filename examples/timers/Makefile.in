@@ -1,0 +1,36 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI timer test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for timer and statistician test programs
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = examples/timers
+OBJECT        = ../..
+
+default:      timertest
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DTESTING=0
+
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+TEST_NPROCS = @TEST_NPROCS@
+
+timertest: main.o $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) main.o \
+	$(LIBSAMRAI) $(LDLIBS) -o timertest
+
+check:  timertest 
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./timertest default.input
+
+clean:
+	$(SAMCLEAN)
+	$(RM) timertest
+
+include Makefile.depend

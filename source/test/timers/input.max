@@ -1,0 +1,7 @@
+Main {
+   ntimers = 129
+}
+
+TimerManager {
+   print_exclusive = TRUE
+}

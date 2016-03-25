@@ -1,0 +1,28 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace appu {
+
+/*!
+  @page package_apputils The Application Utilities Package
+ 
+  The Application Utilities package contains tools that are useful 
+  for application developmentwith SAMRAI.
+  Currently, the package has two subdirectories containing:
+  -# @ref package_apputils_boundary "Support for physical boundary conditions"
+  -# @ref package_apputils_embedded_boundary "Support for Embedded or Immersed boundary representations on Cartesian grids"
+  -# @ref package_apputils_plotting "Utilities for plotting AMR data"
+ 
+  All class names in the Application Utilities package are in the 
+  namespace "appu".
+*/
+
+}
+}

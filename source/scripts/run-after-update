@@ -1,0 +1,23 @@
+#! /bin/sh
+
+# This script may be run after updating from svn to make bring
+# the working directory from the svn state to a functional state.
+# Nothing mysterious is done.  You can do everything by hand if you
+# choose.
+
+# Go to the top level SAMRAI directory and make sure we get there.
+cd `dirname $0`/../.. || exit 1;
+test -d "source/hierarchy/patches" || exit 1
+pwd
+
+# Make sure we have acmacros, which is needed for regenerating
+# config/aclocal.m4, which is needed for regenerating configure.
+#if test ! -d acmacros ; then
+#  test "$CVSROOT_BTNG" || CVSROOT_BTNG=/usr/casc/samrai/gunney/cvsrepository
+#  echo "No acmacros directory.  Using current version in $CVSROOT_BTNG"
+#  cvs -d $CVSROOT_BTNG export -D now acmacros
+#fi
+
+# Update the includes directory.
+echo "Running the includes script"
+perl source/scripts/includes "$@"

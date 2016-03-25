@@ -1,0 +1,10 @@
+##
+## File:        tbox.data
+## Package:     SAMRAI build scripts
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: data file for sed substitutions to generate dim-dep. files
+##
+
+foobarfoobarfoobar

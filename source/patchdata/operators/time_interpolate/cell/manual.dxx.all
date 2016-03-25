@@ -1,0 +1,12 @@
+/*
+ * File:        manual.dxx
+ * Package:     SAMRAI DOC++ manual
+ * Copyright:   (c) 1997-2005 The Regents of the University of California
+ * Revision:    $Revision$
+ * Modified:    $Date$
+ * Description: Generation of SAMRAI DOC++ source code manual
+ */
+
+//@Include: pdat_CellComplexLinearTimeInterpolateOpX.h.sed
+//@Include: pdat_CellDoubleLinearTimeInterpolateOpX.h.sed
+//@Include: pdat_CellFloatLinearTimeInterpolateOpX.h.sed

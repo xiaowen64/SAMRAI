@@ -1,0 +1,19 @@
+#!/bin/sh
+##
+## File:        convert2.0
+## Package:     SAMRAI scripts
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: shell script to convert 1.x codes to 2.0
+##
+
+BIN=`dirname $0`
+
+# Prefix each of the packages
+for PREFIX in tbox hier xfer pdat math mesh mblk geom solv algs appu
+do
+  perl $BIN/packagePrefixPrepend.pl ${PREFIX}
+done 
+
+exit

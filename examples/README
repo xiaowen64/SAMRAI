@@ -1,0 +1,39 @@
+****************************************************************************
+*  Copyright 1997-2005                                                     *
+*  The Regents of the University of California.                            *
+*  All rights reserved.                                                    *
+****************************************************************************
+****************************************************************************
+*                                                                          *
+*  SAMRAI EXAMPLES:                                                        *
+*                                                                          *
+****************************************************************************
+
+This directory contains a set of example codes that illustrate use of 
+various components in SAMRAI.  Some examples demonstrate formulation of 
+applications using the different components in the library.  
+
+The different examples are briefly discussed below.  For a more complete 
+discussion of how to compile and run the examples, see the README in each 
+of the example sub-directories.
+ 
+AutomakeProject - demonstrates how to use SAMRAI in a new or existing
+		  autoconf- and automake-managed project.
+
+ConvDiff - Sample application which solves the convection diffusion
+           equation using a simple adaptive Runge-Kutta integration
+           algorithm without time refinement.
+
+Euler  - Sample application which uses time refinement with a 
+         Berger-Colella style adaptive hyperbolic integration 
+         algorithm to solve the Euler equations.
+
+LinAdv - Uses identical algorithm to the Euler example but solves
+         the simpler Linear Advection equation.
+
+timers - demonstrates addition of code timers and use of the 
+         SAMRAI TimerManager to profile time spent in different
+         parts of an application.
+
+FAC - Sample application to solve Poisson's equation using the FAC
+      algorithm implemented in FAC solver classes.

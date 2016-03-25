@@ -1,0 +1,62 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI applications
+## Copyright:	(c) 1997-2004 The Regents of the University of California
+## Release:	$Name:  $
+## Revision:	$Revision: 460 $
+## Modified:	$Date: 2005-06-16 16:37:57 -0700 (Thu, 16 Jun 2005) $
+## Description:	makefile for embedded boundary sample application
+##
+
+SAMRAI	      =	../../../SAMRAI
+SRCDIR        = ../../../SAMRAI/examples/emb_bdry
+SUBDIR        = examples/emb_bdry
+OBJECT        = ../..
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA+= -DNDIM=$(PDIM)  -DTESTING=0
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o SampleApp.o
+F2D_OBJS      = fortran2d.o
+F3D_OBJS      = fortran3d.o
+
+main2d:
+		if test -f stamp-3d; then $(MAKE) clean ; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:
+		if test -f stamp-2d; then $(MAKE) clean ; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+redo:
+		$(RM) main2d main3d
+
+clean:
+		$(RM) *.f main main2d main3d core.*
+		$(RM) *.o *.ii core *.int.c stamp-[23]d
+		$(RM) -r ti_files ii_files
+
+include Makefile.depend
+
+M4DIRS          = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+
+fortran2d.o:	fortran2d.m4
+		$(M4) $(M4DIRS) ./fortran2d.m4 > fortran2d.f
+		$(F77) $(FFLAGS) -c fortran2d.f -o $@
+
+fortran3d.o:	fortran3d.m4
+		$(M4) $(M4DIRS) ./fortran3d.m4 > fortran3d.f
+		$(F77) $(FFLAGS) -c fortran3d.f -o $@
+

@@ -1,0 +1,33 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+	namespace hier {
+
+/*!
+  @page package_hierarchy_boxes Box Calculus
+
+  The box calculus routines implement the functionality to manipulate the
+  AMR index space.  A box consists of an upper and lower index and represents
+  a rectangular region of index space.
+  - SAMRAI::hier::BoundingBoxList
+  - SAMRAI::hier::Box
+  - SAMRAI::hier::BoxArray
+  - SAMRAI::hier::BoxComm
+  - SAMRAI::hier::BoxGraph
+  - SAMRAI::hier::BoxIOUtility
+  - SAMRAI::hier::BoxList
+  - SAMRAI::hier::BoxTop
+  - SAMRAI::hier::BoxUtilities
+  - SAMRAI::hier::Index
+  - SAMRAI::hier::IntVector
+*/
+
+}
+}

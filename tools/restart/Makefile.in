@@ -1,0 +1,43 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI tests
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 173 $
+## Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description: makefile for SAMRAI patch hierarchy refine/coarsen tests
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = tools/restart
+VPATH         = @srcdir@
+OBJECT        = ../..
+
+default: restart-redistribute	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM)
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS =	RedistributedRestartUtility.o \
+		main.o
+
+restart-redistribute:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+			$(MAKE) redistribute-tool
+
+redistribute-tool:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+			$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+			$(LIBSAMRAI) $(LDLIBS) -o restart-redistribute
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:		restart-resdistribute
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) redo
+
+include $(SRCDIR)/Makefile.depend

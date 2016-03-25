@@ -1,0 +1,29 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace algs {
+
+/*!
+  @page package_algorithm_femutils_standard Standard Data Summation Operations
+
+  These classes provide basic operations for summing data across patches at 
+  shared grid points. They apply when simulation data is defined on all patches
+  of the patch levels involved.
+  
+  - SAMRAI::algs::PatchBoundaryNodeSum
+  - SAMRAI::algs::PatchBoundaryEdgeSum
+  - SAMRAI::algs::OuternodeSumTransaction
+  - SAMRAI::algs::OuteredgeSumTransaction
+  - SAMRAI::algs::OuternodeSumTransactionFactory
+  - SAMRAI::algs::OuteredgeSumTransactionFactory
+*/
+
+}
+}

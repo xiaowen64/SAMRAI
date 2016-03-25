@@ -1,0 +1,37 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for testing parts of SAMRAI library
+##
+
+SAMRAI	      = @top_srcdir@
+SRCDIR        = @srcdir@
+OBJECT        = ../../..
+SUBDIR        = source/test/clustering
+
+SUBDIRS = parallel_br async_br
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+library:
+lib1d:
+lib2d:
+lib3d:
+libXd:
+
+check:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+check2d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+check3d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+
+clean:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

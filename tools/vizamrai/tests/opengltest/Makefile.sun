@@ -1,0 +1,16 @@
+CC = cc
+
+CFLAGS = -g
+
+INCLUDE = -I/usr/openwin/include/ 
+
+LDLIBS = -lGL -lXext -lX11
+
+LDFLAGS = -L/usr/openwin/lib 
+
+UNAME=SunOS
+
+all: test_for_opengl.$(UNAME)
+
+test_for_opengl.$(UNAME): test_for_opengl.c
+	$(CC) $(CFLAGS) $(INCLUDE) test_for_opengl.c $(LDFLAGS) $(LDLIBS) -o $@

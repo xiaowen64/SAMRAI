@@ -1,0 +1,44 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the asynchromous communication class tests 
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/async_comm
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+CPPFLAGS_EXTRA =  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+default: check
+
+include $(OBJECT)/config/Makefile.config
+
+testasync_comm:
+		$(MAKE) main-async_comm
+
+main-async_comm:	main-async_comm.o $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) main-async_comm.o $(LIBSAMRAI) $(LDLIBS) -o testasync_comm
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:		testasync_comm
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testasync_comm $(SRCDIR)/default.input
+
+check2d:
+		$(MAKE) check
+
+check3d:
+		$(MAKE) check
+
+clean:
+		$(SAMCLEAN)
+		$(RM) testasync_comm
+
+include $(SRCDIR)/Makefile.depend

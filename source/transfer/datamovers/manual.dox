@@ -1,0 +1,26 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace xfer {
+
+/*!
+  @page package_transfer_datamovers Support for Moving Data on SAMR Meshes
+
+  The Transfer package provides flexible, extensible support for a wide range data
+  communication operations involving structured AMR patch hierarchies and levels.
+  These classes are partitioned into two categories:
+
+  -# @ref package_transfer_datamovers_standard "classes for data communication where all simulation data live on all patches on the patch levels involved"
+  -# @ref package_transfer_datamovers_locallyactive "classes for data communication where simulation data live on subsets of patches on the patch levels involved, so-called 'locally-active' data"
+ 
+*/
+
+}
+}

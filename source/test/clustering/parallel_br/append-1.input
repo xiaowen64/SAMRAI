@@ -1,0 +1,4 @@
+GlobalInputs {
+   tag_clustering_method = "ORIGINAL"
+   call_abort_in_serial_instead_of_exit = FALSE
+}

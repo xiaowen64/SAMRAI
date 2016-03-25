@@ -1,0 +1,36 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace solv {
+
+/*!
+  @page package_solvers_vectors SAMRAI Vector Facilities
+
+  The SAMRAI vector class wraps a collection of patch data components 
+  defined over multiple levels in an AMR hierarchy so that the data may 
+  be manipulated as though it is a single vector.  Also, included are
+  classes which provide vector kernels to the PETSc and PVodeTrio solver 
+  packages.  Currently, vector interfaces are provided for real-valued
+  vectors only (i.e., where the data is either type {\tt double} or 
+  {\tt float}).  If the need for complex-valued vectors arises (e.g., 
+  PETSc supports complex vectors), they can be easily added.  Presently, 
+  the PVodeTrio vector interface supports only {\tt double}-valued vectors.
+  The abstract classes that define the interfaces to the PETSc and PVodeTrio
+  packages are includes in the SAMRAI source subdirectories "petsc" and
+  "pvode::trio/vector", respectively.  The classes which perform the 
+  actual numerical operations used in the vector kernels are found in 
+  the "Mathematical Operations" package.
+  - SAMRAI::solv::SAMRAIVectorReal
+  - SAMRAI::solv::PETSc::SAMRAIVectorReal
+  - SAMRAI::solv::PVodeTrio::SAMRAIVector
+*/
+
+}
+}

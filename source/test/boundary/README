@@ -1,0 +1,11 @@
+This directory contains a Makefile to build tests
+for the boundary utilities classes.  It is used in the autotest
+suite of SAMRAI.
+
+The Makefile operates on the example code in the examples
+directory.  The programs are run in serial only since the
+functionality is the same in parallel.
+
+2D and 3D test input files are included in this directory:
+   basic2d-*.input - contains input for 2d boundary tests
+   basic3d-*.input - contains input for 3d boundary tests

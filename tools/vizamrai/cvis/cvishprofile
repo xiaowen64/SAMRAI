@@ -1,0 +1,7 @@
+SGSTCLPATH="/Program Files/Tcl.profile"
+PATH=$SGSTCLPATH/bin:$PATH
+TCLLIBPATH=.
+export TCLLIBPATH
+newpath=`cygpath -w "$SGSTCLPATH/bin/wish83d.exe"`
+profile  "$newpath" $*
+(cd "$SGSTCLPATH/bin";prep /M wish83d;plist wish83d > output)

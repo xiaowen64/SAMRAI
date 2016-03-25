@@ -1,0 +1,23 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace pdat {
+
+/*!
+  @page package_patchdata_operators_constant_outernode Outernode Data Constant Operators
+
+  Constant coarsen operators are provided for all standard outernode-centered
+  patch data types.   Here, we only describe the constant operator
+  for data of type double.  All others are similar.
+  - SAMRAI::pdat::OuternodeDoubleConstantCoarsen
+*/
+
+}
+}

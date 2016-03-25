@@ -1,0 +1,67 @@
+#!/bin/sh
+##
+## File:        cvistest
+## Package:     Vizamrai
+## Copyright:   (c) 1997-2000 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: Script used to invoke the CASC Visualization toolkit
+##              used for testing out of development directory
+##
+
+if [ `uname` = "IRIX64" ] 
+then
+    LOCAL=/usr/casc/samrai/local.IRIX64/vtk.mesa
+    LD_LIBRARY_PATH=$LOCAL/lib:/usr/casc/samrai/local.IRIX64/Mesa/lib
+    TCLLIBPATH="/g/g2/smithsg/VTK/vizamrai/cvis $TCLLIBPATH"
+    export LD_LIBRARY_PATH TCLLIBPATH
+    $LOCAL/bin/vtk $*
+    exit
+fi
+
+
+if [ `uname` = "CYGWIN_NT-5.0" ] 
+then
+    PATH="/cygdrive/c/Progra~1/VTK4.0/bin/Release:/cygdrive/c/Progra~1/Vizamrai/bin/Release:$PATH"
+    VTKTCLPATH=
+    TCLLIBPATH='. {c:/Documents and Settings/smithsg/My Documents/local/src/VTK/vtk4.0/VTK/Wrapping/Tcl} {c:/Documents and Settings/smithsg/My Documents/VTK/vizamrai/Wrapping/Tcl}'
+    export TCLLIBPATH
+#    insurespy wish83 $*
+    wish83 $* &
+    exit 
+fi
+
+if [ `uname` = "Linux" ]
+then
+    LOCAL=/usr/casc/samrai/vizamrai/Linux/vtk.ogl.4.0.12.03.02
+    TCLLIBPATH="$HOME/VTK/vizamrai/Wrapping/Tcl $TCLLIBPATH"
+    export TCLLIBPATH
+#    $HOME/VTK/linux.ogl/bin/cvish $*
+    $LOCAL/bin/cvish $*
+    exit
+fi
+
+GLX=`xdpyinfo | grep GLX | wc -l`
+
+if [ "$GLX" -gt 0 ] 
+then
+        LOCAL=/usr/casc/samrai/vizamrai/Sun/vtk.ogl.4.0.beta.02.28.02
+	LD_LIBRARY_PATH=$LOCAL/lib/vtk:$LD_LIBRARY_PATH
+	TCLLIBPATH=/home/smithsg/VTK/vizamrai/cvis
+	export LD_LIBRARY_PATH TCLLIBPATH
+	echo opengl
+        VTK_RENDERER=OpenGL
+	export VTK_RENDERER
+	$LOCAL/bin/vtk $*
+else
+        LOCAL=/usr/casc/samrai/vizamrai/Sun/vtk.ogl.4.0.beta.02.28.02
+	LD_LIBRARY_PATH=$LOCAL/lib:$LD_LIBRARY_PATH
+       TCLLIBPATH="/usr/casc/samrai/vizamrai/Linux/src/vtk4.0/VTK/Wrapping/Tcl $HOME/VTK/vizamrai/Wrapping/Tcl $TCLLIBPATH"
+	export LD_LIBRARY_PATH TCLLIBPATH
+	echo mesa
+	$LOCAL/bin/vtk $*
+fi
+
+
+
+

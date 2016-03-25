@@ -1,0 +1,26 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace tbox {
+/*!
+  @page package_toolbox_stream Stream Toolbox Classes
+
+  These classes provide basic support for portable message and file streams,
+  and the abstract interface for all stream-based interprocessor data 
+  communication in the SAMRAI library.
+
+  - SAMRAI::tbox::AbstractStream
+  - SAMRAI::tbox::FileStream
+  - SAMRAI::tbox::MessageStream
+  - SAMRAI::tbox::XDRStream
+*/
+
+}
+}

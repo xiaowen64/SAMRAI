@@ -1,0 +1,15 @@
+vtkSamraiStructuredPointsReader GetIndexScaling 301 3
+vtkSamraiStructuredPointsReader GetBounds       301 6
+vtkSamraiStructuredPointsReader GetIndexBounds  304 6
+vtkSamraiStructuredPointsReader GetScalarRange  301 2
+vtkSamraiStructuredPointsReader GetSpacing      301 3
+vtkSamraiStructuredPointsReader GetCenter       301 3
+vtkSamraiStructuredPointsReader GetRefinement   304 3
+
+vtkSamraiStructuredPointsVectorReader GetIndexScaling 301 3
+vtkSamraiStructuredPointsVectorReader GetBounds       301 6
+vtkSamraiStructuredPointsVectorReader GetIndexBounds  304 6
+vtkSamraiStructuredPointsVectorReader GetScalarRange  301 2
+vtkSamraiStructuredPointsVectorReader GetSpacing      301 3
+vtkSamraiStructuredPointsVectorReader GetCenter       301 3
+vtkSamraiStructuredPointsVectorReader GetRefinement   304 3

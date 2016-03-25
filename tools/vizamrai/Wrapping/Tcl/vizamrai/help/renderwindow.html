@@ -1,0 +1,143 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.77 [en] (Windows NT 5.0; U) [Netscape]">
+   <title>Vizamrai Help</title>
+</head>
+<body bgcolor="#FFFFFF" link="#0000FF" vlink="#A0B0E0" alink="#FF0000">
+
+<blockquote><img SRC="renderwindow.jpg" height=588 width=714>
+<hr size=3 width=95% align=center noshade>
+<h2>
+Render Window</h2>
+</blockquote>
+
+<p><br>The render window is where all data is displayed. It has four main
+parts: the menu bar, the rendering area, a side button bar, and a bottom
+bar. The menu bar gives access to options to save/restore the state of
+Vizamrai and access to the help screens. The rendering area is where the
+images appear. The mouse can be used to move the camera around (see <a href="navigation.html">screen
+navigation</a> ). The button bars give access to some basic rendering functions
+(bottom) and camera views (side).
+<p>
+<hr size=3 width=95% align=center noshade>
+<h3>
+Render Window Menu Bar</h3>
+
+<h4>
+File -> Open</h4>
+Opens an existing Vizamrai state file. A Vizamrai state file (.vstate)
+contains the state of controls (slider bar values, colors, and other options).
+<h4>
+File -> SaveAs</h4>
+Saves the current state of the Vizamrai controls to a file. Very useful
+when you have the tool setup the with a view that you like and would like
+to be able to get back to quickly.
+<h4>
+File -> Exit</h4>
+Exits Vizamrai.
+<h4>
+Help -> Help Contents</h4>
+Online users manual for Vizamrai. If you are reading this you probably
+have found this already.
+<h4>
+Help -> About</h4>
+Gives the version number for Vizamrai, VTK, and TCL/TK.&nbsp; Useful when
+reporting bugs back to the developers.
+<hr size=3 width=95% align=center noshade>
+<h3>
+View Button Bar</h3>
+The view button bar (left side) contains icons which can be clicked (normally
+with the left mouse button) to invoke some commands to effect the camera
+position.&nbsp; The button bar can be hidden by left clicking on the pullout
+control on the right side of the panel.
+<h4>
+Center</h4>
+This resets the display by centering the objects in the display window.
+You need to do this when you load in datasets that are located in a different
+physical location in the domain or when you load in datasets on a different
+domain. This is also accessible through the "r" keyboard shortcut.
+<h4>
+Pan</h4>
+By click-dragging (clicking the left mouse button and moving the mouse
+while holding the button down) will pan the display.&nbsp; This can also
+be done using the mouse in the render window (see <a href="navigation.html">screen
+navigation</a> ).
+<h4>
+Rotate</h4>
+By click-dragging (clicking the left mouse button and moving the mouse
+while holding the button down) will rotate the display.&nbsp; This can
+also be done using the mouse in the render window (see <a href="navigation.html">screen
+navigation</a> ).
+<h4>
+Zoom</h4>
+By click-dragging (clicking the left mouse button and moving the mouse
+while holding the button down) will zoom the display.&nbsp; This can also
+be done using the mouse in the render window (see <a href="navigation.html">screen
+navigation</a> ).
+<h4>
+Preset Views</h4>
+The seven little views of the teapot will move the camera to the view indicated
+(top, bottom, left, front etc.).&nbsp; Activate by clicking with the left
+mouse button.
+<h4>
+User Defined Views</h4>
+The "memory dot" buttons are used to set user defined camera positions
+and enable you to quickly return to that view. Pressing the button with
+the left mouse button takes you to the saved view. A right mouse click
+will set the view to the view currently on the screen. This is very useful
+for fine tuning a view.&nbsp; Once you get a view that you like, save it
+to one of the user defined views before trying to "tweak it". If after
+tweaking you realize that it looks much worse just pop back to the previous
+view by left mouse clicking.
+<br>
+<hr size=3 width=95% align=center noshade>
+<h3>
+Render Button Bar</h3>
+The render button bar (bottom of display) contains icons which can be clicked
+(normally with the left mouse button) to invoke some commands to effect
+the renderer, save the render image and other miscellaneous tasks.&nbsp;
+The button bar can be hidden by left clicking on the pullout control on
+the top of the panel.
+<h4>
+Save Image</h4>
+Save the current image to the file indicated in the control panel for the
+current render window. This is often used when you are in full screen mode
+and want to save this image since many OpenGL renderers render directly
+to the screen buffer you will pick up any overlapping windows that cover
+the render window.&nbsp; The keyboard shortcut "o" in the render window
+can also be used.
+<h4>
+Render</h4>
+Forces a render of the screen. This is used most often when you have turned
+off the rendering pipeline and want to force a render. This function can
+also come in handy if the display the window has not refreshed correctly.
+<h4>
+Render Pipeline</h4>
+This toggles the rendering process on/off. When the render pipeline is
+turned off, the user interface is active but the screen will not be updated.
+This is very useful for larger datasets; you can set multiple settings
+(like maybe a slice plane value and min/max on the colormap) without having
+to wait for each change to redraw.&nbsp; With the pipeline turned on every
+change will cause a screen update to provide immediate feedback.&nbsp;
+The problem is with large datasets "immediate" feedback isn't very immediate.&nbsp;
+You can force a render using the Render button or turn the pipeline back
+on.
+<h4>
+Wireframe/Full Render</h4>
+Toggles the display between wireframe and full surface drawing. It is claimed
+on some systems wireframe may be faster than shading for some images. The
+"w" and "s" keys also can be used to set the drawing mode.&nbsp; In practice
+this feature has not proven to be very useful.
+<h4>
+Command Line Interface</h4>
+Starts a command line console at which you can type TCL commands. This
+is for advanced users only. Pressing the keyboard shortcut&nbsp; "c" will
+bring also bring up the command line console.
+<br>&nbsp;
+<blockquote>
+<hr size=3 width=95% align=center noshade></blockquote>
+
+</body>
+</html>

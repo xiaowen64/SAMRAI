@@ -1,0 +1,59 @@
+
+			BGL 10 second guide.
+
+Since BGL uses a cross compiler the normal autoconf method for building
+SAMRAI will not work.
+
+The current "hack" method is to run the configure process under Linux
+with the following options:
+
+../SAMRAI/configure \
+	--with-CXX=g++ --with-CC=gcc --with-F77=g77 \
+	--with-mpi-include=/usr/apps/mpich/1.2.4/include \
+	--with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+	--with-mpi-libs="mpich pmpich" \
+	--enable-char \
+	--enable-bool \
+	--enable-float \
+	--enable-dcomplex 
+
+copy the Makefile.config to the config directory
+
+copy the SAMRAI_config.h to the include directory
+
+Make sure HDF is located in the directory specified in the Makefile.config (see Bor Chan for HDF):
+
+	HDF_ROOT=$(HOME)/local.bgl/hdf5-1.6.3
+
+Then build using make as normal.
+
+To run copy the executable to /bgl/test/$USER/
+
+SRUN batch script example:
+
+Note that input files etc need to be in the /bgl/test/$USER directory
+[SGS this may not be required anymore]
+
+        # ConvDiff.srun file
+	/usr/local/bin/mpirun \
+	        -partition LLNL_128_16 \
+	        -nodes 1 \
+	        -cwd /bgl/test/smithsg/ConvDiff \
+	        -exe /bgl/test/smithsg/ConvDiff/main2d \
+	        -args "sphere-2d.input"
+
+To execute the batch script:n
+
+	srun -N1 -b ConvDiff.srun
+
+To check on queue status
+
+	squeue
+
+
+
+
+
+
+
+

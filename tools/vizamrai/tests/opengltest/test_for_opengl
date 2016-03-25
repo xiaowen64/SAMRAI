@@ -1,0 +1,6 @@
+if eval ./test_for_opengl.`uname` >& /dev/null
+then 
+	echo "Worked"
+else
+	echo "Not Worked"
+fi

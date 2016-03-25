@@ -1,0 +1,48 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI application utilities
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 173 $
+## Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description: makefile for the application boundary utilities
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/apputils/boundary
+VPATH         = @srcdir@
+OBJECT        = ../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library:        lib1d lib2d lib3d
+
+OBJS          = BoundaryUtilityStrategy.o
+
+OBJS2D=appu_cartbdry2d.o CartesianBoundaryUtilities2.o
+
+OBJS3D=appu_cartbdry3d.o CartesianBoundaryUtilities3.o
+
+ifeq ($(NDIM),2)
+OBJSXD:=$(OBJS2D)
+endif
+
+ifeq ($(NDIM),3)
+OBJSXD:=$(OBJS3D)
+endif
+
+lib1d:          
+
+lib2d:		libXd $(OBJS2D)
+
+lib3d:		libXd $(OBJS3D)
+
+libXd:		$(OBJS) $(OBJSXD)
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend
+

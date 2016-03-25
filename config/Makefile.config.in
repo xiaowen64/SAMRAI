@@ -1,0 +1,151 @@
+##
+## File:        Makefile.config.in
+## Package:     SAMRAI makefile system
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: configuration makefile included by all SAMRAI makefiles
+##
+
+@TAU_INCLUDE@ 
+
+.SUFFIXES:
+.SUFFIXES: .o .f .c .C .cc
+
+DIM_OBJS = ${DIM_SRC:X.C=${NDIM}.o}
+
+#
+# The sed src_file finds the X.C file in the list of prerequisites. One would think
+# this would exist as a Makefile symbol but the "$<" symbol is only usable in 
+# suffix rules. The sed rule extracts the .C filename.  This ONLY works
+# if the .C file is changed.  It will break if only the .I or .h files
+# change.  Thus is can be used for an intial build but does not
+# really work in a development environment.
+#
+#
+# Uncomment the following 4 lines for non GNU make compatiblity
+# ${DIM_OBJS} :
+# 	@src_file=`echo $? | sed  's/^\(.*\) \(.*X.C\) \(.*\)/\2/;s/^\(.*X.C\) \(.*\)/\1/'`; \
+# 	echo $(CXX) -DNDIM=${NDIM} $(CXXFLAGS) $(CPPFLAGS) -c  $$src_file -o $@; \
+# 	$(CXX) -DNDIM=${NDIM} $(CXXFLAGS) $(CPPFLAGS) -c  $$src_file -o $@ 
+
+# Comment out these 2 lines if using not using GNU make
+%${NDIM}.o : %X.C
+	$(CXX) -DNDIM=${NDIM} $(CXXFLAGS) $(CPPFLAGS) -c $< -o $@ 
+
+.f.o:
+	$(F77) $(FFLAGS) -c @SRCDIR_COMPILE_PREFIX@$< -o $@
+.c.o:
+	$(CC) $(CFLAGS) $(CPPFLAGS) -c @SRCDIR_COMPILE_PREFIX@$< -o $@
+.C.o:
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c @SRCDIR_COMPILE_PREFIX@$< -o $@
+.cc.o:
+	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c @SRCDIR_COMPILE_PREFIX@$< -o $@
+
+SHELL         = /bin/sh
+
+SAMRAI_TARGET=@SAMRAI_TARGET@
+
+INCLUDE_SAM   = $(SAMRAI)/include
+
+
+LIB_SUFFIX=@LIB_SUFFIX@
+
+# For use in dependency lists to check of SAMRAI has been rebuilt
+LIBSAMRAIDEPEND   = \
+	$(OBJECT)/lib/libSAMRAI$(LIB_SUFFIX) 
+
+LIBSAMRAI     = \
+	$(OBJECT)/lib/libSAMRAI$(LIB_SUFFIX)
+
+LIBSAMRAI1D = \
+	$(OBJECT)/lib/libSAMRAI1d_appu$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_algs$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_solv$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_geom$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_mblk$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_mesh$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_math_std$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_math_special$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_pdat_std$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_pdat_special$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_xfer$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI1d_hier$(LIB_SUFFIX) 
+
+LIBSAMRAI2D = \
+	$(OBJECT)/lib/libSAMRAI2d_appu$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_algs$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_solv$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_geom$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_mblk$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_mesh$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_math_std$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_math_special$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_pdat_std$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_pdat_special$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_xfer$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI2d_hier$(LIB_SUFFIX) 
+
+LIBSAMRAI3D = \
+	$(OBJECT)/lib/libSAMRAI3d_appu$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_algs$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_solv$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_geom$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_mblk$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_mesh$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_math_std$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_math_special$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_pdat_std$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_pdat_special$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_xfer$(LIB_SUFFIX) \
+	$(OBJECT)/lib/libSAMRAI3d_hier$(LIB_SUFFIX) 
+
+M4	      =	@M4@
+RM            = rm -f
+XARGS	      = @XARGS@
+
+F77           = @F77@
+FFLAGS        = @F77_FLAGS@ $(FFLAGS_EXTRA)
+
+CC            = @CC@
+CFLAGS        = @C_FLAGS@ $(CFLAGS_EXTRA)
+
+CXX           = @CXX@
+CXXFLAGS      =	@CXX_FLAGS@ $(CXXFLAGS_EXTRA)
+
+CPPFLAGS      = -I. -I$(OBJECT)/include -I$(INCLUDE_SAM) @INC_PATH@ $(CPPFLAGS_EXTRA)
+
+AR	      = @AR@
+
+LDFLAGS       = @LD_FLAGS@ -L$(OBJECT)/lib @LIB_PATH@ $(LDFLAGS_EXTRA)
+LDLIBS        = $(LDLIBS_EXTRA) @LIB_NAME@
+
+CXXLD_FLAGS   = -L$(OBJECT)/lib @CXXLD_FLAGS@ @LIB_PATH@ $(LDFLAGS_EXTRA)
+CXXLDLIBS     = $(LDLIBS_EXTRA) @LIB_NAME@
+
+# Are object files dependent on template implementation files (.C) 
+DEPENDS_ON_TEMPLATE_IMPLEMENTATION=@DEPENDS_ON_TEMPLATE_IMPLEMENTATION@
+
+# Should the special SAMRAI targets be included in the Makefile.config
+DEVELOPER_MAKEFILE=@DEVELOPER_MAKEFILE@
+
+######################################################################
+# Rules used in all directories.
+######################################################################
+
+SAMCLEAN=@$(RM) *.o *.ii *.int.c *.log *.log.* stamp-* core core.* stats -r ti_files ii_files
+
+######################################################################
+# Rules for SAMRAI developer builds only.
+# These may conflict with user Makefiles, leave them off by default.
+######################################################################
+
+ifeq (${DEVELOPER_MAKEFILE},yes)
+
+Makefile: $(SRCDIR)/Makefile.in  $(OBJECT)/config.status
+	cd $(OBJECT) && $(SHELL) ./config.status --file=$(SUBDIR)/$@
+
+endif
+
+
+

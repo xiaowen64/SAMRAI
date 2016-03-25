@@ -1,0 +1,154 @@
+//
+// File:	IndexDataFactory.h
+// Package:	SAMRAI patch data
+// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Release:	0.1
+// Revision:	$Revision: 173 $
+// Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+// Description: hier::Patch data factory for irregularly indexed patch data
+//
+
+#ifndef included_pdat_IndexDataFactory
+#define included_pdat_IndexDataFactory
+
+#ifndef included_SAMRAI_config
+#include "SAMRAI_config.h"
+#endif
+#ifndef included_hier_Box
+#include "Box.h"
+#endif
+#ifndef included_hier_IntVector
+#include "IntVector.h"
+#endif
+#ifndef included_hier_PatchData
+#include "PatchData.h"
+#endif
+#ifndef included_hier_PatchDataFactory
+#include "PatchDataFactory.h"
+#endif
+#ifndef included_tbox_Arena
+#include "tbox/Arena.h"
+#endif
+#ifndef included_tbox_Pointer
+#include "tbox/Pointer.h"
+#endif
+
+#ifndef NULL
+#define NULL (0)
+#endif
+
+namespace SAMRAI {
+    namespace pdat {
+
+/**
+ * Class IndexDataFactory<DIM> is the factory class used to allocate
+ * new instances of IndexData<DIM> objects.  It is a subclass of the
+ * hier::PatchDataFactory<DIM> base class.
+ *
+ * @see pdat::IndexData
+ * @see pdat::IndexVariable
+ * @see hier::PatchDataFactory
+ */
+
+template<int DIM, class TYPE>
+class IndexDataFactory : public hier::PatchDataFactory<DIM>
+{
+public:
+   /**
+    * The default constructor for the IndexDataFactory<DIM> class.
+    * The ghost cell width argument gives the default width for all
+    * irregular data objects created with this factory.
+    */
+   IndexDataFactory(const hier::IntVector<DIM>& ghosts);
+
+   /**
+    * Virtual destructor for the irregular data factory class.
+    */
+   virtual ~IndexDataFactory<DIM,TYPE>();
+
+   /**
+    * Virtual function to clone the irregular data factor.  This will return
+    * a new instantiation of the factory with the samr properties (e.g, same
+    * type and ghost cell width).  The properties of the cloned factory can
+    * then be changed (e.g., change the ghost cell width) without modifying
+    * the original.
+    */
+   virtual tbox::Pointer< hier::PatchDataFactory<DIM> > cloneFactory();
+
+   /**
+    * Virtual factory function to allocate a concrete irregular data object.
+    * The default information about the object (e.g., ghost cell width) is
+    * taken from the factory.  If no memory pool is provided, the allocation
+    * routine assumes some default memory pool.
+    */
+   virtual tbox::Pointer< hier::PatchData<DIM> >
+   allocate(const hier::Box<DIM>& box,
+            tbox::Pointer<tbox::Arena> pool = (tbox::Arena *) NULL) const;
+
+   /**
+    * Allocate the box geometry object associated with the patch data.
+    * This information will be used in the computation of intersections
+    * and data dependencies between objects.
+    */
+   virtual tbox::Pointer< hier::BoxGeometry<DIM> >
+   getBoxGeometry(const hier::Box<DIM>& box) const;
+
+   /**
+    * Get the default ghost cell width.  This is the ghost cell width that
+    * will be used in the instantiation of concrete irregular data instances.
+    */
+   virtual const hier::IntVector<DIM>& getDefaultGhostCellWidth() const;
+
+   /**
+    * Set the default ghost cell width.  This is the ghost cell width that
+    * will be used in the instantiation of concrete irregular data instances.
+    */
+   virtual void setDefaultGhostCellWidth(const hier::IntVector<DIM>& ghosts);
+
+   /**
+    * Calculate the amount of memory needed to store the irregular data
+    * object, including object data but not dynamically allocated data.
+    * Because the irregular data list can grow and shrink, it would be
+    * impossible to estimate the necessary amount of memory.  Instead,
+    * dynamic data is allocated via the standard new/free mechanisms.
+    */
+   virtual size_t getSizeOfMemory(const hier::Box<DIM>& box) const;
+
+   /**
+    * Return a boolean true value indicating that the index data quantities will always 
+    * be treated as though fine values represent them on coarse-fine interfaces.
+    * See the IndexVariable<DIM> class header file for more information.
+    */
+   bool fineBoundaryRepresentsVariable() const {return true;}
+
+   /**
+    * Return false since the index data index space matches the cell-centered
+    * index space for AMR patches.  Thus, index data does not live on patch borders.
+    */
+   bool dataLivesOnPatchBorder() const {return false;}
+
+   /**
+    * Return whether it is valid to copy this IndexDataFactory to the 
+    * supplied destination patch data factory.  It will return true if 
+    * dst_pdf is an IndexDataFactory of the same type and dimension,
+    * false otherwise.
+    */
+   bool validCopyTo(
+      const tbox::Pointer< hier::PatchDataFactory<DIM> >& dst_pdf) const;   
+
+
+private:
+   hier::IntVector<DIM> d_ghosts;
+
+   IndexDataFactory(const IndexDataFactory<DIM,TYPE>&);
+   void operator=(const IndexDataFactory<DIM,TYPE>&);
+
+};
+
+}
+}
+#endif
+
+#ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
+#include "IndexDataFactory.C"
+#endif

@@ -1,0 +1,16 @@
+#!/bin/sh
+##
+## File:        cvis
+## Package:     Vizamrai
+## Copyright:   (c) 1997-2000 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: Script used to invoke the CASC Visualization toolkit
+##
+
+LD_LIBRARY_PATH="$LD_LIBRARY_PATH:CVIS_INSTALL/lib"
+export LD_LIBRARY_PATH
+
+TCLLIBPATH="CVIS_INSTALL/lib/cvis/ $TCLLIBPATH"
+export TCLLIBPATH
+CVIS_INSTALL/bin/vtk $*

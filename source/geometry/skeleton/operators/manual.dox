@@ -1,0 +1,25 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace geom {
+
+/*!
+  @page package_geometry_skeleton_operators Skeleton Operators
+
+  These classes provide dummy coarsen and refine operators for the
+  skeleton geometry type.  They provide dummy implementations of 
+  the pure virtual functions in the refine and coarsen operator 
+  interfaces.
+  - SAMRAI::geom::SkeletonRefine
+  - SAMRAI::geom::SkeletonCoarsen
+*/
+
+}
+}

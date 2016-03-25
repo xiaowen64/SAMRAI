@@ -1,0 +1,74 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI tests
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 173 $
+## Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description: makefile for SAMRAI patch hierarchy refine/coarsen tests
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/test/hierarchy
+VPATH         = @srcdir@
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = HierarchyTester.o \
+		tbox_Pointer-HierarchyTester.o \
+		main.o
+
+test2d:
+		if test -f stamp-1d; then $(MAKE) clean-check; fi
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o test2d
+
+test3d:
+		if test -f stamp-1d; then $(MAKE) clean-check; fi
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 test-3d
+
+test-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o test3d
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	test2d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d hierarchy-refine2d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test2d hierarchy-coarsen2d.input
+
+check3d:	test3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d hierarchy-refine3d.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./test3d hierarchy-coarsen3d.input
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) test*d
+
+redo:
+		$(RM) *core* test*d
+
+include $(SRCDIR)/Makefile.depend

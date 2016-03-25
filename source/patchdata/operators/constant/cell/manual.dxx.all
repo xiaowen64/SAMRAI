@@ -1,0 +1,21 @@
+/*
+ * File:        manual.dxx
+ * Package:     SAMRAI DOC++ manual
+ * Copyright:   (c) 1997-2005 The Regents of the University of California
+ * Revision:    $Revision$
+ * Modified:    $Date$
+ * Description: Generation of SAMRAI DOC++ source code manual
+ */
+
+/**
+ * @name Cell Data Constant Operators
+ *
+ * These classes implement constant refine operations for 
+ * cell-centered patch data.
+ */
+//@{
+//@Include: pdat_CellComplexConstantRefineX.h.sed
+//@Include: pdat_CellDoubleConstantRefineX.h.sed
+//@Include: pdat_CellFloatConstantRefineX.h.sed
+//@Include: pdat_CellIntegerConstantRefineX.h.sed
+//@}

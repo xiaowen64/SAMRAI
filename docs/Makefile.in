@@ -1,0 +1,54 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the entire SAMRAI distribution
+##
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+top_builddir = ..
+subdir = docs
+VPATH = @srcdir@
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status --file=$(subdir)/$@
+
+Doxyfile: $(srcdir)/Doxyfile.in $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status --file=$(subdir)/$@
+dox: Doxyfile
+	@mkdir -p @dox_output_dir@.	&& \
+	@DOXYGEN_BIN@ Doxyfile	&& \
+	echo "# $@ was updated at `date` using this Doxyfile:" > $@	&& \
+	cat Doxyfile >> $@	&& \
+	cp @dox_output_dir@samrai.tag @dox_output_dir@samrai-dox/html/samrai.tag
+	echo "Created documentation in @dox_output_dir@"
+redox:
+	rm -f dox && $(MAKE) dox
+
+devDoxyfile: $(srcdir)/devDoxyfile.in $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status --file=$(subdir)/$@
+devdox: devDoxyfile
+	@mkdir -p @dox_output_dir@.	&& \
+	@DOXYGEN_BIN@ devDoxyfile	&& \
+	echo "# $@ was updated at `date` using this Doxyfile:" > $@	&& \
+	cat devDoxyfile >> $@	&& \
+	cp @dox_output_dir@samrai-dev.tag @dox_output_dir@samrai-devdox/html/samrai.tag
+	echo "Created documentation in @dox_output_dir@"
+redevdox:
+	rm -f devdox && $(MAKE) devdox
+
+grey-dox-bg:
+	@cd @dox_output_dir@.	&&\
+	files="`echo samrai*dox/html/doxygen.css`"	&&\
+	if test -n "$${files}"; then	\
+	  echo "Making html background grey"	&&\
+	  for i in $${files}; do	\
+	    echo 'body { background: #bbbbbb; }' >> $${i}	;\
+	  done	;\
+	fi

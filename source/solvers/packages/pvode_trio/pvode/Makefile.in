@@ -1,0 +1,32 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI solvers
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	primary makefile for the SAMRAI-CVODE interface package
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/solvers/packages/pvode_trio/pvode
+OBJECT        = ../../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+SUBDIRS = pvode wrapper
+
+library:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+lib1d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+lib2d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+lib3d:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+libXd:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done
+clean:
+	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@); done

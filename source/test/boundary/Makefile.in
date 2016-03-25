@@ -1,0 +1,86 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for boundary utilities sample application
+##
+
+SAMRAI	      = @top_srcdir@
+SRCDIR        = @top_srcdir@/examples/boundary
+SUBDIR        = source/test/boundary
+VPATH         = @top_srcdir@/examples/boundary
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+AUTOTEST      = $(SAMRAI)/source/test/boundary
+CPPFLAGS_EXTRA= -I$(AUTOTEST) -DNDIM=$(PDIM) -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o BoundaryDataTester.o
+
+main2d:
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+TEST_NPROCS = @TEST_NPROCS@
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	main2d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d basic2d-flow.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d basic2d-reflect.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d basic2d-dirichlet.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d basic2d-neumann.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d basic2d-periodic01.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d basic2d-periodic11.input
+
+check3d:	main3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-flow.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-reflect.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-dirichlet.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-neumann.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-periodic010.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-periodic011.input; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d basic3d-periodic111.input 
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) *main* 
+
+include $(SRCDIR)/Makefile.depend

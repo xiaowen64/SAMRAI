@@ -1,0 +1,24 @@
+//
+// File:	tbox__List-tbox__TimerPointer.C
+// Package:	SAMRAI templates
+// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Revision:	$Revision: 1.32 
+// Modified:	$Date: 2003/01/22 01:12:43 
+// Description:	Automatically generated template file
+//
+
+#include "tbox/List.h"
+#include "tbox/List.C"
+#include "tbox/Timer.h"
+
+namespace SAMRAI {
+   namespace tbox {
+#ifdef LACKS_STATIC_DATA_INSTANTIATION
+tbox::ListNode< tbox::Timer* > *tbox::ListNode< tbox::Timer* >::s_free_list=0;
+bool tbox::ListNode< tbox::Timer* >::s_registered_callback=false;
+#endif
+template class tbox::List< tbox::Timer* >;
+template class tbox::ListIterator< tbox::Timer* >;
+template class tbox::ListNode< tbox::Timer* >;
+}
+}

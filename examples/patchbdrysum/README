@@ -1,0 +1,30 @@
+The HierSumTest tests patch boundary node sum operations performed in the
+PatchBoundaryNodeSum class.  
+
+The test works as follows:
+
+  1) Initially, set all CELL values to 1.0, except on coarser
+     regions that are covered by finer regions where the cell
+     values are set to 0.0.
+
+  2) Set node/edge values equal to the sum of the cell values it aligns
+     At this point, nodes on patch interiors will equal 2^NDIM and
+     edges will equal 2^(NDIM-1) (i.e. the number of cells each align).  
+     Node and edge values on patch boundaries will be less than this 
+     because they are pulling in cell values of zero.
+ 
+     On finer levels....
+       o zero out cells on the coarser level for which fine level patches
+         overlap. This assures nodes at the coarse-fine boundary will
+         not get duplicate contributions from both fine and coarse
+         levels during the sum.
+       o set cells at the coarse-fine interface (i.e. the ghost region
+         where fine patches intersect with coarser) to 1.0. 
+
+  3) Do the outernode and outeredge sum operations   
+
+  4) Check values.  All node values should equal 2^NDIM and all edge values
+     should equal 2^(NDIM-1).  Nodes that have a finer level overlapping
+     will be 0.0 on the interior of the patch. 
+
+

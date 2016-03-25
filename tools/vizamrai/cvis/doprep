@@ -1,0 +1,10 @@
+SGSTCLPATH="/Progra~1/Tcl.profile"
+cd $SGSTCLPATH/bin
+prep /OM /FT wish83d.exe *.dll
+rm -fr origdll
+mkdir origdll
+mv *.dll origdll/
+for i in *._ll
+do
+	cp $i `basename $i _ll`dll
+done

@@ -1,0 +1,25 @@
+#!/bin/sh
+##
+## File:        update
+## Package:     SAMRAI scripts
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: shell script to run updateXd, include, and depend
+##
+
+BIN=`dirname $0`
+
+perl $BIN/updateXd.pl
+#NOTE: I removed the "includes" part of this script because it causes a 
+#      weird dependency between linked and actual include files.  e.g. if you 
+#      run "includes --link" and then run "update" it screws up your include 
+#      directory.  AMW 5/05
+#perl $BIN/includes "$@"
+sh $BIN/depend
+
+if test -n "`pwd | grep ./source/.`" ; then
+   echo "Warning - you may need to re-run $BIN/depend in SAMRAI/source..."
+fi
+
+exit 0

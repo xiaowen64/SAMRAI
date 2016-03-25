@@ -1,0 +1,58 @@
+Main {
+  base_name = "default2"
+  log_all_nodes = FALSE
+  // Visualization writers to write files for.
+  vis_writer = "VisIt"
+}
+
+HyprePoisson {
+  CellPoissonHypreSolver {
+    use_smg = TRUE	// Whether to use HYPRE's SMG instead of PFMG.
+    print_solver_info = TRUE
+    max_iterations = 20             // Max iterations used by Hypre
+    relative_residual_tol = 1.0e-8  // Residual tolerance used by Hypre
+    num_pre_relax_steps = 1         // # of presmoothing steps used by Hypre
+    num_post_relax_steps = 1        // # of postsmoothing steps used by Hypre
+  }
+  bc_coefs {
+    // These are the boundary condition specifications.  The number
+    // after "boundary_" is the location index of the boundary.
+    // The inputs are arrays of strings where the first string
+    // indicates the type of values you want to set.  "slope" means
+    // boundary slope, "value" means boundary value, and "coefficients"
+    // mean the raw Robin boundary condition coefficients.
+    // The remaining strings are converted into numbers as
+    // appropriate for what boundary condition you specified with
+    // the first string.  Other boundary conditions are possible.
+    // see the solv_RobinBcCoefStrategy class.
+    // Examples:
+    boundary_0 = "value", "0"
+    boundary_1 = "coefficients", "1", "0"
+    boundary_2 = "value", "0"
+    boundary_3 = "value", "0"
+  }
+
+}
+
+CartesianGeometry {
+  domain_boxes = [(0,0), (31,31)]
+  x_lo         = 0, 0
+  x_up         = 1, 1
+}
+
+StandardTagAndInitialize {
+  // Use default settings for this example.
+}
+
+LoadBalancer{
+  // Use default settings for this example.
+}
+
+GriddingAlgorithm {
+   max_levels = 1
+   largest_patch_size {
+      level_0 = 1024, 1024
+      // all finer levels will use same values as level_0...
+   }
+}
+

@@ -1,0 +1,52 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI tests
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for testing variable database operations
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/variables
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+default: check
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA	= -DNDIM=$(PDIM) -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS	= main-var_db.o
+
+vdbtest2:	
+		if test -f stamp-3d; then $(MAKE) clean-check ; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-var_db2
+
+main-var_db2:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o vdbtest2
+
+TEST_NPROCS = @TEST_NPROCS@
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	vdbtest2 
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./vdbtest2
+
+check3d:
+
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) *.f vdbtest*
+
+include $(SRCDIR)/Makefile.depend

@@ -1,0 +1,54 @@
+##
+## File:	Makefile.objects
+## Package:	SAMRAI
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Release:	$Name:  $
+## Revision:	$Revision: $
+## Modified:	$Date: $
+## Description:	makefile objects
+##
+
+
+
+libdefault:	HyperbolicLevelIntegrator-NDIM${NDIM}.o				\
+	HyperbolicPatchStrategy-NDIM${NDIM}.o				\
+	ImplicitEquationStrategy-NDIM${NDIM}.o				\
+	ImplicitIntegrator-NDIM${NDIM}.o				\
+	LocallyActiveDataOuteredgeSumTransactionFactory-NDIM${NDIM}.o	\
+	LocallyActiveDataOuternodeSumTransactionFactory-NDIM${NDIM}.o	\
+	LocallyActiveDataPatchBoundaryEdgeSum-NDIM${NDIM}.o		\
+	LocallyActiveDataPatchBoundaryNodeSum-NDIM${NDIM}.o		\
+	MethodOfLinesIntegrator-NDIM${NDIM}.o				\
+	MethodOfLinesPatchStrategy-NDIM${NDIM}.o			\
+	OuteredgeSumTransaction-NDIM${NDIM}.o				\
+	OuteredgeSumTransactionFactory-NDIM${NDIM}.o			\
+	OuternodeSumTransaction-NDIM${NDIM}.o				\
+	OuternodeSumTransactionFactory-NDIM${NDIM}.o			\
+	PatchBoundaryEdgeSum-NDIM${NDIM}.o				\
+	PatchBoundaryNodeSum-NDIM${NDIM}.o				\
+	TimeRefinementIntegrator-NDIM${NDIM}.o				\
+	TimeRefinementLevelStrategy-NDIM${NDIM}.o			\
+	tbox__Pointer-algs__HyperbolicLevelIntegrator-NDIM${NDIM}.o	\
+	tbox__Pointer-algs__LocallyActiveDataPatchBoundaryEdgeSum-NDIM${NDIM}.o\
+	tbox__Pointer-algs__LocallyActiveDataPatchBoundaryNodeSum-NDIM${NDIM}.o\
+	tbox__Pointer-algs__MethodOfLinesIntegrator-NDIM${NDIM}.o	\
+	tbox__Pointer-algs__PatchBoundaryEdgeSum-NDIM${NDIM}.o		\
+	tbox__Pointer-algs__PatchBoundaryNodeSum-NDIM${NDIM}.o		\
+	tbox__Pointer-algs__TimeRefinementIntegrator-NDIM${NDIM}.o	\
+	tbox__Pointer-algs__TimeRefinementLevelStrategy-NDIM${NDIM}.o	\
+	tbox__Array-tbox__Pointer-algs__LocallyActiveDataPatchBoundaryEdgeSum-NDIM${NDIM}.o\
+	tbox__Array-tbox__Pointer-algs__LocallyActiveDataPatchBoundaryNodeSum-NDIM${NDIM}.o\
+	tbox__Array-tbox__Pointer-algs__PatchBoundaryEdgeSum-NDIM${NDIM}.o\
+	tbox__Array-tbox__Pointer-algs__PatchBoundaryNodeSum-NDIM${NDIM}.o
+
+
+libchar:	
+
+
+libbool:	
+
+
+libfloat:	
+
+
+libdcomplex:	

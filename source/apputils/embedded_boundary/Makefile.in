@@ -1,0 +1,50 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI communication and data transfer package
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Release:	$Name:  $
+## Revision:	$Revision: 605 $
+## Modified:	$Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+## Description:	makefile for library directory 
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/apputils/embedded_boundary
+VPATH         = @srcdir@
+OBJECT        = ../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library: lib1d lib2d lib3d
+
+# For classes that are non-dimensional.
+OBJS= appu_ebdry2d.o appu_ebdry3d.o
+
+OBJS2D=
+
+OBJS3D=
+
+ifeq ($(NDIM),2)
+OBJSXD:=$(OBJS2D)
+endif
+
+ifeq ($(NDIM),3)
+OBJSXD:=$(OBJS3D)
+endif
+
+lib1d:
+
+lib2d:		libXd $(OBJS2D)
+
+lib3d:		libXd $(OBJS3D)
+
+libXd:		$(OBJS) $(OBJSXD)
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend
+

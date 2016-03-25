@@ -1,0 +1,26 @@
+/*
+ * File:        manual.dxx
+ * Package:     SAMRAI DOC++ manual
+ * Copyright:   (c) 1997-2005 The Regents of the University of California
+ * Revision:    $Revision$
+ * Modified:    $Date$
+ * Description: Generation of SAMRAI DOC++ source code manual
+ */
+
+/**
+ * @name Cell Data Operators
+ *
+ * These classes implement spatial coarsen and refine operations for 
+ * cell-centered patch data on a basic Cartesian mesh.
+ */
+//@{
+//@Include: geom_CartesianCellComplexConservativeLinearRefineX.h.sed
+//@Include: geom_CartesianCellComplexLinearRefineX.h.sed
+//@Include: geom_CartesianCellComplexWeightedAverageX.h.sed
+//@Include: geom_CartesianCellDoubleConservativeLinearRefineX.h.sed
+//@Include: geom_CartesianCellDoubleLinearRefineX.h.sed
+//@Include: geom_CartesianCellDoubleWeightedAverageX.h.sed
+//@Include: geom_CartesianCellFloatConservativeLinearRefineX.h.sed
+//@Include: geom_CartesianCellFloatLinearRefineX.h.sed
+//@Include: geom_CartesianCellFloatWeightedAverageX.h.sed
+//@}

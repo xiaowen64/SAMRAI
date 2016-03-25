@@ -1,0 +1,79 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI examples
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 173 $
+## Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description: makefile for SAMRAI HYPRE interface test
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @top_srcdir@/examples/hypre_poisson
+SUBDIR        = source/test/hypre
+VPATH         = @top_srcdir@/examples/hypre_poisson
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM) -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o HyprePoisson.o
+F2D_OBJS      = hyprepoisson2d.o
+F3D_OBJS      = hyprepoisson3d.o
+
+main2d:
+		if test -f stamp-1d; then $(MAKE) clean-check; fi
+		if test -f stamp-3d; then $(MAKE) clean-check; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(F2D_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F2D_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:
+		if test -f stamp-1d; then $(MAKE) clean-check; fi
+		if test -f stamp-2d; then $(MAKE) clean-check; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(F3D_OBJS) $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F3D_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) stamp-*d main*d
+
+redo:
+		$(RM) core main*d
+
+include $(SRCDIR)/Makefile.depend
+
+FORTRAN         = $(SRCDIR)/fortran/$(PDIM)d
+M4DIRS          = -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+
+hyprepoisson$(PDIM)d.o:	$(FORTRAN)/hyprepoisson$(PDIM)d.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/hyprepoisson$(PDIM)d.m4 > hyprepoisson$(PDIM)d.f
+		$(F77) $(FFLAGS) -c hyprepoisson$(PDIM)d.f -o $@
+
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	main2d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main2d 2d.default.input; \
+
+check3d:	main3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./main3d 3d.default.input; \
+

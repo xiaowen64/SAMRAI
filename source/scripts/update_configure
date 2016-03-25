@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# Go to the top level SAMRAI directory and make sure we get there.
+cd `dirname $0`/../.. || exit 1;
+test -d "source/hierarchy/patches" || exit 1
+
+echo "Checking out acmacros"
+cvs -d /usr/casc/samrai/gunney/cvsrepository checkout -rv_0_3 acmacros
+
+echo "Running aclocal"
+aclocal -I config -I acmacros --output=config/aclocal.m4
+
+echo "Running autoconf"
+autoconf -I config

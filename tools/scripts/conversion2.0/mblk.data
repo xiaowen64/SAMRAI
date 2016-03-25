@@ -1,0 +1,22 @@
+##
+## File:        mblk.data
+## Package:     SAMRAI build scripts
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: data file for sed substitutions to generate dim-dep. files
+##
+
+
+#
+# multiblock package
+#
+
+mblk_MBDataUtilities
+mblk_MBUtilities
+mblk_Multiblock
+mblk_MultiblockLevel
+mblk_MultiblockPatchStrategy
+mblk_MultiblockRefineAlgorithm
+mblk_MultiblockRefineSchedule
+

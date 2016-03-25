@@ -1,0 +1,41 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI test
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 173 $
+## Modified:    $Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description: makefile for testing the input database driver
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = source/test/inputdb
+VPATH         = @srcdir@
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=2  -DTESTING=1
+
+inputdb:	inputdb.o $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) inputdb.o $(LIBSAMRAI) $(LDLIBS) -o $@
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:		inputdb
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) \
+			./inputdb inputdb.input
+
+check2d:
+		$(MAKE) check
+
+check3d:
+		$(MAKE) check
+
+clean:
+		$(SAMCLEAN)
+		$(RM) inputdb 
+
+include $(SRCDIR)/Makefile.depend

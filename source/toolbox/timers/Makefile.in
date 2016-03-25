@@ -1,0 +1,35 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI toolbox
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the Timer classes
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/toolbox/timers
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library:	lib1d lib2d lib3d
+
+OBJS	      = Clock.o \
+		Statistic.o Statistician.o \
+		StatTransaction.o	\
+		Timer.o TimerManager.o
+
+lib1d:		$(OBJS)
+lib2d:		$(OBJS)
+lib3d:		$(OBJS)
+libXd:		$(OBJS)
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

@@ -1,0 +1,44 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace solv {
+
+/*!
+  @page package_solvers_packages_petsc PETSc Vector Interface
+
+  An abstract PETSc vector interface is provided to couple a vector 
+  kernel and operations with the PETSc solver library.
+  The templated interface class supports double or float.
+  Since PETSc
+  also supports vectors with complex entries, a complex vector interface
+  class may be provided in the future if such a need arises.  A vector 
+  kernel derived from this interface that may be used with the SAMRAI
+  framework is provided in the SAMRAI Algorithm package.  However, the 
+  interface provided here is entirely independent of SAMRAI.  
+  The vector interface conforms to PETSc version 2.1.6.  In the future, it
+  will be maintained to be current with the latest PETSc version.
+
+  The interfaces to the PETSC nonlinear solver SNES is provided through
+  the wrapper class SAMRAI::solv::SNES::SAMRAIContextX.  This class allows
+  you to use SNES with the natively supported
+  SAMRAI::solv::PETScAbstractVectorReal class.  The nonlinear solver
+  requires certain user-provided operations that must be provided
+  through inheriting the interface class SAMRAI::solv::SNESAbstractFunctions.
+
+  PETSc was developed in the Mathematics and Computer Science Division at 
+  Argonne National Laboratory (ANL).  For more information about PETSc, 
+  see http://www-fp.mcs.anl.gov/petsc/.
+  - SAMRAI::solv::PETScAbstractVectorReal
+  - SAMRAI::solv::SNESAbstractFunctions
+  - SAMRAI::solv::SNES_SAMRAIContext
+*/
+
+}
+}

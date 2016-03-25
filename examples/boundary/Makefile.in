@@ -1,0 +1,46 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI boundary test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for boundary utilities test program
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = examples/boundary
+OBJECT        = ../..
+
+default:        main2d
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DTESTING=0
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS	= main.o BoundaryDataTester.o
+
+main2d:
+	if test -f stamp-3d; then $(MAKE) clean; fi
+	touch stamp-2d
+	$(MAKE) PDIM=2 main-2d
+
+main-2d: 	$(CXX_OBJS) $(LIBSAMRAIDPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS)	\
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d	
+
+main3d:
+	if test -f stamp-2d; then $(MAKE) clean; fi
+	touch stamp-3d
+	$(MAKE) PDIM=3 main-3d
+
+main-3d: 	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS)	\
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d	
+
+clean:
+	$(SAMCLEAN)
+	$(RM) main2d main3d
+
+include Makefile.depend

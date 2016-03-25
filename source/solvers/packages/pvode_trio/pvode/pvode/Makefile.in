@@ -1,0 +1,41 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI PVODE wrappers
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the PVODE source code
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/solvers/packages/pvode_trio/pvode/pvode
+VPATH	      =	.
+OBJECT        = ../../../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library:	cvode_test
+lib1d:		cvode_test
+lib2d:		cvode_test
+lib3d:		cvode_test
+libXd:		cvode_test
+
+cvode_test:
+		if [ -r cvode.c ]; then $(MAKE) cvode_libs; fi
+
+# OBJS = cvode.o cvspgmr.o iterativ.o llnlmath.o spgmr.o
+# To avoid replicating llnlmath.o, spgmr.o iterative.o configure
+# determines which files to compile, the shared files will be compiled
+# in KINSOL if it is available otherwise they will be included here
+SRCS= @PVODE_C_FILES@
+OBJS= ${SRCS:.c=.o}
+
+cvode_libs:	$(OBJS)
+
+clean:
+	$(SAMCLEAN)
+
+include @srcdir@/Makefile.depend

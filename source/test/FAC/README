@@ -1,0 +1,33 @@
+****************************************************************************
+*  Copyright 1997-2005                                                     *
+*  The Regents of the University of California.                            *
+*  All rights reserved.                                                    *
+****************************************************************************
+****************************************************************************
+*                                                                          *
+*  FAC solver test:                                                        *
+*                                                                          *
+****************************************************************************
+
+Test problems for FAC solver
+============================
+
+To generate the 2D and 3D sources, use the genfiles.sh script.
+This script should be run in the SAMRAI/source/test/FAC directory
+or one of the dimensional subdirectories.
+
+To regenerate the source while in the object directory of this
+test, use "make src".
+
+To run:
+======
+
+Compilation:
+              make
+
+Execution:
+              make check
+  or  
+              make check2d
+  or  
+              make check2d

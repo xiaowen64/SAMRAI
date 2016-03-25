@@ -1,0 +1,137 @@
+=============================================================================
+		Vizamrai Installation Instructions
+=============================================================================
+
+Vizamrai is now based on VTK 4.x, so you need to make sure you have the
+correct version of VTK from kitware.  Once you have VTK compiled, installing
+the necessary files for vizamrai is not very hard.  Getting all the VTK parts
+compiled can be non-trivial.
+
+You should have the following installed:
+
+TCL/TK	
+	See 
+		http://www.scriptics.com/
+	
+ITCL
+	See
+		http://www.sciptics.com/
+
+We are using the ActiveState TCL distribution 8.4.2.0 availible from
+
+	http://www.activestate.com/
+	
+
+VTK
+	Tested with 4.2.
+
+	See
+		http:://www.kitware.com/
+
+*****************************************************************************
+Installation overview
+
+Vizamrai is composed of two major parts, a set of scripts and a few
+C++ VTK classes which are compiled into a shared library.  Both of
+these must be installed for Vizamrai to work correctly.
+
+We use the CMake utility (which is required for building VTK, so you 
+should have this installed already).
+
+*****************************************************************************
+
+Step 1.  Building support tools
+
+*****************************************************************************
+
+Make sure VTK, TCL/TK, and ITCL are all installed.  These are all
+required for Vizamrai to work.  VTK needs to be compiled with several
+options turned on, see the build instructions for VTK for more
+information on building VTK.  Make sure your VTK CMakeCache.txt file
+has the following options turned on:
+
+BUILD_SHARED_LIBS:BOOL=OFF
+
+VTK_USE_HYBRID:BOOL=ON
+
+VTK_USE_PATENTED:BOOL=ON
+
+VTK_USE_RENDERING:BOOL=ON
+
+VTK_WRAP_TCL:BOOL=ON
+
+*****************************************************************************
+
+Step 2.  Building vizamrai
+
+*****************************************************************************
+
+Once VTK is built, you have the hard part done.  Since Vizamrai uses
+the CMake configuration information from the VTK build, all of the
+configuration information should be available.
+
+# First create the directory where you want to build Vizamrai.
+# (This is temporary and can be deleted when after the install is done).
+
+mkdir objdir  
+cd objdir
+
+#*************************************************************************
+# Create an initial CMakeCache.txt file with a couple of defaults
+# VTKINSTALLDIR is the where VTK was install at and SOURCDIR is
+# the Vizamrai source directory
+//Use an installed (versus built from source) version of VTK. Be
+// sure that VTK_INSTALL_PATH is correct.
+USE_INSTALLED_VTK:BOOL=ON
+
+//What is the path where the file include/vtk/UseVTK.cmake can
+// be found
+VTK_INSTALL_PATH:PATH=/the vtk install directory
+
+//Where can the hints file be found
+VTK_WRAP_HINTS:FILEPATH=/home/smithsg/VTK/vizamrai/Wrapping/hints
+
+//Install path prefix, prepended onto install directories.
+CMAKE_INSTALL_PREFIX:PATH=/the vtk install directory
+#*************************************************************************
+
+
+# Run cmake to build the makefiles
+cmake <SAMRAI_SOURCE_DIR>/tools/vizamrai
+
+# Everything should be setup so just build and install
+make
+make install
+
+At this point there should be a "vizamrai" script in the bin directory
+of VTK install, just execute this to run the vizamrai application launcher.
+
+=============================================================================
+
+Running Vizamrai
+
+Several sample scripts are included for reading and displaying SAMRAI
+datasets.  These are installed in the bin directory of the VTK
+directory.  
+
+	vizamrai.1slice filename.vis
+	vizamrai.3slice filename.vis
+
+		Cuts the data with one or three slice planes.  
+
+	vizamrai.carpet filename.vis
+
+		Used mostly for looking at 2D data, cuts the box
+		with a slice plane and does a height map plot of the
+		data.  
+		
+	vizamrai.iso filename.vis
+
+		Isosurface around a value.
+
+	vizamrai.vol filename.vis
+
+		Volume rendering of a 3D field.  This has very
+		limited controls at the moment.  This is also very
+		slow.
+		

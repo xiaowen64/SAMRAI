@@ -1,0 +1,173 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI algorithm
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 676 $
+## Modified:	$Date: 2005-10-14 15:23:35 -0700 (Fri, 14 Oct 2005) $
+## Description:	makefile for testing patch data operations
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/dataops
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA	= -DDISPLAY -DNDIM=$(PDIM)  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+cellpatchtest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 cell_patchtest
+
+cellpatchtest3d:
+		@echo "Make sure all files were compiled with PDIM=3..."
+		$(MAKE) clean-check
+		$(MAKE) PDIM=3 cell_patchtest3d
+
+cellhiertest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 cell_hiertest
+
+cellhiertest3d:
+		@echo "Make sure all files were compiled with PDIM=3..."
+		$(MAKE) clean-check
+		$(MAKE) PDIM=3 cell_hiertest3d
+
+edgehiertest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 edge_hiertest
+
+facehiertest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 face_hiertest
+
+sidehiertest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 side_hiertest
+
+nodehiertest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 node_hiertest
+
+edgecplxtest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 edge_cplxtest
+
+facecplxtest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 face_cplxtest
+
+sidecplxtest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 side_cplxtest
+ 
+nodecplxtest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 node_cplxtest
+ 
+cellcplxtest:
+		@echo "Make sure all files were compiled with PDIM=2..."
+		$(MAKE) PDIM=2 cell_cplxtest
+
+cellcplxtest3d:
+		@echo "Make sure all files were compiled with PDIM=3..."
+		$(MAKE) clean-check
+		$(MAKE) PDIM=3 cell_cplxtest3d
+
+cell_patchtest:		cell_patchtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_patchtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+cell_patchtest3d:	cell_patchtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_patchtest.o $(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+cell_hiertest:		cell_hiertest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_hiertest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+cell_hiertest3d:	cell_hiertest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_hiertest.o $(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+edge_hiertest:		edge_hiertest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) edge_hiertest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+face_hiertest:		face_hiertest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) face_hiertest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+side_hiertest:		side_hiertest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) side_hiertest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+node_hiertest:		node_hiertest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) node_hiertest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+cell_cplxtest3d:		cell_cplxtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_cplxtest.o $(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
+ 
+cell_cplxtest:		cell_cplxtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) cell_cplxtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+ 
+edge_cplxtest:		edge_cplxtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) edge_cplxtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+ 
+node_cplxtest:		node_cplxtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) node_cplxtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+ 
+face_cplxtest:		face_cplxtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) face_cplxtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+side_cplxtest:		side_cplxtest.o  $(LIBSAMRAIDEPEND) 
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) side_cplxtest.o $(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:	libdefault @SAMRAI_OPTIONAL_LIBS@
+
+check3d:	cellpatchtest3d cellhiertest3d
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hiertest3d; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_patchtest3d;
+
+libbool:
+
+libchar:
+
+libfloat:
+
+libdcomplex:	cellcplxtest \
+		facecplxtest \
+		nodecplxtest \
+		sidecplxtest \
+		edgecplxtest
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_cplxtest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./face_cplxtest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_cplxtest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_cplxtest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_cplxtest
+
+
+libdefault:	cellpatchtest cellhiertest \
+		facehiertest \
+		nodehiertest \
+		sidehiertest \
+		edgehiertest
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_hiertest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./cell_patchtest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./face_hiertest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./node_hiertest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./edge_hiertest; \
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./side_hiertest
+
+clean-check:
+		$(SAMCLEAN)
+
+clean:		clean-check
+		$(RM) *_hiertest* *_cplxtest* *_patchtest*
+
+
+include $(SRCDIR)/Makefile.depend

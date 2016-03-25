@@ -1,0 +1,145 @@
+THE USER-DEFINED TYPE TO BE USED WITH INDEX DATA
+
+The IndexData patch data type is different from other patch data types in
+SAMRAI, because its templated classes do not use fundamental types or types
+defined within the SAMRAI library as template parameters, but rather they
+require a parameter type to be provided.  This type will be referred to
+as TYPE in this document.  
+
+
+METHODS REQUIRED FOR PARAMETER TYPE
+
+The IndexData class requires that class TYPE define the following methods:
+
+default constructor that takes no arguments
+TYPE& operator=(const TYPE& rhs);
+void copySourceItem(const hier::Index<DIM>& index,
+                    const hier::IntVector<DIM>& src_offset,
+                    const TYPE& src_item);
+size_t getDataStreamSize() const;
+void packStream(tbox::AbstractStream& stream);
+void unpackStream(tbox::AbstractStream& stream,
+                  const hier::IntVector<DIM>& offset);
+void getFromDatabase(tbox::Pointer<tbox::Database>& database);
+void putToDatabase(tbox::Pointer<tbox::Database>& database);
+
+The constructor and assignment operator are needed so that IndexData can
+create and copy TYPE objects.  copySourceItem should copy the data of src_item,
+making adjustments for an offset that might exist due to periodic boundary
+conditions.  If TYPE has data members that depend on the location of the
+item of the domain, then the location item should be located at
+index+src_offset.  getDataStreamSize, packStream, and unpackStream
+are needed for packing and unpacking the data stored in a TYPE object to and
+from parallel communication buffers.  putToDatabase and getFromDatabase are
+used to write and retrieve the data contained in TYPE to and from the restart
+database.
+
+
+INSTATIATING TEMPLATES IN USER CODE
+
+A number of templated IndexData classes should first be instantiated in order
+for the prescribed datatype to be used properly in the application.  
+If you are constructing a datatype that is intended to be used for a particular
+application, and is NOT intended to be part of the SAMRAI library, instantiation
+may be done in user code.   Datatypes that are included in SAMRAI should instead
+be instantiated through separate files.  See below.
+
+To instantiate the templates in user code, add the following lines to one of the
+*.C files in your application code:
+
+        #ifndef LACKS_EXPLICIT_TEMPLATE_INSTANTIATION
+        #include "tbox/Array.C"
+        #include "IndexData.C"
+        #include "IndexDataFactory.C"
+        #include "tbox/List.C"
+        #include "tbox/Pointer.C"
+        #include "IndexVariable.C"
+        template class pdat::IndexData< NDIM,TYPE >;
+        template class pdat::IndexDataFactory< NDIM,TYPE >;
+        template class pdat::IndexDataNode< NDIM,TYPE >;
+        template class pdat::IndexIterator< NDIM,TYPE >;
+        template class pdat::IndexVariable< NDIM,TYPE >;
+        template class tbox::Array< NDIM,TYPE >;
+        template class tbox::Array< pdat::IndexDataNode<NDIM,TYPE> >;
+        template class tbox::List< pdat::IndexDataNode<NDIM,TYPE> >;
+        template class tbox::ListIterator< pdat::IndexDataNode<NDIM,TYPE> >;
+        template class tbox::ListNode< pdat::IndexDataNode<NDIM,TYPE> >;
+        template class tbox::Pointer< pdat::IndexData<NDIM,TYPE> >;
+        template class tbox::Pointer< pdat::IndexVariable<NDIM,TYPE> >;
+
+where TYPE is the class that defines a particular parameter 
+of IndexData type (e.g. BoundaryCell).
+
+
+INSTATIATING TEMPLATES IN THE LIBRARY
+
+If the datatype is intended to go into the SAMRAI library, it should
+be instantiated through separate files to correspond with the way the
+other datatypes are instantiated in the library.
+For each combination of templated types that uses TYPE as a template
+parameter, a file needs to be created for the instantiation of the template.
+This can be done using the perl script make-template.pl located in
+SAMRAI/source/templates.  For example, to create the instantiation file for
+the template class pdat::IndexData<NDIM,TYPE> in directory temp, execute the
+script by typing on the command line:
+
+% perl make-template.pl temp pdat pdat::IndexData NDIM\,TYPE
+
+The file pdat__IndexData-NDIM_TYPE.C would be created in directory temp.
+
+For nested templates, such as tbox::Pointer< pdat::IndexData2<TYPE> >, just
+add another type name to the command line:
+
+% perl make-template.pl temp tbox tbxo::Pointer pdat::IndexData NDIM\,TYPE
+
+When a template parameter type is created, instantiation files need to be
+created for the following template classes, in order for the IndexData classes
+to properly link:
+
+pdat::IndexData<NDIM,TYPE>
+pdat::IndexDataFactory<NDIM,TYPE>
+pdat::IndexDataNode<NDIM,TYPE>
+pdat::IndexIterator<NDIM,TYPE>
+pdat::IndexVariable<NDIM,TYPE>
+tbox::Array<NDIM,TYPE>
+tbox::Array< pdat::IndexDataNode<NDIM,TYPE> >
+tbox::List< pdat::IndexDataNode<NDIM,TYPE> >
+tbox::Pointer< pdat::IndexData<NDIM,TYPE> >
+tbox::Pointer< pdat::IndexVariable<NDIM,TYPE> >
+
+ACCESSING INDEX DATA THROUGH THE ITERATOR
+
+Index data on a patch may be accessed using the IndexIterator, which
+iterates through the list of IndexData components.  For example, 
+
+   tbox::Pointer< pdat::IndexVariable<DIM,TYPE> > data_pointer;
+   tbox::Pointer< pdat::IndexData<DIM,TYPE> > data =
+      patch.getPatchData(data_pointer, context);
+   for (typename pdat::IndexData<DIM,TYPE>::Iterator i(*data); i; i++){
+      size_t size = i().getDataStreamSize();
+      ...
+   }
+
+A user wishing to iterate over all of the cells of the a patch
+where an IndexData object is located should use the BoxIterator associated
+with the Box Class.  For example,
+
+   tbox::Pointer< pdat::IndexVariable<DIM,TYPE> > data_pointer;
+   tbox::Pointer< pdat::IndexData<DIM,TYPE> > data =
+      patch.getPatchData(data_pointer, context);
+   hier::Box box = patch.getGhostBox();
+   for (typename hier::Box::Iterator b(box); b; b++) {
+      if (data.isElement(b())) {
+         ...
+      } else {
+         ...
+      }
+   }
+
+Alternatively, it is possible to iterate over the cells of a
+patch (including ghosts) where an IndexData object is located   
+using a IndexIterator.  
+
+     ADD EXAMPLE USE HERE
+
+

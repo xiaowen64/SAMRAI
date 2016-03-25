@@ -1,0 +1,42 @@
+##
+## File:	Makefile.objects
+## Package:	SAMRAI
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Release:	$Name:  $
+## Revision:	$Revision: $
+## Modified:	$Date: $
+## Description:	makefile objects
+##
+
+
+
+libdefault:	CartesianRobinBcHelper-NDIM${NDIM}.o				\
+	CellPoissonFACOps-NDIM${NDIM}.o					\
+	CellPoissonFACSolver-NDIM${NDIM}.o				\
+	CellPoissonHypreSolver-NDIM${NDIM}.o				\
+	FACOperatorStrategy-NDIM${NDIM}.o				\
+	FACPreconditioner-NDIM${NDIM}.o					\
+	GhostCellRobinBcCoefs-NDIM${NDIM}.o				\
+	KINSOL_SAMRAIContext-NDIM${NDIM}.o				\
+	LocationIndexRobinBcCoefs-NDIM${NDIM}.o				\
+	NonlinearSolverStrategy-NDIM${NDIM}.o				\
+	PETSc_SAMRAIVectorReal-NDIM_double${NDIM}.o			\
+	PVodeTrio_SAMRAIVector-NDIM${NDIM}.o				\
+	RobinBcCoefStrategy-NDIM${NDIM}.o				\
+	SAMRAIVectorReal-NDIM_double${NDIM}.o				\
+	SNES_SAMRAIContext-NDIM${NDIM}.o				\
+	SimpleCellRobinBcCoefs-NDIM${NDIM}.o				\
+	tbox__Pointer-solv__SAMRAIVectorReal-NDIM_double${NDIM}.o
+
+
+libchar:	
+
+
+libbool:	
+
+
+libfloat:	SAMRAIVectorReal-NDIM_float${NDIM}.o				\
+	tbox__Pointer-solv__SAMRAIVectorReal-NDIM_float${NDIM}.o
+
+
+libdcomplex:	

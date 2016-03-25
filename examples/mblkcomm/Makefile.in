@@ -1,0 +1,63 @@
+##
+## File:        Makefile.in
+## Package:     SAMRAI tests
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision: 1.9 $
+## Modified:    $Date: 2004/09/28 18:24:02 $
+## Description: makefile for SAMRAI communication tests
+##
+
+SAMRAI        = @top_srcdir@
+OBJECT        = ../..
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DNDIM=$(PDIM)
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = MultiblockTester.o PatchMultiblockTestStrategy.o main.o \
+		CellMultiblockTest.o \
+		EdgeMultiblockTest.o \
+		FaceMultiblockTest.o \
+		NodeMultiblockTest.o \
+		Pointer-MultiblockTester.o \
+		SideMultiblockTest.o
+
+main1d:
+		if test -f stamp-2d; then $(MAKE) clean; fi
+		if test -f stamp-3d; then $(MAKE) clean; fi
+		touch stamp-1d
+		$(MAKE) PDIM=1 main-1d
+
+main-1d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI1D) $(LIBSAMRAI) $(LDLIBS) -o main1d
+
+main2d:
+		if test -f stamp-1d; then $(MAKE) clean; fi
+		if test -f stamp-3d; then $(MAKE) clean; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:
+		if test -f stamp-1d; then $(MAKE) clean; fi
+		if test -f stamp-2d; then $(MAKE) clean; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) \
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+clean:
+		$(SAMCLEAN)
+		$(RM) stamp-*d main*d
+
+redo:
+		$(RM) core main*d
+
+include Makefile.depend

@@ -1,0 +1,16 @@
+This program tests the smart pointer casting operations, including
+virtual base class notions.
+
+Compilation:
+              make
+  or  
+              make testpointer
+
+Execution:
+              ./testpointer
+
+Output:
+              pointertest.log
+
+-OR- make check
+

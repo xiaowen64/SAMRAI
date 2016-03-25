@@ -1,0 +1,37 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI toolbox
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 605 $
+## Modified:	$Date: 2005-09-09 15:39:55 -0700 (Fri, 09 Sep 2005) $
+## Description:	makefile for the special templates for appu
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/apputils/templates/special
+VPATH	      =	@srcdir@
+OBJECT        = ../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library:	lib1d lib2d lib3d
+
+OBJS          = pdat__IndexData-NDIM_appu__CutCell_NDIM_$(NDIM).o \
+		tbox__Array-pdat__IndexDataNode-NDIM_appu__CutCell_NDIM_$(NDIM).o \
+            	tbox__List-pdat__IndexDataNode-NDIM_appu__CutCell_NDIM_$(NDIM).o \
+            	tbox__Array-pdat__NodeIndex-NDIM$(NDIM).o
+lib1d:
+	$(MAKE) NDIM=1 libXd
+lib2d:
+	$(MAKE) NDIM=2 libXd
+lib3d:
+	$(MAKE) NDIM=3 libXd
+libXd:		$(OBJS)
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

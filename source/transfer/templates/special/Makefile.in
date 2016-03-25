@@ -1,0 +1,37 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI transfer
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 302 $
+## Modified:	$Date: 2005-04-25 10:35:34 -0700 (Mon, 25 Apr 2005) $
+## Description:	makefile for the special templates for transfer
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/transfer/templates/special
+VPATH	      =	@srcdir@
+OBJECT        = ../../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library:	lib1d lib2d lib3d
+
+libdefault:	tbox_List-xfer_CoarsenClasses_NDIM__Data-Ptr${NDIM}.o	\
+		tbox_List-xfer_RefineClasses_NDIM__Data-Ptr${NDIM}.o
+
+lib1d:
+	$(MAKE) NDIM=1 libXd
+lib2d:
+	$(MAKE) NDIM=2 libXd
+lib3d:
+	$(MAKE) NDIM=3 libXd
+
+libXd:	libdefault
+
+clean:
+	$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

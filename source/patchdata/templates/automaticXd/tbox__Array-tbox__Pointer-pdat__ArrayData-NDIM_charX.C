@@ -1,0 +1,19 @@
+//
+// File:	tbox__Array-tbox__Pointer-pdat__ArrayData-NDIM_charX.C
+// Package:	SAMRAI templates
+// Copyright:	(c) 1997-2005 The Regents of the University of California
+// Revision:	$Revision: 1.32 
+// Modified:	$Date: 2003/01/22 01:12:43 
+// Description:	Automatically generated template file
+//
+
+#include "tbox/Array.h"
+#include "tbox/Array.C"
+#include "tbox/Pointer.h"
+#include "ArrayData.h"
+
+namespace SAMRAI {
+   namespace tbox {
+template class tbox::Array< tbox::Pointer< pdat::ArrayData< NDIM,char > > >;
+}
+}

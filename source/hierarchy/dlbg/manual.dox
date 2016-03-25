@@ -1,0 +1,26 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+    namespace hier {
+
+/*!
+  @page package_hierarchy_dlbg Nearest neighbor data for mesh
+  in the form of a graph.
+
+  These classes support the distributed layered box-graph (DLBG)
+  for storing nearest neighbor data.
+  - SAMRAI::hier::LayerNode
+  - SAMRAI::hier::LayerNodeSet
+  - SAMRAI::hier::LayerEdgeSet
+  - SAMRAI::hier::LayerHierarchy
+*/
+
+}
+}

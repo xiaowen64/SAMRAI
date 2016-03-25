@@ -1,0 +1,656 @@
+#!/bin/sh
+##
+## File:        $RCSfile$
+## Package:     SAMRAI
+## Copyright:   (c) 1997-2005 The Regents of the University of California
+## Revision:    $Revision$
+## Modified:    $Date$
+## Description: script to suggest ways to configure SAMRAI
+##
+
+# Note to SAMRAI developers:
+#
+# This script lists known working configure options and associates
+# each configuration with an easy-to-remember index.  Its output can
+# be used as options to SAMRAI's configure script.
+#
+# To add an index, add another case in the case statement, but use the
+# following restrictions so that the help message works automatically:
+#
+# 1. Give your case an index name according to the naming convention.
+# 2. Insert your addition in alphabetical order by index name.
+# 3. Do not use * or | in the glob pattern.
+# 4. Follow the ) with # and a brief (one line) description of
+#    the index.  If you leave out the #, the case will be hidden from
+#    the help message.
+# 5. Add comment that you are maintaining the specific case you added,
+#    so that in case of an error, you can be notified.
+# 6. After adding a case, run this script without arguments to make
+#    sure the help message correctly lists your new addition.
+# 7. Try to list the configure options for each entry in the following order:
+#       C++ compiler       
+#       C compiler
+#       FORTRAN compiler
+#       compiler options
+#       HDF
+#       MPI
+#       Packages stuff (hypre, PVODE, etc.)
+#       SAMRAI specific options
+
+
+case $1 in
+
+##############################################################################
+#                             Autotest Configurations
+#
+# These configurations undergo nightly or weekly autotests, so they should 
+# be current for local systems.
+##############################################################################
+
+# CASC (linux), using GNU compilers, shared library
+casc_gnu-shared_opt_pkg)
+echo "--with-CXX=/usr/apps/gcc/3.3.2/bin/g++ \
+    --with-CC=/usr/apps/gcc/3.3.2/bin/gcc \
+    --with-F77=/usr/apps/gcc/3.3.2/bin/g77 \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-shared
+    --enable-opt --disable-debug"
+# Maintained by Punita Sinha
+;;
+
+casc_gnu_dbg_nopkg) # CASC (linux), using GNU compilers
+echo "--with-CXX=/usr/apps/gcc/3.3.2/bin/g++ \
+    --with-CC=/usr/apps/gcc/3.3.2/bin/gcc \
+    --with-F77=/usr/apps/gcc/3.3.2/bin/g77 \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --without-blaslapack \
+    --enable-test-nprocs=0,2 \
+    --enable-debug --disable-opt"
+# Maintained by Punita Sinha
+;;
+
+casc_gnu_dbg_pkg) # CASC (linux), using GNU compilers
+echo "--with-CXX=/usr/apps/gcc/3.3.2/bin/g++ \
+    --with-CC=/usr/apps/gcc/3.3.2/bin/gcc \
+    --with-F77=/usr/apps/gcc/3.3.2/bin/g77 \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-debug --disable-opt"
+# Maintained by Punita Sinha
+;;
+
+casc_gnu_opt_nopkg) # CASC (linux), using GNU compilers
+echo "--with-CXX=/usr/apps/gcc/3.3.2/bin/g++ \
+    --with-CC=/usr/apps/gcc/3.3.2/bin/gcc \
+    --with-F77=/usr/apps/gcc/3.3.2/bin/g77 \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --without-blaslapack \
+    --enable-bool --enable-char --enable-dcomplex --enable-float \
+    --enable-opt --disable-debug"
+# Maintained by Punita Sinha
+;;
+
+casc_gnu_opt_pkg) # CASC (linux), using GNU compilers
+echo "--with-CXX=/usr/apps/gcc/3.3.2/bin/g++ \
+    --with-CC=/usr/apps/gcc/3.3.2/bin/gcc \
+    --with-F77=/usr/apps/gcc/3.3.2/bin/g77 \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-opt --disable-debug"
+# Maintained by Punita Sinha
+;;
+
+casc_insure_dbg_pkg) # CASC (linux), using Insure++ and GNU compilers
+echo "--with-CXX=\"/usr/apps/ParaSoft/default/bin.linux2/insure /usr/apps/gcc/3.3.2/bin/g++\" \
+    --with-CC=\"/usr/apps/ParaSoft/default/bin.linux2/insure /usr/apps/gcc/3.3.2/bin/gcc\" \
+    --with-F77=/usr/apps/gcc/3.3.2/bin/g77 \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-test-nprocs=0 \
+    --enable-debug --disable-opt"
+# Maintained by Punita Sinha
+;;
+
+# CASC (linux), using Intel compilers, shared library
+casc_intel-shared_opt_pkg)
+echo "--with-CXX=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-CC=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-F77=/usr/apps/intel/fc_8.0.034/bin/ifort \
+    --enable-rpath=\"-Wl,-rpath \" \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-bool \
+    --enable-char \
+    --enable-dcomplex \
+    --enable-float \
+    --enable-opt --disable-debug \
+    --enable-shared"
+# Maintained by Punita Sinha
+;;
+
+casc_intel_dbg_nopkg) # CASC (linux), using Intel compilers
+echo "--with-CXX=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-CC=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-F77=/usr/apps/intel/fc_8.0.034/bin/ifort \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --without-blaslapack
+    --enable-rpath=\"-Wl,-rpath \" \
+    --enable-bool \
+    --enable-char \
+    --enable-dcomplex \
+    --enable-float \
+    --enable-debug --disable-opt"
+# Maintained by Craig Kapfer
+;;
+
+casc_intel_dbg_pkg) # CASC (linux), using Intel compilers
+echo "--with-CXX=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-CC=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-F77=/usr/apps/intel/fc_8.0.034/bin/ifort \
+    --enable-rpath=\"-Wl,-rpath \" \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-bool \
+    --enable-char \
+    --enable-dcomplex \
+    --enable-float \
+    --enable-debug --disable-opt"
+# Maintained by Craig Kapfer
+;;
+
+casc_intel_opt_nopkg) # CASC (linux), using Intel compilers
+echo "--with-CXX=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-CC=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-F77=/usr/apps/intel/fc_8.0.034/bin/ifort \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --without-blaslapack \
+    --enable-rpath=\"-Wl,-rpath \" \
+    --enable-bool \
+    --enable-char \
+    --enable-dcomplex \
+    --enable-float \
+    --enable-opt --disable-debug"
+# Maintained by Craig Kapfer
+;;
+
+casc_intel_opt_pkg) # CASC (linux), using Intel compilers
+echo "--with-CXX=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-CC=/usr/apps/intel/cc_8.0.058/bin/icc \
+    --with-F77=/usr/apps/intel/fc_8.0.034/bin/ifort \
+    --enable-rpath=\"-Wl,-rpath \" \
+    --with-hdf5=/usr/apps/hdf5/serial-1.4.4 \
+    --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.9.0b \
+    --with-mpi-include=/usr/apps/mpich/1.2.4/include \
+    --with-mpi-lib-dirs=/usr/apps/mpich/1.2.4/lib \
+    --with-mpi-libs=\"mpich pmpich\" \
+    --with-parallel-run-bin=/usr/apps/mpich/1.2.4/bin/mpirun \
+    --with-kinsol=/usr/casc/samrai/pvode_trio/i386_linux/KINSOL \
+    --with-pvode=/usr/casc/samrai/pvode_trio/i386_linux/CVODE \
+    --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+    --with-blaslapack=/usr/lib \
+    --with-blaslapack-libs=\"-llapack -lblas \" \
+    --with-x \
+    --enable-bool \
+    --enable-char \
+    --enable-dcomplex \
+    --enable-float \
+    --enable-opt --disable-debug"
+# Maintained by Craig Kapfer
+;;
+
+
+gps_gnu_dbg_nopkg) # LC GPS cluster, using GNU compilers
+echo "--with-CC=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/gcc \
+   --with-CXX=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/g++ \
+   --with-F77=/usr/bin/f77 \
+   --enable-rpath \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial-cc-f90/prod/bit64/shared \
+   --without-mpi \
+   --without-pvode \
+   --without-kinsol \
+   --without-petsc \
+   --with-x \
+   --without-blaslapack \
+   --without-hypre \
+   --enable-bool \
+   --enable-char \
+   --enable-dcomplex \
+   --enable-float \
+   --enable-test-nprocs=0 \
+   --enable-debug --disable-opt"
+# Maintained by Noah Elliott.
+;;
+
+gps_gnu_dbg_pkg) # LC GPS cluster, using GNU compilers
+echo "--with-CC=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/gcc \
+   --with-CXX=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/g++ \
+   --with-F77=/usr/bin/f77 \
+   --enable-rpath \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial-cc-f90/prod/bit64/shared \
+   --without-pvode \
+   --without-kinsol \
+   --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+   --with-petsc-arch=alpha \
+   --with-x \
+   --with-blaslapack \
+   --with-superlu-lib=/usr/casc/petsc/superlu_alpha/libsuperlu_alpha.a \
+   --with-spooles=/usr/casc/petsc/spooles_alpha \
+   --with-hypre=/usr/gapps/hypre/tru64_5/hypre-1.9.0b \
+   --enable-bool \
+   --enable-char \
+   --enable-dcomplex \
+   --enable-float \
+   --enable-debug --disable-opt \
+   --enable-test-nprocs=1,2 "
+# Maintained by Noah Elliott.
+;;
+
+
+gps_gnu_opt_nopkg) # LC GPS cluster, using GNU compilers
+echo "--with-CC=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/gcc \
+   --with-CXX=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/g++ \
+   --with-F77=/usr/bin/f77 \
+   --enable-rpath \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial-cc-f90/prod/bit64/shared \
+   --without-mpi \
+   --without-pvode \
+   --without-kinsol \
+   --without-petsc \
+   --with-x \
+   --with-blaslapack \
+   --without-hypre \
+   --enable-bool \
+   --enable-char \
+   --enable-dcomplex \
+   --enable-float \
+   --enable-test-nprocs=0 \
+   --enable-opt --disable-debug"
+# Maintained by Noah Elliott.
+;;
+
+gps_gnu_opt_pkg) # LC GPS cluster, using GNU compilers
+echo "--with-CC=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/gcc \
+   --with-CXX=/usr/local/tools/gnu/gcc/3.3.2_tru64_5/bin/g++ \
+   --with-F77=/usr/bin/f77 \
+   --enable-rpath \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial-cc-f90/prod/bit64/shared \
+   --without-pvode \
+   --without-kinsol \
+   --with-petsc=/usr/casc/petsc/petsc-2.1.6 \
+   --with-petsc-arch=alpha \
+   --with-x \
+   --with-blaslapack \
+   --with-superlu-lib=/usr/casc/petsc/superlu_alpha/libsuperlu_alpha.a \
+   --with-spooles=/usr/casc/petsc/spooles_alpha \
+   --with-hypre=/usr/gapps/hypre/tru64_5/hypre-1.9.0b \
+   --enable-bool \
+   --enable-char \
+   --enable-dcomplex \
+   --enable-float \
+   --enable-test-nprocs=1,2 \
+   --enable-opt --disable-debug"
+# Maintained by Noah Elliott.
+;;
+
+ilx_icc-ifort_dbg_nopkg) # LC ILX (linux), using Intel compilers
+echo "--with-CXX=/usr/local/intel/compiler80/bin/icc \
+    --with-CC=/usr/local/intel/compiler80/bin/icc \
+    --with-F77=/usr/local/intel/compiler80/bin/ifort \
+    --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+    --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+    --with-mpi-include=/usr/local/mpi/include \
+    --with-mpi-lib-dirs=/usr/local/mpi/lib \
+    --with-mpi-libs=mpich \
+    --with-parallel-run-bin=/usr/local/mpi/bin/mpirun \
+    --without-hypre \
+    --without-kinsol \
+    --without-pvode \
+    --without-petsc \
+    --without-blaslapack \
+    --enable-debug --disable-opt"
+# Maintained by Brian Gunney
+;;
+
+ilx_icc-ifort_opt_nopkg) # LC ILX (linux), using Intel compilers
+echo "--with-CXX=/usr/local/intel/compiler80/bin/icc \
+    --with-CC=/usr/local/intel/compiler80/bin/icc \
+    --with-F77=/usr/local/intel/compiler80/bin/ifort \
+    --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+    --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+    --with-mpi-include=/usr/local/mpi/include \
+    --with-mpi-lib-dirs=/usr/local/mpi/lib \
+    --with-mpi-libs=mpich \
+    --with-parallel-run-bin=/usr/local/mpi/bin/mpirun \
+    --without-hypre \
+    --without-kinsol \
+    --without-pvode \
+    --without-petsc \
+    --without-blaslapack \
+    --enable-opt --disable-debug"
+# Maintained by Brian Gunney
+;;
+
+ilx_icc-pgf_dbg_nopkg) # LC ILX (linux), using Intel/PGI compilers
+echo "--with-CXX=/usr/local/intel/compiler80/bin/icc \
+    --with-CC=/usr/local/intel/compiler80/bin/icc \
+    --with-F77=/usr/local/pgi5/linux86/5.1/bin/pgf90 \
+    --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+    --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+    --with-mpi-include=/usr/local/mpi/include \
+    --with-mpi-lib-dirs=/usr/local/mpi/lib \
+    --with-mpi-libs=mpich \
+    --with-parallel-run-bin=/usr/local/mpi/bin/mpirun \
+    --without-hypre \
+    --without-kinsol \
+    --without-pvode \
+    --without-petsc \
+    --without-blaslapack \
+    --enable-debug --disable-opt"
+# Maintained by Brian Gunney
+;;
+
+ilx_icc-pgf_opt_nopkg) # LC ILX (linux), using Intel/PGI compilers
+echo "--with-CXX=/usr/local/intel/compiler80/bin/icc \
+    --with-CC=/usr/local/intel/compiler80/bin/icc \
+    --with-F77=/usr/local/pgi5/linux86/5.1/bin/pgf90 \
+    --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+    --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+    --with-mpi-include=/usr/local/mpi/include \
+    --with-mpi-lib-dirs=/usr/local/mpi/lib \
+    --with-mpi-libs=mpich \
+    --with-parallel-run-bin=/usr/local/mpi/bin/mpirun \
+    --without-hypre \
+    --without-kinsol \
+    --without-pvode \
+    --without-petsc \
+    --without-blaslapack \
+    --enable-opt --disable-debug"
+# Maintained by Brian Gunney
+;;
+
+mcr_intel_opt_nopkg) # LC MCR (linux), using Intel compilers
+echo "--with-CXX=/opt/intel/compiler80/bin/icc \
+   --with-CC=/opt/intel/compiler80/bin/icc \
+   --with-F77=/opt/intel/compiler80/bin/ifort \
+   --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --enable-test-nprocs=1,2 \
+   --without-hypre \
+   --without-kinsol \
+   --without-pvode \
+   --without-petsc \
+   --without-blaslapack  \
+   --without-x \
+   --enable-opt --disable-debug"
+# Maintained by Craig Kapfer
+;;
+
+mcr_gnu_opt_nopkg) # LC MCR (linux), using GNU compilers
+echo "--with-CXX=/usr/local/tools/gnu/gcc/3.3.3_redhat_7a_ia32/bin/g++ \
+   --with-CC=/usr/local/tools/gnu/gcc/3.3.3_redhat_7a_ia32/bin/gcc \
+   --with-F77=/usr/local/tools/gnu/gcc/3.3.3_redhat_7a_ia32/bin/g77 \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --enable-test-nprocs=1,2 \
+   --without-hypre \
+   --without-kinsol \
+   --without-pvode \
+   --without-petsc \
+   --without-blaslapack \
+   --without-x \
+   --enable-opt --disable-debug"
+# Maintained by Craig Kapfer
+;;
+
+#############################################################################
+# Configurations which are not undergoing nightly autotests.
+# Your mileage may vary using these and we make no guarantees that they work.
+#############################################################################
+
+ilx_gnu_dbg_nopkg) # LC ILX (linux), using GNU compilers
+echo "--with-CXX=g++-3.3.3 \
+      --with-CC=gcc-3.3.3 \
+      --with-F77=g77-3.3.3 \
+      --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+      --with-mpi-include=/usr/local/mpi/include \
+      --with-mpi-lib-dirs=/usr/local/mpi/lib \
+      --with-mpi-libs=mpich \
+      --with-parallel-run-bin=/usr/local/mpi/bin/mpirun \
+      --without-hypre \
+      --without-kinsol \
+      --without-pvode \
+      --without-petsc \
+      --without-blaslapack \
+      --enable-debug --disable-opt"
+# Maintained by Brian Gunney
+;;
+
+ilx_gnu_opt_nopkg) # LC ILX (linux), using GNU compilers
+echo "--with-CXX=g++-3.3.3 \
+      --with-CC=gcc-3.3.3 \
+      --with-F77=g77-3.3.3 \
+      --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+      --with-mpi-include=/usr/local/mpi/include \
+      --with-mpi-lib-dirs=/usr/local/mpi/lib \
+      --with-mpi-libs=mpich \
+      --with-parallel-run-bin=/usr/local/mpi/bin/mpirun \
+      --without-hypre \
+      --without-kinsol \
+      --without-pvode \
+      --without-petsc \
+      --without-blaslapack \
+      --enable-opt --disable-debug"
+# Maintained by Brian Gunney
+;;
+
+mcr_intel-pgf77_opt_pkg) # LC MCR (linux), using Intel/pgi compilers
+echo "--with-CXX=/opt/intel/compiler80/bin/icc \
+   --with-CC=/opt/intel/compiler80/bin/icc \
+   --with-F77=/usr/local/pgi5/linux86/5.1/bin/pgf77 \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --enable-test-nprocs=1,2 \
+   --without-blaslapack \
+   --with-hypre=/usr/gapps/hypre/chaos_2_ia32_elan3/hypre-1.9.0b \
+   --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+   --enable-opt --disable-debug"
+# Maintained by Craig Kapfer
+;; 
+
+mcr_intel_opt_hypre1-9-0b) # LC MCR (linux), using Intel compilers
+echo "--with-CXX=/opt/intel/compiler80/bin/icc \
+   --with-CC=/opt/intel/compiler80/bin/icc \
+   --with-F77=/opt/intel/compiler80/bin/ifort \
+   --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.4.5/serial/prod \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --with-hypre=/usr/gapps/hypre/chaos_2_ia32_elan3/hypre-1.9.0b \
+   --without-blaslapack \
+   --without-kinsol \
+   --without-pvode \
+   --without-petsc \
+   --enable-test-nprocs=1,2 \
+   --enable-opt --disable-debug"
+;;
+
+thunder_icc_dbg_nopkg) # LC Thunder, using Intel compilers
+echo "--with-CXX=/opt/intel/compiler80/bin/icc \
+   --with-CC=/opt/intel/compiler80/bin/icc \
+   --with-F77=/opt/intel/compiler80/bin/ifort \
+   --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.6.0/serial \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --enable-test-nprocs=1,2 \
+   --without-hypre \
+   --without-kinsol \
+   --without-pvode \
+   --without-petsc \
+   --without-blaslapack \
+   --without-x \
+   --disable-opt --enable-debug \
+   --disable-template-depend"
+;;
+
+thunder_icc_opt_nopkg) # LC Thunder, using Intel compilers
+echo "--with-CXX=/opt/intel/compiler80/bin/icc \
+   --with-CC=/opt/intel/compiler80/bin/icc \
+   --with-F77=/opt/intel/compiler80/bin/ifort \
+   --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.6.0/serial \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --enable-test-nprocs=1,2 \
+   --without-hypre \
+   --without-kinsol \
+   --without-pvode \
+   --without-petsc \
+   --without-blaslapack \
+   --without-x \
+   --enable-opt=-O2 \
+   --disable-debug \
+   --disable-template-depend"
+;;
+
+thunder_intel_opt_hypre1-9-0b) # LC Thunder, using Intel compilers
+echo "--with-CXX=/opt/intel/compiler80/bin/icc \
+   --with-CC=/opt/intel/compiler80/bin/icc \
+   --with-F77=/opt/intel/compiler80/bin/ifort \
+   --with-fortran-libs=-L/usr/local/intel/compiler80/lib \
+   --with-hdf5=/usr/local/hdf5/hdf5-1.6.0/serial \
+   --with-mpi-include=/usr/lib/mpi/include \
+   --with-mpi-lib-dirs=/usr/lib/mpi/lib \
+   --with-mpi-libs=\"mpi elan elan3 rmscall\" \
+   --with-hypre=/usr/gapps/hypre/chaos_2_ia64_elan4/hypre-1.9.0b \
+   --without-kinsol \
+   --without-pvode \
+   --without-petsc \
+   --without-blaslapack \
+   --enable-opt=-O2 --disable-debug \
+   --enable-test-nprocs=1,2"
+;;
+
+
+*) # Bad index or no index given, so provide help message.
+cat <<-EOF
+	Usage: $0 <configuration name>
+
+	This script suggests configure options for configuring SAMRAI
+	on platforms that the SAMRAI team have some experience with.
+	The team tests these configurations on weekly basis.
+
+	The output of this script, edited to suit your needs, can be
+	used as options for SAMRAI's configure script.
+
+	For an explanation of the configure script options, use 
+	configure 's --help option.
+
+	These suggestions are listed by: 
+	     <machine>_<compiler>_<dbg/opt>_<pkg/nopkg>
+
+       <machine>     is the local machine name.
+       <compiler>    is the compiler(s) to use.
+       <dbg/opt>     turns on debug or optimization.
+       <pkg/nopkg>   turns on/off linking with external packages like 
+                     hypre, PETSc, KINSOL, and PVODE.
+                     In general
+                       nopkg - HDF (and sometimes MPI) are linked
+                       pkg  -  PETSc, hypre, PVODE, KINSOL, and blaslapack are linked
+                       
+
+	Valid configuration names are:
+	EOF
+sed -e '/^[ 	]\{0,\}[-_a-zA-Z0-9]\{1,\}[ 	]\{0,\})[ 	]\{0,\}#/!d' -e 's/^[ 	]\{0,\}\([-_a-zA-Z0-9]\{1,\}\)[ 	]\{0,\})[ 	]\{0,\}#[ 	]\{0,\}\(.\{0,\}\)/\1	\2/' -e h -e 's/^[^	]\{0,\}	//' -e x -e 's/	.\{0,\}$//' -e ':a' -e 's/^.\{1,22\}$/ &/' -e 'ta' -e G -e 's/\n/ = /' $0
+test $# = 0 && exit	# Normal exit if no index was given.
+exit 1	# Error exit if given bad index.
+;;
+
+
+esac

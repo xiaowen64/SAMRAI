@@ -1,0 +1,16 @@
+This program tests the methods provided by the HDF5Database and
+RestartManager classes.
+
+Compilation:
+              make
+  or  
+              make testHDF5
+
+Execution:
+              ./testHDF5
+
+Output:
+              HDF5test.log
+
+-OR- make check
+

@@ -1,0 +1,27 @@
+/*
+  File:        $Id$
+  Package:     SAMRAI Doxygen manual
+  Copyright:   (c) 1997-2005 The Regents of the University of California
+  Revision:    $Revision$
+  Modified:    $Date$
+  Description: Generation of SAMRAI Doxygen source code manual
+*/
+
+namespace SAMRAI {
+   namespace mesh {
+
+/*!
+  @page package_mesh_clustering Box Generation
+
+  These classes are used to generate a union of boxes covering a collection 
+  of tagged cells on a single AMR.  The procedure implemented here includes
+  some extensions to the algorithm introduced by Berger and Rigoutsos.
+  - SAMRAI::mesh::BergerRigoutsos
+  - SAMRAI::mesh::BoxGeneratorStrategy
+  - SAMRAI::mesh::HistogramBox
+  - SAMRAI::mesh::AsyncBergerRigoutsos.h
+  - SAMRAI::mesh::AsyncBergerRigoutsosNode.h
+*/
+
+}
+}

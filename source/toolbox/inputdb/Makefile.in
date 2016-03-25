@@ -1,0 +1,33 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI toolbox
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the input database routines
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/toolbox/inputdb
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+library:	lib1d lib2d lib3d
+
+OBJS	      = Grammar.o InputDatabase.o InputManager.o	\
+		Parser.o Scanner.o
+
+lib1d:		$(OBJS)
+lib2d:		$(OBJS)
+lib3d:		$(OBJS)
+libXd:		$(OBJS)
+
+clean:
+		$(SAMCLEAN)
+
+include $(SRCDIR)/Makefile.depend

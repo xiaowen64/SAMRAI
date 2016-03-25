@@ -1,0 +1,45 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI test
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for the restart database and HDF5 tests
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/HDF5
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+CPPFLAGS_EXTRA =  -DTESTING=1
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+testHDF5:
+		$(MAKE) main-HDF5
+
+main-HDF5:	main-HDF5.o $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) main-HDF5.o $(LIBSAMRAI) $(LDLIBS) -o testHDF5
+
+TEST_NPROCS = @TEST_NPROCS@ 
+
+check:		testHDF5
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testHDF5
+
+check2d:
+		$(MAKE) check
+
+check3d:
+		$(MAKE) check
+
+clean:
+		$(SAMCLEAN)
+		$(RM) testHDF5
+		$(RM) -r test_dir
+
+include $(SRCDIR)/Makefile.depend

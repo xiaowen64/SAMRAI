@@ -1,0 +1,71 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI applications
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for Convection-Diffusion ODE sample application
+##
+
+SAMRAI        = @top_srcdir@
+SRCDIR        = @srcdir@
+SUBDIR        = examples/ConvDiff
+OBJECT        = ../..
+
+default:        main2d
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DTESTING=0 
+#CPPFLAGS_EXTRA= -DDISPLAY -DNDIM=$(PDIM) -DCBOUNDARIES
+#LDFLAGS_EXTRA= --link_command_prefix "/usr/local/bin/purify4.5 -best-effort"
+
+CXX_OBJS      = main.o ConvDiff.o MainRestartData.o
+F77_OBJS      = compute_rhs.o init.o rkstep.o tag_cells.o 
+
+main2d:		
+		if test -f stamp-3d; then $(MAKE) clean; fi
+		touch stamp-2d
+		$(MAKE) PDIM=2 main-2d
+
+main-2d:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)  
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS) \
+		$(LIBSAMRAI2D) $(LIBSAMRAI) $(LDLIBS) -o main2d
+
+main3d:		
+		if test -f stamp-2d; then $(MAKE) clean; fi
+		touch stamp-3d
+		$(MAKE) PDIM=3 main-3d
+
+main-3d:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS)	\
+		$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main3d
+
+clean:
+		$(SAMCLEAN)
+		$(RM) *.f main main2d main3d 
+
+redo:
+		$(RM) core main*d
+
+include Makefile.depend
+
+FORTRAN		= fortran/$(PDIM)d
+M4DIRS		= -DFORTDIR=$(FORTRAN) -DSAMRAI_FORTDIR=$(SAMRAI)/\`include\'
+
+compute_rhs.o:	$(FORTRAN)/compute_rhs.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/compute_rhs.m4 > compute_rhs.f
+		$(F77) $(FFLAGS) -c compute_rhs.f -o $@
+
+init.o:		$(FORTRAN)/init.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/init.m4 > init.f
+		$(F77) $(FFLAGS) -c init.f -o $@
+
+tag_cells.o:	$(FORTRAN)/tag_cells.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/tag_cells.m4 > tag_cells.f
+		$(F77) $(FFLAGS) -c tag_cells.f -o $@
+
+rkstep.o:	$(FORTRAN)/rkstep.m4
+		$(M4) $(M4DIRS) $(FORTRAN)/rkstep.m4 > rkstep.f
+		$(F77) $(FFLAGS) -c rkstep.f -o $@
+

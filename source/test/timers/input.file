@@ -1,0 +1,19 @@
+Main {
+   ntimes = 10000
+   exclusive_tree_depth = 5
+}
+
+TimerManager{
+   print_exclusive          = TRUE
+   print_user               = TRUE
+   print_sys                = TRUE
+//   print_percentage         = FALSE
+   print_max                = TRUE
+   print_summed             = TRUE
+   print_concurrent         = TRUE
+   print_timer_overhead     = TRUE
+   print_threshold          = 0.0
+   init_from_restart        = TRUE
+   timer_list               = "apps::main::*",
+                              "apps::Foo::*"
+}

@@ -1,0 +1,4 @@
+GlobalInputs {
+   refine_schedule_generation_method = "BOX_GRAPH"
+   call_abort_in_serial_instead_of_exit = FALSE
+}

@@ -1,0 +1,45 @@
+##
+## File:	Makefile.in
+## Package:	SAMRAI algorithm
+## Copyright:	(c) 1997-2005 The Regents of the University of California
+## Revision:	$Revision: 173 $
+## Modified:	$Date: 2005-01-19 09:09:04 -0800 (Wed, 19 Jan 2005) $
+## Description:	makefile for test of patch data and vector operations
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/vector
+VPATH	      =	@srcdir@
+OBJECT        = ../../..
+
+default: library
+
+include $(OBJECT)/config/Makefile.config
+
+CPPFLAGS_EXTRA= -DTESTING=1
+
+pvtest:		pvtest.o $(FOBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) pvtest.o $(COBJS) \
+			$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
+kvtest:		kvtest.o $(FOBJS) $(LIBSAMRAIDEPEND)
+		$(CXX) $(CXXFLAGS) $(LDFLAGS) kvtest.o \
+			$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o $@
+
+TEST_NPROCS = @TEST_NPROCS@
+
+check:
+		$(MAKE) check2d
+		$(MAKE) check3d
+
+check2d:
+
+check3d:	kvtest pvtest
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./kvtest
+		$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./pvtest
+
+clean: 
+	$(SAMCLEAN)
+	$(RM) *.f *vtest*
+
+include $(SRCDIR)/Makefile.depend
