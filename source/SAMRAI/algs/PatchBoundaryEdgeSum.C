@@ -22,7 +22,7 @@
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 #include "SAMRAI/hier/RefineOperator.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {
@@ -141,124 +141,113 @@ PatchBoundaryEdgeSum::registerSum(
 
    boost::shared_ptr<pdat::EdgeDataFactory<double> > edge_factory(
       var_db->getPatchDescriptor()->getPatchDataFactory(edge_data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-   if (!edge_factory) {
+   TBOX_ASSERT(edge_factory);
 
-      TBOX_ERROR("PatchBoundaryEdgeSum register error..."
-         << "\nobject named " << d_object_name
-         << "\n edge_data_id = " << edge_data_id
-         << " does not correspond to edge data of type double." << std::endl);
+   const tbox::Dimension& dim(edge_factory->getDim());
 
-   } else {
+   static std::string tmp_oedge_src_variable_name(
+      "PatchBoundaryEdgeSum__internal-oedge-src");
+   static std::string tmp_oedge_dst_variable_name(
+      "PatchBoundaryEdgeSum__internal-oedge-dst");
 
-      const tbox::Dimension& dim(edge_factory->getDim());
+   const int reg_sum_id = d_num_reg_sum;
 
-      static std::string tmp_oedge_src_variable_name(
-         "PatchBoundaryEdgeSum__internal-oedge-src");
-      static std::string tmp_oedge_dst_variable_name(
-         "PatchBoundaryEdgeSum__internal-oedge-dst");
+   d_num_reg_sum++;
 
-      const int reg_sum_id = d_num_reg_sum;
+   d_user_edge_data_id.resizeArray(d_num_reg_sum);
+   d_user_edge_data_id[reg_sum_id] = ID_UNDEFINED;
+   d_user_edge_depth.resizeArray(d_num_reg_sum);
+   d_user_edge_depth[reg_sum_id] = ID_UNDEFINED;
+   d_tmp_oedge_src_variable.resizeArray(d_num_reg_sum);
+   d_tmp_oedge_dst_variable.resizeArray(d_num_reg_sum);
+   d_oedge_src_id.resizeArray(d_num_reg_sum);
+   d_oedge_src_id[reg_sum_id] = ID_UNDEFINED;
+   d_oedge_dst_id.resizeArray(d_num_reg_sum);
+   d_oedge_dst_id[reg_sum_id] = ID_UNDEFINED;
 
-      d_num_reg_sum++;
+   const int data_depth = edge_factory->getDepth();
+   const int array_by_depth_size = data_depth + 1;
 
-      d_user_edge_data_id.resizeArray(d_num_reg_sum);
-      d_user_edge_data_id[reg_sum_id] = ID_UNDEFINED;
-      d_user_edge_depth.resizeArray(d_num_reg_sum);
-      d_user_edge_depth[reg_sum_id] = ID_UNDEFINED;
-      d_tmp_oedge_src_variable.resizeArray(d_num_reg_sum);
-      d_tmp_oedge_dst_variable.resizeArray(d_num_reg_sum);
-      d_oedge_src_id.resizeArray(d_num_reg_sum);
-      d_oedge_src_id[reg_sum_id] = ID_UNDEFINED;
-      d_oedge_dst_id.resizeArray(d_num_reg_sum);
-      d_oedge_dst_id[reg_sum_id] = ID_UNDEFINED;
+   if (d_num_registered_data_by_depth.size() < array_by_depth_size) {
+      const int old_size = d_num_registered_data_by_depth.size();
+      const int new_size = array_by_depth_size;
 
-      const int data_depth = edge_factory->getDepth();
-      const int array_by_depth_size = data_depth + 1;
-
-      if (d_num_registered_data_by_depth.size() < array_by_depth_size) {
-         const int old_size = d_num_registered_data_by_depth.size();
-         const int new_size = array_by_depth_size;
-
-         d_num_registered_data_by_depth.resizeArray(new_size);
-         for (int i = old_size; i < new_size; i++) {
-            d_num_registered_data_by_depth[i] = 0;
-         }
+      d_num_registered_data_by_depth.resizeArray(new_size);
+      for (int i = old_size; i < new_size; i++) {
+         d_num_registered_data_by_depth[i] = 0;
       }
-
-      const int data_depth_id = d_num_registered_data_by_depth[data_depth];
-      const int num_data_at_depth = data_depth_id + 1;
-
-      if (s_oedge_src_id_array.size() < array_by_depth_size) {
-         s_oedge_src_id_array.resizeArray(array_by_depth_size);
-         s_oedge_dst_id_array.resizeArray(array_by_depth_size);
-      }
-
-      if (s_oedge_src_id_array[data_depth].size() < num_data_at_depth) {
-         const int old_size = s_oedge_src_id_array[data_depth].size();
-         const int new_size = num_data_at_depth;
-
-         s_oedge_src_id_array[data_depth].resizeArray(new_size);
-         s_oedge_dst_id_array[data_depth].resizeArray(new_size);
-         for (int i = old_size; i < new_size; i++) {
-            s_oedge_src_id_array[data_depth][i] = ID_UNDEFINED;
-            s_oedge_dst_id_array[data_depth][i] = ID_UNDEFINED;
-         }
-      }
-
-      std::string var_suffix = tbox::Utilities::intToString(data_depth_id, 4)
-         + "__depth=" + tbox::Utilities::intToString(data_depth);
-
-      std::string toedge_src_var_name = tmp_oedge_src_variable_name
-         + var_suffix;
-      d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(
-            toedge_src_var_name);
-      if (!d_tmp_oedge_src_variable[reg_sum_id]) {
-         d_tmp_oedge_src_variable[reg_sum_id].reset(
-            new pdat::OuteredgeVariable<double>(dim,
-                                                toedge_src_var_name,
-                                                data_depth));
-      }
-
-      std::string toedge_dst_var_name = tmp_oedge_dst_variable_name
-         + var_suffix;
-      d_tmp_oedge_dst_variable[reg_sum_id] = var_db->getVariable(
-            toedge_dst_var_name);
-      if (!d_tmp_oedge_dst_variable[reg_sum_id]) {
-         d_tmp_oedge_dst_variable[reg_sum_id].reset(
-            new pdat::OuteredgeVariable<double>(dim,
-                                                toedge_dst_var_name,
-                                                data_depth));
-      }
-
-      if (s_oedge_src_id_array[data_depth][data_depth_id] < 0) {
-         s_oedge_src_id_array[data_depth][data_depth_id] =
-            var_db->registerInternalSAMRAIVariable(
-               d_tmp_oedge_src_variable[reg_sum_id],
-               hier::IntVector::getZero(dim));
-      }
-      if (s_oedge_dst_id_array[data_depth][data_depth_id] < 0) {
-         s_oedge_dst_id_array[data_depth][data_depth_id] =
-            var_db->registerInternalSAMRAIVariable(
-               d_tmp_oedge_dst_variable[reg_sum_id],
-               hier::IntVector::getZero(dim));
-      }
-
-      d_user_edge_data_id[reg_sum_id] = edge_data_id;
-      d_user_edge_depth[reg_sum_id] = data_depth;
-
-      d_num_registered_data_by_depth[data_depth] = num_data_at_depth;
-
-      d_oedge_src_id[reg_sum_id] =
-         s_oedge_src_id_array[data_depth][data_depth_id];
-      d_oedge_dst_id[reg_sum_id] =
-         s_oedge_dst_id_array[data_depth][data_depth_id];
-
-      d_oedge_src_data_set.setFlag(d_oedge_src_id[reg_sum_id]);
-      d_oedge_dst_data_set.setFlag(d_oedge_dst_id[reg_sum_id]);
-
    }
+
+   const int data_depth_id = d_num_registered_data_by_depth[data_depth];
+   const int num_data_at_depth = data_depth_id + 1;
+
+   if (s_oedge_src_id_array.size() < array_by_depth_size) {
+      s_oedge_src_id_array.resizeArray(array_by_depth_size);
+      s_oedge_dst_id_array.resizeArray(array_by_depth_size);
+   }
+
+   if (s_oedge_src_id_array[data_depth].size() < num_data_at_depth) {
+      const int old_size = s_oedge_src_id_array[data_depth].size();
+      const int new_size = num_data_at_depth;
+
+      s_oedge_src_id_array[data_depth].resizeArray(new_size);
+      s_oedge_dst_id_array[data_depth].resizeArray(new_size);
+      for (int i = old_size; i < new_size; i++) {
+         s_oedge_src_id_array[data_depth][i] = ID_UNDEFINED;
+         s_oedge_dst_id_array[data_depth][i] = ID_UNDEFINED;
+      }
+   }
+
+   std::string var_suffix = tbox::Utilities::intToString(data_depth_id, 4)
+      + "__depth=" + tbox::Utilities::intToString(data_depth);
+
+   std::string toedge_src_var_name = tmp_oedge_src_variable_name + var_suffix;
+   d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(
+         toedge_src_var_name);
+   if (!d_tmp_oedge_src_variable[reg_sum_id]) {
+      d_tmp_oedge_src_variable[reg_sum_id].reset(
+         new pdat::OuteredgeVariable<double>(dim,
+                                             toedge_src_var_name,
+                                             data_depth));
+   }
+
+   std::string toedge_dst_var_name = tmp_oedge_dst_variable_name + var_suffix;
+   d_tmp_oedge_dst_variable[reg_sum_id] = var_db->getVariable(
+         toedge_dst_var_name);
+   if (!d_tmp_oedge_dst_variable[reg_sum_id]) {
+      d_tmp_oedge_dst_variable[reg_sum_id].reset(
+         new pdat::OuteredgeVariable<double>(dim,
+                                             toedge_dst_var_name,
+                                             data_depth));
+   }
+
+   if (s_oedge_src_id_array[data_depth][data_depth_id] < 0) {
+      s_oedge_src_id_array[data_depth][data_depth_id] =
+         var_db->registerInternalSAMRAIVariable(
+            d_tmp_oedge_src_variable[reg_sum_id],
+            hier::IntVector::getZero(dim));
+   }
+   if (s_oedge_dst_id_array[data_depth][data_depth_id] < 0) {
+      s_oedge_dst_id_array[data_depth][data_depth_id] =
+         var_db->registerInternalSAMRAIVariable(
+            d_tmp_oedge_dst_variable[reg_sum_id],
+            hier::IntVector::getZero(dim));
+   }
+
+   d_user_edge_data_id[reg_sum_id] = edge_data_id;
+   d_user_edge_depth[reg_sum_id] = data_depth;
+
+   d_num_registered_data_by_depth[data_depth] = num_data_at_depth;
+
+   d_oedge_src_id[reg_sum_id] =
+      s_oedge_src_id_array[data_depth][data_depth_id];
+   d_oedge_dst_id[reg_sum_id] =
+      s_oedge_dst_id_array[data_depth][data_depth_id];
+
+   d_oedge_src_data_set.setFlag(d_oedge_src_id[reg_sum_id]);
+   d_oedge_dst_data_set.setFlag(d_oedge_dst_id[reg_sum_id]);
 
 }
 
@@ -277,14 +266,12 @@ PatchBoundaryEdgeSum::setupSum(
 {
    TBOX_ASSERT(level);
 
-   const tbox::Dimension& dim(level->getDim());
-
    d_setup_called = true;
 
    d_level = level;
 
    // Communication algorithm for summing outeredge values on a level
-   xfer::RefineAlgorithm single_level_sum_algorithm(dim);
+   xfer::RefineAlgorithm single_level_sum_algorithm;
 
    for (int i = 0; i < d_num_reg_sum; i++) {
       single_level_sum_algorithm.registerRefine(d_oedge_dst_id[i],  // dst data
@@ -296,7 +283,7 @@ PatchBoundaryEdgeSum::setupSum(
    d_single_level_sum_schedule =
       single_level_sum_algorithm.createSchedule(
          d_level,
-         (xfer::RefinePatchStrategy *)NULL,
+         0,
          d_sum_transaction_factory);
 
 }
@@ -348,10 +335,13 @@ PatchBoundaryEdgeSum::doLevelSum(
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch->getPatchData(d_user_edge_data_id[i]),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
             patch->getPatchData(d_oedge_src_id[i]),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(edge_data);
+         TBOX_ASSERT(oedge_data);
 
          oedge_data->copy(*edge_data);
 
@@ -367,10 +357,13 @@ PatchBoundaryEdgeSum::doLevelSum(
       for (int i = 0; i < d_user_edge_data_id.size(); i++) {
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch->getPatchData(d_user_edge_data_id[i]),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
             patch->getPatchData(d_oedge_dst_id[i]),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(edge_data);
+         TBOX_ASSERT(oedge_data);
 
          oedge_data->copy2(*edge_data);
 

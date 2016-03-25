@@ -48,54 +48,6 @@ class BoxTree;
  * about the index space describing the physical domain and computing this
  * information for patches in an AMR hierarchy.
  *
- * Required input file keys and data types (only required when using first
- * constructor which takes an input database):
- *
- *    - @b    num_blocks
- *       Integer value specifying the number of blocks in the multiblock
- *       mesh configuration.
- *
- *    - @b    domain_boxes_
- *       For each block, an array of boxes representing the index space for the
- *       entire domain within a block (on the coarsest mesh level; i.e., level
- *       zero).  The key must have an integer value as a suffix
- *       (domain_boxes_0, domain_boxes_1, etc.), and there must be an entry
- *       for every block from 0 to num_blocks-1.
- *
- * Optional input file keys and data types (for first constructor which
- * takes an input database):
- *
- *    - @b    periodic_dimension
- *       An array of integer values (expected number of values is equal to
- *       the spatial dimension of the mesh) representing the directions in
- *       which the physical domain is periodic.  A non-zero value indicates
- *       that the direction is periodic.  A zero value indicates that
- *       the direction is not periodic.  If no values are specified, then
- *       the array is initialized to all zeros (no periodic directions).
- *       This key should only be used when the number of blocks is 1 (a
- *       single block mesh), as periodic boundaries are not supported for
- *       multiblock meshes.
- *
- *    - @b   BlockNeighbors
- *
- *       For multiblock grids, a BlockNeighbors entry must be given for
- *       every pair of blocks that touch each other in any way.  The key
- *       for this entry must include a unique trailing integer, and the
- *       integers for the full set of BlockNeighbors keys must be a
- *       continuous sequence beginning with 0.
- *
- *    - @b  Singularity
- *
- *       When there is a reduced or enhanced connectivity singularity,
- *       this key must be used to identify which blocks touch the
- *       singularity and the position of the singularity in relation to
- *       each block's index space.  Like BlockNeighbors, each entry must
- *       have a trailing integer beginning with 0.
- *
- * A description of the input format for BlockNeighbors* and Singularity
- * is included in the Multiblock.pdf document in the docs/userdocs
- * directory of the SAMRAI distribution.
- *
  * @par Additional Functionality
  * Operations performed by this class include determining which patches are
  * adjacent to the physical domain boundary and computing boundary boxes
@@ -119,52 +71,43 @@ public:
     *
     * This constructor for BaseGridGeometry initializes data members
     * based on parameters read from the specified input database.
-    * The constructor also registers this object for restart using
-    * the specified object name, when the boolean argument is true.
-    * Whether the object will write its state to restart files during
-    * program execution is determined by this argument.
     *
     * This constructor is intended for use when directly constructing a
     * BaseGridGeometry without using a derived child class.  The object will
     * contain all index space grid information for a mesh, but nothing about
     * the physical coordinates of the mesh.
     *
-    * @note
-    * @b Errors: passing in a null database pointer or an empty string
-    * will result in an unrecoverable assertion.
-    *
     * @param[in]  dim
     * @param[in]  object_name
     * @param[in]  input_db
-    * @param[in]  register_for_restart Flag indicating whether this instance
-    *             should be registered for restart.  @b Default: true
+    * @param[in]  allow_multiblock set to false if called by inherently single
+    *             block derived class such as CartesianGridGeometry
+    *
+    * @pre !object_name.empty()
+    * @pre input_db
     */
    BaseGridGeometry(
       const tbox::Dimension& dim,
       const std::string& object_name,
       const boost::shared_ptr<tbox::Database>& input_db,
-      bool register_for_restart = true);
+      bool allow_multiblock = true);
 
    /*!
     * @brief Construct a new BaseGridGeometry object based on arguments.
     *
     * This constructor creates a new BaseGridGeometry object based on the
-    * arguments, rather than relying on input or restart data.  The
-    * constructor also registers this object for restart using
-    * the specified object name, when the boolean argument is true.
-    * Whether the object will write its state to restart files during
-    * program execution is determined by this argument.
+    * arguments, rather than relying on input or restart data.
     *
     * @param[in]  object_name
     * @param[in]  domain      Each element of the array describes the index
     *                         space for a block.
-    * @param[in]  register_for_restart Flag indicating whether this instance
-    *             should be registered for restart.  @b Default: true
+    *
+    * @pre !object_name.empty()
+    * @pre !domain.isEmpty()
     */
    BaseGridGeometry(
       const std::string& object_name,
-      const BoxContainer& domain,
-      bool register_for_restart = true);
+      BoxContainer& domain);
 
    /*!
     * @brief Virtual destructor
@@ -222,7 +165,7 @@ public:
     * will pass the information to the concrete implementation of the
     * geometry class, and construct boundary boxes if required.
     *
-    * @param[in]   level containing the patches to be checked.
+    * @param[in,out]   level containing the patches to be checked.
     * @param[in]   ratio_to_level_zero ratio to the coarsest level.
     * @param[in]   touches_regular_bdry Array storing which patches touch
     *              non-periodic boundaries.
@@ -230,11 +173,12 @@ public:
     *              periodic boundaries.
     * @param[in]   defer_boundary_box_creation Flag to indicate if boundary
     *              boxes should be created
+    *
+    * @pre (getDim() == level.getDim()) &&
+    *      (getDim() == ratio_to_level_zero.getDim())
+    * @pre ratio_to_level_zero != IntVector::getZero(getDim())
     */
    /*
-    * TODO:  Are all these parameters really only input params?  If so, these
-    * should be const references rather than non-const.
-    *
     * TODO:  The confusing coordination and sequence of calls between
     *        grid geometry classes and patch geometry classes should
     *        be reworked, including simplification of the data we're
@@ -246,9 +190,9 @@ public:
    setGeometryOnPatches(
       PatchLevel& level,
       const IntVector& ratio_to_level_zero,
-      std::map<BoxId, TwoDimBool>& touches_regular_bdry,
-      std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
-      bool defer_boundary_box_creation);
+      const std::map<BoxId, TwoDimBool>& touches_regular_bdry,
+      const std::map<BoxId, TwoDimBool>& touches_periodic_bdry,
+      const bool defer_boundary_box_creation);
 
    /*!
     * @brief Construct and set the boundary boxes for each patch.
@@ -257,11 +201,11 @@ public:
     * Once constructed, the boundary boxes are set on each patch's
     * PatchGeometry object.
     *
-    * @param[in] level The level for which boundary boxes are constructed.
+    * @param[in,out] level The level for which boundary boxes are constructed.
+    *
+    * @pre getDim() == level.getDim()
     */
    /*
-    * TODO:  really input param?  If so, should be const qualified.
-    *
     * TODO:  See the second TODO item for the previous method.
     */
    void
@@ -283,6 +227,8 @@ public:
     * @param[out]    domain The BoxContainer to be computed
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_id
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -311,6 +257,8 @@ public:
     *                Boxes describing the index space
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
     * @param[in]     block_id
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -328,13 +276,15 @@ public:
     * coarsened with respect to the physical domain description.
     * Otherwise, the index space is refined.
     *
-    * @param[out]    domain_mapped_boxes The BoxContainer containing all
+    * @param[out]    domain_boxes The BoxContainer containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
-      BoxContainer& domain_mapped_boxes,
+      BoxContainer& domain_boxes,
       const IntVector& ratio_to_level_zero) const;
 
    /*!
@@ -350,6 +300,8 @@ public:
     * @param[out]    box_level The BoxLevel containing all
     *                Boxes describing the physical domain
     * @param[in]     ratio_to_level_zero ratio to the coarsest level
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    void
    computePhysicalDomain(
@@ -370,6 +322,10 @@ public:
     *
     * @param[in]     domain The input array of BoxContainer
     * @param[in]     number_blocks
+    *
+    * @pre !domain.isEmpty()
+    * @pre for each box in domain: box.getBlockId().isValid() &&
+    *      (box.getBlockId().getBlockValue() < number_blocks)
     */
    void
    setPhysicalDomain(
@@ -437,6 +393,8 @@ public:
     * @param[in]  directions an array indicating periodic directions(1) or
     *             all others (0).
     *
+    * @pre getDim() == directions.getDim()
+    *
     * @note
     * The IntVector argument should be set to 1 for periodic directions
     * and 0 for all other directions.  The shift will be calculated to
@@ -461,6 +419,8 @@ public:
     * @return        The periodic shift in each direction for a domain
     *                represented by a refinement of the reference physical
     *                domain.
+    *
+    * @pre getDim() == ratio_to_level_zero.getDim()
     */
    IntVector
    getPeriodicShift(
@@ -486,9 +446,10 @@ public:
     * @return The max stencil width of all transfer operators.
     */
    IntVector
-   getMaxTransferOpStencilWidth()
+   getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
    {
-      return d_transfer_operator_registry->getMaxTransferOpStencilWidth();
+      buildOperators();
+      return d_transfer_operator_registry->getMaxTransferOpStencilWidth(dim);
    }
 
    /*!
@@ -500,16 +461,13 @@ public:
     *
     * @param[in]     fine_geom_name std::string name of the geometry object
     * @param[in]     refine_ratio the refinement ratio.
-    * @param[in]     register_for_restart Flag to indicate whether to register
-    *                for restart.
     *
     * @return The pointer to the grid geometry object.
     */
    virtual boost::shared_ptr<BaseGridGeometry>
    makeRefinedGridGeometry(
       const std::string& fine_geom_name,
-      const IntVector& refine_ratio,
-      bool register_for_restart) const = 0;
+      const IntVector& refine_ratio) const = 0;
 
    /*!
     * @brief Create a pointer to a coarsened version of this grid geometry
@@ -520,16 +478,13 @@ public:
     *
     * @param[in]     coarse_geom_name std::string name of the geometry object
     * @param[in]     coarsen_ratio the coasening ratio
-    * @param[in]     register_for_restart Flag to indicate whether to register
-    *                for restart.
     *
     * @return The pointer to a coarsened version of this grid geometry object.
     */
    virtual boost::shared_ptr<BaseGridGeometry>
    makeCoarsenedGridGeometry(
       const std::string& coarse_geom_name,
-      const IntVector& coarsen_ratio,
-      bool register_for_restart) const = 0;
+      const IntVector& coarsen_ratio) const = 0;
 
    /*!
     * @brief Compute and set grid data for patch.
@@ -544,6 +499,11 @@ public:
     *                   non-periodic boundaries.
     * @param[in]        touches_periodic_bdry Array storing which patches touch
     *                   periodic boundaries.
+    *
+    * @pre (getDim() == patch.getDim()) && 
+    *      (getDim() == ratio_to_level_zero.getDim()) &&
+    *      (getDim() == touches_regular_bdry.getDim()) &&
+    *      (getDim() == touches_periodic_bdry.getDim())
     */
    /*
     * TODO:  See the second TODO item for the setGeometryOnPatches() method.
@@ -570,9 +530,9 @@ public:
     * of boundary box arrays will be ordered as follows:
     *
     * @code
-    * (patch 0 face array, patch 0 edge array, patch 0 mapped_box array,
-    *  patch 1 face array, patch 1 edge array, patch 1 mapped_box array, . . . ,
-    *  patch n-1 face array, patch n-1 edge array, patch n-1 mapped_box array)
+    * (patch 0 face array, patch 0 edge array, patch 0 box array,
+    *  patch 1 face array, patch 1 edge array, patch 1 box array, . . . ,
+    *  patch n-1 face array, patch n-1 edge array, patch n-1 box array)
     * @endcode
     *
     * @note
@@ -597,6 +557,11 @@ public:
     *                computing boundary boxes.
     * @param[in]     do_all_patches Flag to indicate boundary box computation
     *                on all patches, even those known to not touch a boundary
+    *
+    * @pre (getDim() == level.getDim()) &&
+    *      (getDim() == periodic_shift.getDim()) &&
+    *      (getDim() == ghost_width.getDim())
+    * @pre ghost_width >= IntVector::getZero(ghost_width.getDim())
     */
    void
    computeBoundaryBoxesOnLevel(
@@ -611,14 +576,17 @@ public:
     * @brief Compute boundary boxes for patch
     *
     * Decompose patch boundary region into pieces depending on spatial
-    * dimensions. Boxes are extended along the boundary to the edge
-    * of the ghost mapped_box_level if necessary.
+    * directions. Boxes are extended along the boundary to the edge
+    * of the ghost box_level if necessary.
     *
     * @param[out]    patch_boundaries output boundaries
     * @param[in]     box
     * @param[in]     domain_boxes
     * @param[in]     ghosts
     * @param[in]     periodic_shift
+    *
+    * @pre (getDim() == box.getDim()) && (getDim() == ghosts.getDim()) &&
+    *      (getDim() == periodic_shift.getDim())
     */
    void
    getBoundaryBoxes(
@@ -641,6 +609,10 @@ public:
     * are represented.
     *
     * @param[in,out] patch_level Level where boundaries need to be adjusted.
+    *
+    * @pre getDim() == patch_level.getDim()
+    * @pre patch_level.getGridGeometry()->getNumberBlocks() == getNumberBlocks()
+    *
     * TODO:  Incorporate into regular boundary box computation once
     * PatchLevel is multiblock-aware.
     */
@@ -927,6 +899,8 @@ private:
     *                            correct location within a's index space
     * @param[in] neighbor_type   The type (codimension) of the neighbor
     *                            relationship
+    *
+    * @pre getDim() = shift_b_to_a.getDim()
     */
    void
    registerNeighbors(
@@ -971,7 +945,7 @@ private:
     * @return For every singularity point the block touches, the BoxContainer will
     * contain a single-cell box that lies just outside the block domain,
     * touching the block only at the singularity point.  For line singularities,
-    * the BoxContainer will contain boxes of width 1 in all dimensions except one,
+    * the BoxContainer will contain boxes of width 1 in all directions except one,
     * lying outside the block's coarse-level domain and touching the domain
     * only along the line of singularity.
     *
@@ -1022,13 +996,15 @@ private:
     * resolution level defined by ratio_to_level_zero.
     *
     * @param[in,out] box The boxes will be transformed from the
-    *                      transformed_block index space to the base_block
-    *                      index space.
+    *                    transformed_block index space to the base_block
+    *                    index space.
     * @param[in] ratio
     * @param[in] output_block Integer identifier of the block whose index space
-    *                       will be represented in the boxes at output
+    *                         will be represented in the boxes at output
     * @param[in] input_block Integer identifier of the block whose index
-    *                             space is represented in the boxes at input
+    *                        space is represented in the boxes at input
+    *
+    * @pre (getDim() == box.getDim()) && (getDim() == ratio.getDim())
     *
     * @return Whether the box has been transformed.  True if there is a
     * relationship between input_block and output_block.  False if
@@ -1122,6 +1098,9 @@ private:
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
+    *
+    * @param block_a
+    * @param block_b
     */
    bool
    areNeighbors(
@@ -1130,6 +1109,9 @@ private:
 
    /*!
     * @brief Tell if the given BlockIds represent neighboring blocks.
+    *
+    * @param block_a
+    * @param block_b
     */
    bool
    areSingularityNeighbors(
@@ -1137,7 +1119,12 @@ private:
       const BlockId& block_b) const;
 
    /*!
-    * @brief Get the rotation identifier to rotate from src to dst.
+    * @brief Get the rotation identifier to rotate from src to dst.\
+    *
+    * @param dst
+    * @param src
+    *
+    * @pre areNeighbors(dst, src)
     */
    Transformation::RotationIdentifier
    getRotationIdentifier(
@@ -1146,6 +1133,11 @@ private:
 
    /*!
     * @brief Get the offset to shift from src to dst after rotation.
+    *
+    * @param dst
+    * @param src
+    *
+    * @pre areNeighbors(dst, src)
     */
    const IntVector&
    getOffset(
@@ -1172,49 +1164,17 @@ private:
 
    /*!
     * @brief Writes the state of the BaseGridGeometry object to the
-    * database.
+    * restart database.
     *
-    * When assertion checking is active, db cannot be a null database pointer.
+    * @param[in,out]  restart_db The restart database to write/serialize to.
     *
-    * @param[in,out]    db The database to write to write/serialize.
+    * @pre restart_db
     */
    virtual void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
 protected:
-   /*!
-    * @brief Construct a new BaseGridGeometry object in its default state.
-    *
-    * This constructor is intended to be called from a child class derived
-    * from BaseGridGeometry.  It will not register for restart nor read any
-    * input data, as it is expected that the child class will handle those
-    * operations.
-    *
-    * @param[in]  dim
-    * @param[in]  object_name
-    * @param[in]  op_reg
-    */
-   BaseGridGeometry(
-      const tbox::Dimension& dim,
-      const std::string& object_name,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
-
-   /*!
-    * @brief Construct a new BaseGridGeometry object in its default state.
-    *
-    * This constructor is intended to be called from a child class derived
-    * from BaseGridGeometry.  It will not register for restart nor read any
-    * input data, as it is expected that the child class will handle those
-    * operations.
-    *
-    * @param[in]  dim
-    * @param[in]  object_name
-    */
-   BaseGridGeometry(
-      const tbox::Dimension& dim,
-      const std::string& object_name);
-
    /*!
     * @brief Construct a new BaseGridGeometry object based on arguments.
     *
@@ -1222,19 +1182,21 @@ protected:
     * @param[in]  domain      Each element of the array describes the index
     *                         space for a block.
     * @param[in]  op_reg
-    * @param[in]  register_for_restart Flag indicating whether this instance
-    *             should be registered for restart.  @b Default: true
+    *
+    * @pre !object_name.empty()
+    * @pre !domain.isEmpty()
     */
    BaseGridGeometry(
       const std::string& object_name,
-      const BoxContainer& domain,
-      const boost::shared_ptr<TransferOperatorRegistry>& op_reg,
-      bool register_for_restart);
+      BoxContainer& domain,
+      const boost::shared_ptr<TransferOperatorRegistry>& op_reg);
 
    /*!
     * @brief Read multiblock metadata input from the input database
     *
     * @param[in] input_db
+    *
+    * @pre input_db
     */
    void
    readBlockDataFromInput(
@@ -1276,6 +1238,10 @@ private:
     * It returns true when a BoundaryBox has a width of 1 in at least
     * one direction, is adjacent to the patch boundary (possible extended
     * into the patch's ghost region) and is outside the physical domain.
+    *
+    * @pre (getDim() == boundary_box.getDim()) &&
+    *      (getDim() == patch.getDim()) &&
+    *      (getDim() == max_data_ghost_width.getDim())
     */
    bool
    checkBoundaryBox(
@@ -1296,6 +1262,8 @@ private:
     * @param[in]     box Box on which to compute periodic shifts
     * @param[in]     domain_search_tree search tree for the domain
     * @param[in]     periodic_shift
+    *
+    * @pre (getDim() == box.getDim()) && (getDim() == periodic_shift.getDim())
     */
    void
    computeShiftsForBox(
@@ -1314,6 +1282,8 @@ private:
     *            every block were in the index space where the patch exists
     * @param[in] gcw         The maximum patch data ghost width
     * @param[in] singularity BoxContainer obtained by getSingularityBoxContainer()
+    *
+    * @pre (getDim() == patch.getDim()) && (getDim() == gcw.getDim())
     */
 
    void
@@ -1329,13 +1299,18 @@ private:
     * If the simulation is from restart, these values are taken from restart
     * and newly specified values in the input database are ignored.
     *
-    * @param[in] db  input database, must not be NULL pointer
+    * @param[in] input_db  input database, must not be NULL pointer
     * @param[in] is_from_restart  set to true if simulation is from restart
+    * @param[in] allow_multiblock set to false if called by inherently single
+    *            block derived class such as CartesianGridGeometry
+    *
+    * @pre is_from_restart || input_db
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
-      bool is_from_restart);
+      const boost::shared_ptr<tbox::Database>& input_db,
+      bool is_from_restart,
+      bool allow_multiblock);
 
    /*!
     * @brief Read object state from the restart file and initialize class data
@@ -1343,6 +1318,8 @@ private:
     *
     * The database from which the restart data is read is
     * determined by the object_name specified in the constructor.
+    *
+    * @pre tbox::RestartManager::getManager()->getRootDatabase()->isDatabase(getObjectName()
     *
     * Unrecoverable Errors:
     *
@@ -1447,11 +1424,6 @@ private:
     * geometry.
     */
    bool d_has_enhanced_connectivity;
-
-   /*!
-    * Flag to determine whether this instance is registered for restart.
-    */
-   bool d_registered_for_restart;
 
    static boost::shared_ptr<tbox::Timer> t_find_patches_touching_boundaries;
    static boost::shared_ptr<tbox::Timer> t_touching_boundaries_init;

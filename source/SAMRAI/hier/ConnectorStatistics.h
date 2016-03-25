@@ -35,6 +35,8 @@ public:
     * collective communication.
     *
     * @param[in] connector
+    *
+    * @pre connector.isFinalized()
     */
    explicit ConnectorStatistics(
       const Connector &connector);

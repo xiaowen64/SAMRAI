@@ -52,7 +52,7 @@
 
 #include "get-input-filename.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -235,7 +235,6 @@ int main(
        */
       boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             abrtest.getStandardTagAndInitObject(),
             input_db->getDatabase("StandardTagAndInitialize")));
@@ -302,9 +301,10 @@ int main(
          boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
-            /* simulation time */ 0.0,
-            /* whether initial time */ true,
-            /* tag buffer size */ 0);
+            /* tag buffer size */ 0,
+            /* whether initial cycle */ true,
+            /* cycle */ 0,
+            /* simulation time */ 0.0);
          tbox::plog << "Just added finer level " << ln << " -> " << ln + 1;
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
             tbox::plog << " (no new level!)" << endl;
@@ -375,8 +375,9 @@ int main(
 
          gridding_algorithm->regridAllFinerLevels(
             0,
-            double(istep + 1),
             tag_buffer,
+            istep + 1,
+            double(istep + 1),
             regrid_start_time);
 
          if (mpi.getRank() == 0) {

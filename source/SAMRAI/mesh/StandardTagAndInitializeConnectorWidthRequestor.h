@@ -70,6 +70,9 @@ private:
     * @param[in] ratios_to_coarser Refinement ratios in a hierarchy.
     * @c ratios_to_coarser[ln] is the ratio between level ln and level
     * ln-1.
+    *
+    * @pre (ratios_to_coarser[1](0) % 2 == 0) ||
+    *      (ratios_to_coarser[1](0) % 3 == 0)
     */
    int
    computeCoarsenRatio(

@@ -53,7 +53,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeRequiredConnectorWidths(
       patch_hierarchy.getPatchDescriptor()->getMaxGhostWidth(dim));
 
    const hier::IntVector max_stencil_width(
-      patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth());
+      patch_hierarchy.getGridGeometry()->getMaxTransferOpStencilWidth(dim));
 
    fine_connector_widths.resize(max_levels - 1, hier::IntVector(dim));
    self_connector_widths.resize(max_levels, hier::IntVector(dim));
@@ -126,7 +126,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
 
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const tbox::Dimension& dim(fine_to_fine_width.getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS7(dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY7(dim,
       coarse_to_fine_width,
       coarse_to_coarse_width,
       fine_to_fine_width,
@@ -148,7 +148,7 @@ GriddingAlgorithmConnectorWidthRequestor::computeCoarserLevelConnectorWidthsFrom
    /*
     * Coarse-to-fine width must be big enough for the [ln] -> [ln+1]
     * Connector to see all the [ln+1] Boxes that are used to add
-    * tags to [ln-1] Boxes for ensuring [ln] properly nests
+    * tags to [ln-1] for ensuring [ln] properly nests
     * [ln+1] when [ln] is being regenerated.
     *
     * The rationale for this adjustment is illustrated by the following

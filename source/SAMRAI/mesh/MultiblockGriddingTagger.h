@@ -13,6 +13,7 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
+#include "SAMRAI/xfer/SingularityPatchStrategy.h"
 
 namespace SAMRAI {
 namespace mesh {
@@ -25,7 +26,7 @@ namespace mesh {
  * This class is needed for the calls to RefineSchedule in
  * the GriddingAlgorithm.
  *
- * This class implements the interface from RefinePatchStrategy for
+ * This class implements the interface from SingularityPatchStrategy for
  * fillSingularityBoundaryConditions(), so that boundary conditions for
  * tag data that abuts a singularity can be properly filled.  Also
  * implemented are the interfaces for xfer::RefinePatchStrategy, needed
@@ -37,14 +38,14 @@ namespace mesh {
  */
 
 class MultiblockGriddingTagger:
-   public xfer::RefinePatchStrategy
+      public xfer::RefinePatchStrategy,
+      public xfer::SingularityPatchStrategy
 {
 public:
    /*!
     * @brief The constructor does nothing interesting.
     */
-   explicit MultiblockGriddingTagger(
-      const tbox::Dimension& dim);
+   explicit MultiblockGriddingTagger();
 
    /*!
     * @brief The virtual destructor does nothing interesting.
@@ -89,20 +90,21 @@ public:
     * @param encon_level  Level representing enhanced connectivity ghost
     *                     regions
     * @param dst_to_encon  Connector from destination level to encon_level
-    * @param fill_time            Simulation time when filling occurs
     * @param fill_box             All ghost data to be filled will be within
     *                             this box
     * @param boundary_box         BoundaryBox object that stores information
     *                             about the type and location of the boundary
     *                             where ghost cells will be filled
     * @param grid_geometry
+    *
+    * @pre (patch.getDim() == fill_box.getDim()) &&
+    *      (patch.getDim() == boundary_box.getDim())
     */
    virtual void
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
-      const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
@@ -115,7 +117,9 @@ public:
     * Always returns an IntVector of ones, because that is the maximum
     * stencil needed for the operations in GriddingAlgorithm
     */
-   virtual hier::IntVector getRefineOpStencilWidth() const;
+   virtual hier::IntVector
+   getRefineOpStencilWidth(
+      const tbox::Dimension &dim ) const;
 
    /*!
     * Perform user-defined refining operations.  This member function
@@ -133,7 +137,8 @@ public:
     * @param ratio       Integer vector containing ratio relating index space
     *                    between coarse and fine patches.
     */
-   virtual void preprocessRefine(
+   virtual void
+   preprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
       const hier::Box& fine_box,
@@ -154,6 +159,10 @@ public:
     * @param fine_box    Box region on fine patch into which data is refined.
     * @param ratio       Integer vector containing ratio relating index space
     *                    between coarse and fine patches.
+    *
+    * @pre (fine.getDim() == coarse.getDim()) &&
+    *      (fine.getDim() == fine_box.getDim()) &&
+    *      (fine.getDim() == ratio.getDim())
     */
    virtual void
    postprocessRefine(
@@ -163,7 +172,6 @@ public:
       const hier::IntVector& ratio);
 
 private:
-   const tbox::Dimension d_dim;
 
    /*
     * Patch data index for

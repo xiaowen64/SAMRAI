@@ -22,12 +22,12 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * Class EdgeVariable<DIM> is a templated variable class used to define
+ * Class EdgeVariable<TYPE> is a templated variable class used to define
  * edge-centered quantities on an AMR mesh.   It is a subclass of
  * hier::Variable and is templated on the type of the underlying data
  * (e.g., double, int, bool, etc.).
  *
- * See header file for EdgeData<DIM> class for a more detailed
+ * See header file for EdgeData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see pdat::EdgeData
@@ -86,11 +86,14 @@ public:
 private:
    bool d_fine_boundary_represents_var;
 
+   // Unimplemented copy constructor
    EdgeVariable(
-      const EdgeVariable<TYPE>&);          // not implemented
+      const EdgeVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const EdgeVariable<TYPE>&);               // not implemented
+      const EdgeVariable<TYPE>&);
 
 };
 

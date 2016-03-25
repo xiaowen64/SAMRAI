@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace tbox {
@@ -28,7 +28,7 @@ namespace tbox {
 const int Statistician::DEFAULT_NUMBER_OF_TIMERS_INCREMENT = 128;
 const int StatisticRestartDatabase::TBOX_STATISTICRESTARTDATABASE_VERSION = 1;
 
-Statistician * Statistician::s_statistician_instance = (Statistician *)NULL;
+Statistician * Statistician::s_statistician_instance = 0;
 
 StartupShutdownManager::Handler
 Statistician::s_finalize_handler(
@@ -48,10 +48,9 @@ Statistician::s_finalize_handler(
 
 Statistician*
 Statistician::createStatistician(
-   bool register_for_restart,
    bool read_from_restart)
 {
-   makeStatisticianInstance(register_for_restart, read_from_restart);
+   makeStatisticianInstance(read_from_restart);
    return s_statistician_instance;
 }
 
@@ -116,7 +115,7 @@ Statistician::registerSingletonSubclassInstance(
 Statistician::Statistician():
    d_has_gathered_stats(false)
 {
-   d_restart_database_instance = (StatisticRestartDatabase *)NULL;
+   d_restart_database_instance = 0;
 
    d_must_call_finalize = true;
 
@@ -148,7 +147,6 @@ Statistician::~Statistician()
 
 void
 Statistician::makeStatisticianInstance(
-   bool register_for_restart,
    bool read_from_restart)
 {
    /* If reading from restart then force new instance
@@ -161,19 +159,16 @@ Statistician::makeStatisticianInstance(
 
    if (!s_statistician_instance) {
       s_statistician_instance = new Statistician();
-      s_statistician_instance->initRestartDatabase(register_for_restart,
-         read_from_restart);
+      s_statistician_instance->initRestartDatabase(read_from_restart);
    }
 }
 
 void
 Statistician::initRestartDatabase(
-   bool register_for_restart,
    bool read_from_restart)
 {
    d_restart_database_instance =
       new StatisticRestartDatabase("StatisticRestartDatabase",
-         register_for_restart,
          read_from_restart);
 }
 
@@ -381,7 +376,7 @@ Statistician::getGlobalProcStatSequenceLength(
          TBOX_ERROR("Statistician::getGlobalProcStatSeqLength ..."
             << "\n   The finalize() method to construct global data "
             << "must be called with the argument to gather global "
-            << "stats data BEFORE this metho." << std::endl);
+            << "stats data BEFORE this method." << std::endl);
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
@@ -504,7 +499,7 @@ Statistician::getGlobalProcStatMaxProcessorId(
       }
 
       TBOX_ASSERT(proc_stat_id >= 0 &&
-         proc_stat_id < d_global_proc_stat_data.getSize());
+         proc_stat_id < d_global_proc_stat_imax.getSize());
       TBOX_ASSERT(seq_num >= 0 &&
          seq_num < d_global_proc_stat_imax[proc_stat_id].getSize());
 
@@ -1350,12 +1345,6 @@ Statistician::getGlobalPatchStatNumberPatchesOnProc(
    int proc_id)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
-   TBOX_ASSERT(proc_id >= 0 &&
-      proc_id < mpi.getRank());
    int num_patches = -1;
 
    if (mpi.getRank() == 0) {
@@ -1372,6 +1361,12 @@ Statistician::getGlobalPatchStatNumberPatchesOnProc(
             << "stats data BEFORE this metho." << std::endl);
       }
 
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_data[patch_stat_id].getSize());
+      TBOX_ASSERT(proc_id >= 0 && proc_id < mpi.getSize());
+
       num_patches =
          d_global_patch_stat_mapping[patch_stat_id][seq_num][proc_id];
    }
@@ -1386,11 +1381,6 @@ Statistician::getGlobalPatchStatMaxPatchesPerProc(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
-
    int pmax = -999999;
 
    if (mpi.getRank() == 0) {
@@ -1407,6 +1397,11 @@ Statistician::getGlobalPatchStatMaxPatchesPerProc(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
+
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
       int val = pmax;
       Array<int> patches_per_proc;
@@ -1440,11 +1435,6 @@ Statistician::getGlobalPatchStatMaxPatchesPerProcId(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
-
    int pmax = -999999;
    int id = -1;
 
@@ -1462,6 +1452,11 @@ Statistician::getGlobalPatchStatMaxPatchesPerProcId(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
+
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
       int val = pmax;
       Array<int> patches_per_proc;
@@ -1499,11 +1494,6 @@ Statistician::getGlobalPatchStatMinPatchesPerProc(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
-
    int pmin = 999999;
 
    if (mpi.getRank() == 0) {
@@ -1520,7 +1510,10 @@ Statistician::getGlobalPatchStatMinPatchesPerProc(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
-
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
       TBOX_ASSERT(patch_stat_id >= 0 &&
          patch_stat_id < d_global_patch_stat_data.getSize());
       TBOX_ASSERT(seq_num >= 0 &&
@@ -1559,10 +1552,6 @@ Statistician::getGlobalPatchStatMinPatchesPerProcId(
    int seq_num)
 {
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
-   TBOX_ASSERT(patch_stat_id >= 0 &&
-      patch_stat_id < d_global_patch_stat_proc_data.getSize());
-   TBOX_ASSERT(seq_num >= 0 &&
-      seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
    int pmin = 9999999;
    int id = -1;
@@ -1581,6 +1570,11 @@ Statistician::getGlobalPatchStatMinPatchesPerProcId(
             << "must be called with the argument to gather global "
             << "stats data BEFORE this metho." << std::endl);
       }
+
+      TBOX_ASSERT(patch_stat_id >= 0 &&
+         patch_stat_id < d_global_patch_stat_proc_data.getSize());
+      TBOX_ASSERT(seq_num >= 0 &&
+         seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize());
 
       int val = pmin;
       Array<int> patches_per_proc;
@@ -1795,11 +1789,11 @@ Statistician::finalize(
       Array<boost::shared_ptr<Statistic> >* global_proc_stats =
          d_num_proc_stats > 0
          ? new Array<boost::shared_ptr<Statistic> >[d_num_proc_stats]
-         : (Array<boost::shared_ptr<Statistic> > *)NULL;
+         : 0;
       Array<boost::shared_ptr<Statistic> >* global_patch_stats =
          d_num_patch_stats > 0
          ? new Array<boost::shared_ptr<Statistic> >[d_num_patch_stats]
-         : (Array<boost::shared_ptr<Statistic> > *)NULL;
+         : 0;
 
       if (my_rank == 0) {
 
@@ -2055,7 +2049,7 @@ Statistician::reduceGlobalStatistics()
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
 
    std::vector<double> sum_proc_stat_values(proc_stat_values);
-   if (mpi.getSize() > 1) {
+   if (mpi.getSize() > 1 && proc_stat_values.size() > 0) {
       mpi.Allreduce(&proc_stat_values[0],
          &sum_proc_stat_values[0],
          static_cast<int>(proc_stat_values.size()),
@@ -2065,7 +2059,7 @@ Statistician::reduceGlobalStatistics()
 
    std::vector<double> max_proc_stat_values(proc_stat_values);
    std::vector<int> imax_proc_stat_values(proc_stat_values.size(), mpi.getRank());
-   if (mpi.getSize() > 1) {
+   if (mpi.getSize() > 1 && proc_stat_values.size() > 0) {
       mpi.AllReduce(&max_proc_stat_values[0],
          static_cast<int>(max_proc_stat_values.size()),
          MPI_MAXLOC,
@@ -2074,7 +2068,7 @@ Statistician::reduceGlobalStatistics()
 
    std::vector<double> min_proc_stat_values(proc_stat_values);
    std::vector<int> imin_proc_stat_values(proc_stat_values.size(), mpi.getRank());
-   if (mpi.getSize() > 1) {
+   if (mpi.getSize() > 1 && proc_stat_values.size() > 0) {
       mpi.AllReduce(&min_proc_stat_values[0],
          static_cast<int>(min_proc_stat_values.size()),
          MPI_MINLOC,
@@ -2571,17 +2565,12 @@ Statistician::printSpreadSheetOutputForProcessor(
 
 StatisticRestartDatabase::StatisticRestartDatabase(
    const std::string& object_name,
-   bool register_for_restart,
-   bool read_from_restart)
+   bool read_from_restart) :
+  d_object_name(object_name)
 {
    TBOX_ASSERT(!object_name.empty());
 
-   d_object_name = object_name;
-   d_registered_for_restart = register_for_restart;
-
-   if (d_registered_for_restart) {
-      RestartManager::getManager()->registerRestartItem(d_object_name, this);
-   }
+   RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
    bool is_from_restart = RestartManager::getManager()->isFromRestart();
    if (is_from_restart && read_from_restart) {
@@ -2591,17 +2580,15 @@ StatisticRestartDatabase::StatisticRestartDatabase(
 
 StatisticRestartDatabase::~StatisticRestartDatabase()
 {
-   if (d_registered_for_restart) {
-      RestartManager::getManager()->unregisterRestartItem(d_object_name);
-   }
+   RestartManager::getManager()->unregisterRestartItem(d_object_name);
 }
 
-void StatisticRestartDatabase::putToDatabase(
-   const boost::shared_ptr<Database>& db) const
+void StatisticRestartDatabase::putToRestart(
+   const boost::shared_ptr<Database>& restart_db) const
 {
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("TBOX_STATISTICRESTARTDATABASE_VERSION",
+   restart_db->putInteger("TBOX_STATISTICRESTARTDATABASE_VERSION",
       TBOX_STATISTICRESTARTDATABASE_VERSION);
 
    /*
@@ -2613,10 +2600,10 @@ void StatisticRestartDatabase::putToDatabase(
     * Write the number of statistics
     */
    int number_of_procstats = statistician->getNumberProcessorStats();
-   db->putInteger("number_of_procstats", number_of_procstats);
+   restart_db->putInteger("number_of_procstats", number_of_procstats);
 
    int number_of_patchstats = statistician->getNumberPatchStats();
-   db->putInteger("number_of_patchstats", number_of_patchstats);
+   restart_db->putInteger("number_of_patchstats", number_of_patchstats);
 
    /*
     * Iterate through the list of statistics and write out a
@@ -2636,15 +2623,15 @@ void StatisticRestartDatabase::putToDatabase(
    for (n = 0; n < number_of_procstats; n++) {
       stat = statistician->d_proc_statistics[n];
       proc_stat_names[n] = stat->getName();
-      stat_database = db->putDatabase(proc_stat_names[n]);
-      stat->putUnregisteredToDatabase(stat_database);
+      stat_database = restart_db->putDatabase(proc_stat_names[n]);
+      stat->putToRestart(stat_database);
    }
 
    for (n = 0; n < number_of_patchstats; n++) {
       stat = statistician->d_patch_statistics[n];
       patch_stat_names[n] = stat->getName();
-      stat_database = db->putDatabase(patch_stat_names[n]);
-      stat->putUnregisteredToDatabase(stat_database);
+      stat_database = restart_db->putDatabase(patch_stat_names[n]);
+      stat->putToRestart(stat_database);
    }
 
    /*
@@ -2653,11 +2640,11 @@ void StatisticRestartDatabase::putToDatabase(
     * which to read the stat info.
     */
    if (number_of_procstats > 0) {
-      db->putStringArray("proc_stat_names", proc_stat_names);
+      restart_db->putStringArray("proc_stat_names", proc_stat_names);
    }
 
    if (number_of_patchstats > 0) {
-      db->putStringArray("patch_stat_names", patch_stat_names);
+      restart_db->putStringArray("patch_stat_names", patch_stat_names);
    }
 }
 
@@ -2678,7 +2665,7 @@ void StatisticRestartDatabase::getFromRestart()
          d_object_name << ":  "
          "Restart file version different than class version. \n"
                        << "Cannot read statistic information from restart file so"
-                       << "all statistics will be reset.");
+                       << "all statistics will be reset." << std::endl);
    }
 
    int number_of_procstats = db->getInteger("number_of_procstats");

@@ -35,7 +35,8 @@ using namespace SAMRAI;
 
 class MblkEuler:
    public tbox::Serializable,
-   public MblkHyperbolicPatchStrategy
+   public MblkHyperbolicPatchStrategy,
+   public xfer::SingularityPatchStrategy
 {
 public:
    //
@@ -183,7 +184,6 @@ public:
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
-      const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
@@ -209,8 +209,8 @@ public:
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    hier::IntVector
    getMultiblockRefineOpStencilWidth() const;
@@ -237,17 +237,14 @@ public:
 
 private:
    /*
-    * These private member functions read data from input and restart.
-    * When beginning a run from a restart file, all data members are read
-    * from the restart file.  If the boolean flag is true when reading
-    * from input, some restart values may be overridden by those in the
-    * input file.
+    * This private member function reads data from input.  If the boolean flag
+    * is true all input must be present in input database.
     *
     * An assertion results if the database pointer is null.
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    void
@@ -318,10 +315,10 @@ private:
    //
 
    /// center of the sphere or revolution origin
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
 
    /// revolution axis
-   double d_axis[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_axis[SAMRAI::MAX_DIM_VAL];
 
    /// revolution radius and pos on axis of radius
    tbox::Array<tbox::Array<double> > d_rev_rad;
@@ -346,7 +343,7 @@ private:
    //
    int d_advection_test;      // run the linear advection unit test
    int d_advection_vel_type;  // type of velocity to use
-   double d_advection_velocity[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_advection_velocity[SAMRAI::MAX_DIM_VAL];
 
    //
    // sizing of zonal, flux, and nodal ghosts

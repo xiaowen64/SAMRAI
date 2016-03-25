@@ -36,8 +36,6 @@ CVODEModel {
 
    initial_value         = 0.0
 
-   max_fac_its           = 1
-   fac_tol               = 1.e-40
    max_hypre_its         = 1
    hypre_tol             = 1.e-40
    use_neumann_bcs      = TRUE 
@@ -83,12 +81,29 @@ CVODEModel {
 
 }
 
+fac_precond {
+   max_cycles           = 1
+   residual_tol         = 1.e-40
+}
+
+hypre_solver {
+   use_smg              = FALSE
+}
+
 StandardTagAndInitialize{
    tagging_method = "REFINE_BOXES"
-   RefineBoxes {
-      level_0  = [ (0,0) , (9,4) ]
-      level_1  = [ (0,0) , (19,4) ]
-      level_2  = [ (0,0) , (39,4) ]
+
+   level_0 {
+      level = 0
+      boxes = [ (0,0) , (9,4) ]
+   }
+   level_1 {
+      level = 1
+      boxes = [ (0,0) , (19,4) ]
+   }
+   level_2 {
+      level = 2
+      boxes = [ (0,0) , (39,4) ]
    }
 }
 

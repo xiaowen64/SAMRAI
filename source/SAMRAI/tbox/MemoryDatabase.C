@@ -1317,7 +1317,7 @@ bool MemoryDatabase::deleteKeyIfFound(
  *************************************************************************
  *
  * Find the key data associated with the specified key and return a
- * pointer to the record.  If no such key data exists, then return NULL.
+ * pointer to the record.  If no such key data exists, then return 0.
  *
  *************************************************************************
  */
@@ -1332,7 +1332,7 @@ MemoryDatabase::findKeyData(
          return &(*i);
       }
    }
-   return NULL;
+   return 0;
 }
 
 /*
@@ -1356,7 +1356,7 @@ MemoryDatabase::findKeyDataOrExit(
       }
    }
    MEMORY_DB_ERROR("Key ``" << key << "'' does not exist in the database...");
-   return NULL;
+   return 0;
 }
 
 /*
@@ -1459,7 +1459,7 @@ MemoryDatabase::printDatabase(
                sstream << " = ";
                const int n = i->d_box.getSize();
                for (int j = 0; j < n; j++) {
-                  const int m = i->d_box[j].getDim().getValue();
+                  const int m = i->d_box[j].getDimVal();
                   sstream << "[(";
                   for (int k = 0; k < m; k++) {
                      sstream << i->d_box[j].lower(k);
@@ -1608,9 +1608,7 @@ MemoryDatabase::printDatabase(
    for (std::list<KeyData>::const_iterator j = d_keyvalues.begin();
         j != d_keyvalues.end(); j++) {
       if (j->d_type == Database::SAMRAI_DATABASE) {
-         boost::shared_ptr<MemoryDatabase> db(
-            j->d_database,
-            boost::detail::dynamic_cast_tag());
+         boost::shared_ptr<MemoryDatabase> db(j->d_database, BOOST_CAST_TAG);
          db->printDatabase(os, indent + 3, toprint);
       }
    }

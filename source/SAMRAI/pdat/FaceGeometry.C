@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -34,7 +34,7 @@ FaceGeometry::FaceGeometry(
    d_box(box),
    d_ghosts(ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -67,7 +67,7 @@ FaceGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const FaceGeometry* t_dst =
       dynamic_cast<const FaceGeometry *>(&dst_geometry);
@@ -75,7 +75,7 @@ FaceGeometry::calculateOverlap(
       dynamic_cast<const FaceGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src != NULL) && (t_dst != NULL)) {
+   if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
    } else if (retry) {
@@ -125,11 +125,81 @@ FaceGeometry::toFaceBox(
 /*
  *************************************************************************
  *
+ * Compute the boxes that will be used to contstruct an overlap object
+ *
+ *************************************************************************
+ */
+
+void
+FaceGeometry::computeDestinationBoxes(
+   tbox::Array<hier::BoxContainer>& dst_boxes,
+   const FaceGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const hier::BoxContainer& dst_restrict_boxes) const
+{
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+   const hier::IntVector& src_offset = transformation.getOffset();
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
+#endif
+
+   const tbox::Dimension& dim(src_mask.getDim());
+
+   // Perform a quick-and-dirty intersection to see if the boxes might overlap
+
+   const hier::Box src_box(
+   hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   hier::Box src_shift(src_box);
+   transformation.transform(src_shift);
+   const hier::Box dst_ghost(
+      hier::Box::grow(d_box, d_ghosts));
+
+   // Compute the intersection (if any) for each of the face directions
+
+   const hier::IntVector one_vector(dim, 1);
+
+   const hier::Box quick_check(
+      hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
+         one_vector));
+
+   if (!quick_check.empty()) {
+      for (int d = 0; d < dim.getValue(); d++) {
+         const hier::Box dst_face(toFaceBox(dst_ghost, d));
+         const hier::Box src_face(toFaceBox(src_shift, d));
+         const hier::Box fill_face(toFaceBox(fill_box, d));
+         const hier::Box together(dst_face * src_face * fill_face);
+         if (!together.empty()) {
+            if (!overwrite_interior) {
+               const hier::Box int_face(toFaceBox(d_box, d));
+               dst_boxes[d].removeIntersections(together, int_face);
+            } else {
+               dst_boxes[d].pushBack(together);
+            }
+         }  // if (!together.empty())
+
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+            hier::BoxContainer face_restrict_boxes;
+            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
+                  b != dst_restrict_boxes.end(); ++b) {
+              face_restrict_boxes.pushBack(toFaceBox(*b, d));
+            }
+            dst_boxes[d].intersectBoxes(face_restrict_boxes);
+         }
+      }  // loop over dim
+   }  // !quick_check.empty()
+}
+
+
+/*
+ *************************************************************************
+ *
  * Compute the overlap between two face centered boxes.  The algorithm
  * is fairly straight-forward.  First, we perform a quick-and-dirty
  * intersection to see if the boxes might overlap.  If that intersection
  * is not empty, then we need to do a better job calculating the overlap
- * for each dimension.  Note that the AMR index space boxes must be
+ * for each direction.  Note that the AMR index space boxes must be
  * shifted into the face centered space before we calculate the proper
  * intersections.
  *
@@ -150,49 +220,13 @@ FaceGeometry::doOverlap(
 
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   // Perform a quick-and-dirty intersection to see if the boxes might overlap
-
-   const hier::Box src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
-   hier::Box src_shift(src_box);
-   transformation.transform(src_shift);
-   const hier::Box dst_ghost(
-      hier::Box::grow(dst_geometry.d_box, dst_geometry.d_ghosts));
-
-   // Compute the intersection (if any) for each of the face directions
-
-   const hier::IntVector one_vector(dim, 1);
-
-   const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
-         one_vector));
-
-   if (!quick_check.empty()) {
-      for (int d = 0; d < dim.getValue(); d++) {
-         const hier::Box dst_face(toFaceBox(dst_ghost, d));
-         const hier::Box src_face(toFaceBox(src_shift, d));
-         const hier::Box fill_face(toFaceBox(fill_box, d));
-         const hier::Box together(dst_face * src_face * fill_face);
-         if (!together.empty()) {
-            dst_boxes[d].pushBack(together);
-            if (!overwrite_interior) {
-               const hier::Box int_face(toFaceBox(dst_geometry.d_box, d));
-               dst_boxes[d].removeIntersections(together, int_face);
-            } else {
-               dst_boxes[d].pushBack(together);
-            }
-         }  // if (!together.empty())
-
-         if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
-            hier::BoxContainer face_restrict_boxes;
-            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
-                 b != dst_restrict_boxes.end(); ++b) {
-               face_restrict_boxes.pushBack(toFaceBox(*b, d));
-            }
-            dst_boxes[d].intersectBoxes(face_restrict_boxes);
-         }
-      }  // loop over dim
-   }  // !quick_check.empty()
+   dst_geometry.computeDestinationBoxes(dst_boxes,
+      src_geometry,
+      src_mask,
+      fill_box,
+      overwrite_interior,
+      transformation,
+      dst_restrict_boxes);
 
    // Create the face overlap data object using the boxes and source shift
 
@@ -260,113 +294,117 @@ FaceGeometry::transform(
       cell_box.upper() (normal_direction) -= 1;
       cell_box.setBlockId(box.getBlockId());
       transformation.transform(cell_box);
-      if (dim.getValue() == 2) {
-         const int rotation_num = static_cast<int>(rotation);
-         if (rotation_num % 2) {
-            normal_direction = (normal_direction + 1) % 2;
-         }
-      } else if (dim.getValue() == 3) {
 
-         if (normal_direction == 0) {
+      if (rotation != hier::Transformation::NO_ROTATE) {
 
-            switch (rotation) {
-
-               case hier::Transformation::IUP_JUP_KUP:
-               case hier::Transformation::IDOWN_KUP_JUP:
-               case hier::Transformation::IUP_KDOWN_JUP:
-               case hier::Transformation::IDOWN_JUP_KDOWN:
-               case hier::Transformation::IUP_KUP_JDOWN:
-               case hier::Transformation::IDOWN_JDOWN_KUP:
-               case hier::Transformation::IUP_JDOWN_KDOWN:
-               case hier::Transformation::IDOWN_KDOWN_JDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::KUP_IUP_JUP:
-               case hier::Transformation::JUP_IDOWN_KUP:
-               case hier::Transformation::JUP_IUP_KDOWN:
-               case hier::Transformation::KDOWN_IDOWN_JUP:
-               case hier::Transformation::JDOWN_IUP_KUP:
-               case hier::Transformation::KUP_IDOWN_JDOWN:
-               case hier::Transformation::KDOWN_IUP_JDOWN:
-               case hier::Transformation::JDOWN_IDOWN_KDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-
+         if (dim.getValue() == 2) {
+            const int rotation_num = static_cast<int>(rotation);
+            if (rotation_num % 2) {
+               normal_direction = (normal_direction + 1) % 2;
             }
+         } else if (dim.getValue() == 3) {
 
-         } else if (normal_direction == 1) {
+            if (normal_direction == 0) {
 
-            switch (rotation) {
-               case hier::Transformation::JUP_KUP_IUP:
-               case hier::Transformation::JUP_IDOWN_KUP:
-               case hier::Transformation::JUP_IUP_KDOWN:
-               case hier::Transformation::JUP_KDOWN_IDOWN:
-               case hier::Transformation::JDOWN_IUP_KUP:
-               case hier::Transformation::JDOWN_KUP_IDOWN:
-               case hier::Transformation::JDOWN_KDOWN_IUP:
-               case hier::Transformation::JDOWN_IDOWN_KDOWN:
+               switch (rotation) {
 
-                  normal_direction = 0;
-                  break;
+                  case hier::Transformation::IUP_JUP_KUP:
+                  case hier::Transformation::IDOWN_KUP_JUP:
+                  case hier::Transformation::IUP_KDOWN_JUP:
+                  case hier::Transformation::IDOWN_JUP_KDOWN:
+                  case hier::Transformation::IUP_KUP_JDOWN:
+                  case hier::Transformation::IDOWN_JDOWN_KUP:
+                  case hier::Transformation::IUP_JDOWN_KDOWN:
+                  case hier::Transformation::IDOWN_KDOWN_JDOWN:
 
-               case hier::Transformation::IUP_JUP_KUP:
-               case hier::Transformation::KUP_JUP_IDOWN:
-               case hier::Transformation::KDOWN_JUP_IUP:
-               case hier::Transformation::IDOWN_JUP_KDOWN:
-               case hier::Transformation::KUP_JDOWN_IUP:
-               case hier::Transformation::IDOWN_JDOWN_KUP:
-               case hier::Transformation::IUP_JDOWN_KDOWN:
-               case hier::Transformation::KDOWN_JDOWN_IDOWN:
+                     normal_direction = 0;
+                     break;
 
-                  normal_direction = 1;
-                  break;
+                  case hier::Transformation::KUP_IUP_JUP:
+                  case hier::Transformation::JUP_IDOWN_KUP:
+                  case hier::Transformation::JUP_IUP_KDOWN:
+                  case hier::Transformation::KDOWN_IDOWN_JUP:
+                  case hier::Transformation::JDOWN_IUP_KUP:
+                  case hier::Transformation::KUP_IDOWN_JDOWN:
+                  case hier::Transformation::KDOWN_IUP_JDOWN:
+                  case hier::Transformation::JDOWN_IDOWN_KDOWN:
 
-               default:
+                     normal_direction = 1;
+                     break;
 
-                  normal_direction = 2;
-                  break;
-            }
+                  default:
 
-         } else if (normal_direction == 2) {
+                     normal_direction = 2;
+                     break;
 
-            switch (rotation) {
-               case hier::Transformation::KUP_IUP_JUP:
-               case hier::Transformation::KUP_JUP_IDOWN:
-               case hier::Transformation::KDOWN_JUP_IUP:
-               case hier::Transformation::KDOWN_IDOWN_JUP:
-               case hier::Transformation::KUP_JDOWN_IUP:
-               case hier::Transformation::KUP_IDOWN_JDOWN:
-               case hier::Transformation::KDOWN_IUP_JDOWN:
-               case hier::Transformation::KDOWN_JDOWN_IDOWN:
+               }
 
-                  normal_direction = 0;
-                  break;
+            } else if (normal_direction == 1) {
 
-               case hier::Transformation::JUP_KUP_IUP:
-               case hier::Transformation::IDOWN_KUP_JUP:
-               case hier::Transformation::IUP_KDOWN_JUP:
-               case hier::Transformation::JUP_KDOWN_IDOWN:
-               case hier::Transformation::IUP_KUP_JDOWN:
-               case hier::Transformation::JDOWN_KUP_IDOWN:
-               case hier::Transformation::JDOWN_KDOWN_IUP:
-               case hier::Transformation::IDOWN_KDOWN_JDOWN:
+               switch (rotation) {
+                  case hier::Transformation::JUP_KUP_IUP:
+                  case hier::Transformation::JUP_IDOWN_KUP:
+                  case hier::Transformation::JUP_IUP_KDOWN:
+                  case hier::Transformation::JUP_KDOWN_IDOWN:
+                  case hier::Transformation::JDOWN_IUP_KUP:
+                  case hier::Transformation::JDOWN_KUP_IDOWN:
+                  case hier::Transformation::JDOWN_KDOWN_IUP:
+                  case hier::Transformation::JDOWN_IDOWN_KDOWN:
 
-                  normal_direction = 1;
-                  break;
+                     normal_direction = 0;
+                     break;
 
-               default:
+                  case hier::Transformation::IUP_JUP_KUP:
+                  case hier::Transformation::KUP_JUP_IDOWN:
+                  case hier::Transformation::KDOWN_JUP_IUP:
+                  case hier::Transformation::IDOWN_JUP_KDOWN:
+                  case hier::Transformation::KUP_JDOWN_IUP:
+                  case hier::Transformation::IDOWN_JDOWN_KUP:
+                  case hier::Transformation::IUP_JDOWN_KDOWN:
+                  case hier::Transformation::KDOWN_JDOWN_IDOWN:
 
-                  normal_direction = 2;
-                  break;
+                     normal_direction = 1;
+                     break;
 
+                  default:
+
+                     normal_direction = 2;
+                     break;
+               }
+
+            } else if (normal_direction == 2) {
+
+               switch (rotation) {
+                  case hier::Transformation::KUP_IUP_JUP:
+                  case hier::Transformation::KUP_JUP_IDOWN:
+                  case hier::Transformation::KDOWN_JUP_IUP:
+                  case hier::Transformation::KDOWN_IDOWN_JUP:
+                  case hier::Transformation::KUP_JDOWN_IUP:
+                  case hier::Transformation::KUP_IDOWN_JDOWN:
+                  case hier::Transformation::KDOWN_IUP_JDOWN:
+                  case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::JUP_KUP_IUP:
+                  case hier::Transformation::IDOWN_KUP_JUP:
+                  case hier::Transformation::IUP_KDOWN_JUP:
+                  case hier::Transformation::JUP_KDOWN_IDOWN:
+                  case hier::Transformation::IUP_KUP_JDOWN:
+                  case hier::Transformation::JDOWN_KUP_IDOWN:
+                  case hier::Transformation::JDOWN_KDOWN_IUP:
+                  case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+
+               }
             }
          }
       }

@@ -117,7 +117,7 @@ LinAdv::LinAdv(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
-   algs::HyperbolicPatchStrategy(dim),
+   algs::HyperbolicPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_grid_geometry(grid_geom),
@@ -144,9 +144,7 @@ LinAdv::LinAdv(
 
    tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
-#endif
 
    // SPHERE problem...
    tbox::MathUtilities<double>::setArrayToSignalingNaN(&d_center[0], d_dim.getValue());
@@ -308,7 +306,7 @@ LinAdv::LinAdv(
 
    }
 
-   F77_FUNC(stufprobc, STUFPROBC) (PIECEWISE_CONSTANT_X, PIECEWISE_CONSTANT_Y,
+   SAMRAI_F77_FUNC(stufprobc, STUFPROBC) (PIECEWISE_CONSTANT_X, PIECEWISE_CONSTANT_Y,
       PIECEWISE_CONSTANT_Z,
       SINE_CONSTANT_X, SINE_CONSTANT_Y, SINE_CONSTANT_Z, SPHERE,
       CELLG, FACEG, FLUXG);
@@ -340,10 +338,8 @@ void LinAdv::registerModelVariables(
    algs::HyperbolicLevelIntegrator* integrator)
 {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(integrator != (algs::HyperbolicLevelIntegrator *)NULL);
+   TBOX_ASSERT(integrator != 0);
    TBOX_ASSERT(CELLG == FACEG);
-#endif
 
    integrator->registerVariable(d_uval, d_nghosts,
       algs::HyperbolicLevelIntegrator::TIME_DEP,
@@ -451,18 +447,18 @@ void LinAdv::initializeDataOnPatch(
 
       const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
       const double* xlo = pgeom->getXLower();
       const double* xhi = pgeom->getXUpper();
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(uval);
-#endif
+
       hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
       const hier::Index ifirst = patch.getBox().lower();
@@ -471,7 +467,7 @@ void LinAdv::initializeDataOnPatch(
       if ((d_data_problem_int == SPHERE)) {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(initsphere2d, INITSPHERE2D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -483,7 +479,7 @@ void LinAdv::initializeDataOnPatch(
                &d_center[0], d_radius);
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(initsphere3d, INITSPHERE3D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(initsphere3d, INITSPHERE3D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -509,7 +505,7 @@ void LinAdv::initializeDataOnPatch(
          }
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(linadvinitsine2d, LINADVINITSINE2D) (d_data_problem_int,
+            SAMRAI_F77_FUNC(linadvinitsine2d, LINADVINITSINE2D) (d_data_problem_int,
                dx, xlo,
                domain_xlo, &domain_length[0],
                ifirst(0), ilast(0),
@@ -524,7 +520,7 @@ void LinAdv::initializeDataOnPatch(
                &d_frequency[0]);
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(linadvinitsine3d, LINADVINITSINE3D) (d_data_problem_int,
+            SAMRAI_F77_FUNC(linadvinitsine3d, LINADVINITSINE3D) (d_data_problem_int,
                dx, xlo,
                domain_xlo, &domain_length[0],
                ifirst(0), ilast(0),
@@ -543,7 +539,7 @@ void LinAdv::initializeDataOnPatch(
       } else {
 
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(linadvinit2d, LINADVINIT2D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(linadvinit2d, LINADVINIT2D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -555,7 +551,7 @@ void LinAdv::initializeDataOnPatch(
                d_interval_uval.getPointer());
          }
          if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(linadvinit3d, LINADVINIT3D) (d_data_problem_int, dx, xlo,
+            SAMRAI_F77_FUNC(linadvinit3d, LINADVINIT3D) (d_data_problem_int, dx, xlo,
                xhi,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
@@ -578,7 +574,8 @@ void LinAdv::initializeDataOnPatch(
       }
       boost::shared_ptr<pdat::CellData<double> > workload_data(
          patch.getPatchData(d_workload_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
    }
 
@@ -602,7 +599,8 @@ double LinAdv::computeStableDtOnPatch(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -610,16 +608,15 @@ double LinAdv::computeStableDtOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
-#endif
+
    hier::IntVector ghost_cells(uval->getGhostCellWidth());
 
    double stabdt;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(stabledt2d, STABLEDT2D) (dx,
+      SAMRAI_F77_FUNC(stabledt2d, STABLEDT2D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ghost_cells(0),
@@ -629,7 +626,7 @@ double LinAdv::computeStableDtOnPatch(
          stabdt);
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(stabledt3d, STABLEDT3D) (dx,
+      SAMRAI_F77_FUNC(stabledt3d, STABLEDT3D) (dx,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -673,13 +670,12 @@ void LinAdv::computeFluxesOnPatch(
 
    if (d_dim < tbox::Dimension(3)) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(CELLG == FACEG);
-#endif
 
       const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
 
       hier::Box pbox = patch.getBox();
@@ -688,22 +684,20 @@ void LinAdv::computeFluxesOnPatch(
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::FaceData<double> > flux(
          patch.getPatchData(d_flux, getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       /*
        * Verify that the integrator providing the context correctly
        * created it, and that the ghost cell width associated with the
        * context matches the ghosts defined in this class...
        */
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(uval);
       TBOX_ASSERT(flux);
       TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
       TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
       /*
        * Allocate patch data for temporaries local to this routine.
@@ -712,7 +706,7 @@ void LinAdv::computeFluxesOnPatch(
       pdat::FaceData<double> traced_right(pbox, 1, d_nghosts);
 
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
+         SAMRAI_F77_FUNC(inittraceflux2d, INITTRACEFLUX2D) (ifirst(0), ilast(0),
             ifirst(1), ilast(1),
             uval->getPointer(),
             traced_left.getPointer(0),
@@ -749,7 +743,7 @@ void LinAdv::computeFluxesOnPatch(
  *  Output: w^L, w^R
  */
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(chartracing2d0, CHARTRACING2D0) (dt,
+            SAMRAI_F77_FUNC(chartracing2d0, CHARTRACING2D0) (dt,
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                Mcells, dx[0], d_advection_velocity[0], d_godunov_order,
@@ -761,7 +755,7 @@ void LinAdv::computeFluxesOnPatch(
                ttraclft.getPointer(),
                ttracrgt.getPointer());
 
-            F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
+            SAMRAI_F77_FUNC(chartracing2d1, CHARTRACING2D1) (dt,
                ifirst(0), ilast(0), ifirst(1), ilast(1),
                Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
                uval->getPointer(),
@@ -784,7 +778,7 @@ void LinAdv::computeFluxesOnPatch(
 // fluxcalculation_(dt,*,1,dx, to get artificial viscosity
 // fluxcalculation_(dt,*,0,dx, to get NO artificial viscosity
 
-         F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
+         SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 1, 0, dx,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             &d_advection_velocity[0],
             uval->getPointer(),
@@ -800,7 +794,7 @@ void LinAdv::computeFluxesOnPatch(
  *  Inputs: F (flux)
  *  Output: w^L, w^R (traced_left/right)
  */
-         F77_FUNC(fluxcorrec, FLUXCORREC) (dt, ifirst(0), ilast(0), ifirst(1),
+         SAMRAI_F77_FUNC(fluxcorrec, FLUXCORREC) (dt, ifirst(0), ilast(0), ifirst(1),
             ilast(1),
             dx, &d_advection_velocity[0],
             uval->getPointer(),
@@ -818,7 +812,7 @@ void LinAdv::computeFluxesOnPatch(
  *  Inputs: w^L, w^R (traced_left/right)
  *  Output: F (flux)
  */
-         F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
+         SAMRAI_F77_FUNC(fluxcalculation2d, FLUXCALCULATION2D) (dt, 0, 0, dx,
             ifirst(0), ilast(0), ifirst(1), ilast(1),
             &d_advection_velocity[0],
             uval->getPointer(),
@@ -849,14 +843,13 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    hier::Patch& patch,
    const double dt)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
-#endif
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
@@ -865,17 +858,15 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
    /*
     * Allocate patch data for temporaries local to this routine.
@@ -886,7 +877,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
    pdat::FaceData<double> temp_traced_left(pbox, 1, d_nghosts);
    pdat::FaceData<double> temp_traced_right(pbox, 1, d_nghosts);
 
-   F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
+   SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
       ifirst(0), ilast(0),
       ifirst(1), ilast(1),
       ifirst(2), ilast(2),
@@ -929,7 +920,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
        *  Inputs: w^L, w^R (traced_left/right)
        *  Output: w^L, w^R
        */
-      F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
+      SAMRAI_F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -942,7 +933,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
+      SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -955,7 +946,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
+      SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -978,7 +969,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
 
 //  fluxcalculation_(dt,*,*,1,dx,  to do artificial viscosity
 //  fluxcalculation_(dt,*,*,0,dx,  to do NO artificial viscosity
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -998,7 +989,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: F (flux), w^L, w^R (traced_left/right)
     *  Output: temp_traced_left/right
     */
-   F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
+   SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0], 1,
       uval->getPointer(),
@@ -1026,7 +1017,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_traced_left/right
     *  Output: temp_flux
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 1, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1046,7 +1037,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: F (flux), w^L, w^R (traced_left/right)
     *  Output: temp_traced_left/right
     */
-   F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
+   SAMRAI_F77_FUNC(fluxcorrec2d, FLUXCORREC2D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0], -1,
       uval->getPointer(),
@@ -1077,7 +1068,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_traced_left/right
     *  Output: flux
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1098,7 +1089,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs: temp_flux, flux
     *  Output: w^L, w^R (traced_left/right)
     */
-   F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt, ifirst(0), ilast(0), ifirst(1),
+   SAMRAI_F77_FUNC(fluxcorrec3d, FLUXCORREC3D) (dt, ifirst(0), ilast(0), ifirst(1),
       ilast(1), ifirst(2), ilast(2),
       dx, &d_advection_velocity[0],
       uval->getPointer(),
@@ -1119,7 +1110,7 @@ void LinAdv::compute3DFluxesWithCornerTransport1(
     *  Inputs:  w^L, w^R (traced_left/right)
     *  Output:  F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1152,14 +1143,13 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    hier::Patch& patch,
    const double dt)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(CELLG == FACEG);
    TBOX_ASSERT(d_dim == tbox::Dimension(3));
-#endif
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    hier::Box pbox = patch.getBox();
@@ -1168,17 +1158,15 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
    /*
     * Allocate patch data for temporaries local to this routine.
@@ -1191,7 +1179,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
    /*
     *  Initialize trace fluxes (w^R and w^L) with cell-centered values.
     */
-   F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
+   SAMRAI_F77_FUNC(inittraceflux3d, INITTRACEFLUX3D) (
       ifirst(0), ilast(0),
       ifirst(1), ilast(1),
       ifirst(2), ilast(2),
@@ -1212,7 +1200,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
     *  Inputs: w^L, w^R (traced_left/right)
     *  Output: F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 1, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3d) (dt, 1, 1, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1254,7 +1242,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *  Inputs: w^L, w^R (traced_left/right)
        *  Output: w^L, w^R
        */
-      F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
+      SAMRAI_F77_FUNC(chartracing3d0, CHARTRACING3D0) (dt,
          ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
@@ -1267,7 +1255,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
+      SAMRAI_F77_FUNC(chartracing3d1, CHARTRACING3D1) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          Mcells, dx[1], d_advection_velocity[1], d_godunov_order,
@@ -1279,7 +1267,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
          ttraclft.getPointer(),
          ttracrgt.getPointer());
 
-      F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
+      SAMRAI_F77_FUNC(chartracing3d2, CHARTRACING3D2) (dt,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          Mcells, dx[2], d_advection_velocity[2], d_godunov_order,
          uval->getPointer(),
@@ -1300,7 +1288,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *    Inputs:  F (flux)
        *    Output:  third_state
        */
-      F77_FUNC(onethirdstate3d, ONETHIRDSTATE3D) (dt, dx, idir,
+      SAMRAI_F77_FUNC(onethirdstate3d, ONETHIRDSTATE3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
          uval->getPointer(),
@@ -1315,7 +1303,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *    Output:  temp_flux (only two directions (i.e. those other than idir)
        *             are modified)
        */
-      F77_FUNC(fluxthird3d, FLUXTHIRD3D) (dt, dx, idir,
+      SAMRAI_F77_FUNC(fluxthird3d, FLUXTHIRD3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
          uval->getPointer(),
@@ -1331,7 +1319,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
        *    Inputs:  temp_flux
        *    Output:  w^L, w^R (traced_left/right)
        */
-      F77_FUNC(fluxcorrecjt3d, FLUXCORRECJT3D) (dt, dx, idir,
+      SAMRAI_F77_FUNC(fluxcorrecjt3d, FLUXCORRECJT3D) (dt, dx, idir,
          ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
          &d_advection_velocity[0],
          uval->getPointer(),
@@ -1354,7 +1342,7 @@ void LinAdv::compute3DFluxesWithCornerTransport2(
     *  Inputs:  w^L, w^R (traced_left/right)
     *  Output:  F (flux)
     */
-   F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
+   SAMRAI_F77_FUNC(fluxcalculation3d, FLUXCALCULATION3D) (dt, 0, 0, 0, dx,
       ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
       &d_advection_velocity[0],
       uval->getPointer(),
@@ -1393,7 +1381,8 @@ void LinAdv::conservativeDifferenceOnPatch(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    const hier::Index ifirst = patch.getBox().lower();
@@ -1401,20 +1390,18 @@ void LinAdv::conservativeDifferenceOnPatch(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<double> > flux(
       patch.getPatchData(d_flux, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
    TBOX_ASSERT(flux);
    TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
    TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
-#endif
 
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(consdiff2d, CONSDIFF2D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          dx,
          flux->getPointer(0),
          flux->getPointer(1),
@@ -1422,7 +1409,7 @@ void LinAdv::conservativeDifferenceOnPatch(
          uval->getPointer());
    }
    if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(consdiff3d, CONSDIFF3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
+      SAMRAI_F77_FUNC(consdiff3d, CONSDIFF3D) (ifirst(0), ilast(0), ifirst(1), ilast(1),
          ifirst(2), ilast(2), dx,
          flux->getPointer(0),
          flux->getPointer(1),
@@ -1454,9 +1441,12 @@ void LinAdv::boundaryReset(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    hier::BoxContainer domain_boxes;
-   d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
+   d_grid_geometry->computePhysicalDomain(domain_boxes,
+      patch_geom->getRatio(),
+      hier::BlockId::zero());
 
    pdat::CellIndex icell(ifirst);
    hier::BoxContainer bdrybox;
@@ -1547,15 +1537,13 @@ void LinAdv::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<pdat::CellData<double> > uval(
       patch.getPatchData(d_uval, getDataContext()),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(uval);
-#endif
+
    hier::IntVector ghost_cells(uval->getGhostCellWidth());
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
-#endif
+
+   TBOX_ASSERT(ghost_cells == d_nghosts);
 
    if (d_dim == tbox::Dimension(2)) {
 
@@ -1675,14 +1663,12 @@ void LinAdv::tagRichardsonExtrapolationCells(
 {
    NULL_USE(initial_error);
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
    hier::Box pbox = patch.getBox();
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_index),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(tags);
 
    /*
     * Possible tagging criteria includes
@@ -1704,11 +1690,11 @@ void LinAdv::tagRichardsonExtrapolationCells(
 
       if (ref == "UVAL_RICHARDSON") {
          coarsened_fine_var =
-            boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                        hier::PatchData>(patch.getPatchData(d_uval, coarsened_fine));
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(d_uval, coarsened_fine));
          advanced_coarse_var =
-            boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                        hier::PatchData>(patch.getPatchData(d_uval, advanced_coarse));
+            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+               patch.getPatchData(d_uval, advanced_coarse));
          size = d_rich_tol.getSize();
          tol = ((error_level_number < size)
                 ? d_rich_tol[error_level_number]
@@ -1725,10 +1711,8 @@ void LinAdv::tagRichardsonExtrapolationCells(
 
          if (time_allowed) {
 
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(coarsened_fine_var);
             TBOX_ASSERT(advanced_coarse_var);
-#endif
             /*
              * We tag wherever the global error > specified tolerance
              * (i.e. d_rich_tol).  The estimated global error is the
@@ -1854,16 +1838,20 @@ void LinAdv::tagGradientDetectorCells(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    boost::shared_ptr<pdat::CellData<int> > tags(
       patch.getPatchData(tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(tags);
 
    hier::Box pbox(patch.getBox());
    hier::BoxContainer domain_boxes;
-   d_grid_geometry->computePhysicalDomain(domain_boxes, patch_geom->getRatio(), hier::BlockId::zero());
+   d_grid_geometry->computePhysicalDomain(domain_boxes,
+      patch_geom->getRatio(),
+      hier::BlockId::zero());
    /*
     * Construct domain bounding box
     */
@@ -1904,10 +1892,9 @@ void LinAdv::tagGradientDetectorCells(
       string ref = d_refinement_criteria[ncrit];
       boost::shared_ptr<pdat::CellData<double> > var(
          patch.getPatchData(d_uval, getDataContext()),
-         boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+         BOOST_CAST_TAG);
       TBOX_ASSERT(var);
-#endif
+
       hier::IntVector vghost(var->getGhostCellWidth());
       hier::IntVector tagghost(tags->getGhostCellWidth());
 
@@ -1978,7 +1965,7 @@ void LinAdv::tagGradientDetectorCells(
          if (time_allowed) {
 
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(detectgrad2d, DETECTGRAD2D) (
+               SAMRAI_F77_FUNC(detectgrad2d, DETECTGRAD2D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -1989,7 +1976,7 @@ void LinAdv::tagGradientDetectorCells(
                   tags->getPointer(), temp_tags->getPointer());
             }
             if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(detectgrad3d, DETECTGRAD3D) (
+               SAMRAI_F77_FUNC(detectgrad3d, DETECTGRAD3D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2026,7 +2013,7 @@ void LinAdv::tagGradientDetectorCells(
          if (time_allowed) {
 
             if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(detectshock2d, DETECTSHOCK2D) (
+               SAMRAI_F77_FUNC(detectshock2d, DETECTSHOCK2D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2038,7 +2025,7 @@ void LinAdv::tagGradientDetectorCells(
                   tags->getPointer(), temp_tags->getPointer());
             }
             if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(detectshock3d, DETECTSHOCK3D) (
+               SAMRAI_F77_FUNC(detectshock3d, DETECTSHOCK3D) (
                   ifirst(0), ilast(0), ifirst(1), ilast(1), ifirst(2), ilast(2),
                   vghost(0), tagghost(0), d_nghosts(0),
                   vghost(1), tagghost(1), d_nghosts(1),
@@ -2094,9 +2081,7 @@ void LinAdv::tagGradientDetectorCells(
 void LinAdv::registerVisItDataWriter(
    boost::shared_ptr<appu::VisItDataWriter> viz_writer)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(viz_writer);
-#endif
    d_visit_writer = viz_writer;
 }
 #endif
@@ -2282,12 +2267,10 @@ void LinAdv::printClassData(
  *************************************************************************
  */
 void LinAdv::getFromInput(
-   boost::shared_ptr<tbox::Database> db,
+   boost::shared_ptr<tbox::Database> input_db,
    bool is_from_restart)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
-#endif
+   TBOX_ASSERT(input_db);
 
    /*
     * Note: if we are restarting, then we only allow nonuniform
@@ -2295,17 +2278,17 @@ void LinAdv::getFromInput(
     */
    if (!is_from_restart) {
       d_use_nonuniform_workload =
-         db->getBoolWithDefault("use_nonuniform_workload",
+         input_db->getBoolWithDefault("use_nonuniform_workload",
             d_use_nonuniform_workload);
    } else {
       if (d_use_nonuniform_workload) {
          d_use_nonuniform_workload =
-            db->getBool("use_nonuniform_workload");
+            input_db->getBool("use_nonuniform_workload");
       }
    }
 
-   if (db->keyExists("advection_velocity")) {
-      db->getDoubleArray("advection_velocity",
+   if (input_db->keyExists("advection_velocity")) {
+      input_db->getDoubleArray("advection_velocity",
          &d_advection_velocity[0], d_dim.getValue());
    } else {
       TBOX_ERROR(
@@ -2313,8 +2296,8 @@ void LinAdv::getFromInput(
                        << "Key data `advection_velocity' not found in input.");
    }
 
-   if (db->keyExists("godunov_order")) {
-      d_godunov_order = db->getInteger("godunov_order");
+   if (input_db->keyExists("godunov_order")) {
+      d_godunov_order = input_db->getInteger("godunov_order");
       if ((d_godunov_order != 1) &&
           (d_godunov_order != 2) &&
           (d_godunov_order != 4)) {
@@ -2323,12 +2306,12 @@ void LinAdv::getFromInput(
                           << "`godunov_order' in input must be 1, 2, or 4." << endl);
       }
    } else {
-      d_godunov_order = db->getIntegerWithDefault("d_godunov_order",
+      d_godunov_order = input_db->getIntegerWithDefault("d_godunov_order",
             d_godunov_order);
    }
 
-   if (db->keyExists("corner_transport")) {
-      d_corner_transport = db->getString("corner_transport");
+   if (input_db->keyExists("corner_transport")) {
+      d_corner_transport = input_db->getString("corner_transport");
       if ((d_corner_transport != "CORNER_TRANSPORT_1") &&
           (d_corner_transport != "CORNER_TRANSPORT_2")) {
          TBOX_ERROR(
@@ -2337,13 +2320,13 @@ void LinAdv::getFromInput(
                           << " 'CORNER_TRANSPORT_1' or 'CORNER_TRANSPORT_2'." << endl);
       }
    } else {
-      d_corner_transport = db->getStringWithDefault("corner_transport",
+      d_corner_transport = input_db->getStringWithDefault("corner_transport",
             d_corner_transport);
    }
 
-   if (db->keyExists("Refinement_data")) {
+   if (input_db->keyExists("Refinement_data")) {
       boost::shared_ptr<tbox::Database> refine_db(
-         db->getDatabase("Refinement_data"));
+         input_db->getDatabase("Refinement_data"));
       tbox::Array<string> refinement_keys = refine_db->getAllKeys();
       int num_keys = refinement_keys.getSize();
 
@@ -2548,8 +2531,8 @@ void LinAdv::getFromInput(
 
    if (!is_from_restart) {
 
-      if (db->keyExists("data_problem")) {
-         d_data_problem = db->getString("data_problem");
+      if (input_db->keyExists("data_problem")) {
+         d_data_problem = input_db->getString("data_problem");
       } else {
          TBOX_ERROR(
             d_object_name << ": "
@@ -2557,13 +2540,13 @@ void LinAdv::getFromInput(
                           << endl);
       }
 
-      if (!db->keyExists("Initial_data")) {
+      if (!input_db->keyExists("Initial_data")) {
          TBOX_ERROR(
             d_object_name << ": "
                           << "No `Initial_data' database found in input." << endl);
       }
       boost::shared_ptr<tbox::Database> init_data_db(
-         db->getDatabase("Initial_data"));
+         input_db->getDatabase("Initial_data"));
 
       bool found_problem_data = false;
 
@@ -2721,20 +2704,20 @@ void LinAdv::getFromInput(
       if (periodic(id)) num_per_dirs++;
    }
 
-   if (db->keyExists("Boundary_data")) {
+   if (input_db->keyExists("Boundary_data")) {
 
       boost::shared_ptr<tbox::Database> bdry_db(
-         db->getDatabase("Boundary_data"));
+         input_db->getDatabase("Boundary_data"));
 
       if (d_dim == tbox::Dimension(2)) {
-         appu::CartesianBoundaryUtilities2::readBoundaryInput(this,
+         appu::CartesianBoundaryUtilities2::getFromInput(this,
             bdry_db,
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
       }
       if (d_dim == tbox::Dimension(3)) {
-         appu::CartesianBoundaryUtilities3::readBoundaryInput(this,
+         appu::CartesianBoundaryUtilities3::getFromInput(this,
             bdry_db,
             d_scalar_bdry_face_conds,
             d_scalar_bdry_edge_conds,
@@ -2758,29 +2741,31 @@ void LinAdv::getFromInput(
  *************************************************************************
  */
 
-void LinAdv::putToDatabase(
-   const boost::shared_ptr<tbox::Database>& db) const
+void LinAdv::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
-#endif
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("LINADV_VERSION", LINADV_VERSION);
+   restart_db->putInteger("LINADV_VERSION", LINADV_VERSION);
 
-   db->putDoubleArray("d_advection_velocity", &d_advection_velocity[0], d_dim.getValue());
+   restart_db->putDoubleArray("d_advection_velocity",
+      &d_advection_velocity[0],
+      d_dim.getValue());
 
-   db->putInteger("d_godunov_order", d_godunov_order);
-   db->putString("d_corner_transport", d_corner_transport);
-   db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
-   db->putIntegerArray("d_fluxghosts", &d_fluxghosts[0], d_dim.getValue());
+   restart_db->putInteger("d_godunov_order", d_godunov_order);
+   restart_db->putString("d_corner_transport", d_corner_transport);
+   restart_db->putIntegerArray("d_nghosts", &d_nghosts[0], d_dim.getValue());
+   restart_db->putIntegerArray("d_fluxghosts",
+      &d_fluxghosts[0],
+      d_dim.getValue());
 
-   db->putString("d_data_problem", d_data_problem);
+   restart_db->putString("d_data_problem", d_data_problem);
 
    if (d_data_problem == "SPHERE") {
-      db->putDouble("d_radius", d_radius);
-      db->putDoubleArray("d_center", &d_center[0], d_dim.getValue());
-      db->putDouble("d_uval_inside", d_uval_inside);
-      db->putDouble("d_uval_outside", d_uval_outside);
+      restart_db->putDouble("d_radius", d_radius);
+      restart_db->putDoubleArray("d_center", &d_center[0], d_dim.getValue());
+      restart_db->putDouble("d_uval_inside", d_uval_inside);
+      restart_db->putDouble("d_uval_outside", d_uval_outside);
    }
 
    if ((d_data_problem == "PIECEWISE_CONSTANT_X") ||
@@ -2789,47 +2774,51 @@ void LinAdv::putToDatabase(
        (d_data_problem == "SINE_CONSTANT_X") ||
        (d_data_problem == "SINE_CONSTANT_Y") ||
        (d_data_problem == "SINE_CONSTANT_Z")) {
-      db->putInteger("d_number_of_intervals", d_number_of_intervals);
+      restart_db->putInteger("d_number_of_intervals", d_number_of_intervals);
       if (d_number_of_intervals > 0) {
-         db->putDoubleArray("d_front_position", d_front_position);
-         db->putDoubleArray("d_interval_uval", d_interval_uval);
+         restart_db->putDoubleArray("d_front_position", d_front_position);
+         restart_db->putDoubleArray("d_interval_uval", d_interval_uval);
       }
    }
 
-   db->putIntegerArray("d_scalar_bdry_edge_conds", d_scalar_bdry_edge_conds);
-   db->putIntegerArray("d_scalar_bdry_node_conds", d_scalar_bdry_node_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
+      d_scalar_bdry_edge_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
+      d_scalar_bdry_node_conds);
 
    if (d_dim == tbox::Dimension(2)) {
-      db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
+      restart_db->putDoubleArray("d_bdry_edge_uval", d_bdry_edge_uval);
    }
    if (d_dim == tbox::Dimension(3)) {
-      db->putIntegerArray("d_scalar_bdry_face_conds", d_scalar_bdry_face_conds);
-      db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
+      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+         d_scalar_bdry_face_conds);
+      restart_db->putDoubleArray("d_bdry_face_uval", d_bdry_face_uval);
    }
 
    if (d_refinement_criteria.getSize() > 0) {
-      db->putStringArray("d_refinement_criteria", d_refinement_criteria);
+      restart_db->putStringArray("d_refinement_criteria",
+         d_refinement_criteria);
    }
    for (int i = 0; i < d_refinement_criteria.getSize(); i++) {
 
       if (d_refinement_criteria[i] == "UVAL_DEVIATION") {
-         db->putDoubleArray("d_dev_tol", d_dev_tol);
-         db->putDoubleArray("d_dev", d_dev);
-         db->putDoubleArray("d_dev_time_max", d_dev_time_max);
-         db->putDoubleArray("d_dev_time_min", d_dev_time_min);
+         restart_db->putDoubleArray("d_dev_tol", d_dev_tol);
+         restart_db->putDoubleArray("d_dev", d_dev);
+         restart_db->putDoubleArray("d_dev_time_max", d_dev_time_max);
+         restart_db->putDoubleArray("d_dev_time_min", d_dev_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_GRADIENT") {
-         db->putDoubleArray("d_grad_tol", d_grad_tol);
-         db->putDoubleArray("d_grad_time_max", d_grad_time_max);
-         db->putDoubleArray("d_grad_time_min", d_grad_time_min);
+         restart_db->putDoubleArray("d_grad_tol", d_grad_tol);
+         restart_db->putDoubleArray("d_grad_time_max", d_grad_time_max);
+         restart_db->putDoubleArray("d_grad_time_min", d_grad_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_SHOCK") {
-         db->putDoubleArray("d_shock_onset", d_shock_onset);
-         db->putDoubleArray("d_shock_tol", d_shock_tol);
-         db->putDoubleArray("d_shock_time_max", d_shock_time_max);
-         db->putDoubleArray("d_shock_time_min", d_shock_time_min);
+         restart_db->putDoubleArray("d_shock_onset", d_shock_onset);
+         restart_db->putDoubleArray("d_shock_tol", d_shock_tol);
+         restart_db->putDoubleArray("d_shock_time_max", d_shock_time_max);
+         restart_db->putDoubleArray("d_shock_time_min", d_shock_time_min);
       } else if (d_refinement_criteria[i] == "UVAL_RICHARDSON") {
-         db->putDoubleArray("d_rich_tol", d_rich_tol);
-         db->putDoubleArray("d_rich_time_max", d_rich_time_max);
-         db->putDoubleArray("d_rich_time_min", d_rich_time_min);
+         restart_db->putDoubleArray("d_rich_tol", d_rich_tol);
+         restart_db->putDoubleArray("d_rich_time_max", d_rich_time_max);
+         restart_db->putDoubleArray("d_rich_time_min", d_rich_time_min);
       }
 
    }
@@ -2957,10 +2946,9 @@ void LinAdv::readDirichletBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
+
    if (d_dim == tbox::Dimension(2)) {
       readStateDataEntry(db,
          db_name,
@@ -2991,12 +2979,10 @@ void LinAdv::readStateDataEntry(
    int array_indx,
    tbox::Array<double>& uval)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(uval.getSize() > array_indx);
-#endif
 
    if (db->keyExists("uval")) {
       uval[array_indx] = db->getDouble("uval");
@@ -3036,7 +3022,8 @@ void LinAdv::checkBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
@@ -3044,44 +3031,32 @@ void LinAdv::checkBoundaryData(
 
    for (int i = 0; i < bdry_boxes.getSize(); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
-#endif
       int bloc = bbox.getLocationIndex();
 
       int bscalarcase = 0, refbdryloc = 0;
       if (d_dim == tbox::Dimension(2)) {
          if (btype == Bdry::EDGE2D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_EDGES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else { // btype == Bdry::NODE2D
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_2D_NODES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_edge[bloc];
          }
       }
       if (d_dim == tbox::Dimension(3)) {
          if (btype == Bdry::FACE3D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_FACES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = bloc;
          } else if (btype == Bdry::EDGE3D) {
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_EDGES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_edge_bdry_face[bloc];
          } else { // btype == Bdry::NODE3D
-#ifdef DEBUG_CHECK_ASSERTIONS
             TBOX_ASSERT(scalar_bconds.getSize() == NUM_3D_NODES);
-#endif
             bscalarcase = scalar_bconds[bloc];
             refbdryloc = d_node_bdry_face[bloc];
          }

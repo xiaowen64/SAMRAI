@@ -43,6 +43,20 @@ CellOverlap::getDestinationBoxContainer() const
    return d_dst_boxes;
 }
 
+void
+CellOverlap::getSourceBoxContainer(hier::BoxContainer& src_boxes) const
+{
+   TBOX_ASSERT(src_boxes.isEmpty());
+
+   src_boxes = d_dst_boxes;
+   if (!src_boxes.isEmpty()) {
+      for (hier::BoxContainer::iterator bi = src_boxes.begin();
+           bi != src_boxes.end(); ++bi) {
+         d_transformation.inverseTransform(*bi);
+      }
+   }
+}
+
 const hier::IntVector&
 CellOverlap::getSourceOffset() const
 {

@@ -32,31 +32,6 @@ PatchSideDataBasicOps<TYPE>::~PatchSideDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchSideDataBasicOps<TYPE>::PatchSideDataBasicOps(
-   const PatchSideDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchSideDataBasicOps<TYPE>::operator = (
-   const PatchSideDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General basic templated opertions for side data.
  *
  *************************************************************************
@@ -72,7 +47,7 @@ PatchSideDataBasicOps<TYPE>::scale(
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -97,7 +72,7 @@ PatchSideDataBasicOps<TYPE>::addScalar(
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -123,7 +98,7 @@ PatchSideDataBasicOps<TYPE>::add(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -149,7 +124,7 @@ PatchSideDataBasicOps<TYPE>::subtract(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -175,7 +150,7 @@ PatchSideDataBasicOps<TYPE>::multiply(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -201,7 +176,7 @@ PatchSideDataBasicOps<TYPE>::divide(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -225,7 +200,7 @@ PatchSideDataBasicOps<TYPE>::reciprocal(
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -253,7 +228,7 @@ PatchSideDataBasicOps<TYPE>::linearSum(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -281,7 +256,7 @@ PatchSideDataBasicOps<TYPE>::axpy(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -309,7 +284,7 @@ PatchSideDataBasicOps<TYPE>::axmy(
    TBOX_ASSERT(dst && src1 && src2);
    TBOX_ASSERT(dst->getDirectionVector() == src1->getDirectionVector());
    TBOX_ASSERT(dst->getDirectionVector() == src2->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -334,7 +309,7 @@ PatchSideDataBasicOps<TYPE>::setRandomValues(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -355,7 +330,7 @@ PatchSideDataBasicOps<TYPE>::min(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -378,7 +353,7 @@ PatchSideDataBasicOps<TYPE>::max(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 

@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <vector>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -110,7 +110,7 @@ SiloDatabase::nameDemangle(
 SiloDatabase::SiloDatabase(
    const std::string& name):
    d_is_file(false),
-   d_file(NULL),
+   d_file(0),
    d_directory("/"),
    d_database_name(name)
 {
@@ -133,7 +133,7 @@ SiloDatabase::SiloDatabase(
 {
    TBOX_ASSERT(!name.empty());
    TBOX_ASSERT(!directory.empty());
-   TBOX_ASSERT(file != NULL);
+   TBOX_ASSERT(file != 0);
 
    int err;
 
@@ -176,9 +176,9 @@ SiloDatabase::create(
       close();
    }
 
-   d_file = DBCreate(name.c_str(), DB_CLOBBER, DB_LOCAL, NULL, DB_PDB);
+   d_file = DBCreate(name.c_str(), DB_CLOBBER, DB_LOCAL, 0, DB_PDB);
 
-   if (d_file == NULL) {
+   if (d_file == 0) {
 
       TBOX_ERROR("Unable to open Silo file " << name << "\n");
       status = false;
@@ -218,7 +218,7 @@ SiloDatabase::open(
          DB_UNKNOWN,
          read_write_mode ? DB_APPEND : DB_READ);
 
-   if (d_file == NULL) {
+   if (d_file == 0) {
 
       TBOX_ERROR("Unable to open Silo file " << name << "\n");
       status = false;
@@ -250,7 +250,7 @@ SiloDatabase::close()
 #ifdef ASSERT_SILO_RETURN_VALUES
       TBOX_ASSERT(err >= 0);
 #endif
-      d_file = NULL;
+      d_file = 0;
       d_is_file = false;
    }
 
@@ -273,7 +273,7 @@ SiloDatabase::attachToFile(
 {
    bool status = false;
 
-   if (file != NULL) {
+   if (file != 0) {
       status = true;
       d_is_file = false;
       d_file = file;
@@ -334,7 +334,7 @@ SiloDatabase::keyExists(
 Array<std::string>
 SiloDatabase::getAllKeys()
 {
-   TBOX_ASSERT(!d_directory.empty());
+   TBOX_ASSERT(hasDirectory());
 
    std::string path = nameMangle(d_directory);
 
@@ -592,6 +592,7 @@ bool
 SiloDatabase::isBool(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_SHORT);
 }
 
@@ -611,7 +612,7 @@ SiloDatabase::putBoolArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (bool *)NULL);
+   TBOX_ASSERT(data != 0);
 
    short temp_array[nelements];
 
@@ -686,7 +687,7 @@ SiloDatabase::isDatabaseBox(
 
       DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-      if (ca != NULL) {
+      if (ca != 0) {
          if (ca->datatype == DB_INT) {
             is_type = true;
          }
@@ -712,7 +713,7 @@ SiloDatabase::putDatabaseBoxArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (DatabaseBox *)NULL);
+   TBOX_ASSERT(data != 0);
 
    const char* elemnames[3];
    int elemlengths[3];
@@ -756,7 +757,7 @@ SiloDatabase::putDatabaseBoxArray(
    err = DBPutCompoundarray(d_file, path.c_str(),
          const_cast<char **>(elemnames), elemlengths,
          3, values.getPointer(), values.size(),
-         DB_INT, NULL);
+         DB_INT, 0);
    if (err < 0) {
       TBOX_ERROR(
          "SiloDatabase: DBPutCompoundarray failed " << d_directory
@@ -824,6 +825,7 @@ bool
 SiloDatabase::isChar(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_CHAR);
 }
 
@@ -843,7 +845,7 @@ SiloDatabase::putCharArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (char *)NULL);
+   TBOX_ASSERT(data != 0);
 
    putSiloSimpleType(key, data, nelements, DB_CHAR);
 }
@@ -906,7 +908,7 @@ SiloDatabase::isComplex(
 
       DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-      if (ca != NULL) {
+      if (ca != 0) {
          if (ca->datatype == DB_DOUBLE) {
             is_type = true;
          }
@@ -934,7 +936,7 @@ SiloDatabase::putComplexArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (dcomplex *)NULL);
+   TBOX_ASSERT(data != 0);
 
    const char* elemnames[2];
    Array<double> values(nelements * 2);
@@ -965,7 +967,7 @@ SiloDatabase::putComplexArray(
    err = DBPutCompoundarray(d_file, path.c_str(),
          const_cast<char **>(elemnames), elemlengths, 2,
          values.getPointer(), values.size(),
-         DB_DOUBLE, NULL);
+         DB_DOUBLE, 0);
    if (err < 0) {
       TBOX_ERROR(
          "SiloDatabase DBPutCompoundarray failed " << d_directory
@@ -1027,6 +1029,7 @@ bool
 SiloDatabase::isDouble(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_DOUBLE);
 }
 
@@ -1046,7 +1049,7 @@ SiloDatabase::putDoubleArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (double *)NULL);
+   TBOX_ASSERT(data != 0);
 
    putSiloSimpleType(key, data, nelements, DB_DOUBLE);
 }
@@ -1095,6 +1098,7 @@ bool
 SiloDatabase::isFloat(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_FLOAT);
 }
 
@@ -1114,7 +1118,7 @@ SiloDatabase::putFloatArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (float *)NULL);
+   TBOX_ASSERT(data != 0);
 
    putSiloSimpleType(key, data, nelements, DB_FLOAT);
 }
@@ -1164,6 +1168,7 @@ bool
 SiloDatabase::isInteger(
    const std::string& key)
 {
+   TBOX_ASSERT(!key.empty());
    return isSiloSimpleType(key, DB_INT);
 }
 
@@ -1183,7 +1188,7 @@ SiloDatabase::putIntegerArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (int *)NULL);
+   TBOX_ASSERT(data != 0);
 
    putSiloSimpleType(key, data, nelements, DB_INT);
 }
@@ -1246,7 +1251,7 @@ SiloDatabase::isString(
 
       DBcompoundarray* ca = DBGetCompoundarray(d_file, path.c_str());
 
-      if (ca != NULL) {
+      if (ca != 0) {
          if (ca->datatype == DB_CHAR) {
             is_type = true;
          }
@@ -1274,7 +1279,7 @@ SiloDatabase::putStringArray(
    const int nelements)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (std::string *)NULL);
+   TBOX_ASSERT(data != 0);
 
    std::vector<std::string> strings(nelements);
    const char* elemnames[nelements];
@@ -1305,7 +1310,7 @@ SiloDatabase::putStringArray(
       const_cast<char **>(elemnames), elemlengths,
       nelements, const_cast<char *>(values.c_str()),
       static_cast<int>(values.size() + 1),
-      DB_CHAR, NULL);
+      DB_CHAR, 0);
    if (err < 0) {
       TBOX_ERROR(
          "SiloDatabase DBPutCompoundarray failed " << d_directory
@@ -1497,7 +1502,7 @@ SiloDatabase::putSiloSimpleType(
    const int simple_type)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != (float *)NULL);
+   TBOX_ASSERT(data != 0);
 
    int err;
 
@@ -1522,7 +1527,7 @@ SiloDatabase::getSiloSimpleType(
    void* data)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
 
    int err;
 

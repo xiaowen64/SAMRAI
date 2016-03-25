@@ -33,7 +33,7 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisItDataWriter.h"\
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace std;
 using namespace SAMRAI;
@@ -259,7 +259,7 @@ private:
     */
    virtual void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db);
+      boost::shared_ptr<tbox::Database> input_db);
 
    /*
     * Set boundary conditions at physical boundaries and coarse-fine

@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /*
  *************************************************************************
@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintedgefloat1d, LINTIMEINTEDGEFLOAT1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgefloat1d, LINTIMEINTEDGEFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(lintimeintedgefloat1d, LINTIMEINTEDGEFLOAT1D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintedgefloat2d0, LINTIMEINTEDGEFLOAT2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgefloat2d0, LINTIMEINTEDGEFLOAT2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(lintimeintedgefloat2d0, LINTIMEINTEDGEFLOAT2D0) (const int&,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintedgefloat2d1, LINTIMEINTEDGEFLOAT2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgefloat2d1, LINTIMEINTEDGEFLOAT2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -70,7 +70,7 @@ void F77_FUNC(lintimeintedgefloat2d1, LINTIMEINTEDGEFLOAT2D1) (const int&,
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintedgefloat3d0, LINTIMEINTEDGEFLOAT3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgefloat3d0, LINTIMEINTEDGEFLOAT3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -82,7 +82,7 @@ void F77_FUNC(lintimeintedgefloat3d0, LINTIMEINTEDGEFLOAT3D0) (const int&,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintedgefloat3d1, LINTIMEINTEDGEFLOAT3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgefloat3d1, LINTIMEINTEDGEFLOAT3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -94,7 +94,7 @@ void F77_FUNC(lintimeintedgefloat3d1, LINTIMEINTEDGEFLOAT3D1) (const int&,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintedgefloat3d2, LINTIMEINTEDGEFLOAT3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintedgefloat3d2, LINTIMEINTEDGEFLOAT3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -130,19 +130,19 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const EdgeData<float>* old_dat =
-      dynamic_cast<const EdgeData<float> *>(&src_data_old);
+      CPP_CAST<const EdgeData<float> *>(&src_data_old);
    const EdgeData<float>* new_dat =
-      dynamic_cast<const EdgeData<float> *>(&src_data_new);
+      CPP_CAST<const EdgeData<float> *>(&src_data_new);
    EdgeData<float>* dst_dat =
-      dynamic_cast<EdgeData<float> *>(&dst_data);
+      CPP_CAST<EdgeData<float> *>(&dst_data);
 
-   TBOX_ASSERT(old_dat != NULL);
-   TBOX_ASSERT(new_dat != NULL);
-   TBOX_ASSERT(dst_dat != NULL);
+   TBOX_ASSERT(old_dat != 0);
+   TBOX_ASSERT(new_dat != 0);
+   TBOX_ASSERT(dst_dat != 0);
    TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst_data, where, src_data_old, src_data_new);
 
    const hier::Index old_ilo = old_dat->getGhostBox().lower();
    const hier::Index old_ihi = old_dat->getGhostBox().upper();
@@ -174,7 +174,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
 
    for (int d = 0; d < dst_dat->getDepth(); d++) {
       if (dim == tbox::Dimension(1)) {
-         F77_FUNC(lintimeintedgefloat1d, LINTIMEINTEDGEFLOAT1D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintedgefloat1d, LINTIMEINTEDGEFLOAT1D) (ifirst(0),
             ilast(0),
             old_ilo(0), old_ihi(0),
             new_ilo(0), new_ihi(0),
@@ -184,7 +184,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
       } else if (dim == tbox::Dimension(2)) {
-         F77_FUNC(lintimeintedgefloat2d0, LINTIMEINTEDGEFLOAT2D0) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintedgefloat2d0, LINTIMEINTEDGEFLOAT2D0) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
             new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -193,7 +193,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(0, d),
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
-         F77_FUNC(lintimeintedgefloat2d1, LINTIMEINTEDGEFLOAT2D1) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintedgefloat2d1, LINTIMEINTEDGEFLOAT2D1) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
             new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -203,7 +203,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(1, d),
             dst_dat->getPointer(1, d));
       } else if (dim == tbox::Dimension(3)) {
-         F77_FUNC(lintimeintedgefloat3d0, LINTIMEINTEDGEFLOAT3D0) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintedgefloat3d0, LINTIMEINTEDGEFLOAT3D0) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),
@@ -216,7 +216,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(0, d),
             new_dat->getPointer(0, d),
             dst_dat->getPointer(0, d));
-         F77_FUNC(lintimeintedgefloat3d1, LINTIMEINTEDGEFLOAT3D1) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintedgefloat3d1, LINTIMEINTEDGEFLOAT3D1) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),
@@ -229,7 +229,7 @@ EdgeFloatLinearTimeInterpolateOp::timeInterpolate(
             old_dat->getPointer(1, d),
             new_dat->getPointer(1, d),
             dst_dat->getPointer(1, d));
-         F77_FUNC(lintimeintedgefloat3d2, LINTIMEINTEDGEFLOAT3D2) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintedgefloat3d2, LINTIMEINTEDGEFLOAT3D2) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),

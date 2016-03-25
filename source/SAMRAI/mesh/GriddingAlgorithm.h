@@ -26,7 +26,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -87,130 +87,179 @@ namespace mesh {
  * BoxGeneratorStrategy argument.  Routines that load balance patches
  * on a level are provided by the LoadBalanceStrategy constructor argument.
  *
- * Initialization of a GriddingAlgorithm object is performed via a
- * combination of default parameters and values read from an input
- * database.  Data read from input is summarized as follows:
+ * <b> Input Parameters </b>
  *
- * Optional input keys, data types, and defaults:
+ * <b> Definitions: </b>
+ *   - \b    check_overflow_nesting
+ *
+ *   - \b    check_proper_nesting
  *
  *   - \b    efficiency_tolerance
- *      An array of double values, each of which specifies the minimum
- *      fraction of tagged cells to total cells in boxes used to
- *      construct patches on a new level.  If the ratio is below the
- *      tolerance value, the box may be split into smaller boxes and
- *      pieces removed until the ratio becomes greater than or equal to
- *      the tolerance.  This tolerance helps users control the amount
- *      of extra refined cells created (beyond those tagged explicitly)
- *      that is typical in patch-based AMR computations.
- *      If no input values are given, a default of 0.8 is
- *      used.  See sample input below for input file format.
- *      The index of the value in the array corresponds to the number
- *      of the level to which the tolerance value applies.  If more
- *      values are given than the maximum number of levels allowed in
- *      the hierarchy, extra values will be ignored.  If fewer values
- *      are given, then the last value given will be used for each
- *      level without a specified input value.  For example, if only a
- *      single value is specified, then that value will be used on all
- *      levels.
+ *      each value specifies the minimum fraction of tagged cells to total
+ *      cells in boxes used to construct patches on a new level.  If the ratio
+ *      is below the tolerance value, the box may be split into smaller boxes
+ *      and pieces removed until the ratio becomes greater than or equal to the
+ *      tolerance.  This tolerance helps users control the amount of extra
+ *      refined cells created (beyond those tagged explicitly) that is typical
+ *      in patch-based AMR computations.  The index of the value in the array
+ *      corresponds to the number of the level to which the tolerance value
+ *      applies.  If more values are given than the maximum number of levels
+ *      allowed in the hierarchy, extra values will be ignored.  If fewer
+ *      values are given, then the last value given will be used for each level
+ *      without a specified input value.  For example, if only a single value
+ *      is specified, then that value will be used on all levels.
  *
  *   - \b    combine_efficiency
- *      An array of double values, each of which serves as a threshold
- *      for the ratio of the total number of cells in two boxes into which
- *      a box may be split and the number of cells in the original box.
- *      If that ratio is greater than the combine efficiency, the box will not
- *      be split.  This tolerance helps users avoids splitting up portions
- *      of the domain into into very small patches which can increase
- *      the overhead of AMR operations.
- *      If no input values are given, a default of 0.8 is
- *      used.  See sample input below for input file format.
- *      Multiple values in the array are handled similar to
- *      efficiency_tolerance.
- *
- *   - @b check_nonnesting_user_boxes
- *      A flag to control how user-specified refinement boxes that violate
- *      proper nesting are handled.
- *      Set to one of these strings:
- *      @b "IGNORE" - nesting violations will be quietly disregarded.
- *      @b "WARN" - nesting violations will cause a warning but the
- *      code will continue anyway.
- *      @b "ERROR" - nesting violations will cause an unrecoverable
- *      assertion.
- *      The default is "ERROR".  We highly recommend making nesting violation
- *      an error.  The code may work anyway, but there are no guarantees.
- *
- *   - @b check_boundary_proximity_violation
- *      A flag to control how to resolve refinement boxes that violate
- *      boundary proximity (are less than the max ghost cell width of
- *      physical boundaries without touching the boundary).
- *      Set to one of these strings:
- *      @b "IGNORE" - violations will be quietly disregarded.
- *      @b "WARN" - violations will cause a warning but the
- *      code will continue anyway.
- *      @b "ERROR" - violations will cause an unrecoverable
- *      assertion.
- *      The default is "ERROR".  We highly recommend making boundary
- *      proximity violation an error.  The code may work anyway, but there
- *      are no guarantees.
+ *      each value serves as a threshold for the ratio of the total number of
+ *      cells in two boxes into which a box may be split and the number of
+ *      cells in the original box.  If that ratio is greater than the combine
+ *      efficiency, the box will not be split.  This tolerance helps users
+ *      avoids splitting up portions of the domain into into very small patches
+ *      which can increase the overhead of AMR operations.  Multiple values in
+ *      the array are handled similar to efficiency_tolerance.
  *
  *   - \b    check_nonrefined_tags
- *      A flag to control how to resolve user-specified tags that violate
- *      proper nesting.
- *
- *      If a tag violates the nesting requirements, its location in index space
- *      will not be refined when creating the finer level.  This flag allows the
- *      user to determine what to do when this occurs
- *
- *      Set to one of these strings:
- *      @b "IGNORE" - violating tags will be quietly disregarded.
- *      @b "WARN" - violating tags will cause a warning and be
- *      disregarded.
- *      @b "ERROR" - violating tags will cause an unrecoverable
- *      assertion.
- *      The default is "WARN".  It is fastest to ignore non-nesting tags
- *      because no checking has to be done.
+ *      controls how to resolve user-specified tags that violate proper
+ *      nesting.  If a tag violates the nesting requirements, its location in
+ *      index space will not be refined when creating the finer level.  This
+ *      flag allows the user to determine what to do when this occurs. <br>
+ *      Set to one of these characters: <br>
+ *      @b 'i' - violating tags will be quietly disregarded. <br>
+ *      @b 'w' - violating tags will cause a warning and be disregarded. <br>
+ *      @b 'e' - violating tags will cause an unrecoverable assertion. <br>
+ *      It is fastest to ignore non-nesting tags because no checking has to be
+ *      done.
  *
  *   - \b    check_overlapping_patches
- *      A flag to control checking for overlapping patches on a new level.
- *      Set to one of these strings:
- *      @b "IGNORE" - there is no check for overlapping patches,
- *      and they will be quietly disregarded.
- *      @b "WARN" - overlapping patches will cause a warning and be
- *      disregarded.
- *      @b "ERROR" - violating tags will cause an unrecoverable
- *      assertion.
- *      The default is "WARN".  The check for overlapping patches may be
- *      and should be bypassed by application that can tolerate overlaps.
- *      To prevent the creation of levels with overlapping patches, see
- *      the input flag
- *      "allow_patches_smaller_than_minimum_size_to_prevent_overlaps"
+ *      controls checking for overlapping patches on a new level. <br>
+ *      Set to one of these characters: <br>
+ *      @b 'i' - there is no check for overlapping patches, and they will be
+ *      quietly disregarded. <br>
+ *      @b 'w' - overlapping patches will cause a warning and be
+ *      disregarded. <br>
+ *      @b 'e' - violating tags will cause an unrecoverable assertion. <br>
+ *      The check for overlapping patches may be and should be bypassed by
+ *      applications that can tolerate overlaps.  To prevent the creation of
+ *      levels with overlapping patches, see the PatchHierarchy input flag
+ *      "allow_patches_smaller_than_minimum_size_to_prevent_overlaps".
  *
- *   - \b   sequentialize_patch_indices
- *      A flag to specify whether patch indices will be globally sequentialized.
+ *   - \b    check_nonnesting_user_boxes
+ *      controls how user-specified refinement boxes that violate proper
+ *      nesting are handled. <br>
+ *      Set to one of these characters: <br>
+ *      @b 'i' - nesting violations will be quietly disregarded. <br>
+ *      @b 'w' - nesting violations will cause a warning but the code will
+ *      continue anyway. <br>
+ *      @b 'e' - nesting violations will cause an unrecoverable assertion <br>
+ *      We highly recommend making nesting violation an error.  The code may
+ *      work anyway, but there are no guarantees.
+ *
+ *   - \b    sequentialize_patch_indices
+ *      whether patch indices will be globally sequentialized.
  *      This is not scalable, but is required for writing correct VisIt files.
- *      Due to the current VisIt requirement, this is currently true by default.
- *      It will evetually be set back to false after we remove the VisIt
- *      requirement.
+ *      Due to the current VisIt requirement, this is currently true by
+ *      default.  It will evetually be set back to false after we remove the
+ *      VisIt requirement.
  *
- *   - @b log_metadata_statistics = FALSE
- *      Whether to log metadata statistics after generating a new level.
- *      This flag writes out data that would be of interest to analyzing
- *      how metadata statistics affects performance.
+ *   - \b    enforce_proper_nesting
  *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>check_overflow_nesting</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_proper_nesting</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>efficiency_tolerance</td>
+ *     <td>Array<double></td>
+ *     <td>0.8 for each level</td>
+ *     <td>all values > 0.0 && < 1.0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>combine_efficiency</td>
+ *     <td>Array<double></td>
+ *     <td>0.8 for each level</td>
+ *     <td>all values > 0.0 && < 1.0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_nonrefined_tags</td>
+ *     <td>string</td>
+ *     <td>"WARN"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_overlapping_patches</td>
+ *     <td>string</td>
+ *     <td>"IGNORE"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>check_nonnesting_user_boxes</td>
+ *     <td>string</td>
+ *     <td>"ERROR"</td>
+ *     <td>"WARN", "IGNORE", "ERROR"</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>sequentialize_patch_indices</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>enforce_proper_nesting</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
- * Note that when continuing from restart, the input values in the
- * input file override all values read in from the restart database.
+ * All values read in from a restart database may be overriden by input
+ * database values.  If no new input database value is given, the restart
+ * database value is used.
  *
  * The following represents sample input data for a three-level problem:
  *
- * \verbatim
- *
+ * @code
  *   // Optional input: different efficiency tolerance for each coarser level
  *   efficiency_tolerance = 0.80e0, 0.85e0, 0.90e0
  *
  *   // Optional input: combine efficiency is same for all levels.
  *   combine_efficiency = 0.95e0
- *
- * \endverbatim
+ * @endcode
  *
  * @see mesh::TagAndInitializeStrategy
  * @see mesh::LoadBalanceStrategy
@@ -229,14 +278,7 @@ public:
     *
     * Gridding parameters are initialized from values provided in the
     * specified input and in the restart database corresponding to the
-    * specified object_name argument.  The constructor also registers
-    * this object for restart using the specified object name when the
-    * boolean argument is true (default).
-    *
-    * If assertion checking is turned on, an unrecoverable assertion
-    * will result if any of the required pointer arguments is null.
-    * Assertions may also be thrown if any checks for consistency
-    * among input parameters fail.
+    * specified object_name argument.
     *
     * @param[in] hierarchy The hierarchy that this GriddingAlgorithm will
     * work on.  The pointer is cached.  All hierarchy operations will
@@ -256,7 +298,11 @@ public:
     * @param[in] balancer_zero Special load balancer to use for level
     * zero.  If omitted, will use @c balancer instead.
     *
-    * @param[in] register_for_restart
+    * @pre hierarchy
+    * @pre !object_name.empty()
+    * @pre tag_init_strategy
+    * @pre generator
+    * @pre balancer
     */
    GriddingAlgorithm(
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -266,8 +312,7 @@ public:
       const boost::shared_ptr<BoxGeneratorStrategy>& generator,
       const boost::shared_ptr<LoadBalanceStrategy>& balancer,
       const boost::shared_ptr<LoadBalanceStrategy>& balancer_zero =
-         boost::shared_ptr<LoadBalanceStrategy>(),
-      bool register_for_restart = true);
+         boost::shared_ptr<LoadBalanceStrategy>());
 
    /*!
     * @brief Destructor
@@ -297,6 +342,8 @@ public:
     * cells for refinement, whereas the other routine does.
     *
     * @param[in] level_time Simulation time.
+    *
+    * @pre d_hierarchy->getMaxNumberOfLevels() > 0
     */
    void
    makeCoarsestLevel(
@@ -319,21 +366,28 @@ public:
     * evolve before regridding occurs (e.g., number of timesteps
     * taken) when calculating the tag_buffer.
     *
-    * @param[in] level_time See above text.
-    *
-    * @param[in] initial_time See above text.
-    *
     * @param[in] tag_buffer See above text.
+    *
+    * @param[in] initial_cycle See above text
+    *
+    * @param[in] cycle See above text.
+    *
+    * @param[in] level_time See above text..
     *
     * @param[in] regrid_start_time The simulation time when the
     * regridding operation began (this parameter is ignored except
     * when using Richardson extrapolation)
+    *
+    * @pre d_hierarchy
+    * @pre d_hierarchy->getPatchLevel(d_hierarchy->getFinestLevelNumber())
+    * @pre tag_buffer >= 0
     */
    void
    makeFinerLevel(
-      const double level_time,
-      const bool initial_time,
       const int tag_buffer,
+      const bool initial_cycle,
+      const int cycle,
+      const double level_time,
       const double regrid_start_time = 0.0);
 
    /*!
@@ -353,32 +407,35 @@ public:
     * This constraint, though seemingly restrictive makes the
     * process of maintaining properly nested levels much easier.
     *
-    * Important note: If assertion checking is activated, several
-    * checks are applied to the functions arguments.  If any check is
-    * violated, an unrecoverable assertion will result.  In
-    * particular, the given level number must match that of of some
-    * level in the hierarchy.  Also, the tag buffer array must contain
-    * a positive value for each level in the hierarchy.
-    *
     * @param[in] level_number Coarsest level on which cells will be
     * tagged for refinement
     *
-    * @param[in] regrid_time Simulaition time when regridding occurs
-    *
     * @param[in] tag_buffer Size of buffer on each level around tagged
     * cells that will be covered by the next finer level
+    *
+    * @param[in] cycle Simulaition cycle when regridding occurs
+    *
+    * @param[in] level_time Simulation time of the level corresponding to
+    *                       level_num when regridding occurs
     *
     * @param[in] regrid_start_time The simulation time when the
     * regridding operation began on each level (this parameter is
     * ignored except when using Richardson extrapolation)
     *
     * @param[in] level_is_coarsest_to_sync Level is the coarsest to sync
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= d_hierarchy->getFinestLevelNumber())
+    * @pre d_hierarchy->getPatchLevel(level_number)
+    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
    regridAllFinerLevels(
       const int level_number,
-      const double regrid_time,
       const tbox::Array<int>& tag_buffer,
+      const int cycle,
+      const double level_time,
       tbox::Array<double> regrid_start_time = tbox::Array<double>(),
       const bool level_is_coarsest_to_sync = true);
 
@@ -417,6 +474,10 @@ public:
     *
     * @param[in] efficiency_tolerance
     * @param[in] level_number
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
+    * @pre (efficiency_tolerance >= 0) && (efficiency_tolerance <= 1.0)
     */
    void
    setEfficiencyTolerance(
@@ -434,6 +495,9 @@ public:
     * @brief Return efficiency tolerance for clustering tags on level.
     *
     * @return efficiency tolerance for clustering tags on level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
     */
    double
    getEfficiencyTolerance(
@@ -452,6 +516,10 @@ public:
     *
     * @param[in] combine_efficiency
     * @param[in] level_number
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
+    * @pre (combine_efficiency >= 0) && (combine_efficiency <= 1.0)
     */
    void
    setCombineEfficiency(
@@ -468,6 +536,9 @@ public:
     * @brief Return combine efficiency for clustering tags on level.
     *
     * @return combine efficiency for clustering tags on level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
     */
    double
    getCombineEfficiency(
@@ -489,13 +560,13 @@ public:
       std::ostream& os) const;
 
    /*!
-    * @brief Write object state out to the gien database.
+    * @brief Write object state out to the given restart database.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * @pre restart_db
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*
     * @brief Write out statistics recorded on numbers of cells and patches generated.
@@ -503,6 +574,15 @@ public:
    void
    printStatistics(
       std::ostream& s = tbox::plog) const;
+
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string&
+   getObjectName() const
+    {
+       return d_object_name;
+    }
 
 private:
    /*
@@ -513,23 +593,21 @@ private:
    //! @brief Shorthand typedef.
    typedef hier::Connector::NeighborSet NeighborSet;
 
-   /*
+   /*!
     * @brief Read input data from specified database and initialize class members.
     *
-    * When assertion checking is active, the database pointer must be non-null.
+    * The database pointer must be non-null.
     *
-    * @param[in] db
+    * @param[in] input_db
     *
-    * @param[in] is_from_restart Should be set to true if the
-    * simulation is from restart.  Otherwise, it should be set to
-    * false.
+    * @param[in] is_from_restart
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db,
+      const boost::shared_ptr<tbox::Database>& input_db,
       bool is_from_restart);
 
-   /*
+   /*!
     * @brief Read object state from the restart file and initialize
     * class data members.
     *
@@ -547,24 +625,33 @@ private:
    void
    getFromRestart();
 
-   /*
+   /*!
     * @brief Recursively regrid the hierarchy level and all finer
     * levels in the hierarchy.
     *
     * This private member function is invoked by the
     * regridAllFinerLevels() routine.  It may invoke recursively
     * invoke itself.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= d_hierarchy->getFinestLevelNumber())
+    * @pre d_hierarchy->getPatchLevel(level_number)
+    * @pre (finest_level_not_regridded >= 0) &&
+    *      (finest_level_not_regridded <= level_number)
+    * @pre tag_buffer.getSize() >= level_number + 1
+    * @pre for each member, tb, of tag_buffer, tb >= 0
     */
    void
    regridFinerLevel(
       const int level_number,
       const double regrid_time,
+      const int regrid_cycle,
       const int finest_level_not_regridded,
       const bool level_is_coarsest_to_sync,
       const tbox::Array<int>& tag_buffer,
       const tbox::Array<double>& regrid_start_time = tbox::Array<double>(0));
 
-   /*
+   /*!
     * @brief Tagging stuff before recursive regrid, called from regridFinerLevel.
     */
    void
@@ -572,9 +659,10 @@ private:
       const int tag_ln,
       const bool level_is_coarsest_sync_level,
       const tbox::Array<double>& regrid_start_time,
-      const double regrid_time);
+      const double regrid_time,
+      const int regrid_cycle);
 
-   /*
+   /*!
     * @brief Tagging stuff after recursive regrid, called from regridFinerLevel.
     *
     * A side-effect of this method is setting the overlap Connectors
@@ -588,7 +676,7 @@ private:
       const int tag_ln,
       const tbox::Array<int>& tag_buffer);
 
-   /*
+   /*!
     * @brief Given the metadata describing the new level, this method
     * creates and installs new PatchLevel in the hierarchy.
     */
@@ -601,7 +689,7 @@ private:
       const hier::Connector& tag_to_finer,
       const hier::Connector& finer_to_tag);
 
-   /*
+   /*!
     * @brief Set all tags on a level to a given value.
     *
     * @param[in] tag_value
@@ -609,6 +697,10 @@ private:
     * @param[in] level
     *
     * @param[in] tag_index
+    *
+    * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
+    * @pre tag_level
+    * @pre (tag_index == d_tag_indx) || (tag_index == d_buf_tag_indx)
     */
    void
    fillTags(
@@ -616,7 +708,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int tag_index) const;
 
-   /*
+   /*!
     * @brief Set integer tags to specified value on intersection
     * between patch level and a BoxLevel
     *
@@ -631,7 +723,7 @@ private:
     *
     * @param[in] index
     *
-    * @param[in] level_to_fill_mapped_box_level Connector from the
+    * @param[in] level_to_fill_box_level Connector from the
     * level with the tags to the BoxLevel describing where to
     * fill.
     *
@@ -639,65 +731,76 @@ private:
     *
     * @param fill_box_growth How much to grow fill boxes before using
     * them to tag.  Must be in index space of level holding fill boxes.
+    *
+    * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
+    * @pre tag_level
+    * @pre (index == d_tag_indx || index == d_buf_tag_indx)
+    * @pre tag_level_to_fill_box_level.getHeadCoarserFlag() == false
     */
    void
    fillTagsFromBoxLevel(
       const int tag_value,
       const boost::shared_ptr<hier::PatchLevel>& tag_level,
       const int index,
-      const hier::Connector& tag_level_to_fill_mapped_box_level,
+      const hier::Connector& tag_level_to_fill_box_level,
       const bool interior_only,
       const hier::IntVector& fill_box_growth) const;
 
-   /*
+   /*!
     * @brief Make a map that, when applied to an improperly nested
     * BoxLevel, removes the nonnesting parts.
     *
-    * @param[out] nested_mapped_box_level  The nesting parts of the
+    * @param[out] nested_box_level  The nesting parts of the
     * unnested BoxLevel.
     *
     * @param[out] unnested_to_nested  The mapping from the unnested
     * BoxLevel to the nested BoxLevel.
     *
-    * @param[in] unnested_mapped_box_level
+    * @param[in] unnested_box_level
     *
     * @param[in] tag_to_unnested  Overlap Connector from the tag level
-    * to unnested_mapped_box_level.
+    * to unnested_box_level.
     *
     * @param[in] unnested_to_tag  Transpose of tag_to_unnested.
     *
     * @param[in] unnested_ln Level number of PatchLevel being
     * generated (one more than the tag level number).
+    *
+    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == nested_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == nested_box_level.getDim())
     */
    void
    makeProperNestingMap(
-      hier::BoxLevel& nested_mapped_box_level,
+      hier::BoxLevel& nested_box_level,
       hier::Connector& unnested_to_nested,
-      const hier::BoxLevel& unnested_mapped_box_level,
+      const hier::BoxLevel& unnested_box_level,
       const hier::Connector& tag_to_unnested,
       const hier::Connector& unnested_to_tag,
       const int unnested_ln) const;
 
-   /*
+   /*!
     * @brief Make a map that, when applied to a BoxLevel that
     * extends outside of a reference BoxLevel, removes those
     * outside parts.
     *
-    * @param[out] nested_mapped_box_level  The nesting parts of the
-    * unnested BoxLevel.
+    * @param[out] nested_box_level  The nesting parts of the unnested BoxLevel.
     *
     * @param[out] unnested_to_nested  The mapping from the unnested
     * BoxLevel to the nested BoxLevel.
     *
-    * @param[in] unnested_mapped_box_level
+    * @param[in] unnested_box_level
     *
     * @param[in] unnested_to_reference
+    *
+    * @pre (d_hierarchy->getDim() == unnested_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == nested_box_level.getDim())
     */
    void
    makeOverflowNestingMap(
-      hier::BoxLevel& nested_mapped_box_level,
+      hier::BoxLevel& nested_box_level,
       hier::Connector& unnested_to_nested,
-      const hier::BoxLevel& unnested_mapped_box_level,
+      const hier::BoxLevel& unnested_box_level,
       const hier::Connector& unnested_to_reference) const;
 
    /*!
@@ -710,11 +813,16 @@ private:
     *
     * @param[in] tag_ln Level number of the level that candidate should nest in.
     *
-    * @param[in] candidate_to_hierarchy Connector to mapped_box_level number
+    * @param[in] candidate_to_hierarchy Connector to box_level number
     *       tag_ln in the hierarchy.
     *
-    * @param[in] hierarchy_to_candidate Connector from mapped_box_level number
+    * @param[in] hierarchy_to_candidate Connector from box_level number
     *       tag_ln in the hierarchy.
+    *
+    * @pre (d_hierarchy->getDim() == candidate.getDim()) &&
+    *      (d_hierarchy->getDim() == violator.getDim())
+    * @pre candidate_to_hierarchy.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
+    * @pre hierarchy_to_candidate.getRatio() == hier::IntVector::getOne(d_hierarchy->getDim())
     */
    void
    computeNestingViolator(
@@ -725,12 +833,12 @@ private:
       const hier::Connector& hierarchy_to_candidate,
       const int tag_ln) const;
 
-   /*
+   /*!
     * @brief Extend Boxes to domain boundary if they they are too close.
     *
     * See hier::BoxUtilities::extendBoxToDomainBoundary().
     *
-    * @param[in,out] new_mapped_box_level
+    * @param[in,out] new_box_level
     *
     * @param[in,out] tag_to_new
     *
@@ -743,7 +851,7 @@ private:
     */
    void
    extendBoxesToDomainBoundary(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const tbox::Array<hier::BoxContainer>& physical_domain_array,
@@ -756,6 +864,9 @@ private:
     * constructing level number ln+1.
     *
     * @param[in] ln
+    *
+    * @pre (d_base_ln >= 0) && (ln >= d_base_ln)
+    * @pre (ln == d_base_ln) || (d_to_nesting_complement[ln - 1].isFinalized())
     */
    void
    computeProperNestingData(
@@ -765,7 +876,7 @@ private:
     * @brief Attempt to fix boxes that are too small by growing them
     * within the nesting-restricted domain.
     *
-    * @param[in,out] new_mapped_box_level BoxLevel being formed
+    * @param[in,out] new_box_level BoxLevel being formed
     * into the new new level.
     *
     * @param[in,out] tag_to_new  Connector to be updated.
@@ -775,20 +886,23 @@ private:
     * @param[in] min_size
     *
     * @param[in] tag_ln Level number of the tag level.
+    *
+    * @pre (d_hierarchy->getDim() == new_box_level.getDim()) &&
+    *      (d_hierarchy->getDim() == min_size.getDim())
     */
    void
    growBoxesWithinNestingDomain(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::IntVector& min_size,
       const int tag_ln) const;
 
-   /*
+   /*!
     * @brief Refine a BoxLevel from the resolution of the tag
     * level to the resolution of the level being created.
     *
-    * @param[in,out] new_mapped_box_level BoxLevel being formed
+    * @param[in,out] new_box_level BoxLevel being formed
     * into the new new level.
     *
     * @param[in,out] tag_to_new  Connector to be updated.
@@ -799,12 +913,12 @@ private:
     */
    void
    refineNewBoxLevel(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const hier::IntVector& ratio) const;
 
-   /*
+   /*!
     * @brief Renumber Boxes in a BoxLevel.
     *
     * This method renumbers Boxes to give them globally
@@ -814,7 +928,7 @@ private:
     * approach.  Sorting by box coordinates removes the randomness in
     * the ordering of boxes.
     *
-    * @param[in,out] new_mapped_box_level
+    * @param[in,out] new_box_level
     *
     * @param[in,out] tag_to_new
     *
@@ -823,18 +937,25 @@ private:
     * @param[in] sort_by_corners
     *
     * @param[in] sequentialize_global_indices
+    *
+    * @pre d_hierarchy->getDim() == new_box_level.getDim()
     */
    void
    renumberBoxes(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       bool sort_by_corners,
       bool sequentialize_global_indices) const;
 
-   /*
+   /*!
     * @brief Buffer each integer tag on patch level matching given tag
     * value with a border of matching tags.
+    *
+    * @pre (tag_value == d_true_tag) || (tag_value == d_false_tag)
+    * @pre level
+    * @pre buffer_size >= 0
+    * @pre d_hierarchy->getDim() == level->getDim()
     */
    void
    bufferTagsOnLevel(
@@ -842,7 +963,7 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& level,
       const int buffer_size) const;
 
-   /*
+   /*!
     * @brief Set the new level boxes using information stored in a file.
     *
     * If cell tagging is not performed, the new level boxes may
@@ -853,35 +974,42 @@ private:
     * parameter "remove_old_fine_level" which indicates whether
     * the level box configuration has changed and, consequently,
     * whether we need to remove the old level.
+    *
+    * @pre (level_number >= 0) &&
+    *      (level_number <= d_hierarchy->getFinestLevelNumber())
     */
    void
    readLevelBoxes(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& coarser_to_new,
       hier::Connector& new_to_coarser,
       const int level_number,
       const double regrid_time,
+      const int regrid_cycle,
       bool& remove_old_fine_level);
 
-   /*
+   /*!
     * @brief Given the number for the level where cells are tagged for
     * refinement, compute a BoxLevel from which a refinement of
     * the level may be constructed.
     *
     * It is assumed that the integer tags that identify cells for
     * refinement have been set on the level before this routine is
-    * called.  At the end of this function, new_mapped_box_level will
+    * called.  At the end of this function, new_box_level will
     * represent the box extents of a new fine level on the given
     * block.
+    *
+    * @pre (tag_ln >= 0) && (tag_ln <= d_hierarchy->getFinestLevelNumber())
+    * @pre d_hierarchy->getPatchLevel(tag_ln)
     */
    void
    findRefinementBoxes(
-      hier::BoxLevel& new_mapped_box_level,
+      hier::BoxLevel& new_box_level,
       hier::Connector& tag_to_new,
       hier::Connector& new_to_tag,
       const int tag_ln) const;
 
-   /*
+   /*!
     * @brief Set patch size and ghost cell information needed to
     * create new refinement levels.
     *
@@ -904,6 +1032,13 @@ private:
     * level, the smallest box to refine on the next coarser level, and the
     * number of cells that a patch may be extended to the boundary if it
     * sufficiently close to the boundary (extend_ghosts).
+    *
+    * @pre (d_hierarchy->getDim() == smallest_patch.getDim()) &&
+    *      (d_hierarchy->getDim() == smallest_box_to_refine.getDim()) &&
+    *      (d_hierarchy->getDim() == largest_patch.getDim()) &&
+    *      (d_hierarchy->getDim() == extend_ghosts.getDim())
+    * @pre (level_number >= 0) &&
+    *      (level_number < d_hierarchy->getMaxNumberOfLevels())
     */
    void
    getGriddingParameters(
@@ -937,7 +1072,7 @@ private:
     * intersect the boundary in weird ways, so we disallow it.  This
     * method writes a warning describing each violation found.
     *
-    * @param[in] mapped_box_level
+    * @param[in] box_level
     *
     * @param[in] extend_ghosts
     *
@@ -945,20 +1080,20 @@ private:
     */
    size_t
    checkBoundaryProximityViolation(
-      const hier::BoxLevel& mapped_box_level,
+      const hier::BoxLevel& box_level,
       const hier::IntVector& extend_ghosts) const;
 
    /*!
     * @brief Check for boxes that are too close to the physical
     * boundary without touching it.
     *
-    * Compute the allowable distance from boxes in new_mapped_box_level
+    * Compute the allowable distance from boxes in new_box_level
     * to domain boundary and delegate the checking.
     */
    void
    checkBoundaryProximityViolation(
       const int tag_ln,
-      const hier::BoxLevel& new_mapped_box_level) const;
+      const hier::BoxLevel& new_box_level) const;
 
    /*!
     * @brief Check for user tags that violate proper nesting.
@@ -966,13 +1101,15 @@ private:
     * @param tag_level  Tag level
     *
     * @param tag_ln  Tag level number
+    *
+    * @pre d_hierarchy->getDim() == tag_level.getDim()
     */
    void
    checkNonrefinedTags(
       const hier::PatchLevel& tag_level,
       int tag_ln) const;
 
-   /*
+   /*!
     * @brief Reset data that handles tag buffering.
     *
     * Resets the tag buffering data so that it will be able to handle a
@@ -986,11 +1123,11 @@ private:
    /*!
     * @brief Check for overlapping patches within a level.
     *
-    * @param[in] mapped_box_level_to_self
+    * @param[in] box_level_to_self
     */
    void
    checkOverlappingPatches(
-      const hier::Connector& mapped_box_level_to_self) const;
+      const hier::Connector& box_level_to_self) const;
 
    /*!
     * @brief Warn if the domain is too small any periodic direction.
@@ -1022,10 +1159,10 @@ private:
    startupCallback()
    {
       s_tag_indx = new tbox::Array<int>(
-         tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+         SAMRAI::MAX_DIM_VAL,
          -1);
       s_buf_tag_indx = new tbox::Array<int>(
-         tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+         SAMRAI::MAX_DIM_VAL,
          -1);
    }
 
@@ -1086,18 +1223,13 @@ private:
    static tbox::Array<int> * s_tag_indx;
    static tbox::Array<int> * s_buf_tag_indx;
 
-   const tbox::Dimension d_dim;
-
    hier::IntVector d_buf_tag_ghosts;
 
    /*
     * The object name is used for error reporting and accessing
-    * restart file information.  Whether the object writes restart
-    * file data depends on the value of this boolean which is
-    * set in the constructor.
+    * restart file information.
     */
    std::string d_object_name;
-   bool d_registered_for_restart;
 
    /*
     * Data members that manage application-specific level initialization

@@ -31,7 +31,7 @@ using namespace std;
 #endif
 #include "SAMRAI/hier/Variable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 
@@ -182,7 +182,7 @@ private:
    /*
     * Data members specific to this side data test.
     */
-   tbox::Array<int> d_test_direction;
+   tbox::Array<hier::IntVector> d_test_direction;
    tbox::Array<bool> d_use_fine_value_at_interface;
 
    double d_Acoef;

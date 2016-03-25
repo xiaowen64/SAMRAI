@@ -16,6 +16,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/pdat/SideGeometry.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 
@@ -27,31 +29,6 @@ PatchSideDataNormOpsReal<TYPE>::PatchSideDataNormOpsReal()
 template<class TYPE>
 PatchSideDataNormOpsReal<TYPE>::~PatchSideDataNormOpsReal()
 {
-}
-
-/*
- *************************************************************************
- *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchSideDataNormOpsReal<TYPE>::PatchSideDataNormOpsReal(
-   const PatchSideDataNormOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchSideDataNormOpsReal<TYPE>::operator = (
-   const PatchSideDataNormOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 /*
@@ -69,7 +46,7 @@ PatchSideDataNormOpsReal<TYPE>::numberOfEntries(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -130,7 +107,7 @@ PatchSideDataNormOpsReal<TYPE>::abs(
 {
    TBOX_ASSERT(dst && src);
    TBOX_ASSERT(dst->getDirectionVector() == src->getDirectionVector());
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -153,7 +130,7 @@ PatchSideDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -167,7 +144,7 @@ PatchSideDataNormOpsReal<TYPE>::L1Norm(
          }
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
@@ -191,7 +168,7 @@ PatchSideDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -206,7 +183,7 @@ PatchSideDataNormOpsReal<TYPE>::L2Norm(
          }
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
@@ -233,7 +210,7 @@ PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -254,7 +231,7 @@ PatchSideDataNormOpsReal<TYPE>::weightedL2Norm(
          }
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
@@ -288,7 +265,7 @@ PatchSideDataNormOpsReal<TYPE>::RMSNorm(
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
       retval /= sqrt(sumControlVolumes(data, cvol, box));
    }
    return retval;
@@ -303,13 +280,13 @@ PatchSideDataNormOpsReal<TYPE>::weightedRMSNorm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
       retval /= sqrt(sumControlVolumes(data, cvol, box));
    }
    return retval;
@@ -323,7 +300,7 @@ PatchSideDataNormOpsReal<TYPE>::maxNorm(
    const boost::shared_ptr<pdat::SideData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -339,7 +316,7 @@ PatchSideDataNormOpsReal<TYPE>::maxNorm(
          }
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
@@ -383,7 +360,7 @@ PatchSideDataNormOpsReal<TYPE>::dot(
          }
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data1, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data1, *cvol);
       TBOX_ASSERT(directions ==
          hier::IntVector::min(directions, cvol->getDirectionVector()));
 
@@ -410,7 +387,7 @@ PatchSideDataNormOpsReal<TYPE>::integral(
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT(vol);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, box, *vol);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, box, *vol);
 
    int dimVal = data->getDim().getValue();
 

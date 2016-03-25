@@ -20,6 +20,7 @@ namespace SAMRAI {
   operators are also included here although they are independent of the
   mesh description.
   -# @ref package_geometry_cartesian "simple Cartesian mesh (grid geometry and operators)"
+  -# @ref package_geometry_generic "generic meshes (grid geometry only)"
  
   All class names in the Geometry package are in the SAMRAI::geom namespace.
 

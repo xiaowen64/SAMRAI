@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/Variable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 #include <map>
 
@@ -25,7 +25,7 @@ namespace SAMRAI {
 namespace hier {
 
 /**
- * Class CoarsenOperator<DIM> is an abstract base class for each
+ * Class CoarsenOperator is an abstract base class for each
  * spatial coarsening operator used in the SAMRAI framework.  This class
  * defines the interface between numerical coarsening routines and the
  * rest of the framework.  Each concrete coarsening operator subclass
@@ -52,7 +52,7 @@ namespace hier {
  * from the getStencilWidth() and getOperatorPriority() functions,
  * respectively.  Then, the new operator must be added to the
  * operator list for the appropriate transfer geometry object using the
- * Geometry<DIM>::addCarsenOperator() function.
+ * BaseGridGeometry::addCarsenOperator() function.
  *
  * Since spatial coarsening operators usually depend on patch data centering
  * and data type as well as the mesh coordinate system, they are defined
@@ -73,9 +73,7 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   CoarsenOperator(
-      const tbox::Dimension& dim,
-      const std::string& name);
+   CoarsenOperator(const std::string& name);
 
    /**
     * The virtual destructor for the coarsening operator does
@@ -106,9 +104,11 @@ public:
     * The SAMRAI transfer routines guarantee that the source patch will
     * contain sufficient ghost cell data surrounding the interior to
     * satisfy the stencil width requirements for each coarsening operator.
+    * If your implementation doesn't work with the given dimension, return
+    * zero.
     */
    virtual IntVector
-   getStencilWidth() const = 0;
+   getStencilWidth( const tbox::Dimension &dim ) const = 0;
 
    /**
     * Coarsen the source component on the fine patch to the destination
@@ -135,15 +135,6 @@ public:
    static IntVector
    getMaxCoarsenOpStencilWidth(
       const tbox::Dimension& dim);
-
-   /**
-    * Return the dimension of this object.
-    */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
 
 private:
    CoarsenOperator(
@@ -189,7 +180,6 @@ private:
    }
 
    const std::string d_name;
-   const tbox::Dimension d_dim;
 
    static std::multimap<std::string, CoarsenOperator *> s_lookup_table;
 

@@ -22,7 +22,7 @@
 #endif
 #include "SAMRAI/hier/CoarsenOperator.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace geom {
@@ -43,8 +43,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit CartesianEdgeFloatWeightedAverage(
-      const tbox::Dimension& dim);
+   explicit CartesianEdgeFloatWeightedAverage();
 
    /**
     * Uninteresting virtual destructor.
@@ -63,7 +62,7 @@ public:
     * zeros.  That is, its stencil does not extend outside the fine box.
     */
    hier::IntVector
-   getStencilWidth() const;
+   getStencilWidth( const tbox::Dimension &dim ) const;
 
    /**
     * Coarsen the source component on the fine patch to the destination
@@ -72,6 +71,15 @@ public:
     * the destination patch and the coarse box.  It is assumed that the
     * fine patch contains sufficient data for the stencil width of the
     * coarsening operator.
+    *
+    * @pre (fine.getDim() == coarse.getDim()) &&
+    *      (fine.getDim() == coarse_box.getDim()) &&
+    *      (fine.getDim() == ratio.getDim())
+    * @pre fine.getPatchData(src_component) is actually a boost::shared_ptr<pdat::EdgeData<float> >
+    * @pre coarse.getPatchData(dst_component) is actually a boost::shared_ptr<pdat::EdgeData<float> >
+    * @pre fine.getPatchData(src_component)->getDepth() == coarse.getPatchData(dst_component)->getDepth()
+    * @pre (fine.getDim().getValue() == 1) ||
+    *      (fine.getDim().getValue() == 2) || (fine.getDim().getValue() == 3)
     */
    void
    coarsen(

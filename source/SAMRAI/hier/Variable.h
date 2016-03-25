@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -133,12 +133,14 @@ public:
     * Set the patch data factory object.  Normally, the factory is set in
     * the constructor, but this member function enables the factory to be
     * changed later in the lifetime of the variable.
+    *
+    * @pre getDim() == factory->getDim()
     */
    void
    setPatchDataFactory(
       const boost::shared_ptr<PatchDataFactory>& factory)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *factory);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *factory);
       d_factory = factory;
    }
 

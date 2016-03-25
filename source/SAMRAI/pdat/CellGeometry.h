@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
+#include "boost/make_shared.hpp"
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -32,7 +32,7 @@ namespace pdat {
  * hier::BoxGeometry and it computes intersections between cell-
  * centered box geometries for communication operations.
  *
- * See header file for CellData<DIM> class for a more detailed
+ * See header file for CellData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry
@@ -75,6 +75,9 @@ public:
    /*!
     * @brief Construct the cell geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim()== ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    CellGeometry(
       const hier::Box& box,
@@ -88,6 +91,8 @@ public:
    /*!
     * @brief Compute the overlap in cell-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -104,6 +109,8 @@ public:
     * @brief Compute the cell-centered destination boxes that represent
     * the overlap between the source box geometry and the destination
     * box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    void
    computeDestinationBoxes(

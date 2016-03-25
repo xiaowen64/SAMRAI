@@ -22,7 +22,7 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -60,6 +60,10 @@ public:
 
    /**
     * Copy dst data to src data over given box.
+    *
+    * @pre data && src
+    * @pre (data->getDim() == src->getDim()) &&
+    *      (data->getDim() == box.getDim())
     */
    void
    copyData(
@@ -70,6 +74,13 @@ public:
    /**
     * Swap pointers for patch data objects.  Objects are checked for
     * consistency of depth, box, and ghost box.
+    *
+    * @pre patch
+    * @pre patch->getPatchData(data1_id) is actually a boost::shared_ptr<pdat::FaceData<dcomplex> >
+    * @pre patch->getPatchData(data2_id) is actually a boost::shared_ptr<pdat::FaceData<dcomplex> >
+    * @pre patch->getPatchData(data1_id)->getDepth() == patch->getPatchData(data2_id)->getDepth()
+    * @pre patch->getPatchData(data1_id)->getBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getBox())
+    * @pre patch->getPatchData(data1_id)->getGhostBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getGhostBox())
     */
    void
    swapData(
@@ -79,6 +90,9 @@ public:
 
    /**
     * Print data entries over given box to given output stream.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    void
    printData(
@@ -88,6 +102,9 @@ public:
 
    /**
     * Initialize data to given scalar over given box.
+    *
+    * @pre dst
+    * @pre dst->getDim() == box.getDim()
     */
    void
    setToScalar(
@@ -96,7 +113,7 @@ public:
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst);
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
       dst->fillAll(alpha, box);
    }
 

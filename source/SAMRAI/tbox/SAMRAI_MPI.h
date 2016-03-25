@@ -48,7 +48,7 @@ enum {
    MPI_DOUBLE,
    MPI_FLOAT,
    MPI_INT,
-   MPI_DOUBLE_COMPLEX,
+   MPI_C_DOUBLE_COMPLEX,
    MPI_2INT,
    MPI_DOUBLE_INT,
    MPI_FLOAT_INT,
@@ -308,8 +308,10 @@ public:
     * The purpose of these wrappers is to provide a single place for
     * compile- and run-time toggling of MPI code.  The signatures and
     * return values of these methods are identical to the MPI C bindings.
-    * Thes methods will throw an assertion if they are called when MPI is
+    * These methods will throw an assertion if they are called when MPI is
     * not enabled.
+    *
+    * @pre s_mpi_is_initialized
     */
 
    static int
@@ -394,6 +396,8 @@ public:
     * with the SAMRAI_MPI object (typically passed to the constructor).
     * These methods throw an assertion if called while MPI is not enabled,
     * except where noted.
+    *
+    * @pre s_mpi_is_initialized
     */
 
    int
@@ -561,13 +565,16 @@ public:
     * @param[in]  op     A valid MPI reduce operation.
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
+    *
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != 0)
+    * @pre s_mpi_is_initialized
     */
    int
    AllReduce(
       int* x,
       int count,
       Op op,
-      int* ranks_of_extrema = NULL) const;
+      int* ranks_of_extrema = 0) const;
 
    /*!
     * @brief Specialized Allreduce for doubles.
@@ -581,13 +588,16 @@ public:
     * @param[in]  op     A valid MPI reduce operation.
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
+    *
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != 0)
+    * @pre s_mpi_is_initialized
     */
    int
    AllReduce(
       double* x,
       int count,
       Op op,
-      int* ranks_of_extrema = NULL) const;
+      int* ranks_of_extrema = 0) const;
 
    /*!
     * @brief Specialized Allreduce for floats.
@@ -601,13 +611,16 @@ public:
     * @param[in]  op     A valid MPI reduce operation.
     * @param[out] ranks_of_extrema  Ranks associated with min or max of x
     *                               (if op indicates min or max operation).
+    *
+    * @pre (op != MPI_MINLOC && op != MPI_MAXLOC) || (ranks_of_extrema != 0)
+    * @pre s_mpi_is_initialized
     */
    int
    AllReduce(
       float* x,
       int count,
       Op op,
-      int* ranks_of_extrema = NULL) const;
+      int* ranks_of_extrema = 0) const;
 
    //@}
 

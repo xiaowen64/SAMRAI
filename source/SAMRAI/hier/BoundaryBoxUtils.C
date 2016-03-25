@@ -19,12 +19,6 @@
 namespace SAMRAI {
 namespace hier {
 
-BoundaryBoxUtils::BoundaryBoxUtils():
-   d_bbox(tbox::Dimension::getInvalidDimension()),
-   d_outward(tbox::Dimension::getInvalidDimension(), 0)
-{
-}
-
 BoundaryBoxUtils::BoundaryBoxUtils(
    const BoundaryBox& bbox):
    d_bbox(bbox),
@@ -105,6 +99,7 @@ BoundaryBoxUtils::computeOutwardShift()
          TBOX_ERROR("BoundaryBoxUtils cannot compute\n"
          << "boundary direction for type "
          << d_bbox.getBoundaryType() << " in " << dim << "D");
+         break;
    }
 }
 
@@ -113,7 +108,7 @@ BoundaryBoxUtils::stretchBoxToGhostWidth(
    Box& box,
    const IntVector& ghost_cell_width) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 
@@ -122,9 +117,9 @@ BoundaryBoxUtils::stretchBoxToGhostWidth(
    box = d_bbox.getBox();
    for (int d = 0; d < dim.getValue(); ++d) {
       /*
-       * If gcw along dimension d is > 1, stretch it out to that width.
-       * If gcw a long dimension d is 0, shrink the box down to nothing
-       * in that dimension.
+       * If gcw along direction d is > 1, stretch it out to that width.
+       * If gcw a long direction d is 0, shrink the box down to nothing
+       * in that direction.
        */
       if (d_outward(d) == -1) {
          if (ghost_cell_width(d) > 1) box.growLower(d, ghost_cell_width(d) - 1);
@@ -141,7 +136,7 @@ BoundaryBoxUtils::extendBoxOutward(
    Box& box,
    const IntVector& extension) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 
@@ -189,7 +184,7 @@ BoundaryBox
 BoundaryBoxUtils::trimBoundaryBox(
    const Box& limit_box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_bbox, limit_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_bbox, limit_box);
 
    const tbox::Dimension& dim(d_bbox.getDim());
 

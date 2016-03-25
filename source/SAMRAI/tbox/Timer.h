@@ -16,13 +16,13 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
 #ifdef HAVE_TAU
 #if (PROFILING_ON || TRACING_ON)
-#include <Profile/Profiler.h>
+#include "Profile/Profiler.h"
 #endif
 #endif
 
@@ -80,7 +80,7 @@ public:
    /**
     * Start the timer if active.
     *
-    * It is an error to start a timer that is already started.
+    * @pre !isActive() || !isRunning()
     */
    void
    start();
@@ -88,7 +88,7 @@ public:
    /**
     * Stop the timer if active.
     *
-    * It is an error to stop a timer that is already stopped.
+    * @pre !isActive() || isRunning()
     */
    void
    stop();
@@ -268,19 +268,22 @@ public:
    computeMaxWallclock();
 
    /**
-    * Write timer data members to database.
+    * Write timer data members to restart database.
+    *
+    * @pre restart_db
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /**
-    * Read restarted times from restart database.  When assertion checking
-    * is on, the database pointer must be non-null.
+    * Read restarted times from restart database.
+    *
+    * @pre restart_db
     */
    void
    getFromRestart(
-      const boost::shared_ptr<Database>& db);
+      const boost::shared_ptr<Database>& restart_db);
 
 protected:
    /**

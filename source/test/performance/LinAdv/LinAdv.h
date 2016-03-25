@@ -36,7 +36,7 @@ using namespace std;
 
 #include "SinusoidalFrontTagger.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /**
  * The LinAdv class provides routines for a sample application code that
@@ -82,7 +82,7 @@ public:
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-      SinusoidalFrontTagger* analytical_tagger = NULL);
+      SinusoidalFrontTagger* analytical_tagger = 0);
 
    /**
     * The destructor for LinAdv does nothing.
@@ -207,13 +207,20 @@ public:
       const int tag_index,
       const bool uses_gradient_detector_too);
 
+   //@{
+   //! @name Required implementations of HyperbolicPatchStrategy pure virtuals.
+
    ///
    ///  The following routines:
    ///
    ///      setPhysicalBoundaryConditions()
+   ///      getRefineOpStencilWidth(),
+   ///      preprocessRefine()
+   ///      postprocessRefine()
    ///
    ///  are concrete implementations of functions declared in the
-   ///  RefinePatchStrategy abstract base class.
+   ///  RefinePatchStrategy abstract base class.  Some are trivial
+   ///  because this class doesn't do any pre/postprocessRefine.
    ///
 
    /**
@@ -228,6 +235,78 @@ public:
       const hier::IntVector&
       ghost_width_to_fill);
 
+   hier::IntVector
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getZero(dim);
+   }
+
+   void
+   preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
+
+   void
+   postprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
+
+   ///
+   ///  The following routines:
+   ///
+   ///      getCoarsenOpStencilWidth(),
+   ///      preprocessCoarsen()
+   ///      postprocessCoarsen()
+   ///
+   ///  are concrete implementations of functions declared in the
+   ///  CoarsenPatchStrategy abstract base class.  They are trivial
+   ///  because this class doesn't do any pre/postprocessCoarsen.
+   ///
+
+   hier::IntVector
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getZero(dim);
+   }
+
+   void
+   preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
+
+   void
+   postprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
+
+   //@}
+
    /**
     * Write state of LinAdv object to the given database for restart.
     *
@@ -235,8 +314,8 @@ public:
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -317,7 +396,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    void
@@ -395,7 +474,7 @@ private:
    /**
     * linear advection velocity vector
     */
-   double d_advection_velocity[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_advection_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*
     *  Parameters for numerical method:
@@ -426,7 +505,7 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_uval_inside;
    double d_uval_outside;
 
@@ -467,7 +546,7 @@ private:
     * Input for Sine problem initialization
     */
    double d_amplitude;
-   double d_period[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_period[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Refinement criteria parameters for gradient detector and

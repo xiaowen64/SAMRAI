@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <map>
 
 namespace SAMRAI {
@@ -67,13 +67,7 @@ public:
     * by the grid geometry instance to initialize geometry information
     * of both the level and the patches on that level.
     *
-    * @par Error conditions
-    * When assertion checking is active, an unrecoverable assertion results
-    * if either the grid geometry pointer or patch descriptor pointer is
-    * null, or if the number of boxes in the array does not match the
-    * mapping array.
-    *
-    * @param[in]  mapped_box_level
+    * @param[in]  box_level
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch data
     *             on the local processor
@@ -82,9 +76,15 @@ public:
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.
     *
+    * @pre grid_geometry
+    * @pre descriptor
+    * @pre box_level.getDim() == grid_geometry->getDim()
+    * @pre box_level.getRefinementRatio() != IntVector::getZero(getDim())
+    * @pre all components of box_level's refinement ratio must be nonzero and,
+    *      all components not equal to 1 must have the same sign
     */
    PatchLevel(
-      const BoxLevel& mapped_box_level,
+      const BoxLevel& box_level,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =
@@ -92,22 +92,18 @@ public:
       bool defer_boundary_box_creation = false);
 
    /*!
-    * @brief Construct a new patch level from the specified PatchLevel database.
+    * @brief Construct a new patch level from the specified PatchLevel 
+    * restart database.
     *
     * The box, mapping, and ratio to level zero data which are normally
     * passed in during the construction of a new patch level are
-    * retrieved from the specified database.  The component_selector
+    * retrieved from the specified restart database.  The component_selector
     * argument specifies which patch data components should be allocated
-    * and read in from the level_database.  By default, all bits in the
+    * and read in from the restart_database.  By default, all bits in the
     * component selector are set to false so that no patch data are
     * allocated.
     *
-    * @par Error conditions
-    * When assertion checking is turned on, the level_database,
-    * grid_geometry, and descriptor are checked to make sure that
-    * they are not null.  If null, an unrecoverable assertion will result.
-    *
-    * @param[in]  level_database
+    * @param[in]  restart_database
     * @param[in]  grid_geometry
     * @param[in]  descriptor The PatchDescriptor used to allocate patch
     *             data.
@@ -116,9 +112,13 @@ public:
     *             a ComponentSelector with all elements set to false
     * @param[in]  defer_boundary_box_creation Flag to indicate suppressing
     *             construction of the boundary boxes.  @b Default: false
+    *
+    * @pre restart_database
+    * @pre grid_geometry
+    * @pre descriptor
     */
    PatchLevel(
-      const boost::shared_ptr<tbox::Database>& level_database,
+      const boost::shared_ptr<tbox::Database>& restart_database,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory,
@@ -246,7 +246,7 @@ public:
    int
    getLocalNumberOfPatches() const
    {
-      return static_cast<int>(d_mapped_box_level->getLocalNumberOfBoxes());
+      return static_cast<int>(d_box_level->getLocalNumberOfBoxes());
    }
 
    /*!
@@ -255,7 +255,7 @@ public:
    int
    getGlobalNumberOfPatches() const
    {
-      return d_mapped_box_level->getGlobalNumberOfBoxes();
+      return d_box_level->getGlobalNumberOfBoxes();
    }
 
    /*!
@@ -264,7 +264,7 @@ public:
    int
    getLocalNumberOfCells() const
    {
-      return static_cast<int>(d_mapped_box_level->getLocalNumberOfCells());
+      return static_cast<int>(d_box_level->getLocalNumberOfCells());
    }
 
    /*!
@@ -273,7 +273,7 @@ public:
    int
    getGlobalNumberOfCells() const
    {
-      return d_mapped_box_level->getGlobalNumberOfCells();
+      return d_box_level->getGlobalNumberOfCells();
    }
 
    /*!
@@ -299,6 +299,8 @@ public:
     * @param[in]  mbid
     *
     * @return A boost::shared_ptr to the Patch indicated by the BoxId.
+    *
+    * @pre d_patches.find(mbid) != d_patches.end()
     */
    boost::shared_ptr<Patch>
    getPatch(
@@ -308,7 +310,7 @@ public:
 #ifdef DEBUG_CHECK_ASSERTIONS
       if (mi == d_patches.end()) {
          TBOX_ERROR("PatchLevel::getPatch(" << mbid
-            << "): patch does not exist locally.");
+            << "): patch does not exist locally." << std::endl);
       }
 #endif
       return (*mi).second;
@@ -387,6 +389,12 @@ public:
     * @param[in]  fine_grid_geometry @b Default: boost::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
+    *
+    * @pre coarse_level
+    * @pre refine_ratio > IntVector::getZero(getDim())
+    * @pre (getDim() == coarse_level->getDim()) &&
+    *      (getDim() == refine_ratio.getDim())
+    * @pre !fine_grid_geometry || getDim() == fine_grid_geometry->getDim()
     */
    void
    setRefinedPatchLevel(
@@ -435,6 +443,12 @@ public:
     * @param[in]  coarse_grid_geom @b Default: boost::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
+    *
+    * @pre fine_level
+    * @pre coarsen_ratio > IntVector::getZero(getDim())
+    * @pre (getDim() == fine_level->getDim()) &&
+    *      (getDim() == coarsen_ratio.getDim())
+    * @pre !coarse_grid_geom || getDim() == coarse_grid_geom->getDim()
     */
    void
    setCoarsenedPatchLevel(
@@ -526,7 +540,7 @@ public:
    const boost::shared_ptr<BoxLevel>&
    getBoxLevel() const
    {
-      return d_mapped_box_level;
+      return d_box_level;
    }
 
    /*!
@@ -546,7 +560,7 @@ public:
       if (!d_has_globalized_data) {
          initializeGlobalizedBoxLevel();
       }
-      return d_mapped_box_level->getGlobalizedVersion();
+      return d_box_level->getGlobalizedVersion();
    }
 
    /*!
@@ -614,22 +628,22 @@ public:
     * @return the processor that owns the specified patch.  The patches
     * are numbered starting at zero.
     *
-    * @param[in] mapped_box_id Patch's BoxId
+    * @param[in] box_id Patch's BoxId
     */
    int
    getMappingForPatch(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
       // Note: p is required to be a local index.
       /*
        * This must be for backward compatability, because if p is a local
-       * index, the mapping is always to d_mapped_box_level->getRank().
+       * index, the mapping is always to d_box_level->getRank().
        * Here is the old code:
        *
-       * return d_mapped_box_level->getBoxStrict(p)->getOwnerRank();
+       * return d_box_level->getBoxStrict(p)->getOwnerRank();
        */
-      NULL_USE(mapped_box_id);
-      return d_mapped_box_level->getMPI().getRank();
+      NULL_USE(box_id);
+      return d_box_level->getMPI().getRank();
    }
 
    /*!
@@ -637,33 +651,35 @@ public:
     *
     * @return The box for the specified patch.
     *
-    * @param[in] mapped_box_id Patch's BoxId
+    * @param[in] box_id Patch's BoxId
+    *
+    * @pre box_id.getOwnerRank() == getBoxLevel()->getMPI().getRank()
     */
    const Box&
    getBoxForPatch(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() ==
-                  d_mapped_box_level->getMPI().getRank());
-      return getPatch(mapped_box_id)->getBox();
+      TBOX_ASSERT(box_id.getOwnerRank() == d_box_level->getMPI().getRank());
+      return getPatch(box_id)->getBox();
    }
 
    /*!
     * @brief Determine if the patch is adjacent to a non-periodic
     * physical domain boundary.
     *
-    * @param[in] mapped_box_id Patch's BoxId
+    * @param[in] box_id Patch's BoxId
     *
     * @return True if patch with given number is adjacent to a non-periodic
     * physical domain boundary.  Otherwise, false.
+    *
+    * @pre box_id.getOwnerRank() == getBoxLevel()->getMPI().getRank()
     */
    bool
    patchTouchesRegularBoundary(
-      const BoxId& mapped_box_id) const
+      const BoxId& box_id) const
    {
-      TBOX_ASSERT(mapped_box_id.getOwnerRank() ==
-                  d_mapped_box_level->getMPI().getRank());
-      return getPatch(mapped_box_id)->getPatchGeometry()->getTouchesRegularBoundary();
+      TBOX_ASSERT(box_id.getOwnerRank() == d_box_level->getMPI().getRank());
+      return getPatch(box_id)->getPatchGeometry()->getTouchesRegularBoundary();
    }
 
    /*!
@@ -812,8 +828,8 @@ public:
    }
 
    /*!
-    * @brief Use the PatchLevel database to set the state of the PatchLevel
-    * and to create all patches on the local processor.
+    * @brief Use the PatchLevel restart database to set the state of the
+    * PatchLevel and to create all patches on the local processor.
     *
     * @par Assertions
     * Assertions will check that database is a non-null boost::shared_ptr,
@@ -823,31 +839,32 @@ public:
     * same, and that the number of patches and the number of boxes on the
     * level are equal.
     *
-    * @param[in,out] database
+    * @param[in,out] restart_db
     * @param[in]     component_selector
+    *
+    * @pre restart_db
     */
    void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& component_selector);
 
    /*!
-    * @brief Write data to the database.
+    * @brief Write data to the restart database.
     *
-    * Writes the data from the PatchLevel to the database.
+    * Writes the data from the PatchLevel to the restart database.
     * Also tells all local patches to write out their state to
-    * the database.
+    * the restart database.
     *
-    * @par Assertions
-    * Check that database is a non-null boost::shared_ptr.
-    *
-    * @param[in,out]  database
+    * @param[in,out]  restart_db
     * @param[in]      patchdata_write_table The ComponentSelector specifying
     *                 which patch data to write to the database
+    *
+    * @pre restart_db
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& patchdata_write_table) const;
 
    /*!
@@ -1054,16 +1071,16 @@ private:
    /*!
     * Primary metadata describing the PatchLevel.
     */
-   boost::shared_ptr<BoxLevel> d_mapped_box_level;
+   boost::shared_ptr<BoxLevel> d_box_level;
 
    /*
-    * Whether we have a globalized version of d_mapped_box_level.
+    * Whether we have a globalized version of d_box_level.
     */
    mutable bool d_has_globalized_data;
    /*
     * Boxes for all level patches.
     *
-    * d_boxes is slave to d_mapped_box_level and computed only if getBoxes() is called.
+    * d_boxes is slave to d_box_level and computed only if getBoxes() is called.
     * This means that the first getBoxes() has to be called by all processors,
     * because it requires communication.
     */

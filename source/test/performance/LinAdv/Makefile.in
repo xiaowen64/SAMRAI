@@ -13,24 +13,31 @@ SRCDIR        = @srcdir@
 SUBDIR        = source/test/performance/LinAdv
 VPATH         = @top_srcdir@/$(SUBDIR)
 OBJECT        = ../../../..
+TESTINCLUDE   = $(SAMRAI)/source/test/testlib
+TESTLIBDIR    = $(OBJECT)/source/test/testlib
+TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
 default:      main
 
 include $(OBJECT)/config/Makefile.config
 
-CPPFLAGS_EXTRA= -DNDIM=$(PDIM)  -DTESTING=0
+CPPFLAGS_EXTRA = -I$(TESTINCLUDE)  -DTESTING=0
 
 NUM_TESTS = 2
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = main.o LinAdv.o SinusoidalFrontTagger.o
+CXX_OBJS      = main.o LinAdv.o
 F_OBJS      = \
 	    flux3d.o grad3d.o init3d.o stable3d.o stufprobc3d.o trace3d.o trace1d3d.o fluxcorner3d.o \
 	    flux2d.o grad2d.o init2d.o stable2d.o stufprobc2d.o trace2d.o trace1d2d.o
 
-main:		$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
-		$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS)	\
-		$(LIBSAMRAI) $(LDLIBS) -o $@
+main:	$(CXX_OBJS) $(F_OBJS) $(LIBSAMRAIDEPEND)
+	$(MAKE) testlib
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F_OBJS) $(TESTLIB) \
+	$(LIBSAMRAI) $(LDLIBS) -o $@
+
+testlib:
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 
 clean:
 		$(SAMCLEAN)

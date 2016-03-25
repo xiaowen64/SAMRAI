@@ -35,7 +35,7 @@
 #include "SAMRAI/solv/PETScAbstractVectorReal.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace solv {
@@ -79,6 +79,8 @@ public:
     * the vector data.  Data must be allocated through the SAMRAI vector
     * object directly.  For output of the data through PETSc "ViewVec" calls,
     * the output stream to which the SAMRAI vector object writes will be used.
+    *
+    * @pre samrai_vec
     */
    static Vec
    createPETScVector(
@@ -89,6 +91,8 @@ public:
     * Destroy a given PETSc vector object. It is important to note that
     * this function does not deallocate storage for the vector data.
     * Vector data must be deallocated through the SAMRAI vector object.
+    *
+    * @pre !petsc_vec || petsc_vec->data
     */
    static void
    destroyPETScVector(
@@ -97,6 +101,8 @@ public:
    /**
     * Return pointer to the SAMRAI vector object associated with the
     * given PETSc vector.
+    *
+    * @pre petsc_vec && petsc_vec->data
     */
    static boost::shared_ptr<SAMRAIVectorReal<TYPE> >
    getSAMRAIVector(

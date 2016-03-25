@@ -41,7 +41,7 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace std;
 using namespace SAMRAI;
@@ -68,7 +68,8 @@ class PatchMultiblockTestStrategy;
 class MultiblockTester:
    public mesh::StandardTagAndInitStrategy,
    public xfer::CoarsenPatchStrategy,
-   public xfer::RefinePatchStrategy
+   public xfer::RefinePatchStrategy,
+   public xfer::SingularityPatchStrategy
 {
 public:
    /**
@@ -217,13 +218,12 @@ public:
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
-      const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    hier::IntVector
-   getRefineOpStencilWidth() const;
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const;
 
    void
    preprocessRefine(
@@ -240,7 +240,7 @@ public:
       const hier::IntVector& ratio);
 
    hier::IntVector
-   getCoarsenOpStencilWidth() const;
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const;
 
    void
    preprocessCoarsen(
@@ -274,6 +274,14 @@ public:
    setupHierarchy(
       boost::shared_ptr<tbox::Database> main_input_db,
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger);
+
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*
@@ -310,6 +318,11 @@ private:
     * Dummy time stamp for all data operations.
     */
    double d_fake_time;
+
+   /*
+    * Dummy cycle for all data operations.
+    */
+   int d_fake_cycle;
 
    /*
     * The MultiblockTester uses two variable contexts for each variable.

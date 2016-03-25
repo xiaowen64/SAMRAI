@@ -159,7 +159,7 @@ void writeTestData(
    namesdb->putDouble("Name-with-dashes", scalardb_full_thisDouble);
    namesdb->putDouble("Name-with-!@#$%^&*()_+-=", scalardb_full_thisDouble);
 
-   std::vector<hier::IntVector> vector_IntVector(2);
+   std::vector<hier::IntVector> vector_IntVector(2, intVector0);
    vector_IntVector[0] = intVector1;
    vector_IntVector[1] = intVector2;
 
@@ -1170,7 +1170,7 @@ void testDatabaseContents(
    /*
     * Tests for reading stl::vector
     */
-   std::vector<hier::IntVector> vector_IntVector(2);
+   std::vector<hier::IntVector> vector_IntVector(2, intVector0);
 
    vectordb->getVector("vector_IntVector", vector_IntVector);
 

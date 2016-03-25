@@ -74,8 +74,10 @@ GriddingAlgorithm {
 
 StandardTagAndInitialize{
    tagging_method = "REFINE_BOXES"
-   RefineBoxes {
-      level_0  = [ (0,0,0) , (9,8,7) ]
+
+   level_0 {
+      level = 0
+      boxes = [ (0,0,0) , (9,8,7) ]
    }
 }
 

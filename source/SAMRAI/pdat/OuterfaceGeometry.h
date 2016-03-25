@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -33,7 +33,7 @@ class FaceGeometry;
  * box geometries and face or outerface box geometries for communication
  * operations.
  *
- * See header file for OuterfaceData<DIM> class for a more detailed
+ * See header file for OuterfaceData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry
@@ -52,6 +52,9 @@ public:
    /*!
     * @brief Construct an outerface geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    OuterfaceGeometry(
       const hier::Box& box,
@@ -65,6 +68,8 @@ public:
    /*!
     * @brief Compute the overlap in face-centered index space on the
     * boundaries of the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(

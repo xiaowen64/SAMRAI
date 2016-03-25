@@ -64,7 +64,7 @@ using namespace std;
 #include "AutoTester.h"
 #endif
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -385,7 +385,7 @@ int main(
             dim,
             input_db->getDatabase("LinAdv"),
             grid_geometry,
-            use_analytical_tagger ? &analytical_tagger : NULL);
+            use_analytical_tagger ? &analytical_tagger : 0);
 
       boost::shared_ptr<tbox::Database> hli_db(
          scaled_input_db->isDatabase("HyperbolicLevelIntegrator") ?
@@ -395,13 +395,12 @@ int main(
          new algs::HyperbolicLevelIntegrator(
             "HyperbolicLevelIntegrator",
             hli_db,
-            linear_advection_model, true, use_refined_timestepping));
+            linear_advection_model, use_refined_timestepping));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagAndInitialize",
-             hyp_level_integrator.get(),
+            hyp_level_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<Database> abr_db(
@@ -638,8 +637,9 @@ int main(
           * Output load balancing results for TreeLoadBalancer.
           */
          boost::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
-            boost::dynamic_pointer_cast<mesh::TreeLoadBalancer,
-                                        mesh::LoadBalanceStrategy>(load_balancer));
+            BOOST_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+               load_balancer));
+         TBOX_ASSERT(tree_load_balancer);
          tbox::plog << "\n\nLoad balancing results:\n";
          tree_load_balancer->printStatistics(tbox::plog);
       }

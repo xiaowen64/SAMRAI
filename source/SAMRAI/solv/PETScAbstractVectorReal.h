@@ -393,9 +393,8 @@ private:
     *
     * typedef enum {NORM_1=0,NORM_2=1,NORM_FROBENIUS=2,NORM_INFINITY=3,NORM_1_AND_2=4} NormType;
     *
-    * If norm type is not NORM_1, NORM_2, NORM_INFINITY, or
-    * NORM_1_AND_2, an unrecoverable assertion will be thrown and
-    * program will abort.
+    * @pre (type == NORM_1) || (type == NORM_2) || (type == NORM_INFINITY) ||
+    *      (type == NORM_1_AND_2)
     */
    static PetscErrorCode
    vecNorm(
@@ -624,9 +623,8 @@ private:
     *
     * typedef enum {NORM_1=0,NORM_2=1,NORM_FROBENIUS=2,NORM_INFINITY=3,NORM_1_AND_2=4} NormType;
     *
-    * If norm type is not NORM_1, NORM_2, NORM_INFINITY, or
-    * NORM_1_AND_2, an unrecoverable assertion will be thrown and
-    * program will abort.
+    * @pre (type == NORM_1) || (type == NORM_2) || (type == NORM_INFINITY) ||
+    *      (type == NORM_1_AND_2)
     */
    static PetscErrorCode
    vecNorm_local(

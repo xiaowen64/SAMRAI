@@ -22,7 +22,7 @@ SundialsAbstractVector::SundialsAbstractVector()
 {
    /* Create N vector */
    d_n_vector = (N_Vector)malloc(sizeof *d_n_vector);
-   TBOX_ASSERT(d_n_vector != NULL);
+   TBOX_ASSERT(d_n_vector != 0);
 
    /* Attach content and ops */
    d_n_vector->content = this;
@@ -34,10 +34,10 @@ SundialsAbstractVector::~SundialsAbstractVector()
    if (d_n_vector) {
       if (d_n_vector->ops) {
          free(d_n_vector->ops);
-         d_n_vector->ops = NULL;
+         d_n_vector->ops = 0;
       }
       free(d_n_vector);
-      d_n_vector = NULL;
+      d_n_vector = 0;
    }
 }
 

@@ -37,21 +37,21 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgcellcplx1d, CARTWGTAVGCELLCPLX1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcellcplx1d, CARTWGTAVGCELLCPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgcellcplx2d, CARTWGTAVGCELLCPLX2D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcellcplx2d, CARTWGTAVGCELLCPLX2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const dcomplex *, dcomplex *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgcellcplx3d, CARTWGTAVGCELLCPLX3D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcellcplx3d, CARTWGTAVGCELLCPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -67,9 +67,8 @@ namespace geom {
 
 // using namespace std;
 
-CartesianCellComplexWeightedAverage::CartesianCellComplexWeightedAverage(
-   const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "CONSERVATIVE_COARSEN")
+CartesianCellComplexWeightedAverage::CartesianCellComplexWeightedAverage():
+   hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }
 
@@ -84,9 +83,9 @@ CartesianCellComplexWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellComplexWeightedAverage::getStencilWidth() const
+CartesianCellComplexWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -98,15 +97,15 @@ CartesianCellComplexWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, coarse, fine, coarse_box, ratio);
+   const tbox::Dimension& dim(fine.getDim());
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::CellData<dcomplex> > fdata(
       fine.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<dcomplex> > cdata(
       coarse.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -118,17 +117,20 @@ CartesianCellComplexWeightedAverage::coarsen(
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
    for (int d = 0; d < cdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
-         F77_FUNC(cartwgtavgcellcplx1d, CARTWGTAVGCELLCPLX1D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartwgtavgcellcplx1d, CARTWGTAVGCELLCPLX1D) (ifirstc(0),
             ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
@@ -139,7 +141,7 @@ CartesianCellComplexWeightedAverage::coarsen(
             cdata->getPointer(d));
       }
       if ((dim == tbox::Dimension(2))) {
-         F77_FUNC(cartwgtavgcellcplx2d, CARTWGTAVGCELLCPLX2D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartwgtavgcellcplx2d, CARTWGTAVGCELLCPLX2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -150,7 +152,7 @@ CartesianCellComplexWeightedAverage::coarsen(
             cdata->getPointer(d));
       }
       if ((dim == tbox::Dimension(3))) {
-         F77_FUNC(cartwgtavgcellcplx3d, CARTWGTAVGCELLCPLX3D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartwgtavgcellcplx3d, CARTWGTAVGCELLCPLX3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),

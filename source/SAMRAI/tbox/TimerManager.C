@@ -18,7 +18,7 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <string>
 
 #ifndef ENABLE_SAMRAI_TIMERS
@@ -38,7 +38,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-TimerManager * TimerManager::s_timer_manager_instance = (TimerManager *)NULL;
+TimerManager * TimerManager::s_timer_manager_instance = 0;
 
 int TimerManager::s_main_timer_identifier = -1;
 int TimerManager::s_inactive_timer_identifier = -9999;
@@ -100,7 +100,7 @@ TimerManager::finalizeCallback()
 {
    if (s_timer_manager_instance) {
       delete s_timer_manager_instance;
-      s_timer_manager_instance = ((TimerManager *)NULL);
+      s_timer_manager_instance = 0;
    }
 }
 
@@ -383,7 +383,7 @@ TimerManager::startTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!(timer == (Timer *)NULL));
+   TBOX_ASSERT(timer != 0);
 
    if (timer->isActive()) {
    }
@@ -412,7 +412,7 @@ TimerManager::stopTime(
    Timer* timer)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(!(timer == (Timer *)NULL));
+   TBOX_ASSERT(timer != 0);
 
    if (d_print_exclusive) {
       timer->stopExclusive();
@@ -1740,7 +1740,7 @@ TimerManager::checkConsistencyAcrossProcessors()
          << "\nwill continue for this process, but checking only\n"
          << d_timers.size() << " timers."
          << "\nIt is not possible to print global"
-         << "\nsummed or max timer information.");
+         << "\nsummed or max timer information." << std::endl);
       ++inconsistency_count;
    }
 
@@ -1752,7 +1752,7 @@ TimerManager::checkConsistencyAcrossProcessors()
                                << max_timer_lengths[i] << " characters in their names."
                                << "\nIt is not possible to print global"
                                << "\nsummed or max timer information."
-            );
+                               << std::endl);
          ++inconsistency_count;
       }
    }
@@ -1771,7 +1771,7 @@ TimerManager::checkConsistencyAcrossProcessors()
       if (inconsistency_count == 0) {
          TBOX_WARNING("Though this process found no timer inconsistencies,"
             << "\nother processes did.  It is not possible to print"
-            << "\nglobal summed or max timer information.");
+            << "\nglobal summed or max timer information." << std::endl);
       }
    }
 
@@ -2177,37 +2177,35 @@ TimerManager::getFromInput(
 #ifdef ENABLE_SAMRAI_TIMERS
    if (input_db) {
 
-      d_print_exclusive = input_db->getBoolWithDefault("print_exclusive",
-            d_print_exclusive);
+      d_print_exclusive =
+         input_db->getBoolWithDefault("print_exclusive", false);
 
-      d_print_total = input_db->getBoolWithDefault("print_total",
-            d_print_total);
+      d_print_total = input_db->getBoolWithDefault("print_total", true);
 
-      d_print_processor = input_db->getBoolWithDefault("print_processor",
-            d_print_processor);
+      d_print_processor =
+         input_db->getBoolWithDefault("print_processor", true);
 
-      d_print_max = input_db->getBoolWithDefault("print_max", d_print_max);
+      d_print_max = input_db->getBoolWithDefault("print_max", false);
 
-      d_print_summed = input_db->getBoolWithDefault("print_summed",
-            d_print_summed);
+      d_print_summed = input_db->getBoolWithDefault("print_summed", false);
 
-      d_print_user = input_db->getBoolWithDefault("print_user", d_print_user);
+      d_print_user = input_db->getBoolWithDefault("print_user", false);
 
-      d_print_sys = input_db->getBoolWithDefault("print_sys", d_print_sys);
+      d_print_sys = input_db->getBoolWithDefault("print_sys", false);
 
-      d_print_wall = input_db->getBoolWithDefault("print_wall", d_print_wall);
+      d_print_wall = input_db->getBoolWithDefault("print_wall", true);
 
-      d_print_percentage = input_db->getBoolWithDefault("print_percentage",
-            d_print_percentage);
+      d_print_percentage =
+         input_db->getBoolWithDefault("print_percentage", true);
 
-      d_print_concurrent = input_db->getBoolWithDefault("print_concurrent",
-            d_print_concurrent);
+      d_print_concurrent =
+         input_db->getBoolWithDefault("print_concurrent", false);
 
-      d_print_timer_overhead = input_db->
-         getBoolWithDefault("print_timer_overhead", d_print_timer_overhead);
+      d_print_timer_overhead =
+         input_db->getBoolWithDefault("print_timer_overhead", false);
 
-      d_print_threshold = input_db->
-         getDoubleWithDefault("print_threshold", d_print_threshold);
+      d_print_threshold =
+         input_db->getDoubleWithDefault("print_threshold", 0.25);
 
       Array<std::string> timer_list;
       if (input_db->keyExists("timer_list")) {

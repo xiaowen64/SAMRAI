@@ -10,6 +10,7 @@
 
 #include "MblkGeometry.h"
 
+#include "SAMRAI/hier/BaseGridGeometry.h"
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/Index.h"
 #include "SAMRAI/hier/IntVector.h"
@@ -33,18 +34,16 @@ MblkGeometry::MblkGeometry(
    const std::string& object_name,
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
-   const int nblocks):
+   const hier::BaseGridGeometry& grid_geom):
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-#endif
 
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
 
-   d_nblocks = nblocks;
+   d_nblocks = grid_geom.getNumberBlocks(); 
 
    d_metrics_set.resizeArray(10);
    for (int i = 0; i < 10; i++) {
@@ -59,6 +58,31 @@ MblkGeometry::MblkGeometry(
 //      getFromRestart();  // ADD
    }
    getFromInput(input_db, is_from_restart);
+
+   hier::BoxContainer domain_boxes;
+   grid_geom.computePhysicalDomain(domain_boxes,
+                                   hier::IntVector::getOne(dim),
+                                   hier::BlockId(0));
+
+   TBOX_ASSERT(domain_boxes.size() == 1);
+
+   if (d_geom_problem == "CARTESIAN") {
+      if (!d_metrics_set[0]) {
+         setCartesianMetrics(domain_boxes.front(), 0);
+      }
+   }
+
+   if (d_geom_problem == "WEDGE") {
+      if (!d_metrics_set[0]) {
+         setWedgeMetrics(domain_boxes.front(), 0);
+      }
+   }
+   if (d_geom_problem == "SPHERICAL_SHELL") {
+      if (!d_metrics_set[0]) {
+         setSShellMetrics(domain_boxes.front(), 0);
+      }
+   }
+
 
 }
 
@@ -123,15 +147,14 @@ void MblkGeometry::tagOctantCells(
    const double regrid_time,
    const int refine_tag_val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(d_geom_problem == "SPHERICAL_SHELL" &&
       d_sshell_type == "OCTANT");
    TBOX_ASSERT(temp_tags);
-#endif
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(xyz);
 
    if (d_dim == tbox::Dimension(3)) {
       /*
@@ -178,9 +201,7 @@ void MblkGeometry::getFromInput(
 {
    NULL_USE(is_from_restart);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> db(input_db->getDatabase("MblkGeometry"));
 
@@ -189,7 +210,7 @@ void MblkGeometry::getFromInput(
    bool found = false;
    int i, nb;
    char block_name[128];
-   double temp_domain[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double temp_domain[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Cartesian geometry
@@ -566,11 +587,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    pdat::NodeIterator niend(patch.getBox(), false);
    for (pdat::NodeIterator ni(patch.getBox(), true); ni != niend; ++ni) {
@@ -651,7 +670,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(xyz);
 
@@ -669,7 +688,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    int nd_nxny = nd_nx * nd_ny;
    //int nd_nel  = nd_nx*nd_ny*nd_nz;
 
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
    dx[0] = d_dx[level_number][0];
    dx[1] = d_dx[level_number][1];
 
@@ -679,7 +698,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    int nd_kmin;
    int nd_kmax;
    dx[2] = d_dx[level_number][2];
-   double* z = NULL;
+   double* z = 0;
    if (d_dim == tbox::Dimension(3)) {
       nd_kmin = ifirst(2) - nghost_cells(2);
       nd_kmax = ilast(2) + 1 + nghost_cells(2);
@@ -796,11 +815,9 @@ void MblkGeometry::buildSShellGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    if (d_dim == tbox::Dimension(3)) {
 

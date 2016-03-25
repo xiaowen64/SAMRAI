@@ -71,11 +71,45 @@ public:
     * factor.  Increasing the factor is NOT the same as multiplying
     * the Connector widths by the same factor.
     *
-    * @param[in] factor By default, @c factor=1.
+    * @param[in] gcw_factor By default, @c gcw_factor=1.
+    *
+    * @pre gcw_factor >= 0
     */
    void
    setGhostCellWidthFactor(
-      int factor);
+      int gcw_factor);
+
+   /*
+    * @brief Compute fine Connector width needed at each coarser level
+    * for recursive refinement starting with destination level ln.
+    *
+    * @param fine_connector_width [in/out] On input, contains width
+    * requirement from other conditions, if any.  This method computes
+    * the fine connector width for each level coarser than
+    * initial_dst_ln, for recursive refinement with initial
+    * destination level initial_dst_ln.  It sets fine_connector_width
+    * to the max of its input value and the value computed.  It will
+    * change the values of the first initial_dst_ln entries (or create
+    * them if missing).
+    *
+    * @param data_gcw_on_initial_dst_ln Ghost data width to be filled on
+    * the initial destination level.
+    *
+    * @param [out] max_stencil_width Max stencil width used by the
+    * refinement operators.
+    *
+    * @param [in] patch_hierarchy
+    *
+    * @param [in] initial_dst_ln Level number corresponding to the
+    * initial destination.
+    */
+   void
+   computeRequiredFineConnectorWidthsForRecursiveRefinement(
+      std::vector<hier::IntVector>& fine_connector_widths,
+      const hier::IntVector& data_gcw_on_initial_dst_ln,
+      const hier::IntVector& max_stencil_width,
+      const hier::PatchHierarchy& patch_hierarchy,
+      int initial_dst_ln) const;
 
 private:
    /*!

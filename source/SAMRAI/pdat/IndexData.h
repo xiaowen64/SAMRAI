@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <vector>
 
 namespace SAMRAI {
@@ -60,7 +60,7 @@ class IndexIterator;
  * faster.
  *
  * The template parameter TYPE * defines the storage at each index
- * location.  IndexDaga is derived from * hier::PatchData.
+ * location.  IndexData is derived from * hier::PatchData.
  *
  * The data type TYPE must define the following five methods which are
  * require by this class:
@@ -77,9 +77,9 @@ class IndexIterator;
  *             unpackStream(MessageStream\& stream,
  *             const hier::IntVector\& offset)
  *    - \b - Write to restart;
- *             putToDatabase(boost::shared_ptr<tbox::Database>\& database)
+ *             putToRestart(boost::shared_ptr<tbox::Database>\& restart_db)
  *    - \b - Retrieve from restart;
- *             getFromDatabase(boost::shared_ptr<tbox::Database>\& database)
+ *             getFromRestart(boost::shared_ptr<tbox::Database>\& restart_db)
  *
  * The BOX_GEOMETRY template parameter defines the geometry.   BOX_GEOMETRY must
  * have a nested class name Overlap that implements he following methods:
@@ -91,7 +91,7 @@ class IndexIterator;
  * More information about the templated TYPE is provided in the IndexData
  * README file.
  *
- * IndexData<DIM> objects are created by the IndexDataFactory<DIM>
+ * IndexData objects are created by the IndexDataFactory
  * factory object just as all other patch data types.
  *
  * @see pdat::IndexData
@@ -112,6 +112,8 @@ public:
     * The constructor for an IndexData object.  The box describes the interior
     * of the index space and the ghosts vector describes the ghost nodes in
     * each coordinate direction.
+    *
+    * @pre box.getDim() == ghosts.getDim()
     */
    IndexData(
       const hier::Box& box,
@@ -126,10 +128,21 @@ public:
     * A fast copy between the source and destination.  All data is copied
     * from the source into the destination where there is overlap in the
     * index space.
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src) != 0
     */
    virtual void
    copy(
       const hier::PatchData& src);
+
+   /**
+    * A fast copy between the source and destination.  All data is copied
+    * from the source into the destination where there is overlap in the
+    * index space.
+    *
+    * @pre getDim() == dst.getDim()
+    */
    virtual void
    copy2(
       hier::PatchData& dst) const;
@@ -138,11 +151,23 @@ public:
     * Copy data from the source into the destination using the designated
     * overlap descriptor.  The overlap description should have been computed
     * previously from computeIntersection().
+    *
+    * @pre getDim() == src.getDim()
+    * @pre dynamic_cast<const IndexData<TYPE, BOX_GEOMETRY> *>(&src) != 0
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual void
    copy(
       const hier::PatchData& src,
       const hier::BoxOverlap& overlap);
+
+   /**
+    * Copy data from the source into the destination using the designated
+    * overlap descriptor.  The overlap description should have been computed
+    * previously from computeIntersection().
+    *
+    * @pre getDim() == dst.getDim()
+    */
    virtual void
    copy2(
       hier::PatchData& dst,
@@ -158,6 +183,8 @@ public:
    /**
     * Calculate the number of bytes needed to stream the data lying
     * in the specified box domain.
+    *
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual int
    getDataStreamSize(
@@ -165,6 +192,8 @@ public:
 
    /**
     * Pack data lying on the specified index set into the output stream.
+    *
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual void
    packStream(
@@ -173,6 +202,8 @@ public:
 
    /**
     * Unpack data from the message stream into the specified index set.
+    *
+    * @pre dynamic_cast<const typename BOX_GEOMETRY::Overlap *>(&overlap) != 0
     */
    virtual void
    unpackStream(
@@ -181,6 +212,11 @@ public:
 
    /**
     * Add a new item to the tail of the irregular index set.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    appendItem(
@@ -197,6 +233,11 @@ public:
     * call.  It should be used with caution, the caller MUST NOT
     * delete the referenced item.  Think of this as giving up control
     * of the item to IndexData.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    appendItemPointer(
@@ -205,6 +246,11 @@ public:
 
    /**
     * Add a new item to the head of the irregular index set
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    addItem(
@@ -221,6 +267,11 @@ public:
     * call.  It should be used with caution, the caller MUST NOT
     * delete the referenced item.  Think of this as giving up control
     * of the item to IndexData.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
 
    void
@@ -236,6 +287,11 @@ public:
     *
     * If an item does not already exist at index this is equivelent
     * to addItem.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    replaceAddItem(
@@ -252,6 +308,11 @@ public:
     * to addItemPointer.
     *
     * See addItemPointer for additional comments on pointer semantics.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    replaceAddItemPointer(
@@ -266,6 +327,11 @@ public:
     *
     * If an item does not already exist at index this is equivelent
     * to appendItem.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    replaceAppendItem(
@@ -282,6 +348,11 @@ public:
     * to appendItemPointer.
     *
     * See addItemPointer for additional comments on pointer semantics.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
     */
    void
    replaceAppendItemPointer(
@@ -292,6 +363,11 @@ public:
     * Remove (deallocate) the item in the irregular index set located at
     * the specified hier::Index.
     *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
+    * @pre (hier::PatchData::getGhostBox().offset(index) >= 0) &&
+    *      (hier::PatchData::getGhostBox().offset(index) <= hier::PatchData::getGhostBox().size())
+    *
     */
    void
    removeItem(
@@ -300,6 +376,9 @@ public:
    /**
     * Return the number of data items (i.e. the number of indices) in
     * the index data list.
+    *
+    * @pre offset >= 0 && offset <= hier::PatchData::getGhostBox().size()
+    * @pre d_data[offset] != 0
     */
    int
    getNumberOfItems() const;
@@ -307,6 +386,8 @@ public:
    /**
     * Remove (deallocate) any items in the irregular index set located in
     * the index space of the hier::Box.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    removeInsideBox(
@@ -315,6 +396,8 @@ public:
    /**
     * Remove (deallocate) any items in the irregular index set located
     * outside of the index space of the hier::Box.
+    *
+    * @pre getDim() == box.getDim()
     */
    void
    removeOutsideBox(
@@ -336,6 +419,9 @@ public:
    /**
     * Returns true if there is an element of the irregular index set at
     * the specified hier::Index.
+    *
+    * @pre getDim() == index.getDim()
+    * @pre hier::PatchData::getGhostBox().contains(index)
     */
    bool
    isElement(
@@ -344,6 +430,8 @@ public:
    /**
     * Given an index, return a pointer to the item located at that index.
     * If there is no item at the index, null is returned.
+    *
+    * @pre getDim() == index.getDim()
     */
    TYPE *
    getItem(
@@ -353,20 +441,20 @@ public:
     * Check to make sure that the class version number is the same
     * as the restart file version number.
     *
-    * Assertions: database must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
-   getSpecializedFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database);
+   getFromRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db);
 
    /**
-    * Write out the class version number to the database.
+    * Write out the class version number to the restart database.
     *
-    * Assertions: database must be a non-null pointer.
+    * @pre restart_db
     */
    virtual void
-   putSpecializedToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
 private:
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
@@ -400,12 +488,24 @@ private:
     *
     * NOTE: Offset is not strictly necessary but was include to avoid
     * computing it repeatedly.
+    *
+    * @pre getDim() == index.getDim()
     */
    void
    addItemToList(
       const hier::Index& index,
       const int offset,
       TYPE& item);
+
+   /**
+    * Internal routine to add item to the linked list
+    * representation.
+    *
+    * NOTE: Offset is not strictly necessary but was include to avoid
+    * computing it repeatedly.
+    *
+    * @pre getDim() == index.getDim()
+    */
    void
    appendItemToList(
       const hier::Index& index,
@@ -419,11 +519,14 @@ private:
    removeNodeFromList(
       IndexDataNode<TYPE, BOX_GEOMETRY> * node);
 
+   // Unimplemented copy constructor
    IndexData(
-      const IndexData<TYPE, BOX_GEOMETRY>&);       // not implemented
+      const IndexData<TYPE, BOX_GEOMETRY>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const IndexData<TYPE, BOX_GEOMETRY>&);              // not implemented
+      const IndexData<TYPE, BOX_GEOMETRY>&);
 
    const tbox::Dimension d_dim;
 
@@ -451,8 +554,6 @@ public:
    friend class IndexData<TYPE, BOX_GEOMETRY>;
    friend class IndexIterator<TYPE, BOX_GEOMETRY>;
 
-   IndexDataNode<TYPE, BOX_GEOMETRY>();
-
    IndexDataNode<TYPE, BOX_GEOMETRY>(
       const hier::Index & index,
       const int d_offset,
@@ -463,6 +564,9 @@ public:
    virtual ~IndexDataNode<TYPE, BOX_GEOMETRY>();
 
 private:
+   // Unimplemented default constructor.
+   IndexDataNode<TYPE, BOX_GEOMETRY>();
+
    hier::Index d_index;
    int d_offset;
    TYPE* d_item;
@@ -475,14 +579,14 @@ private:
  * Class IndexIterator is the iterator associated with the IndexData
  * This class provides methods for stepping through the
  * list that contains the irregular index set.  The user should
- * access this class through the name IndexData<TYPE>::iterator.
+ * access this class through the name IndexData<TYPE, BOX_GEOMETRY>::iterator.
  *
  * This iterator should be used as follows:
  * \verbatim
- * IndexData<TYPE> data;
+ * IndexData<TYPE, BOX_GEOMETRY> data;
  * ...
- * IndexData<TYPE>::iterator iterend(data, false);
- * for (IndexData<TYPE>::iterator iter(data, true); iter != iterend; ++iter) {
+ * IndexData<TYPE, BOX_GEOMETRY>::iterator iterend(data, false);
+ * for (IndexData<TYPE, BOX_GEOMETRY>::iterator iter(data, true); iter != iterend; ++iter) {
  *    ... = *iter;
  * }
  * \endverbatim

@@ -39,7 +39,8 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    const int tag_val = 1;
 
@@ -67,7 +68,7 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
 
 
    hier::BoxLevel tagfootprint(dim);
-   hier::Connector Ltag_to_tagfootprint;
+   hier::Connector Ltag_to_tagfootprint(dim);
    const hier::Connector &Ltag_to_Ltag =
       Ltag.getPersistentOverlapConnectors().findOrCreateConnector(
          Ltag,
@@ -88,16 +89,17 @@ void MeshGenerationStrategy::setTagsByShrinkingLevel(
       boost::shared_ptr<hier::Patch> patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !Ltag_to_tagfootprint.hasNeighborSet(patch->getBox().getId()) ) {
+      if ( !Ltag_to_tagfootprint.hasNeighborSet(patch->getBox().getBoxId()) ) {
          tag_data->getArrayData().fillAll(1);
       }
       else {
          hier::Connector::ConstNeighborhoodIterator ni =
-            Ltag_to_tagfootprint.find(patch->getBox().getId());
+            Ltag_to_tagfootprint.find(patch->getBox().getBoxId());
 
          for ( hier::Connector::ConstNeighborIterator na = Ltag_to_tagfootprint.begin(ni);
                na != Ltag_to_tagfootprint.end(ni); ++na ) {

@@ -24,7 +24,7 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 using namespace std;
 
@@ -86,10 +86,6 @@ private:
    double d_total_time;
    double d_last_start_time;
 };
-#endif
-
-#ifndef NULL
-#define NULL (0)
 #endif
 
 using namespace SAMRAI;

@@ -43,6 +43,10 @@ public:
     * Constructor for CartesianPatchGeometry class.  It simply passes
     * patch boundary information to hier::PatchGeometry base class constructor
     * and allocates storage for spatial coordinates on patch.
+    *
+    * @pre dx != 0
+    * @pre x_lo != 0
+    * @pre x_up != 0
     */
    CartesianPatchGeometry(
       const hier::IntVector& ratio_to_level_zero,
@@ -100,9 +104,9 @@ private:
    operator = (
       const CartesianPatchGeometry&);
 
-   double d_dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];           // mesh increments for patch.
-   double d_x_lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];         // spatial coords of lower end of patch.
-   double d_x_up[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];         // spatial coords of upper end of patch.
+   double d_dx[SAMRAI::MAX_DIM_VAL];   // mesh increments for patch.
+   double d_x_lo[SAMRAI::MAX_DIM_VAL]; // spatial coords of lower end of patch.
+   double d_x_up[SAMRAI::MAX_DIM_VAL]; // spatial coords of upper end of patch.
 
 };
 

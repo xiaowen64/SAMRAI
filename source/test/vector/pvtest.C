@@ -48,11 +48,7 @@ using namespace std;
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
-#include <boost/shared_ptr.hpp>
-
-#ifndef NULL
-#define NULL (0)
-#endif
+#include "boost/shared_ptr.hpp"
 
 #define NCELL_VARS 2
 #define NFACE_VARS 2
@@ -85,7 +81,7 @@ int main(
 //   This problem fixed, DAH 9/19/2001.  Problem arose from the PETSc
 //   libs not having world readable and executable permisions.
 //   Also added a matching PetscFinalize, to prevent memory leaks, etc.
-      PetscInitialize(&argc, &argv, (char *)NULL, NULL);
+      PetscInitialize(&argc, &argv, 0, 0);
 
       int ln, iv;
 
@@ -111,15 +107,6 @@ int main(
       hier::Box fine6(hier::Index(8, 6, 4), hier::Index(13, 7, 5), blk0);
       hier::Box fine7(hier::Index(8, 6, 6), hier::Index(13, 7, 7), blk0);
       hier::IntVector ratio(dim3d, 2);
-
-      coarse0.initialize(coarse0, hier::LocalId(0), 0);
-      coarse1.initialize(coarse1, hier::LocalId(1), 0);
-      coarse2.initialize(coarse2, hier::LocalId(2), 0);
-      coarse3.initialize(coarse3, hier::LocalId(3), 0);
-      coarse4.initialize(coarse4, hier::LocalId(4), 0);
-      coarse5.initialize(coarse5, hier::LocalId(5), 0);
-      coarse6.initialize(coarse6, hier::LocalId(6), 0);
-      coarse7.initialize(coarse7, hier::LocalId(7), 0);
 
       hier::BoxContainer coarse_domain;
       hier::BoxContainer fine_boxes;
@@ -303,15 +290,19 @@ int main(
       boost::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt,
             hierarchy),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt,
             hierarchy),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
          math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt,
             hierarchy),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(cell_ops);
+      TBOX_ASSERT(face_ops);
+      TBOX_ASSERT(node_ops);
 
       cell_ops->resetLevels(0, 1);
       face_ops->resetLevels(0, 1);
@@ -336,13 +327,15 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
-                                                hier::PatchGeometry>(patch->getPatchGeometry());
+            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+                               hier::PatchGeometry>(patch->getPatchGeometry());
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::CellData<double> > cvdata(
                   patch->getPatchData(cwgt_id),
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+            TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
          }
@@ -356,13 +349,15 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
-                                                hier::PatchGeometry>(patch->getPatchGeometry());
+            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+                               hier::PatchGeometry>(patch->getPatchGeometry());
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::FaceData<double> > data(
                patch->getPatchData(fwgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(face_vol);
             pdat::FaceIndex fi(dim3d);
             int plo0 = patch->getBox().lower(0);
@@ -484,13 +479,15 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = boost::dynamic_pointer_cast<geom::CartesianPatchGeometry,
-                                                hier::PatchGeometry>(patch->getPatchGeometry());
+            pgeom = BOOST_CAST<geom::CartesianPatchGeometry,
+                               hier::PatchGeometry>(patch->getPatchGeometry());
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
             boost::shared_ptr<pdat::NodeData<double> > data(
                patch->getPatchData(nwgt_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(data);
             data->fillAll(node_vol);
             pdat::NodeIndex ni(dim3d);
             hier::Index plo = patch->getBox().lower();
@@ -1029,7 +1026,7 @@ int main(
 
       // my_vec0 = 2.0
       my_vec0->setToScalar(2.0);
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       double my_norm;
       double p_norm;
@@ -1114,8 +1111,9 @@ int main(
            ip != level_zero->end(); ++ip) {
          patch = *ip;
 
-         cdata = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                             hier::PatchData>(patch->getPatchData(cvindx[1]));
+         cdata = BOOST_CAST<pdat::CellData<double>,
+                            hier::PatchData>(patch->getPatchData(cvindx[1]));
+         TBOX_ASSERT(cdata);
          hier::Index cindex0(2, 2, 2);
          hier::Index cindex1(5, 3, 2);
          hier::Index cindex2(4, 2, 2);
@@ -1133,8 +1131,9 @@ int main(
             (*cdata)(pdat::CellIndex(cindex3), 1) = -10.0;
          }
 
-         fdata = boost::dynamic_pointer_cast<pdat::FaceData<double>,
-                                             hier::PatchData>(patch->getPatchData(fvindx[1]));
+         fdata = BOOST_CAST<pdat::FaceData<double>,
+                            hier::PatchData>(patch->getPatchData(fvindx[1]));
+         TBOX_ASSERT(fdata);
          hier::Index findex0(2, 2, 2);
          hier::Index findex1(5, 3, 2);
          if (patch->getBox().contains(findex0)) {
@@ -1151,19 +1150,23 @@ int main(
          hier::Index nindex0(2, 2, 2);
          hier::Index nindex1(5, 3, 2);
          if (patch->getBox().contains(nindex0)) {
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[2]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[2]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LLL)) = 300.0;
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[3]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[3]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LUL)) = 30.0;
          }
          if (patch->getBox().contains(nindex1)) {
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[2]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[2]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::UUL)) = -300.0;
-            ndata = boost::dynamic_pointer_cast<pdat::NodeData<double>,
-                                                hier::PatchData>(patch->getPatchData(nvindx[3]));
+            ndata = BOOST_CAST<pdat::NodeData<double>,
+                               hier::PatchData>(patch->getPatchData(nvindx[3]));
+            TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::ULL)) = -3300.0;
          }
       }
@@ -1283,27 +1286,27 @@ int main(
       variable_db->printClassData(tbox::plog);
 
       tbox::plog << "pvec3 = Random....?" << endl;
-      VecView(pvec3, ((PetscViewer)NULL));
+      VecView(pvec3, 0);
 
       VecSwap(pvec0, pvec3);
       tbox::plog << "After swapping pvec0 and pvec3, pvec0 = Random....?"
                  << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
       tbox::plog
       << "pvec3 = 2.0 on L0 (-1.0 in covered region), = 3.0 pn L1?" << endl;
-      VecView(pvec3, ((PetscViewer)NULL));
+      VecView(pvec3, 0);
 
       VecAXPY(pvec0, four, pvec3);
       tbox::plog
       <<
       "pvec0 = pvec0 + 4.0 * pvec3 = Random + 8.0 on L0 (-3.0 - Random in covered region), = 12.0 + Random on L1?"
       << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       VecScale(pvec3, half);
       tbox::plog
       << "pvec3 = 1.0 on L0 (-0.5 in covered region), = 1.5 pn L1?" << endl;
-      VecView(pvec3, ((PetscViewer)NULL));
+      VecView(pvec3, 0);
 
       VecSet(pvec0, one);
       VecSet(pvec1, two);
@@ -1311,15 +1314,15 @@ int main(
 
       VecAXPBY(pvec0, three, half, pvec1);
       tbox::plog << "pvec0 = 3 * 2 + 0.5 * 1 = 6.5?" << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       VecAYPX(pvec1, twelve, pvec0);
       tbox::plog << "pvec1 = 6.5 + 12 * 2 = 30.5?" << endl;
-      VecView(pvec1, ((PetscViewer)NULL));
+      VecView(pvec1, 0);
 
       VecWAXPY(pvec0, zero, pvec0, pvec0);
       tbox::plog << "pvec0 = 0 * 6.5 + 6.5 = 6.5?" << endl;
-      VecView(pvec0, ((PetscViewer)NULL));
+      VecView(pvec0, 0);
 
       // No more tests....Destroy vectors and data...
 

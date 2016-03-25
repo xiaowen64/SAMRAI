@@ -20,7 +20,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -31,7 +31,7 @@ namespace pdat {
  * hier::BoxGeometry and it computes intersections between side-
  * centered box geometries for communication operations.
  *
- * See header file for SideData<DIM> class for a more detailed
+ * See header file for SideData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry
@@ -48,8 +48,10 @@ public:
 
    /*!
     * @brief Convert an AMR index box space box into an side geometry box.
-    * An side geometry box extends the given AMR index box space box
-    * by one in upper dimension for the side normal coordinate direction.
+    * An side geometry box extends the given AMR index space box
+    * by one at upper end for the side normal coordinate direction.
+    *
+    * @pre (side_normal >= 0) && (side_normal < box.getDim().getValue())
     */
    static hier::Box
    toSideBox(
@@ -93,6 +95,10 @@ public:
     * @brief Construct the side geometry object given an AMR index
     * space box, ghost cell width and directions vector indicating
     * which coordinate directions are allocated.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
+    * @pre directions.min() >= 0
     */
    SideGeometry(
       const hier::Box& box,
@@ -107,6 +113,8 @@ public:
    /*!
     * @brief Compute the overlap in side-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -117,6 +125,23 @@ public:
       const bool overwrite_interior,
       const hier::Transformation& transformation,
       const bool retry,
+      const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
+
+   /*!
+    * @brief Compute the side-centered destination boxes that represent
+    * the overlap between the source box geometry and the destination
+    * box geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset.getDim()
+    */
+   void
+   computeDestinationBoxes(
+      tbox::Array<hier::BoxContainer>& dst_boxes,
+      const SideGeometry& src_geometry,
+      const hier::Box& src_mask,
+      const hier::Box& fill_box,
+      const bool overwrite_interior,
+      const hier::Transformation& transformation,
       const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
 
    /*!
@@ -167,6 +192,9 @@ private:
     * Function doOverlap() is the function that computes the overlap
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have side centered geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset().getDim()
+    * @pre dst_geometry.getDirectionVector() == src_geometry.getDirectionVector()
     */
    static boost::shared_ptr<hier::BoxOverlap>
    doOverlap(

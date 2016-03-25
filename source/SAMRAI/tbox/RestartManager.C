@@ -8,7 +8,7 @@
  *
  ************************************************************************/
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <string>
 
 #include "SAMRAI/tbox/RestartManager.h"
@@ -24,8 +24,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-RestartManager * RestartManager::s_manager_instance =
-   (RestartManager *)NULL;
+RestartManager * RestartManager::s_manager_instance = 0;
 
 StartupShutdownManager::Handler
 RestartManager::s_shutdown_handler(
@@ -59,7 +58,7 @@ RestartManager::shutdownCallback()
    if (s_manager_instance) {
       s_manager_instance->clearRestartItems();
       delete s_manager_instance;
-      s_manager_instance = ((RestartManager *)NULL);
+      s_manager_instance = 0;
    }
 }
 
@@ -127,7 +126,7 @@ RestartManager::openRestartFile(
    bool open_successful = true;
    /* try to mount restart file */
 
-   if (d_database_factory) {
+   if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> database(d_database_factory->allocate(
          restart_filename));
@@ -191,7 +190,7 @@ RestartManager::registerRestartItem(
    Serializable* obj)
 {
    TBOX_ASSERT(!name.empty());
-   TBOX_ASSERT(obj != ((Serializable *)NULL));
+   TBOX_ASSERT(obj != 0);
 
    /*
     * Run through list to see if there is another object registered
@@ -275,7 +274,7 @@ RestartManager::writeRestartFile(
 
    std::string restart_filename = restart_dirname + restart_filename_buf;
 
-   if (d_database_factory) {
+   if (hasDatabaseFactory()) {
 
       boost::shared_ptr<Database> new_restartDB(d_database_factory->allocate(
          restart_filename));
@@ -297,7 +296,7 @@ RestartManager::writeRestartFile(
 /*
  *************************************************************************
  *
- * Write simulation state to supplied database.
+ * Write simulation state to supplied restart database.
  *
  *************************************************************************
  */
@@ -312,7 +311,7 @@ RestartManager::writeRestartFile(
    for ( ; i != d_restart_items_list.end(); i++) {
       boost::shared_ptr<Database> obj_db(
          database->putDatabase(i->name));
-      (i->obj)->putToDatabase(obj_db);
+      (i->obj)->putToRestart(obj_db);
    }
 }
 
@@ -326,7 +325,7 @@ RestartManager::writeRestartFile(
 void
 RestartManager::writeRestartToDatabase()
 {
-   if (d_database_root) {
+   if (hasRootDatabase()) {
       writeRestartFile(d_database_root);
    } else {
       TBOX_ERROR("writeRestartToDatabase has no database to write to"

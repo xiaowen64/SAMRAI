@@ -93,6 +93,7 @@ Euler {
 }
 
 Main {
+   dim = 2
 // log file parameters 
    log_file_name    = "sphere-2d.log"
    log_all_nodes    = TRUE
@@ -129,9 +130,13 @@ StandardTagAndInitialize {
    tagging_method = "RICHARDSON_EXTRAPOLATION"
 //   tagging_method = "RICHARDSON_EXTRAPOLATION", "GRADIENT_DETECTOR"
 //   tagging_method = "REFINE_BOXES"
-//   RefineBoxes {
-//      level_0 = [(20,20),(40,40)]
-//      level_1 = [(90,90),(150,150)]
+//   level_0 {
+//      level = 0
+//      boxes = [(20,20),(40,40)]
+//   }
+//   level_1 {
+//      level = 1
+//      boxes = [(90,90),(150,150)]
 //   }
 }
 

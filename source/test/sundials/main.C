@@ -63,7 +63,7 @@ using namespace std;
 #endif
 #endif
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -145,6 +145,7 @@ int main(
       int max_order = main_db->getInteger("max_order");
       int max_internal_steps = main_db->getInteger("max_internal_steps");
       double init_time = main_db->getDouble("init_time");
+      int init_cycle = main_db->getInteger("init_cycle");
       double print_interval = main_db->getDouble("print_interval");
       int num_print_intervals = main_db->getInteger("num_print_intervals");
 
@@ -189,16 +190,68 @@ int main(
        * Create gridding algorithm objects that will handle construction of
        * of the patch levels in the hierarchy.
        */
+
+      std::string cvode_model_name = "CVODEModel";
+      std::string fac_solver_name = cvode_model_name + ":FAC solver";
+      std::string fac_ops_name = fac_solver_name + "::fac_ops";
+      std::string fac_precond_name = fac_solver_name + "::fac_precond";
+      std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
+
+#ifdef HAVE_HYPRE
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+         new solv::CellPoissonHypreSolver(
+            dim,
+            hypre_poisson_name,
+            input_db->isDatabase("hypre_solver") ?
+            input_db->getDatabase("hypre_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            hypre_poisson,
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#else
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#endif
+
+      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+         new solv::FACPreconditioner(
+            fac_precond_name,
+            fac_ops,
+            input_db->isDatabase("fac_precond") ?
+            input_db->getDatabase("fac_precond") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
+         new solv::CellPoissonFACSolver(
+            dim,
+            fac_solver_name,
+            fac_precond,
+            fac_ops,
+            input_db->isDatabase("fac_solver") ?
+            input_db->getDatabase("fac_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
       boost::shared_ptr<CVODEModel> cvode_model(
          new CVODEModel(
-            "CVODEModel",
+            cvode_model_name,
             dim,
+            fac_solver,
             input_db->getDatabase("CVODEModel"),
             geometry));
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_est(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagAndInitialize",
             cvode_model.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
@@ -233,13 +286,14 @@ int main(
       }
 
       bool done = false;
-      bool initial_time = true;
+      bool initial_cycle = true;
       for (int ln = 0; hierarchy->levelCanBeRefined(ln) && !done;
            ln++) {
          gridding_algorithm->makeFinerLevel(
-            init_time,
-            initial_time,
-            tag_buffer_array[ln]);
+            tag_buffer_array[ln],
+            initial_cycle,
+            init_cycle,
+            init_time);
          done = !(hierarchy->finerLevelExists(ln));
       }
 
@@ -322,7 +376,9 @@ int main(
 
                boost::shared_ptr<CellData<double> > y_data(
                   y_init->getComponentPatchData(0, *patch),
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+               TBOX_ASSERT(y_data);
+               y_data->print(y_data->getBox());
             }
          }
       }
@@ -401,7 +457,8 @@ int main(
 
                   boost::shared_ptr<CellData<double> > y_data(
                      y_result->getComponentPatchData(0, *patch),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(y_data);
                   y_data->print(y_data->getBox());
                }
             }

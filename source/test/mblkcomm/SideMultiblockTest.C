@@ -83,7 +83,7 @@ void SideMultiblockTest::readTestInput(
 void SideMultiblockTest::registerVariables(
    MultiblockTester* commtest)
 {
-   TBOX_ASSERT(commtest != (MultiblockTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 
@@ -94,6 +94,7 @@ void SideMultiblockTest::registerVariables(
          new pdat::SideVariable<double>(
             d_dim,
             d_variable_src_name[i],
+            hier::IntVector::getOne(d_dim),
             d_variable_depth[i]));
 
       commtest->registerVariable(d_variables[i],
@@ -125,7 +126,8 @@ void SideMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(side_data);
 
          hier::Box dbox = side_data->getGhostBox();
 
@@ -181,7 +183,8 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
 
       /*
        * Set node boundary data.
@@ -318,7 +321,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::BoxId& dst_mb_id = patch.getBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getBox().getBoxId();
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
@@ -328,7 +331,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
 
       hier::Box sing_fill_box(side_data->getGhostBox() * fill_box);
 
@@ -373,7 +377,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                  ei != dst_to_encon.end(ni); ++ei) {
 
                boost::shared_ptr<hier::Patch> encon_patch(
-                  encon_level.getPatch(ei->getId()));
+                  encon_level.getPatch(ei->getBoxId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
 
@@ -417,7 +421,8 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::SideData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -576,7 +581,8 @@ bool SideMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::SideData<double> > side_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(side_data);
       int depth = side_data->getDepth();
 
       hier::Box interior_box(pbox);
@@ -777,9 +783,7 @@ void SideMultiblockTest::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
-
-   pdat::SideDoubleConstantRefine ref_op(dim);
+   pdat::SideDoubleConstantRefine ref_op;
 
    hier::BoxContainer fine_box_list(fine_box);
 

@@ -16,7 +16,7 @@
 #include "SAMRAI/pdat/OuternodeData.h"
 #include "SAMRAI/algs/OuternodeSumTransaction.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {
@@ -58,7 +58,7 @@ void OuternodeSumTransactionFactory::setRefineItems(
 void OuternodeSumTransactionFactory::unsetRefineItems()
 {
    OuternodeSumTransaction::unsetRefineItems();
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+   d_refine_items = 0;
    d_number_refine_items = 0;
 }
 
@@ -84,7 +84,13 @@ OuternodeSumTransactionFactory::allocate(
    NULL_USE(box);
    NULL_USE(use_time_interpolation);
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
+   TBOX_ASSERT(dst_node.getLocalId() >= 0);
+   TBOX_ASSERT(src_node.getLocalId() >= 0);
+   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return boost::make_shared<OuternodeSumTransaction>(dst_level,
       src_level,
@@ -103,7 +109,13 @@ OuternodeSumTransactionFactory::allocate(
    const hier::Box& src_node,
    int ritem_id) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
+   TBOX_ASSERT(dst_node.getLocalId() >= 0);
+   TBOX_ASSERT(src_node.getLocalId() >= 0);
+   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return allocate(dst_level,
       src_level,
@@ -140,7 +152,8 @@ void OuternodeSumTransactionFactory::preprocessScratchSpace(
          if (preprocess_vector.isSet(n)) {
             boost::shared_ptr<pdat::OuternodeData<double> > onode_data(
                patch->getPatchData(n),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(onode_data);
             onode_data->fillAll(0.0);
          }
       }

@@ -24,7 +24,7 @@
 #include "SAMRAI/pdat/NodeDataFactory.h"
 #include "SAMRAI/geom/CartesianGridGeometry.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 #include <cstring>
 #include <ctime>
@@ -36,19 +36,19 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
+void SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    float *, double *, const int&);
-void F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
+void SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    double *, double *, const int&);
-void F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
+void SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -56,19 +56,19 @@ void F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (
    int *, double *, const int&);
 }
 extern "C" {
-void F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
+void SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    float *, double *, const int&);
-void F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
+void SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    double *, double *, const int&);
-void F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
+void SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -133,8 +133,8 @@ VisItDataWriter::VisItDataWriter(
 
    d_object_name = object_name;
 
-   d_default_derived_writer = NULL;
-   d_materials_writer = NULL;
+   d_default_derived_writer = 0;
+   d_materials_writer = 0;
 
    d_number_working_slaves = VISIT_UNDEFINED_INDEX;
    d_file_cluster_size = number_procs_per_file;
@@ -156,7 +156,7 @@ VisItDataWriter::VisItDataWriter(
    d_summary_filename = "summary.samrai";
    d_number_levels = 1;
 
-   d_worker_min_max = (patchMinMaxStruct *)NULL;
+   d_worker_min_max = 0;
 
    d_is_multiblock = is_multiblock;
 }
@@ -174,13 +174,13 @@ VisItDataWriter::~VisItDataWriter()
    /*
     * De-allocate min/max structs for each variable.
     */
-   if (d_worker_min_max != (patchMinMaxStruct *)NULL)
+   if (d_worker_min_max != 0)
       delete[] d_worker_min_max;
 
    for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
         ipi != d_plot_items.end(); ipi++) {
       for (int comp = 0; comp < VISIT_MAX_NUMBER_COMPONENTS; comp++) {
-         if (ipi->d_master_min_max[comp] != (patchMinMaxStruct *)NULL)
+         if (ipi->d_master_min_max[comp] != 0)
             delete[] ipi->d_master_min_max[comp];
       }
    }
@@ -327,8 +327,8 @@ VisItDataWriter::registerDerivedPlotQuantity(
     */
    plotitem.d_is_derived = true;
 
-   if (derived_writer == NULL) {
-      if (d_default_derived_writer == NULL) {
+   if (derived_writer == 0) {
+      if (d_default_derived_writer == 0) {
          TBOX_ERROR("VisItDataWriter::registerDerivedPlotQuantity"
             << "\n    no derived data writer specified for variable:"
             << variable_name
@@ -935,7 +935,7 @@ VisItDataWriter::registerSpeciesNames(
    /*
     * Find the material in the list of plot items
     */
-   VisItItem* material_item = (VisItItem *)NULL;
+   VisItItem* material_item = 0;
    for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
         ipi != d_plot_items.end(); ipi++) {
       if ((ipi->d_material_name == material_name) &&
@@ -952,7 +952,7 @@ VisItDataWriter::registerSpeciesNames(
       }
    }
 
-   TBOX_ASSERT(material_item != (VisItItem *)NULL);
+   TBOX_ASSERT(material_item != 0);
 
    d_number_species += species_names.getSize();
    material_item->d_species_names = species_names;
@@ -1256,7 +1256,7 @@ VisItDataWriter::initializePlotItem(
     * Initialize min/max information.
     */
    for (int i = 0; i < VISIT_MAX_NUMBER_COMPONENTS; i++) {
-      plotitem.d_master_min_max[i] = (patchMinMaxStruct *)NULL;
+      plotitem.d_master_min_max[i] = 0;
    }
 
    /*
@@ -1265,14 +1265,14 @@ VisItDataWriter::initializePlotItem(
     * should be set by the appropriate registration functions.
     */
    plotitem.d_is_derived = false;
-   plotitem.d_derived_writer = (VisDerivedDataStrategy *)NULL;
+   plotitem.d_derived_writer = 0;
    plotitem.d_is_deformed_coords = false;
 
    plotitem.d_isa_material = false;
-   plotitem.d_materials_writer = (VisMaterialsDataStrategy *)NULL;
+   plotitem.d_materials_writer = 0;
 
    plotitem.d_isa_species = false;
-   plotitem.d_parent_material_pointer = (VisItItem *)NULL;
+   plotitem.d_parent_material_pointer = 0;
 
    // default to CLEAN (not mixed data)
    plotitem.d_is_material_state_variable = false;
@@ -1358,17 +1358,17 @@ VisItDataWriter::writePlotData(
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
 
    for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ++ln) {
-      const hier::BoxLevel& unsorted_mapped_box_level =
+      const hier::BoxLevel& unsorted_box_level =
          *hierarchy->getPatchLevel(ln)->getBoxLevel();
-      hier::BoxLevel sorted_mapped_box_level(d_dim);
-      hier::Connector unused_sorting_map;
+      hier::BoxLevel sorted_box_level(d_dim);
+      hier::Connector unused_sorting_map(d_dim);
       dlbg_edge_utils.makeSortingMap(
-         sorted_mapped_box_level,
+         sorted_box_level,
          unused_sorting_map,
-         unsorted_mapped_box_level,
+         unsorted_box_level,
          false,
          true);
-      if (!d_is_multiblock && sorted_mapped_box_level != unsorted_mapped_box_level) {
+      if (!d_is_multiblock && sorted_box_level != unsorted_box_level) {
          TBOX_ERROR(
             "VisItDataWriter: Encountered existing limitation of VisItDataWriter\n"
             << "This class cannot write files unless all patch levels have\n"
@@ -1392,7 +1392,7 @@ VisItDataWriter::writePlotData(
    d_time_step_number = time_step_number;
 
    if ((d_materials_names.getSize() > 0) &&
-       (d_materials_writer == NULL)) {
+       (d_materials_writer == 0)) {
       TBOX_ERROR("VisItDataWriter::writePlotData"
          << "\n    data writer with name " << d_object_name
          << "\n    setMaterialsDataWriter() has not been called,"
@@ -1501,7 +1501,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
          + d_number_species;
 
       int num_components = max_number_local_patches * num_items_to_plot;
-      if (d_worker_min_max != (patchMinMaxStruct *)NULL) {
+      if (d_worker_min_max != 0) {
          delete[] d_worker_min_max;
       }
       d_worker_min_max = new patchMinMaxStruct[num_components];
@@ -1532,7 +1532,7 @@ VisItDataWriter::initializePlotVariableMinMaxInfo(
              * Create space for master min/max struct, if it doesn't
              * already exist.
              */
-            if (ipi->d_master_min_max[comp] != (patchMinMaxStruct *)NULL) {
+            if (ipi->d_master_min_max[comp] != 0) {
                delete[] ipi->d_master_min_max[comp];
             }
             patchMinMaxStruct* mm =
@@ -2213,10 +2213,10 @@ VisItDataWriter::packMaterialsData(
                ipi->d_var_centering);
 
          // Pointers to buffers for dense packing format
-         double* dbuffer = NULL; // used to pack var
-         float* fbuffer = NULL;   // copy to float for writing
+         double* dbuffer = 0;  // used to pack var
+         float* fbuffer = 0;   // copy to float for writing
          // Pointer to buffer for sparse packing format
-         int* ibuffer = NULL;      // used to pack mat_list
+         int* ibuffer = 0;     // used to pack mat_list
 
          // Allocate appropriate memory for packing format
          if (!(ipi->d_is_material_state_variable)) {
@@ -2820,7 +2820,8 @@ VisItDataWriter::writeSummaryToHDFFile(
 
       boost::shared_ptr<tbox::HDFDatabase> hdf_database(
          basic_HDFGroup,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(hdf_database);
       hid_t basic_group_id = hdf_database->getGroupId();
 
       std::string key_string = "VDR_version_number";
@@ -3118,7 +3119,7 @@ VisItDataWriter::writeSummaryToHDFFile(
        */
       double geom_lo[VISIT_FIXED_DIM] = { 0., 0., 0. };
 
-      double dx_curr_lev[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double dx_curr_lev[SAMRAI::MAX_DIM_VAL];
       double patch_xlo, patch_xhi;
 
       for (i = 0; i < d_dim.getValue(); i++) {
@@ -3139,7 +3140,8 @@ VisItDataWriter::writeSummaryToHDFFile(
          //This is never entered in multiblock case
          const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
             hierarchy->getGridGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ggeom);
          int next = 0;
          for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
             for (i = 0; i < VISIT_FIXED_DIM; i++) {
@@ -3188,11 +3190,10 @@ VisItDataWriter::writeSummaryToHDFFile(
 
       sprintf(temp_buf, "extents");
       boost::shared_ptr<tbox::Database> extents_HDFGroup(
-         summary_HDFFilePointer->putDatabase(std::string(temp_buf)),
-         boost::detail::dynamic_cast_tag());
+         summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
       hdf_database =
-         boost::dynamic_pointer_cast<tbox::HDFDatabase,
-                                     tbox::Database>(extents_HDFGroup);
+        BOOST_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
+      TBOX_ASSERT(hdf_database);
       hid_t extents_group_id = hdf_database->getGroupId();
 
       /*
@@ -3258,7 +3259,8 @@ VisItDataWriter::writeSummaryToHDFFile(
          //This is never entered in multiblock case
          const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
             hierarchy->getGridGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ggeom);
          for (i = 0; i < d_dim.getValue(); i++) {
             geom_lo[i] = ggeom->getXLower()[i];
             dx_curr_lev[i] = ggeom->getDx()[i]; // coarsest level dx
@@ -3365,7 +3367,8 @@ VisItDataWriter::writeSummaryToHDFFile(
                }
                boost::shared_ptr<tbox::HDFDatabase> extents_database(
                   extents_material_name_HDFGroup,
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+               TBOX_ASSERT(extents_database);
                hid_t extents_material_name_group_id =
                   extents_database->getGroupId();
 
@@ -3387,7 +3390,8 @@ VisItDataWriter::writeSummaryToHDFFile(
                key_string = ipi->d_species_name;
                boost::shared_ptr<tbox::HDFDatabase> extents_database(
                   ipi->d_parent_material_pointer->d_extents_species_HDFGroup,
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+               TBOX_ASSERT(extents_database);
 
                /*
                 * species group
@@ -3527,7 +3531,7 @@ VisItDataWriter::exchangeMinMaxPatchInformation(
        */
 
       // recv buffer large enough to receive info from any processor.
-      patchMinMaxStruct* buf = NULL;
+      patchMinMaxStruct* buf = 0;
       if (d_number_working_slaves > 0) {
          buf = new patchMinMaxStruct[max_number_local_patches
                                      * num_items_to_plot];
@@ -3642,7 +3646,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    int child_ptrs_idx = 0;
 
    for (ln = 0; ln <= finest_level; ln++) {
-      const hier::BoxContainer& coarser_mapped_boxes =
+      const hier::BoxContainer& coarser_boxes =
          hierarchy->getPatchLevel(ln)->getBoxLevel()->getGlobalizedVersion().getGlobalBoxes();
 
       boost::shared_ptr<hier::BoxContainer> child_box_tree;
@@ -3685,8 +3689,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
          }
       }
 
-      for (hier::RealBoxConstIterator bi(coarser_mapped_boxes.realBegin());
-           bi != coarser_mapped_boxes.realEnd(); ++bi) {
+      for (hier::RealBoxConstIterator bi(coarser_boxes.realBegin());
+           bi != coarser_boxes.realEnd(); ++bi) {
 
          if (ln == finest_level) {
             child_ptrs[child_ptrs_idx].u.number_children = 0;
@@ -3696,14 +3700,14 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
             hier::Box compare_box(*bi);
             compare_box.refine(ratio);
 
-            hier::BoxContainer overlap_mapped_boxes;
+            hier::BoxContainer overlap_boxes;
 
             child_box_tree->findOverlapBoxes(
-               overlap_mapped_boxes,
+               overlap_boxes,
                compare_box,
                ratio);
 
-            int num_kids = static_cast<int>(overlap_mapped_boxes.size());
+            int num_kids = static_cast<int>(overlap_boxes.size());
             child_ptrs[child_ptrs_idx].u.number_children = num_kids;
 
             if (num_kids == 0) {
@@ -3725,8 +3729,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
                }
 
                for (hier::BoxContainer::iterator
-                    ob_itr = overlap_mapped_boxes.begin();
-                    ob_itr != overlap_mapped_boxes.end(); ++ob_itr) { 
+                    ob_itr = overlap_boxes.begin();
+                    ob_itr != overlap_boxes.end(); ++ob_itr) { 
                   child_parent[child_parent_idx].child =
                      getGlobalPatchNumber(hierarchy, ln + 1,
                         ob_itr->getLocalId().getValue());
@@ -3739,12 +3743,12 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
       }
    }
 
-   int* parent_array = (int *)NULL;
-   int* child_array = (int *)NULL;
+   int* parent_array = 0;
+   int* child_array = 0;
    int parent_array_length = 0;
    int child_array_length = child_parent_idx;
 
-   struct cpPointerStruct* parent_ptrs = (cpPointerStruct *)NULL;
+   struct cpPointerStruct* parent_ptrs = 0;
 
    // copy child info to child array
    if (child_array_length > 0) {
@@ -3812,7 +3816,8 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    basic_HDFGroup->putInteger(key_string, parent_array_length);
    boost::shared_ptr<tbox::HDFDatabase> hdf_database(
       basic_HDFGroup,
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(hdf_database);
    hid_t basic_group_id = hdf_database->getGroupId();
    if (child_array_length > 0) {
       key_string = "child_array";
@@ -3940,11 +3945,11 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
    switch (data_type) {
 
       case VISIT_FLOAT: {
-         float* dat_ptr = NULL;
+         float* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<float> > fpdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(fpdata);
 
@@ -3958,7 +3963,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          } else if (centering == VISIT_NODE) {
             const boost::shared_ptr<pdat::NodeData<float> > fpdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(fpdata);
 
@@ -3971,14 +3976,14 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = node_copy.getPointer();
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpfdat2buf2d, CPFDAT2BUF2D) (databox_lower(0),
                databox_lower(1),
                plolower(0), plolower(1),
                ploupper(0), ploupper(1),
                databox_upper(0), databox_upper(1),
                dat_ptr, buffer, buf_size);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpfdat2buf3d, CPFDAT2BUF3D) (databox_lower(0),
                databox_lower(1), databox_lower(2),
                plolower(0), plolower(1), plolower(2),
                ploupper(0), ploupper(1), ploupper(2),
@@ -3989,11 +3994,11 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_DOUBLE: {
-         double* dat_ptr = NULL;
+         double* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<double> > dpdata( 
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4006,7 +4011,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          } else if (centering == VISIT_NODE) {
             const boost::shared_ptr<pdat::NodeData<double> > dpdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4018,14 +4023,14 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = node_copy.getPointer();
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpddat2buf2d, CPDDAT2BUF2D) (databox_lower(0),
                databox_lower(1),
                plolower(0), plolower(1),
                ploupper(0), ploupper(1),
                databox_upper(0), databox_upper(1),
                dat_ptr, buffer, buf_size);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpddat2buf3d, CPDDAT2BUF3D) (databox_lower(0),
                databox_lower(1), databox_lower(2),
                plolower(0), plolower(1), plolower(2),
                ploupper(0), ploupper(1), ploupper(2),
@@ -4036,11 +4041,11 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
       }
 
       case VISIT_INT: {
-         int* dat_ptr = NULL;
+         int* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             const boost::shared_ptr<pdat::CellData<int> > ipdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(ipdata);
 
@@ -4053,7 +4058,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          } else if (centering == VISIT_NODE) {
             const boost::shared_ptr<pdat::NodeData<int> > ipdata(
                pdata,
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(ipdata);
 
@@ -4065,14 +4070,14 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = node_copy.getPointer();
          }
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpidat2buf2d, CPIDAT2BUF2D) (databox_lower(0),
                databox_lower(1),
                plolower(0), plolower(1),
                ploupper(0), ploupper(1),
                databox_upper(0), databox_upper(1),
                dat_ptr, buffer, buf_size);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (databox_lower(0),
+            SAMRAI_F77_FUNC(cpidat2buf3d, CPIDAT2BUF3D) (databox_lower(0),
                databox_lower(1), databox_lower(2),
                plolower(0), plolower(1), plolower(2),
                ploupper(0), ploupper(1), ploupper(2),
@@ -4109,13 +4114,13 @@ VisItDataWriter::HDFputIntegerArray2D(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT((nelements0 > 0) && (nelements1 > 0));
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
       hsize_t dim[] = { nelements0, nelements1 };
-      hid_t space = H5Screate_simple(2, dim, NULL);
+      hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);
 
@@ -4180,13 +4185,13 @@ VisItDataWriter::HDFputDoubleArray2D(
 {
 
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT((nelements0 > 0) && (nelements1 > 0));
 
    herr_t errf;
    if ((nelements0 > 0) && (nelements1 > 0)) {
       hsize_t dim[] = { nelements0, nelements1 };
-      hid_t space = H5Screate_simple(2, dim, NULL);
+      hid_t space = H5Screate_simple(2, dim, 0);
 
       TBOX_ASSERT(space >= 0);
 
@@ -4249,7 +4254,7 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4257,7 +4262,7 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t pe_id = H5Tcreate(H5T_COMPOUND, sizeof(patchExtentsStruct));
@@ -4268,14 +4273,14 @@ VisItDataWriter::HDFputPatchExtentsStructArray(
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1);
 #else
-      hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1, NULL);
+      hid_t intXdType = H5Tarray_create(H5T_NATIVE_INT, 1, dim1, 0);
 #endif
       TBOX_ASSERT(intXdType >= 0);
 
 #if (H5_VERS_MAJOR > 1) || ((H5_VERS_MAJOR == 1) && (H5_VERS_MINOR > 6))
       hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1);
 #else
-      hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1, NULL);
+      hid_t doubleXdType = H5Tarray_create(H5T_NATIVE_DOUBLE, 1, dim1, 0);
 #endif
       TBOX_ASSERT(doubleXdType >= 0);
 
@@ -4368,7 +4373,7 @@ VisItDataWriter::HDFputPatchMapStructArray(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4376,7 +4381,7 @@ VisItDataWriter::HDFputPatchMapStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t pm_id = H5Tcreate(H5T_COMPOUND, sizeof(patchMapStruct));
@@ -4464,7 +4469,7 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
    const hid_t group_id)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4472,7 +4477,7 @@ VisItDataWriter::HDFputPatchMinMaxStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t s1_tid = H5Tcreate(H5T_COMPOUND, sizeof(patchMinMaxStruct));
@@ -4571,7 +4576,7 @@ VisItDataWriter::HDFputChildParentStructArray(
    const std::string& field_name)
 {
    TBOX_ASSERT(!key.empty());
-   TBOX_ASSERT(data != NULL);
+   TBOX_ASSERT(data != 0);
    TBOX_ASSERT(nelements > 0);
 
    herr_t errf;
@@ -4579,7 +4584,7 @@ VisItDataWriter::HDFputChildParentStructArray(
       hid_t space;
       hsize_t dim[1];
       dim[0] = nelements;
-      space = H5Screate_simple(1, dim, NULL);
+      space = H5Screate_simple(1, dim, 0);
       TBOX_ASSERT(space >= 0);
 
       hid_t s1_tid = H5Tcreate(H5T_COMPOUND, sizeOfStruct);

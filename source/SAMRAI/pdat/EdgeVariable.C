@@ -15,7 +15,7 @@
 #include "SAMRAI/pdat/EdgeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -52,35 +52,11 @@ EdgeVariable<TYPE>::~EdgeVariable()
 template<class TYPE>
 int EdgeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<EdgeDataFactory<TYPE> > factory(getPatchDataFactory());
+   boost::shared_ptr<EdgeDataFactory<TYPE> > factory(
+      getPatchDataFactory(),
+      BOOST_CAST_TAG);
    TBOX_ASSERT(factory);
    return factory->getDepth();
-}
-
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-EdgeVariable<TYPE>::EdgeVariable(
-   const EdgeVariable<TYPE>& foo):
-   hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void EdgeVariable<TYPE>::operator = (
-   const EdgeVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 }

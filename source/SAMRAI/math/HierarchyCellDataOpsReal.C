@@ -95,32 +95,6 @@ HierarchyCellDataOpsReal<TYPE>::getPatchHierarchy() const
 /*
  *************************************************************************
  *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-HierarchyCellDataOpsReal<TYPE>::HierarchyCellDataOpsReal(
-   const HierarchyCellDataOpsReal<TYPE>& foo):
-   HierarchyDataOpsReal<TYPE>()
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-HierarchyCellDataOpsReal<TYPE>::operator = (
-   const HierarchyCellDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Basic generic operations.
  *
  *************************************************************************
@@ -147,12 +121,13 @@ HierarchyCellDataOpsReal<TYPE>::copyData(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -170,11 +145,11 @@ HierarchyCellDataOpsReal<TYPE>::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::CellDataFactory<TYPE> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::CellDataFactory<TYPE> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -224,7 +199,7 @@ HierarchyCellDataOpsReal<TYPE>::printData(
 
          boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -256,7 +231,7 @@ HierarchyCellDataOpsReal<TYPE>::setToScalar(
 
          boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -297,12 +272,13 @@ HierarchyCellDataOpsReal<TYPE>::scale(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -333,12 +309,13 @@ HierarchyCellDataOpsReal<TYPE>::addScalar(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -369,15 +346,17 @@ HierarchyCellDataOpsReal<TYPE>::add(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -408,15 +387,17 @@ HierarchyCellDataOpsReal<TYPE>::subtract(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -447,15 +428,17 @@ HierarchyCellDataOpsReal<TYPE>::multiply(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -486,15 +469,17 @@ HierarchyCellDataOpsReal<TYPE>::divide(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -524,12 +509,13 @@ HierarchyCellDataOpsReal<TYPE>::reciprocal(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -562,15 +548,17 @@ HierarchyCellDataOpsReal<TYPE>::linearSum(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -602,15 +590,17 @@ HierarchyCellDataOpsReal<TYPE>::axpy(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -642,15 +632,17 @@ HierarchyCellDataOpsReal<TYPE>::axmy(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -680,12 +672,13 @@ HierarchyCellDataOpsReal<TYPE>::abs(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -716,7 +709,7 @@ HierarchyCellDataOpsReal<TYPE>::setRandomValues(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
 
@@ -759,7 +752,7 @@ HierarchyCellDataOpsReal<TYPE>::numberOfEntries(
 
          boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -803,11 +796,12 @@ HierarchyCellDataOpsReal<TYPE>::sumControlVolumes(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > cv(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
+         TBOX_ASSERT(data);
          TBOX_ASSERT(cv);
 
          hier::Box box = cv->getGhostBox();
@@ -848,13 +842,13 @@ HierarchyCellDataOpsReal<TYPE>::L1Norm(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -917,16 +911,17 @@ HierarchyCellDataOpsReal<TYPE>::weightedL2Norm(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > weight(
             p->getPatchData(wgt_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
+         TBOX_ASSERT(weight);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1005,13 +1000,13 @@ HierarchyCellDataOpsReal<TYPE>::maxNorm(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1061,16 +1056,17 @@ HierarchyCellDataOpsReal<TYPE>::dot(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > data2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data1);
+         TBOX_ASSERT(data2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data1);
 
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1115,10 +1111,10 @@ HierarchyCellDataOpsReal<TYPE>::integral(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > vol(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
@@ -1169,16 +1165,17 @@ HierarchyCellDataOpsReal<TYPE>::computeConstrProdPos(
 
          boost::shared_ptr<pdat::CellData<TYPE> > data1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > data2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data1);
+         TBOX_ASSERT(data2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data1);
 
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1222,16 +1219,17 @@ HierarchyCellDataOpsReal<TYPE>::compareToScalar(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(dst);
 
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1270,16 +1268,17 @@ HierarchyCellDataOpsReal<TYPE>::testReciprocal(
 
          boost::shared_ptr<pdat::CellData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(dst);
 
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1326,10 +1325,13 @@ HierarchyCellDataOpsReal<TYPE>::maxPointwiseDivide(
 
          boost::shared_ptr<pdat::CellData<TYPE> > numer(
             p->getPatchData(numer_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > denom(
             p->getPatchData(denom_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(numer);
+         TBOX_ASSERT(denom);
 
          hier::Box box = p->getBox();
 
@@ -1371,10 +1373,13 @@ HierarchyCellDataOpsReal<TYPE>::minPointwiseDivide(
 
          boost::shared_ptr<pdat::CellData<TYPE> > numer(
             p->getPatchData(numer_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<TYPE> > denom(
             p->getPatchData(denom_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(numer);
+         TBOX_ASSERT(denom);
 
          hier::Box box = p->getBox();
 
@@ -1415,7 +1420,7 @@ HierarchyCellDataOpsReal<TYPE>::min(
 
          boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -1456,7 +1461,7 @@ HierarchyCellDataOpsReal<TYPE>::max(
 
          boost::shared_ptr<pdat::CellData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 

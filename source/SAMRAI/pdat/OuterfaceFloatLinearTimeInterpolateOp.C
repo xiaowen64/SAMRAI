@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /*
  *************************************************************************
@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintoutfacefloat1d, LINTIMEINTOUTFACEFLOAT1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutfacefloat1d, LINTIMEINTOUTFACEFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(lintimeintoutfacefloat1d, LINTIMEINTOUTFACEFLOAT1D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintoutfacefloat2d0,
+void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d0,
               LINTIMEINTOUTFACEFLOAT2D0) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(lintimeintoutfacefloat2d0,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintoutfacefloat2d1,
+void SAMRAI_F77_FUNC(lintimeintoutfacefloat2d1,
               LINTIMEINTOUTFACEFLOAT2D1) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -70,7 +70,7 @@ void F77_FUNC(lintimeintoutfacefloat2d1,
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintoutfacefloat3d0,
+void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d0,
               LINTIMEINTOUTFACEFLOAT3D0) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -82,7 +82,7 @@ void F77_FUNC(lintimeintoutfacefloat3d0,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintoutfacefloat3d1,
+void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d1,
               LINTIMEINTOUTFACEFLOAT3D1) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -94,7 +94,7 @@ void F77_FUNC(lintimeintoutfacefloat3d1,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintoutfacefloat3d2,
+void SAMRAI_F77_FUNC(lintimeintoutfacefloat3d2,
               LINTIMEINTOUTFACEFLOAT3D2) (const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -130,19 +130,19 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const OuterfaceData<float>* old_dat =
-      dynamic_cast<const OuterfaceData<float> *>(&src_data_old);
+      CPP_CAST<const OuterfaceData<float> *>(&src_data_old);
    const OuterfaceData<float>* new_dat =
-      dynamic_cast<const OuterfaceData<float> *>(&src_data_new);
+      CPP_CAST<const OuterfaceData<float> *>(&src_data_new);
    OuterfaceData<float>* dst_dat =
-      dynamic_cast<OuterfaceData<float> *>(&dst_data);
+      CPP_CAST<OuterfaceData<float> *>(&dst_data);
 
-   TBOX_ASSERT(old_dat != NULL);
-   TBOX_ASSERT(new_dat != NULL);
-   TBOX_ASSERT(dst_dat != NULL);
+   TBOX_ASSERT(old_dat != 0);
+   TBOX_ASSERT(new_dat != 0);
+   TBOX_ASSERT(dst_dat != 0);
    TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst_data, where, src_data_old, src_data_new);
 
    const hier::Index old_ilo = old_dat->getGhostBox().lower();
    const hier::Index old_ihi = old_dat->getGhostBox().upper();
@@ -176,7 +176,7 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
       // loop over lower and upper outerface arrays
       for (int i = 0; i < 2; i++) {
          if (dim == tbox::Dimension(1)) {
-            F77_FUNC(lintimeintoutfacefloat1d,
+            SAMRAI_F77_FUNC(lintimeintoutfacefloat1d,
                LINTIMEINTOUTFACEFLOAT1D) (ifirst(0), ilast(0),
                old_ilo(0), old_ihi(0),
                new_ilo(0), new_ihi(0),
@@ -186,7 +186,7 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
                new_dat->getPointer(0, i, d),
                dst_dat->getPointer(0, i, d));
          } else if (dim == tbox::Dimension(2)) {
-            F77_FUNC(lintimeintoutfacefloat2d0,
+            SAMRAI_F77_FUNC(lintimeintoutfacefloat2d0,
                LINTIMEINTOUTFACEFLOAT2D0) (ifirst(0), ifirst(1), ilast(0),
                ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -196,7 +196,7 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(0, i, d),
                new_dat->getPointer(0, i, d),
                dst_dat->getPointer(0, i, d));
-            F77_FUNC(lintimeintoutfacefloat2d1,
+            SAMRAI_F77_FUNC(lintimeintoutfacefloat2d1,
                LINTIMEINTOUTFACEFLOAT2D1) (ifirst(0), ifirst(1), ilast(0),
                ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -207,7 +207,7 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
                new_dat->getPointer(1, i, d),
                dst_dat->getPointer(1, i, d));
          } else if (dim == tbox::Dimension(3)) {
-            F77_FUNC(lintimeintoutfacefloat3d0,
+            SAMRAI_F77_FUNC(lintimeintoutfacefloat3d0,
                LINTIMEINTOUTFACEFLOAT3D0) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -220,7 +220,7 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(0, i, d),
                new_dat->getPointer(0, i, d),
                dst_dat->getPointer(0, i, d));
-            F77_FUNC(lintimeintoutfacefloat3d1,
+            SAMRAI_F77_FUNC(lintimeintoutfacefloat3d1,
                LINTIMEINTOUTFACEFLOAT3D1) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -233,7 +233,7 @@ OuterfaceFloatLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(1, i, d),
                new_dat->getPointer(1, i, d),
                dst_dat->getPointer(1, i, d));
-            F77_FUNC(lintimeintoutfacefloat3d2,
+            SAMRAI_F77_FUNC(lintimeintoutfacefloat3d2,
                LINTIMEINTOUTFACEFLOAT3D2) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),

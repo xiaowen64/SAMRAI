@@ -60,6 +60,9 @@ public:
     * This constructor creates a RankGroup consisting of all ranks from min
     * to max, inclusive.  min must be >= 0 and max must be less than the
     * total number of available processors.
+    *
+    * @pre min >= 0
+    * @pre min <= max
     */
    RankGroup(
       const int min,
@@ -75,7 +78,7 @@ public:
     * created with this constructor should be expected to be less efficient
     * than those created with the above min/max constructor.
     *
-    * An assertion failure will result if the array is empty.
+    * @pre !rank_group.empty()
     */
    explicit RankGroup(
       const Array<int>& rank_group,
@@ -108,10 +111,6 @@ public:
       const int min,
       const int max)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      int nodes = 1;
-      d_samrai_mpi.Comm_size(&nodes);
-#endif
       TBOX_ASSERT(min >= 0);
       TBOX_ASSERT(min <= max);
       d_storage = USING_MIN_MAX;
@@ -147,6 +146,8 @@ public:
     * contained in the RankGroup, return a unique integer identifier in the
     * set [0,N-1], N being the size of the rank group, according to a 1-to-1
     * mapping.
+    *
+    * @pre rank >= 0
     */
    int
    getMapIndex(
@@ -155,8 +156,7 @@ public:
 private:
    enum StorageType { USING_ALL,
                       USING_ARRAY,
-                      USING_MIN_MAX,
-                      INVALID_STORAGE };
+                      USING_MIN_MAX };
 
    int d_min;
    int d_max;

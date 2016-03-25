@@ -61,12 +61,14 @@ public:
 
    /**
     * The assignment operator sets the face index equal to the argument.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator = (
       const FaceIndex& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator = (rhs);
       d_axis = rhs.d_axis;
       return *this;
@@ -106,24 +108,28 @@ public:
 
    /**
     * Plus-equals operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator += (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator += (rhs);
       return *this;
    }
 
    /**
     * Plus operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex
    operator + (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       FaceIndex tmp = *this;
       tmp += rhs;
       return tmp;
@@ -154,24 +160,28 @@ public:
 
    /**
     * Minus-equals operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator -= (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator -= (rhs);
       return *this;
    }
 
    /**
     * Minus operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex
    operator - (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       FaceIndex tmp = *this;
       tmp -= rhs;
       return tmp;
@@ -202,24 +212,28 @@ public:
 
    /**
     * Times-equals operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex&
    operator *= (
       const hier::IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       hier::Index::operator *= (rhs);
       return *this;
    }
 
    /**
     * Times operator for a face index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    FaceIndex
    operator * (
       const hier::IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       FaceIndex tmp = *this;
       tmp *= rhs;
       return tmp;
@@ -251,24 +265,28 @@ public:
    /**
     * Returns true if two face index objects are equal.  All components
     * and the corresponding face axes must be the same for equality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator == (
       const FaceIndex& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return ((hier::Index *)this)->operator == (rhs) && (d_axis == rhs.d_axis);
    }
 
    /**
     * Returns true if two face index objects are not equal.  Any of
     * the components or axes may be different for inequality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator != (
       const FaceIndex& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return ((hier::Index *)this)->operator != (rhs) || (d_axis != rhs.d_axis);
    }
 

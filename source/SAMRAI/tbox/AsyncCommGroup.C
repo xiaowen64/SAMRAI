@@ -67,11 +67,11 @@ AsyncCommGroup::AsyncCommGroup():
    d_idx(-1),
    d_root_idx(-1),
    d_parent_rank(-1),
-   d_child_data(NULL),
+   d_child_data(0),
    d_branch_size_totl(-1),
    d_base_op(undefined),
    d_next_task_op(none),
-   d_external_buf(NULL),
+   d_external_buf(0),
    d_external_size(0),
    d_internal_buf(),
    d_mpi_tag(-1),
@@ -106,7 +106,7 @@ AsyncCommGroup::AsyncCommGroup(
    d_branch_size_totl(-1),
    d_base_op(undefined),
    d_next_task_op(none),
-   d_external_buf(NULL),
+   d_external_buf(0),
    d_external_size(0),
    d_internal_buf(),
    d_mpi_tag(-1),
@@ -128,7 +128,7 @@ AsyncCommGroup::AsyncCommGroup(
  */
 AsyncCommGroup::AsyncCommGroup(
    const AsyncCommGroup& r):
-   AsyncCommStage::Member(0, NULL, NULL),
+   AsyncCommStage::Member(0, 0, 0),
    d_nchild(0),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld())
 {
@@ -163,7 +163,7 @@ AsyncCommGroup::~AsyncCommGroup()
          << "mpi_tag = " << d_mpi_tag);
    }
    delete[] d_child_data;
-   d_child_data = NULL;
+   d_child_data = 0;
 }
 
 /*
@@ -236,7 +236,7 @@ bool
 AsyncCommGroup::isDone() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_next_task_op == none) {
+   if (getNextTaskOp() == none) {
       TBOX_ASSERT(!hasPendingRequests());    // Verify sane state.
    }
 #endif
@@ -256,7 +256,7 @@ AsyncCommGroup::completeCurrentOperation()
 {
    SAMRAI_MPI::Request * const req = getRequestPointer();
    SAMRAI_MPI::Status* mpi_stat = d_next_task_op == none ?
-      (SAMRAI_MPI::Status *)NULL : new SAMRAI_MPI::Status[d_nchild];
+      0 : new SAMRAI_MPI::Status[d_nchild];
 
    while (d_next_task_op != none) {
 
@@ -276,7 +276,7 @@ AsyncCommGroup::completeCurrentOperation()
 
    }
 
-   if (mpi_stat != NULL) {
+   if (mpi_stat != 0) {
       delete[] mpi_stat;
    }
 }
@@ -292,7 +292,7 @@ AsyncCommGroup::beginBcast(
    int* buffer,
    int size)
 {
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress."
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_mpi_tag);
@@ -321,7 +321,7 @@ AsyncCommGroup::beginBcast(
 bool
 AsyncCommGroup::checkBcast()
 {
-   if (d_base_op != bcast) {
+   if (getBaseOp() != bcast) {
       TBOX_ERROR("Cannot check nonexistent broadcast operation."
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_mpi_tag);
@@ -481,7 +481,7 @@ AsyncCommGroup::checkBcast()
    }
 
    if (d_parent_rank == -1) {
-      TBOX_ASSERT(d_next_task_op != recv_check);
+      TBOX_ASSERT(getNextTaskOp() != recv_check);
    }
 
    return d_next_task_op == none;
@@ -526,7 +526,7 @@ AsyncCommGroup::beginGather(
    int size)
 {
 
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress."
          << "mpi_communicator = " << d_mpi.getCommunicator()
          << "mpi_tag = " << d_mpi_tag);
@@ -597,7 +597,7 @@ AsyncCommGroup::beginGather(
 bool
 AsyncCommGroup::checkGather()
 {
-   if (d_base_op != gather) {
+   if (getBaseOp() != gather) {
       TBOX_ERROR("Cannot check nonexistent gather operation\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
          << "mpi_tag = " << d_mpi_tag << '\n');
@@ -802,7 +802,7 @@ AsyncCommGroup::beginSumReduce(
    int* buffer,
    int size)
 {
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("Cannot begin communication while another is in progress.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
          << "mpi_tag = " << d_mpi_tag << '\n');
@@ -921,9 +921,9 @@ AsyncCommGroup::beginReduce()
 bool
 AsyncCommGroup::checkReduce()
 {
-   if (!(d_base_op == max_reduce ||
-         d_base_op == min_reduce ||
-         d_base_op == sum_reduce)) {
+   if (!(getBaseOp() == max_reduce ||
+         getBaseOp() == min_reduce ||
+         getBaseOp() == sum_reduce)) {
       TBOX_ERROR("Cannot check nonexistent reduce operation.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
          << "mpi_tag = " << d_mpi_tag << '\n');
@@ -1110,11 +1110,11 @@ AsyncCommGroup::checkReduce()
          << "mpi_tag = " << d_mpi_tag << '\n');
    }
 
-   if (d_parent_rank == -1) {
-      TBOX_ASSERT(d_next_task_op != send_check);
+   if (getParentRank() == -1) {
+      TBOX_ASSERT(getNextTaskOp() != send_check);
    }
 
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ASSERT(numberOfPendingRequests() > 0);
    }
 
@@ -1159,7 +1159,7 @@ AsyncCommGroup::setGroupAndRootIndex(
    const int group_size,
    const int root_index)
 {
-   if (d_next_task_op != none) {
+   if (getNextTaskOp() != none) {
       TBOX_ERROR("Changing group while a communication is occuring can\n"
          << "corrupt data and so is disallowed.\n"
          << "mpi_communicator = " << d_mpi.getCommunicator() << '\n'
@@ -1373,7 +1373,7 @@ AsyncCommGroup::toPosition(
    int index) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (index < 0 || index >= d_group_size) {
+   if (index < 0 || index >= getGroupSize()) {
       TBOX_ERROR(
          "Invalid index " << index << "\n"
                           << "should be in [0," << d_group_size - 1
@@ -1395,7 +1395,7 @@ AsyncCommGroup::toIndex(
    int position) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (position < 0 || position >= d_group_size) {
+   if (position < 0 || position >= getGroupSize()) {
       TBOX_ERROR(
          "Invalid parent position " << position
                                     << " should be in [" << 0 << ','
@@ -1418,7 +1418,7 @@ AsyncCommGroup::toChildPosition(
    int child) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (parent_pos < 0 || parent_pos >= d_group_size) {
+   if (parent_pos < 0 || parent_pos >= getGroupSize()) {
       TBOX_ERROR(
          "Invalid parent position " << parent_pos
                                     << " should be in [" << 0 << ','
@@ -1437,7 +1437,7 @@ AsyncCommGroup::toOldest(
    int parent_pos) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (parent_pos < 0 || parent_pos >= d_group_size) {
+   if (parent_pos < 0 || parent_pos >= getGroupSize()) {
       TBOX_ERROR(
          "Invalid parent position " << parent_pos
                                     << " should be in [" << 0 << ','
@@ -1456,7 +1456,7 @@ AsyncCommGroup::toYoungest(
    int parent_pos) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (parent_pos < 0 || parent_pos >= d_group_size) {
+   if (parent_pos < 0 || parent_pos >= getGroupSize()) {
       TBOX_ERROR(
          "Invalid parent position " << parent_pos
                                     << " should be in [" << 0 << ','
@@ -1473,7 +1473,7 @@ AsyncCommGroup::toYoungest(
 void
 AsyncCommGroup::checkMPIParams()
 {
-   if (d_mpi_tag < 0) {
+   if (getMPITag() < 0) {
       TBOX_ERROR("AsyncCommGroup: Invalid MPI tag value "
          << d_mpi_tag << "\nUse setMPITag() to set it.");
    }

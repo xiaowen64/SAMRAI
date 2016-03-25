@@ -25,18 +25,6 @@
 #include "SAMRAI/tbox/Complex.h"
 
 /*
- * Floating point assertion handling.
- * The following lines setup assertion handling header files on
- * systems other than solaris.
- */
-#if defined(HAVE_EXCEPTION_HANDLING)
-#include <stdlib.h>
-#include <stdio.h>
-#include <fpu_control.h>
-#include <signal.h>
-#endif
-
-/*
  * The following lines setup assertion handling headers on the Sun.  If we
  * use Sun's native compiler, just pull in the <sunmath.h> include file.
  * If we are under solaris but use a different compiler (e.g. g++)
@@ -55,108 +43,35 @@
 namespace SAMRAI {
 namespace tbox {
 
-/*
- *  Settings for the various signaling NaNs on different systems
- */
-//#if !defined(FLT_SNAN_IS_BROKEN)
-//#define SAMRAI_FLT_SNAN FLT_SNAN
-//#elif !defined(FLT_MAX_IS_BROKEN)
-//#define SAMRAI_FLT_SNAN FLT_MAX
-//#else
-//#define SAMRAI_FLT_SNAN NAN
-//#endif
-//
-//#if !defined(DBL_SNAN_IS_BROKEN)
-//#define SAMRAI_DBL_SNAN DBL_SNAN
-//#elif !defined(DBL_MAX_IS_BROKEN)
-//#define SAMRAI_DBL_SNAN DBL_MAX
-//#else
-//#define SAMRAI_DBL_SNAN NAN
-//#endif
-
-// TODO:  This is in place ONLY for the 3.0.10 patch release.  A change to the
-// way we are doing signaling NaNs will be in the next release.
-#define SAMRAI_FLT_SNAN FLT_MAX
-#define SAMRAI_DBL_SNAN DBL_MAX
-
 template<>
 bool MathUtilities<bool>::s_zero = false;
 template<>
 bool MathUtilities<bool>::s_one = true;
-template<>
-bool MathUtilities<bool>::s_signaling_nan = false;
-template<>
-bool MathUtilities<bool>::s_max = true;
-template<>
-bool MathUtilities<bool>::s_min = false;
-template<>
-bool MathUtilities<bool>::s_epsilon = true;
 
 template<>
 char MathUtilities<char>::s_zero = 0;
 template<>
 char MathUtilities<char>::s_one = 1;
-template<>
-char MathUtilities<char>::s_signaling_nan = CHAR_MAX;
-template<>
-char MathUtilities<char>::s_max = CHAR_MAX;
-template<>
-char MathUtilities<char>::s_min = CHAR_MIN;
-template<>
-char MathUtilities<char>::s_epsilon = 1;
 
 template<>
 int MathUtilities<int>::s_zero = 0;
 template<>
 int MathUtilities<int>::s_one = 1;
-template<>
-int MathUtilities<int>::s_signaling_nan = INT_MAX;
-template<>
-int MathUtilities<int>::s_max = INT_MAX;
-template<>
-int MathUtilities<int>::s_min = INT_MIN;
-template<>
-int MathUtilities<int>::s_epsilon = 1;
 
 template<>
 float MathUtilities<float>::s_zero = 0.0;
 template<>
 float MathUtilities<float>::s_one = 1.0;
-template<>
-float MathUtilities<float>::s_signaling_nan = SAMRAI_FLT_SNAN;
-template<>
-float MathUtilities<float>::s_max = FLT_MAX;
-template<>
-float MathUtilities<float>::s_min = FLT_MIN;
-template<>
-float MathUtilities<float>::s_epsilon = FLT_EPSILON;
 
 template<>
 double MathUtilities<double>::s_zero = 0.0;
 template<>
 double MathUtilities<double>::s_one = 1.0;
-template<>
-double MathUtilities<double>::s_signaling_nan = SAMRAI_DBL_SNAN;
-template<>
-double MathUtilities<double>::s_max = DBL_MAX;
-template<>
-double MathUtilities<double>::s_min = DBL_MIN;
-template<>
-double MathUtilities<double>::s_epsilon = DBL_EPSILON;
 
 template<>
 dcomplex MathUtilities<dcomplex>::s_zero = dcomplex(0.0, 0.0);
 template<>
 dcomplex MathUtilities<dcomplex>::s_one = dcomplex(1.0, 0.0);
-template<>
-dcomplex MathUtilities<dcomplex>::s_signaling_nan = dcomplex(SAMRAI_DBL_SNAN,
-      SAMRAI_DBL_SNAN);
-template<>
-dcomplex MathUtilities<dcomplex>::s_max = dcomplex(DBL_MAX, DBL_MAX);
-template<>
-dcomplex MathUtilities<dcomplex>::s_min = dcomplex(DBL_MIN, DBL_MIN);
-template<>
-dcomplex MathUtilities<dcomplex>::s_epsilon = dcomplex(DBL_MIN, 0.0);
 
 template<>
 bool MathUtilities<float>::isNaN(
@@ -229,6 +144,14 @@ MathUtilities<dcomplex>::isNaN(
 }
 
 template<>
+dcomplex
+MathUtilities<dcomplex>::getSignalingNaN()
+{
+   return dcomplex(std::numeric_limits<double>::signaling_NaN(),
+                   std::numeric_limits<double>::signaling_NaN());
+}
+
+template<>
 bool
 MathUtilities<float>::equalEps(
    const float& a,
@@ -239,10 +162,9 @@ MathUtilities<float>::equalEps(
          MathUtilities<float>::Abs(b));
    float numerator = MathUtilities<float>::Abs(a - b);
    float denomenator =
-      MathUtilities<float>::Max(absmax,
-         MathUtilities<float>::s_epsilon);
+      MathUtilities<float>::Max(absmax, MathUtilities<float>::getEpsilon());
 
-   return numerator / denomenator < sqrt(MathUtilities<float>::s_epsilon);
+   return numerator / denomenator < sqrt(MathUtilities<float>::getEpsilon());
 }
 
 template<>
@@ -256,10 +178,9 @@ MathUtilities<double>::equalEps(
          MathUtilities<double>::Abs(b));
    double numerator = MathUtilities<double>::Abs(a - b);
    double denomenator =
-      MathUtilities<double>::Max(absmax,
-         MathUtilities<double>::s_epsilon);
+      MathUtilities<double>::Max(absmax, MathUtilities<double>::getEpsilon());
 
-   return numerator / denomenator < sqrt(MathUtilities<double>::s_epsilon);
+   return numerator / denomenator < sqrt(MathUtilities<double>::getEpsilon());
 }
 
 template<>

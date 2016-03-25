@@ -23,7 +23,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 
 extern "C" {
-void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
+void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -31,7 +31,7 @@ void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    double* rhs,
    const double* dx,
    const double* xlower);
-void F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
+void SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -54,21 +54,12 @@ namespace SAMRAI {
 HyprePoisson::HyprePoisson(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> database):
+   boost::shared_ptr<solv::CellPoissonHypreSolver>& hypre_solver,
+   boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs):
    d_object_name(object_name),
    d_dim(dim),
-   d_poisson_hypre(dim,
-                   object_name + "::poisson_hypre",
-                   (database &&
-                    database->isDatabase("CellPoissonHypreSolver")) ?
-                   database->getDatabase("CellPoissonHypreSolver") :
-                   boost::shared_ptr<tbox::Database>()),
-   d_bc_coefs(dim,
-              object_name + "::bc_coefs",
-              (database &&
-               database->isDatabase("bc_coefs")) ?
-              database->getDatabase("bc_coefs") :
-              boost::shared_ptr<tbox::Database>())
+   d_poisson_hypre(hypre_solver),
+   d_bc_coefs(bc_coefs)
 {
 
    hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
@@ -147,7 +138,8 @@ void HyprePoisson::initializeLevelData(
    boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy = hierarchy;
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom(
       patch_hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geom);
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -175,20 +167,23 @@ void HyprePoisson::initializeLevelData(
       hier::Box pbox = patch->getBox();
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       boost::shared_ptr<pdat::CellData<double> > exact_data(
          patch->getPatchData(d_exact_id),
-        boost::detail::dynamic_cast_tag());
+        BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > rhs_data(
          patch->getPatchData(d_rhs_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
+      TBOX_ASSERT(exact_data);
+      TBOX_ASSERT(rhs_data);
 
       /*
        * Set source function and exact solution.
        */
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (
+         SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (
             pbox.lower()[0],
             pbox.upper()[0],
             pbox.lower()[1],
@@ -198,8 +193,8 @@ void HyprePoisson::initializeLevelData(
             grid_geom->getDx(),
             patch_geom->getXLower());
       }
-      if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
+      else if (d_dim == tbox::Dimension(3)) {
+         SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
             pbox.lower()[0],
             pbox.upper()[0],
             pbox.lower()[1],
@@ -258,11 +253,12 @@ bool HyprePoisson::solvePoisson()
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > data(
          patch->getPatchData(d_comp_soln_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(data);
       data->fill(0.0);
    }
-   // d_poisson_hypre.setBoundaries( "Dirichlet" );
-   d_poisson_hypre.setPhysicalBcCoefObject(&d_bc_coefs);
+   // d_poisson_hypre->setBoundaries( "Dirichlet" );
+   d_poisson_hypre->setPhysicalBcCoefObject(d_bc_coefs.get());
 
    /*
     * Set up HYPRE solver object.
@@ -270,34 +266,34 @@ bool HyprePoisson::solvePoisson()
     * CellPoissonSpecifications object then passed to the solver
     * for setting the coefficients.
     */
-   d_poisson_hypre.initializeSolverState(d_hierarchy,
+   d_poisson_hypre->initializeSolverState(d_hierarchy,
       level_number);
    solv::PoissonSpecifications sps("Hypre Poisson solver");
    sps.setCZero();
    sps.setDConstant(1.0);
-   d_poisson_hypre.setMatrixCoefficients(sps);
+   d_poisson_hypre->setMatrixCoefficients(sps);
 
    /*
     * Solve the system.
     */
    tbox::plog << "solving..." << std::endl;
    int solver_ret;
-   solver_ret = d_poisson_hypre.solveSystem(d_comp_soln_id,
+   solver_ret = d_poisson_hypre->solveSystem(d_comp_soln_id,
          d_rhs_id);
    /*
     * Present data on the solve.
     */
    tbox::plog << "\t" << (solver_ret ? "" : "NOT ") << "converged " << "\n"
-              << "      iterations: "<< d_poisson_hypre.getNumberOfIterations()
+              << "      iterations: "<< d_poisson_hypre->getNumberOfIterations()
               << "\n"
-              << "      residual: "<< d_poisson_hypre.getRelativeResidualNorm()
+              << "      residual: "<< d_poisson_hypre->getRelativeResidualNorm()
               << "\n"
               << std::flush;
 
    /*
     * Deallocate state.
     */
-   d_poisson_hypre.deallocateSolverState();
+   d_poisson_hypre->deallocateSolverState();
 
    /*
     * Return whether solver converged.
@@ -370,10 +366,12 @@ bool HyprePoisson::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(
          patch.getPatchData(d_comp_soln_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > exact_solution_(
          patch.getPatchData(d_exact_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(current_solution_);
+      TBOX_ASSERT(exact_solution_);
       pdat::CellData<double>& current_solution = *current_solution_;
       pdat::CellData<double>& exact_solution = *exact_solution_;
       for ( ; icell != icellend; ++icell) {

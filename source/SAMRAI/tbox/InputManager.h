@@ -15,7 +15,7 @@
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {

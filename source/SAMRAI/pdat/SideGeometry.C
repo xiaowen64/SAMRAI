@@ -15,7 +15,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -38,7 +38,7 @@ SideGeometry::SideGeometry(
    d_directions(directions)
 
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
 }
@@ -72,7 +72,7 @@ SideGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const SideGeometry* t_dst =
       dynamic_cast<const SideGeometry *>(&dst_geometry);
@@ -80,7 +80,7 @@ SideGeometry::calculateOverlap(
       dynamic_cast<const SideGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src != NULL) && (t_dst != NULL)) {
+   if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
    } else if (retry) {
@@ -90,6 +90,80 @@ SideGeometry::calculateOverlap(
             dst_restrict_boxes);
    }
    return over;
+}
+
+/*
+ *************************************************************************
+ *
+ * Compute the boxes that will be used to contstruct an overlap object
+ *
+ *************************************************************************
+ */
+
+void
+SideGeometry::computeDestinationBoxes(
+   tbox::Array<hier::BoxContainer>& dst_boxes,
+   const SideGeometry& src_geometry,
+   const hier::Box& src_mask,
+   const hier::Box& fill_box,
+   const bool overwrite_interior,
+   const hier::Transformation& transformation,
+   const hier::BoxContainer& dst_restrict_boxes) const
+{
+#ifdef DEBUG_CHECK_DIM_ASSERTIONS 
+   const hier::IntVector& src_offset = transformation.getOffset();
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
+#endif
+   TBOX_ASSERT(
+      getDirectionVector() == src_geometry.getDirectionVector());
+
+   const tbox::Dimension& dim(src_mask.getDim());
+
+   // Perform a quick-and-dirty intersection to see if the boxes might overlap
+   hier::Box src_shift(
+      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
+   transformation.transform(src_shift);
+   hier::Box dst_ghost(d_box);
+   dst_ghost.grow(d_ghosts);
+
+   // Compute the intersection (if any) for each of the side directions
+   const hier::IntVector one_vector(dim, 1);
+
+   const hier::Box quick_check(
+      hier::Box::grow(src_shift, one_vector) *
+      hier::Box::grow(dst_ghost, one_vector));
+
+   if (!quick_check.empty()) {
+
+      const hier::IntVector& dirs = src_geometry.getDirectionVector();
+      for (int d = 0; d < dim.getValue(); d++) {
+         if (dirs(d)) {
+            const hier::Box dst_side(toSideBox(dst_ghost, d));
+            const hier::Box src_side(toSideBox(src_shift, d));
+            const hier::Box fill_side(toSideBox(fill_box, d));
+            const hier::Box together(dst_side * src_side * fill_side);
+            if (!together.empty()) {
+               if (!overwrite_interior) {
+                  const hier::Box int_side(toSideBox(d_box, d));
+                  dst_boxes[d].removeIntersections(together, int_side);
+               } else {
+                  dst_boxes[d].pushBack(together);
+               }
+            }  // if (!together.empty())
+         } // if (dirs(d))
+
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
+            hier::BoxContainer side_restrict_boxes;
+            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
+                 b != dst_restrict_boxes.end(); ++b) {
+               side_restrict_boxes.pushBack(toSideBox(*b, d));
+            }
+            dst_boxes[d].intersectBoxes(side_restrict_boxes);
+         }
+
+      }  // loop over dim && dirs(d)
+
+   }  // if (!quick_check.empty())
 }
 
 /*
@@ -127,7 +201,7 @@ SideGeometry::toSideBox(
  * is fairly straight-forward.  First, we perform a quick-and-dirty
  * intersection to see if the boxes might overlap.  If that intersection
  * is not empty, then we need to do a better job calculating the overlap
- * for each dimension.  Note that the AMR index space boxes must be
+ * for each direction.  Note that the AMR index space boxes must be
  * shifted into the side centered space before we calculate the proper
  * intersections.
  *
@@ -146,8 +220,8 @@ SideGeometry::doOverlap(
 {
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS 
    const hier::IntVector& src_offset = transformation.getOffset();
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 #endif
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
    TBOX_ASSERT(
       dst_geometry.getDirectionVector() == src_geometry.getDirectionVector());
 
@@ -155,54 +229,13 @@ SideGeometry::doOverlap(
 
    tbox::Array<hier::BoxContainer> dst_boxes(dim.getValue());
 
-   // Perform a quick-and-dirty intersection to see if the boxes might overlap
-
-   const hier::Box src_box(
-      hier::Box::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask);
-   hier::Box src_shift(src_box);
-   transformation.transform(src_shift);
-   const hier::Box dst_ghost(
-      hier::Box::grow(dst_geometry.d_box, dst_geometry.d_ghosts));
-
-   // Compute the intersection (if any) for each of the side directions
-   const hier::IntVector one_vector(dim, 1);
-
-   const hier::Box quick_check(
-      hier::Box::grow(src_shift, one_vector) * hier::Box::grow(dst_ghost,
-         one_vector));
-
-   if (!quick_check.empty()) {
-
-      const hier::IntVector& dirs = src_geometry.getDirectionVector();
-      for (int d = 0; d < dim.getValue(); d++) {
-         if (dirs(d)) {
-            const hier::Box dst_side(toSideBox(dst_ghost, d));
-            const hier::Box src_side(toSideBox(src_shift, d));
-            const hier::Box fill_side(toSideBox(fill_box, d));
-            const hier::Box together(dst_side * src_side * fill_side);
-            if (!together.empty()) {
-               dst_boxes[d].pushBack(together);
-               if (!overwrite_interior) {
-                  const hier::Box int_side(toSideBox(dst_geometry.d_box, d));
-                  dst_boxes[d].removeIntersections(together, int_side);
-               } else {
-                  dst_boxes[d].pushBack(together);
-               }
-            }  // if (!together.empty())
-         } // if (dirs(d))
-
-         if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
-            hier::BoxContainer side_restrict_boxes;
-            for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
-                 b != dst_restrict_boxes.end(); ++b) {
-               side_restrict_boxes.pushBack(toSideBox(*b, d));
-            }
-            dst_boxes[d].intersectBoxes(side_restrict_boxes);
-         }
-
-      }  // loop over dim && dirs(d)
-
-   }  // if (!quick_check.empty())
+   dst_geometry.computeDestinationBoxes(dst_boxes,
+      src_geometry,
+      src_mask,
+      fill_box,
+      overwrite_interior,
+      transformation,
+      dst_restrict_boxes);
 
    // Create the side overlap data object using the boxes and source shift
 
@@ -262,120 +295,127 @@ SideGeometry::transform(
       const hier::Transformation::RotationIdentifier rotation =
          transformation.getRotation();
 
-      box.upper() (normal_direction) -= 1;
-      transformation.transform(box);
-      if (dim.getValue() == 2) {
-         const int rotation_num = static_cast<int>(rotation);
-         if (rotation_num % 2) {
-            normal_direction = (normal_direction + 1) % 2;
+      if (rotation == hier::Transformation::NO_ROTATE) {
+
+         transformation.transform(box);
+
+      } else {
+
+         box.upper() (normal_direction) -= 1;
+         transformation.transform(box);
+         if (dim.getValue() == 2) {
+            const int rotation_num = static_cast<int>(rotation);
+            if (rotation_num % 2) {
+               normal_direction = (normal_direction + 1) % 2;
+            }
+         } else if (dim.getValue() == 3) {
+
+            if (normal_direction == 0) {
+
+               switch (rotation) {
+
+                  case hier::Transformation::IUP_JUP_KUP:
+                  case hier::Transformation::IDOWN_KUP_JUP:
+                  case hier::Transformation::IUP_KDOWN_JUP:
+                  case hier::Transformation::IDOWN_JUP_KDOWN:
+                  case hier::Transformation::IUP_KUP_JDOWN:
+                  case hier::Transformation::IDOWN_JDOWN_KUP:
+                  case hier::Transformation::IUP_JDOWN_KDOWN:
+                  case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::KUP_IUP_JUP:
+                  case hier::Transformation::JUP_IDOWN_KUP:
+                  case hier::Transformation::JUP_IUP_KDOWN:
+                  case hier::Transformation::KDOWN_IDOWN_JUP:
+                  case hier::Transformation::JDOWN_IUP_KUP:
+                  case hier::Transformation::KUP_IDOWN_JDOWN:
+                  case hier::Transformation::KDOWN_IUP_JDOWN:
+                  case hier::Transformation::JDOWN_IDOWN_KDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+
+               }
+
+            } else if (normal_direction == 1) {
+
+               switch (rotation) {
+                  case hier::Transformation::JUP_KUP_IUP:
+                  case hier::Transformation::JUP_IDOWN_KUP:
+                  case hier::Transformation::JUP_IUP_KDOWN:
+                  case hier::Transformation::JUP_KDOWN_IDOWN:
+                  case hier::Transformation::JDOWN_IUP_KUP:
+                  case hier::Transformation::JDOWN_KUP_IDOWN:
+                  case hier::Transformation::JDOWN_KDOWN_IUP:
+                  case hier::Transformation::JDOWN_IDOWN_KDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::IUP_JUP_KUP:
+                  case hier::Transformation::KUP_JUP_IDOWN:
+                  case hier::Transformation::KDOWN_JUP_IUP:
+                  case hier::Transformation::IDOWN_JUP_KDOWN:
+                  case hier::Transformation::KUP_JDOWN_IUP:
+                  case hier::Transformation::IDOWN_JDOWN_KUP:
+                  case hier::Transformation::IUP_JDOWN_KDOWN:
+                  case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+               }
+
+            } else if (normal_direction == 2) {
+
+               switch (rotation) {
+                  case hier::Transformation::KUP_IUP_JUP:
+                  case hier::Transformation::KUP_JUP_IDOWN:
+                  case hier::Transformation::KDOWN_JUP_IUP:
+                  case hier::Transformation::KDOWN_IDOWN_JUP:
+                  case hier::Transformation::KUP_JDOWN_IUP:
+                  case hier::Transformation::KUP_IDOWN_JDOWN:
+                  case hier::Transformation::KDOWN_IUP_JDOWN:
+                  case hier::Transformation::KDOWN_JDOWN_IDOWN:
+
+                     normal_direction = 0;
+                     break;
+
+                  case hier::Transformation::JUP_KUP_IUP:
+                  case hier::Transformation::IDOWN_KUP_JUP:
+                  case hier::Transformation::IUP_KDOWN_JUP:
+                  case hier::Transformation::JUP_KDOWN_IDOWN:
+                  case hier::Transformation::IUP_KUP_JDOWN:
+                  case hier::Transformation::JDOWN_KUP_IDOWN:
+                  case hier::Transformation::JDOWN_KDOWN_IUP:
+                  case hier::Transformation::IDOWN_KDOWN_JDOWN:
+
+                     normal_direction = 1;
+                     break;
+
+                  default:
+
+                     normal_direction = 2;
+                     break;
+
+               }
+            }
          }
-      } else if (dim.getValue() == 3) {
 
-         if (normal_direction == 0) {
-
-            switch (rotation) {
-
-               case hier::Transformation::IUP_JUP_KUP:
-               case hier::Transformation::IDOWN_KUP_JUP:
-               case hier::Transformation::IUP_KDOWN_JUP:
-               case hier::Transformation::IDOWN_JUP_KDOWN:
-               case hier::Transformation::IUP_KUP_JDOWN:
-               case hier::Transformation::IDOWN_JDOWN_KUP:
-               case hier::Transformation::IUP_JDOWN_KDOWN:
-               case hier::Transformation::IDOWN_KDOWN_JDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::KUP_IUP_JUP:
-               case hier::Transformation::JUP_IDOWN_KUP:
-               case hier::Transformation::JUP_IUP_KDOWN:
-               case hier::Transformation::KDOWN_IDOWN_JUP:
-               case hier::Transformation::JDOWN_IUP_KUP:
-               case hier::Transformation::KUP_IDOWN_JDOWN:
-               case hier::Transformation::KDOWN_IUP_JDOWN:
-               case hier::Transformation::JDOWN_IDOWN_KDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-
-            }
-
-         } else if (normal_direction == 1) {
-
-            switch (rotation) {
-               case hier::Transformation::JUP_KUP_IUP:
-               case hier::Transformation::JUP_IDOWN_KUP:
-               case hier::Transformation::JUP_IUP_KDOWN:
-               case hier::Transformation::JUP_KDOWN_IDOWN:
-               case hier::Transformation::JDOWN_IUP_KUP:
-               case hier::Transformation::JDOWN_KUP_IDOWN:
-               case hier::Transformation::JDOWN_KDOWN_IUP:
-               case hier::Transformation::JDOWN_IDOWN_KDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::IUP_JUP_KUP:
-               case hier::Transformation::KUP_JUP_IDOWN:
-               case hier::Transformation::KDOWN_JUP_IUP:
-               case hier::Transformation::IDOWN_JUP_KDOWN:
-               case hier::Transformation::KUP_JDOWN_IUP:
-               case hier::Transformation::IDOWN_JDOWN_KUP:
-               case hier::Transformation::IUP_JDOWN_KDOWN:
-               case hier::Transformation::KDOWN_JDOWN_IDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-            }
-
-         } else if (normal_direction == 2) {
-
-            switch (rotation) {
-               case hier::Transformation::KUP_IUP_JUP:
-               case hier::Transformation::KUP_JUP_IDOWN:
-               case hier::Transformation::KDOWN_JUP_IUP:
-               case hier::Transformation::KDOWN_IDOWN_JUP:
-               case hier::Transformation::KUP_JDOWN_IUP:
-               case hier::Transformation::KUP_IDOWN_JDOWN:
-               case hier::Transformation::KDOWN_IUP_JDOWN:
-               case hier::Transformation::KDOWN_JDOWN_IDOWN:
-
-                  normal_direction = 0;
-                  break;
-
-               case hier::Transformation::JUP_KUP_IUP:
-               case hier::Transformation::IDOWN_KUP_JUP:
-               case hier::Transformation::IUP_KDOWN_JUP:
-               case hier::Transformation::JUP_KDOWN_IDOWN:
-               case hier::Transformation::IUP_KUP_JDOWN:
-               case hier::Transformation::JDOWN_KUP_IDOWN:
-               case hier::Transformation::JDOWN_KDOWN_IUP:
-               case hier::Transformation::IDOWN_KDOWN_JDOWN:
-
-                  normal_direction = 1;
-                  break;
-
-               default:
-
-                  normal_direction = 2;
-                  break;
-
-            }
-         }
+         box.upper() (normal_direction) += 1;
       }
-
-      box.upper() (normal_direction) += 1;
    }
 }
 

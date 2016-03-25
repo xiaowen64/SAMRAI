@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <list>
 
@@ -145,12 +145,13 @@ private:
    /*!
     * @brief Get representative item for a given equivalence class index.
     *
-    * When assertion checking is active, the index will be checked for validity.
-    *
     * @return Given an index of an existing equivalence class, one item
     * from that class is returned.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    const CoarsenClasses::Data&
    getClassRepresentative(
@@ -188,8 +189,7 @@ private:
     *
     * The number of quivalence classes can be determined via the
     * getNumberOfEquivalenceClasses() member function.  Valid integer
-    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.  When
-    * assertion checking is active, the id will be checked for validity.
+    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.
     *
     * @note The list should not be modified through this iterator.
     *
@@ -199,6 +199,9 @@ private:
     * class.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    std::list<int>::iterator
    getIterator(
@@ -215,8 +218,7 @@ private:
     *
     * The number of quivalence classes can be determined via the
     * getNumberOfEquivalenceClasses() member function.  Valid integer
-    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.  When
-    * assertion checking is active, the id will be checked for validity.
+    * arguments are from 0 to getNumberOfEquivalenceClasses()-1.
     *
     * @note The list should not be modified through this iterator.
     *
@@ -226,6 +228,9 @@ private:
     * class.
     *
     * @param[in] equiv_class_index
+    *
+    * @pre (equiv_class_index >= 0) &&
+    *      (equiv_class_index < getNumberOfEquivalenceClasses())
     */
    std::list<int>::iterator
    getIteratorEnd(
@@ -245,15 +250,14 @@ private:
     * this item.  The integer class index in the data item will set to the
     * index of the equivalence class into which it is inserted.
     *
-    * If assertion checking is active, the data item will be checked for
-    * validity.  See itemIsValid() for explanation of validity.
-    *
     * If a null patch descriptor argument is passed (or ommitted), the
     * descriptor associated with the variable database Singleton object will be
     * used.
     *
     * @param[in,out] data
     * @param[in] descriptor
+    *
+    * @pre itemIsValid(data, descriptor)
     */
    void
    insertEquivalenceClassItem(

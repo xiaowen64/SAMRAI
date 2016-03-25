@@ -28,11 +28,8 @@ CoarsenOperator::s_finalize_handler(
    CoarsenOperator::finalizeCallback,
    tbox::StartupShutdownManager::priorityList);
 
-CoarsenOperator::CoarsenOperator(
-   const tbox::Dimension& dim,
-   const std::string& name):
-   d_name(name),
-   d_dim(dim)
+CoarsenOperator::CoarsenOperator(const std::string& name):
+   d_name(name)
 {
    registerInLookupTable(name);
 }
@@ -48,7 +45,7 @@ CoarsenOperator::removeFromLookupTable(
 {
    /*
     * The lookup table might be empty if static CoarsenOperator's are used
-    * in which case the table will have been removed before the statics
+    * in which case the table will have been cleared before the statics
     * are destroyed.
     */
    if (!s_lookup_table.empty()) {
@@ -61,7 +58,7 @@ CoarsenOperator::removeFromLookupTable(
       }
       TBOX_ASSERT(mi->first == name);
       TBOX_ASSERT(mi->second == this);
-      mi->second = NULL;
+      mi->second = 0;
       s_lookup_table.erase(mi);
    }
 }
@@ -80,9 +77,7 @@ CoarsenOperator::getMaxCoarsenOpStencilWidth(
    for (std::multimap<std::string, CoarsenOperator *>::const_iterator
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const CoarsenOperator* op = mi->second;
-      if (op->getDim() == dim) {
-         max_width.max(op->getStencilWidth());
-      }
+      max_width.max(op->getStencilWidth(dim));
    }
 
    return max_width;

@@ -25,7 +25,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
 #include <set>
@@ -49,28 +49,50 @@ namespace mesh {
  * non-uniform load balancing should be supported.  (Non-uniform load
  * balancing is supported by the CutAndPackLoadBalancer class.)
  *
- * Inputs and their default values:
+ * <b> Input Parameters </b>
  *
- * No special inputs are required for this class.
+ * <b> Definitions: </b>
+ *    - \b    n_root_cycles
+ *       Number of steps over which to smoothly spread out work load.  This
+ *       helps scalability when initial work load is grossly unbalanced.
+ *       Usually 1 step is sufficient.  Can be set higher (2 or 3) to reduce
+ *       negative performance effects of extremely poor initial load balance.
+ *       Set to -1, the default, or any negative number to compute the number
+ *       of cycles by a simple heuristic.  Set to zero to effectively bypass
+ *       load balancing.
  *
- * @verbatim
- * min_load_fraction_per_box = 0.03
- *                           // Additional restriction on box size.
- *                           // Will not generate a box that has less
- *                           // than this fraction of the global average
- *                           // work load in order to move work load.
- *                           // Set to negative to disable.
- * report_load_balance = TRUE // Write out load balance report in log
- * n_root_cycles = -1         // Number of steps over which to smoothly spread
- *                            // out work load.  This helps scalability when
- *                            // initial work load is grossly unbalanced.
- *                            // Usually 1 step is sufficient.
- *                            // Can be set higher (2 or 3) to reduce negative
- *                            // performance effects of extremely poor initial
- *                            // load balance.  Set to -1 (default) to compute
- *                            // the number of cycles by a simple heuristic.
- *                            // Set to zero to effectively bypass load balancing.
- * @endverbatim
+ *    - \b    min_load_fraction_per_box
+ *       Additional restriction on box size.  Will not generate a box that
+ *       has less than this fraction of the global average work load in
+ *       order to move work load.
+ *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>n_root_cycles</td>
+ *     <td>int</td>
+ *     <td>-1</td>
+ *     <td>any int</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>min_load_fraction_per_box</td>
+ *     <td>double</td>
+ *     <td>0.03</td>
+ *     <td>>=0 && <=1.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
  * @see mesh::LoadBalanceStrategy
  */
@@ -92,6 +114,8 @@ public:
     * @param[in] input_db (optional) database pointer providing
     * parameters from input file.  This pointer may be null indicating
     * no input is used.
+    *
+    * @pre !name.empty()
     */
    TreeLoadBalancer(
       const tbox::Dimension& dim,
@@ -122,6 +146,8 @@ public:
     * Otherwise, the SAMRAI_MPI of the BoxLevel will be used.  The
     * duplicate MPI communicator is freed when the object is
     * destructed, or freeMPICommunicator() is called.
+    *
+    * @pre samrai_mpi.getCommunicator() != tbox::SAMRAI_MPI::commNull
     */
    void
    setSAMRAI_MPI(
@@ -156,6 +182,8 @@ public:
     * Optional integer number for level on which data id
     * is used.  If no value is given, the data will be
     * used for all levels.
+    *
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -195,10 +223,20 @@ public:
     *
     * Note: This implementation does not yet support non-uniform load
     * balancing.
+    *
+    * @pre anchor_to_balance.isFinalized() == balance_to_anchor.isFinalized()
+    * @pre !anchor_to_balance.isFinalized() || anchor_to_balance.isTransposeOf(balance_to_anchor)
+    * @pre (d_dim == balance_box_level.getDim()) &&
+    *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
+    *      (d_dim == domain_box_level.getDim()) &&
+    *      (d_dim == bad_interval.getDim()) && (d_dim == cut_factor.getDim())
+    * @pre !hierarchy || (d_dim == hierarchy->getDim())
+    * @pre !d_mpi_is_dupe || (d_mpi.getSize() == balance_box_level.getMPI().getSize())
+    * @pre !d_mpi_is_dupe || (d_mpi.getSize() == balance_box_level.getMPI().getRank())
     */
    void
    loadBalanceBoxLevel(
-      hier::BoxLevel& balance_mapped_box_level,
+      hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -207,7 +245,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor,
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
@@ -237,7 +275,14 @@ public:
          output_stream);
    }
 
-
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string&
+   getObjectName() const
+   {
+      return d_object_name;
+   }
 
 private:
 
@@ -383,7 +428,7 @@ private:
          if (a.getBox().size() != b.getBox().size()) {
             return a.d_boxload > b.d_boxload;
          }
-         return a.d_box.getId() < b.d_box.getId();
+         return a.d_box.getBoxId() < b.d_box.getBoxId();
       }
    };
 
@@ -479,12 +524,15 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Move Boxes in balance_box_level from ranks outside of
     * rank_group to ranks inside rank_group.  Modify the given connectors
     * to make them correct following this moving of boxes.
+    *
+    * @pre !balance_to_anchor.isFinalized() || (anchor_to_balance.checkTransposeCorrectness(balance_to_anchor) == 0)
+    * @pre !balance_to_anchor.isFinalized() || (balance_to_anchor.checkTransposeCorrectness(anchor_to_balance) == 0)
     */
    void
    prebalanceBoxLevel(
@@ -637,6 +685,8 @@ private:
     * @param[o] leftover Remainder of Box after breakoff is gone.
     *
     * @param[o] brk_load The load broken off.
+    *
+    * @pre ideal_load_to_break > 0
     */
    bool
    breakOffLoad(
@@ -814,6 +864,8 @@ private:
     * @brief Given an "unbalanced" BoxLevel, compute the BoxLevel that
     * is load-balanced within the given rank_group and compute the
     * mapping between the unbalanced and balanced BoxLevels.
+    *
+    * @pre d_dim == balance_box_level.getDim()
     */
    void
    loadBalanceWithinRankGroup(
@@ -826,6 +878,8 @@ private:
    /*!
     * @brief Constrain maximum box sizes in the given BoxLevel and
     * update given Connectors to the changed BoxLevel.
+    *
+    * @pre d_dim == box_level.getDim()
     */
    void
    constrainMaxBoxSizes(
@@ -881,6 +935,8 @@ private:
 
    /*
     * @brief Undo the set-up done by setupAsyncCommObjects.
+    *
+    * @pre (d_mpi.getSize() != 1) || ((child_comms == 0) && (parent_comms == 0))
     */
    void
    destroyAsyncCommObjects(

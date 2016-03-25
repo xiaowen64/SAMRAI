@@ -31,11 +31,10 @@ EdgeMultiblockTest::EdgeMultiblockTest(
 {
    NULL_USE(do_refine);
    NULL_USE(do_coarsen);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -71,9 +70,7 @@ EdgeMultiblockTest::~EdgeMultiblockTest()
 void EdgeMultiblockTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -86,7 +83,7 @@ void EdgeMultiblockTest::readTestInput(
 void EdgeMultiblockTest::registerVariables(
    MultiblockTester* commtest)
 {
-   TBOX_ASSERT(commtest != (MultiblockTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 
@@ -127,7 +124,8 @@ void EdgeMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::EdgeData<double> > edge_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(edge_data);
 
          hier::Box dbox = edge_data->getGhostBox();
 
@@ -183,7 +181,8 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(edge_data);
 
       /*
        * Set node boundary data.
@@ -318,7 +317,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::BoxId& dst_mb_id = patch.getBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getBox().getBoxId();
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
@@ -329,7 +328,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(edge_data);
 
       hier::Box sing_fill_box(edge_data->getGhostBox() * fill_box);
 
@@ -376,7 +376,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                boost::shared_ptr<hier::Patch> encon_patch(
-                  encon_level.getPatch(ei->getId()));
+                  encon_level.getPatch(ei->getBoxId()));
 
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
@@ -417,7 +417,8 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::EdgeData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   for (int axis = 0; axis < d_dim.getValue(); axis++) {
 
@@ -577,7 +578,8 @@ bool EdgeMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::EdgeData<double> > edge_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(edge_data);
       int depth = edge_data->getDepth();
 
       hier::Box interior_box(pbox);
@@ -790,9 +792,7 @@ void EdgeMultiblockTest::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
-
-   pdat::EdgeDoubleConstantRefine ref_op(dim);
+   pdat::EdgeDoubleConstantRefine ref_op;
 
    hier::BoxContainer fine_box_list(fine_box);
 

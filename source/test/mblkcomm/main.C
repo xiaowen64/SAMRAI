@@ -32,7 +32,7 @@
 #include "NodeMultiblockTest.h"
 #include "SideMultiblockTest.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -270,7 +270,7 @@ int main(
        * Create communication tester and patch data test object
        */
 
-      PatchMultiblockTestStrategy* patch_data_test = NULL;
+      PatchMultiblockTestStrategy* patch_data_test = 0;
 
       if (test_to_run == "CellMultiblockTest") {
          patch_data_test = new CellMultiblockTest("CellMultiblockTest",
@@ -322,8 +322,7 @@ int main(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             patch_data_test->getGridGeometry(),
-            hier_db,
-            true));
+            hier_db));
 
       boost::shared_ptr<MultiblockTester> comm_tester(
          new MultiblockTester(
@@ -338,7 +337,6 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTagggingAndInitializer",
             comm_tester.get(),
             input_db->getDatabase("StandardTaggingAndInitializer")));

@@ -16,9 +16,8 @@
 namespace SAMRAI {
 namespace pdat {
 
-std::vector<hier::IntVector> NodeIndex::s_offsets[tbox::Dimension::
-                                                  MAXIMUM_DIMENSION_VALUE];
-bool NodeIndex::s_offsets_are_set[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] = { false };
+std::vector<hier::IntVector> NodeIndex::s_offsets[SAMRAI::MAX_DIM_VAL];
+bool NodeIndex::s_offsets_are_set[SAMRAI::MAX_DIM_VAL] = { false };
 
 NodeIndex::NodeIndex(
    const tbox::Dimension& dim):
@@ -32,7 +31,7 @@ NodeIndex::NodeIndex(
    const Corner corner):
    hier::Index(rhs.getDim())
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(* this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(* this, rhs);
 
    setOffsets();
    hier::IntVector::operator = (
@@ -44,7 +43,7 @@ NodeIndex::NodeIndex(
    const hier::IntVector& corner):
    hier::Index(rhs.getDim())
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < getDim().getValue(); i++) {
@@ -60,7 +59,7 @@ NodeIndex::NodeIndex(
    const NodeIndex& rhs):
    hier::Index(rhs)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
 
    setOffsets();
 }
@@ -76,7 +75,7 @@ NodeIndex::setOffsets()
    int dim_index = dim.getValue() - 1;
    if (!s_offsets_are_set[dim_index]) {
       s_offsets[dim_index] = std::vector<hier::IntVector>(
-            2 << tbox::Dimension::MAXIMUM_DIMENSION_VALUE,
+            2 << SAMRAI::MAX_DIM_VAL,
             hier::IntVector(dim));
       for (int i = 0; i < (1 << dim.getValue()); i++) {
          hier::IntVector offset(dim, 0);

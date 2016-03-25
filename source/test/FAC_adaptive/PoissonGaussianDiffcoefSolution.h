@@ -75,9 +75,9 @@ public:
       , /*! Input database */
       tbox::Database& database
       , /*! Standard output stream */
-      std::ostream * out_stream = NULL
+      std::ostream * out_stream = 0
       , /*! Log output stream */
-      std::ostream * log_stream = NULL);
+      std::ostream * log_stream = 0);
 
    virtual ~PoissonGaussianDiffcoefSolution();
 
@@ -166,8 +166,8 @@ private:
    SinusoidFcn d_sccomp;
    //@{
    double d_lambda;
-   double d_k[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double d_p[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_k[SAMRAI::MAX_DIM_VAL];
+   double d_p[SAMRAI::MAX_DIM_VAL];
    double d_k2;
    //@}
 

@@ -117,8 +117,8 @@ void PoissonSineSolution::setGridData(
    setCellDataToSinusoid(source_data,
       patch,
       d_exact);
-   double npi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-          ppi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double npi[SAMRAI::MAX_DIM_VAL],
+          ppi[SAMRAI::MAX_DIM_VAL];
    d_exact.getWaveNumbers(npi);
    d_exact.getPhaseAngles(ppi);
    double source_scale = 0.0;
@@ -173,7 +173,8 @@ void PoissonSineSolution::setBcCoefs(
    hier::Box patch_box(patch.getBox());
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* xlo = patch_geom->getXLower();
    const double* xup = patch_geom->getXUpper();
    const double* dx = patch_geom->getDx();

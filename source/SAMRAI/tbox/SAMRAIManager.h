@@ -70,6 +70,8 @@ public:
     * interface through StartupShutdownManager.
     *
     * @param[in] initialize_IEEE_assertion_handlers (defaults to true)
+    *
+    * @pre !s_initialized
     */
    static void
    initialize(
@@ -82,6 +84,9 @@ public:
     * startup callback interface through StartupShutdownManager.
     * This function may be invoked more than once in a process if
     * solving multiple SAMRAI problems.
+    *
+    * @pre s_initialized
+    * @pre !s_started
     */
    static void
    startup()
@@ -99,6 +104,9 @@ public:
     * startup callback interface through StartupShutdownManager.
     * This function may be invoked more than once in an process if
     * solving multiple SAMRAI problems.
+    *
+    * @pre s_initialized
+    * @pre s_started
     */
    static void
    shutdown()
@@ -122,6 +130,8 @@ public:
     * exiting the program is a call to SAMRAI_MPI::finalize().
     *
     * This function should be invoked only once.
+    *
+    * @pre s_initialized
     */
    static void
    finalize()
@@ -175,6 +185,8 @@ public:
     * internally within SAMRAI.  Typically, the first internal access of this
     * value occurs whenever any objects related to the patch hierarchy or
     * variables are created.
+    *
+    * @pre s_max_patch_data_entries_accessed
     */
    static void
    setMaxNumberPatchDataEntries(

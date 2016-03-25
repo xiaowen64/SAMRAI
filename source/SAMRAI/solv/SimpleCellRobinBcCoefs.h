@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <map>
 
 namespace SAMRAI {
@@ -88,6 +88,11 @@ public:
     *        the coefficient data is needed.
     * @param fill_time solution time corresponding to filling, for use
     *        when coefficients are time-dependent.
+    *
+    * @pre (d_dim == patch.getDim()) && (d_dim == bdry_box.getDim())
+    * @pre !acoef_data || (d_dim == acoef_data->getDim())
+    * @pre !bcoef_data || (d_dim == bcoef_data->getDim())
+    * @pre !gcoef_data || (d_dim == gcoef_data->getDim())
     */
    void
    setBcCoefs(
@@ -113,10 +118,15 @@ public:
     * boundary values, the flux or the Dirichlet/Neumann
     * flag.  That hierarchy and the range of relevant
     * patch levels is specified by calling this function.
+    *
+    * @pre hierarchy
+    * @pre d_dim == hierarchy->getDim()
+    *
+    * @post (d_ln_min >= 0) && (d_ln_max >= 0) && (d_ln_min <= d_ln_max)
     */
    void
    setHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>&,
+      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int ln_min = -1,
       const int ln_max = -1);
 
@@ -130,7 +140,7 @@ public:
     *
     * If using Dirichlet boundary conditions, then before the solver is
     * called, the storage for the unknown u
-    * must have a mapped_box_level of ghost cells at least one cell wide that includes
+    * must have a box_level of ghost cells at least one cell wide that includes
     * the Dirichlet boundary values.
     *
     * If using Neumann boundary conditions, then before the solver is called,
@@ -156,14 +166,18 @@ public:
     * conditions, 1 for Neumann conditions, and 2 for mixed boundary
     * conditions.  The bdry_type argument is never required, but if used
     * it can sometimes make the PoissonHYPRESolver class more efficient.
+    *
+    * @pre (boundary_type != "Neumann") || (fluxes >= 0)
+    * @pre (boundary_type != "Mixed") || ((fluxes >= 0) && (flags >= 0))
+    * @pre (boundary_type == "Dirichlet") || (boundary_type != "Neumann") ||
+    *      (boundary_type != "Mixed")
     */
-
    void
    setBoundaries(
       const std::string& boundary_type,
       const int fluxes = -1,
       const int flags = -1,
-      int* bdry_types = NULL);
+      int* bdry_types = 0);
 
    /*!
     * @brief Cache data providing Dirichlet boundary values.
@@ -180,6 +194,8 @@ public:
     *
     * @param dirichlet_data_id patch data id of the source cell data
     *        for copy.
+    *
+    * @pre d_hierarchy
     */
    void
    cacheDirichletData(
@@ -195,6 +211,8 @@ public:
     *
     * @param dirichlet_data_id patch data id of the destination cell data
     *        for copy.
+    *
+    * @pre !d_dirichlet_data_pos.empty()
     */
    void
    restoreDirichletData(
@@ -273,6 +291,8 @@ private:
     * @param boundary_box input boundary box
     * @return a box to define the face indices corresponding to
     *    boundary_box
+    *
+    * @pre boundary_box.getBoundaryType() == 1
     */
    hier::Box
    makeSideBoundaryBox(
@@ -296,7 +316,7 @@ private:
    /*!
     * @brief array of boundary type on each side
     */
-   int d_bdry_types[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int d_bdry_types[2 * SAMRAI::MAX_DIM_VAL];
    /*!
     * @brief patch index for fluxes
     */

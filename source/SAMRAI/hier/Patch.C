@@ -30,15 +30,15 @@ const int Patch::HIER_PATCH_VERSION = 2;
  */
 
 Patch::Patch(
-   const Box& mapped_box,
+   const Box& box,
    const boost::shared_ptr<PatchDescriptor>& descriptor):
-   d_mapped_box(mapped_box),
+   d_box(box),
    d_descriptor(descriptor),
    d_patch_data(d_descriptor->getMaxNumberRegisteredComponents()),
    d_patch_level_number(-1),
    d_patch_in_hierarchy(false)
 {
-   TBOX_ASSERT(mapped_box.getLocalId() >= 0);
+   TBOX_ASSERT(box.getLocalId() >= 0);
 }
 
 /*
@@ -73,7 +73,7 @@ Patch::getSizeOfPatchData(
 
    for (int i = 0; i < max_set_component && components.isSet(i); i++) {
       size += d_descriptor->getPatchDataFactory(i)->getSizeOfMemory(
-            d_mapped_box);
+            d_box);
    }
 
    return size;
@@ -192,53 +192,51 @@ Patch::setTime(
  */
 
 void
-Patch::getFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database,
+Patch::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db,
    const ComponentSelector& component_selector)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("HIER_PATCH_VERSION");
+   int ver = restart_db->getInteger("HIER_PATCH_VERSION");
    if (ver != HIER_PATCH_VERSION) {
-      TBOX_ERROR("Patch::getFromDatabase() error...\n"
+      TBOX_ERROR("Patch::getFromRestart() error...\n"
          << "   Restart file version different than class version" << std::endl);
    }
 
-   Box box(database->getDatabaseBox("d_box"));
-   const LocalId patch_local_id(database->getInteger("d_patch_local_id"));
-   int patch_owner = database->getInteger("d_patch_owner");
-   int block_id = database->getInteger("d_block_id");
+   Box box(restart_db->getDatabaseBox("d_box"));
+   const LocalId patch_local_id(restart_db->getInteger("d_patch_local_id"));
+   int patch_owner = restart_db->getInteger("d_patch_owner");
+   int block_id = restart_db->getInteger("d_block_id");
    box.setBlockId(BlockId(block_id));
-   d_mapped_box.initialize(box,
+   d_box.initialize(box,
       patch_local_id,
       patch_owner);
 
-   d_patch_level_number = database->getInteger("d_patch_level_number");
-   d_patch_in_hierarchy = database->getBool("d_patch_in_hierarchy");
+   d_patch_level_number = restart_db->getInteger("d_patch_level_number");
+   d_patch_in_hierarchy = restart_db->getBool("d_patch_in_hierarchy");
 
    d_patch_data.resizeArray(d_descriptor->getMaxNumberRegisteredComponents());
 
-   int namelist_count = database->getInteger("patch_data_namelist_count");
+   int namelist_count = restart_db->getInteger("patch_data_namelist_count");
    tbox::Array<std::string> patch_data_namelist;
    if (namelist_count) {
-      patch_data_namelist = database->getStringArray("patch_data_namelist");
+      patch_data_namelist = restart_db->getStringArray("patch_data_namelist");
    }
 
    ComponentSelector local_selector(component_selector);
 
    for (int i = 0; i < patch_data_namelist.getSize(); i++) {
-      std::string patch_data_name;
+      std::string& patch_data_name = patch_data_namelist[i];
       int patch_data_index;
 
-      patch_data_name = patch_data_namelist[i];
-
-      if (!database->isDatabase(patch_data_name)) {
-         TBOX_ERROR("Patch::getFromDatabase() error...\n"
+      if (!restart_db->isDatabase(patch_data_name)) {
+         TBOX_ERROR("Patch::getFromRestart() error...\n"
             << "   patch data" << patch_data_name
-            << " not found in database" << std::endl);
+            << " not found in restart database" << std::endl);
       }
       boost::shared_ptr<tbox::Database> patch_data_database(
-         database->getDatabase(patch_data_name));
+         restart_db->getDatabase(patch_data_name));
 
       patch_data_index = d_descriptor->mapNameToIndex(patch_data_name);
 
@@ -247,26 +245,26 @@ Patch::getFromDatabase(
          boost::shared_ptr<PatchDataFactory> patch_data_factory(
             d_descriptor->getPatchDataFactory(patch_data_index));
          d_patch_data[patch_data_index] = patch_data_factory->allocate(*this);
-         d_patch_data[patch_data_index]->getFromDatabase(patch_data_database);
+         d_patch_data[patch_data_index]->getFromRestart(patch_data_database);
 
          local_selector.clrFlag(patch_data_index);
       }
    }
 
    if (local_selector.any()) {
-      TBOX_WARNING("Patch::getFromDatabase() warning...\n"
+      TBOX_WARNING("Patch::getFromRestart() warning...\n"
          << "   Some requested patch data components not "
-         << "found in database" << std::endl);
+         << "found in restart database" << std::endl);
    }
 }
 
 /*
  *************************************************************************
  *
- * Write out the class version number to database.  Then,
- * writes out data to database and have each patch_data item write
- * itself out to the database.  The following data
- * members are written out: d_mapped_box, d_patch_number,
+ * Write out the class version number to restart database.  Then,
+ * writes out data to restart database and have each patch_data item write
+ * itself out to the restart database.  The following data
+ * members are written out: d_box, d_patch_number,
  * d_patch_level_number,
  * d_patch_in_hierarchy, d_patch_data[].
  * The database key for all data members is identical to the
@@ -281,24 +279,21 @@ Patch::getFromDatabase(
  *************************************************************************
  */
 void
-Patch::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database,
+Patch::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db,
    const ComponentSelector& patchdata_write_table) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
    int i;
 
-   database->putInteger("HIER_PATCH_VERSION", HIER_PATCH_VERSION);
-   database->putDatabaseBox("d_box", d_mapped_box);
-   database->putInteger("d_patch_local_id",
-      d_mapped_box.getLocalId().getValue());
-   database->putInteger("d_patch_owner",
-      d_mapped_box.getOwnerRank());
-   database->putInteger("d_block_id",
-      d_mapped_box.getBlockId().getBlockValue());
-   database->putInteger("d_patch_level_number", d_patch_level_number);
-   database->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
+   restart_db->putInteger("HIER_PATCH_VERSION", HIER_PATCH_VERSION);
+   restart_db->putDatabaseBox("d_box", d_box);
+   restart_db->putInteger("d_patch_local_id", d_box.getLocalId().getValue());
+   restart_db->putInteger("d_patch_owner", d_box.getOwnerRank());
+   restart_db->putInteger("d_block_id", d_box.getBlockId().getBlockValue());
+   restart_db->putInteger("d_patch_level_number", d_patch_level_number);
+   restart_db->putBool("d_patch_in_hierarchy", d_patch_in_hierarchy);
 
    int namelist_count = 0;
    for (i = 0; i < d_patch_data.getSize(); i++) {
@@ -315,14 +310,14 @@ Patch::putUnregisteredToDatabase(
          patch_data_namelist[namelist_count++] =
             patch_data_name = d_descriptor->mapIndexToName(i);
          boost::shared_ptr<tbox::Database> patch_data_database(
-            database->putDatabase(patch_data_name));
-         (d_patch_data[i])->putUnregisteredToDatabase(patch_data_database);
+            restart_db->putDatabase(patch_data_name));
+         (d_patch_data[i])->putToRestart(patch_data_database);
       }
    }
 
-   database->putInteger("patch_data_namelist_count", namelist_count);
+   restart_db->putInteger("patch_data_namelist_count", namelist_count);
    if (namelist_count > 0) {
-      database->putStringArray("patch_data_namelist", patch_data_namelist);
+      restart_db->putStringArray("patch_data_namelist", patch_data_namelist);
    }
 }
 
@@ -342,16 +337,16 @@ Patch::recursivePrint(
 {
    NULL_USE(depth);
 
-   const tbox::Dimension& dim(d_mapped_box.getDim());
+   const tbox::Dimension& dim(d_box.getDim());
 
    os << border
-      << d_mapped_box
-      << "\tdims: " << d_mapped_box.numberCells(0)
+      << d_box
+      << "\tdims: " << d_box.numberCells(0)
    ;
    for (int i = 1; i < dim.getValue(); ++i) {
-      os << " X " << d_mapped_box.numberCells(i);
+      os << " X " << d_box.numberCells(i);
    }
-   os << "\tsize: " << d_mapped_box.size()
+   os << "\tsize: " << d_box.size()
       << "\n";
    return 0;
 }
@@ -361,8 +356,8 @@ operator << (
    std::ostream& s,
    const Patch& patch)
 {
-   s << "Patch::mapped_box = "
-   << patch.d_mapped_box << std::endl << std::flush;
+   s << "Patch::box = "
+   << patch.d_box << std::endl << std::flush;
    s << "Patch::patch_level_number = " << patch.d_patch_level_number
    << std::endl << std::flush;
    s << "Patch::patch_in_hierarchy = " << patch.d_patch_in_hierarchy

@@ -26,7 +26,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -36,79 +36,137 @@ namespace hier {
  * @brief Class PatchHierarchy maintains the patch levels that
  * define the AMR hierarchy.
  *
- * The following describes the input file keys and data types. For each
- * input key that involves input for levels in the hierarchy, assume that
- * we have N levels, numbered coarsest to finest as 0,..., N-1.  For such
- * input, the value for a level must be given as ``level_n = value'' where
+ * <b> Input Parameters </b> <br>
+ * For ratio_to_coarser, smallest_patch_size, and largest_patch_size assume
+ * that we have N levels numbered coarsest to finest as 0,..., N-1.  For these
+ * inputs, the value for a level must be given as ``level_n = value'' where
  * n is the level number.  When more values are given than needed for the
  * maximum number of levels, extra values are ignored.  When fewer values
  * are given, the last value provided will be used on each level without a
  * specified input value.  See example input below.
  *
+ * <b> Definitions: </b>
  *   - \b    max_levels
- *      Integer value specifying maximum number of levels
- *      allowed in the AMR patch hierarchy.
+ *      specifies maximum number of levels allowed in the AMR patch hierarchy.
  *
  *   - \b    ratio_to_coarser
- *      A set of max_levels - 1 integer vectors (each has length = DIM),
- *      each of which indicates the ratio of the index space of a patch
- *      level to that of the next coarser level in the hierarchy.  The
- *      input is given for each level n, where n (= 1, 2,..., N-1) is the
- *      level number.
- *
- *   - \b    largest_patch_size
- *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the dimensions of largest patch allowed on the level
- *      in the hierarchy.  Non-positive values for patch size corresponds to
- *      no upper limit on patch size.  The input is given for each level n,
- *      where n (= 0, 1,..., N-1) is the level number.
+ *      A set of max_levels - 1 integer arrays each with length = DIM, each of
+ *      which indicates the ratio of the index space of a patch level to that
+ *      of the next coarser level in the hierarchy.  The input is given for
+ *      each level n, where n (= 1, 2,..., N-1) is the level number.
  *
  *   - \b    smallest_patch_size
- *      A set of max_levels integer vectors (each has length = DIM) each of
- *      which indicates the dimensions of smallest patch allowed on the level
- *      in the hierarchy.  The smallest patch allowed must be at least as
- *      large as the maximum ghost cell width for all variables in the problem.
- *      If some smaller patch size is given in input, then it will be
- *      overridden by the maximum ghost width.  If no input is given, a
- *      default of the maximum ghost cell width over all variables is used.
- *      The input is given for each level n, where n (= 0, 1,..., N-1) is
- *      the level number.
+ *      A set of max_levels integer vectors each with length = DIM, each of
+ *      which indicates the size of smallest patch allowed on the level in the
+ *      hierarchy.  The smallest patch allowed must be at least as large as the
+ *      maximum ghost cell width for all variables in the problem.  If some
+ *      smaller patch size is given in input, then it will be overridden by the
+ *      maximum ghost width.  If no input is given, a default of the maximum
+ *      ghost cell width over all variables is used.  The input is given for
+ *      each level n, where n (= 0, 1,..., N-1) is the level number.
+ *
+ *   - \b    largest_patch_size
+ *      A set of max_levels integer vectors each with length = DIM, each of
+ *      which indicates the size of largest patch allowed on the level in the
+ *      hierarchy.  Negative values for patch size corresponds to no upper
+ *      limit on patch size.  The input is given for each level n, where
+ *      n (= 0, 1,..., N-1) is the level number.
  *
  *   - \b    proper_nesting_buffer
- *      A set of max_levels - 1 integer values specifying the number of
- *      coarse cells by which the next finer level is nested within the
- *      interior of the union of the patches on the next coarser level.
- *      The input is given for each level n, where n (= 0, 1,..., N-2) is
- *      the level number.
+ *      A set of max_levels - 1 integer values specifying the number of coarse
+ *      cells by which the next finer level is nested within the interior of
+ *      the union of the patches on the next coarser level.  The input is given
+ *      for each level n, where n (= 0, 1,..., N-2) is the level number.
  *
  *    - \b    allow_patches_smaller_than_ghostwidth
- *      A boolean value ("TRUE" or "FALSE") indicating whether patches
- *      are allowed that are smaller than the maximum variable ghost width
- *      along some coordinate direction.  Recall that when a smallest
- *      patch size provided in the input file is smaller than the maximum
- *      ghost width of all the registered variables, then by default the
- *      smallest patch size will be set to the maximum ghost width.  Set this
- *      flag to TRUE to override this default behavior and to allow the
+ *      indicates whether patches are allowed that are smaller than the maximum
+ *      variable ghost width along some coordinate direction.  Recall that when
+ *      a smallest patch size provided in the input file is smaller than the
+ *      maximum ghost width of all the registered variables, then by default
+ *      the smallest patch size will be set to the maximum ghost width.  Set
+ *      this flag to TRUE to override this default behavior and to allow the
  *      smallest patch size given in the input to remain in effect.
- *      The default value is FALSE.
  *
  *    - \b    allow_patches_smaller_than_minimum_size_to_prevent_overlaps
- *      A boolean value ("TRUE" or "FALSE") indicating whether patches
- *      are allowed to be smaller than the minimum patch size to prevent
- *      overlapping patches.  In order to enforce minimum patch size
- *      restrictions, boxes may be grown during adaptive gridding operations.
- *      This may lead to patches whose boxes overlap.  This may be a problem
- *      for some applications. If overlaps are undesirable and you are
- *      willing to relax the minimum size constraints, set this parameter
- *      TRUE.  By default, it is FALSE.
+ *      indicates whether patches are allowed to be smaller than the minimum
+ *      patch size to prevent overlapping patches.  In order to enforce minimum
+ *      patch size restrictions, boxes may be grown during adaptive gridding
+ *      operations.  This may lead to patches whose boxes overlap.  This may be
+ *      a problem for some applications. If overlaps are undesirable and you
+ *      are willing to relax the minimum size constraints, set this parameter
+ *      TRUE.
  *
- * Note that when continuing from restart, the input values in the
- * input file override all values read in from the restart database.
+ * <b> Details: </b>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>max_levels</td>
+ *     <td>int</td>
+ *     <td>>0</td>
+ *     <td>1</td>
+ *     <td>opt</td>
+ *     <td>May be made smaller by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>ratio_to_coarser</td>
+ *     <td>max_levels-1 int[]</td>
+ *     <td>all values 1</td>
+ *     <td>all values >0</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>smallest_patch_size</td>
+ *     <td>max_levels int[]</td>
+ *     <td>all values 1</td>
+ *     <td>all values >0</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>largest_patch_size</td>
+ *     <td>max_levels int[]</td>
+ *     <td>all values max int</td>
+ *     <td>each value >=0 must be >= corresponding smallest_patch_size value</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ *   <tr>
+ *     <td>proper_nesting_buffer</td>
+ *     <td>int[]</td>
+ *     <td>all values 1</td>
+ *     <td>all values >=0</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_patches_smaller_than_ghostwidth</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>May not be modified by input db on restart</td>
+ *   </tr>
+ *   <tr>
+ *     <td>allow_patches_smaller_than_minimum_size_to_prevent_overlap</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Parameter read from restart db may be overridden by input db</td>
+ *   </tr>
+ * </table>
  *
  * The following represents sample input data for a three-dimensional problem:
  *
  * @code
- *
  *   // Required input: maximum number of levels in patch hierarchy
  *   max_levels = 4
  *
@@ -134,7 +192,6 @@ namespace hier {
  *
  *   // Optional input:  buffer of one cell used on each level
  *   proper_nesting_buffer = 1
- *
  * @endcode
  *
  * @see hier::PatchLevel
@@ -145,7 +202,7 @@ class PatchHierarchy:public tbox::Serializable
 {
 public:
    /*
-    *  TODO: There must be a better way to do what this base class
+    *  TODO: There must be a better way to do what this class
     *  provides.  If not, then we need to make this documentation clearer.
     *  Specifically, it is not clear how one actually determines the
     *  correct width information to provide.  Also, the documentation
@@ -253,25 +310,20 @@ public:
  *
  * The constructor for the PatchHierarchy initializes the number of
  * levels to zero, sets the geometry for the PatchHierarchy, and
- * registers the PatchHierarchy for restart with the specified name
- * by default.
- *
- * @par Errors/Assertions
- * Passing in an empty std::string or a null grid geometry pointer
- * will result in an unrecoverable assertion when assertion checking is
- * active.
+ * registers the PatchHierarchy for restart with the specified name.
  *
  * @param[in]  object_name
  * @param[in]  geometry
- * @param[in]  database Database specifying hierarchy parameters.
- * @param[in]  register_for_restart @b Default: true
+ * @param[in]  input_db Input database specifying hierarchy parameters.
+ *
+ * @pre !object_name.empty()
+ * @pre geometry
  */
    PatchHierarchy(
       const std::string& object_name,
       const boost::shared_ptr<BaseGridGeometry>& geometry,
-      const boost::shared_ptr<tbox::Database>& database =
-         boost::shared_ptr<tbox::Database>(),
-      bool register_for_restart = true);
+      const boost::shared_ptr<tbox::Database>& input_db =
+         boost::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor for PatchHierarchy.
@@ -298,13 +350,16 @@ public:
     *
     * @param[in]  fine_hierarchy_name
     * @param[in]  refine_ratio
-    * @param[in]  register_for_restart
+    *
+    * @pre getDim() == refine_ratio.getDim()
+    * @pre !fine_hierarchy_name.empty()
+    * @pre fine_hierarchy_name != getObjectName()
+    * @pre refine_ratio > IntVector::getZero(refine_ratio.getDim())
     */
    boost::shared_ptr<PatchHierarchy>
    makeRefinedPatchHierarchy(
       const std::string& fine_hierarchy_name,
-      const IntVector& refine_ratio,
-      bool register_for_restart) const;
+      const IntVector& refine_ratio) const;
 
    /*!
     * @brief Create a coarsened version of this patch hierarchy.
@@ -327,13 +382,16 @@ public:
     *
     * @param[in]  coarse_hierarchy_name
     * @param[in]  coarsen_ratio
-    * @param[in]  register_for_restart
+    *
+    * @pre getDim() == coarsen_ratio.getDim()
+    * @pre !coarse_hierarchy_name.empty()
+    * @pre coarse_hierarchy_name != getObjectName()
+    * @pre coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim())
     */
    boost::shared_ptr<PatchHierarchy>
    makeCoarsenedPatchHierarchy(
       const std::string& coarse_hierarchy_name,
-      const IntVector& coarsen_ratio,
-      bool register_for_restart) const;
+      const IntVector& coarsen_ratio) const;
 
 /*
  * TODO: Is it an error to call this method when a level with the given
@@ -343,15 +401,19 @@ public:
  * @brief Construct new PatchLevel in hierarchy at given level number.
  *
  * Boxes, their mappings and the refinement ratio are obtained from
- * @c new_mapped_box_level.
+ * @c new_box_level.
  *
  * @param[in]  level_number
- * @param[in]  new_mapped_box_level
+ * @param[in]  new_box_level
+ *
+ * @pre getDim() == new_box_level.getDim()
+ * @pre level_number >= 0 && ln < getMaxNumberOfLevels()
+ * @pre new_box_level.getRefinementRatio() > IntVector::getZero(getDim())
  */
    void
    makeNewPatchLevel(
       const int level_number,
-      const BoxLevel& new_mapped_box_level);
+      const BoxLevel& new_box_level);
 
    /*!
     * @brief Remove a patch level
@@ -360,6 +422,8 @@ public:
     * accordingly.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getNumberOfLevels())
     */
    void
    removePatchLevel(
@@ -371,12 +435,14 @@ public:
     * @return a pointer to the specified patch level.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getNumberOfLevels())
     */
    boost::shared_ptr<PatchLevel>
    getPatchLevel(
       const int level) const
    {
-      TBOX_ASSERT((level >= 0) && (level < d_number_levels));
+      TBOX_ASSERT((level >= 0) && (level < getNumberOfLevels()));
       return d_patch_levels[level];
    }
 
@@ -404,7 +470,7 @@ public:
    levelExists(
       const int level) const
    {
-      return (level < d_number_levels) && d_patch_levels[level];
+      return (level < getNumberOfLevels()) && d_patch_levels[level];
    }
 
    /*!
@@ -420,7 +486,7 @@ public:
    finerLevelExists(
       const int level) const
    {
-      return (level + 1 < d_number_levels) && d_patch_levels[level + 1];
+      return (level + 1 < getNumberOfLevels()) && d_patch_levels[level + 1];
    }
 
    /*!
@@ -443,7 +509,7 @@ public:
    int
    getFinestLevelNumber() const
    {
-      return d_number_levels - 1;
+      return getNumberOfLevels() - 1;
    }
 
    /*!
@@ -452,6 +518,8 @@ public:
     * @return true if level associated with the specified level number can
     * be refined; i.e., the level number is less than that of the finest
     * level allowed in the hierarchy.  Otherwise, false is returned.
+    *
+    * @pre level_number >= 0
     */
    bool
    levelCanBeRefined(
@@ -487,6 +555,9 @@ public:
     *             connector.
     * @param[in]  head_ln The head level indicating the other end of
     *             the connector.
+    *
+    * @pre (base_ln >= 0) && (base_ln < getNumberOfLevels())
+    * @pre (head_ln >= 0) && (head_ln < getNumberOfLevels())
     */
    const Connector&
    getConnector(
@@ -510,11 +581,9 @@ public:
     * All registrations must occur before the first call to
     * getRequiredConnectorWidth().
     *
-    * @par Errors/Assertions
-    * Calling this method after the first getRequiredConnectorWidth()
-    * results in an unrecoverable assertion.
-    *
     * @param[in]  cwrs The connector width requester strategy instance.
+    *
+    * @pre d_connector_widths_are_computed
     */
    void
    registerConnectorWidthRequestor(
@@ -530,6 +599,9 @@ public:
     *
     * @param[in]  base_ln
     * @param[in]  head_ln
+    *
+    * @pre (head_ln >= 0) && (head_ln < getMaxNumberOfLevels())
+    * @pre (base_ln >= 0) && (base_ln < getMaxNumberOfLevels())
     */
    IntVector
    getRequiredConnectorWidth(
@@ -558,14 +630,14 @@ public:
  * @brief Access the domain description as a BoxLevel.
  *
  * The domain BoxLevel is maintained in Globalized mode with
- * processor 0 owning all mapped boxes.
+ * processor 0 owning all boxes.
  *
  * @return The domain description as a BoxLevel
  */
    const BoxLevel&
    getDomainBoxLevel() const
    {
-      return d_domain_mapped_box_level;
+      return d_domain_box_level;
    }
 
    /*!
@@ -575,7 +647,7 @@ public:
    const tbox::SAMRAI_MPI&
    getMPI() const
    {
-      return d_domain_mapped_box_level.getMPI();
+      return d_domain_box_level.getMPI();
    }
 
    //@{
@@ -632,13 +704,15 @@ public:
     *
     * @param[in]  ratio   Refinement ratio in each direction
     * @param[in]  level
+    *
+    * @pre (level > 0) && (level < getMaxNumberOfLevels())
     */
    void
    setRatioToCoarserLevel(
       const IntVector& ratio,
       int level)
    {
-      TBOX_ASSERT(level > 0 && level < d_max_levels);
+      TBOX_ASSERT(level > 0 && level < getMaxNumberOfLevels());
       d_ratio_to_coarser[level] = ratio;
    }
 
@@ -648,12 +722,14 @@ public:
     * @return The ratio between specified @c level and @ level-1
     *
     * @param[in]  level
+    *
+    * @pre level < getMaxNumberOfLevels()
     */
    const IntVector&
    getRatioToCoarserLevel(
       int level) const
    {
-      TBOX_ASSERT(level < d_max_levels);
+      TBOX_ASSERT(level < getMaxNumberOfLevels());
       return d_ratio_to_coarser[level];
    }
 
@@ -662,13 +738,15 @@ public:
     *
     * @param[in]  size   Smallest size in each direction
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    void
    setSmallestPatchSize(
       const IntVector& size,
       int level)
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       d_smallest_patch_size[level] = size;
    }
 
@@ -678,12 +756,14 @@ public:
     * @return The smallest patch size allowed on the given level.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    const IntVector&
    getSmallestPatchSize(
       int level) const
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       return d_smallest_patch_size[level];
    }
 
@@ -692,13 +772,15 @@ public:
     *
     * @param[in]  size   Largest size in each direction.
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    void
    setLargestPatchSize(
       const IntVector& size,
       int level)
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       d_largest_patch_size[level] = size;
    }
 
@@ -708,12 +790,14 @@ public:
     * @return The largest patch size allowed on the given level.
     *
     * @param[in]  level
+    *
+    * @pre (level >= 0) && (level < getMaxNumberOfLevels())
     */
    const IntVector&
    getLargestPatchSize(
       int level) const
    {
-      TBOX_ASSERT(level >= 0 && level < d_max_levels);
+      TBOX_ASSERT(level >= 0 && level < getMaxNumberOfLevels());
       return d_largest_patch_size[level];
    }
 
@@ -730,13 +814,15 @@ public:
     * @return The proper nesting buffer
     *
     * @param[in]  ln
+    *
+    * @pre (ln >= 0) && (ln < getMaxNumberOfLevels())
     */
    int
    getProperNestingBuffer(
       int ln) const
    {
-      TBOX_ASSERT(ln >= 0 && ln < d_max_levels);
-      return (ln < d_max_levels - 1) ? d_proper_nesting_buffer[ln] : -1;
+      TBOX_ASSERT(ln >= 0 && ln < getMaxNumberOfLevels());
+      return (ln < getMaxNumberOfLevels() - 1) ? d_proper_nesting_buffer[ln] : -1;
    }
 
    /*!
@@ -807,7 +893,7 @@ public:
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the database.
+    * it contains to the restart database.
     *
     * @note
     * Only those patch data which have been registered for restart with
@@ -815,43 +901,17 @@ public:
     * This method implements the pure virtual method in tbox::Serializable
     * class which is used by the tbox::RestartManager for writing the
     * PatchHierarchy to a restart file.
-    * @par Assertions
-    * When assertion checking is active, the database pointer must be non-null.
     *
-    * @param[out]  database
+    * @param[out]  restart_db
+    *
+    * @pre restart_db
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
-    * @brief Read in the entire hierarchy from the restart file.
-    *
-    * The database from which the restart data is read is determined by the
-    * object_name specified in the constructor.
-    *
-    * @note
-    * <ul>
-    * <li> This method handles the memory allocation for each PatchLevel
-    *      it reads in.
-    * <li> The number of levels read in is the minimum of the d_max_levels
-    *      and the number of levels stored in the database.
-    * </ul>
-    *
-    * @par Assertions
-    * When assertion checking is active, @c d_max_levels must be
-    * greater than zero.  An unrecoverable assertion will result if the
-    * database cannot be found in the restart file or the data in the
-    * restart file is erroneous.
-    */
-   void
-   getFromRestart();
-
-   /*!
-    * @brief Read in the entire hierarchy from the specified database.
-    *
-    * The component_selector specifies which patch data components
-    * to read in from the database.
+    * @brief Read in the entire hierarchy from the restart database.
     *
     * @note
     * <ul>
@@ -865,17 +925,11 @@ public:
     * @par Assertions
     *
     * <ul>
-    * <li>   The database argument must not be null.
     * <li>   The number of levels (if given) must be greater than zero.
     * </ul>
-    *
-    * @param[in]  database
-    * @param[in]  component_selector
     */
    void
-   getFromDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
-      const ComponentSelector& component_selector);
+   initializeHierarchy();
 
    /*!
     * @brief Get the dimension of this object.
@@ -933,34 +987,45 @@ private:
 
    /*!
     * @brief Writes the state of the PatchHierarchy object and the PatchLevels
-    * it contains to the database.
+    * it contains to the restart database.
     *
     * Only those patch data indicated in the ComponentSelector are written to
     * the specified database.
     *
-    * @par Assertions
-    * When assertion checking is active, the database pointer must be non-null.
-    *
-    * @param[out]  database
+    * @param[out] restart_db
     * @param[in]  patchdata_write_table
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& database,
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db,
       const ComponentSelector& patchdata_write_table) const;
 
    /*!
     * @brief Read input data from specified database and initialize
     * class members.
     *
-    * When assertion checking is active, the database pointer must be
-    * non-null.
-    *
-    * @param[in]  database   Input database
+    * @param[in]  input_db   Input database
+    * @param[in]  is_from_restart   True is being invoked on restart
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& database);
+      const boost::shared_ptr<tbox::Database>& input_db,
+      bool is_from_restart);
+
+   /*!
+    * @brief Read in the entire hierarchy from the restart file.
+    *
+    * The database from which the restart data is read is determined by the
+    * object_name specified in the constructor.
+    *
+    * @par Assertions
+    * When assertion checking is active, @c d_max_levels must be
+    * greater than zero.  An unrecoverable assertion will result if the
+    * database cannot be found in the restart file or the data in the
+    * restart file is erroneous.
+    */
+   void
+   getFromRestart();
 
    /*!
     * @brief Set up things for the entire class.
@@ -992,11 +1057,6 @@ private:
     * @brief Dimension of the object
     */
    const tbox::Dimension d_dim;
-
-   /*!
-    * @brief Boolean telling if object is registered for restart
-    */
-   bool d_registered_for_restart;
 
    /*!
     * @brief Number of levels currently in the hierarchy
@@ -1167,7 +1227,7 @@ private:
 /*
  * TODO: These things (if really needed) should be moved to the
  * BaseGridGeometry class.  However, the BaseGridGeometry object cannot own a
- * MappedBoxLevel because the BaseGridGeometry object is incapable of creating
+ * BoxLevel because the BaseGridGeometry object is incapable of creating
  * a boost::shared_ptr to itself.  Might need to change BoxLevel to take a raw
  * pointer to BaseGridGeometry.
  */
@@ -1175,13 +1235,13 @@ private:
    /*!
     * @brief Physical domain BoxLevel.
     *
-    * All mapped_boxes in the domain
+    * All boxes in the domain
     * BoxLevel are owned by process 0.
     *
     * The physical domain BoxLevel is maintained in GLOBALIZED
-    * mode with processor 0 owning all mapped boxes.
+    * mode with processor 0 owning all boxes.
     */
-   BoxLevel d_domain_mapped_box_level;
+   BoxLevel d_domain_box_level;
 
    //@}
 

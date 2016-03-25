@@ -15,7 +15,7 @@
 
 #include <iostream>
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 namespace SAMRAI {
@@ -68,7 +68,6 @@ public:
 
    /**
     * Reset range of patch levels over which operations occur.
-    * Typically, levels must exist in hierarchy or an assertion will result.
     */
    virtual void
    resetLevels(

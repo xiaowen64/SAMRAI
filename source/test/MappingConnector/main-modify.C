@@ -38,21 +38,21 @@ using namespace tbox;
  * The database may have the following items: min_box_size,
  * max_box_size, refinement_ratio.
  *
- * The mapped_box_level will be refined by refinement_ratio and
+ * The box_level will be refined by refinement_ratio and
  * partitioned to generate a non-trivial configuration for testing.
  */
 void
 breakUpBoxes(
-   hier::BoxLevel& mapped_box_level,
-   const hier::BoxLevel& domain_mapped_box_level,
+   hier::BoxLevel& box_level,
+   const hier::BoxLevel& domain_box_level,
    const boost::shared_ptr<tbox::Database>& database);
 
 void
 alterAndGenerateMapping(
-   hier::BoxLevel& mapped_box_level_c,
+   hier::BoxLevel& box_level_c,
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
-   const hier::BoxLevel& mapped_box_level_b,
+   const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database);
 
 /*
@@ -172,35 +172,35 @@ int main(
       const hier::IntVector& one_vector(hier::IntVector::getOne(dim));
       const hier::IntVector& zero_vector(hier::IntVector::getZero(dim));
 
-      hier::BoxLevel domain_mapped_box_level(
+      hier::BoxLevel domain_box_level(
          one_vector,
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
       grid_geometry->computePhysicalDomain(
-         domain_mapped_box_level,
+         domain_box_level,
          hier::IntVector::getOne(dim));
-      domain_mapped_box_level.finalize();
+      domain_box_level.finalize();
 
       /*
        * Generate BoxLevel A from the multiblock domain description
        * using input database BoxLevelA.
        */
-      hier::BoxLevel mapped_box_level_a(domain_mapped_box_level);
+      hier::BoxLevel box_level_a(domain_box_level);
       boost::shared_ptr<Database> a_db(main_db->getDatabase("BoxLevelA"));
-      breakUpBoxes(mapped_box_level_a, domain_mapped_box_level, a_db);
-      mapped_box_level_a.cacheGlobalReducedData();
-      // tbox::pout << "mapped box level a:\n" << mapped_box_level_a.format("A: ",2) << std::endl;
+      breakUpBoxes(box_level_a, domain_box_level, a_db);
+      box_level_a.cacheGlobalReducedData();
+      // tbox::pout << "box level a:\n" << box_level_a.format("A: ",2) << std::endl;
 
       /*
        * Generate BoxLevel B from the multiblock domain description
        * using input database BoxLevelB.
        */
-      hier::BoxLevel mapped_box_level_b(domain_mapped_box_level);
+      hier::BoxLevel box_level_b(domain_box_level);
       boost::shared_ptr<Database> b_db(main_db->getDatabase("BoxLevelB"));
-      breakUpBoxes(mapped_box_level_b, domain_mapped_box_level, b_db);
-      mapped_box_level_b.cacheGlobalReducedData();
-      // tbox::pout << "mapped box level b:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
+      breakUpBoxes(box_level_b, domain_box_level, b_db);
+      box_level_b.cacheGlobalReducedData();
+      // tbox::pout << "box level b:\n" << box_level_b.format("B: ",2) << std::endl;
 
       /*
        * Generate Connector A<==>B, to be modified by the mapping
@@ -213,15 +213,15 @@ int main(
          main_db->getIntegerArray("base_width_a", &base_width_a[0], dim.getValue());
       }
       base_width_b = hier::Connector::convertHeadWidthToBase(
-            mapped_box_level_b.getRefinementRatio(),
-            mapped_box_level_a.getRefinementRatio(),
+            box_level_b.getRefinementRatio(),
+            box_level_a.getRefinementRatio(),
             base_width_a);
 
-      hier::Connector a_to_b(mapped_box_level_a,
-                             mapped_box_level_b,
+      hier::Connector a_to_b(box_level_a,
+                             box_level_b,
                              base_width_a);
-      hier::Connector b_to_a(mapped_box_level_b,
-                             mapped_box_level_a,
+      hier::Connector b_to_a(box_level_b,
+                             box_level_a,
                              base_width_b);
 
       hier::OverlapConnectorAlgorithm oca;
@@ -243,19 +243,19 @@ int main(
        * Generate the mapping Connectors B<==>C.
        */
 
-      hier::BoxLevel mapped_box_level_c(dim);
-      hier::Connector b_to_c, c_to_b;
+      hier::BoxLevel box_level_c(dim);
+      hier::Connector b_to_c(dim), c_to_b(dim);
       boost::shared_ptr<Database> alteration_db(
          main_db->getDatabase("Alteration"));
 
       alterAndGenerateMapping(
-         mapped_box_level_c,
+         box_level_c,
          b_to_c,
          c_to_b,
-         mapped_box_level_b,
+         box_level_b,
          alteration_db);
-      mapped_box_level_c.cacheGlobalReducedData();
-      // tbox::pout << "mapped box level c:\n" << mapped_box_level_c.format("C: ",2) << std::endl;
+      box_level_c.cacheGlobalReducedData();
+      // tbox::pout << "box level c:\n" << box_level_c.format("C: ",2) << std::endl;
       // tbox::pout << "b_to_c:\n" << b_to_c.format("BC: ",2) << std::endl;
       // tbox::pout << "c_to_b:\n" << c_to_b.format("CB: ",2) << std::endl;
 
@@ -264,9 +264,9 @@ int main(
          b_to_a,
          b_to_c,
          c_to_b,
-         &mapped_box_level_b,
-         &mapped_box_level_c);
-      // tbox::pout << "mapped box level b after modify:\n" << mapped_box_level_b.format("B: ",2) << std::endl;
+         &box_level_b,
+         &box_level_c);
+      // tbox::pout << "box level b after modify:\n" << box_level_b.format("B: ",2) << std::endl;
 
       // tbox::pout << "checking a--->b consistency with base:" << std::endl;
       a_to_b.checkConsistencyWithBase();
@@ -277,20 +277,20 @@ int main(
       // tbox::pout << "checking b--->a consistency with head:" << std::endl;
       b_to_a.checkConsistencyWithHead();
 
-      tbox::pout << "Checking for a--->b errors:" << std::endl;
+      tbox::pout << "Checking for a--->b overlap correctness:" << std::endl;
       const int a_to_b_errors = oca.checkOverlapCorrectness(a_to_b);
       if (a_to_b_errors) {
          tbox::pout << "... " << a_to_b_errors << " errors." << std::endl;
       } else {
-         tbox::pout << "... none." << std::endl;
+         tbox::pout << "... OK." << std::endl;
       }
 
-      tbox::pout << "Checking for b--->a errors:" << std::endl;
+      tbox::pout << "Checking for b--->a overlap correctness:" << std::endl;
       const int b_to_a_errors = oca.checkOverlapCorrectness(b_to_a);
       if (b_to_a_errors) {
          tbox::pout << "... " << b_to_a_errors << " errors." << std::endl;
       } else {
-         tbox::pout << "... none." << std::endl;
+         tbox::pout << "... OK." << std::endl;
       }
 
       fail_count += a_to_b_errors + b_to_a_errors;
@@ -337,11 +337,11 @@ int main(
  * 2. Partition according to min and max box sizes in the database.
  */
 void breakUpBoxes(
-   hier::BoxLevel& mapped_box_level,
-   const hier::BoxLevel& domain_mapped_box_level,
+   hier::BoxLevel& box_level,
+   const hier::BoxLevel& domain_box_level,
    const boost::shared_ptr<tbox::Database>& database) {
 
-   const tbox::Dimension& dim(mapped_box_level.getDim());
+   const tbox::Dimension& dim(box_level.getDim());
 
    hier::IntVector refinement_ratio(hier::IntVector::getOne(dim));
    if (database->isInteger("refinement_ratio")) {
@@ -349,10 +349,10 @@ void breakUpBoxes(
    }
 
    if (refinement_ratio != hier::IntVector::getOne(dim)) {
-      mapped_box_level.refineBoxes(mapped_box_level,
+      box_level.refineBoxes(box_level,
          refinement_ratio,
-         mapped_box_level.getRefinementRatio()*refinement_ratio);
-      mapped_box_level.finalize();
+         box_level.getRefinementRatio()*refinement_ratio);
+      box_level.finalize();
    }
 
    hier::IntVector max_box_size(dim, tbox::MathUtilities<int>::getMax());
@@ -365,17 +365,17 @@ void breakUpBoxes(
       database->getIntegerArray("min_box_size", &min_box_size[0], dim.getValue());
    }
 
-   mesh::TreeLoadBalancer load_balancer(mapped_box_level.getDim());
+   mesh::TreeLoadBalancer load_balancer(box_level.getDim());
 
    const int level_number(0);
 
-   hier::Connector dummy_connector;
+   hier::Connector dummy_connector(dim);
 
    const hier::IntVector bad_interval(dim, 1);
    const hier::IntVector cut_factor(dim, 1);
 
    load_balancer.loadBalanceBoxLevel(
-      mapped_box_level,
+      box_level,
       dummy_connector,
       dummy_connector,
       boost::shared_ptr<hier::PatchHierarchy>(),
@@ -384,7 +384,7 @@ void breakUpBoxes(
       dummy_connector,
       min_box_size,
       max_box_size,
-      domain_mapped_box_level,
+      domain_box_level,
       bad_interval,
       cut_factor);
 }
@@ -394,13 +394,13 @@ void breakUpBoxes(
  * Generate the mapping Connectors B<==>C.
  */
 void alterAndGenerateMapping(
-   hier::BoxLevel& mapped_box_level_c,
+   hier::BoxLevel& box_level_c,
    hier::Connector& b_to_c,
    hier::Connector& c_to_b,
-   const hier::BoxLevel& mapped_box_level_b,
+   const hier::BoxLevel& box_level_b,
    const boost::shared_ptr<tbox::Database>& database)
 {
-   const tbox::Dimension dim(mapped_box_level_b.getDim());
+   const tbox::Dimension dim(box_level_b.getDim());
 
    /*
     * Increment for changing the LocalIds.
@@ -409,33 +409,31 @@ void alterAndGenerateMapping(
    const int local_id_increment =
       database->getIntegerWithDefault("local_id_increment", 0);
 
-   const hier::BoxContainer mapped_boxes_b(mapped_box_level_b.getBoxes());
+   const hier::BoxContainer boxes_b(box_level_b.getBoxes());
 
-   mapped_box_level_c.initialize(mapped_box_level_b.getRefinementRatio(),
-      mapped_box_level_b.getGridGeometry(),
-      mapped_box_level_b.getMPI());
+   box_level_c.initialize(box_level_b.getRefinementRatio(),
+      box_level_b.getGridGeometry(),
+      box_level_b.getMPI());
 
-   b_to_c.setConnectorType(hier::Connector::MAPPING);
-   b_to_c.setBase(mapped_box_level_b);
-   b_to_c.setHead(mapped_box_level_c);
+   b_to_c.setBase(box_level_b);
+   b_to_c.setHead(box_level_c);
    b_to_c.setWidth(hier::IntVector::getZero(dim), true);
-   c_to_b.setConnectorType(hier::Connector::MAPPING);
-   c_to_b.setBase(mapped_box_level_c);
-   c_to_b.setHead(mapped_box_level_b);
+   c_to_b.setBase(box_level_c);
+   c_to_b.setHead(box_level_b);
    c_to_b.setWidth(hier::IntVector::getZero(dim), true);
-   for (hier::BoxContainer::const_iterator bi = mapped_boxes_b.begin();
-        bi != mapped_boxes_b.end(); ++bi) {
-      const hier::Box& mapped_box_b(*bi);
-      hier::Box mapped_box_c(mapped_box_b,
-                             mapped_box_b.getLocalId() + local_id_increment,
-                             mapped_box_b.getOwnerRank(),
-                             mapped_box_b.getPeriodicId());
-      mapped_box_level_c.addBoxWithoutUpdate(mapped_box_c);
-      b_to_c.insertLocalNeighbor(mapped_box_c, mapped_box_b.getId());
-      c_to_b.insertLocalNeighbor(mapped_box_b, mapped_box_c.getId());
+   for (hier::BoxContainer::const_iterator bi = boxes_b.begin();
+        bi != boxes_b.end(); ++bi) {
+      const hier::Box& box_b(*bi);
+      hier::Box box_c(box_b,
+                      box_b.getLocalId() + local_id_increment,
+                      box_b.getOwnerRank(),
+                      box_b.getPeriodicId());
+      box_level_c.addBoxWithoutUpdate(box_c);
+      b_to_c.insertLocalNeighbor(box_c, box_b.getBoxId());
+      c_to_b.insertLocalNeighbor(box_b, box_c.getBoxId());
    }
 
-   mapped_box_level_c.finalize();
+   box_level_c.finalize();
 
    b_to_c.checkConsistencyWithBase();
    b_to_c.checkConsistencyWithHead();

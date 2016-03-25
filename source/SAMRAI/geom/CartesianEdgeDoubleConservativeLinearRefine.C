@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -46,7 +46,7 @@ void F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (const int&,
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -54,7 +54,7 @@ void F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (const int&,
    const int *, const double *, const double *,
    const double *, double *,
    double *, double *, double *, double *);
-void F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -63,7 +63,7 @@ void F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (const int&,
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -76,7 +76,7 @@ void F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (const int&,
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -89,7 +89,7 @@ void F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (const int&,
    const double *, double *,
    double *, double *, double *,
    double *, double *, double *);
-void F77_FUNC(cartclinrefedgedoub3d2, CARTCLINREFEDGEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefedgedoub3d2, CARTCLINREFEDGEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -110,9 +110,8 @@ namespace geom {
 // using namespace std;
 
 CartesianEdgeDoubleConservativeLinearRefine::
-CartesianEdgeDoubleConservativeLinearRefine(
-   const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "CONSERVATIVE_LINEAR_REFINE")
+CartesianEdgeDoubleConservativeLinearRefine():
+   hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }
 
@@ -128,9 +127,9 @@ CartesianEdgeDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianEdgeDoubleConservativeLinearRefine::getStencilWidth() const
+CartesianEdgeDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(getDim());
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -142,20 +141,20 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, fine, coarse, ratio);
+   const tbox::Dimension& dim(fine.getDim());
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
    boost::shared_ptr<pdat::EdgeData<double> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::EdgeData<double> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    const pdat::EdgeOverlap* t_overlap =
-      dynamic_cast<const pdat::EdgeOverlap *>(&fine_overlap);
+      CPP_CAST<const pdat::EdgeOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -170,10 +169,13 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
@@ -182,7 +184,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
            b != boxes.end(); ++b) {
 
          hier::Box fine_box(*b);
-         TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, fine_box);
+         TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
          for (int i = 0; i < dim.getValue(); i++) {
             if (i != axis) {
@@ -202,7 +204,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
 
          for (int d = 0; d < fdata->getDepth(); d++) {
             if ((dim == tbox::Dimension(1))) {
-               F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (
+               SAMRAI_F77_FUNC(cartclinrefedgedoub1d, CARTCLINREFEDGEDOUB1D) (
                   ifirstc(0), ilastc(0),
                   ifirstf(0), ilastf(0),
                   cilo(0), cihi(0),
@@ -218,7 +220,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                pdat::EdgeData<double> slope1(cgbox, 1, tmp_ghosts);
 
                if (axis == 0) {
-                  F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (
+                  SAMRAI_F77_FUNC(cartclinrefedgedoub2d0, CARTCLINREFEDGEDOUB2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -231,7 +233,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      diff0.getPointer(), slope0.getPointer(0),
                      diff1.getPointer(), slope1.getPointer(0));
                } else if (axis == 1) {
-                  F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (
+                  SAMRAI_F77_FUNC(cartclinrefedgedoub2d1, CARTCLINREFEDGEDOUB2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -252,7 +254,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                pdat::EdgeData<double> slope2(cgbox, 1, tmp_ghosts);
 
                if (axis == 0) {
-                  F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (
+                  SAMRAI_F77_FUNC(cartclinrefedgedoub3d0, CARTCLINREFEDGEDOUB3D0) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -270,7 +272,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      diff1.getPointer(), slope1.getPointer(0),
                      diff2.getPointer(), slope2.getPointer(0));
                } else if (axis == 1) {
-                  F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (
+                  SAMRAI_F77_FUNC(cartclinrefedgedoub3d1, CARTCLINREFEDGEDOUB3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -288,7 +290,7 @@ CartesianEdgeDoubleConservativeLinearRefine::refine(
                      diff2.getPointer(), slope2.getPointer(1),
                      diff0.getPointer(), slope0.getPointer(1));
                } else if (axis == 2) {
-                  F77_FUNC(cartclinrefedgedoub3d2, CARTCLINREFEDGEDOUB3D2) (
+                  SAMRAI_F77_FUNC(cartclinrefedgedoub3d2, CARTCLINREFEDGEDOUB3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),

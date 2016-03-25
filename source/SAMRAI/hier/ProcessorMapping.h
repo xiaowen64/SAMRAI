@@ -72,10 +72,10 @@ public:
       const int n);
 
    /**
-    * Sets the number of mapped_boxes to n.
+    * Sets the number of boxes to n.
     * IMPORTANT NOTE: This method should only be used for
     * testing purposes.  Under normal circumstances, the number of
-    * mapped_boxes is set by a call to tbox::SAMRAI_MPI::getNodes() and should NOT
+    * boxes is set by a call to tbox::SAMRAI_MPI::getNodes() and should NOT
     * be changed.
     */
    void
@@ -87,6 +87,8 @@ public:
 
    /**
     * Return the processor assignment for the specified patch index.
+    *
+    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
     */
    int
    getProcessorAssignment(
@@ -99,6 +101,9 @@ public:
    /**
     * Set the processor assignment (second argument) for the specified
     * patch index (first argument).
+    *
+    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
+    * @pre (p >= 0) && (p < d_nodes)
     */
    void
    setProcessorAssignment(
@@ -122,7 +127,7 @@ public:
    /**
     * Sets the processor mappings from an tbox::Array<int>.  Remaps the
     * processors so that patches are not accidentally mapped to
-    * non-existent mapped_boxes.
+    * non-existent boxes.
     */
    void
    setProcessorMapping(
@@ -162,6 +167,8 @@ public:
    /**
     * Check whether the specified index is a local index (that is, mapped
     * to the local processor).
+    *
+    * @pre (i >= 0) && (i < getProcessorMapping().getSize())
     */
    bool
    isMappingLocal(

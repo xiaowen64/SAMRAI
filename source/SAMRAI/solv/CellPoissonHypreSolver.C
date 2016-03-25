@@ -37,7 +37,7 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <cstdlib>
 
 extern "C" {
@@ -46,7 +46,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
+void SAMRAI_F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -57,7 +57,7 @@ void F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
+void SAMRAI_F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -68,7 +68,7 @@ void F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
+void SAMRAI_F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -78,7 +78,7 @@ void F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (
    const int* jlast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(adjbdry2d, ADJBDRY2D) (
+void SAMRAI_F77_FUNC(adjbdry2d, ADJBDRY2D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -94,7 +94,7 @@ void F77_FUNC(adjbdry2d, ADJBDRY2D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
+void SAMRAI_F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
    double* diag,
    const double* offdiag,
    const int* pifirst,
@@ -114,7 +114,7 @@ void F77_FUNC(adjbdryconstoffdiags2d, ADJBDRYCONSTOFFDIAGS2D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
+void SAMRAI_F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
    const int* rifirst,
    const int* rilast,
    const int* rjfirst,
@@ -132,7 +132,7 @@ void F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (double* rhs,
    const int* lower, const int* upper,
    const int* location);
 
-void F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
+void SAMRAI_F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -146,7 +146,7 @@ void F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (
    const int* klast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
+void SAMRAI_F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
    double* diag,
    const double* c,
    const double* offdiagi,
@@ -160,7 +160,7 @@ void F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (
    const int* klast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
+void SAMRAI_F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -173,7 +173,7 @@ void F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (
    const int* klast,
    const double* cscale,
    const double* dscale);
-void F77_FUNC(adjbdry3d, ADJBDRY3D) (
+void SAMRAI_F77_FUNC(adjbdry3d, ADJBDRY3D) (
    double* diag,
    const double* offdiagi,
    const double* offdiagj,
@@ -202,7 +202,7 @@ void F77_FUNC(adjbdry3d, ADJBDRY3D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
+void SAMRAI_F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
    double* diag,
    const double* offdiag,
    const int* pifirst,
@@ -228,7 +228,7 @@ void F77_FUNC(adjbdryconstoffdiags3d, ADJBDRYCONSTOFFDIAGS3D) (
    const int* lower, const int* upper,
    const int* location,
    const double* h);
-void F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (double* rhs,
+void SAMRAI_F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (double* rhs,
    const int* rifirst,
    const int* rilast,
    const int* rjfirst,
@@ -258,7 +258,7 @@ namespace SAMRAI {
 namespace solv {
 
 boost::shared_ptr<pdat::OutersideVariable<double> >
-CellPoissonHypreSolver::s_Ak0_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonHypreSolver::s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler(
    0,
@@ -276,7 +276,7 @@ tbox::StartupShutdownManager::Handler CellPoissonHypreSolver::s_finalize_handler
 CellPoissonHypreSolver::CellPoissonHypreSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_ln(-1),
@@ -294,13 +294,13 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
    d_num_pre_relax_steps(1),
    d_num_post_relax_steps(1),
    d_relative_residual_norm(-1.0),
-   d_use_smg(false),
-   d_grid(NULL),
-   d_stencil(NULL),
-   d_matrix(NULL),
-   d_linear_rhs(NULL),
-   d_linear_sol(NULL),
-   d_mg_data(NULL),
+   d_use_smg(true),
+   d_grid(0),
+   d_stencil(0),
+   d_matrix(0),
+   d_linear_rhs(0),
+   d_linear_sol(0),
+   d_mg_data(0),
    d_print_solver_info(false)
 {
    if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
@@ -317,12 +317,13 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
      s_Ak0_var[d_dim.getValue() - 1].reset(
         new pdat::OutersideVariable<double>(d_dim, d_object_name + "::Ak0", 1));
    }
+
    d_Ak0_id =
       vdb->registerVariableAndContext(s_Ak0_var[d_dim.getValue() - 1],
          d_context,
          hier::IntVector::getZero(d_dim));
 
-   getFromInput(database);
+   getFromInput(input_db);
 }
 
 /*
@@ -333,42 +334,43 @@ CellPoissonHypreSolver::CellPoissonHypreSolver(
 
 void
 CellPoissonHypreSolver::getFromInput(
-   const boost::shared_ptr<tbox::Database>& database)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
-   if (database) {
-      d_print_solver_info = database->getBoolWithDefault("print_solver_info",
-            d_print_solver_info);
-      d_max_iterations = database->getIntegerWithDefault("max_iterations",
-            d_max_iterations);
-      d_relative_residual_tol = database->getDoubleWithDefault(
-            "relative_residual_tol",
-            d_relative_residual_tol);
-      if (database->isDouble("residual_tol")) {
-         TBOX_ERROR("CellPoissonHypreSolver input error.\n"
+   if (input_db) {
+      d_print_solver_info =
+         input_db->getBoolWithDefault("print_solver_info", false);
+
+      d_max_iterations = input_db->getIntegerWithDefault("max_iterations", 10);
+      if (!(d_max_iterations >= 1)) {
+         INPUT_RANGE_ERROR("max_iterations");
+      }
+
+      d_relative_residual_tol =
+         input_db->getDoubleWithDefault("relative_residual_tol", 1.0e-10);
+      if (!(d_relative_residual_tol > 0)) {
+         INPUT_RANGE_ERROR("relative_residual_tol");
+      }
+
+      if (input_db->isDouble("residual_tol")) {
+         TBOX_ERROR("CellPoissonHypreSolver getFromInput error...\n"
             << "The parameter 'residual_tol' has been replaced\n"
             << "by 'relative_residual_tol' to be more descriptive.\n"
             << "Please change the parameter name in the input database.");
       }
+
       d_num_pre_relax_steps =
-         database->getIntegerWithDefault("num_pre_relax_steps",
-            d_num_pre_relax_steps);
-      if (d_num_pre_relax_steps < 0) {
-         TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
-                                  << "non-negative.\n");
+         input_db->getIntegerWithDefault("num_pre_relax_steps", 1);
+      if (!(d_num_pre_relax_steps >= 0)) {
+         INPUT_RANGE_ERROR("num_pre_relax_steps");
       }
+
       d_num_post_relax_steps =
-         database->getIntegerWithDefault("num_post_relax_steps",
-            d_num_post_relax_steps);
-      if (d_num_post_relax_steps < 0) {
-         TBOX_ERROR(d_object_name << ": Number of relaxation steps must be\n"
-                                  << "non-negative.\n");
+         input_db->getIntegerWithDefault("num_post_relax_steps", 1);
+      if (!(d_num_post_relax_steps >= 0)) {
+         INPUT_RANGE_ERROR("num_post_relax_steps");
       }
-      if (database->isBool("use_smg")) {
-         bool use_smg = database->getBool("use_smg");
-         if (use_smg != d_use_smg) {
-            setUseSMG(use_smg);
-         }
-      }
+
+      d_use_smg = input_db->getBoolWithDefault("use_smg", true);
    }
 }
 
@@ -388,7 +390,7 @@ CellPoissonHypreSolver::initializeSolverState(
    int ln)
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    deallocateSolverState();
 
@@ -451,12 +453,15 @@ CellPoissonHypreSolver::allocateHypreData()
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(d_ln));
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       d_hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(grid_geometry);
+
    const hier::IntVector ratio = level->getRatioToLevelZero();
    hier::IntVector periodic_shift =
       grid_geometry->getPeriodicShift(ratio);
 
-   int periodic_flag[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int periodic_flag[SAMRAI::MAX_DIM_VAL];
    int d;
    bool is_periodic = false;
    for (d = 0; d < d_dim.getValue(); ++d) {
@@ -566,8 +571,8 @@ CellPoissonHypreSolver::allocateHypreData()
        * Allocate the structured matrix
        */
 
-      int* full_ghosts = NULL;
-      int* no_ghosts = NULL;
+      int* full_ghosts = 0;
+      int* no_ghosts = 0;
 
       if (d_dim == tbox::Dimension(1)) {
          full_ghosts = full_ghosts1;
@@ -641,23 +646,23 @@ CellPoissonHypreSolver::deallocateHypreData()
 {
    if (d_stencil) {
       HYPRE_StructStencilDestroy(d_stencil);
-      d_stencil = NULL;
+      d_stencil = 0;
    }
    if (d_grid) {
       HYPRE_StructGridDestroy(d_grid);
-      d_grid = NULL;
+      d_grid = 0;
    }
    if (d_matrix) {
       HYPRE_StructMatrixDestroy(d_matrix);
-      d_matrix = NULL;
+      d_matrix = 0;
    }
    if (d_linear_rhs) {
       HYPRE_StructVectorDestroy(d_linear_rhs);
-      d_linear_rhs = NULL;
+      d_linear_rhs = 0;
    }
    if (d_linear_sol) {
       HYPRE_StructVectorDestroy(d_linear_sol);
-      d_linear_sol = NULL;
+      d_linear_sol = 0;
    }
    destroyHypreSolver();
 }
@@ -677,7 +682,7 @@ CellPoissonHypreSolver::copyToHypre(
    int depth,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, src, box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, src, box);
 
    pdat::CellIterator cend(box, false);
    for (pdat::CellIterator c(box, true); c != cend; ++c) {
@@ -701,7 +706,7 @@ CellPoissonHypreSolver::copyFromHypre(
    HYPRE_StructVector vector,
    const hier::Box box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, dst, box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, dst, box);
 
    pdat::CellIterator cend(box, false);
    for (pdat::CellIterator c(box, true); c != cend; ++c) {
@@ -727,7 +732,7 @@ void
 CellPoissonHypreSolver::setMatrixCoefficients(
    const PoissonSpecifications& spec)
 {
-   if (d_physical_bc_coef_strategy == NULL) {
+   if (d_physical_bc_coef_strategy == 0) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
                        << "Use either setBoundaries or setPhysicalBcCoefObject\n"
@@ -774,7 +779,9 @@ CellPoissonHypreSolver::setMatrixCoefficients(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> pg(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(pg);
 
       const double* h = pg->getDx();
 
@@ -783,29 +790,20 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       const hier::Index patch_up = patch_box.upper();
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
-         C_data = boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                              hier::PatchData>(patch.getPatchData(spec.getCPatchDataId()));
-         if (!C_data) {
-            TBOX_ERROR(d_object_name << ": Invalid cell variable index "
-                                     << spec.getCPatchDataId()
-                                     << " for the C parameter.  It is not\n"
-                                     << "cell-centered double data.");
-         }
+         C_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+            patch.getPatchData(spec.getCPatchDataId()));
+         TBOX_ASSERT(C_data);
       }
 
       if (!spec.dIsConstant()) {
-         D_data = boost::dynamic_pointer_cast<pdat::SideData<double>,
-                                              hier::PatchData>(patch.getPatchData(spec.getDPatchDataId()));
-         if (!D_data) {
-            TBOX_ERROR(d_object_name << ": Invalid cell variable index "
-                                     << spec.getDPatchDataId()
-                                     << " for diffusion coefficient.  It is not\n"
-                                     << "side-centered double data.");
-         }
+         D_data = BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+            patch.getPatchData(spec.getDPatchDataId()));
+         TBOX_ASSERT(D_data);
       }
 
-      Ak0 = boost::dynamic_pointer_cast<pdat::OutersideData<double>,
-                                        hier::PatchData>(patch.getPatchData(d_Ak0_id));
+      Ak0 = BOOST_CAST<pdat::OutersideData<double>, hier::PatchData>(
+         patch.getPatchData(d_Ak0_id));
+      TBOX_ASSERT(Ak0);
 
       Ak0->fillAll(0.0);
 
@@ -1074,7 +1072,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
    const RobinBcCoefStrategy* robin_bc_coef,
    pdat::CellData<double>& rhs)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS2(d_dim, patch, rhs);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(d_dim, patch, rhs);
 
    /*
     * g*A*k0(a) is the storage for adjustments to be made to the rhs
@@ -1085,7 +1083,9 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
     */
    boost::shared_ptr<pdat::OutersideData<double> >Ak0(
       patch.getPatchData(d_Ak0_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(Ak0);
 
    const int n_bdry_boxes = bdry_boxes.getSize();
    for (int n = 0; n < n_bdry_boxes; ++n) {
@@ -1124,7 +1124,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
        * beg=beginning, end=ending.
        */
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (rhs.getPointer(d_rhs_depth),
+         SAMRAI_F77_FUNC(adjustrhs2d, ADJUSTRHS2D) (rhs.getPointer(d_rhs_depth),
             &rhsbox.lower()[0],
             &rhsbox.upper()[0],
             &rhsbox.lower()[1],
@@ -1142,7 +1142,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
             &lower[0], &upper[0],
             &location_index);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (rhs.getPointer(d_rhs_depth),
+         SAMRAI_F77_FUNC(adjustrhs3d, ADJUSTRHS3D) (rhs.getPointer(d_rhs_depth),
             &rhsbox.lower()[0],
             &rhsbox.upper()[0],
             &rhsbox.lower()[1],
@@ -1177,7 +1177,7 @@ CellPoissonHypreSolver::add_gAk0_toRhs(
 void
 CellPoissonHypreSolver::setupHypreSolver()
 {
-   TBOX_ASSERT(d_mg_data == NULL);
+   TBOX_ASSERT(d_mg_data == 0);
 
    tbox::SAMRAI_MPI::Comm communicator =
       d_hierarchy->getMPI().getCommunicator();
@@ -1215,13 +1215,13 @@ CellPoissonHypreSolver::setupHypreSolver()
 void
 CellPoissonHypreSolver::destroyHypreSolver()
 {
-   if (d_mg_data != NULL) {
+   if (d_mg_data != 0) {
       if (d_use_smg) {
          HYPRE_StructSMGDestroy(d_mg_data);
       } else {
          HYPRE_StructPFMGDestroy(d_mg_data);
       }
-      d_mg_data = NULL;
+      d_mg_data = 0;
    }
 }
 
@@ -1240,7 +1240,7 @@ CellPoissonHypreSolver::solveSystem(
    const int f,
    bool homogeneous_bc)
 {
-   if (d_physical_bc_coef_strategy == NULL) {
+   if (d_physical_bc_coef_strategy == 0) {
       TBOX_ERROR(
          d_object_name << ": No BC coefficient strategy object!\n"
                        << "Use either setBoundaries or setPhysicalBcCoefObject\n"
@@ -1295,7 +1295,7 @@ CellPoissonHypreSolver::solveSystem(
        */
       boost::shared_ptr<pdat::CellData<double> > u_data_(
          patch->getPatchData(u),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       TBOX_ASSERT(u_data_);
       pdat::CellData<double>& u_data = *u_data_;
       pdat::CellData<double> rhs_data(box, 1, no_ghosts);
@@ -1389,7 +1389,10 @@ CellPoissonHypreSolver::solveSystem(
       const boost::shared_ptr<hier::Patch>& patch = *ip;
       boost::shared_ptr<pdat::CellData<double> > u_data_(
          patch->getPatchData(u),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(u_data_);
+
       pdat::CellData<double>& u_data = *u_data_;
       copyFromHypre(u_data,
          d_soln_depth,
@@ -1409,7 +1412,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim,
       diagonal,
       C_data,
       off_diagonal,
@@ -1419,7 +1422,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const hier::Index patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (diagonal.getPointer(),
          C_data.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1427,7 +1430,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
          &patch_lo[1], &patch_up[1],
          &c, &d);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagvariablec3d, COMPDIAGVARIABLEC3D) (diagonal.getPointer(),
          C_data.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1446,13 +1449,13 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, diagonal, off_diagonal, patch_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, diagonal, off_diagonal, patch_box);
 
    const hier::Index patch_lo = patch_box.lower();
    const hier::Index patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (diagonal.getPointer(),
          &C,
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1460,7 +1463,7 @@ CellPoissonHypreSolver::computeDiagonalEntries(
          &patch_lo[1], &patch_up[1],
          &c, &d);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagscalarc3d, COMPDIAGSCALARC3D) (diagonal.getPointer(),
          &C,
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
@@ -1481,20 +1484,20 @@ CellPoissonHypreSolver::computeDiagonalEntries(
    const pdat::SideData<double>& off_diagonal,
    const hier::Box& patch_box)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, diagonal, off_diagonal, patch_box);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, diagonal, off_diagonal, patch_box);
 
    const hier::Index patch_lo = patch_box.lower();
    const hier::Index patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          &patch_lo[0], &patch_up[0],
          &patch_lo[1], &patch_up[1],
          &c, &d);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(compdiagzeroc3d, COMPDIAGZEROC3D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          off_diagonal.getPointer(2),
@@ -1518,9 +1521,9 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
    const hier::Box bccoef_box,
    pdat::ArrayData<double>& Ak0_data,
    const hier::BoundaryBox& trimmed_boundary_box,
-   const double h[tbox::Dimension::MAXIMUM_DIMENSION_VALUE])
+   const double h[SAMRAI::MAX_DIM_VAL])
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS8(d_dim, diagonal, off_diagonal, patch_box,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY8(d_dim, diagonal, off_diagonal, patch_box,
       acoef_data, bcoef_data,
       bccoef_box, Ak0_data, trimmed_boundary_box);
 
@@ -1531,7 +1534,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
    const hier::Index& upper = trimmed_boundary_box.getBox().upper();
    const hier::Box& Ak0_box = Ak0_data.getBox();
    if (d_dim == tbox::Dimension(2)) {
-      F77_FUNC(adjbdry2d, ADJBDRY2D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(adjbdry2d, ADJBDRY2D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          &patch_lo[0], &patch_up[0],
@@ -1550,7 +1553,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
          &lower[0], &upper[0],
          &location_index, h);
    } else if (d_dim == tbox::Dimension(3)) {
-      F77_FUNC(adjbdry3d, ADJBDRY3D) (diagonal.getPointer(),
+      SAMRAI_F77_FUNC(adjbdry3d, ADJBDRY3D) (diagonal.getPointer(),
          off_diagonal.getPointer(0),
          off_diagonal.getPointer(1),
          off_diagonal.getPointer(2),
@@ -1583,7 +1586,7 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
 void
 CellPoissonHypreSolver::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_Ak0_var[d].reset();
    }
 }

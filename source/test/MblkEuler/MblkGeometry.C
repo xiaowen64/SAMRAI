@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <cmath>
+
 #define MAX(a, b) (a > b ? a : b)
 #define MIN(a, b) (a < b ? a : b)
 
@@ -38,10 +40,8 @@ MblkGeometry::MblkGeometry(
    const int nblocks):
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-#endif
 
    d_object_name = object_name;
    //tbox::RestartManager::getManager()->registerRestartItem(d_object_name, this);
@@ -110,9 +110,7 @@ bool MblkGeometry::getRefineBoxes(
 void MblkGeometry::getFromInput(
    boost::shared_ptr<tbox::Database> input_db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> db(
       input_db->getDatabase("MblkGeometry"));
@@ -122,7 +120,7 @@ void MblkGeometry::getFromInput(
    bool found = false;
    int i, nb;
    char block_name[128];
-   double temp_domain[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double temp_domain[SAMRAI::MAX_DIM_VAL];
 
    //
    // Cartesian geometry
@@ -532,8 +530,8 @@ void MblkGeometry::buildCartesianGridOnPatch(
    hier::Index upper(domain.upper());
    hier::Index diff(upper - lower + hier::Index(lower.getDim(), 1));
 
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   double xlo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
+   double xlo[SAMRAI::MAX_DIM_VAL];
    for (int i = 0; i < d_dim.getValue(); i++) {
       dx[i] = (d_cart_xhi[0][i] - d_cart_xlo[0][i]) / (double)diff(i);
       xlo[i] = d_cart_xlo[0][i];
@@ -544,11 +542,9 @@ void MblkGeometry::buildCartesianGridOnPatch(
    //
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -603,7 +599,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
    //
    // Set dx (dr, dth, dz) for the level
    //
-   double dx[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double dx[SAMRAI::MAX_DIM_VAL];
 
    double nr = (domain.upper(0) - domain.lower(0) + 1);
    double nth = (domain.upper(1) - domain.lower(1) + 1);
@@ -618,11 +614,9 @@ void MblkGeometry::buildWedgeGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -690,11 +684,9 @@ void MblkGeometry::buildTrilinearGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    const hier::Index ifirst = patch.getBox().lower();
    const hier::Index ilast = patch.getBox().upper();
@@ -820,11 +812,9 @@ void MblkGeometry::buildSShellGridOnPatch(
 
    boost::shared_ptr<pdat::NodeData<double> > xyz(
       patch.getPatchData(xyz_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(xyz);
-#endif
 
    if (d_dim == tbox::Dimension(3)) {
 

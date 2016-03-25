@@ -18,7 +18,7 @@
 #include "SAMRAI/tbox/Statistician.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
@@ -31,31 +31,29 @@
 namespace SAMRAI {
 namespace hier {
 
-boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[tbox::Dimension::
-                                                     MAXIMUM_DIMENSION_VALUE];
-boost::shared_ptr<tbox::Timer> BoxTree::t_search[tbox::Dimension::
-                                                 MAXIMUM_DIMENSION_VALUE];
-unsigned int BoxTree::s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
+boost::shared_ptr<tbox::Timer> BoxTree::t_build_tree[SAMRAI::MAX_DIM_VAL];
+boost::shared_ptr<tbox::Timer> BoxTree::t_search[SAMRAI::MAX_DIM_VAL];
+unsigned int BoxTree::s_num_build[SAMRAI::MAX_DIM_VAL] =
 { 0 };
-unsigned int BoxTree::s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_generate[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_num_duplicate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_duplicate[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_num_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE] =
+unsigned int BoxTree::s_num_search[SAMRAI::MAX_DIM_VAL] =
 { 0 };
-unsigned int BoxTree::s_num_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_num_sorted_box[SAMRAI::MAX_DIM_VAL
 ] = { 0 };
-unsigned int BoxTree::s_num_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_num_found_box[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_max_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_max_sorted_box[SAMRAI::MAX_DIM_VAL
 ] = { 0 };
-unsigned int BoxTree::s_max_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]
+unsigned int BoxTree::s_max_found_box[SAMRAI::MAX_DIM_VAL]
    =
    { 0 };
-unsigned int BoxTree::s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
+unsigned int BoxTree::s_max_lin_search[SAMRAI::MAX_DIM_VAL
 ] = { 0 };
 
 tbox::StartupShutdownManager::Handler
@@ -77,7 +75,7 @@ BoxTree::BoxTree(
    d_dim(dim),
    d_bounding_box(dim),
    d_block_id(BlockId::invalidId()),
-   d_partition_dim(0)
+   d_partition_dir(0)
 {
 }
 
@@ -154,7 +152,7 @@ BoxTree::BoxTree(
 
       /*
        * Partition the boxes into three sets, using the midpoint of
-       * the longest dimension of the bounding box:
+       * the longest direction of the bounding box:
        *
        * - those that belong to me (intersects the midpoint plane).  Put
        * these in d_boxes.
@@ -167,24 +165,24 @@ BoxTree::BoxTree(
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
-      d_partition_dim = 0;
+      d_partition_dir = 0;
       for (int d = 1; d < d_dim.getValue(); ++d) {
-         if (bbsize(d_partition_dim) < bbsize(d)) {
-            d_partition_dim = d;
+         if (bbsize(d_partition_dir) < bbsize(d)) {
+            d_partition_dir = d;
          }
       }
 
       int midpoint =
-         (d_bounding_box.lower(d_partition_dim)
-          + d_bounding_box.upper(d_partition_dim)) / 2;
+         (d_bounding_box.lower(d_partition_dir)
+          + d_bounding_box.upper(d_partition_dir)) / 2;
 
       std::list<const Box*> left_boxes, right_boxes;
       for (BoxContainer::const_iterator ni = boxes.begin();
            ni != boxes.end(); ++ni) {
          const Box& box = *ni;
-         if (box.upper(d_partition_dim) <= midpoint) {
+         if (box.upper(d_partition_dir) <= midpoint) {
             left_boxes.push_back(&box);
-         } else if (box.lower(d_partition_dim) > midpoint) {
+         } else if (box.lower(d_partition_dir) > midpoint) {
             right_boxes.push_back(&box);
          } else {
             d_boxes.push_back(&box);
@@ -260,7 +258,7 @@ BoxTree::privateGenerateTree(
 {
    ++s_num_generate[d_dim.getValue() - 1];
 
-   if (d_boxes.size()) {
+   if (d_boxes.size() > 0) {
       d_block_id = (**(d_boxes.begin())).getBlockId();
    }
 
@@ -282,7 +280,7 @@ BoxTree::privateGenerateTree(
    if (d_boxes.size() > static_cast<std::list<const Box*>::size_type>(min_number)) {
       /*
        * Partition the boxes into three sets, using the midpoint of
-       * the longest dimension of the bounding box:
+       * the longest direction of the bounding box:
        *
        * - those that belong to me (intersects the midpoint plane).  Put
        * these in d_boxes.
@@ -295,27 +293,27 @@ BoxTree::privateGenerateTree(
        */
 
       const IntVector bbsize = d_bounding_box.numberCells();
-      d_partition_dim = 0;
+      d_partition_dir = 0;
       for (int d = 1; d < d_dim.getValue(); ++d) {
-         if (bbsize(d_partition_dim) < bbsize(d)) {
-            d_partition_dim = d;
+         if (bbsize(d_partition_dir) < bbsize(d)) {
+            d_partition_dir = d;
          }
       }
 
       int midpoint =
-         (d_bounding_box.lower(d_partition_dim)
-          + d_bounding_box.upper(d_partition_dim)) / 2;
+         (d_bounding_box.lower(d_partition_dir)
+          + d_bounding_box.upper(d_partition_dir)) / 2;
 
       std::list<const Box*> left_boxes, right_boxes;
       for (std::list<const Box*>::iterator ni = d_boxes.begin();
            ni != d_boxes.end(); ) {
          const Box* box = *ni;
-         if (box->upper(d_partition_dim) <= midpoint) {
+         if (box->upper(d_partition_dir) <= midpoint) {
             left_boxes.push_back(box);
             std::list<const Box*>::iterator curr = ni;
             ++ni;
             d_boxes.erase(curr);
-         } else if (box->lower(d_partition_dim) > midpoint) {
+         } else if (box->lower(d_partition_dir) > midpoint) {
             right_boxes.push_back(box);
             std::list<const Box*>::iterator curr = ni;
             ++ni;
@@ -369,7 +367,7 @@ BoxTree::setupChildren(
 
 #if 0
    tbox::plog << "Split " << d_boxes.size() << "  " << d_bounding_box
-              << " across " << d_partition_dim << " at " << mid << " into "
+              << " across " << d_partition_dir << " at " << mid << " into "
               << ' ' << left_boxes.size()
               << ' ' << cent_boxes.size()
               << ' ' << right_boxes.size()
@@ -411,7 +409,7 @@ bool
 BoxTree::hasOverlap(
    const Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    bool has_overlap = false;
    if (box.intersects(d_bounding_box)) {
 
@@ -456,7 +454,7 @@ BoxTree::findOverlapBoxes(
       t_search[d_dim.getValue() - 1]->start();
    }
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT(box.getBlockId() == d_block_id);
 
    if (box.intersects(d_bounding_box)) {
@@ -511,7 +509,7 @@ BoxTree::findOverlapBoxes(
       t_search[d_dim.getValue() - 1]->start();
    }
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    TBOX_ASSERT(box.getBlockId() == d_block_id);
 
    if (box.intersects(d_bounding_box)) {
@@ -565,7 +563,7 @@ BoxTree::findOverlapBoxes(
 void
 BoxTree::initializeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       const std::string dim_str(tbox::Utilities::intToString(i + 1));
       t_build_tree[i] = tbox::TimerManager::getManager()->
          getTimer(std::string("hier::BoxTree::build_tree[") + dim_str + "]");
@@ -583,7 +581,7 @@ BoxTree::initializeCallback()
 void
 BoxTree::finalizeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       t_build_tree[i].reset();
       t_search[i].reset();
    }

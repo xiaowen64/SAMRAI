@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -36,7 +36,7 @@ OutersideGeometry::OutersideGeometry(
    d_ghosts(ghosts)
 
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 
 }
@@ -71,7 +71,7 @@ OutersideGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const SideGeometry* t_dst =
       dynamic_cast<const SideGeometry *>(&dst_geometry);
@@ -79,7 +79,7 @@ OutersideGeometry::calculateOverlap(
       dynamic_cast<const OutersideGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src != NULL) && (t_dst != NULL)) {
+   if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
    } else if (retry) {
@@ -114,7 +114,7 @@ OutersideGeometry::doOverlap(
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
    const hier::IntVector& src_offset = transformation.getOffset();
 #endif
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_mask, src_offset);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_mask, src_offset);
 
    const tbox::Dimension& dim(src_mask.getDim());
 
@@ -185,7 +185,7 @@ OutersideGeometry::doOverlap(
 
          }  // if (!together.empty())
 
-         if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer side_restrict_boxes;
             for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {

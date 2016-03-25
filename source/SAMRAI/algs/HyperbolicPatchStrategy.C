@@ -18,11 +18,9 @@
 namespace SAMRAI {
 namespace algs {
 
-HyperbolicPatchStrategy::HyperbolicPatchStrategy(
-   const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(dim),
-   xfer::CoarsenPatchStrategy(dim),
-   d_dim(dim),
+HyperbolicPatchStrategy::HyperbolicPatchStrategy():
+   xfer::RefinePatchStrategy(),
+   xfer::CoarsenPatchStrategy(),
    d_data_context()
 {
 }
@@ -126,70 +124,6 @@ HyperbolicPatchStrategy::postprocessAdvanceLevelState(
    NULL_USE(first_step);
    NULL_USE(last_step);
    NULL_USE(regrid_advance);
-}
-
-hier::IntVector
-HyperbolicPatchStrategy::getRefineOpStencilWidth() const
-{
-   return hier::IntVector::getZero(d_dim);
-}
-
-void
-HyperbolicPatchStrategy::preprocessRefine(
-   hier::Patch& fine,
-   const hier::Patch& coarse,
-   const hier::Box& fine_box,
-   const hier::IntVector& ratio)
-{
-   NULL_USE(fine);
-   NULL_USE(coarse);
-   NULL_USE(fine_box);
-   NULL_USE(ratio);
-}
-
-void
-HyperbolicPatchStrategy::postprocessRefine(
-   hier::Patch& fine,
-   const hier::Patch& coarse,
-   const hier::Box& fine_box,
-   const hier::IntVector& ratio)
-{
-   NULL_USE(fine);
-   NULL_USE(coarse);
-   NULL_USE(fine_box);
-   NULL_USE(ratio);
-}
-
-hier::IntVector
-HyperbolicPatchStrategy::getCoarsenOpStencilWidth() const
-{
-   return hier::IntVector::getZero(d_dim);
-}
-
-void
-HyperbolicPatchStrategy::preprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio)
-{
-   NULL_USE(coarse);
-   NULL_USE(fine);
-   NULL_USE(coarse_box);
-   NULL_USE(ratio);
-}
-
-void
-HyperbolicPatchStrategy::postprocessCoarsen(
-   hier::Patch& coarse,
-   const hier::Patch& fine,
-   const hier::Box& coarse_box,
-   const hier::IntVector& ratio)
-{
-   NULL_USE(coarse);
-   NULL_USE(fine);
-   NULL_USE(coarse_box);
-   NULL_USE(ratio);
 }
 
 }

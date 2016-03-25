@@ -32,7 +32,7 @@ CellGeometry::CellGeometry(
    d_box(box),
    d_ghosts(ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -65,7 +65,7 @@ CellGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const CellGeometry* t_dst =
       dynamic_cast<const CellGeometry *>(&dst_geometry);
@@ -73,7 +73,7 @@ CellGeometry::calculateOverlap(
       dynamic_cast<const CellGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src != NULL) && (t_dst != NULL)) {
+   if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
    } else if (retry) {
@@ -103,7 +103,7 @@ CellGeometry::computeDestinationBoxes(
    const hier::Transformation& transformation,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    // Translate the source box and grow the destination box by the ghost cells
 
@@ -130,7 +130,7 @@ CellGeometry::computeDestinationBoxes(
       }
    }
 
-   if (dst_boxes.size() && dst_restrict_boxes.size()) {
+   if (!dst_boxes.isEmpty() && !dst_restrict_boxes.isEmpty()) {
       dst_boxes.intersectBoxes(dst_restrict_boxes);
    }
 }

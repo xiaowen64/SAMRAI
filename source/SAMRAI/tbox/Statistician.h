@@ -17,7 +17,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include "SAMRAI/tbox/Statistic.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -72,13 +72,8 @@ public:
     * users can control whether statistic information will be written
     * to/read from restart files.
     *
-    * The statistic restart database object is also resistered for writing
-    * subsequent restart files when the first boolean argument is true.
-    * Whether the statistic database will write statistics to restart files
-    * during program execution is determined by this argument (true by
-    * default).  Regardless of the value of this argument, statistics that
-    * exist in the restart file will be read from restart when a run is
-    * restarted and the second argument is true.
+    * Statistics that exist in the restart file will be read from restart
+    * when a run is restarted and the second argument is true.
     *
     * Generally, this routine should only be called once during program
     * execution.  If the statistician has been previously created (e.g.,
@@ -87,7 +82,6 @@ public:
     */
    static Statistician *
    createStatistician(
-      bool register_for_restart = true,
       bool read_from_restart = true);
 
    /**
@@ -97,6 +91,8 @@ public:
     * object with the name "my_stat" to the statistician, use the
     * following call:
     * Statistician::getStatistician()->addStatistic("my_stat").
+    *
+    * @pre s_statistician_instance
     */
    static Statistician *
    getStatistician();
@@ -111,8 +107,9 @@ public:
     * statistics and patch statistics which are indicated by the strings
     * "PROC_STAT" and "PATCH_STAT", respectively.
     *
-    * When assertion checking is active, an assertion will result if wither
-    * string is empty.
+    * @pre !name.empty()
+    * @pre !stat_type.empty()
+    * @pre (stat_type == "PROC_STAT") || (stat_type == "PATCH_STAT")
     */
    boost::shared_ptr<Statistic>
    getStatistic(
@@ -124,7 +121,8 @@ public:
     * exists in the database of statistics controlled by the statistician.
     * If a match is found, the statistic pointer in the argument list is set
     * to that statistic.  Otherwise, return false and return a null pointer.
-    * If the name string is empty, a null pointer is returned.
+    *
+    * @pre !name.empty()
     */
    bool
    checkStatisticExists(
@@ -189,8 +187,9 @@ public:
     * provided to map the statistic string name to the proper integer
     * identifier.
     *
-    * When assertion checking is active, the identifier must be valid or
-    * an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_state &&
+    *       (proc_stat_id >= 0) && (proc_stat_id < d_global_proc_stat_data.getSize()))
     */
    int
    getGlobalProcStatSequenceLength(
@@ -204,8 +203,13 @@ public:
     * getGlobalProcStatSequenceLength() provides the sequence length for
     * a given processor statistic.
     *
-    * When assertion checking is active, the identifier, sequence number,
-    * and processor number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_state &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_data[proc_stat_id].getSize()) &&
+    *       (proc_num < SAMRAI_MPI::getSAMRAIWorld().getSize()))
     */
    double
    getGlobalProcStatValue(
@@ -221,8 +225,12 @@ public:
     * getGlobalProcStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_sum.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_sum[proc_stat_id].getSize()))
     */
    double
    getGlobalProcStatSum(
@@ -237,8 +245,12 @@ public:
     * getGlobalProcStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_max.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_max[proc_stat_id].getSize()))
     */
    double
    getGlobalProcStatMax(
@@ -250,8 +262,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_imax.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_imax[proc_stat_id].getSize()))
     */
    int
    getGlobalProcStatMaxProcessorId(
@@ -266,8 +282,12 @@ public:
     * getGlobalProcStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_min.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_min[proc_stat_id].getSize()))
     */
    double
    getGlobalProcStatMin(
@@ -279,8 +299,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize &&
+    *       (proc_stat_id >= 0) &&
+    *       (proc_stat_id < d_global_proc_stat_imin.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_proc_stat_imin[proc_stat_id].getSize()))
     */
    int
    getGlobalProcStatMinProcessorId(
@@ -293,6 +317,10 @@ public:
     * (default is 12).  Note that this method generates a general dump of
     * the data but does NOT generate it in tabulated form.  To generate
     * tabulated data, see the printGlobalProcStatDataFormatted() method.
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (proc_stat_id >= 0) && (precision > 0))
     */
    void
    printGlobalProcStatData(
@@ -303,6 +331,10 @@ public:
    /**
     * Print processor stat data in formatted output to given output
     * stream.  Floating point precision may be specified (default is 12).
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (proc_stat_id >= 0) && (precision > 0))
     */
    void
    printGlobalProcStatDataFormatted(
@@ -314,6 +346,10 @@ public:
     * Print stat data for specified processor in formatted output to
     * given output stream.  Floating point precision may be specified
     * (default is 12).
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (proc_stat_id >= 0) && (proc_id >= 0) && (precision > 0))
     */
    void
    printGlobalProcStatDataFormatted(
@@ -338,8 +374,10 @@ public:
     * is provided to map the statistic string name to the proper integer
     * identifier.
     *
-    * When assertion checking is active, the identifier must be valid or
-    * an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()))
     */
    int
    getGlobalPatchStatSequenceLength(
@@ -353,8 +391,12 @@ public:
     * getGlobalPatchStatSequenceLength() provides the sequence length for
     * a given patch statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatNumberPatches(
@@ -371,8 +413,14 @@ public:
     * getGlobalPatchStatNumberPatches() gives the number of patches
     * associated with a patch statistic and sequence number.
     *
-    * When assertion checking is active, the identifier, sequence number,
-    * and patch number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_mapping.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_mapping[patch_stat_id].getSize()) &&
+    *       (patch_num >= 0) &&
+    *       (patch_num < d_global_patch_stat_mapping[patch_stat_id][seq_num].getSize()))
     */
    int
    getGlobalPatchStatPatchMapping(
@@ -390,8 +438,14 @@ public:
     * getGlobalPatchStatNumberPatches() gives the number of patches
     * associated with a patch statistic and sequence number.
     *
-    * When assertion checking is active, the identifier, sequence number,
-    * and patch number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()) &&
+    *       (patch_num >= 0) &&
+    *       (patch_num < d_global_patch_stat_data[patch_stat_id][seq_num].getSize()))
     */
    double
    getGlobalPatchStatValue(
@@ -407,8 +461,12 @@ public:
     * getGlobalPatchStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatSum(
@@ -423,8 +481,12 @@ public:
     * getGlobalPatchStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatMax(
@@ -436,8 +498,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMaxPatchId(
@@ -452,8 +518,12 @@ public:
     * getGlobalPatchStatSequenceLength() returns the maximum sequence length
     * for the processor statistic.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatMin(
@@ -465,8 +535,12 @@ public:
     * statistic specified by the given integer identifyer and sequence
     * number.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMinPatchId(
@@ -478,8 +552,14 @@ public:
     * processor.  The patch statistic is specified by its integer identifyer
     * and sequence number.
     *
-    * When assertion checking is active, the identifier, processor id,
-    * and sequence number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (processor_id >= 0) &&
+    *       (processor_id < SAMRAI_MPI::getSAMRAIWorld().getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatProcessorSum(
@@ -495,8 +575,12 @@ public:
     * statistic is specified by its integer identifyer and sequence
     * number.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatProcessorSumMax(
@@ -510,8 +594,12 @@ public:
     * for more information on the summed patch statistic information
     * on processors.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatProcessorSumMaxId(
@@ -525,8 +613,12 @@ public:
     * statistic is specified by its integer identifyer and sequence
     * number.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    double
    getGlobalPatchStatProcessorSumMin(
@@ -540,8 +632,12 @@ public:
     * for more information on the summed patch statistic information
     * on processors.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatProcessorSumMinId(
@@ -552,8 +648,13 @@ public:
     * Return number of patches on the specified processor number for
     * patch statistic with given identifier, and sequence number.
     *
-    * When assertion checking is active, the identifier and sequence number
-    * must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()) &&
+    *       (proc_id >= 0 && proc_id < SAMRAI_MPI::getSAMRAIWorld().getSize()))
     */
    int
    getGlobalPatchStatNumberPatchesOnProc(
@@ -565,8 +666,12 @@ public:
     * Returns the maximum number of patches per processor for the
     * specified patch statistic.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMaxPatchesPerProc(
@@ -577,8 +682,12 @@ public:
     * Returns the processor ID holding the maximum number of patches
     * per processor for the specified patch statistic.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMaxPatchesPerProcId(
@@ -589,8 +698,16 @@ public:
     * Returns the minimum number of patches per processor for the
     * specified patch statistic.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()) &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMinPatchesPerProc(
@@ -601,8 +718,12 @@ public:
     * Returns the processor ID holding the minimum number of patches
     * per processor for the specified patch statistic.
     *
-    * When assertion checking is active, the identifier and sequence
-    * number must be valid or an assertion will result.
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats &&
+    *       (patch_stat_id >= 0) &&
+    *       (patch_stat_id < d_global_patch_stat_proc_data.getSize()) &&
+    *       (seq_num >= 0) &&
+    *       (seq_num < d_global_patch_stat_proc_data[patch_stat_id].getSize()))
     */
    int
    getGlobalPatchStatMinPatchesPerProcId(
@@ -614,6 +735,9 @@ public:
     * (default is 12).  Note that this method generates a general dump of
     * the data but does NOT generate it in tabulated form.  To generate
     * tabulated data, see the printGlobalPatchStatDataFormatted() method.
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (patch_stat_id >= 0 && precision > 0)
     */
    void
    printGlobalPatchStatData(
@@ -624,6 +748,9 @@ public:
    /**
     * Print patch stat data in formatted output to given output
     * stream.  Floating point precision may be specified (default is 12).
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (patch_stat_id >= 0 && precision > 0)
     */
    void
    printGlobalPatchStatDataFormatted(
@@ -663,6 +790,9 @@ public:
     * Print global statistic data information to given output stream.
     * The data will NOT be in tabulated form.  Floating point precision
     * can be specified (default is 12).
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats)
     */
    void
    printAllGlobalStatData(
@@ -695,6 +825,9 @@ public:
     * The files may be read in to a spreadsheet program such as MS Excel.  If
     * no directory name is supplied, the files will be written to the directory
     * where the application is run.
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats)
     */
    void
    printSpreadSheetOutput(
@@ -707,6 +840,9 @@ public:
     * prints data for a single processor.  This may be useful for information
     * that is the same across all processors.  This method will only print
     * processor stats. Any patch stats will be ignored.
+    *
+    * @pre (SAMRAI_MPI::getSAMRAIWorld().getRank() != 0) ||
+    *      (!d_must_call_finalize && d_has_gathered_stats)
     */
    void
    printSpreadSheetOutputForProcessor(
@@ -731,6 +867,8 @@ protected:
     * Initialize Singleton instance with instance of subclass.  This function
     * is used to make the singleton object unique when inheriting from this
     * base class.
+    *
+    * @pre !s_statistician_instance
     */
    void
    registerSingletonSubclassInstance(
@@ -739,6 +877,8 @@ protected:
    /**
     * During finalize() check statistic information on all processors
     * for consistency before generating arrays of data.
+    *
+    * @pre total_patches.getSize() == 0
     */
    void
    checkStatsForConsistency(
@@ -810,7 +950,6 @@ private:
 
    static void
    makeStatisticianInstance(
-      bool register_for_restart = true,
       bool read_from_restart = true);
 
    /*
@@ -818,7 +957,6 @@ private:
     */
    void
    initRestartDatabase(
-      bool register_for_restart,
       bool read_from_restart);
 
    /**
@@ -953,28 +1091,31 @@ public:
    /*
     * The StatisticRestartDatabase constructor caches a copy of the
     * database object name and registers the object with the restart
-    * manager for subsequent restart files if the first boolean argument
-    * is true.  If the run is started froma restart file and the second
-    * boolean argument is true, we initialize the statistics from restart.
+    * manager for subsequent restart files.  If the run is started from
+    * a restart file and the boolean argument is true, we initialize
+    * the statistics from restart.
+    *
+    * @pre !object_name.empty()
     */
    StatisticRestartDatabase(
       const std::string& object_name,
-      bool register_for_restart,
       bool read_from_restart);
 
    /*
     * The destructor for StatisticRestartDatabase unregisters
-    * the database object with the restart manager when so registered.
+    * the database object with the restart manager.
     */
    virtual ~StatisticRestartDatabase();
 
    /*
     * Put all statistics and their state in the given restart database.
-    * This function is overloaded from Serializable.
+    * This function is inherited from Serializable.
+    *
+    * @pre restart_db
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /*
     * Construct those statistics saved in the restart database.
@@ -993,7 +1134,6 @@ public:
 
 private:
    std::string d_object_name;
-   bool d_registered_for_restart;
 
    /*
     * Static integer constant describing this class's version number.

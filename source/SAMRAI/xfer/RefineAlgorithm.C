@@ -22,7 +22,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -35,9 +35,7 @@ namespace xfer {
  *************************************************************************
  */
 
-RefineAlgorithm::RefineAlgorithm(
-   const tbox::Dimension& dim):
-   d_dim(dim),
+RefineAlgorithm::RefineAlgorithm():
    d_refine_classes(boost::make_shared<RefineClasses>()),
    d_schedule_created(false)
 {
@@ -72,12 +70,6 @@ RefineAlgorithm::registerRefine(
    const boost::shared_ptr<hier::RefineOperator>& oprefine,
    const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   if (oprefine) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *oprefine);
-   }
-#endif
-
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm::registerRefine error..."
          << "\nCannot call registerRefine with a RefineAlgorithm"
@@ -176,12 +168,6 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
-   }
-#endif
 
    d_schedule_created = true;
 
@@ -222,12 +208,6 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
-   }
-#endif
 
    d_schedule_created = true;
 
@@ -269,12 +249,7 @@ RefineAlgorithm::createSchedule(
 
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
-   }
-#endif
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
 
    d_schedule_created = true;
 
@@ -319,12 +294,7 @@ RefineAlgorithm::createSchedule(
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
-#ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, *dst_level, *src_level);
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
-   }
-#endif
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
 
    d_schedule_created = true;
 
@@ -365,16 +335,12 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
-   }
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*level, *hierarchy);
    }
 #endif
 
@@ -423,16 +389,12 @@ RefineAlgorithm::createSchedule(
    const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    TBOX_ASSERT(level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *level);
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
-   }
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*level, *hierarchy);
    }
 #endif
 
@@ -482,19 +444,15 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
    if (src_level) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    }
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
-   }
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
 #endif
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    if (src_level) {
       if (next_coarser_level >= 0) {
       }
@@ -550,19 +508,15 @@ RefineAlgorithm::createSchedule(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_level == -1) || hierarchy);
 #ifdef DEBUG_CHECK_DIM_ASSERTIONS
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_level);
    if (src_level) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *src_level);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *src_level);
    }
    if (hierarchy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *hierarchy);
-   }
-   if (patch_strategy) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *patch_strategy);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*dst_level, *hierarchy);
    }
 #endif
 
-   // Do we all agree on the destination mapped_box_level?
+   // Do we all agree on the destination box_level?
    if (src_level) {
       if (next_coarser_level >= 0) {
       }

@@ -84,6 +84,8 @@ public:
     * @param read_write_mode Open the database in read-write
     * mode instead of read-only mode.  NOTE: This class currently
     * does not support read-only mode, so this flag must be true.
+    *
+    * @pre read_write_mode == true
     */
    virtual bool
    open(

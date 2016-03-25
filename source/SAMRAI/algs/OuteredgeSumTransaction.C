@@ -39,9 +39,7 @@ namespace algs {
  *************************************************************************
  */
 
-const xfer::RefineClasses::Data **
-OuteredgeSumTransaction::s_refine_items =
-   (const xfer::RefineClasses::Data **)NULL;
+const xfer::RefineClasses::Data ** OuteredgeSumTransaction::s_refine_items = 0;
 int OuteredgeSumTransaction::s_num_refine_items = 0;
 
 /*
@@ -76,7 +74,7 @@ OuteredgeSumTransaction::OuteredgeSumTransaction(
    TBOX_ASSERT(refine_item_id >= 0);
    // Note: s_num_refine_items cannot be used at this point!
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 }
 
 OuteredgeSumTransaction::~OuteredgeSumTransaction()
@@ -149,10 +147,9 @@ void
 OuteredgeSumTransaction::packStream(
    tbox::MessageStream& stream)
 {
-   d_src_level->getPatch(d_src_node.getGlobalId())
-   ->getPatchData(s_refine_items[d_refine_item_id]->
-      d_src)
-   ->packStream(stream, *d_overlap);
+   d_src_level->getPatch(d_src_node.getGlobalId())->
+     getPatchData(s_refine_items[d_refine_item_id]->d_src)->
+        packStream(stream, *d_overlap);
 }
 
 void
@@ -162,7 +159,7 @@ OuteredgeSumTransaction::unpackStream(
    boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(oedge_dst_data);
 
    oedge_dst_data->unpackStreamAndSum(stream, *d_overlap);
@@ -174,13 +171,13 @@ OuteredgeSumTransaction::copyLocalData()
    boost::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
       d_dst_level->getPatch(d_dst_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_scratch),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(oedge_dst_data);
 
    boost::shared_ptr<pdat::OuteredgeData<double> > oedge_src_data(
       d_src_level->getPatch(d_src_node.getGlobalId())->
       getPatchData(s_refine_items[d_refine_item_id]->d_src),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(oedge_src_data);
 
    oedge_dst_data->sum(*oedge_src_data, *d_overlap);

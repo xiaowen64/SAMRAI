@@ -18,11 +18,11 @@
 namespace SAMRAI {
 namespace hier {
 
-Index * Index::s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-Index * Index::s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+Index * Index::s_zeros[SAMRAI::MAX_DIM_VAL];
+Index * Index::s_ones[SAMRAI::MAX_DIM_VAL];
 
-Index * Index::s_mins[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-Index * Index::s_maxs[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+Index * Index::s_mins[SAMRAI::MAX_DIM_VAL];
+Index * Index::s_maxs[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 Index::s_initialize_finalize_handler(
@@ -32,18 +32,10 @@ Index::s_initialize_finalize_handler(
    Index::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-Index::Index():
-   IntVector()
-{
-}
-
 Index::Index(
    const tbox::Dimension& dim):
    IntVector(dim)
 {
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!dim.isValid()) || (
-         dim.getValue() > 0 && dim <= tbox::Dimension::getMaxDimension()));
 }
 
 Index::Index(
@@ -51,9 +43,6 @@ Index::Index(
    const int i):
    IntVector(dim, i)
 {
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!dim.isValid()) || (
-         dim >= tbox::Dimension(1) && dim <= tbox::Dimension::getMaxDimension()));
 }
 
 Index::Index(
@@ -61,11 +50,10 @@ Index::Index(
    const int j):
    IntVector(tbox::Dimension(2))
 {
-   TBOX_DIM_ASSERT(
-      tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
+   TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(2));
 
    (*this)[0] = i;
-   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
+   if (SAMRAI::MAX_DIM_VAL > 1) {
       (*this)[1] = j;
    }
 }
@@ -79,11 +67,11 @@ Index::Index(
    TBOX_DIM_ASSERT(tbox::Dimension::getMaxDimension() >= tbox::Dimension(3));
 
    (*this)[0] = i;
-   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 1) {
+   if (SAMRAI::MAX_DIM_VAL > 1) {
       (*this)[1] = j;
    }
 
-   if (tbox::Dimension::MAXIMUM_DIMENSION_VALUE > 2) {
+   if (SAMRAI::MAX_DIM_VAL > 2) {
       (*this)[2] = k;
    }
 
@@ -121,7 +109,7 @@ Index::~Index()
 void
 Index::initializeCallback()
 {
-   for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
       s_ones[d] = new Index(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
 
@@ -135,7 +123,7 @@ Index::initializeCallback()
 void
 Index::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       delete s_zeros[d];
       delete s_ones[d];
 

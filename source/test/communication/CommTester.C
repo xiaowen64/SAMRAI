@@ -40,27 +40,27 @@ CommTester::CommTester(
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
-   RefinePatchStrategy(dim),
-   CoarsenPatchStrategy(dim),
+   RefinePatchStrategy(),
+   CoarsenPatchStrategy(),
    d_dim(dim),
-   d_fill_source_algorithm(dim),
-   d_refine_algorithm(dim),
+   d_fill_source_algorithm(),
+   d_refine_algorithm(),
    d_coarsen_algorithm(dim),
-   d_reset_refine_algorithm(dim),
+   d_reset_refine_algorithm(),
    d_reset_coarsen_algorithm(dim)
 {
    NULL_USE(main_input_db);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
-   TBOX_ASSERT(data_test != (PatchDataTestStrategy *)NULL);
-#endif
+   TBOX_ASSERT(data_test != 0);
 
    d_object_name = object_name;
    d_data_test_strategy = data_test;
 
    d_fake_time = 0.0;
+
+   d_fake_cycle = 0;
 
    d_is_reset = false;
 
@@ -121,7 +121,7 @@ void CommTester::registerVariable(
    const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_ghosts, dst_ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
 
    TBOX_ASSERT(src_variable);
    TBOX_ASSERT(dst_variable);
@@ -154,7 +154,7 @@ void CommTester::registerVariable(
                                         dst_ghosts));
       scratch_ghosts.max(hier::IntVector(scratch_ghosts.getDim(), 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth());
+         scratch_ghosts.max(refine_operator->getStencilWidth(dim));
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -196,7 +196,7 @@ void CommTester::registerVariableForReset(
    const boost::shared_ptr<hier::BaseGridGeometry> xfer_geom,
    const string& operator_name)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(src_ghosts, dst_ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(src_ghosts, dst_ghosts);
 
    TBOX_ASSERT(src_variable);
    TBOX_ASSERT(dst_variable);
@@ -224,7 +224,7 @@ void CommTester::registerVariableForReset(
                                         dst_ghosts));
       scratch_ghosts.max(hier::IntVector(scratch_ghosts.getDim(), 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth());
+         scratch_ghosts.max(refine_operator->getStencilWidth(scratch_ghosts.getDim()));
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -259,10 +259,8 @@ void CommTester::registerVariableForReset(
 void CommTester::createRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -277,9 +275,9 @@ void CommTester::createRefineSchedule(
       const hier::Connector& peer_cnect =
          d_patch_hierarchy->getConnector(level_number, level_number);
       const hier::Connector* cnect_to_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number, level_number - 1) : NULL;
+         &d_patch_hierarchy->getConnector(level_number, level_number - 1) : 0;
       const hier::Connector* cnect_from_coarser = level_number > 0 ?
-         &d_patch_hierarchy->getConnector(level_number - 1, level_number) : NULL;
+         &d_patch_hierarchy->getConnector(level_number - 1, level_number) : 0;
 
       if (0) {
          // These are expensive checks.
@@ -318,10 +316,8 @@ void CommTester::createRefineSchedule(
 void CommTester::resetRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_refine) {
 
@@ -335,10 +331,8 @@ void CommTester::resetRefineSchedule(
 void CommTester::createCoarsenSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_coarsen && (level_number > 0)) {
 
@@ -362,10 +356,8 @@ void CommTester::createCoarsenSchedule(
 void CommTester::resetCoarsenSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_coarsen && (level_number > 0)) {
 
@@ -478,11 +470,10 @@ void CommTester::initializeLevelData(
    NULL_USE(initial_time);
    NULL_USE(old_level);
    NULL_USE(allocate_data);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
-#endif
 
    hier::PatchLevel& level =
       (hier::PatchLevel &) * hierarchy->getPatchLevel(level_number);
@@ -571,9 +562,9 @@ void CommTester::setPhysicalBoundaryConditions(
       gcw);
 }
 
-hier::IntVector CommTester::getRefineOpStencilWidth() const
+hier::IntVector CommTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(d_dim);
+   return hier::IntVector::getOne(dim);
 }
 
 void CommTester::preprocessRefine(
@@ -594,9 +585,9 @@ void CommTester::postprocessRefine(
    d_data_test_strategy->postprocessRefine(fine, coarse, fine_box, ratio);
 }
 
-hier::IntVector CommTester::getCoarsenOpStencilWidth() const
+hier::IntVector CommTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(d_dim);
+   return hier::IntVector::getZero(dim);
 }
 
 void CommTester::preprocessCoarsen(
@@ -631,9 +622,7 @@ void CommTester::setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
 
    d_patch_hierarchy.reset(
       new hier::PatchHierarchy("PatchHierarchy",
@@ -663,12 +652,13 @@ void CommTester::setupHierarchy(
 
    gridding_algorithm->makeCoarsestLevel(d_fake_time);
 
-   bool initial_time = true;
+   bool initial_cycle = true;
    for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ln++) {
       gridding_algorithm->makeFinerLevel(
-         d_fake_time,
-         initial_time,
-         fake_tag_buffer);
+         fake_tag_buffer,
+         initial_cycle,
+         d_fake_cycle,
+         d_fake_time);
    }
 
    /*
@@ -685,7 +675,7 @@ void CommTester::setupHierarchy(
    if (0) {
       tbox::plog << "h:  generated hierarchy:\n";
       d_patch_hierarchy->recursivePrint(tbox::plog, "h:  ", 3);
-      tbox::plog << "h:  mapped_box_level hierarchy:\n";
+      tbox::plog << "h:  box_level hierarchy:\n";
       d_patch_hierarchy->recursivePrint(tbox::plog,
          "",
          3);

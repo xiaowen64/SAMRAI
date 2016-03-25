@@ -25,7 +25,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -84,10 +84,6 @@ public:
     * cell width and and they must be filled with valid data before calling
     * coarsenData().
     *
-    * When assertion checking is active, unrecoverable assertions will result
-    * if either patch level pointer, the refine classes pointer, or the
-    * transaction factory pointer, is null.
-    *
     * @param[in] crse_level      boost::shared_ptr to coarse (destination)
     *                            patch level.
     * @param[in] fine_level      boost::shared_ptr to fine (source) patch level.
@@ -105,6 +101,12 @@ public:
     * @param[in] fill_coarse_data  Boolean indicating whether coarse data
     *                              should be filled before coarsening
     *                              operations are done.
+    *
+    * @pre crse_level
+    * @pre fine_level
+    * @pre coarsen_classes
+    * @pre transaction_factory
+    * @pre crse_level->getDim() == fine_level->getDim()
     */
    CoarsenSchedule(
       const boost::shared_ptr<hier::PatchLevel>& crse_level,
@@ -119,6 +121,12 @@ public:
     * storage.
     */
    ~CoarsenSchedule();
+ 
+   /*!
+    * @brief Read static data from input database.
+    */
+   void
+   getFromInput();
 
    /*!
     * @brief Reset this coarsen schedule to perform data transfers asssociated
@@ -133,6 +141,8 @@ public:
     *                             general, this is constructed by the calling
     *                             CoarsenAlgorithm object.  This pointer must
     *                             be non-null.
+    *
+    * @pre coarsen_classes
     */
    void
    reset(
@@ -165,6 +175,8 @@ public:
     *                    choices are:  "DLBG" (default case),
     *                    and "ORIG_NSQUARED".   More details can be found below
     *                    in the comments for the generateSchedule() routine.
+    *
+    * @pre (method == "ORIG_NSQUARED") || (method == "DLBG")
     */
    static void
    setScheduleGenerationMethod(
@@ -184,7 +196,7 @@ private:
       const CoarsenSchedule&);              // not implemented
    void
    operator = (
-      const CoarsenSchedule&);                    // not implemented
+      const CoarsenSchedule&);              // not implemented
 
    /*!
     * @brief Set up things for the entire class.
@@ -241,6 +253,9 @@ private:
     *    <li>   if setScheduleGenerationMethod("ORIG_NSQUARED") is called use
     *           generateScheduleNSquared() to generate the schedule.
     * </ul>
+    *
+    * @pre (s_schedule_generation_method == "ORIG_NSQUARED") ||
+    *      (s_schedule_generation_method == "DLBG")
     */
    void
    generateSchedule();
@@ -307,17 +322,24 @@ private:
     * data from temporary coarse level to the destination level.
     *
     * @param[in] dst_level      The destination level for the schedule
-    * @param[in] dst_mapped_box Owned by a Patch on the destination level
+    * @param[in] dst_box        Owned by a Patch on the destination level
     * @param[in] src_level      The temporary coarse level that will have
     *                           coarsened data
-    * @param[in] src_mapped_box Owned by a Patch on the temporary coarse level
+    * @param[in] src_box        Owned by a Patch on the temporary coarse level
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre (d_crse_level.getDim() == dst_level->getDim()) &&
+    *      (d_crse_level.getDim() == src_level->getDim()) &&
+    *      (d_crse_level.getDim() == dst_box.getDim()) &&
+    *      (d_crse_level.getDim() == src_box.getDim())
     */
    void
    constructScheduleTransactions(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const hier::Box& dst_mapped_box,
+      const hier::Box& dst_box,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const hier::Box& src_mapped_box);
+      const hier::Box& src_box);
 
    /*!
     * @brief Restructure the neighborhood sets from a src_to_dst Connector
@@ -328,10 +350,10 @@ private:
     * same order that dst owners see them.  Transactions must have the same
     * order on the sending and receiving processors.
     *
-    * Section, it shifts periodic image dst mapped_boxes back to the zero-shift
-    * position, and applies a similar shift to src mapped_boxes so that the
+    * Section, it shifts periodic image dst boxes back to the zero-shift
+    * position, and applies a similar shift to src boxes so that the
     * overlap is unchanged.  The constructScheduleTransactions method requires
-    * all shifts to be absorbed in the src mapped_box.
+    * all shifts to be absorbed in the src box.
     *
     * The restructured neighboorhood sets are added to the output parameter.
     *
@@ -388,6 +410,12 @@ private:
     * @brief Shared debug checking flag.
     */
    static bool s_extra_debug;
+ 
+   /*!
+    * @brief Flag indicating if any RefineSchedule has read the input database
+    * for static data.
+    */
+   static bool s_read_static_input;
 
    /*!
     * @brief Structures that store coarsen data items.
@@ -412,14 +440,14 @@ private:
    boost::shared_ptr<hier::PatchLevel> d_temp_crse_level;
 
    /*!
-    * @brief Connector from temporary (coarsened fine) mapped_box_level
-    * to coarse mapped_box_level.
+    * @brief Connector from temporary (coarsened fine) box_level
+    * to coarse box_level.
     */
    Connector d_temp_to_coarse;
 
    /*!
-    * @brief Connector from coarse mapped_box_level to temporary
-    * (coarsened fine) mapped_box_level.
+    * @brief Connector from coarse box_level to temporary
+    * (coarsened fine) box_level.
     */
    Connector d_coarse_to_temp;
 

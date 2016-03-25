@@ -43,6 +43,12 @@ public:
    virtual ~MappingConnectorAlgorithm();
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Set whether to run expensive sanity checks on input
     * parameters when at the beginning of certain methods.
     *
@@ -69,15 +75,15 @@ public:
    /*!
     * @brief Most general version for modifying Connectors using
     * mapping Connectors.  Modification is the changing of existing
-    * Connectors when mapped_boxes in a BoxLevel changes according to specified
+    * Connectors when boxes in a BoxLevel changes according to specified
     * mapping connectors.
     *
     * The change is represented by a the mapper @c old_to_new
     * and its transpose @c new_to_old.  The Connectors to be
     * modified are @c anchor_to_mapped and @c mapped_to_anchor, which
     * on input, go between a anchor (not mapped) BoxLevel and the old
-    * BoxLevel.  On output, these Connectors will go from the anchor mapped_box_level
-    * to the new mapped_box_level.
+    * BoxLevel.  On output, these Connectors will go from the anchor box_level
+    * to the new box_level.
     *
     * @code
     * Input:
@@ -88,7 +94,7 @@ public:
     *              mapped_to_anchor-> / /
     *                                / / <--anchor_to_mapped
     *                               / v
-    * mapped mapped_box_level:    (old) ---------> (new)
+    * mapped box_level:           (old) ---------> (new)
     *                                   <---------
     *
     *
@@ -110,10 +116,10 @@ public:
     *
     * An important constraint in the old_to_new Connectors is
     * that this method cannot handle multiple maps at once.  For
-    * example, it cannot map mapped_box J to mapped_box K and at the
-    * same time map mapped_box I to mapped_box J.  Box J in the
-    * old mapped_box_level and mapped_box J on the new
-    * mapped_box_level are considered entirely different mapped_boxes.
+    * example, it cannot map box J to box K and at the
+    * same time map box I to box J.  Box J in the
+    * old box_level and box J on the new
+    * box_level are considered entirely different boxes.
     *
     * After modifying, the output Connectors that had referenced old
     * BoxLevels will be reset to reference the new
@@ -151,6 +157,15 @@ public:
     * @param[in] new_to_old Reverse (transpose) of old_to_new.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
+    *
+    * @pre (&old_to_new.getBase() == &new_to_old.getHead()) &&
+    *      (&old_to_new.getBase() == &anchor_to_mapped.getHead()) &&
+    *      (&old_to_new.getBase() == &mapped_to_anchor.getBase())
+    * @pre &anchor_to_mapped.getBase() == &mapped_to_anchor.getHead()
+    * @pre &old_to_new.getHead() == &new_to_old.getBase()
+    * @pre anchor_to_mapped.isTransposeOf(mapped_to_anchor)
+    * @pre new_to_old.isTransposeOf(old_to_new)
+    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    modify(
@@ -158,8 +173,8 @@ public:
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
       const Connector& new_to_old,
-      BoxLevel* mutable_new = NULL,
-      BoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = 0,
+      BoxLevel* mutable_old = 0) const;
 
    /*!
     * @brief Version of modify requiring only the forward map
@@ -178,7 +193,7 @@ public:
     *              mapped_to_anchor-> / /
     *                                / / <--anchor_to_mapped
     *                               / v
-    * mapped mapped_box_level:    (old) ---------> (new)
+    * mapped box_level:           (old) ---------> (new)
     *
     *
     * Output:
@@ -217,14 +232,20 @@ public:
     *   growth caused by the change.  A value of zero means no growth.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
+    *
+    * @pre (&old_to_new.getBase() == &old_to_new.getBase()) &&
+    *      (&old_to_new.getBase() == &anchor_to_mapped.getHead())
+    * @pre &anchor_to_mapped.getBase() == &mapped_to_anchor.getHead()
+    * @pre anchor_to_mapped.isTransposeOf(mapped_to_anchor)
+    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    modify(
       Connector& anchor_to_mapped,
       Connector& mapped_to_anchor,
       const Connector& old_to_new,
-      BoxLevel* mutable_new = NULL,
-      BoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = 0,
+      BoxLevel* mutable_old = 0) const;
 
    /*!
     * @brief Version of modify requiring only the forward map
@@ -236,7 +257,7 @@ public:
     * old_to_new must contain no remote neighbor.
     *
     * This version does not update the Connector from
-    * the mapped mapped_box_level back to the anchor mapped_box_level.
+    * the mapped box_level back to the anchor box_level.
     * (This is implicit in the fact that mapped_to_anchor
     * is absent from the interface.)
     *
@@ -249,7 +270,7 @@ public:
     *                                   /
     *                                  / <--anchor_to_mapped
     *                                 v
-    * mapped mapped_box_level:    (old) ---------> (new)
+    * mapped box_level:           (old) ---------> (new)
     *
     *
     * Output:
@@ -281,15 +302,23 @@ public:
     *   points to the BoxLevel being mapped.
     * @param[in,out] mutable_new See comments.
     * @param[in,out] mutable_old See comments.
+    *
+    * @pre &anchor_to_mapped.getHead() == &old_to_new.getBase()
+    * @pre anchor_to_mapped.getParallelState() == BoxLevel::DISTRIBUTED
     */
    void
    modify(
       Connector& anchor_to_mapped,
       const Connector& old_to_new,
-      BoxLevel* mutable_new = NULL,
-      BoxLevel* mutable_old = NULL) const;
+      BoxLevel* mutable_new = 0,
+      BoxLevel* mutable_old = 0) const;
 
-   // TODO:  Create an enum to replace the char for clarity.
+   /*!
+    * @brief Types of mappings for use in findMappingErrors() and
+    *        assertMappingValidity().
+    */
+   enum MappingType {LOCAL, NOT_LOCAL, UNKNOWN};
+
    /*!
     * @brief Check if the Connector has a valid mapping.
     *
@@ -300,8 +329,8 @@ public:
     * in modify() without logic errors.  It does no other checks.
     *
     * @param[in] connector
-    * @param[in] is_local_map 'y' means assume the mapping is local.  'n'
-    * means the mapping is not local.  '\0' means find out whether the
+    * @param[in] map_type LOCAL means assume the mapping is local.  NOT_LOCAL
+    * means the mapping is not local.  UNKNOWN means find out whether the
     * map is local or not (communication required) and act
     * accordingly.
     *
@@ -310,23 +339,30 @@ public:
    size_t
    findMappingErrors(
       const Connector& connector,
-      char is_local_map = '\0') const;
+      MappingType map_type = UNKNOWN) const;
 
    /*!
     * @brief Run findMappingErrors and abort if any errors are found.
     *
     * @param[in] connector
-    * @param[in] is_local_map 'y' means assume the mapping is local.  'n'
-    * means the mapping is not local.  '\0' means find out whether the
+    * @param[in] map_type LOCAL means assume the mapping is local.  NOT_LOCAL
+    * means the mapping is not local.  UNKNOWN means find out whether the
     * map is local or not (communication required) and act
     * accordingly.
     */
    void
    assertMappingValidity(
       const Connector& connector,
-      char is_local_map = '\0') const;
+      MappingType map_type = UNKNOWN) const;
 
-   //@}
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "MappingConnectorAlgorithm";
+   }
 
 private:
    /*!
@@ -343,7 +379,7 @@ private:
 
    /*!
     * @brief Most general version of method to modify existing
-    * Connectors objects by using another to map the head mapped_boxes.
+    * Connectors objects by using another to map the head boxes.
     *
     * This version does no checking of the inputs.  The three
     * public versions do input checking and setting up temporaries
@@ -446,6 +482,9 @@ private:
     */
    static void
    finalizeCallback();
+
+   // Extra checks independent of optimization/debug.
+   static char s_print_steps;
 
    /*
     * @brief Border for debugging output.

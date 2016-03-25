@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -52,15 +52,17 @@ public:
     *
     * @return A boost::shared_ptr to the newly created PatchLevel.
     *
-    * @param[in]  mapped_box_level
+    * @param[in]  box_level
     * @param[in]  grid_geometry
     * @param[in]  descriptor
     * @param[in]  factory @b Default: a boost::shared_ptr to the standard
     *             PatchFactory
+    *
+    * @pre box_level.getDim() == grid_geometry->getDim()
     */
    virtual boost::shared_ptr<PatchLevel>
    allocate(
-      const BoxLevel& mapped_box_level,
+      const BoxLevel& box_level,
       const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
       const boost::shared_ptr<PatchDescriptor>& descriptor,
       const boost::shared_ptr<PatchFactory>& factory =

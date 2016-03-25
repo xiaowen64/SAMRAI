@@ -1,8 +1,10 @@
 #ifdef __GNUC__
+#ifndef __INTEL_COMPILER
 #if __GNUC__ > 4 ||               (__GNUC__ == 4 && (__GNUC_MINOR__ > 2 ||                                  (__GNUC_MINOR__ == 2 &&                                   __GNUC_PATCHLEVEL__ > 0)))
 #pragma GCC diagnostic ignored "-Wall"
 #pragma GCC diagnostic ignored "-Wextra"
 #pragma GCC diagnostic ignored "-Wconversion"
+#endif
 #endif
 #endif
 
@@ -1760,7 +1762,7 @@ yyreduce:
                Parser::getParser()->error("Type mismatch in box array");
                delete (yyvsp[(3) - (3)].u_keydata);
                (yyval.u_keydata) = (yyvsp[(1) - (3)].u_keydata);
-            } else if ((yyvsp[(3) - (3)].u_keydata)->d_box.getDim() != (yyvsp[(1) - (3)].u_keydata)->d_box.getDim()) {
+            } else if ((yyvsp[(3) - (3)].u_keydata)->d_box.getDimVal() != (yyvsp[(1) - (3)].u_keydata)->d_box.getDimVal()) {
                Parser::getParser()->error("Box array dimension mismatch");
                delete (yyvsp[(3) - (3)].u_keydata);
                (yyval.u_keydata) = (yyvsp[(1) - (3)].u_keydata);
@@ -1998,7 +2000,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_BOOL;
       (yyval.u_keydata)->d_array_type = KEY_BOOL;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
       (yyval.u_keydata)->d_bool       = true;
    }
     break;
@@ -2010,7 +2012,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_BOOL;
       (yyval.u_keydata)->d_array_type = KEY_BOOL;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
       (yyval.u_keydata)->d_bool       = false;
    }
     break;
@@ -2029,7 +2031,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_CHAR;
       (yyval.u_keydata)->d_array_type = KEY_CHAR;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
       (yyval.u_keydata)->d_char       = (yyvsp[(1) - (1)].u_char);
    }
     break;
@@ -2048,7 +2050,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_DOUBLE;
       (yyval.u_keydata)->d_array_type = KEY_DOUBLE;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
       (yyval.u_keydata)->d_double     = (yyvsp[(1) - (1)].u_double);
    }
     break;
@@ -2060,7 +2062,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_INTEGER;
       (yyval.u_keydata)->d_array_type = KEY_INTEGER;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
       (yyval.u_keydata)->d_integer    = (yyvsp[(1) - (1)].u_integer);
    }
     break;
@@ -2072,7 +2074,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_STRING;
       (yyval.u_keydata)->d_array_type = KEY_STRING;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
       (yyval.u_keydata)->d_string     = *(yyvsp[(1) - (1)].u_string);
       delete (yyvsp[(1) - (1)].u_string);
    }
@@ -2098,7 +2100,7 @@ yyreduce:
       (yyval.u_keydata)->d_node_type  = KEY_BOX;
       (yyval.u_keydata)->d_array_type = KEY_BOX;
       (yyval.u_keydata)->d_array_size = 1;
-      (yyval.u_keydata)->d_next       = NULL;
+      (yyval.u_keydata)->d_next       = 0;
 
       if ((yyvsp[(2) - (5)].u_keydata)->d_array_size != (yyvsp[(4) - (5)].u_keydata)->d_array_size) {
          Parser::getParser()->error("Box lower/upper dimension mismatch");
@@ -2661,26 +2663,26 @@ struct arith_functions {
 // compiler; so use an initialization function to 
 // create the table
 static arith_functions af[] = {
-   { "abs"  , fabs , NULL, abs  },
-   { "acos" , acos , NULL, NULL },
-   { "asin" , asin , NULL, NULL },
-   { "atan" , atan , NULL, NULL },
-   { "ceil" , ceil , NULL, NULL },
-   { "conj" , NULL , conj, NULL },
-   { "cos"  , cos  , cos , NULL },
-   { "cosh" , cosh , cosh, NULL },
-   { "exp"  , exp  , exp , NULL },
-   { "fabs" , fabs , NULL, NULL },
-   { "floor", floor, NULL, NULL },
-   { "imag" , NULL , NULL, imag },
-   { "log10", log10, NULL, NULL },
-   { "log"  , log  , log , NULL },
-   { "real" , NULL , NULL, real },
-   { "sin"  , sin  , sin , NULL },
-   { "sinh" , sinh , sinh, NULL },
-   { "sqrt" , sqrt , sqrt, NULL },
-   { "tan"  , tan  , NULL, NULL },
-   { ""     , NULL , NULL, NULL }
+   { "abs"  , fabs , 0   , abs  },
+   { "acos" , acos , 0   , 0    },
+   { "asin" , asin , 0   , 0    },
+   { "atan" , atan , 0   , 0    },
+   { "ceil" , ceil , 0   , 0    },
+   { "conj" , 0    , conj, 0    },
+   { "cos"  , cos  , cos , 0    },
+   { "cosh" , cosh , cosh, 0    },
+   { "exp"  , exp  , exp , 0    },
+   { "fabs" , fabs , 0   , 0    },
+   { "floor", floor, 0   , 0    },
+   { "imag" , 0    , 0   , imag },
+   { "log10", log10, 0   , 0    },
+   { "log"  , log  , log , 0    },
+   { "real" , 0    , 0   , real },
+   { "sin"  , sin  , sin , 0    },
+   { "sinh" , sinh , sinh, 0    },
+   { "sqrt" , sqrt , sqrt, 0    },
+   { "tan"  , tan  , 0   , 0    },
+   { ""     , 0    , 0   , 0    }
 };
 #endif
 
@@ -2702,105 +2704,105 @@ void parser_static_table_initialize()
 {
    af[0].d_name =    "abs";
    af[0].d_r2r_func = fabs;
-   af[0].d_c2c_func = NULL;
+   af[0].d_c2c_func = 0;
    af[0].d_c2r_func = std::abs;
 
 
    af[1].d_name =    "acos";
    af[1].d_r2r_func = acos;
-   af[1].d_c2c_func = NULL;
-   af[1].d_c2r_func = NULL;
+   af[1].d_c2c_func = 0;
+   af[1].d_c2r_func = 0;
    
    af[2].d_name =    "asin";
    af[2].d_r2r_func = asin;
-   af[2].d_c2c_func = NULL;
-   af[2].d_c2r_func = NULL;
+   af[2].d_c2c_func = 0;
+   af[2].d_c2r_func = 0;
    
    af[3].d_name =    "atan";
    af[3].d_r2r_func = atan;
-   af[3].d_c2c_func = NULL;
-   af[3].d_c2r_func = NULL;
+   af[3].d_c2c_func = 0;
+   af[3].d_c2r_func = 0;
    
    af[4].d_name =    "ceil";
    af[4].d_r2r_func = ceil;
-   af[4].d_c2c_func = NULL;
-   af[4].d_c2r_func = NULL;
+   af[4].d_c2c_func = 0;
+   af[4].d_c2r_func = 0;
 
    af[5].d_name =    "conj";
-   af[5].d_r2r_func = NULL;
+   af[5].d_r2r_func = 0;
    af[5].d_c2c_func = conj;
-   af[5].d_c2r_func = NULL;
+   af[5].d_c2r_func = 0;
 
 
    af[6].d_name =    "cos";
    af[6].d_r2r_func = ::cos;
    af[6].d_c2c_func = std::cos;
-   af[6].d_c2r_func = NULL;
+   af[6].d_c2r_func = 0;
 
    af[7].d_name =    "cosh";
    af[7].d_r2r_func = ::cosh;
    af[7].d_c2c_func = std::cosh;
-   af[7].d_c2r_func = NULL;
+   af[7].d_c2r_func = 0;
 
    af[8].d_name =    "exp";
    af[8].d_r2r_func = ::exp;
    af[8].d_c2c_func = std::exp;
-   af[8].d_c2r_func = NULL;
+   af[8].d_c2r_func = 0;
 
    af[9].d_name =    "fabs";
    af[9].d_r2r_func = fabs;
-   af[9].d_c2c_func = NULL;
-   af[9].d_c2r_func = NULL;
+   af[9].d_c2c_func = 0;
+   af[9].d_c2r_func = 0;
 
    af[10].d_name =    "floor";
    af[10].d_r2r_func = floor;
-   af[10].d_c2c_func = NULL;
-   af[10].d_c2r_func = NULL;
+   af[10].d_c2c_func = 0;
+   af[10].d_c2r_func = 0;
 
    af[11].d_name =    "imag";
-   af[11].d_r2r_func = NULL;
-   af[11].d_c2c_func = NULL;
+   af[11].d_r2r_func = 0;
+   af[11].d_c2c_func = 0;
    af[11].d_c2r_func = imag_thunk;
 
    af[12].d_name =    "log10";
    af[12].d_r2r_func = ::log10;
-   af[12].d_c2c_func = NULL;
-   af[12].d_c2r_func = NULL;
+   af[12].d_c2c_func = 0;
+   af[12].d_c2r_func = 0;
 
    af[13].d_name =    "log";
    af[13].d_r2r_func = ::log;
    af[13].d_c2c_func = std::log;
-   af[13].d_c2r_func = NULL;
+   af[13].d_c2r_func = 0;
 
    af[14].d_name =    "real";
-   af[14].d_r2r_func = NULL;
-   af[14].d_c2c_func = NULL;
+   af[14].d_r2r_func = 0;
+   af[14].d_c2c_func = 0;
    af[14].d_c2r_func = real_thunk;
 
    af[15].d_name =    "sin";
    af[15].d_r2r_func = ::sin;
    af[15].d_c2c_func = std::sin;
-   af[15].d_c2r_func = NULL;
+   af[15].d_c2r_func = 0;
 
    af[16].d_name =    "sinh";
    af[16].d_r2r_func = ::sinh;
    af[16].d_c2c_func = std::sinh;
-   af[16].d_c2r_func = NULL;
+   af[16].d_c2r_func = 0;
 
    af[17].d_name =    "sqrt";
    af[17].d_r2r_func = ::sqrt;
    af[17].d_c2c_func = std::sqrt;
-   af[17].d_c2r_func = NULL;
+   af[17].d_c2r_func = 0;
 
    af[18].d_name =    "tan";
    af[18].d_r2r_func = tan;
-   af[18].d_c2c_func = NULL;
-   af[18].d_c2r_func = NULL;
+   af[18].d_c2c_func = 0;
+   af[18].d_c2r_func = 0;
 
    af[19].d_name =    "";
-   af[19].d_r2r_func = NULL;
-   af[19].d_c2c_func = NULL;
-   af[19].d_c2r_func = NULL;
+   af[19].d_r2r_func = 0;
+   af[19].d_c2c_func = 0;
+   af[19].d_c2r_func = 0;
 }
 
 static KeyData* eval_function(KeyData* arg, const string& func)
@@ -2871,7 +2873,7 @@ static KeyData* lookup_variable(
    result->d_node_type  = KEY_INTEGER;
    result->d_array_type = KEY_INTEGER;
    result->d_array_size = 1;
-   result->d_next       = NULL;
+   result->d_next       = 0;
    result->d_integer    = 0;
 
    Parser *parser = Parser::getParser();

@@ -31,11 +31,10 @@ CellMultiblockTest::CellMultiblockTest(
 {
    NULL_USE(do_refine);
    NULL_USE(do_coarsen);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -77,9 +76,7 @@ CellMultiblockTest::~CellMultiblockTest()
 void CellMultiblockTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -92,7 +89,7 @@ void CellMultiblockTest::readTestInput(
 void CellMultiblockTest::registerVariables(
    MultiblockTester* commtest)
 {
-   TBOX_ASSERT(commtest != (MultiblockTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 
@@ -133,7 +130,8 @@ void CellMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::CellData<double> > cell_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cell_data);
 
          hier::Box dbox = cell_data->getGhostBox();
 
@@ -189,7 +187,8 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_data);
 
       /*
        * Set node boundary data.
@@ -256,7 +255,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::BoxId& dst_mb_id = patch.getBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getBox().getBoxId();
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
@@ -267,7 +266,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_data);
 
       hier::Box sing_fill_box(cell_data->getGhostBox() * fill_box);
       cell_data->fillAll(0.0, sing_fill_box);
@@ -286,7 +286,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                  ei != dst_to_encon.end(ni); ++ei) {
 
                boost::shared_ptr<hier::Patch> encon_patch(
-                  encon_level.getPatch(ei->getId()));
+                  encon_level.getPatch(ei->getBoxId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
 
@@ -331,7 +331,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::CellData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   pdat::CellIterator ciend(encon_fill_box, false);
                   for (pdat::CellIterator ci(encon_fill_box, true);
@@ -370,9 +371,7 @@ void CellMultiblockTest::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(fine.getDim());
-
-   pdat::CellDoubleConstantRefine ref_op(dim);
+   pdat::CellDoubleConstantRefine ref_op;
 
    for (int i = 0; i < d_variables.getSize(); i++) {
 
@@ -432,7 +431,8 @@ bool CellMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::CellData<double> > cell_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();
 
       pdat::CellIterator ciend(pbox, false);
@@ -492,7 +492,8 @@ bool CellMultiblockTest::verifyResults(
 
       boost::shared_ptr<hier::PatchGeometry> pgeom(
          patch.getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(pgeom);
 
       for (int b = 0; b < d_dim.getValue(); b++) {
          tbox::Array<hier::BoundaryBox> bdry =

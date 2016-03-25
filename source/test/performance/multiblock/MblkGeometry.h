@@ -20,7 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -41,7 +41,7 @@ public:
       const std::string& object_name,
       const tbox::Dimension& dim,
       boost::shared_ptr<tbox::Database> input_db,
-      const int nblocks);
+      const hier::BaseGridGeometry& grid_geom);
 
    ~MblkGeometry();
 
@@ -166,7 +166,7 @@ private:
     * For the spherical shell construction, i always points in the r direction
     * and j,k are points on the shell.  Given a certain j,k compute the
     * unit sphere locations for block face (actual xyz is computed
-    * by x = r*xface, y = r*yface, z = r*zface.  Note that the dimension
+    * by x = r*xface, y = r*yface, z = r*zface.  Note that the size
     * in the theta direction (nth) should be the same for each block.
     */
    void

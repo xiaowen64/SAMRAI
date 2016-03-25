@@ -346,48 +346,47 @@ Timer::computeMaxWallclock()
 }
 
 void
-Timer::putUnregisteredToDatabase(
-   const boost::shared_ptr<Database>& db) const
+Timer::putToRestart(
+   const boost::shared_ptr<Database>& restart_db) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("TBOX_TIMER_VERSION",
-      TBOX_TIMER_VERSION);
+   restart_db->putInteger("TBOX_TIMER_VERSION", TBOX_TIMER_VERSION);
 
-   db->putString("d_name", d_name);
+   restart_db->putString("d_name", d_name);
 
-   db->putDouble("d_user_total", d_user_total);
-   db->putDouble("d_system_total", d_system_total);
-   db->putDouble("d_wallclock_total", d_wallclock_total);
+   restart_db->putDouble("d_user_total", d_user_total);
+   restart_db->putDouble("d_system_total", d_system_total);
+   restart_db->putDouble("d_wallclock_total", d_wallclock_total);
 
-   db->putDouble("d_user_exclusive", d_user_exclusive);
-   db->putDouble("d_system_exclusive", d_system_exclusive);
-   db->putDouble("d_wallclock_exclusive", d_wallclock_exclusive);
+   restart_db->putDouble("d_user_exclusive", d_user_exclusive);
+   restart_db->putDouble("d_system_exclusive", d_system_exclusive);
+   restart_db->putDouble("d_wallclock_exclusive", d_wallclock_exclusive);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
 void
 Timer::getFromRestart(
-   const boost::shared_ptr<Database>& db)
+   const boost::shared_ptr<Database>& restart_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   TBOX_ASSERT(db);
+   TBOX_ASSERT(restart_db);
 
-   int ver = db->getInteger("TBOX_TIMER_VERSION");
+   int ver = restart_db->getInteger("TBOX_TIMER_VERSION");
    if (ver != TBOX_TIMER_VERSION) {
       TBOX_ERROR("Restart file version different than class version.");
    }
 
-   d_name = db->getString("d_name");
+   d_name = restart_db->getString("d_name");
 
-   d_user_total = db->getDouble("d_user_total");
-   d_system_total = db->getDouble("d_system_total");
-   d_wallclock_total = db->getDouble("d_wallclock_total");
+   d_user_total = restart_db->getDouble("d_user_total");
+   d_system_total = restart_db->getDouble("d_system_total");
+   d_wallclock_total = restart_db->getDouble("d_wallclock_total");
 
-   d_user_exclusive = db->getDouble("d_user_exclusive");
-   d_system_exclusive = db->getDouble("d_system_exclusive");
-   d_wallclock_exclusive = db->getDouble("d_wallclock_exclusive");
+   d_user_exclusive = restart_db->getDouble("d_user_exclusive");
+   d_system_exclusive = restart_db->getDouble("d_system_exclusive");
+   d_wallclock_exclusive = restart_db->getDouble("d_wallclock_exclusive");
 #endif // ENABLE_SAMRAI_TIMERS
 }
 

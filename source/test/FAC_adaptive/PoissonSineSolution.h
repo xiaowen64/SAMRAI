@@ -45,9 +45,9 @@ public:
       , /*! Input database */
       tbox::Database& database
       , /*! Standard output stream */
-      std::ostream * out_stream = NULL
+      std::ostream * out_stream = 0
       , /*! Log output stream */
-      std::ostream * log_stream = NULL);
+      std::ostream * log_stream = 0);
 
    virtual ~PoissonSineSolution();
 
@@ -99,7 +99,7 @@ public:
 private:
    const tbox::Dimension d_dim;
 
-   bool d_neumann_location[2 * tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   bool d_neumann_location[2 * SAMRAI::MAX_DIM_VAL];
    double d_linear_coef;
    SinusoidFcn d_exact;
 

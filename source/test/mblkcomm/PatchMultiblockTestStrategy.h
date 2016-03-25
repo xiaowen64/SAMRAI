@@ -22,7 +22,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -126,27 +126,21 @@ public:
    void setDataContext(
       boost::shared_ptr<hier::VariableContext> context)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(context);
-#endif
       d_data_context = context;
    }
 
    void setDestinationContext(
       boost::shared_ptr<hier::VariableContext> context)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(context);
-#endif
       d_dst_context = context;
    }
 
    void setScratchContext(
       boost::shared_ptr<hier::VariableContext> context)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(context);
-#endif
       d_scr_context = context;
    }
 

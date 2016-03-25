@@ -68,14 +68,19 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/hier/Variable.h				\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableContext.h			\
 	$(INCLUDE_SAM)/SAMRAI/hier/VariableDatabase.h			\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/BalanceUtilities.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/BoxGeneratorStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithm.h			\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmConnectorWidthRequestor.h\
 	$(INCLUDE_SAM)/SAMRAI/mesh/GriddingAlgorithmStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/LoadBalanceStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/MultiblockGriddingTagger.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/SpatialKey.h				\
 	$(INCLUDE_SAM)/SAMRAI/mesh/StandardTagAndInitStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/mesh/TagAndInitializeStrategy.h		\
+	$(INCLUDE_SAM)/SAMRAI/mesh/TreeLoadBalancer.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.h				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataIterator.h			\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.h	\
@@ -101,6 +106,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Array.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommPeer.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/AsyncCommStage.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/BalancedDepthFirstTree.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Boost.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Clock.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Complex.h				\
@@ -140,11 +146,14 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h Euler.C Euler.h\
 	EulerFort.h
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_0 +=\
+	$(INCLUDE_SAM)/SAMRAI/math/ArrayDataNormOpsReal.C		\
+	$(INCLUDE_SAM)/SAMRAI/math/PatchCellDataNormOpsReal.C		\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -296,6 +305,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/SAMRAI_MPI.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Schedule.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Serializable.h			\
+	$(INCLUDE_SAM)/SAMRAI/tbox/SiloDatabaseFactory.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/StartupShutdownManager.h		\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Statistic.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Statistician.h			\
@@ -314,6 +324,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefinePatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineSchedule.h			\
 	$(INCLUDE_SAM)/SAMRAI/xfer/RefineTransactionFactory.h		\
+	$(INCLUDE_SAM)/SAMRAI/xfer/SingularityPatchStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/xfer/VariableFillPattern.h Euler.h main.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)

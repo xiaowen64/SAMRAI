@@ -266,15 +266,11 @@ int main(
        * Set up the domain from input.
        */
 
-      hier::BoxContainer input_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
-      input_boxes.begin();
+      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
 
-      hier::BoxContainer domain_boxes;
-      hier::LocalId local_id(0);
-      for (hier::BoxContainer::iterator itr = input_boxes.begin();
-           itr != input_boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr = domain_boxes.begin();
+           itr != domain_boxes.end(); ++itr) {
          itr->setBlockId(hier::BlockId(0));
-         domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
       }
 
       std::vector<double> xlo(dim.getValue());
@@ -321,7 +317,7 @@ int main(
        * If autoscale_base_nprocs is given, take the domain_boxes, xlo and xhi
        * to be the size for the (integer) value of autoscale_base_nprocs.  Scale
        * the problem from there to the number of process running by
-       * doubling the dimension starting with the j direction.
+       * doubling the size starting with the j direction.
        *
        * The number of processes must be a power of 2 times the value
        * of autoscale_base_nprocs.
@@ -502,8 +498,8 @@ int main(
                domain_to_L0,
                hierarchy,
                0,
-               hier::Connector(),
-               hier::Connector(),
+               hier::Connector(dim),
+               hier::Connector(dim),
                hierarchy->getSmallestPatchSize(0),
                hierarchy->getLargestPatchSize(0),
                domain_box_level,
@@ -533,9 +529,9 @@ int main(
 
 
 
-      hier::Connector L1_to_L0;
-      hier::Connector L0_to_L1;
-      hier::Connector L1_to_L1;
+      hier::Connector L1_to_L0(dim);
+      hier::Connector L0_to_L1(dim);
+      hier::Connector L1_to_L1(dim);
 
 
 
@@ -579,12 +575,11 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            L0.getGlobalBoundingBox(0),
+            hier::BoxContainer(L0.getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
             required_connector_width,
-            hier::BlockId::zero(),
             hier::LocalId(0));
 
          outputPostcluster( L1, L0, required_connector_width, "L1: " );
@@ -625,8 +620,8 @@ int main(
                L0_to_L1,
                hierarchy,
                1,
-               hier::Connector(),
-               hier::Connector(),
+               hier::Connector(dim),
+               hier::Connector(dim),
                hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
                hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
                domain_box_level,
@@ -668,9 +663,9 @@ int main(
 
       const hier::BoxLevel &L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
 
-      hier::Connector L2_to_L1;
-      hier::Connector L1_to_L2;
-      hier::Connector L2_to_L2;
+      hier::Connector L2_to_L1(dim);
+      hier::Connector L1_to_L2(dim);
+      hier::Connector L2_to_L2(dim);
 
       if ( max_levels > 2 ) {
          /*
@@ -712,12 +707,11 @@ int main(
             hierarchy->getPatchLevel(coarser_ln),
             tag_data_id,
             1 /* tag_val */,
-            L1.getGlobalBoundingBox(0),
+            hier::BoxContainer(L1.getGlobalBoundingBox(0)),
             min_size,
             exact_tagging ? 1.0 : efficiency_tol,
             exact_tagging ? 1.0 : combine_tol,
             required_connector_width,
-            hier::BlockId::zero(),
             hier::LocalId(0));
 
          outputPostcluster( L2, L1, required_connector_width, "L2: " );
@@ -759,8 +753,8 @@ int main(
                L1_to_L2,
                hierarchy,
                1,
-               hier::Connector(),
-               hier::Connector(),
+               hier::Connector(dim),
+               hier::Connector(dim),
                hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
                hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
                domain_box_level,
@@ -1040,7 +1034,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   hier::Connector sorting_map;
+   hier::Connector sorting_map(new_box_level.getDim());
    hier::BoxLevel seq_box_level(new_box_level.getDim());
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
@@ -1166,7 +1160,7 @@ void enforceNesting(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    hier::BoxLevel L1nested(dim);
-   hier::Connector L1_to_L1nested;
+   hier::Connector L1_to_L1nested(dim);
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,

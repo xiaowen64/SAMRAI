@@ -20,8 +20,8 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/make_shared.hpp>
-#include <boost/shared_ptr.hpp>
+#include "boost/make_shared.hpp"
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -32,7 +32,7 @@ namespace pdat {
  * hier::BoxGeometry and it computes intersections between node-
  * centered box geometries for communication operations.
  *
- * See header file for NodeData<DIM> class for a more detailed
+ * See header file for NodeData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry
@@ -50,7 +50,7 @@ public:
    /*!
     * @brief Convert an AMR index box space box into a node geometry box.
     * A node geometry box is extends the given AMR index box space box
-    * by one in upper dimension for each coordinate direction.
+    * by one at upper end for each coordinate direction.
     */
    static hier::Box
    toNodeBox(
@@ -93,6 +93,9 @@ public:
    /*!
     * @brief Construct the node geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    NodeGeometry(
       const hier::Box& box,
@@ -106,6 +109,8 @@ public:
    /*!
     * @brief Compute the overlap in node-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -122,6 +127,8 @@ public:
     * @brief Compute the node-centered destination boxes that represent
     * the overlap between the source box geometry and the destination
     * box geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset.getDim()
     */
    void
    computeDestinationBoxes(

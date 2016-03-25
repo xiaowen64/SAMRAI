@@ -21,7 +21,7 @@
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #ifndef included_tbox_String
 #include <string>
 

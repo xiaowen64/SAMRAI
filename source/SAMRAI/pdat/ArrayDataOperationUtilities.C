@@ -39,7 +39,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    int num_depth,
    const OP& op)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src, opbox, src_shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src, opbox, src_shift);
    TBOX_ASSERT(num_depth >= 0);
    TBOX_ASSERT((0 <= dst_start_depth) &&
       (dst_start_depth + num_depth <= dst.getDepth()));
@@ -54,10 +54,10 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
    const hier::Box& dst_box(dst.getBox());
    const hier::Box& src_box(src.getBox());
 
-   int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int box_w[SAMRAI::MAX_DIM_VAL];
+   int dst_w[SAMRAI::MAX_DIM_VAL];
+   int src_w[SAMRAI::MAX_DIM_VAL];
+   int dim_counter[SAMRAI::MAX_DIM_VAL];
    for (int i = 0; i < dim.getValue(); i++) {
       box_w[i] = opbox.numberCells(i);
       dst_w[i] = dst_box.numberCells(i);
@@ -94,8 +94,8 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
       int dst_counter = dst_begin;
       int src_counter = src_begin;
 
-      int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int dst_b[SAMRAI::MAX_DIM_VAL];
+      int src_b[SAMRAI::MAX_DIM_VAL];
       for (int nd = 0; nd < dim.getValue(); nd++) {
          dst_b[nd] = dst_counter;
          src_b[nd] = src_counter;
@@ -177,8 +177,8 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    bool src_is_buffer,
    const OP& op)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(arraydata, opbox);
-   TBOX_ASSERT(buffer != (const TYPE *)NULL);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(arraydata, opbox);
+   TBOX_ASSERT(buffer != 0);
    TBOX_ASSERT(opbox.isSpatiallyEqual((opbox * arraydata.getBox())));
 
    const tbox::Dimension& dim(arraydata.getDim());
@@ -192,9 +192,9 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
    const hier::Box& array_d_box(arraydata.getBox());
    const int array_d_depth = arraydata.getDepth();
 
-   int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   int dat_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int box_w[SAMRAI::MAX_DIM_VAL];
+   int dat_w[SAMRAI::MAX_DIM_VAL];
+   int dim_counter[SAMRAI::MAX_DIM_VAL];
    for (int i = 0; i < dim.getValue(); i++) {
       box_w[i] = opbox.numberCells(i);
       dat_w[i] = array_d_box.numberCells(i);
@@ -231,7 +231,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
       int& dst_counter = (src_is_buffer ? dat_counter : buf_counter);
       int& src_counter = (src_is_buffer ? buf_counter : dat_counter);
 
-      int dat_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int dat_b[SAMRAI::MAX_DIM_VAL];
       for (int nd = 0; nd < dim.getValue(); nd++) {
          dat_b[nd] = dat_counter;
       }

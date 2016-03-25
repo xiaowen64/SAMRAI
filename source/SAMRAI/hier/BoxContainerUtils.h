@@ -20,14 +20,6 @@ namespace hier {
 /*!
  * @brief Utilities for performing simple common tasks on a container
  * of Boxes.
- *
- * TODO: Arguments should be re-ordered to the SAMRAI standard, output
- * before input.
- *
- * TODO: There are some very similar methods in this class.  In many cases,
- * one version supports input and output being the same object, but the other
- * does not.  For uniformity, all these methods should support input and
- * output containers being the same object.  It's simple to implement.
  */
 class BoxContainerUtils
 {
@@ -40,7 +32,7 @@ public:
    /*!
     * @brief Print a vector of Boxes to an output stream.
     *
-    * @param[in] mapped_boxes
+    * @param[in] boxes
     *
     * @param[in] output_stream
     *
@@ -50,7 +42,7 @@ public:
     */
    static void
    recursivePrintBoxVector(
-      const std::vector<Box>& mapped_boxes,
+      const std::vector<Box>& boxes,
       std::ostream& output_stream = tbox::plog,
       const std::string& border = std::string(),
       int detail_depth = 0);

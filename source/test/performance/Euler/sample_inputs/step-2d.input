@@ -7,11 +7,6 @@
  * Description:   Input file for SAMRAI Euler example problem (2d step) 
  *
  ************************************************************************/
-check_connectivity = 'y'
-print_steps = 'n'
-print_break_steps = 'n'
-print_edge_steps = 'n'
-
 Euler {
    gamma            = 1.4      // gamma = Ratio of specific heats
 
@@ -88,6 +83,7 @@ Euler {
 }
 
 Main {
+   dim = 2
 // log file parameters 
    log_file_name    = "step-2d.log"
    log_all_nodes    = TRUE
@@ -144,12 +140,10 @@ PatchHierarchy {
 
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = FALSE
-   // load_balance = FALSE
+   DEV_extend_to_domain_boundary = FALSE
+   // DEV_load_balance = FALSE
    efficiency_tolerance = 0.75
    combine_efficiency = 0.80
-   sort_boxes_after_globalizing = FALSE
-   extend_tags_to_bdry = TRUE
 }
 
 HyperbolicLevelIntegrator {
@@ -171,14 +165,13 @@ LoadBalancer {
 }
 
 TreeLoadBalancer {
-  report_load_balance = FALSE
-  barrier_before = TRUE
-  barrier_after = TRUE
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
   n_root_cycles = 2
 }
 
 BergerRigoutsos {
-  log_node_history = TRUE
-  log_cluster_summary = TRUE
-  sequentialize_output_indices = TRUE
+  DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
 }

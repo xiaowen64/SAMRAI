@@ -4,7 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Set of edges incident from a mapped_box_level of a distributed box graph.
+ * Description:   Set of edges incident from a box_level of a distributed box graph.
  *
  ************************************************************************/
 #ifndef included_hier_PeriodicShiftCatalog_C
@@ -28,7 +28,7 @@ namespace SAMRAI {
 namespace hier {
 
 PeriodicShiftCatalog * PeriodicShiftCatalog::s_periodic_shift_catalog_instance[
-   tbox::Dimension::MAXIMUM_DIMENSION_VALUE] = { 0 };
+   SAMRAI::MAX_DIM_VAL] = { 0 };
 
 tbox::StartupShutdownManager::Handler
 PeriodicShiftCatalog::s_finalize_handler(
@@ -47,7 +47,7 @@ const PeriodicShiftCatalog*
 PeriodicShiftCatalog::getCatalog(
    const tbox::Dimension& dim)
 {
-   if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == NULL) {
+   if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == 0) {
       s_periodic_shift_catalog_instance[dim.getValue() - 1] = new PeriodicShiftCatalog(dim);
    }
    return s_periodic_shift_catalog_instance[dim.getValue() - 1];
@@ -61,10 +61,10 @@ PeriodicShiftCatalog::getCatalog(
 void
 PeriodicShiftCatalog::finalizeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
-      if (s_periodic_shift_catalog_instance[i] != NULL) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
+      if (s_periodic_shift_catalog_instance[i] != 0) {
          delete s_periodic_shift_catalog_instance[i];
-         s_periodic_shift_catalog_instance[i] = NULL;
+         s_periodic_shift_catalog_instance[i] = 0;
       }
    }
 }
@@ -76,7 +76,6 @@ PeriodicShiftCatalog::finalizeCallback()
 
 PeriodicShiftCatalog::PeriodicShiftCatalog(
    const tbox::Dimension& dim):
-   d_dim(dim),
    d_shifts(1, IntVector::getZero(dim)),
    d_opposite_number(1),
    d_zero_shift_number(0)

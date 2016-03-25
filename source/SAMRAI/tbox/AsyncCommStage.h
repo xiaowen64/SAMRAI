@@ -117,6 +117,8 @@ public:
        * @brief Destructor detach the Member from its stage.
        * Memory allocated by the stage to support the Member
        * will be recycled.
+       *
+       * @pre !hasPendingRequests()
        */
       virtual ~Member();
 
@@ -218,6 +220,8 @@ public:
        *
        * This causes the member to be returned by a call to
        * AsyncCommStage::popCompletionQueue(), eventually.
+       *
+       * @pre isDone()
        */
       void
       pushToCompletionQueue();
@@ -230,6 +234,15 @@ public:
       yankFromCompletionQueue()
       {
          d_stage->privateYankFromCompletionQueue(*this);
+      }
+
+      /*!
+       * @brief Returns true if there is a stage associated with this member.
+       */
+      bool
+      hasStage() const
+      {
+         return d_stage != 0;
       }
 
 protected:
@@ -267,6 +280,8 @@ protected:
        * @b Important: Do not save the pointer returned by this
        * method.  The stage's dynamic memory actions may render old
        * pointers invalid.
+       *
+       * @pre hasStage()
        */
       SAMRAI_MPI::Request *
       getRequestPointer() const;
@@ -284,6 +299,8 @@ protected:
        * @b Important: Do not save the pointer returned by this
        * method.  The stage's dynamic memory actions may render old
        * pointers invalid.
+       *
+       * @pre hasStage()
        */
       SAMRAI_MPI::Status *
       getStatusPointer() const;
@@ -394,6 +411,28 @@ private:
       return d_completed_members.size();
    }
 
+   /*!
+    * @brief Returns the first completed Member.
+    */
+   const Member*
+   firstCompletedMember() const
+   {
+      return d_members[d_completed_members.front()];
+   }
+
+   /*!
+    * @brief Returns the ith managed Member.
+    *
+    * @param i
+    *
+    * @pre i < numManagedMembers()
+    */
+   const Member*
+   getMember(size_t i) const
+   {
+      return d_members[i];
+   }
+
    /*
     * @brief Return a Member that has fully completed its
     * communication operation.
@@ -403,6 +442,9 @@ private:
     * populated by advanceAny(), advanceSome() and advanceAll().  You
     * can also push Members onto the queue using the Member's
     * pushToCompletionQueue().
+    *
+    * @pre numberOfCompletedMembers() != 0
+    * @pre firstCompletedMember()->isDone()
     */
    Member*
    popCompletionQueue();
@@ -444,6 +486,15 @@ private:
    }
 
    /*!
+    * @brief Returns the number of staged and destaged Members.
+    */
+   size_t
+   numManagedMembers() const
+   {
+      return d_members.size();
+   }
+
+   /*!
     * @brief Return whether the stage has any pending communication
     * requests.
     */
@@ -480,26 +531,37 @@ private:
     * @brief Set up a Member to work this stage, initializing mutual
     * references between the stage and the member.
     *
+    * @param member Member to work this stage.
     * @param nreq Number of requests needed on the stage.
     *
-    * @param handle Optional pointer back to a Member object associated
-    *               with the Member.  See class documentation.
+    * @pre !member->hasStage()
+    * @pre nreq >= 1
     */
    void
    privateStageMember(
-      Member* Member,
+      Member* member,
       size_t nreq);
 
    /*!
     * @brief Remove a member from the stage, clearing mutual
     * references between the stage and the member.
+    *
+    * @param member Member removed from the stage.
+    *
+    * @pre !member->hasPendingRequests()
+    * @pre getMember(member->d_index_on_stage) == member
     */
    void
    privateDestageMember(
-      Member* Member);
+      Member* member);
 
    /*!
     * @brief Get the number of requests for the given Member index.
+    *
+    * @param index_on_stage Member index.
+    *
+    * @pre index_on_stage < numManagedMembers()
+    * @pre getMember(index_on_stage) != 0
     */
    size_t
    numberOfRequests(
@@ -526,6 +588,11 @@ private:
     *
     * This is private because only friend class Member should
     * use it.
+    *
+    * @param index_on_stage Member index.
+    *
+    * @pre index_on_stage < numManagedMembers()
+    * @pre getMember(index_on_stage) != 0
     */
    SAMRAI_MPI::Request *
    lookupRequestPointer(
@@ -534,6 +601,11 @@ private:
    /*!
     * @brief Look up and return the status pointer from the stage
     * for the given Member.  (Works similarly to lookupRequestPointer().)
+    *
+    * @param index_on_stage Member index.
+    *
+    * @pre index_on_stage < numManagedMembers()
+    * @pre getMember(index_on_stage) != 0
     */
    SAMRAI_MPI::Status *
    lookupStatusPointer(
@@ -542,6 +614,10 @@ private:
    /*!
     * @brief Push the given Member onto the stage's list of completed
     * Members.
+    *
+    * @param member
+    *
+    * @pre member.isDone()
     */
    void
    privatePushToCompletionQueue( Member &member );
@@ -569,7 +645,7 @@ private:
    /*!
     * @brief Number of members.
     *
-    * Not necessarily the same as d_members.size(), because d_members
+    * Not necessarily the same as numManagedMembers(), because d_members
     * may have unused slots left behind by destaged members.
     */
    size_t d_member_count;
@@ -602,7 +678,7 @@ private:
     * (d_member_to_req[i]) and the number of request it has
     * (d_member_to_req[i+1]-d_member_to_req[i]).  This vector is
     * always one longer than d_members.  The extra item,
-    * d_member_to_req[d_members.size()], is the total number of
+    * d_member_to_req[numManagedMembers()], is the total number of
     * requests that the stage has allocated.
     */
    std::vector<size_t> d_member_to_req;

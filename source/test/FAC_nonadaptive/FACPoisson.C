@@ -22,7 +22,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 
 extern "C" {
-void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
+void SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -31,7 +31,7 @@ void F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (const int& ifirst0,
    const double* dx,
    const double* xlower);
 
-void F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
+void SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (const int& ifirst0,
    const int& ilast0,
    const int& ifirst1,
    const int& ilast1,
@@ -54,21 +54,12 @@ namespace SAMRAI {
 FACPoisson::FACPoisson(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> database):
+   const boost::shared_ptr<solv::CellPoissonFACSolver>& fac_solver,
+   const boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs):
    d_object_name(object_name),
    d_dim(dim),
-   d_poisson_fac_solver((d_dim),
-                        object_name + "::poisson_hypre",
-                        (database &&
-                         database->isDatabase("fac_solver")) ?
-                        database->getDatabase("fac_solver") :
-                        boost::shared_ptr<tbox::Database>()),
-   d_bc_coefs(d_dim,
-              object_name + "::bc_coefs",
-              (database &&
-               database->isDatabase("bc_coefs")) ?
-              database->getDatabase("bc_coefs") :
-              boost::shared_ptr<tbox::Database>())
+   d_poisson_fac_solver(fac_solver),
+   d_bc_coefs(bc_coefs)
 {
 
    hier::VariableDatabase* vdb =
@@ -121,7 +112,7 @@ FACPoisson::FACPoisson(
     * We use the implementation solv::LocationIndexRobinBcCoefs, but other
     * implementations are possible, including user-implemented.
     */
-   d_poisson_fac_solver.setBcObject(&d_bc_coefs);
+   d_poisson_fac_solver->setBcObject(d_bc_coefs.get());
 }
 
 /*
@@ -180,20 +171,23 @@ void FACPoisson::initializeLevelData(
       hier::Box pbox = patch->getBox();
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       boost::shared_ptr<pdat::CellData<double> > exact_data(
          patch->getPatchData(d_exact_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > rhs_data(
          patch->getPatchData(d_rhs_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
+      TBOX_ASSERT(exact_data);
+      TBOX_ASSERT(rhs_data);
 
       /*
        * Set source function and exact solution.
        */
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (
+         SAMRAI_F77_FUNC(setexactandrhs2d, SETEXACTANDRHS2D) (
             pbox.lower()[0],
             pbox.upper()[0],
             pbox.lower()[1],
@@ -203,7 +197,7 @@ void FACPoisson::initializeLevelData(
             patch_geom->getDx(),
             patch_geom->getXLower());
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
+         SAMRAI_F77_FUNC(setexactandrhs3d, SETEXACTANDRHS3D) (
             pbox.lower()[0],
             pbox.upper()[0],
             pbox.lower()[1],
@@ -262,7 +256,8 @@ int FACPoisson::solvePoisson()
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > data(
             patch->getPatchData(d_comp_soln_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(data);
          data->fill(0.0);
       }
    }
@@ -274,10 +269,10 @@ int FACPoisson::solvePoisson()
     * (D is the diffusion coefficient.
     * C is the source term which is not used in this example.)
     */
-   d_poisson_fac_solver.setDConstant(1.0);
-   d_poisson_fac_solver.setCConstant(0.0);
+   d_poisson_fac_solver->setDConstant(1.0);
+   d_poisson_fac_solver->setCConstant(0.0);
 
-   d_poisson_fac_solver.initializeSolverState(
+   d_poisson_fac_solver->initializeSolverState(
       d_comp_soln_id,
       d_rhs_id,
       d_hierarchy,
@@ -286,23 +281,22 @@ int FACPoisson::solvePoisson()
 
    tbox::plog << "solving..." << std::endl;
    int solver_ret;
-   solver_ret = d_poisson_fac_solver.solveSystem(d_comp_soln_id,
-         d_rhs_id);
+   solver_ret = d_poisson_fac_solver->solveSystem(d_comp_soln_id, d_rhs_id);
    /*
     * Present data on the solve.
     */
    double avg_factor, final_factor;
-   d_poisson_fac_solver.getConvergenceFactors(avg_factor, final_factor);
+   d_poisson_fac_solver->getConvergenceFactors(avg_factor, final_factor);
    tbox::plog << "\t" << (solver_ret ? "" : "NOT ") << "converged " << "\n"
               << "      iterations: "
-              << d_poisson_fac_solver.getNumberOfIterations() << "\n"
-              << "      residual: "<< d_poisson_fac_solver.getResidualNorm()
+              << d_poisson_fac_solver->getNumberOfIterations() << "\n"
+              << "      residual: "<< d_poisson_fac_solver->getResidualNorm()
               << "\n"
               << "      average convergence: "<< avg_factor << "\n"
               << "      final convergence: "<< final_factor << "\n"
               << std::flush;
 
-   d_poisson_fac_solver.deallocateSolverState();
+   d_poisson_fac_solver->deallocateSolverState();
 
    return 0;
 }
@@ -359,10 +353,12 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Error") {
       boost::shared_ptr<pdat::CellData<double> > current_solution_(
          patch.getPatchData(d_comp_soln_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > exact_solution_(
          patch.getPatchData(d_exact_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(current_solution_);
+      TBOX_ASSERT(exact_solution_);
       pdat::CellData<double>& current_solution = *current_solution_;
       pdat::CellData<double>& exact_solution = *exact_solution_;
       for ( ; icell != icellend; ++icell) {

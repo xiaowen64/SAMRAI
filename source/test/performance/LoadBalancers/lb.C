@@ -40,6 +40,8 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include <vector>
 
+#include <cmath>
+
 #include "DerivedVisOwnerData.h"
 #include "SinusoidalFrontTagger.h"
 
@@ -315,14 +317,11 @@ int main(
        * Set up the domain from input.
        */
 
-      hier::BoxContainer input_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
+      hier::BoxContainer domain_boxes(main_db->getDatabaseBoxArray("domain_boxes"));
 
-      hier::BoxContainer domain_boxes;
-      hier::LocalId local_id(0);
-      for (hier::BoxContainer::iterator itr = input_boxes.begin();
-           itr != input_boxes.end(); ++itr) {
+      for (hier::BoxContainer::iterator itr = domain_boxes.begin();
+           itr != domain_boxes.end(); ++itr) {
          itr->setBlockId(hier::BlockId(0));
-         domain_boxes.pushBack(hier::Box(*itr, local_id++, 0));
       }
 
       std::vector<double> xlo(dim.getValue());
@@ -342,7 +341,7 @@ int main(
        * If num_procs_in_tile is given, take the domain_boxes, xlo and xhi
        * to be the size for the (integer) value of num_procs_in_tile.  Scale
        * the problem from there to the number of process running by
-       * doubling the dimension starting with the j direction.
+       * doubling the size starting with the j direction.
        *
        * The number of processes must be a power of 2 times the value
        * of num_procs_in_tile.
@@ -425,10 +424,9 @@ int main(
          grid_geometry,
          tbox::SAMRAI_MPI::getSAMRAIWorld(),
          hier::BoxLevel::GLOBALIZED);
-      hier::BoxContainer::iterator domain_boxes_itr(domain_boxes);
-      for (int i = 0; i < domain_boxes.size(); ++i, ++domain_boxes_itr) {
-         domain_box_level.addBox(hier::Box(*domain_boxes_itr,
-               hier::LocalId(i), 0));
+      for (hier::BoxContainer::const_iterator bi=grid_geometry->getPhysicalDomain().begin();
+           bi!=grid_geometry->getPhysicalDomain().end() ; ++bi) {
+         domain_box_level.addBox(*bi);
       }
 
 
@@ -506,8 +504,8 @@ int main(
             domain_to_L0,
             hierarchy,
             0,
-            hier::Connector(),
-            hier::Connector(),
+            hier::Connector(dim),
+            hier::Connector(dim),
             hierarchy->getSmallestPatchSize(0),
             hierarchy->getLargestPatchSize(0),
             domain_box_level,
@@ -539,14 +537,14 @@ int main(
 
 
       hier::BoxLevel L1(dim);
-      hier::Connector L1_to_L0;
-      hier::Connector L0_to_L1;
-      hier::Connector L1_to_L1;
+      hier::Connector L1_to_L0(dim);
+      hier::Connector L0_to_L1(dim);
+      hier::Connector L1_to_L1(dim);
 
       hier::BoxLevel L2(dim);
-      hier::Connector L2_to_L1;
-      hier::Connector L1_to_L2;
-      hier::Connector L2_to_L2;
+      hier::Connector L2_to_L1(dim);
+      hier::Connector L1_to_L2(dim);
+      hier::Connector L2_to_L2(dim);
 
 
 
@@ -603,8 +601,8 @@ int main(
             L0_to_L1,
             hierarchy,
             1,
-            hier::Connector(),
-            hier::Connector(),
+            hier::Connector(dim),
+            hier::Connector(dim),
             hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
             hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(1), hierarchy->getRatioToCoarserLevel(1)),
             domain_box_level,
@@ -700,8 +698,8 @@ int main(
             L1_to_L2,
             hierarchy,
             1,
-            hier::Connector(),
-            hier::Connector(),
+            hier::Connector(dim),
+            hier::Connector(dim),
             hier::IntVector::ceilingDivide(hierarchy->getSmallestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
             hier::IntVector::ceilingDivide(hierarchy->getLargestPatchSize(2), hierarchy->getRatioToCoarserLevel(2)),
             domain_box_level,
@@ -1004,7 +1002,8 @@ void generatePrebalanceByUserShells(
       hier::VariableDatabase::getDatabase();
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
       new hier::PatchLevel(L0,
@@ -1054,7 +1053,8 @@ void generatePrebalanceByUserShells(
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);
 
@@ -1088,12 +1088,11 @@ void generatePrebalanceByUserShells(
       tag_level,
       tag_id,
       tag_val,
-      L0.getGlobalBoundingBox(0),
+      hier::BoxContainer(L0.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
    /*
@@ -1112,7 +1111,7 @@ void generatePrebalanceByUserShells(
     * Make L1 nest inside L0 by one cell.
     */
    hier::BoxLevel L1nested(dim);
-   hier::Connector L1_to_L1nested;
+   hier::Connector L1_to_L1nested(dim);
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L1nested,
                               L1_to_L1nested,
@@ -1149,7 +1148,8 @@ void generatePrebalanceByShrinkingLevel(
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    // Parameters set by database, with defaults.
    double efficiency_tol = 1.00;
@@ -1171,7 +1171,7 @@ void generatePrebalanceByShrinkingLevel(
 
 
    hier::BoxLevel L1tags(dim);
-   hier::Connector L1_to_L1tags;
+   hier::Connector L1_to_L1tags(dim);
    const hier::Connector &L1_to_L1 =
       L1.getPersistentOverlapConnectors().findOrCreateConnector(
          L1,
@@ -1218,16 +1218,17 @@ void generatePrebalanceByShrinkingLevel(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       tag_data->getArrayData().fillAll(0);
 
-      if ( !L1_to_L1tags.hasNeighborSet(patch->getBox().getId()) ) {
+      if ( !L1_to_L1tags.hasNeighborSet(patch->getBox().getBoxId()) ) {
          tag_data->getArrayData().fillAll(1);
       }
       else {
          hier::Connector::ConstNeighborhoodIterator ni =
-            L1_to_L1tags.find(patch->getBox().getId());
+            L1_to_L1tags.find(patch->getBox().getBoxId());
 
          for ( hier::Connector::ConstNeighborIterator na = L1_to_L1tags.begin(ni);
                na != L1_to_L1tags.end(ni); ++na ) {
@@ -1249,12 +1250,11 @@ void generatePrebalanceByShrinkingLevel(
       tag_level,
       tag_id,
       tag_val,
-      L1.getGlobalBoundingBox(0),
+      hier::BoxContainer(L1.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
 
@@ -1275,7 +1275,7 @@ void generatePrebalanceByShrinkingLevel(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    hier::BoxLevel L2nested(dim);
-   hier::Connector L2_to_L2nested;
+   hier::Connector L2_to_L2nested(dim);
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
                               L2_to_L1,
@@ -1311,7 +1311,8 @@ void generatePrebalanceBySinusoidalFront(
 
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
       hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(grid_geometry);
 
    // Parameters set by database, with defaults.
    double efficiency_tol = 0.70;
@@ -1341,8 +1342,7 @@ void generatePrebalanceBySinusoidalFront(
 
    const int tag_val = 1;
 
-   hier::VariableDatabase* vdb =
-      hier::VariableDatabase::getDatabase();
+   hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
 
    boost::shared_ptr<hier::PatchLevel> tag_level(
       new hier::PatchLevel(
@@ -1378,14 +1378,16 @@ void generatePrebalanceBySinusoidalFront(
 
       boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
          patch->getPatchGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(patch_geom);
 
       boost::shared_ptr<pdat::CellData<int> > tag_data(
          patch->getPatchData(tag_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       sinusoidal_front_tagger.computeFrontsData(
-         NULL /* distance data */,
+         0 /* distance data */,
          tag_data.get(),
          tag_buffer,
          patch_geom->getXLower(),
@@ -1406,12 +1408,11 @@ void generatePrebalanceBySinusoidalFront(
       tag_level,
       tag_id,
       tag_val,
-      L1.getGlobalBoundingBox(0),
+      hier::BoxContainer(L1.getGlobalBoundingBox(0)),
       min_size,
       efficiency_tol,
       combine_tol,
       connector_width,
-      hier::BlockId::zero(),
       hier::LocalId(0));
 
 
@@ -1432,7 +1433,7 @@ void generatePrebalanceBySinusoidalFront(
     */
    const hier::IntVector nesting_width(dim, hierarchy->getProperNestingBuffer(coarser_ln));
    hier::BoxLevel L2nested(dim);
-   hier::Connector L2_to_L2nested;
+   hier::Connector L2_to_L2nested(dim);
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts( L2nested,
                               L2_to_L2nested,
@@ -1480,8 +1481,7 @@ void generatePrebalanceByUserBoxes(
       const int owner = i % initial_owners.size();
       if (owner == L1.getMPI().getRank()) {
          prebalance_boxes_itr->setBlockId(hier::BlockId(0));
-         L1.addBox(hier::Box(*prebalance_boxes_itr,
-               hier::LocalId(i), owner));
+         L1.addBox(hier::Box(*prebalance_boxes_itr, hier::LocalId(i), owner));
       }
    }
 
@@ -1512,7 +1512,7 @@ void sortNodes(
 {
    const hier::MappingConnectorAlgorithm mca;
 
-   hier::Connector sorting_map;
+   hier::Connector sorting_map(new_box_level.getDim());
    hier::BoxLevel seq_box_level(new_box_level.getDim());
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(

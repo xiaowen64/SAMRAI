@@ -28,8 +28,7 @@
 namespace SAMRAI {
 namespace xfer {
 
-const CoarsenClasses::Data ** CoarsenCopyTransaction::s_coarsen_items =
-   (const CoarsenClasses::Data **)NULL;
+const CoarsenClasses::Data ** CoarsenCopyTransaction::s_coarsen_items = 0;
 int CoarsenCopyTransaction::s_num_coarsen_items = 0;
 
 /*
@@ -44,11 +43,11 @@ CoarsenCopyTransaction::CoarsenCopyTransaction(
    const boost::shared_ptr<hier::PatchLevel>& dst_level,
    const boost::shared_ptr<hier::PatchLevel>& src_level,
    const boost::shared_ptr<hier::BoxOverlap>& overlap,
-   const hier::Box& dst_mapped_box,
-   const hier::Box& src_mapped_box,
+   const hier::Box& dst_box,
+   const hier::Box& src_box,
    const int coarsen_item_id):
-   d_dst_patch_rank(dst_mapped_box.getOwnerRank()),
-   d_src_patch_rank(src_mapped_box.getOwnerRank()),
+   d_dst_patch_rank(dst_box.getOwnerRank()),
+   d_src_patch_rank(src_box.getOwnerRank()),
    d_overlap(overlap),
    d_coarsen_item_id(coarsen_item_id),
    d_incoming_bytes(0),
@@ -57,21 +56,21 @@ CoarsenCopyTransaction::CoarsenCopyTransaction(
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
    TBOX_ASSERT(overlap);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level,
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level,
       *src_level,
-      dst_mapped_box,
-      src_mapped_box);
-   TBOX_ASSERT(dst_mapped_box.getLocalId() >= 0);
-   TBOX_ASSERT(src_mapped_box.getLocalId() >= 0);
+      dst_box,
+      src_box);
+   TBOX_ASSERT(dst_box.getLocalId() >= 0);
+   TBOX_ASSERT(src_box.getLocalId() >= 0);
    TBOX_ASSERT(coarsen_item_id >= 0);
 
    // Note: s_num_coarsen_items cannot be used at this point!
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_dst_patch = dst_level->getPatch(dst_mapped_box.getGlobalId());
+      d_dst_patch = dst_level->getPatch(dst_box.getGlobalId());
    }
    if (d_src_patch_rank == src_level->getBoxLevel()->getMPI().getRank()) {
-      d_src_patch = src_level->getPatch(src_mapped_box.getGlobalId());
+      d_src_patch = src_level->getPatch(src_box.getGlobalId());
    }
 }
 

@@ -26,7 +26,7 @@
 #include "SAMRAI/pdat/IndexDataFactory.h"
 #include "SAMRAI/pdat/IndexDataFactory.C"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <list>
 
 using namespace SAMRAI;
@@ -81,12 +81,12 @@ public:
       NULL_USE(offset);
    }
 
-   void putUnregisteredToDatabase(
+   void putToRestart(
       boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
    }
-   void getFromDatabase(
+   void getFromRestart(
       boost::shared_ptr<tbox::Database> dbase)
    {
       NULL_USE(dbase);
@@ -114,7 +114,6 @@ template class pdat::IndexDataNode<Item, pdat::CellGeometry>;
 template class pdat::IndexIterator<Item, pdat::CellGeometry>;
 template class pdat::IndexVariable<Item, pdat::CellGeometry>;
 
-template class tbox::Array<pdat::IndexDataNode<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexData<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexVariable<Item, pdat::CellGeometry> >;
 template class boost::shared_ptr<pdat::IndexDataFactory<Item, pdat::CellGeometry> >;

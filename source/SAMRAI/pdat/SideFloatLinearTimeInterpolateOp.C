@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /*
  *************************************************************************
@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (const int&,
    const float *, const float *,
    float *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintsidefloat2d0, LINTIMEINTSIDEFLOAT2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat2d0, LINTIMEINTSIDEFLOAT2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(lintimeintsidefloat2d0, LINTIMEINTSIDEFLOAT2D0) (const int&,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintsidefloat2d1, LINTIMEINTSIDEFLOAT2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat2d1, LINTIMEINTSIDEFLOAT2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -70,7 +70,7 @@ void F77_FUNC(lintimeintsidefloat2d1, LINTIMEINTSIDEFLOAT2D1) (const int&,
    const float *, const float *,
    float *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintsidefloat3d0, LINTIMEINTSIDEFLOAT3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat3d0, LINTIMEINTSIDEFLOAT3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -82,7 +82,7 @@ void F77_FUNC(lintimeintsidefloat3d0, LINTIMEINTSIDEFLOAT3D0) (const int&,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintsidefloat3d1, LINTIMEINTSIDEFLOAT3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat3d1, LINTIMEINTSIDEFLOAT3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -94,7 +94,7 @@ void F77_FUNC(lintimeintsidefloat3d1, LINTIMEINTSIDEFLOAT3D1) (const int&,
    const double&,
    const float *, const float *,
    float *);
-void F77_FUNC(lintimeintsidefloat3d2, LINTIMEINTSIDEFLOAT3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintsidefloat3d2, LINTIMEINTSIDEFLOAT3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -130,19 +130,19 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const SideData<float>* old_dat =
-      dynamic_cast<const SideData<float> *>(&src_data_old);
+      CPP_CAST<const SideData<float> *>(&src_data_old);
    const SideData<float>* new_dat =
-      dynamic_cast<const SideData<float> *>(&src_data_new);
+      CPP_CAST<const SideData<float> *>(&src_data_new);
    SideData<float>* dst_dat =
-      dynamic_cast<SideData<float> *>(&dst_data);
+      CPP_CAST<SideData<float> *>(&dst_data);
 
-   TBOX_ASSERT(old_dat != NULL);
-   TBOX_ASSERT(new_dat != NULL);
-   TBOX_ASSERT(dst_dat != NULL);
+   TBOX_ASSERT(old_dat != 0);
+   TBOX_ASSERT(new_dat != 0);
+   TBOX_ASSERT(dst_dat != 0);
    TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst_data, where, src_data_old, src_data_new);
 
    const hier::IntVector& directions = dst_dat->getDirectionVector();
 
@@ -182,7 +182,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
    for (int d = 0; d < dst_dat->getDepth(); d++) {
       if (dim == tbox::Dimension(1)) {
          if (directions(0)) {
-            F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidefloat1d, LINTIMEINTSIDEFLOAT1D) (ifirst(0),
                ilast(0),
                old_ilo(0), old_ihi(0),
                new_ilo(0), new_ihi(0),
@@ -194,7 +194,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
          }
       } else if (dim == tbox::Dimension(2)) {
          if (directions(0)) {
-            F77_FUNC(lintimeintsidefloat2d0, LINTIMEINTSIDEFLOAT2D0) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidefloat2d0, LINTIMEINTSIDEFLOAT2D0) (ifirst(0),
                ifirst(1), ilast(0), ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
                new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -205,7 +205,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(0, d));
          }
          if (directions(1)) {
-            F77_FUNC(lintimeintsidefloat2d1, LINTIMEINTSIDEFLOAT2D1) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidefloat2d1, LINTIMEINTSIDEFLOAT2D1) (ifirst(0),
                ifirst(1), ilast(0), ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
                new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -217,7 +217,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
          }
       } else if (dim == tbox::Dimension(3)) {
          if (directions(0)) {
-            F77_FUNC(lintimeintsidefloat3d0, LINTIMEINTSIDEFLOAT3D0) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidefloat3d0, LINTIMEINTSIDEFLOAT3D0) (ifirst(0),
                ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -232,7 +232,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(0, d));
          }
          if (directions(1)) {
-            F77_FUNC(lintimeintsidefloat3d1, LINTIMEINTSIDEFLOAT3D1) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidefloat3d1, LINTIMEINTSIDEFLOAT3D1) (ifirst(0),
                ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -247,7 +247,7 @@ SideFloatLinearTimeInterpolateOp::timeInterpolate(
                dst_dat->getPointer(1, d));
          }
          if (directions(2)) {
-            F77_FUNC(lintimeintsidefloat3d2, LINTIMEINTSIDEFLOAT3D2) (ifirst(0),
+            SAMRAI_F77_FUNC(lintimeintsidefloat3d2, LINTIMEINTSIDEFLOAT3D2) (ifirst(0),
                ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),

@@ -68,7 +68,7 @@ PatchInteriorVariableFillPattern::calculateOverlap(
 {
    NULL_USE(dst_patch_box);
    NULL_USE(overwrite_interior);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
    hier::BoxContainer dst_restrict_boxes(dst_patch_box);
    return dst_geometry.calculateOverlap(src_geometry, src_mask, fill_box,
       true, transformation,

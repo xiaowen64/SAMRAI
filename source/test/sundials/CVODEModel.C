@@ -59,7 +59,7 @@
 #endif
 
 extern "C" {
-void F77_FUNC(comprhs2d, COMPRHS2D) (
+void SAMRAI_F77_FUNC(comprhs2d, COMPRHS2D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -68,14 +68,14 @@ void F77_FUNC(comprhs2d, COMPRHS2D) (
    const double *, const double *,
    double *);
 #ifdef USE_FAC_PRECONDITIONER
-void F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
+void SAMRAI_F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
    const int&, const int&,
    const int&, const int&,
    const int *, const double *,
    int *, int *, int *, int *,
    double *, double *, double *, double *);
 #endif
-void F77_FUNC(comprhs3d, COMPRHS3D) (
+void SAMRAI_F77_FUNC(comprhs3d, COMPRHS3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -85,7 +85,7 @@ void F77_FUNC(comprhs3d, COMPRHS3D) (
    const double *, const double *, const double *,
    double *);
 #ifdef USE_FAC_PRECONDITIONER
-void F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
+void SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -103,15 +103,16 @@ void F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
 
 CVODEModel::CVODEModel(
    const string& object_name,
-   const tbox::Dimension& dim,
+   const Dimension& dim,
+   boost::shared_ptr<CellPoissonFACSolver> fac_solver,
    boost::shared_ptr<Database> input_db,
    boost::shared_ptr<CartesianGridGeometry> grid_geom):
-   RefinePatchStrategy(dim),
-   CoarsenPatchStrategy(dim),
+   RefinePatchStrategy(),
+   CoarsenPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_soln_var(new CellVariable<double>(dim, "soln", 1)),
-   d_FAC_solver(dim, object_name + ":FAC solver"),
+   d_FAC_solver(fac_solver),
    d_grid_geometry(grid_geom)
 {
    /*
@@ -129,7 +130,8 @@ CVODEModel::CVODEModel(
          d_scr_cxt,
          IntVector(d_dim, 1));
 #ifdef USE_FAC_PRECONDITIONER
-   d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion", 1));
+   d_diff_var.reset(new SideVariable<double>(d_dim, "diffusion",
+      hier::IntVector::getOne(d_dim), 1));
 
    d_diff_id = variable_db->registerVariableAndContext(d_diff_var,
          d_cur_cxt,
@@ -138,8 +140,6 @@ CVODEModel::CVODEModel(
    /*
     * Set default values for preconditioner.
     */
-   d_max_fac_its = 1;
-   d_fac_tol = 1.0e-40;
    d_max_hypre_its = 1;
    d_hypre_tol = 1.0e-40;
    d_use_neumann_bcs = false;
@@ -163,7 +163,7 @@ CVODEModel::CVODEModel(
    /*
     * Boundary condition initialization.
     */
-   if (d_dim == tbox::Dimension(2)) {
+   if (d_dim == Dimension(2)) {
       d_scalar_bdry_edge_conds.resizeArray(NUM_2D_EDGES);
       for (int ei = 0; ei < NUM_2D_EDGES; ei++) {
          d_scalar_bdry_edge_conds[ei] = BOGUS_BDRY_DATA;
@@ -178,9 +178,9 @@ CVODEModel::CVODEModel(
       }
 
       d_bdry_edge_val.resizeArray(NUM_2D_EDGES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_val);
+      MathUtilities<double>::setArrayToSignalingNaN(d_bdry_edge_val);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds.resizeArray(NUM_3D_FACES);
       for (int fi = 0; fi < NUM_3D_FACES; fi++) {
          d_scalar_bdry_face_conds[fi] = BOGUS_BDRY_DATA;
@@ -202,7 +202,7 @@ CVODEModel::CVODEModel(
       }
 
       d_bdry_face_val.resizeArray(NUM_3D_FACES);
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_val);
+      MathUtilities<double>::setArrayToSignalingNaN(d_bdry_face_val);
    }
 
    /*
@@ -236,14 +236,14 @@ CVODEModel::CVODEModel(
     * Set boundary types for FAC preconditioner.
     *  bdry_types holds a flag where 0 = dirichlet, 1 = neumann
     */
-   if (d_dim == tbox::Dimension(2)) {
+   if (d_dim == Dimension(2)) {
       for (int i = 0; i < NUM_2D_EDGES; i++) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_edge_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
          if (d_scalar_bdry_edge_conds[i] == BdryCond::NEUMANN) d_bdry_types[i] = 1;
       }
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; i++) {
          d_bdry_types[i] = 0;
          if (d_scalar_bdry_face_conds[i] == BdryCond::DIRICHLET) d_bdry_types[i] = 0;
@@ -257,7 +257,7 @@ CVODEModel::CVODEModel(
     * quantity in this problem cannot have reflective boundary conditions
     * so we reset them to BdryCond::FLOW.
     */
-   if (d_dim == tbox::Dimension(2)) {
+   if (d_dim == Dimension(2)) {
       for (int i = 0; i < NUM_2D_EDGES; i++) {
          if (d_scalar_bdry_edge_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_edge_conds[i] = BdryCond::FLOW;
@@ -279,7 +279,7 @@ CVODEModel::CVODEModel(
          }
       }
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       for (int i = 0; i < NUM_3D_FACES; i++) {
          if (d_scalar_bdry_face_conds[i] == BdryCond::REFLECT) {
             d_scalar_bdry_face_conds[i] = BdryCond::FLOW;
@@ -420,7 +420,8 @@ CVODEModel::applyGradientDetector(
 
       boost::shared_ptr<CellData<int> > tag_data(
          patch->getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_data);
 
       // dumb implementation that tags all cells.
       tag_data->fillAll(TRUE);
@@ -445,14 +446,13 @@ CVODEModel::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<CellData<double> > soln_data(
       patch.getPatchData(d_soln_scr_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(soln_data);
-#endif
+
    IntVector ghost_cells(soln_data->getGhostCellWidth());
 
-   if (d_dim == tbox::Dimension(2)) {
+   if (d_dim == Dimension(2)) {
 
       /*
        * Set boundary conditions for cells corresponding to patch edges.
@@ -476,8 +476,7 @@ CVODEModel::setPhysicalBoundaryConditions(
          d_bdry_edge_val);
 
    }
-
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
 
       /*
        *  Set boundary conditions for cells corresponding to patch faces.
@@ -620,7 +619,7 @@ CVODEModel::evaluateRHSFunction(
     * 4) Use the refine schedule to fill data on fine level.
     */
    boost::shared_ptr<RefineAlgorithm> bdry_fill_alg(
-      new RefineAlgorithm(d_dim));
+      new RefineAlgorithm());
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
    bdry_fill_alg->registerRefine(d_soln_scr_id,  // dest
@@ -657,20 +656,24 @@ CVODEModel::evaluateRHSFunction(
 
          boost::shared_ptr<CellData<double> > y(
             patch->getPatchData(d_soln_scr_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<SideData<double> > diff(
             patch->getPatchData(d_diff_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<CellData<double> > rhs(
             patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0)),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(y);
+         TBOX_ASSERT(diff);
+         TBOX_ASSERT(rhs);
 
          const Index ifirst(patch->getBox().lower());
          const Index ilast(patch->getBox().upper());
 
          const boost::shared_ptr<CartesianPatchGeometry> patch_geom(
             patch->getPatchGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
 
          IntVector ghost_cells(y->getGhostCellWidth());
@@ -678,8 +681,8 @@ CVODEModel::evaluateRHSFunction(
          /*
           * 1 eqn radiation diffusion
           */
-         if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(comprhs2d, COMPRHS2D) (
+         if (d_dim == Dimension(2)) {
+            SAMRAI_F77_FUNC(comprhs2d, COMPRHS2D) (
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ghost_cells(0), ghost_cells(1),
@@ -688,8 +691,8 @@ CVODEModel::evaluateRHSFunction(
                diff->getPointer(0),
                diff->getPointer(1),
                rhs->getPointer());
-         } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(comprhs3d, COMPRHS3D) (
+         } else if (d_dim == Dimension(3)) {
+            SAMRAI_F77_FUNC(comprhs3d, COMPRHS3D) (
                ifirst(0), ilast(0),
                ifirst(1), ilast(1),
                ifirst(2), ilast(2),
@@ -773,7 +776,7 @@ int CVODEModel::CVSpgmrPrecondSet(
    /*
     * Construct refine algorithm to fill boundaries of solution vector
     */
-   RefineAlgorithm fill_soln_vector_bounds(d_dim);
+   RefineAlgorithm fill_soln_vector_bounds;
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
    fill_soln_vector_bounds.registerRefine(d_soln_scr_id,
@@ -837,14 +840,12 @@ int CVODEModel::CVSpgmrPrecondSet(
 
          boost::shared_ptr<SideData<double> > diffusion(
             patch->getPatchData(d_diff_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(diffusion);
 
          diffusion->fillAll(1.0);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-         double current_dt = t - d_current_soln_time;
-         TBOX_ASSERT(current_dt >= 0.);
-#endif
+         TBOX_ASSERT((t - d_current_soln_time) >= 0.);
 
          /*
           * Set Neumann fluxes and flag array (if desired)
@@ -853,10 +854,12 @@ int CVODEModel::CVSpgmrPrecondSet(
 
             boost::shared_ptr<OuterfaceData<int> > flag_data(
                patch->getPatchData(d_flag_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             boost::shared_ptr<OuterfaceData<double> > neuf_data(
                patch->getPatchData(d_neuf_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(flag_data);
+            TBOX_ASSERT(neuf_data);
 
             /*
              * Outerface data access:
@@ -865,8 +868,8 @@ int CVODEModel::CVSpgmrPrecondSet(
              * and face specifies lower or upper (0,1 respectively)
              */
 
-            if (d_dim == tbox::Dimension(2)) {
-               F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
+            if (d_dim == Dimension(2)) {
+               SAMRAI_F77_FUNC(setneufluxvalues2d, SETNEUFLUXVALUES2D) (
                   ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   d_bdry_types,
@@ -880,8 +883,8 @@ int CVODEModel::CVSpgmrPrecondSet(
                   neuf_data->getPointer(1, 0), // y lower
                   neuf_data->getPointer(1, 1)); // y upper
             }
-            if (d_dim == tbox::Dimension(3)) {
-               F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
+            else if (d_dim == Dimension(3)) {
+               SAMRAI_F77_FUNC(setneufluxvalues3d, SETNEUFLUXVALUES3D) (
                   ifirst(0), ilast(0),
                   ifirst(1), ilast(1),
                   ifirst(2), ilast(2),
@@ -909,30 +912,17 @@ int CVODEModel::CVSpgmrPrecondSet(
    } // level loop
 
    /*
-    * Setup FAC preconditioner
-    */
-
-   /* Construct a Poisson solver for a level.  The use_smg flag
-    * is used to select which of HYPRE's linear solver algorithms to use
-    * if true, the semicoarsening multigrid algorithm is used, and if
-    * false, the ``PF'' multigrid algorithm is used.
-    */
-   bool use_smg = false;
-
-   d_FAC_solver.setUseSMG(use_smg);
-
-   /*
     * Set boundaries.  The "bdry_types" array holds a set of integers
     * where 0 = dirichlet and 1 = neumann boundary conditions.
     */
    if (d_use_neumann_bcs) {
-      d_FAC_solver.setBoundaries("Mixed", d_neuf_id, d_flag_id, d_bdry_types);
+      d_FAC_solver->setBoundaries("Mixed", d_neuf_id, d_flag_id, d_bdry_types);
    } else {
-      d_FAC_solver.setBoundaries("Dirichlet");
+      d_FAC_solver->setBoundaries("Dirichlet");
    }
 
-   d_FAC_solver.setCConstant(1.0 / gamma);
-   d_FAC_solver.setDPatchDataId(d_diff_id);
+   d_FAC_solver->setCConstant(1.0 / gamma);
+   d_FAC_solver->setDPatchDataId(d_diff_id);
 
    /*
     * increment counter for number of precond setup calls
@@ -1009,7 +999,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * Construct a communication schedule which will fill ghosts of
     * soln_scratch with z vector data (z -> soln_scratch).
     */
-   RefineAlgorithm fill_z_vector_bounds(d_dim);
+   RefineAlgorithm fill_z_vector_bounds;
    boost::shared_ptr<RefineOperator> refine_op(d_grid_geometry->
       lookupRefineOperator(d_soln_var, "CONSERVATIVE_LINEAR_REFINE"));
    fill_z_vector_bounds.registerRefine(d_soln_scr_id,
@@ -1035,7 +1025,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
          boost::shared_ptr<CellData<double> > z_data(
             patch->getPatchData(z_indx),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(z_data);
 
          /*
           * Set initial guess for z here.
@@ -1048,7 +1039,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
          PatchCellDataOpsReal<double> math_ops;
          boost::shared_ptr<CellData<double> > r_data(
             patch->getPatchData(r_indx),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(r_data);
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
 
          /*
@@ -1056,7 +1048,8 @@ int CVODEModel::CVSpgmrPrecondSolve(
           */
          boost::shared_ptr<CellData<double> > z_scr_data(
             patch->getPatchData(d_soln_scr_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(z_scr_data);
          z_scr_data->copy(*z_data);
       }
 
@@ -1099,8 +1092,6 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * error.
     */
 
-   d_FAC_solver.setMaxCycles(d_max_fac_its);
-   d_FAC_solver.setResidualTolerance(d_fac_tol);
    const int coarsest_solve_ln = 0;
    const int finest_solve_ln = 0;
    /*
@@ -1108,7 +1099,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
     * When upgrading to the new FAC solver from the old, I noticed
     * that the old solver only solved on level 0.  BTNG.
     */
-   bool converge = d_FAC_solver.solveSystem(d_soln_scr_id,
+   bool converge = d_FAC_solver->solveSystem(d_soln_scr_id,
          r_indx,
          hierarchy,
          coarsest_solve_ln,
@@ -1116,9 +1107,9 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
    if (d_print_solver_info) {
       double avg_convergence, final_convergence;
-      d_FAC_solver.getConvergenceFactors(avg_convergence, final_convergence);
+      d_FAC_solver->getConvergenceFactors(avg_convergence, final_convergence);
       pout << "   \t\t\tFinal Residual Norm: "
-           << d_FAC_solver.getResidualNorm() << endl;
+           << d_FAC_solver->getResidualNorm() << endl;
       pout << "   \t\t\tFinal Convergence Error: "
            << final_convergence << endl;
       pout << "   \t\t\tFinal Convergence Rate: "
@@ -1140,10 +1131,12 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
          boost::shared_ptr<CellData<double> > soln_scratch(
             patch->getPatchData(d_soln_scr_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<CellData<double> > z(
             patch->getPatchData(z_indx),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(soln_scratch);
+         TBOX_ASSERT(z);
 
          z->copy(*soln_scratch);
       }
@@ -1152,11 +1145,11 @@ int CVODEModel::CVSpgmrPrecondSolve(
 
    if (d_print_solver_info) {
       double avg_convergence, final_convergence;
-      d_FAC_solver.getConvergenceFactors(avg_convergence, final_convergence);
+      d_FAC_solver->getConvergenceFactors(avg_convergence, final_convergence);
       pout << "\t\tAfter FAC Solve (Az=r): "
            << "\n   \t\t\tz_l2norm = " << z_samvect->L2Norm()
            << "\n   \t\t\tz_maxnorm = " << z_samvect->maxNorm()
-           << "\n   \t\t\tResidual Norm: " << d_FAC_solver.getResidualNorm()
+           << "\n   \t\t\tResidual Norm: " << d_FAC_solver->getResidualNorm()
            << "\n   \t\t\tConvergence Error: " << final_convergence
            << endl;
    }
@@ -1215,9 +1208,7 @@ CVODEModel::setupSolutionVector(
 
    for (int ln = 0; ln < nlevels; ln++) {
       boost::shared_ptr<PatchLevel> level(hierarchy->getPatchLevel(ln));
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(level);
-#endif
       level->allocatePatchData(d_diff_id);
       if (d_use_neumann_bcs) {
          level->allocatePatchData(d_flag_id);
@@ -1265,7 +1256,8 @@ CVODEModel::setInitialConditions(
              */
             boost::shared_ptr<CellData<double> > y_init(
                soln_init_samvect->getComponentPatchData(cn, *patch),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(y_init);
             y_init->fillAll(d_initial_value);
 
             /*
@@ -1276,7 +1268,8 @@ CVODEModel::setInitialConditions(
              */
             boost::shared_ptr<SideData<double> > diffusion(
                patch->getPatchData(d_diff_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(diffusion);
 
             diffusion->fillAll(1.0);
          }
@@ -1322,7 +1315,7 @@ CVODEModel::getFromInput(
 
    d_initial_value = input_db->getDoubleWithDefault("initial_value", 0.0);
 
-   IntVector periodic(d_grid_geometry->getPeriodicShift(hier::IntVector(d_dim,
+   IntVector periodic(d_grid_geometry->getPeriodicShift(IntVector(d_dim,
                             1)));
    int num_per_dirs = 0;
    for (int id = 0; id < d_dim.getValue(); id++) {
@@ -1333,15 +1326,15 @@ CVODEModel::getFromInput(
       boost::shared_ptr<Database> boundary_db(
          input_db->getDatabase("Boundary_data"));
 
-      if (d_dim == tbox::Dimension(2)) {
-         CartesianBoundaryUtilities2::readBoundaryInput(this,
+      if (d_dim == Dimension(2)) {
+         CartesianBoundaryUtilities2::getFromInput(this,
             boundary_db,
             d_scalar_bdry_edge_conds,
             d_scalar_bdry_node_conds,
             periodic);
       }
-      if (d_dim == tbox::Dimension(3)) {
-         CartesianBoundaryUtilities3::readBoundaryInput(this,
+      else if (d_dim == Dimension(3)) {
+         CartesianBoundaryUtilities3::getFromInput(this,
             boundary_db,
             d_scalar_bdry_face_conds,
             d_scalar_bdry_edge_conds,
@@ -1356,10 +1349,6 @@ CVODEModel::getFromInput(
    }
 
 #ifdef USE_FAC_PRECONDITIONER
-   d_max_fac_its =
-      input_db->getIntegerWithDefault("max_fac_its", d_max_fac_its);
-   d_fac_tol =
-      input_db->getDoubleWithDefault("fac_tol", d_fac_tol);
    d_max_hypre_its =
       input_db->getIntegerWithDefault("max_hypre_its", d_max_hypre_its);
    d_hypre_tol =
@@ -1379,26 +1368,27 @@ CVODEModel::getFromInput(
  *
  *************************************************************************
  */
-void CVODEModel::putUnregisteredToDatabase(
-   const boost::shared_ptr<Database>& db) const
+void CVODEModel::putToRestart(
+   const boost::shared_ptr<Database>& restart_db) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(db);
-#endif
+   TBOX_ASSERT(restart_db);
 
-   db->putInteger("CVODE_MODEL_VERSION", CVODE_MODEL_VERSION);
+   restart_db->putInteger("CVODE_MODEL_VERSION", CVODE_MODEL_VERSION);
 
-   db->putDouble("d_initial_value", d_initial_value);
+   restart_db->putDouble("d_initial_value", d_initial_value);
 
-   db->putIntegerArray("d_scalar_bdry_edge_conds", d_scalar_bdry_edge_conds);
-   db->putIntegerArray("d_scalar_bdry_node_conds", d_scalar_bdry_node_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_edge_conds",
+      d_scalar_bdry_edge_conds);
+   restart_db->putIntegerArray("d_scalar_bdry_node_conds",
+      d_scalar_bdry_node_conds);
 
-   if (d_dim == tbox::Dimension(2)) {
-      db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
+   if (d_dim == Dimension(2)) {
+      restart_db->putDoubleArray("d_bdry_edge_val", d_bdry_edge_val);
    }
-   if (d_dim == tbox::Dimension(3)) {
-      db->putIntegerArray("d_scalar_bdry_face_conds", d_scalar_bdry_face_conds);
-      db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
+   else if (d_dim == Dimension(3)) {
+      restart_db->putIntegerArray("d_scalar_bdry_face_conds",
+         d_scalar_bdry_face_conds);
+      restart_db->putDoubleArray("d_bdry_face_val", d_bdry_face_val);
    }
 
 }
@@ -1434,10 +1424,10 @@ void CVODEModel::getFromRestart()
    d_scalar_bdry_edge_conds = db->getIntegerArray("d_scalar_bdry_edge_conds");
    d_scalar_bdry_node_conds = db->getIntegerArray("d_scalar_bdry_node_conds");
 
-   if (d_dim == tbox::Dimension(2)) {
+   if (d_dim == Dimension(2)) {
       d_bdry_edge_val = db->getDoubleArray("d_bdry_edge_val");
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       d_scalar_bdry_face_conds = db->getIntegerArray("d_scalar_bdry_face_conds");
 
       d_bdry_face_val = db->getDoubleArray("d_bdry_face_val");
@@ -1458,17 +1448,16 @@ void CVODEModel::readDirichletBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
-   if (d_dim == tbox::Dimension(2)) {
+
+   if (d_dim == Dimension(2)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1481,17 +1470,16 @@ void CVODEModel::readNeumannBoundaryDataEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
-#endif
-   if (d_dim == tbox::Dimension(2)) {
+
+   if (d_dim == Dimension(2)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
          d_bdry_edge_val);
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       readStateDataEntry(db,
          db_name,
          bdry_location_index,
@@ -1505,12 +1493,10 @@ void CVODEModel::readStateDataEntry(
    int array_indx,
    Array<double>& val)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(array_indx >= 0);
    TBOX_ASSERT(val.getSize() > array_indx);
-#endif
 
    if (db->keyExists("val")) {
       val[array_indx] = db->getDouble("val");
@@ -1545,7 +1531,7 @@ void CVODEModel::printClassData(
    os << "d_initial_value = " << d_initial_value << endl;
 
    os << "Boundary Condition data..." << endl;
-   if (d_dim == tbox::Dimension(2)) {
+   if (d_dim == Dimension(2)) {
       for (j = 0; j < d_scalar_bdry_edge_conds.getSize(); j++) {
          os << "       d_scalar_bdry_edge_conds[" << j << "] = "
             << d_scalar_bdry_edge_conds[j] << endl;
@@ -1562,7 +1548,7 @@ void CVODEModel::printClassData(
             << d_node_bdry_edge[j] << endl;
       }
    }
-   if (d_dim == tbox::Dimension(3)) {
+   else if (d_dim == Dimension(3)) {
       for (j = 0; j < d_scalar_bdry_face_conds.getSize(); j++) {
          os << "       d_scalar_bdry_face_conds[" << j << "] = "
             << d_scalar_bdry_face_conds[j] << endl;

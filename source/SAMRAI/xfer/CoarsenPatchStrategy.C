@@ -16,9 +16,7 @@
 namespace SAMRAI {
 namespace xfer {
 
-CoarsenPatchStrategy::CoarsenPatchStrategy(
-   const tbox::Dimension& dim):
-   d_dim(dim)
+CoarsenPatchStrategy::CoarsenPatchStrategy()
 {
    registerObject();
 }
@@ -43,10 +41,8 @@ CoarsenPatchStrategy::getMaxCoarsenOpStencilWidth(
       CoarsenPatchStrategy::getCurrentObjects();
    for (std::set<CoarsenPatchStrategy *>::const_iterator
         si = current_objects.begin(); si != current_objects.end(); ++si) {
-      const CoarsenPatchStrategy* op = *si;
-      if (op->getDim() == dim) {
-         max_width.max(op->getCoarsenOpStencilWidth());
-      }
+      const CoarsenPatchStrategy* strategy = *si;
+      max_width.max(strategy->getCoarsenOpStencilWidth(dim));
    }
 
    return max_width;

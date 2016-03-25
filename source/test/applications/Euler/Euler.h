@@ -34,7 +34,7 @@
 #include "SAMRAI/tbox/Array.h"
 
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 using namespace std;
 
@@ -203,11 +203,15 @@ public:
       const int tag_index,
       const bool uses_gradient_detector_too);
 
+   //@{
+   //! @name Required implementations of HyperbolicPatchStrategy pure virtuals.
+
    ///
    ///  The following routines:
    ///
    ///      setPhysicalBoundaryConditions(),
    ///      getRefineOpStencilWidth(),
+   ///      preprocessRefine()
    ///      postprocessRefine()
    ///
    ///  are concrete implementations of functions declared in the
@@ -229,8 +233,22 @@ public:
    /**
     * Return stencil width of conservative linear interpolation operations.
     */
-   virtual hier::IntVector
-   getRefineOpStencilWidth() const;
+   hier::IntVector
+   getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getOne(dim);
+   }
+
+   void
+   preprocessRefine(
+      hier::Patch& fine,
+      const hier::Patch& coarse,
+      const hier::Box& fine_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(fine);
+      NULL_USE(coarse);
+      NULL_USE(fine_box);
+      NULL_USE(ratio);
+   }
 
    /**
     * Refine velocity and pressure from coarse patch to fine patch
@@ -247,17 +265,33 @@ public:
    ///  The following routines:
    ///
    ///      getCoarsenOpStencilWidth(),
+   ///      preprocessCoarsen()
    ///      postprocessCoarsen()
    ///
    ///  are concrete implementations of functions declared in the
-   ///  CoarsenPatchStrategy abstract base class.
+   ///  CoarsenPatchStrategy abstract base class.  They are trivial
+   ///  because this class doesn't do any pre/postprocessCoarsen.
    ///
 
    /**
     * Return stencil width of conservative averaging operations.
     */
    hier::IntVector
-   getCoarsenOpStencilWidth() const;
+   getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector::getZero(dim);
+   }
+
+   void
+   preprocessCoarsen(
+      hier::Patch& coarse,
+      const hier::Patch& fine,
+      const hier::Box& coarse_box,
+      const hier::IntVector& ratio) {
+      NULL_USE(coarse);
+      NULL_USE(fine);
+      NULL_USE(coarse_box);
+      NULL_USE(ratio);
+   }
 
    /**
     * Coarsen velocity and pressure from coarse patch to fine patch
@@ -270,6 +304,8 @@ public:
       const hier::Box& coarse_box,
       const hier::IntVector& ratio);
 
+   //@}
+
    /**
     * Write state of Euler object to the given database for restart.
     *
@@ -277,8 +313,8 @@ public:
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -388,7 +424,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
    void
    getFromRestart();
@@ -509,12 +545,12 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_density_inside;
-   double d_velocity_inside[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_velocity_inside[SAMRAI::MAX_DIM_VAL];
    double d_pressure_inside;
    double d_density_outside;
-   double d_velocity_outside[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_velocity_outside[SAMRAI::MAX_DIM_VAL];
    double d_pressure_outside;
 
    /*

@@ -19,10 +19,18 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <string>
 #include <iostream>
+
+#define INPUT_RANGE_ERROR(param_name)                                     \
+   TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
+      << " out of range.  Check documentation for valid input.\n")
+
+#define INPUT_VALUE_ERROR(param_name)                                     \
+   TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \
+      << " invalid value.  Check documentation for valid input.\n")
 
 namespace SAMRAI {
 namespace tbox {
@@ -199,6 +207,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual boost::shared_ptr<Database>
    getDatabaseWithDefault(
@@ -222,6 +232,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putBool(
@@ -235,6 +247,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putBoolArray(
@@ -263,6 +278,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    getBool(
@@ -273,6 +290,8 @@ public:
     * If the specified key does not exist in the database, then the default
     * value is returned.  If the key exists but is not a boolean scalar,
     * then an error message is printed and the program exits.
+    *
+    * @pre !key.empty()
     */
    virtual bool
    getBoolWithDefault(
@@ -301,6 +320,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getBoolArray(
@@ -325,6 +346,8 @@ public:
     *
     * @param key  Key name in database.
     * @param data Data to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putDatabaseBox(
@@ -338,6 +361,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putDatabaseBoxArray(
@@ -366,6 +392,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual DatabaseBox
    getDatabaseBox(
@@ -379,6 +407,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual DatabaseBox
    getDatabaseBoxWithDefault(
@@ -407,6 +437,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getDatabaseBoxArray(
@@ -431,6 +463,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putChar(
@@ -446,6 +480,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putCharArray(
@@ -474,6 +511,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual char
    getChar(
@@ -487,6 +526,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual char
    getCharWithDefault(
@@ -515,6 +556,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getCharArray(
@@ -539,6 +582,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putComplex(
@@ -552,6 +597,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putComplexArray(
@@ -580,6 +628,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual dcomplex
    getComplex(
@@ -593,6 +643,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual dcomplex
    getComplexWithDefault(
@@ -621,6 +673,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getComplexArray(
@@ -645,6 +699,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putDouble(
@@ -658,6 +714,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putDoubleArray(
@@ -686,6 +745,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual double
    getDouble(
@@ -699,6 +760,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual double
    getDoubleWithDefault(
@@ -727,6 +790,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getDoubleArray(
@@ -751,6 +816,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putFloat(
@@ -764,6 +831,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putFloatArray(
@@ -792,6 +862,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual float
    getFloat(
@@ -805,6 +877,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual float
    getFloatWithDefault(
@@ -833,6 +907,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getFloatArray(
@@ -857,6 +933,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putInteger(
@@ -870,6 +948,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putIntegerArray(
@@ -898,6 +979,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual int
    getInteger(
@@ -911,6 +994,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual int
    getIntegerWithDefault(
@@ -939,6 +1024,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getIntegerArray(
@@ -963,6 +1050,8 @@ public:
     *
     * @param key Key name in database.
     * @param data Value to put into database.
+    *
+    * @pre !key.empty()
     */
    virtual void
    putString(
@@ -976,6 +1065,9 @@ public:
     *
     * @param key  Key name in database.
     * @param data Array with data to put into database.
+    *
+    * @pre !key.empty()
+    * @pre data.getSize() > 0
     */
    virtual void
    putStringArray(
@@ -1004,6 +1096,8 @@ public:
     * exits.
     *
     * @param key Key name in database.
+    *
+    * @pre !key.empty()
     */
    virtual std::string
    getString(
@@ -1017,6 +1111,8 @@ public:
     *
     * @param key          Key name in database.
     * @param defaultvalue Default value to return if not found.
+    *
+    * @pre !key.empty()
     */
    virtual std::string
    getStringWithDefault(
@@ -1045,6 +1141,8 @@ public:
     * @param key       Key name in database.
     * @param data      Array with data to put into database.
     * @param nelements Number of elements to write from array.
+    *
+    * @pre !key.empty()
     */
    virtual void
    getStringArray(
@@ -1484,12 +1582,12 @@ public:
       size_t size = getInteger(key + "_size");
       for (unsigned int i = 0; i < size; ++i) {
          const std::string index_str = Utilities::intToString(i);
-         vector[i].getFromDatabase(*this, key + "_" + index_str);
+         vector[i].getFromRestart(*this, key + "_" + index_str);
       }
    }
 
    /**
-    * Create an vector entry in the database with the specified
+    * Create a vector entry in the database with the specified
     * key name.  If the key already exists in the database, then the old
     * key record is deleted and the new one is silently created in its place.
     *
@@ -1508,7 +1606,7 @@ public:
       putInteger(key + "_size", size);
       for (unsigned int i = 0; i < size; ++i) {
          const std::string index_str = Utilities::intToString(i);
-         vector[i].putUnregisteredToDatabase(*this, key + "_" + index_str);
+         vector[i].putToRestart(*this, key + "_" + index_str);
       }
    }
 

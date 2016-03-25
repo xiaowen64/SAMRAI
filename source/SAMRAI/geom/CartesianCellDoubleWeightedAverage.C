@@ -36,21 +36,21 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -64,9 +64,8 @@ void F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (const int&,
 namespace SAMRAI {
 namespace geom {
 
-CartesianCellDoubleWeightedAverage::CartesianCellDoubleWeightedAverage(
-   const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "CONSERVATIVE_COARSEN")
+CartesianCellDoubleWeightedAverage::CartesianCellDoubleWeightedAverage():
+   hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }
 
@@ -81,9 +80,9 @@ CartesianCellDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellDoubleWeightedAverage::getStencilWidth() const
+CartesianCellDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -95,16 +94,16 @@ CartesianCellDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::CellData<double> > fdata(
       fine.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > cdata(
       coarse.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -116,17 +115,20 @@ CartesianCellDoubleWeightedAverage::coarsen(
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
 
    for (int d = 0; d < cdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
-         F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub1d, CARTWGTAVGCELLDOUB1D) (ifirstc(0),
             ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
@@ -136,7 +138,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if ((dim == tbox::Dimension(2))) {
-         F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub2d, CARTWGTAVGCELLDOUB2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -146,7 +148,7 @@ CartesianCellDoubleWeightedAverage::coarsen(
             fdata->getPointer(d),
             cdata->getPointer(d));
       } else if ((dim == tbox::Dimension(3))) {
-         F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartwgtavgcelldoub3d, CARTWGTAVGCELLDOUB3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),

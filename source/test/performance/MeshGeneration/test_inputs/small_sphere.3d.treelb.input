@@ -42,14 +42,12 @@ Main {
    combine_tol = 0.85
 
    BergerRigoutsos {
-      sort_output_nodes = TRUE
-      log_node_history = FALSE
-      log_cluster_summary = FALSE
-      log_cluster = FALSE
-      sequentialize_output_indices = FALSE
-      barrier_before_cluster = FALSE
-      // owner_mode = "SINGLE_OWNER"
-      // algo_advance_mode = "SYNCHRONOUS"
+      DEV_sort_output_nodes = TRUE
+      DEV_log_node_history = FALSE
+      DEV_log_cluster_summary = FALSE
+      DEV_log_cluster = FALSE
+      // DEV_owner_mode = "SINGLE_OWNER"
+      // DEV_algo_advance_mode = "SYNCHRONOUS"
    }
 
    mesh_generator_name = "SphericalShellGenerator"
@@ -75,21 +73,21 @@ Main {
 }
 
 TreeLoadBalancer {
-  report_load_balance = FALSE // Reported in main
+  DEV_report_load_balance = FALSE // Reported in main
   n_root_cycles = -1
   min_load_fraction_per_box = 0.03
-  balance_penalty_wt = 1.0
-  surface_penalty_wt = 1.0
-  slender_penalty_wt = 1.0
-  precut_penalty_wt = 1.0
+  DEV_balance_penalty_wt = 1.0
+  DEV_surface_penalty_wt = 1.0
+  DEV_slender_penalty_wt = 1.0
+  DEV_precut_penalty_wt = 1.0
 
   // Debugging options
-  check_map = FALSE
-  check_connectivity = FALSE
-  print_steps = FALSE
-  print_swap_steps = FALSE
-  print_break_steps = FALSE
-  print_edge_steps = FALSE
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
 }
 
 TimerManager {
@@ -108,10 +106,6 @@ PatchHierarchy {
    */
    max_levels = 3
 
-   enforce_proper_nesting = FALSE
-   extend_to_domain_boundary = FALSE
-   check_nonrefined_tags = "IGNORE"
-   // load_balance = FALSE
    largest_patch_size {
       level_0 = -1,-1,-1
       // level_0 = 20,20,20

@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -42,8 +42,7 @@ public:
    /**
     * Uninteresting default constructor.
     */
-   explicit NodeComplexInjection(
-      const tbox::Dimension& dim);
+   explicit NodeComplexInjection();
 
    /**
     * Uninteresting virtual destructor.
@@ -62,7 +61,7 @@ public:
     * zeros.  That is, its stencil does not extend outside the fine box.
     */
    hier::IntVector
-   getStencilWidth() const;
+   getStencilWidth( const tbox::Dimension &dim ) const;
 
    /**
     * Coarsen the source component on the fine patch to the destination
@@ -71,6 +70,10 @@ public:
     * the destination patch and the coarse box.  It is assumed that the
     * fine patch contains sufficient data for the stencil width of the
     * coarsening operator.
+    *
+    * @pre coarse.getDim == fine.getDim() &&
+    *      coarse.getDim == coarse_box.getDim() &&
+    *      coarse.getDim == ratio.getDim()
     */
    void
    coarsen(

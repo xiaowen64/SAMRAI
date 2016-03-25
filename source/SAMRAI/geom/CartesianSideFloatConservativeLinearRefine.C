@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (const int&,
    const float *, float *,
    float *, float *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefsideflot2d0, CARTCLINREFSIDEFLOT2D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsideflot2d0, CARTCLINREFSIDEFLOT2D0) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -53,7 +53,7 @@ void F77_FUNC(cartclinrefsideflot2d0, CARTCLINREFSIDEFLOT2D0) (const int&,
    const int *, const double *, const double *,
    const float *, float *,
    float *, float *, float *, float *);
-void F77_FUNC(cartclinrefsideflot2d1, CARTCLINREFSIDEFLOT2D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsideflot2d1, CARTCLINREFSIDEFLOT2D1) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -62,7 +62,7 @@ void F77_FUNC(cartclinrefsideflot2d1, CARTCLINREFSIDEFLOT2D1) (const int&,
    const float *, float *,
    float *, float *, float *, float *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefsideflot3d0, CARTCLINREFSIDEFLOT3D0) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsideflot3d0, CARTCLINREFSIDEFLOT3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -75,7 +75,7 @@ void F77_FUNC(cartclinrefsideflot3d0, CARTCLINREFSIDEFLOT3D0) (const int&,
    const float *, float *,
    float *, float *, float *,
    float *, float *, float *);
-void F77_FUNC(cartclinrefsideflot3d1, CARTCLINREFSIDEFLOT3D1) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsideflot3d1, CARTCLINREFSIDEFLOT3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -88,7 +88,7 @@ void F77_FUNC(cartclinrefsideflot3d1, CARTCLINREFSIDEFLOT3D1) (const int&,
    const float *, float *,
    float *, float *, float *,
    float *, float *, float *);
-void F77_FUNC(cartclinrefsideflot3d2, CARTCLINREFSIDEFLOT3D2) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefsideflot3d2, CARTCLINREFSIDEFLOT3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -109,9 +109,8 @@ namespace geom {
 // using namespace std;
 
 CartesianSideFloatConservativeLinearRefine::
-CartesianSideFloatConservativeLinearRefine(
-   const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "CONSERVATIVE_LINEAR_REFINE")
+CartesianSideFloatConservativeLinearRefine():
+   hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }
 
@@ -127,9 +126,9 @@ CartesianSideFloatConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianSideFloatConservativeLinearRefine::getStencilWidth() const
+CartesianSideFloatConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(getDim());
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -141,20 +140,20 @@ CartesianSideFloatConservativeLinearRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(dim, fine, coarse, ratio);
+   const tbox::Dimension& dim(fine.getDim());
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY2(dim, coarse, ratio);
 
    boost::shared_ptr<pdat::SideData<float> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::SideData<float> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    const pdat::SideOverlap* t_overlap =
-      dynamic_cast<const pdat::SideOverlap *>(&fine_overlap);
+      CPP_CAST<const pdat::SideOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -174,10 +173,13 @@ CartesianSideFloatConservativeLinearRefine::refine(
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    for (int axis = 0; axis < dim.getValue(); axis++) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
@@ -186,7 +188,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
            b != boxes.end(); ++b) {
 
          hier::Box fine_box(*b);
-         TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(dim, fine_box);
+         TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(dim, fine_box);
 
          fine_box.upper(axis) -= 1;
 
@@ -204,7 +206,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
          for (int d = 0; d < fdata->getDepth(); d++) {
             if ((dim == tbox::Dimension(1))) {
                if (directions(axis)) {
-                  F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (
+                  SAMRAI_F77_FUNC(cartclinrefsideflot1d, CARTCLINREFSIDEFLOT1D) (
                      ifirstc(0), ilastc(0),
                      ifirstf(0), ilastf(0),
                      cilo(0), cihi(0),
@@ -222,7 +224,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
                                             directions);
 
                if (axis == 0 && directions(0)) {
-                  F77_FUNC(cartclinrefsideflot2d0, CARTCLINREFSIDEFLOT2D0) (
+                  SAMRAI_F77_FUNC(cartclinrefsideflot2d0, CARTCLINREFSIDEFLOT2D0) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -236,7 +238,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      diff1.getPointer(), slope1.getPointer(0));
                }
                if (axis == 1 && directions(1)) {
-                  F77_FUNC(cartclinrefsideflot2d1, CARTCLINREFSIDEFLOT2D1) (
+                  SAMRAI_F77_FUNC(cartclinrefsideflot2d1, CARTCLINREFSIDEFLOT2D1) (
                      ifirstc(0), ifirstc(1), ilastc(0), ilastc(1),
                      ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
                      cilo(0), cilo(1), cihi(0), cihi(1),
@@ -259,7 +261,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
                                             directions);
 
                if (axis == 0 && directions(0)) {
-                  F77_FUNC(cartclinrefsideflot3d0, CARTCLINREFSIDEFLOT3D0) (
+                  SAMRAI_F77_FUNC(cartclinrefsideflot3d0, CARTCLINREFSIDEFLOT3D0) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -278,7 +280,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      diff2.getPointer(), slope2.getPointer(0));
                }
                if (axis == 1 && directions(1)) {
-                  F77_FUNC(cartclinrefsideflot3d1, CARTCLINREFSIDEFLOT3D1) (
+                  SAMRAI_F77_FUNC(cartclinrefsideflot3d1, CARTCLINREFSIDEFLOT3D1) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),
@@ -297,7 +299,7 @@ CartesianSideFloatConservativeLinearRefine::refine(
                      diff0.getPointer(), slope0.getPointer(1));
                }
                if (axis == 2 && directions(2)) {
-                  F77_FUNC(cartclinrefsideflot3d2, CARTCLINREFSIDEFLOT3D2) (
+                  SAMRAI_F77_FUNC(cartclinrefsideflot3d2, CARTCLINREFSIDEFLOT3D2) (
                      ifirstc(0), ifirstc(1), ifirstc(2),
                      ilastc(0), ilastc(1), ilastc(2),
                      ifirstf(0), ifirstf(1), ifirstf(2),

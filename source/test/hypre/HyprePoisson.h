@@ -44,7 +44,7 @@ using namespace std;
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 
@@ -86,12 +86,14 @@ public:
     * pass in valid pointers for those streams.
     *
     * @param object_name Ojbect name
+    * @param dim
+    * @param database
     */
    HyprePoisson(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> database =
-         boost::shared_ptr<tbox::Database>());
+      boost::shared_ptr<solv::CellPoissonHypreSolver>& hypre_solver,
+      boost::shared_ptr<solv::LocationIndexRobinBcCoefs>& bc_coefs);
 
    virtual ~HyprePoisson();
 
@@ -191,12 +193,12 @@ private:
    /*!
     * @brief HYPRE poisson solver.
     */
-   solv::CellPoissonHypreSolver d_poisson_hypre;
+   boost::shared_ptr<solv::CellPoissonHypreSolver> d_poisson_hypre;
 
    /*!
     * @brief Boundary condition coefficient implementation.
     */
-   solv::LocationIndexRobinBcCoefs d_bc_coefs;
+   boost::shared_ptr<solv::LocationIndexRobinBcCoefs> d_bc_coefs;
 
    //@}
 

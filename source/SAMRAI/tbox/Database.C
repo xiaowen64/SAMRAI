@@ -127,7 +127,7 @@ Database::getBoolWithDefault(
    if (keyExists(key)) {
       Array<bool> local_bool = getBoolArray(key);
       bool* locptr = local_bool.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }
@@ -246,7 +246,7 @@ Database::getDatabaseBoxWithDefault(
    if (keyExists(key)) {
       Array<DatabaseBox> local_box = getDatabaseBoxArray(key);
       DatabaseBox* locptr = local_box.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }
@@ -371,7 +371,7 @@ Database::getCharWithDefault(
    if (keyExists(key)) {
       Array<char> local_char = getCharArray(key);
       char* locptr = local_char.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }
@@ -497,7 +497,7 @@ Database::getComplexWithDefault(
    if (keyExists(key)) {
       Array<dcomplex> local_dcomplex = getComplexArray(key);
       dcomplex* locptr = local_dcomplex.getPointer();
-      if (locptr != NULL) {
+      if (locptr != 0) {
          retval = *locptr;
       }
    }
@@ -622,7 +622,7 @@ Database::getFloatWithDefault(
    if (keyExists(key)) {
       Array<float> local_float = getFloatArray(key);
       float* locptr = local_float.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }
@@ -746,7 +746,7 @@ Database::getDoubleWithDefault(
    if (keyExists(key)) {
       Array<double> local_double = getDoubleArray(key);
       double* locptr = local_double.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }
@@ -869,7 +869,7 @@ Database::getIntegerWithDefault(
    if (keyExists(key)) {
       Array<int> local_int = getIntegerArray(key);
       int* locptr = local_int.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }
@@ -993,7 +993,7 @@ Database::getStringWithDefault(
    if (keyExists(key)) {
       Array<std::string> local_string = getStringArray(key);
       std::string* locptr = local_string.getPointer();
-      return locptr == NULL ? defaultvalue : *locptr;
+      return locptr == 0 ? defaultvalue : *locptr;
    } else {
       return defaultvalue;
    }

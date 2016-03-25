@@ -30,7 +30,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -51,7 +51,7 @@ using namespace SAMRAI;
  * shrink_distance_0, shrink_distance_1, ...:
  * shrink_distance[ln] is the shink distance when tagging ON
  * level ln by shrinking the boundaries of level ln.
- * We use this method ONLY when shrink_distance[ln] is not given.
+ * We use this method ONLY when buffer_distance[ln] is not given.
  */
 class SphericalShellGenerator:
    public MeshGenerationStrategy
@@ -89,7 +89,7 @@ public:
     * Take the domain_boxes, xlo and xhi to be the size for the
     * (integer) value of autoscale_base_nprocs.  Scale the problem
     * from there to the number of process running by doubling the
-    * dimension starting with the j direction.
+    * size starting with the j direction.
     *
     * The number of processes must be a power of 2 times the value
     * of autoscale_base_nprocs.

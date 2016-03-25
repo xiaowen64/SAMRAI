@@ -14,7 +14,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-Logger * Logger::s_instance = NULL;
+Logger * Logger::s_instance = 0;
 
 StartupShutdownManager::Handler
 Logger::s_finalize_handler(
@@ -130,14 +130,14 @@ Logger::finalizeCallback()
 {
    if (s_instance) {
       delete s_instance;
-      s_instance = static_cast<Logger *>(NULL);
+      s_instance = 0;
    }
 }
 
 Logger*
 Logger::getInstance()
 {
-   if (s_instance == static_cast<Logger *>(NULL)) {
+   if (s_instance == 0) {
       s_instance = new Logger();
    }
 

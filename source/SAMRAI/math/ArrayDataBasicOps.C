@@ -33,31 +33,6 @@ ArrayDataBasicOps<TYPE>::~ArrayDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-ArrayDataBasicOps<TYPE>::ArrayDataBasicOps(
-   const ArrayDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);       // not implemented (but needed by some compilers)
-}
-
-template<class TYPE>
-void
-ArrayDataBasicOps<TYPE>::operator = (
-   const ArrayDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);       // not implemented (but needed by some compilers)
-}
-
-/*
- *************************************************************************
- *
  * General templated operations for array data.
  *
  *************************************************************************
@@ -76,7 +51,7 @@ ArrayDataBasicOps<TYPE>::scale(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -95,10 +70,10 @@ ArrayDataBasicOps<TYPE>::scale(
 
       if (!ibox.empty()) {
 
-         int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int box_w[SAMRAI::MAX_DIM_VAL];
+         int dst_w[SAMRAI::MAX_DIM_VAL];
+         int src_w[SAMRAI::MAX_DIM_VAL];
+         int dim_counter[SAMRAI::MAX_DIM_VAL];
          for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
@@ -122,8 +97,8 @@ ArrayDataBasicOps<TYPE>::scale(
             int dst_counter = dst_begin;
             int src_counter = src_begin;
 
-            int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int dst_b[SAMRAI::MAX_DIM_VAL];
+            int src_b[SAMRAI::MAX_DIM_VAL];
             for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
@@ -188,7 +163,7 @@ ArrayDataBasicOps<TYPE>::addScalar(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -205,10 +180,10 @@ ArrayDataBasicOps<TYPE>::addScalar(
 
       if (!ibox.empty()) {
 
-         int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int box_w[SAMRAI::MAX_DIM_VAL];
+         int dst_w[SAMRAI::MAX_DIM_VAL];
+         int src_w[SAMRAI::MAX_DIM_VAL];
+         int dim_counter[SAMRAI::MAX_DIM_VAL];
          for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
@@ -232,8 +207,8 @@ ArrayDataBasicOps<TYPE>::addScalar(
             int dst_counter = dst_begin;
             int src_counter = src_begin;
 
-            int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int dst_b[SAMRAI::MAX_DIM_VAL];
+            int src_b[SAMRAI::MAX_DIM_VAL];
             for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src_b[nd] = src_counter;
@@ -293,7 +268,7 @@ ArrayDataBasicOps<TYPE>::add(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -308,11 +283,11 @@ ArrayDataBasicOps<TYPE>::add(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src1_w[SAMRAI::MAX_DIM_VAL];
+      int src2_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -341,9 +316,9 @@ ArrayDataBasicOps<TYPE>::add(
          int src1_counter = src1_begin;
          int src2_counter = src2_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src1_b[SAMRAI::MAX_DIM_VAL];
+         int src2_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
@@ -409,7 +384,7 @@ ArrayDataBasicOps<TYPE>::subtract(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -424,11 +399,11 @@ ArrayDataBasicOps<TYPE>::subtract(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src1_w[SAMRAI::MAX_DIM_VAL];
+      int src2_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -457,9 +432,9 @@ ArrayDataBasicOps<TYPE>::subtract(
          int src1_counter = src1_begin;
          int src2_counter = src2_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src1_b[SAMRAI::MAX_DIM_VAL];
+         int src2_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
@@ -525,7 +500,7 @@ ArrayDataBasicOps<TYPE>::multiply(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -539,11 +514,11 @@ ArrayDataBasicOps<TYPE>::multiply(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src1_w[SAMRAI::MAX_DIM_VAL];
+      int src2_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -572,9 +547,9 @@ ArrayDataBasicOps<TYPE>::multiply(
          int src1_counter = src1_begin;
          int src2_counter = src2_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src1_b[SAMRAI::MAX_DIM_VAL];
+         int src2_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
@@ -640,7 +615,7 @@ ArrayDataBasicOps<TYPE>::divide(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -654,11 +629,11 @@ ArrayDataBasicOps<TYPE>::divide(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src1_w[SAMRAI::MAX_DIM_VAL];
+      int src2_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -687,9 +662,9 @@ ArrayDataBasicOps<TYPE>::divide(
          int src1_counter = src1_begin;
          int src2_counter = src2_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src1_b[SAMRAI::MAX_DIM_VAL];
+         int src2_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src1_b[nd] = src1_counter;
@@ -751,7 +726,7 @@ ArrayDataBasicOps<TYPE>::reciprocal(
    const pdat::ArrayData<TYPE>& src,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -764,10 +739,10 @@ ArrayDataBasicOps<TYPE>::reciprocal(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -791,8 +766,8 @@ ArrayDataBasicOps<TYPE>::reciprocal(
          int dst_counter = dst_begin;
          int src_counter = src_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
@@ -859,7 +834,7 @@ ArrayDataBasicOps<TYPE>::linearSum(
 #pragma warning (disable:1572)
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
    const int ddepth = dst.getDepth();
@@ -891,11 +866,11 @@ ArrayDataBasicOps<TYPE>::linearSum(
 
       if (!ibox.empty()) {
 
-         int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int box_w[SAMRAI::MAX_DIM_VAL];
+         int dst_w[SAMRAI::MAX_DIM_VAL];
+         int src1_w[SAMRAI::MAX_DIM_VAL];
+         int src2_w[SAMRAI::MAX_DIM_VAL];
+         int dim_counter[SAMRAI::MAX_DIM_VAL];
          for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
@@ -924,9 +899,9 @@ ArrayDataBasicOps<TYPE>::linearSum(
             int src1_counter = src1_begin;
             int src2_counter = src2_begin;
 
-            int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int dst_b[SAMRAI::MAX_DIM_VAL];
+            int src1_b[SAMRAI::MAX_DIM_VAL];
+            int src2_b[SAMRAI::MAX_DIM_VAL];
             for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
@@ -994,7 +969,7 @@ ArrayDataBasicOps<TYPE>::axpy(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -1016,11 +991,11 @@ ArrayDataBasicOps<TYPE>::axpy(
 
       if (!ibox.empty()) {
 
-         int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int box_w[SAMRAI::MAX_DIM_VAL];
+         int dst_w[SAMRAI::MAX_DIM_VAL];
+         int src1_w[SAMRAI::MAX_DIM_VAL];
+         int src2_w[SAMRAI::MAX_DIM_VAL];
+         int dim_counter[SAMRAI::MAX_DIM_VAL];
          for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
@@ -1049,9 +1024,9 @@ ArrayDataBasicOps<TYPE>::axpy(
             int src1_counter = src1_begin;
             int src2_counter = src2_begin;
 
-            int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int dst_b[SAMRAI::MAX_DIM_VAL];
+            int src1_b[SAMRAI::MAX_DIM_VAL];
+            int src2_b[SAMRAI::MAX_DIM_VAL];
             for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
@@ -1119,7 +1094,7 @@ ArrayDataBasicOps<TYPE>::axmy(
    const pdat::ArrayData<TYPE>& src2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst, src1, src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst, src1, src2, box);
 
    int dimVal = dst.getDim().getValue();
 
@@ -1139,11 +1114,11 @@ ArrayDataBasicOps<TYPE>::axmy(
 
       if (!ibox.empty()) {
 
-         int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int box_w[SAMRAI::MAX_DIM_VAL];
+         int dst_w[SAMRAI::MAX_DIM_VAL];
+         int src1_w[SAMRAI::MAX_DIM_VAL];
+         int src2_w[SAMRAI::MAX_DIM_VAL];
+         int dim_counter[SAMRAI::MAX_DIM_VAL];
          for (int i = 0; i < dimVal; i++) {
             box_w[i] = ibox.numberCells(i);
             dst_w[i] = dst_box.numberCells(i);
@@ -1172,9 +1147,9 @@ ArrayDataBasicOps<TYPE>::axmy(
             int src1_counter = src1_begin;
             int src2_counter = src2_begin;
 
-            int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-            int src2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+            int dst_b[SAMRAI::MAX_DIM_VAL];
+            int src1_b[SAMRAI::MAX_DIM_VAL];
+            int src2_b[SAMRAI::MAX_DIM_VAL];
             for (int nd = 0; nd < dimVal; nd++) {
                dst_b[nd] = dst_counter;
                src1_b[nd] = src1_counter;
@@ -1239,7 +1214,7 @@ ArrayDataBasicOps<TYPE>::min(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
@@ -1248,9 +1223,9 @@ ArrayDataBasicOps<TYPE>::min(
    const hier::Box ibox = box * d_box;
 
    if (!ibox.empty()) {
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -1271,7 +1246,7 @@ ArrayDataBasicOps<TYPE>::min(
 
          int d_counter = d_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
@@ -1319,7 +1294,7 @@ ArrayDataBasicOps<TYPE>::max(
    const pdat::ArrayData<TYPE>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
    TYPE maxval = -(tbox::MathUtilities<TYPE>::getMax());
@@ -1329,9 +1304,9 @@ ArrayDataBasicOps<TYPE>::max(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -1352,7 +1327,7 @@ ArrayDataBasicOps<TYPE>::max(
 
          int d_counter = d_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
@@ -1402,7 +1377,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
    const TYPE& low,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst, box);
 
    int dimVal = dst.getDim().getValue();
    const hier::Box d_box = dst.getBox();
@@ -1410,9 +1385,9 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -1433,7 +1408,7 @@ ArrayDataBasicOps<TYPE>::setRandomValues(
 
          int d_counter = d_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }

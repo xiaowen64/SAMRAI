@@ -84,7 +84,7 @@ void PoissonGaussianDiffcoefSolution::setFromDatabase(
    {
       // Compute the cosine-sine component.
       d_cscomp = d_sscomp;
-      double new_phase_angles[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double new_phase_angles[SAMRAI::MAX_DIM_VAL];
       d_cscomp.getPhaseAngles(new_phase_angles);
       new_phase_angles[0] -= 0.5;
       d_cscomp.setPhaseAngles(new_phase_angles);
@@ -121,9 +121,9 @@ double PoissonGaussianDiffcoefSolution::sourceFcn(
    double x,
    double y) const {
    double rval;
-   double trig_arg[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double trig_arg[SAMRAI::MAX_DIM_VAL];
    d_sscomp.getPhaseAngles(trig_arg);
-   double gauss_ctr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double gauss_ctr[SAMRAI::MAX_DIM_VAL];
    d_gcomp.getCenter(gauss_ctr);
    trig_arg[0] += d_k[0] * x;
    trig_arg[1] += d_k[1] * y;
@@ -142,9 +142,9 @@ double PoissonGaussianDiffcoefSolution::sourceFcn(
    double y,
    double z) const {
    double rval;
-   double trig_arg[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double trig_arg[SAMRAI::MAX_DIM_VAL];
    d_sscomp.getPhaseAngles(trig_arg);
-   double gauss_ctr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double gauss_ctr[SAMRAI::MAX_DIM_VAL];
    d_gcomp.getCenter(gauss_ctr);
    trig_arg[0] += d_k[0] * x;
    trig_arg[1] += d_k[1] * y;
@@ -181,7 +181,8 @@ void PoissonGaussianDiffcoefSolution::setGridData(
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
 
    const double* h = patch_geom->getDx();
    const double* xl = patch_geom->getXLower();
@@ -190,7 +191,7 @@ void PoissonGaussianDiffcoefSolution::setGridData(
    {
       /* Set diffusion coefficients on each side at a time. */
       for (axis = 0; axis < d_dim.getValue(); ++axis) {
-         double sl[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]; // Like XLower, except for side.
+         double sl[SAMRAI::MAX_DIM_VAL]; // Like XLower, except for side.
          int j;
          for (j = 0; j < d_dim.getValue(); ++j) {
             sl[j] = j != axis ? xl[j] + 0.5 * h[j] : xl[j];
@@ -219,7 +220,7 @@ void PoissonGaussianDiffcoefSolution::setGridData(
    }
    {
       /* Set cell-centered data. */
-      double sl[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]; // Like XLower, except for cell.
+      double sl[SAMRAI::MAX_DIM_VAL]; // Like XLower, except for cell.
       int j;
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
@@ -273,7 +274,8 @@ void PoissonGaussianDiffcoefSolution::setBcCoefs(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */
@@ -293,9 +295,9 @@ void PoissonGaussianDiffcoefSolution::setBcCoefs(
    hier::Index upper = box.upper();
 
    if (d_dim == tbox::Dimension(2)) {
-      double* a_array = acoef_data ? acoef_data->getPointer() : NULL;
-      double* b_array = bcoef_data ? bcoef_data->getPointer() : NULL;
-      double* g_array = gcoef_data ? gcoef_data->getPointer() : NULL;
+      double* a_array = acoef_data ? acoef_data->getPointer() : 0;
+      double* b_array = bcoef_data ? bcoef_data->getPointer() : 0;
+      double* g_array = gcoef_data ? gcoef_data->getPointer() : 0;
       int i, j, ibeg, iend, jbeg, jend;
       double x, y;
       switch (bdry_box.getLocationIndex()) {

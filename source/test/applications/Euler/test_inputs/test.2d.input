@@ -102,17 +102,15 @@ Euler {
 }
 
 BergerRigoutsos {
-   algo_advance_mode = "ADVANCE_SOME"
-   owner_mode = "MOST_OVERLAP"
-   log_node_history = FALSE
-   use_level_boxes = FALSE
-   use_private_communicator = TRUE
+   DEV_algo_advance_mode = "ADVANCE_SOME"
+   DEV_owner_mode = "MOST_OVERLAP"
+   DEV_log_node_history = FALSE
    sort_output_nodes = TRUE // Makes results repeatable.
    max_box_size = 100, 100
-   log_cluster_summary = TRUE
-   log_cluster = FALSE
-   barrier_before = TRUE
-   barrier_after = TRUE
+   DEV_log_cluster_summary = TRUE
+   DEV_log_cluster = FALSE
+   DEV_barrier_before = TRUE
+   DEV_barrier_after = TRUE
 }
 
 Main {
@@ -181,7 +179,7 @@ PatchHierarchy {
 
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = TRUE
+   DEV_extend_to_domain_boundary = TRUE
    check_nonrefined_tags = "IGNORE"
 
    efficiency_tolerance = 0.75e0   // min % of tag cells in new patch level
@@ -207,12 +205,12 @@ TimeRefinementIntegrator {
 }
 
 LoadBalancer {
-  report_load_balance = FALSE
-  barrier_before = TRUE
-  barrier_after = TRUE
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
   n_root_cycles = 1
 }
 
 RefineSchedule {
-  extra_debug = TRUE
+  DEV_extra_debug = FALSE
 }

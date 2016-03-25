@@ -49,7 +49,7 @@
 
 #include "get-input-filename.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 using namespace tbox;
@@ -127,7 +127,7 @@ int main(
       boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
-      tbox::plog << "Main database:" << endl;
+      tbox::plog << "Main database:" << std::endl;
       main_db->printClassData(tbox::plog);
 
       int verbose = main_db->getIntegerWithDefault("verbose", 0);
@@ -185,13 +185,6 @@ int main(
       tbox::plog << "Running on " << mpi.getSize()
                  << " processes.\n";
 
-      /*
-       * Choose which BR implementation to use.
-       */
-      char which_br = 'o';
-      which_br = main_db->getCharWithDefault("which_br", which_br);
-      tbox::plog << "which_br is " << which_br << std::endl;
-
       int ln;
 
       int plot_step = main_db->getIntegerWithDefault("plot_step", 0);
@@ -243,7 +236,6 @@ int main(
        */
       boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             dlbgtest.getStandardTagAndInitObject(),
             input_db->getDatabase("StandardTagAndInitialize")));
@@ -311,9 +303,10 @@ int main(
          boost::shared_ptr<hier::PatchLevel> level_(
             patch_hierarchy->getPatchLevel(ln));
          gridding_algorithm->makeFinerLevel(
-            /* simulation time */ 0.0,
-            /* whether initial time */ true,
-            /* tag buffer size */ tag_buffer[ln]);
+            /* tag buffer size */ tag_buffer[ln],
+            /* whether initial cycle */ true,
+            /* simulation cycle */ 0,
+            /* simulation time */ 0.0);
          tbox::plog << "Just added finer level " << ln << " -> " << ln + 1;
          if (patch_hierarchy->getNumberOfLevels() < ln + 2) {
             tbox::plog << " (no new level!)" << std::endl;
@@ -386,8 +379,9 @@ int main(
 
          gridding_algorithm->regridAllFinerLevels(
             0,
-            double(istep),
             tag_buffer,
+            istep,
+            double(istep),
             regrid_start_time);
 
          patch_hierarchy->recursivePrint(tbox::plog, std::string("    "), 1);
@@ -457,7 +451,7 @@ static int createAndTestDLBG(
    const bool build_peer_edge =
       main_db.getBoolWithDefault("build_peer_edge", false);
 
-   const bool globalize_mapped_box_levels =
+   const bool globalize_box_levels =
       main_db.getBoolWithDefault("globalize_mapped_box_levels", false);
 
    const int node_log_detail =
@@ -467,43 +461,45 @@ static int createAndTestDLBG(
 
    pout << "Generating boxgraph in parallel." << std::endl;
 
-   Connector* crse_connectors = NULL;
-   Connector* fine_connectors = NULL;
-   Connector* peer_connectors = NULL;
+   std::vector<Connector> crse_connectors;
+   std::vector<Connector> fine_connectors;
+   std::vector<Connector> peer_connectors;
 
    int ln;
 
-   tbox::Array<BoxLevel> mapped_box_levels(
+   tbox::Array<BoxLevel> box_levels(
       patch_hierarchy.getNumberOfLevels(), BoxLevel(dim));
-   if (build_peer_edge) {
-      peer_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
-   }
-   if (build_cross_edge) {
-      crse_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
-      fine_connectors = new Connector[patch_hierarchy.getNumberOfLevels()];
+   for (int conn = 0; conn < patch_hierarchy.getNumberOfLevels(); ++conn) {
+      if (build_peer_edge) {
+         peer_connectors.push_back(Connector(dim));
+      }
+      if (build_cross_edge) {
+         crse_connectors.push_back(Connector(dim));
+         fine_connectors.push_back(Connector(dim));
+      }
    }
 
    /*
-    * Set the mapped_box_level nodes.
+    * Set the box_level nodes.
     */
    for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
       boost::shared_ptr<PatchLevel> level_ptr(
          patch_hierarchy.getPatchLevel(ln));
       PatchLevel& level = *level_ptr;
-      mapped_box_levels[ln] = *level.getBoxLevel();
+      box_levels[ln] = *level.getBoxLevel();
       plog << "****************************************\n";
-      plog << "mapped_box_levels[" << ln << "]:\n";
+      plog << "box_levels[" << ln << "]:\n";
       plog << "****************************************\n";
-      mapped_box_levels[ln].recursivePrint(plog, "", node_log_detail);
-      if (globalize_mapped_box_levels) {
+      box_levels[ln].recursivePrint(plog, "", node_log_detail);
+      if (globalize_box_levels) {
          pout << "Globalizing BoxLevel " << ln << ".\n";
-         mapped_box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
+         box_levels[ln].setParallelState(BoxLevel::GLOBALIZED);
       }
       pout << "BoxLevel " << ln << " done.\n";
    }
 
    /*
-    * Compute the cross edges by searching globalized node mapped_box_levels.
+    * Compute the cross edges by searching globalized node box_levels.
     */
    hier::OverlapConnectorAlgorithm oca;
    if (build_cross_edge) {
@@ -512,14 +508,14 @@ static int createAndTestDLBG(
             patch_hierarchy.getPatchLevel(ln));
          PatchLevel& level = *level_ptr;
          if (ln < patch_hierarchy.getNumberOfLevels() - 1) {
-            fine_connectors[ln].setBase(mapped_box_levels[ln]);
-            fine_connectors[ln].setHead(mapped_box_levels[ln + 1]);
+            fine_connectors[ln].setBase(box_levels[ln]);
+            fine_connectors[ln].setHead(box_levels[ln + 1]);
             fine_connectors[ln].setWidth(IntVector(dim, 1), true);
             oca.findOverlaps(fine_connectors[ln]);
          }
          if (ln > 0) {
-            crse_connectors[ln].setBase(mapped_box_levels[ln]);
-            crse_connectors[ln].setHead(mapped_box_levels[ln - 1]);
+            crse_connectors[ln].setBase(box_levels[ln]);
+            crse_connectors[ln].setHead(box_levels[ln - 1]);
             crse_connectors[ln].setWidth(level.getRatioToCoarserLevel(), true);
             oca.findOverlaps(crse_connectors[ln]);
             if (edge_log_detail >= 0) {
@@ -538,12 +534,12 @@ static int createAndTestDLBG(
 
    /*
     * Compute the peer edges.  Use bridging operation centered on the coarse edge
-    * if available.  Else, search globalized node mapped_box_levels.
+    * if available.  Else, search globalized node box_levels.
     */
    if (build_peer_edge) {
       for (ln = 0; ln < patch_hierarchy.getNumberOfLevels(); ++ln) {
-         peer_connectors[ln].setBase(mapped_box_levels[ln]);
-         peer_connectors[ln].setHead(mapped_box_levels[ln]);
+         peer_connectors[ln].setBase(box_levels[ln]);
+         peer_connectors[ln].setHead(box_levels[ln]);
          peer_connectors[ln].setWidth(IntVector(dim, 1), true);
          if (build_cross_edge && ln > 0) {
             // plog << " Bridging for level " << ln << std::endl;
@@ -613,11 +609,7 @@ static int createAndTestDLBG(
    << "=====================================================================\n";
    patch_hierarchy.recursivePrint(plog, "", 2);
 
-   mapped_box_levels.clear();
-
-   if (crse_connectors) delete[] crse_connectors;
-   if (fine_connectors) delete[] fine_connectors;
-   if (peer_connectors) delete[] peer_connectors;
+   box_levels.clear();
 
    return 0;
 }

@@ -119,32 +119,6 @@ HierarchyFaceDataOpsReal<TYPE>::getPatchHierarchy() const
 /*
  *************************************************************************
  *
- * The following are private and cannot be used, but they are defined
- * here for compilers that require that every template declaration have
- * a definition (a stupid requirement, if you ask me).
- *
- *************************************************************************
- */
-
-template<class TYPE>
-HierarchyFaceDataOpsReal<TYPE>::HierarchyFaceDataOpsReal(
-   const HierarchyFaceDataOpsReal<TYPE>& foo):
-   HierarchyDataOpsReal<TYPE>()
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-HierarchyFaceDataOpsReal<TYPE>::operator = (
-   const HierarchyFaceDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Basic generic operations.
  *
  *************************************************************************
@@ -171,12 +145,13 @@ HierarchyFaceDataOpsReal<TYPE>::copyData(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -194,11 +169,11 @@ HierarchyFaceDataOpsReal<TYPE>::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::FaceDataFactory<TYPE> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::FaceDataFactory<TYPE> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -248,7 +223,7 @@ HierarchyFaceDataOpsReal<TYPE>::printData(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > d(
          p->getPatchData(data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -280,7 +255,7 @@ HierarchyFaceDataOpsReal<TYPE>::setToScalar(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -321,12 +296,13 @@ HierarchyFaceDataOpsReal<TYPE>::scale(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -357,12 +333,13 @@ HierarchyFaceDataOpsReal<TYPE>::addScalar(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -393,15 +370,17 @@ HierarchyFaceDataOpsReal<TYPE>::add(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -432,15 +411,17 @@ HierarchyFaceDataOpsReal<TYPE>::subtract(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -471,15 +452,17 @@ HierarchyFaceDataOpsReal<TYPE>::multiply(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -510,15 +493,17 @@ HierarchyFaceDataOpsReal<TYPE>::divide(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -548,12 +533,13 @@ HierarchyFaceDataOpsReal<TYPE>::reciprocal(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -586,15 +572,17 @@ HierarchyFaceDataOpsReal<TYPE>::linearSum(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -626,15 +614,17 @@ HierarchyFaceDataOpsReal<TYPE>::axpy(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -666,15 +656,17 @@ HierarchyFaceDataOpsReal<TYPE>::axmy(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src1);
+         TBOX_ASSERT(src2);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -704,12 +696,13 @@ HierarchyFaceDataOpsReal<TYPE>::abs(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -740,7 +733,7 @@ HierarchyFaceDataOpsReal<TYPE>::setRandomValues(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
 
@@ -780,7 +773,7 @@ HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
 
       boost::shared_ptr<pdat::FaceDataFactory<TYPE> > dfact(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(dfact);
 
@@ -816,7 +809,7 @@ HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
               ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::FaceData<TYPE> > d(
                (*ip)->getPatchData(data_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(d);
 
@@ -860,11 +853,12 @@ HierarchyFaceDataOpsReal<TYPE>::sumControlVolumes(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<double> > cv(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
+         TBOX_ASSERT(data);
          TBOX_ASSERT(cv);
 
          hier::Box box = cv->getGhostBox();
@@ -905,13 +899,13 @@ HierarchyFaceDataOpsReal<TYPE>::L1Norm(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -974,16 +968,17 @@ HierarchyFaceDataOpsReal<TYPE>::weightedL2Norm(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > weight(
             p->getPatchData(wgt_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
+         TBOX_ASSERT(weight);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1062,13 +1057,13 @@ HierarchyFaceDataOpsReal<TYPE>::maxNorm(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data);
 
             box = data->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1118,16 +1113,17 @@ HierarchyFaceDataOpsReal<TYPE>::dot(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > data2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data1);
+         TBOX_ASSERT(data2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data1);
 
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1172,10 +1168,10 @@ HierarchyFaceDataOpsReal<TYPE>::integral(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<double> > vol(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
@@ -1226,16 +1222,17 @@ HierarchyFaceDataOpsReal<TYPE>::computeConstrProdPos(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > data1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > data2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(data1);
+         TBOX_ASSERT(data2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(data1);
 
             box = data1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1278,16 +1275,17 @@ HierarchyFaceDataOpsReal<TYPE>::compareToScalar(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(dst);
 
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1326,16 +1324,17 @@ HierarchyFaceDataOpsReal<TYPE>::testReciprocal(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(dst);
 
             box = dst->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1381,10 +1380,13 @@ HierarchyFaceDataOpsReal<TYPE>::maxPointwiseDivide(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > numer(
             p->getPatchData(numer_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > denom(
             p->getPatchData(denom_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(numer);
+         TBOX_ASSERT(denom);
 
          hier::Box box = p->getBox();
 
@@ -1426,10 +1428,13 @@ HierarchyFaceDataOpsReal<TYPE>::minPointwiseDivide(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > numer(
             p->getPatchData(numer_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::FaceData<TYPE> > denom(
             p->getPatchData(denom_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(numer);
+         TBOX_ASSERT(denom);
 
          hier::Box box = p->getBox();
 
@@ -1470,7 +1475,7 @@ HierarchyFaceDataOpsReal<TYPE>::min(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -1511,7 +1516,7 @@ HierarchyFaceDataOpsReal<TYPE>::max(
 
          boost::shared_ptr<pdat::FaceData<TYPE> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 

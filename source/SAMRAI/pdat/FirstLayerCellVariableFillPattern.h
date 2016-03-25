@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -71,6 +71,8 @@ public:
     *                            destination index space.
     *
     * @return                boost::shared_ptr to the calculated overlap object
+    *
+    * @pre dst_patch_box.getDim() == src_mask.getDim()
     */
    boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -136,6 +138,8 @@ private:
     *
     * @param[out] stencil_boxes   The computed stencil BoxContainer.
     * @param[in]  dst_box         Input box around which stencil is computed.
+    *
+    * @pre stencil_boxes.size() == 0
     */
    void
    computeStencilBoxes(

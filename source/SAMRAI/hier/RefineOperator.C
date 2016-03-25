@@ -28,11 +28,8 @@ RefineOperator::s_finalize_handler(
    RefineOperator::finalizeCallback,
    tbox::StartupShutdownManager::priorityList);
 
-RefineOperator::RefineOperator(
-   const tbox::Dimension& dim,
-   const std::string& name):
-   d_name(name),
-   d_dim(dim)
+RefineOperator::RefineOperator(const std::string& name):
+   d_name(name)
 {
    registerInLookupTable(name);
 }
@@ -48,7 +45,7 @@ RefineOperator::removeFromLookupTable(
 {
    /*
     * The lookup table might be empty if static RefineOperator's are used
-    * in which case the table will have been removed before the statics
+    * in which case the table will have been cleared before the statics
     * are destroyed.
     */
    if (!s_lookup_table.empty()) {
@@ -61,7 +58,7 @@ RefineOperator::removeFromLookupTable(
       }
       TBOX_ASSERT(mi->first == name);
       TBOX_ASSERT(mi->second == this);
-      mi->second = NULL;
+      mi->second = 0;
       s_lookup_table.erase(mi);
    }
 }
@@ -81,9 +78,7 @@ RefineOperator::getMaxRefineOpStencilWidth(
    for (std::multimap<std::string, RefineOperator *>::const_iterator
         mi = s_lookup_table.begin(); mi != s_lookup_table.end(); ++mi) {
       const RefineOperator* op = mi->second;
-      if (op->getDim() == dim) {
-         max_width.max(op->getStencilWidth());
-      }
+      max_width.max(op->getStencilWidth(dim));
    }
 
    return max_width;

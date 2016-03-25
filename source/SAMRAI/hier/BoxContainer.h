@@ -858,7 +858,7 @@ public:
       bool other_set_created = other.d_ordered;
       other.d_ordered = d_ordered;
       d_ordered = other_set_created;
-      d_tree = other.d_tree;
+      d_tree.swap(other.d_tree);
    }
 
    /*!
@@ -867,6 +867,8 @@ public:
     * The rank of every member of this container is inserted into the set.
     *
     * @param[out] owners
+    *
+    * @pre isOrdered() || for each box in container has valid BoxId
     */
    void
    getOwners(
@@ -925,6 +927,8 @@ public:
     *
     * @param[in] idx
     * @param[in] block_id
+    *
+    * @pre each box in container must have a valid BlockId
     */
    bool
    contains(
@@ -934,8 +938,8 @@ public:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container.
     *
-    * A run-time error will occur if Boxes in this container have different
-    * BlockIds.
+    * @pre !isEmpty()
+    * @pre each Box in container has same BlockId
     */
    Box
    getBoundingBox() const;
@@ -943,6 +947,10 @@ public:
    /*!
     * @brief  Returns the bounding box for all the boxes in the container
     *         having the given BlockId.
+    *
+    * @param[in] block_id
+    *
+    * @pre !isEmpty()
     */
    Box
    getBoundingBox(
@@ -964,11 +972,9 @@ public:
    /*!
     * @brief Changes state of this container to ordered.
     *
-    * This can be called on an unordered container with the restriction that
-    * every member of the container must have a valid and unique BoxId.
-    * If this restriction is not met, then a run-time error will occur.
-    *
     * If called on a container that is already ordered, nothing changes.
+    *
+    * @pre each box in container must have valid and unique BoxId
     */
    void
    order();
@@ -1003,20 +1009,23 @@ public:
     * front() in an unordered container.
     *
     * @param[in] item
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    pushFront(
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+      if (!isEmpty()) {
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
       if (!d_ordered) {
          d_list.push_front(item);
       } else {
-         TBOX_ERROR("Attempted pushFront on an ordered BoxContainer");
+         TBOX_ERROR("Attempted pushFront on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1030,20 +1039,23 @@ public:
     * back() in an unordered container.
     *
     * @param[in] item
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    pushBack(
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+      if (!isEmpty()) {
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
       if (!d_ordered) {
          d_list.push_back(item);
       } else {
-         TBOX_ERROR("Attempted pushBack on an ordered BoxContainer");
+         TBOX_ERROR("Attempted pushBack on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1058,6 +1070,9 @@ public:
     *
     * @param[in] iter Location to add item before.
     * @param[in] item Box to add to container.
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    insertBefore(
@@ -1065,14 +1080,14 @@ public:
       const Box& item)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), item);
+      if (!isEmpty()) {
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), item);
       }
 #endif
       if (!d_ordered) {
          d_list.insert(iter.d_list_iter, item);
       } else {
-         TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer");
+         TBOX_ERROR("Attempted insertBefore on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1087,6 +1102,9 @@ public:
     *
     * @param[in] iter Location to add item after.
     * @param[in] item Box to add to container.
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
     */
    void
    insertAfter(
@@ -1102,7 +1120,7 @@ public:
             insertBefore(tmp, item);
          }
       } else {
-         TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer.");
+         TBOX_ERROR("Attempted insertAfter called on ordered BoxContainer." << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1115,20 +1133,25 @@ public:
     * "boxes" will be empty following this operation.
     *
     * @param[in] boxes
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
+    *
+    * @post boxes.isEmpty()
     */
    void
    spliceFront(
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0 && boxes.size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+      if (!isEmpty() && !boxes.isEmpty()) {
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
       if (!d_ordered) {
          d_list.splice(begin().d_list_iter, boxes.d_list);
       } else {
-         TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer");
+         TBOX_ERROR("Attempted spliceFront on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1141,21 +1164,26 @@ public:
     * "boxes" will be empty following this operation.
     *
     * @param[in] boxes
+    *
+    * @pre isEmpty() || (front().getDim() == item.getDim())
+    * @pre !isOrdered()
+    *
+    * @post boxes.isEmpty()
     */
    void
    spliceBack(
       BoxContainer& boxes)
    {
 #ifdef DEBUG_CHECK_ASSERTIONS
-      if (size() > 0 && boxes.size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), boxes.front());
+      if (!isEmpty() && !boxes.isEmpty()) {
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), boxes.front());
       }
 #endif
       if (!d_ordered) {
          boxes.spliceFront(*this);
          d_list.swap(boxes.d_list);
       } else {
-         TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer");
+         TBOX_ERROR("Attempted spliceBack on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1164,6 +1192,8 @@ public:
 
    /*!
     * @brief Remove the first member of the unordered container.
+    *
+    * @pre !isOrdered()
     */
    void
    popFront()
@@ -1171,7 +1201,7 @@ public:
       if (!d_ordered) {
          d_list.pop_front();
       } else {
-         TBOX_ERROR("Attempted popFront on an ordered BoxContainer");
+         TBOX_ERROR("Attempted popFront on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1180,6 +1210,8 @@ public:
 
    /*!
     * @brief Remove the last member of the unordered container.
+    *
+    * @pre !isOrdered()
     */
    void
    popBack()
@@ -1187,7 +1219,7 @@ public:
       if (!d_ordered) {
          d_list.pop_back();
       } else {
-         TBOX_ERROR("Attempted popBack on an ordered BoxContainer");
+         TBOX_ERROR("Attempted popBack on an ordered BoxContainer" << std::endl);
       }
       if (d_tree) {
          d_tree.reset();
@@ -1198,8 +1230,8 @@ public:
     * @brief Place the boxes in the container into a canonical ordering.
     *
     * The canonical ordering for boxes is defined such that boxes that lie
-    * next to each other in higher dimensions are coalesced together before
-    * boxes that lie next to each other in lower dimensions.  This ordering
+    * next to each other in higher directions are coalesced together before
+    * boxes that lie next to each other in lower directions.  This ordering
     * provides a standard representation that can be used to compare box
     * containers.  The canonical ordering also does not allow any overlap
     * between the boxes in the container.  This routine is potentially
@@ -1207,6 +1239,9 @@ public:
     * of the domain calculus routines call simplify(); all calls to simplify
     * the boxes must be explicit.  Note that this routine is distinct from
     * coalesce(), which is not guaranteed to produce a canonical ordering.
+    *
+    * @pre !isOrdered()
+    * @pre isEmpty() || all Boxes in container have same BlockId
     */
    void
    simplify();
@@ -1225,6 +1260,9 @@ public:
     * the boxes in the order in which they appear in the container, rather
     * than attempting to coalesce boxes along specific coordinate directions
     * before others.
+    *
+    * @pre !isOrdered()
+    * @pre isEmpty() || all Boxes in container have same BlockId
     */
    void
    coalesce();
@@ -1235,6 +1273,9 @@ public:
     * @note Works only in 2D or 3D.
     *
     * @param[in] rotation_ident
+    *
+    * @pre each Box in container has dim 2 or 3
+    * @pre each Box in container has same BlockId
     */
    void
    rotate(
@@ -1250,6 +1291,8 @@ public:
     * '^' indicates intersection.
     *
     * @param[in] takeaway What to exclude from each box in the container.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersections(
@@ -1265,6 +1308,8 @@ public:
     * BoxContainer have the same BlockId.  An error will occur otherwise.
     *
     * @param[in] takeaway What to exclude from each box in the container.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersections(
@@ -1287,6 +1332,9 @@ public:
     * @param[in] include_singularity_block_neighbors  If true, intersections
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be removed.  If false, those intersections are ignored.
+    *
+    * @pre !isOrdered()
+    * @pre takeaway.hasTree()
     */
    void
    removeIntersections(
@@ -1307,6 +1355,10 @@ public:
     *
     * @param[in] box
     * @param[in] takeaway
+    *
+    * @pre !isOrdered()
+    * @pre isEmpty()
+    * @pre box.getBlockId() == takeaway.getBlockId()
     */
    void
    removeIntersections(
@@ -1320,6 +1372,8 @@ public:
     * container with \f$N\f$ boxes.  The complement of removeIntersections.
     *
     * @param[in] keep
+    *
+    * @pre !isOrdered()
     */
    void
    intersectBoxes(
@@ -1337,6 +1391,8 @@ public:
     * BoxContainer have the same BlockId.  An error will occur otherwise.
     *
     * @param[in] keep
+    *
+    * @pre !isOrdered()
     */
    void
    intersectBoxes(
@@ -1359,6 +1415,9 @@ public:
     * @param[in] include_singularity_block_neighbors  If true, intersections
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be kept.  If false, those intersections are ignored.
+    *
+    * @pre !isOrdered()
+    * @pre keep.hasTree()
     */
    void
    intersectBoxes(
@@ -1389,6 +1448,10 @@ public:
     *          same BoxId, false otherwise.
     *
     * @param[in]  box Box to attempt to insert into the container.
+    *
+    * @pre box.getBoxId().isValid()
+    * @pre isEmpty() || (front().getDim() == box.getDim())
+    * @pre isEmpty() || isOrdered()
     */ 
    bool
    insert(
@@ -1418,6 +1481,11 @@ public:
     *
     * @param[in] position  Location to begin searching for place to insert Box
     * @param[in] box       Box to attempt to insert into the container
+    *
+    * @pre box.getBoxId().isValid()
+    * @pre box.getBlockId() != BlockId::invalidId()
+    * @pre isEmpty() || (front().getDim() == box.getDim())
+    * @pre isEmpty() || isOrdered()
     */
    iterator
    insert(
@@ -1433,6 +1501,10 @@ public:
     *
     * @param[in] first
     * @param[in] last
+    *
+    * @pre isEmpty() || isOrdered()
+    * @pre for each box in [first, last), box.getBoxId().isValid() &&
+    *      (isEmpty || front().getDim() == box.getDim())
     */
    void
    insert(
@@ -1455,13 +1527,15 @@ public:
     *
     * @param[in]  box  Box serving as key for the find operation.  Only
     *                  its BoxId is compared to members of this container. 
+    *
+    * @pre isOrdered()
     */  
    iterator
    find(
       const Box& box) const
    {
       if (!d_ordered) {
-         TBOX_ERROR("find attempted on unordered BoxContainer.");
+         TBOX_ERROR("find attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
       iter.d_set_iter = d_set.find(const_cast<Box*>(&box));
@@ -1479,13 +1553,15 @@ public:
     *          the argument Box.
     *
     * @param[in]  box  Box serving as key for the lower bound search.
+    *
+    * @pre isOrdered()
     */
    iterator
    lowerBound(
       const Box& box) const
    {
       if (!d_ordered) {
-         TBOX_ERROR("lowerBound attempted on unordered BoxContainer.");
+         TBOX_ERROR("lowerBound attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
       iter.d_set_iter = d_set.lower_bound(const_cast<Box*>(&box));
@@ -1496,21 +1572,21 @@ public:
    /*!
     * @brief  Get upper bound iterator for a given Box.
     *
-    * This may only be called on an ordered container.
-    *
     * @return  iterator pointing to the first member of this container
     *          with a BoxId value greater than the BoxId of the argument
     *          Box.  Will return end() if there are no members with a greater
     *          BoxId value.
     *
     * @param[in]  box  Box serving as key for the upper bound search.
+    *
+    * @pre isOrdered()
     */
    iterator
    upperBound(
       const Box& box) const
    {
       if (!d_ordered) {
-         TBOX_ERROR("upperBound attempted on unordered BoxContainer.");
+         TBOX_ERROR("upperBound attempted on unordered BoxContainer." << std::endl);
       }
       iterator iter;
       iter.d_set_iter = d_set.upper_bound(const_cast<Box*>(&box));
@@ -1521,14 +1597,15 @@ public:
    /*!
     * @brief  Erase a Box from the container.
     *
-    * This may only be called on an ordered container.  If a member of the
-    * container has the same BoxId as the argument Box, it will be erased
-    * from the container.  If no such member is found, the container is
-    * unchanged.
+    * If a member of the container has the same BoxId as the argument Box,
+    * it will be erased from the container.  If no such member is found,
+    * the container is unchanged.
     *
     * @return  1 if a Box is erased, 0 otherwise.
     *
     * @param[in]  box  Box serving as key to find a Box to be erased.
+    *
+    * @pre isOrdered()
     */
    int
    erase(
@@ -1545,17 +1622,21 @@ public:
     * efficiency, the output containers are NOT cleared first, so users
     * may want to clear them before calling this method.
     *
-    * @param[out] real_mapped_box_vector
-    * @param[out] periodic_image_mapped_box_vector
+    * @param[out] real_box_vector
+    * @param[out] periodic_image_box_vector
+    *
+    * @pre isOrdered()
     */
    void
    separatePeriodicImages(
-      std::vector<Box>& real_mapped_box_vector,
-      std::vector<Box>& periodic_image_mapped_box_vector) const;
+      std::vector<Box>& real_box_vector,
+      std::vector<Box>& periodic_image_box_vector) const;
 
    /*!
     * @brief  Any members of this container that are periodic images will
     *         be erased.
+    *
+    * @pre isEmpty() || isOrdered()
     */
    void
    removePeriodicImageBoxes();
@@ -1571,13 +1652,15 @@ public:
     * For flexibility and efficiency, the output container is NOT cleared
     * first, so users may want to clear it before calling this method.
     *
-    * @param[out] output_mapped_boxes
+    * @param[out] output_boxes
     *
     * @param[in] refinement_ratio Refinement ratio where the boxes live.
+    *
+    * @pre isOrdered()
     */
    void
    unshiftPeriodicImageBoxes(
-      BoxContainer& output_mapped_boxes,
+      BoxContainer& output_boxes,
       const IntVector& refinement_ratio) const;
 
    //@}
@@ -1612,18 +1695,18 @@ public:
    //@{ @name I/O
 
    /*!
-    * @brief Write the BoxContainer to a database.
+    * @brief Write the BoxContainer to a restart database.
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<tbox::Database>& database) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
-    * @brief Read the BoxContainer from a database.
+    * @brief Read the BoxContainer from a restart database.
     */
    void
-   getFromDatabase(
-      tbox::Database& database);
+   getFromRestart(
+      tbox::Database& restart_db);
 
    /*!
     * @brief Conversion from BoxContainer to tbox::Array<tbox::DatabaseBox>.
@@ -1660,7 +1743,7 @@ private:
        * parameters needed to output the BoxContainer to a stream.
        */
       Outputter(
-         const BoxContainer& mapped_box_set,
+         const BoxContainer& boxes,
          const std::string& border,
          int detail_depth = 0);
 
@@ -1681,7 +1764,7 @@ private:
     *
     * Usage example (printing with a tab indentation):
     * @verbatim
-    *    cout << "my mapped_boxes:\n" << mapped_boxes.format("\t") << endl;
+    *    cout << "my boxes:\n" << boxes.format("\t") << endl;
     * @endverbatim
     *
     * @param[in] border Left border of the output
@@ -1726,14 +1809,20 @@ private:
     * container is going to be used in any of the methods that handle
     * multiblock transformations.  If this container is used only in a
     * single-block context, no BaseGridGeometry argument is necessary.
+    *
+    * @note The grid_geometry argument is required for multiblock.  It must
+    * be the GridGeometry from which the Boxes stored in the container came
+    * from.
     * 
     * @param[in]  grid_geometry  To handle multiblock transformations if
     *                            needed.  
-    * @param[in]  min_number  An assertion failure will occur if not positive
+    * @param[in]  min_number
+    *
+    * @pre min_number > 0
     */
    void
    makeTree(
-      const BaseGridGeometry* grid_geometry = NULL,
+      const BaseGridGeometry* grid_geometry = 0,
       const int min_number = 10) const;
 
    /*!
@@ -1792,6 +1881,8 @@ private:
     * @param[out] overlap_boxes
     *
     * @param[in] box
+    *
+    * @pre !hasTree() || (d_tree->getNumberBlocksInTree() == 1)
     */
    void
    findOverlapBoxes(
@@ -1823,6 +1914,8 @@ private:
     * with neighboring blocks that touch only across an enhanced connectivity
     * singularity will be added to output.  If false, those intersections are
     * ignored.
+    *
+    * @pre hasTree()
     */
    void
    findOverlapBoxes(
@@ -1867,6 +1960,8 @@ private:
     * this operation computes b-(b^t) where '^' indicates intersection.
     *
     * @param[in] takeaway What to exclude from each box in the container.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersections(
@@ -1880,6 +1975,8 @@ private:
     * removeIntersections.
     *
     * @param[in] keep
+    *
+    * @pre !isOrdered()
     */
    void
    intersectBoxes(
@@ -1888,38 +1985,44 @@ private:
    /*!
     * @brief Break up bursty against solid and adds the pieces to container.
     *
-    * The bursting is done on dimensions 0 through dimension-1, starting
-    * with lowest dimensions first to try to maintain the canonical
+    * The bursting is done on directions 0 through dimension-1, starting
+    * with lowest directions first to try to maintain the canonical
     * representation for the bursted domains.
     *
     * @param[in] bursty
     * @param[in] solid
-    * @param[in] dimension
+    * @param[in] direction
+    *
+    * @pre bursty.getDim() == solid.getDim()
+    * @pre dimension <= bursty.getDim().getValue()
     */
    void
    burstBoxes(
       const Box& bursty,
       const Box& solid,
-      const int dimension);
+      const int direction);
 
    /*!
     * @brief Break up bursty against solid and adds the pieces to container
     * starting at location pointed to by itr.
     *
-    * The bursting is done on dimensions 0 through dimension-1, starting
-    * with lowest dimensions first to try to maintain the canonical
+    * The bursting is done on directions 0 through dimension-1, starting
+    * with lowest directions first to try to maintain the canonical
     * representation for the bursted domains.
     *
     * @param[in] bursty
     * @param[in] solid
-    * @param[in] dimension
+    * @param[in] direction
     * @param[in] itr
+    *
+    * @pre bursty.getDim() == solid.getDim()
+    * @pre dimension <= bursty.getDim().getValue()
     */
    void
    burstBoxes(
       const Box& bursty,
       const Box& solid,
-      const int dimension,
+      const int direction,
       iterator& itr);
 
    /*!
@@ -1931,6 +2034,8 @@ private:
     * @param[in] sublist_end
     * @param[in] insertion_pt Where to put new boxes created by this
     * operation.
+    *
+    * @pre !isOrdered()
     */
    void
    removeIntersectionsFromSublist(

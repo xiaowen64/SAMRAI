@@ -32,31 +32,6 @@ PatchFaceDataMiscellaneousOpsReal<TYPE>::~PatchFaceDataMiscellaneousOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchFaceDataMiscellaneousOpsReal<TYPE>::PatchFaceDataMiscellaneousOpsReal(
-   const PatchFaceDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchFaceDataMiscellaneousOpsReal<TYPE>::operator = (
-   const PatchFaceDataMiscellaneousOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Templated miscellaneous opertions for real face-centered data.
  *
  *************************************************************************

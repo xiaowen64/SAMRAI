@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -37,7 +37,7 @@ OuteredgeGeometry::OuteredgeGeometry(
    d_ghosts(ghosts)
 
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -70,7 +70,7 @@ OuteredgeGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const EdgeGeometry* t_dst_edge =
       dynamic_cast<const EdgeGeometry *>(&dst_geometry);
@@ -81,11 +81,11 @@ OuteredgeGeometry::calculateOverlap(
 
    boost::shared_ptr<hier::BoxOverlap> over;
 
-   if ((t_src != NULL) && (t_dst_edge != NULL)) {
+   if ((t_src != 0) && (t_dst_edge != 0)) {
       over = doOverlap(*t_dst_edge, *t_src, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);
-   } else if ((t_src != NULL) && (t_dst_oedge != NULL)) {
+   } else if ((t_src != 0) && (t_dst_oedge != 0)) {
       over = doOverlap(*t_dst_oedge, *t_src, src_mask, fill_box,
             overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -184,7 +184,7 @@ OuteredgeGeometry::doOverlap(
 
          }  // if source and destination edge boxes overlap in axis direction
 
-         if (dst_restrict_boxes.size() && dst_boxes[axis].size()) {
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[axis].isEmpty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
@@ -336,7 +336,7 @@ OuteredgeGeometry::doOverlap(
             dst_boxes[axis].removeIntersections(interior_edges);
          }
 
-         if (dst_restrict_boxes.size() && dst_boxes[axis].size()) {
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[axis].isEmpty()) {
             hier::BoxContainer edge_restrict_boxes;
             for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {
@@ -395,7 +395,7 @@ OuteredgeGeometry::toOuteredgeBox(
 
          if (d != axis) {    // do not trim in axis direction
 
-            for (int dh = d + 1; dh < dim.getValue(); ++dh) { // trim in higher dimensions
+            for (int dh = d + 1; dh < dim.getValue(); ++dh) { // trim higher directions
 
                if (dh != axis && dh != face_normal) {
                   // do not trim in axis or face_normal direction

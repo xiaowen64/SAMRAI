@@ -70,7 +70,7 @@ BoxContainer::BoxContainer(
       order();
    }
    if (other.d_tree) {
-      makeTree();
+      makeTree(other.d_tree->getGridGeometry());
    }
 }
 
@@ -87,8 +87,8 @@ BoxContainer::BoxContainer(
 {
    BoxContainerSingleBlockIterator itr(other.begin(block_id));
    while (itr != other.end(block_id)) {
-      const Box& mapped_box = *itr;
-      pushBack(mapped_box);
+      const Box& box = *itr;
+      pushBack(box);
       ++itr;
    }
    if (other.d_ordered) {
@@ -220,20 +220,20 @@ BoxContainer::insert(
    iterator position,
    const Box& box)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(box.getId().isValid());
+   TBOX_ASSERT(box.getBoxId().isValid());
    TBOX_ASSERT(box.getBlockId() != BlockId::invalidId());
-   if (size() > 0) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (!isEmpty()) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
-   if (!d_ordered && size() == 0) {
+   if (!d_ordered && isEmpty()) {
       order();
    }
 
    if (!d_ordered) {
-      TBOX_ERROR("insert attempted on unordered container.");
+      TBOX_ERROR("insert attempted on unordered container." << std::endl);
    }
 
    if (d_tree) {
@@ -260,19 +260,20 @@ bool
 BoxContainer::insert(
    const Box& box)
 {
+   TBOX_ASSERT(box.getBoxId().isValid());
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(box.getId().isValid());
-   if (size() > 0) {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(front(), box);
+   if (!isEmpty()) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(front(), box);
    }
 #endif
 
-   if (!d_ordered && size() == 0) {
+   if (!d_ordered && isEmpty()) {
       order();
    }
 
    if (!d_ordered) {
-      TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer.");
+      TBOX_ERROR("BoxContainer::insert called on unordered BoxContainer."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -305,12 +306,12 @@ BoxContainer::insert (
    const_iterator last )
 {
 
-   if (!d_ordered && size() == 0) {
+   if (!d_ordered && isEmpty()) {
       order();
    }
 
    if (!d_ordered) {
-      TBOX_ERROR("insert attempted on unordered container.");
+      TBOX_ERROR("insert attempted on unordered container." << std::endl);
    }
 
    if (d_tree) {
@@ -320,10 +321,10 @@ BoxContainer::insert (
    for (std::set<Box*>::const_iterator set_iter = first.d_set_iter;
         set_iter != last.d_set_iter; ++set_iter) {
 
+      TBOX_ASSERT((**set_iter).getBoxId().isValid());
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT((**set_iter).getId().isValid());
-      if (size() > 0) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(front(), **set_iter);
+      if (!isEmpty()) {
+         TBOX_ASSERT_OBJDIM_EQUALITY2(front(), **set_iter);
       }
 #endif
 
@@ -346,20 +347,20 @@ BoxContainer::insert (
  * coalesces regions together where possible.
  *
  * The canonical ordering for boxes is defined such that boxes which
- * lie next to each other in higher dimensions are coalesced together
- * before boxes which lie next to each other in lower dimensions.
+ * lie next to each other in higher directions are coalesced together
+ * before boxes which lie next to each other in lower directions.
  * Thus, we try to coalesce two boxes together on the higher
- * dimensions first.
+ * directions first.
  *
  * Assuming that two boxes a and b of dimension DIM are in canonical
- * order for dimensions d+1, ..., D, we can coalesce them together on
- * dimension d if:
+ * order for directions d+1, ..., D, we can coalesce them together on
+ * direction d if:
  *
  *      (1) the lower and upper bounds for a and b agree for all
- *          dimensions greater than d
+ *          directions greater than d
  *      (2) boxes a and b overlap or are next to each other in
- *          dimension d
- *      (3) boxes a and b overlap for all dimensions less than d
+ *          direction d
+ *      (3) boxes a and b overlap for all directions less than d
  *
  * If these conditions hold, then we break up the two boxes and put
  * them into the container of non-canonical boxes.
@@ -370,11 +371,11 @@ void
 BoxContainer::simplify()
 {
    if (d_ordered) {
-      TBOX_ERROR("simplify called on ordered BoxContainer.");
+      TBOX_ERROR("simplify called on ordered BoxContainer." << std::endl);
    }
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (size() > 0) {
+   if (!isEmpty()) {
       const BlockId& front_block_id = front().getBlockId();
       for (const_iterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
@@ -386,7 +387,7 @@ BoxContainer::simplify()
       d_tree.reset();
    }
 
-   // Start coalescing on the highest dimension of the containers and work down
+   // Start coalescing on the highest direction of the containers and work down
    // While there are non-canonical boxes, pick somebody out of the container.
 
    if (!isEmpty()) {
@@ -497,7 +498,7 @@ void
 BoxContainer::coalesce()
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   if (size() > 0) {
+   if (!isEmpty()) {
       const BlockId& front_block_id = front().getBlockId();
       for (const_iterator itr = begin(); itr != end(); ++itr) {
          TBOX_ASSERT(itr->getBlockId() == front_block_id);
@@ -506,7 +507,7 @@ BoxContainer::coalesce()
 #endif
 
    if (d_ordered) {
-      TBOX_ERROR("coalesce called on ordered BoxContainer.");
+      TBOX_ERROR("coalesce called on ordered BoxContainer." << std::endl);
    }
 
    if (d_tree) {
@@ -548,8 +549,9 @@ BoxContainer::coalesce()
 void
 BoxContainer::removePeriodicImageBoxes()
 {
-   if (!d_ordered && size() > 0) {
-      TBOX_ERROR("removePeriodicImages attempted on unordered container.");
+   if (!d_ordered && !isEmpty()) {
+      TBOX_ERROR("removePeriodicImages attempted on unordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -573,11 +575,12 @@ BoxContainer::removePeriodicImageBoxes()
  */
 void
 BoxContainer::separatePeriodicImages(
-   std::vector<Box>& real_mapped_box_vector,
-   std::vector<Box>& periodic_image_mapped_box_vector) const
+   std::vector<Box>& real_box_vector,
+   std::vector<Box>& periodic_image_box_vector) const
 {
    if (!d_ordered) {
-      TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer.");
+      TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer."
+         << std::endl);
    }
 
    if (!isEmpty()) {
@@ -588,13 +591,13 @@ BoxContainer::separatePeriodicImages(
                                             first_element.getDim())->
                                          getZeroShiftNumber());
 
-      real_mapped_box_vector.reserve(real_mapped_box_vector.size() + size());
+      real_box_vector.reserve(real_box_vector.size() + size());
       for (const_iterator ni = begin(); ni != end(); ++ni) {
-         const Box& mapped_box = *ni;
-         if (mapped_box.getPeriodicId() == zero_shift_number) {
-            real_mapped_box_vector.push_back(mapped_box);
+         const Box& box = *ni;
+         if (box.getPeriodicId() == zero_shift_number) {
+            real_box_vector.push_back(box);
          } else {
-            periodic_image_mapped_box_vector.push_back(mapped_box);
+            periodic_image_box_vector.push_back(box);
          }
       }
    }
@@ -612,9 +615,9 @@ BoxContainer::rotate(
 {
    if (!isEmpty()) {
 
-   if (d_tree) {
-      d_tree.reset();
-   }
+      if (d_tree) {
+         d_tree.reset();
+      }
 
       const tbox::Dimension& dim = d_list.front().getDim();
       const BlockId& block_id = d_list.front().getBlockId();
@@ -649,24 +652,21 @@ Box
 BoxContainer::getBoundingBox() const
 {
    if (isEmpty()) {
-      TBOX_WARNING("Bounding box container is empty");
-      const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
-      Box empty(dim);
-      return empty;
-   } else {
-      const_iterator i = begin();
-      Box bbox(*i);
-      const BlockId& block_id = bbox.getBlockId();
-      ++i;
-      for ( ; i != end(); ++i) {
-         if (i->getBlockId() == block_id) {
-            bbox += *i;
-         } else {
-            TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks");
-         }
-      }
-      return bbox;
+      TBOX_ERROR("Bounding box container is empty" << std::endl);
    }
+   const_iterator i = begin();
+   Box bbox(*i);
+   const BlockId& block_id = bbox.getBlockId();
+   ++i;
+   for ( ; i != end(); ++i) {
+      if (i->getBlockId() == block_id) {
+         bbox += *i;
+      } else {
+         TBOX_ERROR("Attempted to find bounding box for BoxContainer with boxes from different blocks"
+            << std::endl);
+      }
+   }
+   return bbox;
 }
 
 
@@ -675,44 +675,42 @@ BoxContainer::getBoundingBox(
    const BlockId& block_id) const
 {
    if (isEmpty()) {
-      TBOX_WARNING("Bounding box container is empty");
-      const tbox::Dimension dim(tbox::Dimension::getInvalidDimension());
-      Box empty(dim);
-      return empty;
-   } else {
-      const tbox::Dimension& dim = d_list.front().getDim();
-      Box bbox(dim);
+      TBOX_ERROR("Bounding box container is empty" << std::endl);
+   }
 
-      /*
-       * First find the first box with the given BlockId
-       */ 
-      const_iterator i = begin();
+   const tbox::Dimension& dim = d_list.front().getDim();
+   Box bbox(dim);
+
+   /*
+    * First find the first box with the given BlockId
+    */ 
+   const_iterator i = begin();
+   for ( ; i != end(); ++i) {
+      if (i->getBlockId() == block_id) {
+         bbox = *i;
+         break;
+      }
+   }
+
+   /*
+    * If no boxes were found with the desired BlockId, then the returned
+    * box will be empty.
+    */
+   if (i == end()) {
+      TBOX_WARNING("Container has no boxes with the given BlockId"
+         << std::endl);
+   } else {
+
+      ++i;
+
       for ( ; i != end(); ++i) {
          if (i->getBlockId() == block_id) {
-            bbox = *i;
-            break;
+            bbox += *i;
          }
       }
-
-      /*
-       * If no boxes were found with the desired BlockId, then the returned
-       * box will be empty.
-       */
-      if (i == end()) {
-         TBOX_WARNING("Container has no boxes with the given BlockId");
-      } else {
-
-         ++i;
-
-         for ( ; i != end(); ++i) {
-            if (i->getBlockId() == block_id) {
-               bbox += *i;
-            }
-         }
-      }
-
-      return bbox;
    }
+
+   return bbox;
 }
 
 /*
@@ -762,7 +760,8 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -800,7 +799,8 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -836,45 +836,47 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
       d_tree.reset();
    }
 
-   if (takeaway.size() == 0) {
+   if (takeaway.isEmpty()) {
       return;
    }
 
    if (!takeaway.d_tree) {
-      TBOX_ERROR("Multiblock removeIntersections called without makeTree.");
+      TBOX_ERROR("Multiblock removeIntersections called without makeTree."
+         << std::endl);
    }
 
    const BaseGridGeometry& grid_geometry(*takeaway.d_tree->getGridGeometry());
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    iterator itr(*this);
    while (itr != end()) {
       const Box& tryme = *itr;
-      takeaway.d_tree->findOverlapBoxes(overlap_mapped_boxes,
+      takeaway.d_tree->findOverlapBoxes(overlap_boxes,
          tryme,
          refinement_ratio,
          include_singularity_block_neighbors);
-      if (overlap_mapped_boxes.empty()) {
+      if (overlap_boxes.empty()) {
          ++itr;
       } else {
          iterator sublist_start = itr;
          iterator sublist_end = sublist_start;
          ++sublist_end;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
+              i < overlap_boxes.size() && sublist_start != sublist_end;
               ++i) {
             iterator insertion_pt = sublist_start;
             const BlockId& overlap_box_block_id =
-               overlap_mapped_boxes[i]->getBlockId();
+               overlap_boxes[i]->getBlockId();
             if (overlap_box_block_id != sublist_start->getBlockId()) {
-               Box overlap_box = *overlap_mapped_boxes[i];
+               Box overlap_box = *overlap_boxes[i];
                grid_geometry.transformBox(overlap_box,
                   refinement_ratio,
                   sublist_start->getBlockId(),
@@ -886,13 +888,13 @@ BoxContainer::removeIntersections(
                   insertion_pt);
             } else {
                removeIntersectionsFromSublist(
-                  *overlap_mapped_boxes[i],
+                  *overlap_boxes[i],
                   sublist_start,
                   sublist_end,
                   insertion_pt);
             }
          }
-         overlap_mapped_boxes.clear();
+         overlap_boxes.clear();
          itr = sublist_end;
       }
    }
@@ -904,7 +906,8 @@ BoxContainer::removeIntersections(
    const Box& takeaway)
 {
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    /*
@@ -938,35 +941,36 @@ BoxContainer::removeIntersections(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
       d_tree.reset();
    }
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    iterator itr(*this);
    while (itr != end()) {
       const Box& tryme = *itr;
-      takeaway.findOverlapBoxes(overlap_mapped_boxes, tryme);
-      if (overlap_mapped_boxes.empty()) {
+      takeaway.findOverlapBoxes(overlap_boxes, tryme);
+      if (overlap_boxes.empty()) {
          ++itr;
       } else {
          iterator sublist_start = itr;
          iterator sublist_end = sublist_start;
          ++sublist_end;
          for (size_t i = 0;
-              i < overlap_mapped_boxes.size() && sublist_start != sublist_end;
+              i < overlap_boxes.size() && sublist_start != sublist_end;
               ++i) {
             iterator insertion_pt = sublist_start;
             removeIntersectionsFromSublist(
-               *overlap_mapped_boxes[i],
+               *overlap_boxes[i],
                sublist_start,
                sublist_end,
                insertion_pt);
          }
-         overlap_mapped_boxes.clear();
+         overlap_boxes.clear();
          itr = sublist_end;
       }
    }
@@ -981,7 +985,8 @@ BoxContainer::removeIntersectionsFromSublist(
    iterator& insertion_pt)
 {
    if (d_ordered) {
-      TBOX_ERROR("removeIntersections attempted on ordered container.");
+      TBOX_ERROR("removeIntersections attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1024,7 +1029,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1056,7 +1062,8 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
@@ -1093,28 +1100,29 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
       d_tree.reset();
    }
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    Box overlap(front().getDim());
    iterator itr(*this);
    iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
-      keep.findOverlapBoxes(overlap_mapped_boxes, tryme);
-      for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         tryme.intersect(*overlap_mapped_boxes[i], overlap);
+      keep.findOverlapBoxes(overlap_boxes, tryme);
+      for (size_t i = 0; i < overlap_boxes.size(); ++i) {
+         tryme.intersect(*overlap_boxes[i], overlap);
          if (!overlap.empty()) {
             insertAfter(insertion_pt, overlap);
             ++insertion_pt;
          }
       }
-      overlap_mapped_boxes.clear();
+      overlap_boxes.clear();
       iterator tmp = itr;
       ++insertion_pt;
       itr = insertion_pt;
@@ -1133,39 +1141,40 @@ BoxContainer::intersectBoxes(
    }
 
    if (d_ordered) {
-      TBOX_ERROR("intersectBoxes attempted on ordered container.");
+      TBOX_ERROR("intersectBoxes attempted on ordered container."
+         << std::endl);
    }
 
    if (d_tree) {
       d_tree.reset();
    }
 
-   if (keep.size() == 0) {
+   if (keep.isEmpty()) {
       clear();
       return; 
    }
 
    if (!keep.d_tree) {
-      TBOX_ERROR("Multiblock intersectBoxes called without makeTree.");
+      TBOX_ERROR("Multiblock intersectBoxes called without makeTree."
+         << std::endl);
    }
 
    const BaseGridGeometry& grid_geometry(*keep.d_tree->getGridGeometry());
 
-   std::vector<const Box *> overlap_mapped_boxes;
+   std::vector<const Box *> overlap_boxes;
    Box overlap(front().getDim());
    iterator itr(*this);
    iterator insertion_pt = itr;
    while (itr != end()) {
       const Box& tryme = *itr;
-      keep.d_tree->findOverlapBoxes(overlap_mapped_boxes,
+      keep.d_tree->findOverlapBoxes(overlap_boxes,
          tryme,
          refinement_ratio,
          include_singularity_block_neighbors);
-      for (size_t i = 0; i < overlap_mapped_boxes.size(); ++i) {
-         const BlockId& overlap_box_block_id =
-            overlap_mapped_boxes[i]->getBlockId();
+      for (size_t i = 0; i < overlap_boxes.size(); ++i) {
+         const BlockId& overlap_box_block_id = overlap_boxes[i]->getBlockId();
          if (overlap_box_block_id != tryme.getBlockId()) {
-            Box overlap_box = *overlap_mapped_boxes[i];
+            Box overlap_box = *overlap_boxes[i];
             grid_geometry.transformBox(overlap_box,
                refinement_ratio,
                tryme.getBlockId(),
@@ -1176,14 +1185,14 @@ BoxContainer::intersectBoxes(
                ++insertion_pt;
             }
          } else {
-            tryme.intersect(*overlap_mapped_boxes[i], overlap);
+            tryme.intersect(*overlap_boxes[i], overlap);
             if (!overlap.empty()) {
                insertAfter(insertion_pt, overlap);
                ++insertion_pt;
             }
          }
       }
-      overlap_mapped_boxes.clear();
+      overlap_boxes.clear();
       iterator tmp = itr;
       ++insertion_pt;
       itr = insertion_pt;
@@ -1215,8 +1224,8 @@ BoxContainer::operator tbox::Array<tbox::DatabaseBox>() const
  *************************************************************************
  *
  * Break up box bursty against box solid and adds the pieces to
- * container.  The bursting is done on dimensions 0 through dimension-1,
- * starting with lowest dimensions first to try to maintain the
+ * container.  The bursting is done on directions 0 through dimension-1,
+ * starting with lowest directions first to try to maintain the
  * canonical representation for the bursted domains.
  *
  *************************************************************************
@@ -1227,7 +1236,7 @@ BoxContainer::burstBoxes(
    const Box& solid,
    const int dimension)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(bursty, solid);
    TBOX_ASSERT(dimension <= bursty.getDim().getValue());
 
    // Set up the lower and upper bounds of the regions for ease of access
@@ -1238,7 +1247,7 @@ BoxContainer::burstBoxes(
    const Index& solidh = solid.upper();
    const BlockId& block_id = bursty.getBlockId();
 
-   // Break bursty region against solid region along low dimensions first
+   // Break bursty region against solid region along low directions first
 
    for (int d = 0; d < dimension; d++) {
       if (bursth(d) > solidh(d)) {
@@ -1261,8 +1270,8 @@ BoxContainer::burstBoxes(
  *
  * Break up box bursty against box solid and adds the pieces to
  * container starting at the location pointed to by the supplied
- * iterator.  The bursting is done on dimensions 0 through dimension-1,
- * starting with lowest dimensions first to try to maintain the
+ * iterator.  The bursting is done on directions 0 through dimension-1,
+ * starting with lowest directions first to try to maintain the
  * canonical representation for the bursted domains.
  *
  *************************************************************************
@@ -1271,11 +1280,11 @@ void
 BoxContainer::burstBoxes(
    const Box& bursty,
    const Box& solid,
-   const int dimension,
+   const int direction,
    iterator& insertion_pt)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(bursty, solid);
-   TBOX_ASSERT(dimension <= bursty.getDim().getValue());
+   TBOX_ASSERT_OBJDIM_EQUALITY2(bursty, solid);
+   TBOX_ASSERT(direction <= bursty.getDim().getValue());
 
    // Set up the lower and upper bounds of the regions for ease of access
 
@@ -1285,9 +1294,9 @@ BoxContainer::burstBoxes(
    const Index& solidh = solid.upper();
    const BlockId& block_id = bursty.getBlockId();
 
-   // Break bursty region against solid region along low dimensions first
+   // Break bursty region against solid region along low directions first
 
-   for (int d = 0; d < dimension; d++) {
+   for (int d = 0; d < direction; d++) {
       if (bursth(d) > solidh(d)) {
          Index newl = burstl;
          newl(d) = solidh(d) + 1;
@@ -1323,11 +1332,12 @@ BoxContainer::getOwners(
    } else {
       for (const_iterator i_nabr = begin();
            i_nabr != end(); ++i_nabr) {
-         if (i_nabr->getId().isValid()) {
+         if (i_nabr->getBoxId().isValid()) {
             const int owner = i_nabr->getOwnerRank();
             owners.insert(owner);
          } else {
-            TBOX_ERROR("Attempted to get owner of Box with invalid BoxId.");
+            TBOX_ERROR("Attempted to get owner of Box with invalid BoxId."
+               << std::endl);
          }
       }
    }
@@ -1340,14 +1350,15 @@ BoxContainer::getOwners(
  */
 void
 BoxContainer::unshiftPeriodicImageBoxes(
-   BoxContainer& output_mapped_boxes,
+   BoxContainer& output_boxes,
    const IntVector& refinement_ratio) const
 {
    if (!d_ordered) {
-      TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container.");
+      TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container."
+         << std::endl);
    }
 
-   iterator hint = output_mapped_boxes.begin();
+   iterator hint = output_boxes.begin();
 
    if (!isEmpty()) {
       const Box& first_element(*begin());
@@ -1358,11 +1369,10 @@ BoxContainer::unshiftPeriodicImageBoxes(
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const Box unshifted_mapped_box(
-               *na, zero_shift_number, refinement_ratio);
-            hint = output_mapped_boxes.insert(hint, unshifted_mapped_box);
+            const Box unshifted_box(*na, zero_shift_number, refinement_ratio);
+            hint = output_boxes.insert(hint, unshifted_box);
          } else {
-            hint = output_mapped_boxes.insert(hint, *na);
+            hint = output_boxes.insert(hint, *na);
          }
       }
    }
@@ -1379,11 +1389,13 @@ BoxContainer::order()
    if (!d_ordered) {
       d_set.clear();
       for (iterator i(*this); i != end(); ++i) {
-         if (!i->getId().isValid()) {
-            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId.");
+         if (!i->getBoxId().isValid()) {
+            TBOX_ERROR("Attempted to order a BoxContainer that has a member with an invalid BoxId."
+               << std::endl);
          }
          if (d_set.insert(&(*i)).second == false) {
-            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds.");
+            TBOX_ERROR("Attempted to order a BoxContainer with duplicate BoxIds."
+               << std::endl);
          }
          i->lockId();
       }
@@ -1423,7 +1435,7 @@ BoxContainer::erase(
 
       for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
            ++bi) {
-         if (bi->getId() == box.getId()) {
+         if (bi->getBoxId() == box.getBoxId()) {
             d_list.erase(bi);
             break;
          }
@@ -1457,13 +1469,14 @@ BoxContainer::erase(
    const Box& box)
 {
    if (!d_ordered) {
-      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer.");
+      TBOX_ERROR("erase with Box argument attempted on unordered BoxContainer."
+         << std::endl);
    }
 
    int ret = static_cast<int>(d_set.erase(const_cast<Box*>(&box)));
    for (std::list<Box>::iterator bi = d_list.begin(); bi != d_list.end();
         ++bi) {
-      if (bi->getId() == box.getId()) {
+      if (bi->getBoxId() == box.getBoxId()) {
          d_list.erase(bi++);
          break;
       }
@@ -1504,9 +1517,8 @@ BoxContainer::contains(
    const BlockId& block_id) const
 {
    for (const_iterator i(*this); i != end(); ++i) {
-      //TODO: Change this when BoxContainer can no longer accept invalid BlockId
-      if (i->getBlockId() == block_id ||
-          i->getBlockId() == BlockId::invalidId()) {
+      TBOX_ASSERT(i->getBlockId().isValid());
+      if (i->getBlockId() == block_id) {
          if (i->contains(idx)) {
             return true;
          }
@@ -1578,7 +1590,7 @@ BoxContainer::makeTree(
 {
    TBOX_ASSERT(min_number > 0);
 
-   if (!d_tree && size() > 0) {
+   if (!d_tree && !isEmpty()) {
       d_tree.reset(new MultiblockBoxTree(*this, grid_geometry, min_number));
    }
 }
@@ -1602,18 +1614,18 @@ BoxContainer::hasBoxInBlock(
 
 /*
  ***********************************************************************
- * Write the BoxContainer to a database.
+ * Write the BoxContainer to a restart database.
  ***********************************************************************
  */
 void
-BoxContainer::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+BoxContainer::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   database->putInteger(
+   restart_db->putInteger(
       "HIER_BOX_CONTAINER_VERSION", HIER_BOX_CONTAINER_VERSION);
 
    const int mbs_size = size();
-   database->putInteger("mapped_box_set_size", mbs_size);
+   restart_db->putInteger("mapped_box_set_size", mbs_size);
    if (mbs_size > 0) {
 
       std::vector<int> local_ids;
@@ -1636,25 +1648,32 @@ BoxContainer::putUnregisteredToDatabase(
          db_box_array[++counter] = *ni;
       }
 
-      database->putIntegerArray("local_indices", &local_ids[0], mbs_size);
-      database->putIntegerArray("ranks", &ranks[0], mbs_size);
-      database->putIntegerArray("block_ids", &block_ids[0], mbs_size);
-      database->putIntegerArray("periodic_ids", &periodic_ids[0], mbs_size);
-      database->putDatabaseBoxArray("boxes", &db_box_array[0], mbs_size);
+      restart_db->putIntegerArray("local_indices", &local_ids[0], mbs_size);
+      restart_db->putIntegerArray("ranks", &ranks[0], mbs_size);
+      restart_db->putIntegerArray("block_ids", &block_ids[0], mbs_size);
+      restart_db->putIntegerArray("periodic_ids", &periodic_ids[0], mbs_size);
+      restart_db->putDatabaseBoxArray("boxes", &db_box_array[0], mbs_size);
    }
 }
 
 
 /*
  ***********************************************************************
- * Read the BoxContainer from a database.
+ * Read the BoxContainer from a restart database.
  ***********************************************************************
  */
 void
-BoxContainer::getFromDatabase(
-   tbox::Database& database)
+BoxContainer::getFromRestart(
+   tbox::Database& restart_db)
 {
-   const unsigned int mbs_size = database.getInteger("mapped_box_set_size");
+   int version = restart_db.getInteger("HIER_BOX_CONTAINER_VERSION");
+   if (version != HIER_BOX_CONTAINER_VERSION) {
+      TBOX_ERROR("BoxContainer::getFromRestart() error...\n"
+         << "   Restart file version different than class version."
+         << std::endl);
+   }
+
+   const unsigned int mbs_size = restart_db.getInteger("mapped_box_set_size");
    if (mbs_size > 0) {
       std::vector<int> local_ids(mbs_size);
       std::vector<int> ranks(mbs_size);
@@ -1662,26 +1681,25 @@ BoxContainer::getFromDatabase(
       std::vector<int> periodic_ids(mbs_size);
       tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "local_indices", &local_ids[0], mbs_size);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "ranks", &ranks[0], mbs_size);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "block_ids", &block_ids[0], mbs_size);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "periodic_ids", &periodic_ids[0], mbs_size);
-      database.getDatabaseBoxArray(
+      restart_db.getDatabaseBoxArray(
          "boxes", &db_box_array[0], mbs_size);
 
       for (unsigned int i = 0; i < mbs_size; ++i) {
-         Box box(db_box_array[i]);
-         box.setBlockId(BlockId(block_ids[i]));
-         Box mapped_box(
-            box,
-            LocalId(local_ids[i]),
+         Box array_box(db_box_array[i]);
+         array_box.setBlockId(BlockId(block_ids[i]));
+         BoxId box_id(LocalId(local_ids[i]),
             ranks[i],
             PeriodicId(periodic_ids[i]));
-         insert(end(), mapped_box);
+         array_box.setId(box_id);
+         insert(end(), array_box);
       }
    }
 }
@@ -1712,10 +1730,10 @@ BoxContainer::print(
  */
 
 BoxContainer::Outputter::Outputter(
-   const BoxContainer& mapped_box_set,
+   const BoxContainer& boxes,
    const std::string& border,
    int detail_depth):
-   d_set(mapped_box_set),
+   d_set(boxes),
    d_border(border),
    d_detail_depth(detail_depth)
 {
@@ -1807,7 +1825,8 @@ BoxContainer::findOverlapBoxes(
    }
 
    if (!d_tree) {
-      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument.");
+      TBOX_ERROR("Must call makeTree before calling findOverlapBoxes with refinement ratio argument."
+         << std::endl);
    }
 
    d_tree->findOverlapBoxes(overlap_boxes,

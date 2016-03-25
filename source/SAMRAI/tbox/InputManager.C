@@ -9,7 +9,7 @@
  ************************************************************************/
 
 #include "SAMRAI/tbox/InputManager.h"
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -22,7 +22,7 @@
 namespace SAMRAI {
 namespace tbox {
 
-InputManager * InputManager::s_manager_instance = NULL;
+InputManager * InputManager::s_manager_instance = 0;
 
 boost::shared_ptr<Database> InputManager::s_input_db;
 
@@ -66,7 +66,7 @@ InputManager::finalizeCallback()
 {
    if (s_manager_instance) {
       delete s_manager_instance;
-      s_manager_instance = ((InputManager *)NULL);
+      s_manager_instance = 0;
    }
 
    s_input_db.reset();
@@ -120,7 +120,7 @@ InputManager::parseInputFile(
    const std::string& filename,
    const boost::shared_ptr<InputDatabase>& db)
 {
-   FILE* fstream = NULL;
+   FILE* fstream = 0;
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());
    if (mpi.getRank() == 0) {
       fstream = fopen(filename.c_str(), "r");

@@ -21,7 +21,7 @@
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <map>
 #include <set>
 #include <vector>
@@ -47,7 +47,7 @@ class BoxNeighborhoodCollection
          bool
          operator () (const Box* box0, const Box* box1) const
          {
-            return box0->getId() < box1->getId();
+            return box0->getBoxId() < box1->getBoxId();
          }
       };
 
@@ -56,7 +56,7 @@ class BoxNeighborhoodCollection
          bool
          operator () (const Box& box0, const Box& box1) const
          {
-            return box0.getId() < box1.getId();
+            return box0.getBoxId() < box1.getBoxId();
          }
       };
 
@@ -932,6 +932,9 @@ class BoxNeighborhoodCollection
        * neighborhood of the base Box pointed to by base_box_itr.
        *
        * @param base_box_itr
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       NeighborIterator
       begin(
@@ -947,6 +950,9 @@ class BoxNeighborhoodCollection
        * neighborhood of the base Box pointed to by base_box_itr.
        *
        * @param base_box_itr
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       ConstNeighborIterator
       begin(
@@ -989,6 +995,9 @@ class BoxNeighborhoodCollection
        * neighborhood of the base Box pointed to by base_box_itr.
        *
        * @param base_box_itr
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       NeighborIterator
       end(
@@ -1004,6 +1013,9 @@ class BoxNeighborhoodCollection
        * neighborhood of the base Box pointed to by base_box_itr.
        *
        * @param base_box_itr
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       ConstNeighborIterator
       end(
@@ -1109,6 +1121,9 @@ class BoxNeighborhoodCollection
        * base_box_itr is empty.
        *
        * @param base_box_itr
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       bool
       emptyBoxNeighborhood(
@@ -1137,6 +1152,9 @@ class BoxNeighborhoodCollection
        * Box pointed to by base_box_itr.
        *
        * @param base_box_itr
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       int
       numNeighbors(
@@ -1284,6 +1302,9 @@ class BoxNeighborhoodCollection
        * @param base_box_itr Iterator pointing to the base Box.
        *
        * @param new_nbr The new neighbor of the base Box.
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       void
       insert(
@@ -1299,6 +1320,9 @@ class BoxNeighborhoodCollection
        * @param new_nbrs The new neighbors of the base Box.
        *
        * @return An Iterator pointing to the base Box with the supplied BoxId.
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       Iterator
       insert(
@@ -1353,6 +1377,10 @@ class BoxNeighborhoodCollection
        * @param base_box_itr An iterator pointing to the base Box.
        *
        * @param nbr The neighbor of the base Box to be erased.
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
+       * @pre d_nbrs.find(nbr) != d_nbrs.end()
        */
       void
       erase(
@@ -1384,6 +1412,10 @@ class BoxNeighborhoodCollection
        * @param base_box_itr An iterator pointing to the base Box.
        *
        * @param nbrs The neighbors of base Box to be erased.
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
+       * @pre for each box in nbrs, d_nbrs.find(box) != d_nbrs.end()
        */
       void
       erase(
@@ -1429,6 +1461,9 @@ class BoxNeighborhoodCollection
        *
        * @param base_box_itr Iterator pointing to the base box whose neighbors
        * are to be erased.
+       *
+       * @pre base_box_itr.d_collection == this
+       * @pre base_box_itr != end()
        */
       void
       erase(
@@ -1635,22 +1670,24 @@ class BoxNeighborhoodCollection
        */
 
       /*!
-       * @brief Writes the neighborhood information to the supplied database.
+       * @brief Writes the neighborhood information to the supplied restart
+       * database.
        *
-       * @param database
+       * @param restart_db
        */
       void
-      putUnregisteredToDatabase(
-         const boost::shared_ptr<tbox::Database>& database) const;
+      putToRestart(
+         const boost::shared_ptr<tbox::Database>& restart_db) const;
 
       /*!
-       * @brief Constructs the neighborhoods from the supplied database.
+       * @brief Constructs the neighborhoods from the supplied restart
+       * database.
        *
-       * @param database
+       * @param restart_db
        */
       void
-      getFromDatabase(
-         tbox::Database& database);
+      getFromRestart(
+         tbox::Database& restart_db);
 
       //@}
 };

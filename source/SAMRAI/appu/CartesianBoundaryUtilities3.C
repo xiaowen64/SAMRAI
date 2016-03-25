@@ -34,7 +34,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -43,7 +43,7 @@ void F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
+void SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
    const int&, const int&, const int&,
    const int&,
    const int&, const int&, const int&,
@@ -52,7 +52,7 @@ void F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (const int&,
    const int&,
    const int&, const int&, const int&);
 
-void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -66,7 +66,7 @@ void F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (const int&, const int&,
    double *,
    const int&);
 
-void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -80,7 +80,7 @@ void F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (const int&, const int&,
    double *,
    const int&);
 
-void F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -121,7 +121,7 @@ bool CartesianBoundaryUtilities3::s_fortran_constants_stuffed = false;
  *
  * Arguments are:
  *    bdry_strategy .... object that reads DIRICHLET or NEUMANN conditions
- *    bdry_db .......... input database containing all boundary data
+ *    input_db ......... input database containing all boundary data
  *    face_conds ....... array into which integer boundary conditions
  *                       for faces are read
  *    edge_conds ....... array into which integer boundary conditions
@@ -134,9 +134,9 @@ bool CartesianBoundaryUtilities3::s_fortran_constants_stuffed = false;
  */
 
 void
-CartesianBoundaryUtilities3::readBoundaryInput(
+CartesianBoundaryUtilities3::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
@@ -144,27 +144,31 @@ CartesianBoundaryUtilities3::readBoundaryInput(
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
+
+   if (!input_db) {
+      TBOX_ERROR(": CartesianBoundaryUtility3::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    if (!s_fortran_constants_stuffed) {
       stuff3dBdryFortConst();
    }
 
    read3dBdryFaces(bdry_strategy,
-      bdry_db,
+      input_db,
       face_conds,
       periodic);
 
-   read3dBdryEdges(bdry_db,
+   read3dBdryEdges(input_db,
       face_conds,
       edge_conds,
       periodic);
 
-   read3dBdryNodes(bdry_db,
+   read3dBdryNodes(input_db,
       face_conds,
       node_conds,
       periodic);
@@ -200,7 +204,7 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -210,7 +214,8 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -236,7 +241,7 @@ CartesianBoundaryUtilities3::fillFaceBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartfacebdry3d, GETCARTFACEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          ibeg(0), iend(0),
@@ -283,7 +288,7 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -293,7 +298,8 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -319,7 +325,7 @@ CartesianBoundaryUtilities3::fillEdgeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartedgebdry3d, GETCARTEDGEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          ibeg(0), iend(0),
@@ -366,7 +372,7 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
    TBOX_ASSERT(bdry_face_values.getSize() == NUM_3D_FACES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -376,7 +382,8 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -402,7 +409,7 @@ CartesianBoundaryUtilities3::fillNodeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartnodebdry3d, GETCARTNODEBDRY3D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ifirst(2), ilast(2),
          ibeg(0), iend(0),
@@ -620,14 +627,14 @@ CartesianBoundaryUtilities3::checkBdryData(
    const hier::IntVector& gcw_to_check,
    const hier::BoundaryBox& bbox,
    int bcase,
-   double bstate)
+   const double& bstate)
 {
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(data_id >= 0);
    TBOX_ASSERT(depth >= 0);
 
    TBOX_DIM_ASSERT(gcw_to_check.getDim() == tbox::Dimension(3));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(patch, gcw_to_check, bbox);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(patch, gcw_to_check, bbox);
 
    int num_bad_values = 0;
 
@@ -636,11 +643,13 @@ CartesianBoundaryUtilities3::checkBdryData(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
       patch.getPatchData(data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(vardata);
 
    std::string bdry_type_str;
    if (btype == Bdry::FACE3D) {
@@ -815,14 +824,14 @@ CartesianBoundaryUtilities3::checkBdryData(
 void
 CartesianBoundaryUtilities3::read3dBdryFaces(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& face_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(bdry_strategy != 0);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
 
    int num_per_dirs = 0;
@@ -869,41 +878,27 @@ CartesianBoundaryUtilities3::read3dBdryFaces(
          }
 
          if (need_data_read) {
-            if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db(
-                  bdry_db->getDatabase(bdry_loc_str));
-               if (bdry_loc_db) {
-                  if (bdry_loc_db->keyExists("boundary_condition")) {
-                     std::string bdry_cond_str =
-                        bdry_loc_db->getString("boundary_condition");
-                     if (bdry_cond_str == "FLOW") {
-                        face_conds[s] = BdryCond::FLOW;
-                     } else if (bdry_cond_str == "REFLECT") {
-                        face_conds[s] = BdryCond::REFLECT;
-                     } else if (bdry_cond_str == "DIRICHLET") {
-                        face_conds[s] = BdryCond::DIRICHLET;
-                        bdry_strategy->
-                        readDirichletBoundaryDataEntry(bdry_loc_db,
-                           bdry_loc_str,
-                           s);
-                     } else if (bdry_cond_str == "NEUMANN") {
-                        face_conds[s] = BdryCond::NEUMANN;
-                        bdry_strategy->
-                        readNeumannBoundaryDataEntry(bdry_loc_db,
-                           bdry_loc_str,
-                           s);
-                     } else {
-                        TBOX_ERROR("Unknown face boundary string = "
-                           << bdry_cond_str << " found in input." << std::endl);
-                     }
-                  } else {
-                     TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << std::endl);
-                  }
-               }
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               input_db->getDatabase(bdry_loc_str));
+            std::string bdry_cond_str =
+               bdry_loc_db->getString("boundary_condition");
+            if (bdry_cond_str == "FLOW") {
+               face_conds[s] = BdryCond::FLOW;
+            } else if (bdry_cond_str == "REFLECT") {
+               face_conds[s] = BdryCond::REFLECT;
+            } else if (bdry_cond_str == "DIRICHLET") {
+               face_conds[s] = BdryCond::DIRICHLET;
+               bdry_strategy->readDirichletBoundaryDataEntry(bdry_loc_db,
+                  bdry_loc_str,
+                  s);
+            } else if (bdry_cond_str == "NEUMANN") {
+               face_conds[s] = BdryCond::NEUMANN;
+               bdry_strategy->readNeumannBoundaryDataEntry(bdry_loc_db,
+                  bdry_loc_str,
+                  s);
             } else {
-               TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << std::endl);
+               TBOX_ERROR("Unknown face boundary string = "
+                  << bdry_cond_str << " found in input." << std::endl);
             }
          } // if (need_data_read)
 
@@ -919,14 +914,14 @@ CartesianBoundaryUtilities3::read3dBdryFaces(
 
 void
 CartesianBoundaryUtilities3::read3dBdryEdges(
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(edge_conds.getSize() == NUM_3D_EDGES);
 
@@ -1016,259 +1011,247 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
          }
 
          if (need_data_read) {
-            if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db(
-                  bdry_db->getDatabase(bdry_loc_str));
-               if (bdry_loc_db) {
-                  if (bdry_loc_db->keyExists("boundary_condition")) {
-                     std::string bdry_cond_str =
-                        bdry_loc_db->getString("boundary_condition");
-                     if (bdry_cond_str == "XFLOW") {
-                        edge_conds[s] = BdryCond::XFLOW;
-                     } else if (bdry_cond_str == "YFLOW") {
-                        edge_conds[s] = BdryCond::YFLOW;
-                     } else if (bdry_cond_str == "ZFLOW") {
-                        edge_conds[s] = BdryCond::ZFLOW;
-                     } else if (bdry_cond_str == "XREFLECT") {
-                        edge_conds[s] = BdryCond::XREFLECT;
-                     } else if (bdry_cond_str == "YREFLECT") {
-                        edge_conds[s] = BdryCond::YREFLECT;
-                     } else if (bdry_cond_str == "ZREFLECT") {
-                        edge_conds[s] = BdryCond::ZREFLECT;
-                     } else if (bdry_cond_str == "XDIRICHLET") {
-                        edge_conds[s] = BdryCond::XDIRICHLET;
-                     } else if (bdry_cond_str == "YDIRICHLET") {
-                        edge_conds[s] = BdryCond::YDIRICHLET;
-                     } else if (bdry_cond_str == "ZDIRICHLET") {
-                        edge_conds[s] = BdryCond::ZDIRICHLET;
-                     } else if (bdry_cond_str == "XNEUMANN") {
-                        edge_conds[s] = BdryCond::XNEUMANN;
-                     } else if (bdry_cond_str == "YNEUMANN") {
-                        edge_conds[s] = BdryCond::YNEUMANN;
-                     } else if (bdry_cond_str == "ZNEUMANN") {
-                        edge_conds[s] = BdryCond::ZNEUMANN;
-                     } else {
-                        TBOX_ERROR("Unknown edge boundary string = "
-                           << bdry_cond_str << " found in input." << std::endl);
-                     }
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               input_db->getDatabase(bdry_loc_str));
+            std::string bdry_cond_str =
+               bdry_loc_db->getString("boundary_condition");
+            if (bdry_cond_str == "XFLOW") {
+               edge_conds[s] = BdryCond::XFLOW;
+            } else if (bdry_cond_str == "YFLOW") {
+               edge_conds[s] = BdryCond::YFLOW;
+            } else if (bdry_cond_str == "ZFLOW") {
+               edge_conds[s] = BdryCond::ZFLOW;
+            } else if (bdry_cond_str == "XREFLECT") {
+               edge_conds[s] = BdryCond::XREFLECT;
+            } else if (bdry_cond_str == "YREFLECT") {
+               edge_conds[s] = BdryCond::YREFLECT;
+            } else if (bdry_cond_str == "ZREFLECT") {
+               edge_conds[s] = BdryCond::ZREFLECT;
+            } else if (bdry_cond_str == "XDIRICHLET") {
+               edge_conds[s] = BdryCond::XDIRICHLET;
+            } else if (bdry_cond_str == "YDIRICHLET") {
+               edge_conds[s] = BdryCond::YDIRICHLET;
+            } else if (bdry_cond_str == "ZDIRICHLET") {
+               edge_conds[s] = BdryCond::ZDIRICHLET;
+            } else if (bdry_cond_str == "XNEUMANN") {
+               edge_conds[s] = BdryCond::XNEUMANN;
+            } else if (bdry_cond_str == "YNEUMANN") {
+               edge_conds[s] = BdryCond::YNEUMANN;
+            } else if (bdry_cond_str == "ZNEUMANN") {
+               edge_conds[s] = BdryCond::ZNEUMANN;
+            } else {
+               TBOX_ERROR("Unknown edge boundary string = "
+                  << bdry_cond_str << " found in input." << std::endl);
+            }
 
-                     bool ambiguous_type = false;
-                     if (bdry_cond_str == "XFLOW" ||
-                         bdry_cond_str == "XREFLECT" ||
-                         bdry_cond_str == "XDIRICHLET" ||
-                         bdry_cond_str == "XNEUMANN") {
-                        if (s == EdgeBdyLoc3D::YLO_ZLO ||
-                            s == EdgeBdyLoc3D::YHI_ZLO ||
-                            s == EdgeBdyLoc3D::YLO_ZHI ||
-                            s == EdgeBdyLoc3D::YHI_ZHI) {
-                           ambiguous_type = true;
-                        }
-                     } else if (bdry_cond_str == "YFLOW" ||
-                                bdry_cond_str == "YREFLECT" ||
-                                bdry_cond_str == "YDIRICHLET" ||
-                                bdry_cond_str == "YNEUMANN") {
-                        if (s == EdgeBdyLoc3D::XLO_ZLO ||
-                            s == EdgeBdyLoc3D::XLO_ZHI ||
-                            s == EdgeBdyLoc3D::XHI_ZLO ||
-                            s == EdgeBdyLoc3D::XHI_ZHI) {
-                           ambiguous_type = true;
-                        }
-                     } else if (bdry_cond_str == "ZFLOW" ||
-                                bdry_cond_str == "ZREFLECT" ||
-                                bdry_cond_str == "ZDIRICHLET" ||
-                                bdry_cond_str == "ZNEUMANN") {
-                        if (s == EdgeBdyLoc3D::XLO_YLO ||
-                            s == EdgeBdyLoc3D::XHI_YLO ||
-                            s == EdgeBdyLoc3D::XLO_YHI ||
-                            s == EdgeBdyLoc3D::XHI_YHI) {
-                           ambiguous_type = true;
-                        }
-                     }
-                     if (ambiguous_type) {
-                        TBOX_ERROR("Ambiguous bdry condition "
-                           << bdry_cond_str
-                           << " found for " << bdry_loc_str << std::endl);
-                     }
+            bool ambiguous_type = false;
+            if (bdry_cond_str == "XFLOW" ||
+                bdry_cond_str == "XREFLECT" ||
+                bdry_cond_str == "XDIRICHLET" ||
+                bdry_cond_str == "XNEUMANN") {
+               if (s == EdgeBdyLoc3D::YLO_ZLO ||
+                   s == EdgeBdyLoc3D::YHI_ZLO ||
+                   s == EdgeBdyLoc3D::YLO_ZHI ||
+                   s == EdgeBdyLoc3D::YHI_ZHI) {
+                  ambiguous_type = true;
+               }
+            } else if (bdry_cond_str == "YFLOW" ||
+                       bdry_cond_str == "YREFLECT" ||
+                       bdry_cond_str == "YDIRICHLET" ||
+                       bdry_cond_str == "YNEUMANN") {
+               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::XLO_ZHI ||
+                   s == EdgeBdyLoc3D::XHI_ZLO ||
+                   s == EdgeBdyLoc3D::XHI_ZHI) {
+                  ambiguous_type = true;
+               }
+            } else if (bdry_cond_str == "ZFLOW" ||
+                       bdry_cond_str == "ZREFLECT" ||
+                       bdry_cond_str == "ZDIRICHLET" ||
+                       bdry_cond_str == "ZNEUMANN") {
+               if (s == EdgeBdyLoc3D::XLO_YLO ||
+                   s == EdgeBdyLoc3D::XHI_YLO ||
+                   s == EdgeBdyLoc3D::XLO_YHI ||
+                   s == EdgeBdyLoc3D::XHI_YHI) {
+                  ambiguous_type = true;
+               }
+            }
+            if (ambiguous_type) {
+               TBOX_ERROR("Ambiguous bdry condition "
+                  << bdry_cond_str
+                  << " found for " << bdry_loc_str << std::endl);
+            }
 
-                     std::string proper_face;
-                     std::string proper_face_data;
-                     bool no_face_data_found = false;
-                     if (bdry_cond_str == "XFLOW" ||
-                         bdry_cond_str == "XDIRICHLET" ||
-                         bdry_cond_str == "XNEUMANN" ||
-                         bdry_cond_str == "XREFLECT") {
-                        if (s == EdgeBdyLoc3D::XLO_ZLO ||
-                            s == EdgeBdyLoc3D::XLO_ZHI ||
-                            s == EdgeBdyLoc3D::XLO_YLO ||
-                            s == EdgeBdyLoc3D::XLO_YHI) {
-                           proper_face = "XLO";
-                           if (bdry_cond_str == "XFLOW" &&
-                               face_conds[BdryLoc::XLO] != BdryCond::FLOW) {
-                              no_face_data_found = true;
-                              proper_face_data = "FLOW";
-                           }
-                           if (bdry_cond_str == "XDIRICHLET" &&
-                               face_conds[BdryLoc::XLO] != BdryCond::DIRICHLET) {
-                              no_face_data_found = true;
-                              proper_face_data = "DIRICHLET";
-                           }
-                           if (bdry_cond_str == "XNEUMANN" &&
-                               face_conds[BdryLoc::XLO] != BdryCond::NEUMANN) {
-                              no_face_data_found = true;
-                              proper_face_data = "NEUMANN";
-                           }
-                           if (bdry_cond_str == "XREFLECT" &&
-                               face_conds[BdryLoc::XLO] != BdryCond::REFLECT) {
-                              no_face_data_found = true;
-                              proper_face_data = "REFLECT";
-                           }
-                        } else {
-                           proper_face = "XHI";
-                           if (bdry_cond_str == "XFLOW" &&
-                               face_conds[BdryLoc::XHI] != BdryCond::FLOW) {
-                              no_face_data_found = true;
-                              proper_face_data = "FLOW";
-                           }
-                           if (bdry_cond_str == "XDIRICHLET" &&
-                               face_conds[BdryLoc::XHI] != BdryCond::DIRICHLET) {
-                              no_face_data_found = true;
-                              proper_face_data = "DIRICHLET";
-                           }
-                           if (bdry_cond_str == "XNEUMANN" &&
-                               face_conds[BdryLoc::XHI] != BdryCond::NEUMANN) {
-                              no_face_data_found = true;
-                              proper_face_data = "NEUMANN";
-                           }
-                           if (bdry_cond_str == "XREFLECT" &&
-                               face_conds[BdryLoc::XHI] != BdryCond::REFLECT) {
-                              no_face_data_found = true;
-                              proper_face_data = "REFLECT";
-                           }
-                        }
-                     } else if (bdry_cond_str == "YFLOW" ||
-                                bdry_cond_str == "YDIRICHLET" ||
-                                bdry_cond_str == "YNEUMANN" ||
-                                bdry_cond_str == "YREFLECT") {
-                        if (s == EdgeBdyLoc3D::XLO_ZLO ||
-                            s == EdgeBdyLoc3D::YLO_ZHI ||
-                            s == EdgeBdyLoc3D::XLO_YLO ||
-                            s == EdgeBdyLoc3D::XHI_YLO) {
-                           proper_face = "YLO";
-                           if (bdry_cond_str == "YFLOW" &&
-                               face_conds[BdryLoc::YLO] != BdryCond::FLOW) {
-                              no_face_data_found = true;
-                              proper_face_data = "FLOW";
-                           }
-                           if (bdry_cond_str == "YDIRICHLET" &&
-                               face_conds[BdryLoc::YLO] != BdryCond::DIRICHLET) {
-                              no_face_data_found = true;
-                              proper_face_data = "DIRICHLET";
-                           }
-                           if (bdry_cond_str == "YNEUMANN" &&
-                               face_conds[BdryLoc::YLO] != BdryCond::NEUMANN) {
-                              no_face_data_found = true;
-                              proper_face_data = "NEUMANN";
-                           }
-                           if (bdry_cond_str == "YREFLECT" &&
-                               face_conds[BdryLoc::YLO] != BdryCond::REFLECT) {
-                              no_face_data_found = true;
-                              proper_face_data = "REFLECT";
-                           }
-                        } else {
-                           proper_face = "YHI";
-                           if (bdry_cond_str == "YFLOW" &&
-                               face_conds[BdryLoc::YHI] != BdryCond::FLOW) {
-                              no_face_data_found = true;
-                              proper_face_data = "FLOW";
-                           }
-                           if (bdry_cond_str == "YDIRICHLET" &&
-                               face_conds[BdryLoc::YHI] != BdryCond::DIRICHLET) {
-                              no_face_data_found = true;
-                              proper_face_data = "DIRICHLET";
-                           }
-                           if (bdry_cond_str == "YNEUMANN" &&
-                               face_conds[BdryLoc::YHI] != BdryCond::NEUMANN) {
-                              no_face_data_found = true;
-                              proper_face_data = "NEUMANN";
-                           }
-                           if (bdry_cond_str == "YREFLECT" &&
-                               face_conds[BdryLoc::YHI] != BdryCond::REFLECT) {
-                              no_face_data_found = true;
-                              proper_face_data = "REFLECT";
-                           }
-                        }
-                     } else if (bdry_cond_str == "ZFLOW" ||
-                                bdry_cond_str == "ZDIRICHLET" ||
-                                bdry_cond_str == "ZNEUMANN" ||
-                                bdry_cond_str == "ZREFLECT") {
-                        if (s == EdgeBdyLoc3D::XLO_ZLO ||
-                            s == EdgeBdyLoc3D::YHI_ZLO ||
-                            s == EdgeBdyLoc3D::XLO_ZLO ||
-                            s == EdgeBdyLoc3D::XHI_ZLO) {
-                           proper_face = "ZLO";
-                           if (bdry_cond_str == "ZFLOW" &&
-                               face_conds[BdryLoc::ZLO] != BdryCond::FLOW) {
-                              no_face_data_found = true;
-                              proper_face_data = "FLOW";
-                           }
-                           if (bdry_cond_str == "ZDIRICHLET" &&
-                               face_conds[BdryLoc::ZLO] != BdryCond::DIRICHLET) {
-                              no_face_data_found = true;
-                              proper_face_data = "DIRICHLET";
-                           }
-                           if (bdry_cond_str == "ZNEUMANN" &&
-                               face_conds[BdryLoc::ZLO] != BdryCond::NEUMANN) {
-                              no_face_data_found = true;
-                              proper_face_data = "NEUMANN";
-                           }
-                           if (bdry_cond_str == "ZREFLECT" &&
-                               face_conds[BdryLoc::ZLO] != BdryCond::REFLECT) {
-                              no_face_data_found = true;
-                              proper_face_data = "REFLECT";
-                           }
-                        } else {
-                           proper_face = "ZHI";
-                           if (bdry_cond_str == "ZFLOW" &&
-                               face_conds[BdryLoc::ZHI] != BdryCond::FLOW) {
-                              no_face_data_found = true;
-                              proper_face_data = "FLOW";
-                           }
-                           if (bdry_cond_str == "ZDIRICHLET" &&
-                               face_conds[BdryLoc::ZHI] != BdryCond::DIRICHLET) {
-                              no_face_data_found = true;
-                              proper_face_data = "DIRICHLET";
-                           }
-                           if (bdry_cond_str == "ZNEUMANN" &&
-                               face_conds[BdryLoc::ZHI] != BdryCond::NEUMANN) {
-                              no_face_data_found = true;
-                              proper_face_data = "NEUMANN";
-                           }
-                           if (bdry_cond_str == "ZREFLECT" &&
-                               face_conds[BdryLoc::ZHI] != BdryCond::REFLECT) {
-                              no_face_data_found = true;
-                              proper_face_data = "REFLECT";
-                           }
-                        }
-                     }
-                     if (no_face_data_found) {
-                        TBOX_ERROR(
-                           "Bdry condition " << bdry_cond_str
-                                             << " found for "
-                                             << bdry_loc_str
-                                             << "\n but no "
-                                             << proper_face_data
-                                             << " data found for face "
-                                             << proper_face << std::endl);
-                     }
-                  } else {
-                     TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << std::endl);
+            std::string proper_face;
+            std::string proper_face_data;
+            bool no_face_data_found = false;
+            if (bdry_cond_str == "XFLOW" ||
+                bdry_cond_str == "XDIRICHLET" ||
+                bdry_cond_str == "XNEUMANN" ||
+                bdry_cond_str == "XREFLECT") {
+               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::XLO_ZHI ||
+                   s == EdgeBdyLoc3D::XLO_YLO ||
+                   s == EdgeBdyLoc3D::XLO_YHI) {
+                  proper_face = "XLO";
+                  if (bdry_cond_str == "XFLOW" &&
+                      face_conds[BdryLoc::XLO] != BdryCond::FLOW) {
+                     no_face_data_found = true;
+                     proper_face_data = "FLOW";
+                  }
+                  if (bdry_cond_str == "XDIRICHLET" &&
+                      face_conds[BdryLoc::XLO] != BdryCond::DIRICHLET) {
+                     no_face_data_found = true;
+                     proper_face_data = "DIRICHLET";
+                  }
+                  if (bdry_cond_str == "XNEUMANN" &&
+                      face_conds[BdryLoc::XLO] != BdryCond::NEUMANN) {
+                     no_face_data_found = true;
+                     proper_face_data = "NEUMANN";
+                  }
+                  if (bdry_cond_str == "XREFLECT" &&
+                      face_conds[BdryLoc::XLO] != BdryCond::REFLECT) {
+                     no_face_data_found = true;
+                     proper_face_data = "REFLECT";
+                  }
+               } else {
+                  proper_face = "XHI";
+                  if (bdry_cond_str == "XFLOW" &&
+                      face_conds[BdryLoc::XHI] != BdryCond::FLOW) {
+                     no_face_data_found = true;
+                     proper_face_data = "FLOW";
+                  }
+                  if (bdry_cond_str == "XDIRICHLET" &&
+                      face_conds[BdryLoc::XHI] != BdryCond::DIRICHLET) {
+                     no_face_data_found = true;
+                     proper_face_data = "DIRICHLET";
+                  }
+                  if (bdry_cond_str == "XNEUMANN" &&
+                      face_conds[BdryLoc::XHI] != BdryCond::NEUMANN) {
+                     no_face_data_found = true;
+                     proper_face_data = "NEUMANN";
+                  }
+                  if (bdry_cond_str == "XREFLECT" &&
+                      face_conds[BdryLoc::XHI] != BdryCond::REFLECT) {
+                     no_face_data_found = true;
+                     proper_face_data = "REFLECT";
                   }
                }
-            } else {
-               TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << std::endl);
+            } else if (bdry_cond_str == "YFLOW" ||
+                       bdry_cond_str == "YDIRICHLET" ||
+                       bdry_cond_str == "YNEUMANN" ||
+                       bdry_cond_str == "YREFLECT") {
+               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::YLO_ZHI ||
+                   s == EdgeBdyLoc3D::XLO_YLO ||
+                   s == EdgeBdyLoc3D::XHI_YLO) {
+                  proper_face = "YLO";
+                  if (bdry_cond_str == "YFLOW" &&
+                      face_conds[BdryLoc::YLO] != BdryCond::FLOW) {
+                     no_face_data_found = true;
+                     proper_face_data = "FLOW";
+                  }
+                  if (bdry_cond_str == "YDIRICHLET" &&
+                      face_conds[BdryLoc::YLO] != BdryCond::DIRICHLET) {
+                     no_face_data_found = true;
+                     proper_face_data = "DIRICHLET";
+                  }
+                  if (bdry_cond_str == "YNEUMANN" &&
+                      face_conds[BdryLoc::YLO] != BdryCond::NEUMANN) {
+                     no_face_data_found = true;
+                     proper_face_data = "NEUMANN";
+                  }
+                  if (bdry_cond_str == "YREFLECT" &&
+                      face_conds[BdryLoc::YLO] != BdryCond::REFLECT) {
+                     no_face_data_found = true;
+                     proper_face_data = "REFLECT";
+                  }
+               } else {
+                  proper_face = "YHI";
+                  if (bdry_cond_str == "YFLOW" &&
+                      face_conds[BdryLoc::YHI] != BdryCond::FLOW) {
+                     no_face_data_found = true;
+                     proper_face_data = "FLOW";
+                  }
+                  if (bdry_cond_str == "YDIRICHLET" &&
+                      face_conds[BdryLoc::YHI] != BdryCond::DIRICHLET) {
+                     no_face_data_found = true;
+                     proper_face_data = "DIRICHLET";
+                  }
+                  if (bdry_cond_str == "YNEUMANN" &&
+                      face_conds[BdryLoc::YHI] != BdryCond::NEUMANN) {
+                     no_face_data_found = true;
+                     proper_face_data = "NEUMANN";
+                  }
+                  if (bdry_cond_str == "YREFLECT" &&
+                      face_conds[BdryLoc::YHI] != BdryCond::REFLECT) {
+                     no_face_data_found = true;
+                     proper_face_data = "REFLECT";
+                  }
+               }
+            } else if (bdry_cond_str == "ZFLOW" ||
+                       bdry_cond_str == "ZDIRICHLET" ||
+                       bdry_cond_str == "ZNEUMANN" ||
+                       bdry_cond_str == "ZREFLECT") {
+               if (s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::YHI_ZLO ||
+                   s == EdgeBdyLoc3D::XLO_ZLO ||
+                   s == EdgeBdyLoc3D::XHI_ZLO) {
+                  proper_face = "ZLO";
+                  if (bdry_cond_str == "ZFLOW" &&
+                      face_conds[BdryLoc::ZLO] != BdryCond::FLOW) {
+                     no_face_data_found = true;
+                     proper_face_data = "FLOW";
+                  }
+                  if (bdry_cond_str == "ZDIRICHLET" &&
+                      face_conds[BdryLoc::ZLO] != BdryCond::DIRICHLET) {
+                     no_face_data_found = true;
+                     proper_face_data = "DIRICHLET";
+                  }
+                  if (bdry_cond_str == "ZNEUMANN" &&
+                      face_conds[BdryLoc::ZLO] != BdryCond::NEUMANN) {
+                     no_face_data_found = true;
+                     proper_face_data = "NEUMANN";
+                  }
+                  if (bdry_cond_str == "ZREFLECT" &&
+                      face_conds[BdryLoc::ZLO] != BdryCond::REFLECT) {
+                     no_face_data_found = true;
+                     proper_face_data = "REFLECT";
+                  }
+               } else {
+                  proper_face = "ZHI";
+                  if (bdry_cond_str == "ZFLOW" &&
+                      face_conds[BdryLoc::ZHI] != BdryCond::FLOW) {
+                     no_face_data_found = true;
+                     proper_face_data = "FLOW";
+                  }
+                  if (bdry_cond_str == "ZDIRICHLET" &&
+                      face_conds[BdryLoc::ZHI] != BdryCond::DIRICHLET) {
+                     no_face_data_found = true;
+                     proper_face_data = "DIRICHLET";
+                  }
+                  if (bdry_cond_str == "ZNEUMANN" &&
+                      face_conds[BdryLoc::ZHI] != BdryCond::NEUMANN) {
+                     no_face_data_found = true;
+                     proper_face_data = "NEUMANN";
+                  }
+                  if (bdry_cond_str == "ZREFLECT" &&
+                      face_conds[BdryLoc::ZHI] != BdryCond::REFLECT) {
+                     no_face_data_found = true;
+                     proper_face_data = "REFLECT";
+                  }
+               }
             }
+            if (no_face_data_found) {
+               TBOX_ERROR(
+                  "Bdry condition " << bdry_cond_str
+                                    << " found for "
+                                    << bdry_loc_str
+                                    << "\n but no "
+                                    << proper_face_data
+                                    << " data found for face "
+                                    << proper_face << std::endl);
+               }
 
          } // if (need_data_read)
 
@@ -1284,14 +1267,14 @@ CartesianBoundaryUtilities3::read3dBdryEdges(
 
 void
 CartesianBoundaryUtilities3::read3dBdryNodes(
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    const tbox::Array<int>& face_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(3));
 
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(face_conds.getSize() == NUM_3D_FACES);
    TBOX_ASSERT(node_conds.getSize() == NUM_3D_NODES);
 
@@ -1341,221 +1324,208 @@ CartesianBoundaryUtilities3::read3dBdryNodes(
             default: NULL_STATEMENT;
          }
 
-         if (bdry_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db(
-               bdry_db->getDatabase(bdry_loc_str));
-            if (bdry_loc_db) {
-               if (bdry_loc_db->keyExists("boundary_condition")) {
-                  std::string bdry_cond_str =
-                     bdry_loc_db->getString("boundary_condition");
-                  if (bdry_cond_str == "XFLOW") {
-                     node_conds[s] = BdryCond::XFLOW;
-                  } else if (bdry_cond_str == "YFLOW") {
-                     node_conds[s] = BdryCond::YFLOW;
-                  } else if (bdry_cond_str == "ZFLOW") {
-                     node_conds[s] = BdryCond::ZFLOW;
-                  } else if (bdry_cond_str == "XREFLECT") {
-                     node_conds[s] = BdryCond::XREFLECT;
-                  } else if (bdry_cond_str == "YREFLECT") {
-                     node_conds[s] = BdryCond::YREFLECT;
-                  } else if (bdry_cond_str == "ZREFLECT") {
-                     node_conds[s] = BdryCond::ZREFLECT;
-                  } else if (bdry_cond_str == "XDIRICHLET") {
-                     node_conds[s] = BdryCond::XDIRICHLET;
-                  } else if (bdry_cond_str == "YDIRICHLET") {
-                     node_conds[s] = BdryCond::YDIRICHLET;
-                  } else if (bdry_cond_str == "ZDIRICHLET") {
-                     node_conds[s] = BdryCond::ZDIRICHLET;
-                  } else if (bdry_cond_str == "XNEUMANN") {
-                     node_conds[s] = BdryCond::XNEUMANN;
-                  } else if (bdry_cond_str == "YNEUMANN") {
-                     node_conds[s] = BdryCond::YNEUMANN;
-                  } else if (bdry_cond_str == "ZNEUMANN") {
-                     node_conds[s] = BdryCond::ZNEUMANN;
-                  } else {
-                     TBOX_ERROR("Unknown node boundary string = "
-                        << bdry_cond_str << " found in input." << std::endl);
-                  }
+         boost::shared_ptr<tbox::Database> bdry_loc_db(
+            input_db->getDatabase(bdry_loc_str));
+         std::string bdry_cond_str =
+            bdry_loc_db->getString("boundary_condition");
+         if (bdry_cond_str == "XFLOW") {
+            node_conds[s] = BdryCond::XFLOW;
+         } else if (bdry_cond_str == "YFLOW") {
+            node_conds[s] = BdryCond::YFLOW;
+         } else if (bdry_cond_str == "ZFLOW") {
+            node_conds[s] = BdryCond::ZFLOW;
+         } else if (bdry_cond_str == "XREFLECT") {
+            node_conds[s] = BdryCond::XREFLECT;
+         } else if (bdry_cond_str == "YREFLECT") {
+            node_conds[s] = BdryCond::YREFLECT;
+         } else if (bdry_cond_str == "ZREFLECT") {
+            node_conds[s] = BdryCond::ZREFLECT;
+         } else if (bdry_cond_str == "XDIRICHLET") {
+            node_conds[s] = BdryCond::XDIRICHLET;
+         } else if (bdry_cond_str == "YDIRICHLET") {
+            node_conds[s] = BdryCond::YDIRICHLET;
+         } else if (bdry_cond_str == "ZDIRICHLET") {
+            node_conds[s] = BdryCond::ZDIRICHLET;
+         } else if (bdry_cond_str == "XNEUMANN") {
+            node_conds[s] = BdryCond::XNEUMANN;
+         } else if (bdry_cond_str == "YNEUMANN") {
+            node_conds[s] = BdryCond::YNEUMANN;
+         } else if (bdry_cond_str == "ZNEUMANN") {
+            node_conds[s] = BdryCond::ZNEUMANN;
+         } else {
+            TBOX_ERROR("Unknown node boundary string = "
+               << bdry_cond_str << " found in input." << std::endl);
+         }
 
-                  std::string proper_face;
-                  std::string proper_face_data;
-                  bool no_face_data_found = false;
-                  if (bdry_cond_str == "XFLOW" ||
-                      bdry_cond_str == "XDIRICHLET" ||
-                      bdry_cond_str == "XNEUMANN" ||
-                      bdry_cond_str == "XREFLECT") {
-                     if (s == NodeBdyLoc3D::XLO_YLO_ZLO ||
-                         s == NodeBdyLoc3D::XLO_YHI_ZLO ||
-                         s == NodeBdyLoc3D::XLO_YLO_ZHI ||
-                         s == NodeBdyLoc3D::XLO_YHI_ZHI) {
-                        proper_face = "XLO";
-                        if (bdry_cond_str == "XFLOW" &&
-                            face_conds[BdryLoc::XLO] != BdryCond::FLOW) {
-                           no_face_data_found = true;
-                           proper_face_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "XDIRICHLET" &&
-                            face_conds[BdryLoc::XLO] != BdryCond::DIRICHLET) {
-                           no_face_data_found = true;
-                           proper_face_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "XNEUMANN" &&
-                            face_conds[BdryLoc::XLO] != BdryCond::NEUMANN) {
-                           no_face_data_found = true;
-                           proper_face_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "XREFLECT" &&
-                            face_conds[BdryLoc::XLO] != BdryCond::REFLECT) {
-                           no_face_data_found = true;
-                           proper_face_data = "REFLECT";
-                        }
-                     } else {
-                        proper_face = "XHI";
-                        if (bdry_cond_str == "XFLOW" &&
-                            face_conds[BdryLoc::XHI] != BdryCond::FLOW) {
-                           no_face_data_found = true;
-                           proper_face_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "XDIRICHLET" &&
-                            face_conds[BdryLoc::XHI] != BdryCond::DIRICHLET) {
-                           no_face_data_found = true;
-                           proper_face_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "XNEUMANN" &&
-                            face_conds[BdryLoc::XHI] != BdryCond::NEUMANN) {
-                           no_face_data_found = true;
-                           proper_face_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "XREFLECT" &&
-                            face_conds[BdryLoc::XHI] != BdryCond::REFLECT) {
-                           no_face_data_found = true;
-                           proper_face_data = "REFLECT";
-                        }
-                     }
-                  } else if (bdry_cond_str == "YFLOW" ||
-                             bdry_cond_str == "YDIRICHLET" ||
-                             bdry_cond_str == "YNEUMANN" ||
-                             bdry_cond_str == "YREFLECT") {
-                     if (s == NodeBdyLoc3D::XLO_YLO_ZLO ||
-                         s == NodeBdyLoc3D::XHI_YLO_ZLO ||
-                         s == NodeBdyLoc3D::XLO_YLO_ZHI ||
-                         s == NodeBdyLoc3D::XHI_YLO_ZHI) {
-                        proper_face = "YLO";
-                        if (bdry_cond_str == "YFLOW" &&
-                            face_conds[BdryLoc::YLO] != BdryCond::FLOW) {
-                           no_face_data_found = true;
-                           proper_face_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "YDIRICHLET" &&
-                            face_conds[BdryLoc::YLO] != BdryCond::DIRICHLET) {
-                           no_face_data_found = true;
-                           proper_face_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "YNEUMANN" &&
-                            face_conds[BdryLoc::YLO] != BdryCond::NEUMANN) {
-                           no_face_data_found = true;
-                           proper_face_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "YREFLECT" &&
-                            face_conds[BdryLoc::YLO] != BdryCond::REFLECT) {
-                           no_face_data_found = true;
-                           proper_face_data = "REFLECT";
-                        }
-                     } else {
-                        proper_face = "YHI";
-                        if (bdry_cond_str == "YFLOW" &&
-                            face_conds[BdryLoc::YHI] != BdryCond::FLOW) {
-                           no_face_data_found = true;
-                           proper_face_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "YDIRICHLET" &&
-                            face_conds[BdryLoc::YHI] != BdryCond::DIRICHLET) {
-                           no_face_data_found = true;
-                           proper_face_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "YNEUMANN" &&
-                            face_conds[BdryLoc::YHI] != BdryCond::NEUMANN) {
-                           no_face_data_found = true;
-                           proper_face_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "YREFLECT" &&
-                            face_conds[BdryLoc::YHI] != BdryCond::REFLECT) {
-                           no_face_data_found = true;
-                           proper_face_data = "REFLECT";
-                        }
-                     }
-                  } else if (bdry_cond_str == "ZFLOW" ||
-                             bdry_cond_str == "ZDIRICHLET" ||
-                             bdry_cond_str == "ZNEUMANN" ||
-                             bdry_cond_str == "ZREFLECT") {
-                     if (s == NodeBdyLoc3D::XLO_YLO_ZLO ||
-                         s == NodeBdyLoc3D::XHI_YLO_ZLO ||
-                         s == NodeBdyLoc3D::XLO_YHI_ZLO ||
-                         s == NodeBdyLoc3D::XHI_YHI_ZLO) {
-                        proper_face = "ZLO";
-                        if (bdry_cond_str == "ZFLOW" &&
-                            face_conds[BdryLoc::ZLO] != BdryCond::FLOW) {
-                           no_face_data_found = true;
-                           proper_face_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "ZDIRICHLET" &&
-                            face_conds[BdryLoc::ZLO] != BdryCond::DIRICHLET) {
-                           no_face_data_found = true;
-                           proper_face_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "ZNEUMANN" &&
-                            face_conds[BdryLoc::ZLO] != BdryCond::NEUMANN) {
-                           no_face_data_found = true;
-                           proper_face_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "ZREFLECT" &&
-                            face_conds[BdryLoc::ZLO] != BdryCond::REFLECT) {
-                           no_face_data_found = true;
-                           proper_face_data = "REFLECT";
-                        }
-                     } else {
-                        proper_face = "ZHI";
-                        if (bdry_cond_str == "ZFLOW" &&
-                            face_conds[BdryLoc::ZHI] != BdryCond::FLOW) {
-                           no_face_data_found = true;
-                           proper_face_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "ZDIRICHLET" &&
-                            face_conds[BdryLoc::ZHI] != BdryCond::DIRICHLET) {
-                           no_face_data_found = true;
-                           proper_face_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "ZNEUMANN" &&
-                            face_conds[BdryLoc::ZHI] != BdryCond::NEUMANN) {
-                           no_face_data_found = true;
-                           proper_face_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "ZREFLECT" &&
-                            face_conds[BdryLoc::ZHI] != BdryCond::REFLECT) {
-                           no_face_data_found = true;
-                           proper_face_data = "REFLECT";
-                        }
-                     }
-                  }
-                  if (no_face_data_found) {
-                     TBOX_ERROR(
-                        "Bdry condition " << bdry_cond_str
-                                          << " found for "
-                                          << bdry_loc_str
-                                          << "\n but no "
-                                          << proper_face_data
-                                          << " data found for face "
-                                          << proper_face << std::endl);
-                  }
-
-               } else {
-                  TBOX_ERROR("'boundary_condition' entry missing from "
-                     << bdry_loc_str << " input database." << std::endl);
+         std::string proper_face;
+         std::string proper_face_data;
+         bool no_face_data_found = false;
+         if (bdry_cond_str == "XFLOW" ||
+             bdry_cond_str == "XDIRICHLET" ||
+             bdry_cond_str == "XNEUMANN" ||
+             bdry_cond_str == "XREFLECT") {
+            if (s == NodeBdyLoc3D::XLO_YLO_ZLO ||
+                s == NodeBdyLoc3D::XLO_YHI_ZLO ||
+                s == NodeBdyLoc3D::XLO_YLO_ZHI ||
+                s == NodeBdyLoc3D::XLO_YHI_ZHI) {
+               proper_face = "XLO";
+               if (bdry_cond_str == "XFLOW" &&
+                   face_conds[BdryLoc::XLO] != BdryCond::FLOW) {
+                  no_face_data_found = true;
+                  proper_face_data = "FLOW";
+               }
+               if (bdry_cond_str == "XDIRICHLET" &&
+                   face_conds[BdryLoc::XLO] != BdryCond::DIRICHLET) {
+                  no_face_data_found = true;
+                  proper_face_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "XNEUMANN" &&
+                   face_conds[BdryLoc::XLO] != BdryCond::NEUMANN) {
+                  no_face_data_found = true;
+                  proper_face_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "XREFLECT" &&
+                   face_conds[BdryLoc::XLO] != BdryCond::REFLECT) {
+                  no_face_data_found = true;
+                  proper_face_data = "REFLECT";
+               }
+            } else {
+               proper_face = "XHI";
+               if (bdry_cond_str == "XFLOW" &&
+                   face_conds[BdryLoc::XHI] != BdryCond::FLOW) {
+                  no_face_data_found = true;
+                  proper_face_data = "FLOW";
+               }
+               if (bdry_cond_str == "XDIRICHLET" &&
+                   face_conds[BdryLoc::XHI] != BdryCond::DIRICHLET) {
+                  no_face_data_found = true;
+                  proper_face_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "XNEUMANN" &&
+                   face_conds[BdryLoc::XHI] != BdryCond::NEUMANN) {
+                  no_face_data_found = true;
+                  proper_face_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "XREFLECT" &&
+                   face_conds[BdryLoc::XHI] != BdryCond::REFLECT) {
+                  no_face_data_found = true;
+                  proper_face_data = "REFLECT";
                }
             }
-         } else {
-            TBOX_ERROR(bdry_loc_str
-               << " database entry not found in input." << std::endl);
+         } else if (bdry_cond_str == "YFLOW" ||
+                    bdry_cond_str == "YDIRICHLET" ||
+                    bdry_cond_str == "YNEUMANN" ||
+                    bdry_cond_str == "YREFLECT") {
+            if (s == NodeBdyLoc3D::XLO_YLO_ZLO ||
+                s == NodeBdyLoc3D::XHI_YLO_ZLO ||
+                s == NodeBdyLoc3D::XLO_YLO_ZHI ||
+                s == NodeBdyLoc3D::XHI_YLO_ZHI) {
+               proper_face = "YLO";
+               if (bdry_cond_str == "YFLOW" &&
+                   face_conds[BdryLoc::YLO] != BdryCond::FLOW) {
+                  no_face_data_found = true;
+                  proper_face_data = "FLOW";
+               }
+               if (bdry_cond_str == "YDIRICHLET" &&
+                   face_conds[BdryLoc::YLO] != BdryCond::DIRICHLET) {
+                  no_face_data_found = true;
+                  proper_face_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "YNEUMANN" &&
+                   face_conds[BdryLoc::YLO] != BdryCond::NEUMANN) {
+                  no_face_data_found = true;
+                  proper_face_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "YREFLECT" &&
+                   face_conds[BdryLoc::YLO] != BdryCond::REFLECT) {
+                  no_face_data_found = true;
+                  proper_face_data = "REFLECT";
+               }
+            } else {
+               proper_face = "YHI";
+               if (bdry_cond_str == "YFLOW" &&
+                   face_conds[BdryLoc::YHI] != BdryCond::FLOW) {
+                  no_face_data_found = true;
+                  proper_face_data = "FLOW";
+               }
+               if (bdry_cond_str == "YDIRICHLET" &&
+                   face_conds[BdryLoc::YHI] != BdryCond::DIRICHLET) {
+                  no_face_data_found = true;
+                  proper_face_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "YNEUMANN" &&
+                   face_conds[BdryLoc::YHI] != BdryCond::NEUMANN) {
+                  no_face_data_found = true;
+                  proper_face_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "YREFLECT" &&
+                   face_conds[BdryLoc::YHI] != BdryCond::REFLECT) {
+                  no_face_data_found = true;
+                  proper_face_data = "REFLECT";
+               }
+            }
+         } else if (bdry_cond_str == "ZFLOW" ||
+                    bdry_cond_str == "ZDIRICHLET" ||
+                    bdry_cond_str == "ZNEUMANN" ||
+                    bdry_cond_str == "ZREFLECT") {
+            if (s == NodeBdyLoc3D::XLO_YLO_ZLO ||
+                s == NodeBdyLoc3D::XHI_YLO_ZLO ||
+                s == NodeBdyLoc3D::XLO_YHI_ZLO ||
+                s == NodeBdyLoc3D::XHI_YHI_ZLO) {
+               proper_face = "ZLO";
+               if (bdry_cond_str == "ZFLOW" &&
+                   face_conds[BdryLoc::ZLO] != BdryCond::FLOW) {
+                  no_face_data_found = true;
+                  proper_face_data = "FLOW";
+               }
+               if (bdry_cond_str == "ZDIRICHLET" &&
+                   face_conds[BdryLoc::ZLO] != BdryCond::DIRICHLET) {
+                  no_face_data_found = true;
+                  proper_face_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "ZNEUMANN" &&
+                   face_conds[BdryLoc::ZLO] != BdryCond::NEUMANN) {
+                  no_face_data_found = true;
+                  proper_face_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "ZREFLECT" &&
+                   face_conds[BdryLoc::ZLO] != BdryCond::REFLECT) {
+                  no_face_data_found = true;
+                  proper_face_data = "REFLECT";
+               }
+            } else {
+               proper_face = "ZHI";
+               if (bdry_cond_str == "ZFLOW" &&
+                   face_conds[BdryLoc::ZHI] != BdryCond::FLOW) {
+                  no_face_data_found = true;
+                  proper_face_data = "FLOW";
+               }
+               if (bdry_cond_str == "ZDIRICHLET" &&
+                   face_conds[BdryLoc::ZHI] != BdryCond::DIRICHLET) {
+                  no_face_data_found = true;
+                  proper_face_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "ZNEUMANN" &&
+                   face_conds[BdryLoc::ZHI] != BdryCond::NEUMANN) {
+                  no_face_data_found = true;
+                  proper_face_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "ZREFLECT" &&
+                   face_conds[BdryLoc::ZHI] != BdryCond::REFLECT) {
+                  no_face_data_found = true;
+                  proper_face_data = "REFLECT";
+               }
+            }
+         }
+         if (no_face_data_found) {
+            TBOX_ERROR(
+               "Bdry condition " << bdry_cond_str
+                                 << " found for "
+                                 << bdry_loc_str
+                                 << "\n but no "
+                                 << proper_face_data
+                                 << " data found for face "
+                                 << proper_face << std::endl);
          }
 
       } // for (int s = 0 ...
@@ -1733,7 +1703,7 @@ CartesianBoundaryUtilities3::get3dBdryDirectionCheckValues(
 void
 CartesianBoundaryUtilities3::stuff3dBdryFortConst()
 {
-   F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (BdryLoc::XLO, BdryLoc::XHI,
+   SAMRAI_F77_FUNC(stufcartbdryloc3d, STUFCARTBDRYLOC3D) (BdryLoc::XLO, BdryLoc::XHI,
       BdryLoc::YLO, BdryLoc::YHI, BdryLoc::ZLO, BdryLoc::ZHI,
       EdgeBdyLoc3D::YLO_ZLO, EdgeBdyLoc3D::YHI_ZLO, EdgeBdyLoc3D::YLO_ZHI,
       EdgeBdyLoc3D::YHI_ZHI, EdgeBdyLoc3D::XLO_ZLO, EdgeBdyLoc3D::XLO_ZHI,
@@ -1743,7 +1713,7 @@ CartesianBoundaryUtilities3::stuff3dBdryFortConst()
       NodeBdyLoc3D::XLO_YHI_ZLO, NodeBdyLoc3D::XHI_YHI_ZLO,
       NodeBdyLoc3D::XLO_YLO_ZHI, NodeBdyLoc3D::XHI_YLO_ZHI,
       NodeBdyLoc3D::XLO_YHI_ZHI, NodeBdyLoc3D::XHI_YHI_ZHI);
-   F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (BdryCond::FLOW,
+   SAMRAI_F77_FUNC(stufcartbdrycond3d, STUFCARTBDRYCOND3D) (BdryCond::FLOW,
       BdryCond::XFLOW, BdryCond::YFLOW, BdryCond::ZFLOW,
       BdryCond::REFLECT,
       BdryCond::XREFLECT, BdryCond::YREFLECT, BdryCond::ZREFLECT,

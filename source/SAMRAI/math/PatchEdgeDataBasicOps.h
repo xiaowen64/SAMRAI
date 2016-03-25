@@ -18,7 +18,7 @@
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/hier/Box.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace math {
@@ -27,11 +27,10 @@ namespace math {
  * Class PatchEdgeDataBasicOps provides access to a collection
  * of basic numerical operations that may be applied to numerical edge-
  * centered patch data.  These operations include simple arithmetic
- * operations as well as min and max, etc.  The primary intent of this
- * class is to provide the interface to these standard operations for
- * an PatchEdgeDataOps<DIM> object which provides access to a complete set
- * of operations that may be used to manipulate edge-centered patch data
- * objects.   Each member function accepts a box argument indicating the
+ * operations as well as min and max, etc.  This class provides a single
+ * implementation of these operations that may be used to manipulate any
+ * edge-centered patch data object.   Each  member function accepts a box
+ * argument indicating the
  * region of index space on which the operation should be performed.  The
  * operation will be performed on the intersection of this box and those
  * boxes corresponding to the patch data objects involved.
@@ -59,6 +58,9 @@ public:
 
    /**
     * Set dst = alpha * src, elementwise.
+    *
+    * @pre dst && src
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    scale(
@@ -69,6 +71,9 @@ public:
 
    /**
     * Set dst = src + alpha, elementwise.
+    *
+    * @pre dst && src
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    addScalar(
@@ -78,7 +83,12 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 + src2, elementwise.
+    * Set dst = src1 + src2, elementwise. 
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    add(
@@ -88,7 +98,12 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 - src2, elementwise.
+    * Set dst = src1 - src2, elementwise. 
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    subtract(
@@ -98,7 +113,12 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 * src2, elementwise.
+    * Set dst = src1 * src2, elementwise. 
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    multiply(
@@ -108,7 +128,12 @@ public:
       const hier::Box& box) const;
 
    /**
-    * Set dst = src1 / src2, elementwise.  No check for division by zero.
+    * Set dst = src1 / src2, elementwise.  No check for division by zero. 
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    divide(
@@ -119,6 +144,9 @@ public:
 
    /**
     * Set dst = 1 / src, elementwise.  No check for division by zero.
+    *
+    * @pre dst && src
+    * @pre (dst->getDim() == src->getDim()) && (dst->getDim() == box.getDim())
     */
    void
    reciprocal(
@@ -128,6 +156,11 @@ public:
 
    /**
     * Set dst = alpha * src1 + beta * src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    linearSum(
@@ -140,6 +173,11 @@ public:
 
    /**
     * Set dst = alpha * src1 + src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    axpy(
@@ -151,6 +189,11 @@ public:
 
    /**
     * Set dst = alpha * src1 - src2, elementwise.
+    *
+    * @pre dst && src1 && src2
+    * @pre (dst->getDim() == src1->getDim()) &&
+    *      (dst->getDim() == src2->getDim()) &&
+    *      (dst->getDim() == box.getDim())
     */
    void
    axmy(
@@ -163,6 +206,9 @@ public:
    /**
     * Return the minimum patch data component entry  When the data is
     * complex, the result is the data element with the smallest norm.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    TYPE
    min(
@@ -172,6 +218,9 @@ public:
    /**
     * Return the maximum patch data component entry  When the data is
     * complex, the result is the data element with the largest norm.
+    *
+    * @pre data
+    * @pre data->getDim() == box.getDim()
     */
    TYPE
    max(
@@ -182,6 +231,9 @@ public:
     * Set patch data to random values.  See the operations in the
     * ArrayDataBasicOps class for details on the generation
     * of the random values for each data type.
+    *
+    * @pre dst
+    * @pre dst->getDim() == box.getDim()
     */
    void
    setRandomValues(

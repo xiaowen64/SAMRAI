@@ -180,6 +180,26 @@ EOF
 # Maintained by Brian Gunney
 ;;
 
+chaos5_mpiicc) # CHAOS5, Intel compilers with LLNL mpiicpc front ends
+cat <<-EOF
+	--with-CC=/usr/local/bin/mpiicc-12.1.293
+	--with-CXX=/usr/local/bin/mpiicpc-12.1.293
+	--with-F77=/usr/local/bin/ifort-12.1.293
+	--without-petsc
+	--without-x
+	--without-sundials
+	--disable-shared
+	--disable-rpath
+	--with-zlib
+	--with-hdf5=/usr/local/tools/hdf5-intel-parallel-1.8.8
+	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
+	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.6.0b.opt
+	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.45.0
+	--without-tbb 
+EOF
+# Maintained by Noah Elliott
+;;
+
 edge_gcc) # Edge with default GNU GCC compilers
 cat <<-EOF
 	--with-CXX=/usr/local/bin/g++

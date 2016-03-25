@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchData.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -74,6 +74,8 @@ public:
     *
     * @param ghosts ghost cell width for concrete classes created from
     * the factory.
+    *
+    * @pre ghosts.min() >= 0
     */
    explicit PatchDataFactory(
       const IntVector& ghosts);

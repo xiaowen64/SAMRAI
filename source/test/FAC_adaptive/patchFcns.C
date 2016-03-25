@@ -23,7 +23,7 @@
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideData.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -132,7 +132,8 @@ void setCellDataToSinusoid(
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
       t4 = pdat::ArrayDataAccess::access<2, double>(cd.getArrayData());
@@ -226,7 +227,8 @@ void setCellDataToQuartic(
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    if (cd.getDim() == tbox::Dimension(2)) {
       MDA_Access<double, 2, MDA_OrderColMajor<2> >
       t4 = pdat::ArrayDataAccess::access<2, double>(cd.getArrayData());

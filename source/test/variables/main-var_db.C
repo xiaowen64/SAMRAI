@@ -25,7 +25,7 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/hier/VariableDatabase.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 using namespace std;
 
@@ -660,7 +660,7 @@ int main(
                  << "This should bomb!!" << endl;
       tctxt = var_db->getContext("CURRENT");
       tvar = var_db->getVariable("uval");
-      g = hier::IntVector<NDIM>(2);
+      g = hier::IntVector(2);
       ti = var_db->registerVariableAndContext(tvar, tctxt, g);
       tbox::plog << "uval, CURRENT at index = " << ti << endl;
 
@@ -669,7 +669,7 @@ int main(
                  << "This should bomb!!" << endl;
       tctxt = new hier::VariableContext("CURRENT");
       tvar = var_db->getVariable("uval");
-      g = hier::IntVector<NDIM>(0);
+      g = hier::IntVector(0);
       ti = var_db->registerVariableAndContext(tvar, tctxt, g);
       tbox::plog << "uval, fake CURRENT at index = " << ti << endl;
 

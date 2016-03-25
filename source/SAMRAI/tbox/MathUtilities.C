@@ -11,6 +11,8 @@
 #ifndef included_tbox_MathUtilities_C
 #define included_tbox_MathUtilities_C
 
+#include <limits>
+
 namespace SAMRAI {
 namespace tbox {
 
@@ -148,28 +150,28 @@ template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getSignalingNaN()
 {
-   return s_signaling_nan;
+   return std::numeric_limits<TYPE>::signaling_NaN();
 }
 
 template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getMax()
 {
-   return s_max;
+   return std::numeric_limits<TYPE>::max();
 }
 
 template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getMin()
 {
-   return s_min;
+   return std::numeric_limits<TYPE>::min();
 }
 
 template<class TYPE>
 TYPE
 MathUtilities<TYPE>::getEpsilon()
 {
-   return s_epsilon;
+   return std::numeric_limits<TYPE>::epsilon();
 }
 
 template<class TYPE>

@@ -26,9 +26,7 @@ namespace xfer {
  *************************************************************************
  */
 
-RefinePatchStrategy::RefinePatchStrategy(
-   const tbox::Dimension& dim):
-   d_dim(dim)
+RefinePatchStrategy::RefinePatchStrategy()
 {
    registerObject();
 }
@@ -36,29 +34,6 @@ RefinePatchStrategy::RefinePatchStrategy(
 RefinePatchStrategy::~RefinePatchStrategy()
 {
    unregisterObject();
-}
-
-void
-RefinePatchStrategy::fillSingularityBoundaryConditions(
-   hier::Patch& patch,
-   const hier::PatchLevel& encon_level,
-   const hier::Connector& dst_to_encon,
-   const double fill_time,
-   const hier::Box& fill_box,
-   const hier::BoundaryBox& boundary_box,
-   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
-{
-   NULL_USE(patch);
-   NULL_USE(encon_level);
-   NULL_USE(dst_to_encon);
-   NULL_USE(fill_time);
-   NULL_USE(fill_box);
-   NULL_USE(boundary_box);
-   NULL_USE(grid_geometry);
-   TBOX_ERROR(
-      "The abstract RefinePatchLevelStragey::fillSingularityBoudaryConditions:\n"
-      << "must be implemented whenever the concrete derived\n"
-      << "class supports multiblock and singularities.");
 }
 
 /*
@@ -77,10 +52,8 @@ RefinePatchStrategy::getMaxRefineOpStencilWidth(
       RefinePatchStrategy::getCurrentObjects();
    for (std::set<RefinePatchStrategy *>::const_iterator
         si = current_objects.begin(); si != current_objects.end(); ++si) {
-      const RefinePatchStrategy* op = *si;
-      if (op->getDim() == dim) {
-         max_width.max(op->getRefineOpStencilWidth());
-      }
+      const RefinePatchStrategy* strategy = *si;
+      max_width.max(strategy->getRefineOpStencilWidth(dim));
    }
 
    return max_width;

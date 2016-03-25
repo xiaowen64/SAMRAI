@@ -36,27 +36,27 @@ class Index:public IntVector
 {
 public:
    /**
-    * Creates an uninitialized vector.
+    * @brief Creates an uninitialized vector.
     */
    explicit Index(
       const tbox::Dimension& dim);
 
    /**
-    * Construct an index with all components equal to the argument.
+    * @brief Construct an index with all components equal to the argument.
     */
    Index(
       const tbox::Dimension& dim,
       const int i);
 
    /**
-    * Construct a two-dimensional index with the value (i,j).
+    * @brief Construct a two-dimensional index with the value (i,j).
     */
    Index(
       const int i,
       const int j);
 
    /**
-    * Construct a three-dimensional index with the value (i,j,k).
+    * @brief Construct a three-dimensional index with the value (i,j,k).
     */
    Index(
       const int i,
@@ -64,269 +64,271 @@ public:
       const int k);
 
    /**
-    * Construct an n-dimensional index with the values copied
-    * from the integer tbox::Array i of size n.
+    * @brief Construct an n-dimensional index with the values copied
+    *        from the integer tbox::Array i of size n.
     */
    explicit Index(
       const tbox::Array<int>& i);
 
    /**
-    * The copy constructor creates an index equal to the argument.
+    * @brief The copy constructor creates an index equal to the argument.
     */
    Index(
       const Index& rhs);
 
    /**
-    * Construct an index equal to the argument IntVector.
+    * @brief Construct an index equal to the argument IntVector.
     */
    explicit Index(
       const IntVector& rhs);
 
    /**
-    * Construct an index equal to the argument array.
+    * @brief Construct an index equal to the argument array.
     */
    Index(
       const tbox::Dimension& dim,
       const int array[]);
 
    /**
-    * The assignment operator sets the index equal to the argument.
+    * @brief The assignment operator sets the index equal to the argument.
     *
     * An assignment to an uninitialized Index is allowed but assigning
     * from an uninitialized Index will result in an assert.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index&
    operator = (
       const Index& rhs)
    {
-#ifdef DEBUG_CHECK_ASSERTIONS
-      /*
-       * Allow assignment of to an uninitialized
-       * but do not allow assignment from an
-       * uninitialized.
-       */
-      if (getDim().isValid()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      } else {
-         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-      }
-#endif
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator = (rhs);
       return *this;
    }
 
    /**
-    * The assignment operator sets the index equal to the argument IntVector.
+    * @brief The assignment operator sets the index equal to the argument
+    *        IntVector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index&
    operator = (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator = (rhs);
       return *this;
    }
 
    /**
-    * The index destructor does nothing interesting.
+    * @brief The index destructor does nothing interesting.
     */
    virtual ~Index();
 
    /**
-    * Plus-equals operator for an index and an integer vector.
+    * @brief Plus-equals operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index&
    operator += (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator += (rhs);
       return *this;
    }
 
    /**
-    * Plus operator for an index and an integer vector.
+    * @brief Plus operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index
    operator + (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp += rhs;
       return tmp;
    }
 
    /**
-    * Plus-equals operator for an index and an integer.
+    * @brief Plus-equals operator for an index and an integer.
     */
    Index&
    operator += (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator += (rhs);
       return *this;
    }
 
    /**
-    * Plus operator for an index and an integer.
+    * @brief Plus operator for an index and an integer.
     */
    Index
    operator + (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp += rhs;
       return tmp;
    }
 
    /**
-    * Minus-equals operator for an index and an integer vector.
+    * @brief Minus-equals operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index&
    operator -= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator -= (rhs);
       return *this;
    }
 
    /**
-    * Minus operator for an index and an integer vector.
+    * @brief Minus operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index
    operator - (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp -= rhs;
       return tmp;
    }
 
    /**
-    * Minus-equals operator for an index and an integer.
+    * @brief Minus-equals operator for an index and an integer.
     */
    Index&
    operator -= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator -= (rhs);
       return *this;
    }
 
    /**
-    * Minus operator for an index and an integer.
+    * @brief Minus operator for an index and an integer.
     */
    Index
    operator - (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp -= rhs;
       return tmp;
    }
 
    /**
-    * Times-equals operator for an index and an integer vector.
+    * @brief Times-equals operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index&
    operator *= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator *= (rhs);
       return *this;
    }
 
    /**
-    * Times operator for an index and an integer vector.
+    * @brief Times operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index
    operator * (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp *= rhs;
       return tmp;
    }
 
    /**
-    * Times-equals operator for an index and an integer.
+    * @brief Times-equals operator for an index and an integer.
     */
    Index&
    operator *= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator *= (rhs);
       return *this;
    }
 
    /**
-    * Times operator for an index and an integer.
+    * @brief Times operator for an index and an integer.
     */
    Index
    operator * (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp *= rhs;
       return tmp;
    }
 
    /**
-    * Assign-quotient operator for an index and an integer vector.
+    * @brief Assign-quotient operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index&
    operator /= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector::operator /= (rhs);
       return *this;
    }
 
    /**
-    * Quotient operator for an index and an integer vector.
+    * @brief Quotient operator for an index and an integer vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    Index
    operator / (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       Index tmp = *this;
       tmp /= rhs;
       return tmp;
    }
 
    /**
-    * Assign-quotient operator for an index and an integer.
+    * @brief Assign-quotient operator for an index and an integer.
     */
    Index&
    operator /= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       IntVector::operator /= (rhs);
       return *this;
    }
 
    /**
-    * Quotient operator for an index and an integer.
+    * @brief Quotient operator for an index and an integer.
     */
    Index
    operator / (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(getDim());
       Index tmp = *this;
       tmp /= rhs;
       return tmp;
@@ -336,12 +338,14 @@ public:
     * @brief Coarsen the Index by a given ratio.
     *
     * For positive indices, this is the same as dividing by the ratio.
+    *
+    * @pre getDim() == ratio.getDim()
     */
    Index&
    coarsen(
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
       for (int d = 0; d < getDim().getValue(); ++d) {
          (*this)(d) = coarsen((*this)(d), ratio(d));
       }
@@ -402,13 +406,15 @@ public:
     * @brief Coarsen an Index by a given ratio.
     *
     * For positive indices, this is the same as dividing by the ratio.
+    *
+    * @pre index.getDim() == ratio.getDim()
     */
    static Index
    coarsen(
       const Index& index,
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(index, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(index, ratio);
       tbox::Dimension dim(index.getDim());
       Index tmp(dim);
       for (int d = 0; d < dim.getValue(); ++d) {
@@ -418,10 +424,8 @@ public:
    }
 
 private:
-   friend class std::vector<Index>;
-
-   /**
-    * The default constructor for Index creates an uninitialized index.
+   /*
+    * Unimplemented default constructor
     */
    Index();
 
@@ -451,11 +455,11 @@ private:
    static void
    finalizeCallback();
 
-   static Index* s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static Index* s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Index* s_zeros[SAMRAI::MAX_DIM_VAL];
+   static Index* s_ones[SAMRAI::MAX_DIM_VAL];
 
-   static Index* s_maxs[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static Index* s_mins[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Index* s_maxs[SAMRAI::MAX_DIM_VAL];
+   static Index* s_mins[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

@@ -255,7 +255,6 @@ int main(
          input_db->getDatabase("HyperbolicLevelIntegrator"),
          euler_model,
          mblk_patch_hierarchy,
-         true,
          use_refined_timestepping));
 
    //
@@ -263,7 +262,6 @@ int main(
    //
    boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
       new mesh::StandardTagAndInitialize(
-         dim,
          "StandardTagAndInitialize",
          mblk_hyp_level_integrator.get(),
          input_db->getDatabase("StandardTagAndInitialize")));
@@ -468,9 +466,7 @@ void setupHierarchy(
    boost::shared_ptr<hier::BaseGridGeometry>& geometry,
    boost::shared_ptr<hier::PatchHierarchy>& mblk_hierarchy)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
 
    boost::shared_ptr<tbox::Database> mult_db(
       main_input_db->getDatabase("PatchHierarchy"));
@@ -497,7 +493,6 @@ void setupHierarchy(
       new hier::PatchHierarchy(
          "PatchHierarchy",
          geometry,
-         mult_db,
-         true));
+         mult_db));
 
 }

@@ -34,7 +34,7 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <list>
@@ -80,12 +80,6 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_master_bin_pack_method("SPATIAL")
 {
    TBOX_ASSERT(!name.empty());
-
-   d_workload_data_id.resizeArray(0);
-   d_max_workload_factor.resizeArray(0);
-   d_workload_tolerance.resizeArray(0);
-   d_bin_pack_method.resizeArray(0);
-
    getFromInput(input_db);
 }
 
@@ -96,20 +90,13 @@ ChopAndPackLoadBalancer::ChopAndPackLoadBalancer(
    d_object_name("ChopAndPackLoadBalancer"),
    d_processor_layout_specified(false),
    d_processor_layout(hier::IntVector::getZero(d_dim)),
+   d_ignore_level_box_union_is_single_box(false),
    d_master_workload_data_id(-1),
    d_master_max_workload_factor(1.0),
    d_master_workload_tolerance(0.0),
    d_master_bin_pack_method("SPATIAL")
 
 {
-
-   d_workload_data_id.resizeArray(0);
-   d_max_workload_factor.resizeArray(0);
-   d_workload_tolerance.resizeArray(0);
-   d_bin_pack_method.resizeArray(0);
-
-   d_ignore_level_box_union_is_single_box = false;
-
    getFromInput(input_db);
 }
 
@@ -185,17 +172,11 @@ ChopAndPackLoadBalancer::setWorkloadPatchDataIndex(
    int data_id,
    int level_number)
 {
-  boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
+   boost::shared_ptr<pdat::CellDataFactory<double> > datafact(
       hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
       getPatchDataFactory(data_id),
-      boost::detail::dynamic_cast_tag());
-   if (!datafact) {
-      TBOX_ERROR(
-         d_object_name << " error: "
-                       << "\n   data_id " << data_id << " passed to "
-                       << "setWorkloadPatchDataIndex()"
-                       << " does not refer to cell-centered double patch data. " << std::endl);
-   }
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(datafact);
 
    if (level_number >= 0) {
       int asize = d_workload_data_id.getSize();
@@ -277,7 +258,7 @@ ChopAndPackLoadBalancer::setBinPackMethod(
  */
 void
 ChopAndPackLoadBalancer::loadBalanceBoxLevel(
-   hier::BoxLevel& balance_mapped_box_level,
+   hier::BoxLevel& balance_box_level,
    hier::Connector& balance_to_anchor,
    hier::Connector& anchor_to_balance,
    const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -286,16 +267,16 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
    const hier::Connector& attractor_to_balance,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
-   const hier::BoxLevel& domain_mapped_box_level,
+   const hier::BoxLevel& domain_box_level,
    const hier::IntVector& bad_interval,
    const hier::IntVector& cut_factor,
    const tbox::RankGroup& rank_group) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS6(d_dim,
-      balance_mapped_box_level,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY6(d_dim,
+      balance_box_level,
       min_size,
       max_size,
-      domain_mapped_box_level,
+      domain_box_level,
       bad_interval,
       cut_factor);
    NULL_USE(balance_to_attractor);
@@ -309,21 +290,19 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       }
    }
 
-   hier::BoxLevel globalized_input_mapped_box_level(
-      balance_mapped_box_level);
-   globalized_input_mapped_box_level.setParallelState(
-      hier::BoxLevel::GLOBALIZED);
+   hier::BoxLevel globalized_input_box_level(balance_box_level);
+   globalized_input_box_level.setParallelState(hier::BoxLevel::GLOBALIZED);
 
    hier::BoxContainer in_boxes;
-   const hier::BoxContainer globalized_input_mapped_boxes(
-      globalized_input_mapped_box_level.getGlobalBoxes());
-   for (hier::RealBoxConstIterator bi(globalized_input_mapped_boxes.realBegin());
-        bi != globalized_input_mapped_boxes.realEnd(); ++bi) {
+   const hier::BoxContainer globalized_input_boxes(
+      globalized_input_box_level.getGlobalBoxes());
+   for (hier::RealBoxConstIterator bi(globalized_input_boxes.realBegin());
+        bi != globalized_input_boxes.realEnd(); ++bi) {
       in_boxes.pushBack(*bi);
    }
 
    hier::BoxContainer physical_domain;
-   domain_mapped_box_level.getGlobalBoxes(physical_domain);
+   domain_box_level.getGlobalBoxes(physical_domain);
 
    hier::BoxContainer out_boxes;
    hier::ProcessorMapping mapping;
@@ -335,35 +314,35 @@ ChopAndPackLoadBalancer::loadBalanceBoxLevel(
       hierarchy,
       level_number,
       physical_domain,
-      balance_mapped_box_level.getRefinementRatio(),
+      balance_box_level.getRefinementRatio(),
       min_size,
       actual_max_size,
       cut_factor,
       bad_interval);
 
-   // Build up balance_mapped_box_level from old-style data.
-   balance_mapped_box_level.initialize(
-      balance_mapped_box_level.getRefinementRatio(),
-      balance_mapped_box_level.getGridGeometry(),
-      balance_mapped_box_level.getMPI(),
+   // Build up balance_box_level from old-style data.
+   balance_box_level.initialize(
+      balance_box_level.getRefinementRatio(),
+      balance_box_level.getGridGeometry(),
+      balance_box_level.getMPI(),
       hier::BoxLevel::GLOBALIZED);
    int i = 0;
    for (hier::BoxContainer::iterator itr(out_boxes);
         itr != out_boxes.end(); ++itr, ++i) {
       hier::Box node(*itr, hier::LocalId(i),
                      mapping.getProcessorAssignment(i));
-      balance_mapped_box_level.addBox(node);
+      balance_box_level.addBox(node);
    }
-   // Reinitialize Connectors due to changed balance_mapped_box_level.
+   // Reinitialize Connectors due to changed balance_box_level.
    balance_to_anchor.clearNeighborhoods();
-   balance_to_anchor.setBase(balance_mapped_box_level, true);
+   balance_to_anchor.setBase(balance_box_level, true);
    anchor_to_balance.clearNeighborhoods();
-   anchor_to_balance.setHead(balance_mapped_box_level, true);
+   anchor_to_balance.setHead(balance_box_level, true);
    hier::OverlapConnectorAlgorithm oca;
    oca.findOverlaps(balance_to_anchor);
-   oca.findOverlaps(anchor_to_balance, balance_mapped_box_level);
+   oca.findOverlaps(anchor_to_balance, balance_box_level);
 
-   balance_mapped_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
+   balance_box_level.setParallelState(hier::BoxLevel::DISTRIBUTED);
 }
 
 /*
@@ -434,7 +413,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 {
    t_load_balance_boxes->start();
 
-   TBOX_DIM_ASSERT_CHECK_ARGS5(ratio_to_hierarchy_level_zero,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(ratio_to_hierarchy_level_zero,
       min_size,
       max_size,
       cut_factor,
@@ -442,7 +421,7 @@ ChopAndPackLoadBalancer::loadBalanceBoxes(
 
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number >= 0);
-   TBOX_ASSERT(physical_domain.size() > 0);
+   TBOX_ASSERT(!physical_domain.isEmpty());
    TBOX_ASSERT(min_size > hier::IntVector::getZero(d_dim));
    TBOX_ASSERT(max_size >= min_size);
    TBOX_ASSERT(cut_factor > hier::IntVector::getZero(d_dim));
@@ -644,10 +623,10 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
    const tbox::SAMRAI_MPI& mpi) const
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(min_size, max_size, cut_factor, bad_interval);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(min_size, max_size, cut_factor, bad_interval);
 
    /*
-    * Determine processor layout that corresponds to box dimensions.
+    * Determine processor layout that corresponds to box size.
     */
 
    hier::IntVector processor_distribution(d_dim);
@@ -661,7 +640,7 @@ ChopAndPackLoadBalancer::chopUniformSingleBox(
    }
 
    /*
-    * The ideal box size will be the dimensions of the input box divided
+    * The ideal box size will be the size of the input box divided
     * by the number of processors in each direction.  Compute this
     * ideal size and then adjust as necessary to fit within min/max size
     * constraints.
@@ -734,7 +713,7 @@ ChopAndPackLoadBalancer::chopBoxesWithUniformWorkload(
    const tbox::SAMRAI_MPI& mpi) const
 {
    NULL_USE(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(d_dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY5(d_dim,
       *hierarchy,
       min_size,
       max_size,
@@ -831,7 +810,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
    const tbox::SAMRAI_MPI& mpi) const
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS5(ratio_to_hierarchy_level_zero,
+   TBOX_ASSERT_OBJDIM_EQUALITY5(ratio_to_hierarchy_level_zero,
       min_size,
       max_size,
       cut_factor,
@@ -875,7 +854,7 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
       tmp_level_workloads,
       "GREEDY");
 
-   boost::shared_ptr<hier::BoxLevel> tmp_mapped_box_level(
+   boost::shared_ptr<hier::BoxLevel> tmp_box_level(
       boost::make_shared<hier::BoxLevel>(
          ratio_to_hierarchy_level_zero,
          hierarchy->getGridGeometry(),
@@ -886,20 +865,20 @@ ChopAndPackLoadBalancer::chopBoxesWithNonuniformWorkload(
         i != tmp_level_boxes.end(); ++i, ++idx) {
       hier::Box node(*i, hier::LocalId(idx),
                      tmp_level_mapping.getProcessorAssignment(idx));
-      tmp_mapped_box_level->addBox(node);
+      tmp_box_level->addBox(node);
    }
 
    boost::shared_ptr<hier::PatchLevel> tmp_level(
-      boost::make_shared<hier::PatchLevel>(*tmp_mapped_box_level,
+      boost::make_shared<hier::PatchLevel>(*tmp_box_level,
          hierarchy->getGridGeometry(),
          hierarchy->getPatchDescriptor()));
 
    tmp_level->allocatePatchData(wrk_indx);
 
-   xfer::RefineAlgorithm fill_work_algorithm(d_dim);
+   xfer::RefineAlgorithm fill_work_algorithm;
 
    boost::shared_ptr<hier::RefineOperator> work_refine_op(
-      boost::make_shared<pdat::CellDoubleConstantRefine>(d_dim));
+      boost::make_shared<pdat::CellDoubleConstantRefine>());
 
    fill_work_algorithm.registerRefine(wrk_indx,
       wrk_indx,
@@ -1039,10 +1018,10 @@ ChopAndPackLoadBalancer::exchangeBoxContainersAndWeightArrays(
    tbox::Array<int> buf_in(buf_size_in);
    tbox::Array<int> buf_out(buf_size_out);
 
-   int* buf_in_ptr = (int *)NULL;
-   int* buf_out_ptr = (int *)NULL;
-   const double* wgts_in_ptr = (const double *)NULL;
-   double* wgts_out_ptr = (double *)NULL;
+   int* buf_in_ptr = 0;
+   int* buf_out_ptr = 0;
+   const double* wgts_in_ptr = 0;
+   double* wgts_out_ptr = 0;
 
    if (size_in > 0) {
       buf_in_ptr = buf_in.getPointer();
@@ -1174,33 +1153,26 @@ ChopAndPackLoadBalancer::printClassData(
 
 void
 ChopAndPackLoadBalancer::getFromInput(
-   const boost::shared_ptr<tbox::Database>& db)
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
 
-   if (db) {
+   if (input_db) {
 
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       d_master_bin_pack_method =
-         db->getStringWithDefault("bin_pack_method",
-            d_master_bin_pack_method);
+         input_db->getStringWithDefault("bin_pack_method", "SPATIAL");
       if (!(d_master_bin_pack_method == "GREEDY" ||
             d_master_bin_pack_method == "SPATIAL")) {
-         TBOX_WARNING(
-            d_object_name << ": "
-                          << "Unknown 'bin_pack_method' "
-                          << d_master_bin_pack_method
-                          << " found in input. \nDefault 'GREEDY' will be used." << std::endl);
-         d_master_bin_pack_method = "GREEDY";
+         INPUT_VALUE_ERROR("bin_pack_method");
       }
 
-      if (db->keyExists("max_workload_factor")) {
-         d_max_workload_factor = db->getDoubleArray("max_workload_factor");
-         for (int i = 0; i < d_max_workload_factor.getSize(); i++) {
-            if (d_max_workload_factor[i] < 0.0) {
-               TBOX_ERROR(
-                  d_object_name
-                  << "Max workload values should be greater than 0");
+      if (input_db->keyExists("max_workload_factor")) {
+         d_max_workload_factor = input_db->getDoubleArray(
+            "max_workload_factor");
+         for (int i = 0; i < d_max_workload_factor.getSize(); ++i) {
+            if (!(d_max_workload_factor[i] >=0)) {
+               INPUT_RANGE_ERROR("max_workload_factor");
             }
          }
 
@@ -1209,14 +1181,12 @@ ChopAndPackLoadBalancer::getFromInput(
             d_max_workload_factor[d_max_workload_factor.getSize() - 1];
       }
 
-      if (db->keyExists("workload_tolerance")) {
-         d_workload_tolerance = db->getDoubleArray("workload_tolerance");
-         for (int i = 0; i < d_workload_tolerance.getSize(); i++) {
-            if (d_workload_tolerance[i] < 0.0 || d_workload_tolerance[i] >=
-                1.0) {
-               TBOX_ERROR(
-                  d_object_name
-                  << "Workload tolerance should be >= 0 and < 1.0");
+      if (input_db->keyExists("workload_tolerance")) {
+         d_workload_tolerance = input_db->getDoubleArray("workload_tolerance");
+         for (int i = 0; i < d_workload_tolerance.getSize(); ++i) {
+            if (!(d_workload_tolerance[i] >= 0.0 &&
+                  d_workload_tolerance[i] < 1.0)) {
+               INPUT_RANGE_ERROR("workload_tolerance");
             }
          }
 
@@ -1226,13 +1196,13 @@ ChopAndPackLoadBalancer::getFromInput(
       }
 
       d_ignore_level_box_union_is_single_box =
-         db->getBoolWithDefault("ignore_level_box_union_is_single_box",
-            d_ignore_level_box_union_is_single_box);
+         input_db->getBoolWithDefault("ignore_level_box_union_is_single_box", false);
 
       d_processor_layout_specified = false;
-      int temp_processor_layout[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      if (db->keyExists("processor_layout")) {
-         db->getIntegerArray("processor_layout", temp_processor_layout, d_dim.getValue());
+      int temp_processor_layout[SAMRAI::MAX_DIM_VAL];
+      if (input_db->keyExists("processor_layout")) {
+         input_db->getIntegerArray("processor_layout",
+            temp_processor_layout, d_dim.getValue());
 
          /* consistency check */
          int totprocs = 1;
@@ -1254,10 +1224,6 @@ ChopAndPackLoadBalancer::getFromInput(
             d_processor_layout_specified = true;
          }
       }
-
-      d_ignore_level_box_union_is_single_box =
-         db->getBoolWithDefault("ignore_level_box_union_is_single_box",
-            d_ignore_level_box_union_is_single_box);
 
    }
 

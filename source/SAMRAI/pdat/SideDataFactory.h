@@ -19,7 +19,7 @@
 #include "SAMRAI/hier/PatchDataFactory.h"
 #include "SAMRAI/tbox/Complex.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -53,15 +53,11 @@ public:
     * with a single direction only, provide the directions vector argument.
     * A zero entry indicates that data for that direction is not wanted.
     * Otherwise, data will be created for that direction.  See the
-    * SideVariable<DIM> class header file for more information.
-    */
-   SideDataFactory(
-      int depth,
-      const hier::IntVector& ghosts,
-      bool fine_boundary_represents_var);
-
-   /**
-    * Same as previous constructor but with directions vector of 1's
+    * SideVariable<TYPE> class header file for more information.
+    *
+    * @pre depth > 0
+    * @pre ghosts.min() >= 0
+    * @pre directions.min() >= 0
     */
    SideDataFactory(
       int depth,
@@ -83,6 +79,8 @@ public:
     *
     * @param ghosts default ghost cell width for concrete classes created from
     * the factory.
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    virtual boost::shared_ptr<hier::PatchDataFactory>
    cloneFactory(
@@ -92,6 +90,8 @@ public:
     * Virtual factory function to allocate a concrete side data object.
     * The default information about the object (e.g., ghost cell width)
     * is taken from the factory.
+    *
+    * @pre getDim() == patch.getDim()
     */
    virtual boost::shared_ptr<hier::PatchData>
    allocate(
@@ -101,6 +101,8 @@ public:
     * Allocate the box geometry object associated with the patch data.
     * This information will be used in the computation of intersections
     * and data dependencies between objects.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual boost::shared_ptr<hier::BoxGeometry>
    getBoxGeometry(
@@ -127,6 +129,8 @@ public:
    /**
     * Calculate the amount of memory needed to store the side data object,
     * including object data and dynamically allocated data.
+    *
+    * @pre getDim() == box.getDim()
     */
    virtual size_t
    getSizeOfMemory(
@@ -135,7 +139,7 @@ public:
    /**
     * Return a boolean value indicating how data for the side quantity will be
     * treated on coarse-fine interfaces.  This value is passed into the
-    * constructor.  See the FaceVariable<DIM> class header file for more
+    * constructor.  See the FaceVariable<TYPE> class header file for more
     * information.
     */
    bool
@@ -152,6 +156,8 @@ public:
     * Return whether it is valid to copy this SideDataFactory to the
     * supplied destination patch data factory.  It will return true if
     * dst_pdf is SideDataFactory or OutersideDataFactory, false otherwise.
+    *
+    * @pre getDim() == dst_pdf->getDim()
     */
    bool
    validCopyTo(

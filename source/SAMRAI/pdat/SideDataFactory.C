@@ -19,7 +19,7 @@
 #include "SAMRAI/pdat/OutersideDataFactory.h"
 #include "SAMRAI/hier/Patch.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -32,43 +32,20 @@ namespace pdat {
  *************************************************************************
  */
 
-// SGS DODIM TODO
-// WARNING! WARNING! WARNING! WARNING!
-// This was hacked to replicate a bug in the SAMRAI.  The direction vector
-// should not be all ones but not having this causes the tests to fail
-// WARNING! WARNING! WARNING! WARNING!
-
 template<class TYPE>
 SideDataFactory<TYPE>::SideDataFactory(
-   const int depth,
+   int depth,
    const hier::IntVector& ghosts,
    bool fine_boundary_represents_var,
    const hier::IntVector& directions):
    hier::PatchDataFactory(ghosts),
    d_depth(depth),
    d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(hier::IntVector::getOne(ghosts.getDim()))
+   d_directions(directions)
 {
-#ifndef DEBUG_CHECK_ASSERTIONS
-   NULL_USE(directions);
-#endif
    TBOX_ASSERT(depth > 0);
    TBOX_ASSERT(ghosts.min() >= 0);
    TBOX_ASSERT(directions.min() >= 0);
-}
-
-template<class TYPE>
-SideDataFactory<TYPE>::SideDataFactory(
-   const int depth,
-   const hier::IntVector& ghosts,
-   bool fine_boundary_represents_var):
-   hier::PatchDataFactory(ghosts),
-   d_depth(depth),
-   d_fine_boundary_represents_var(fine_boundary_represents_var),
-   d_directions(ghosts.getDim(), 1)
-{
-   TBOX_ASSERT(depth > 0);
-   TBOX_ASSERT(ghosts.min() >= 0);
 }
 
 template<class TYPE>
@@ -89,7 +66,7 @@ boost::shared_ptr<hier::PatchDataFactory>
 SideDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
    return boost::make_shared<SideDataFactory<TYPE> >(
       d_depth,
@@ -111,7 +88,7 @@ boost::shared_ptr<hier::PatchData>
 SideDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
    return boost::make_shared<SideData<TYPE> >(
       patch.getBox(),
@@ -133,7 +110,7 @@ boost::shared_ptr<hier::BoxGeometry>
 SideDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    return boost::make_shared<SideGeometry>(
       box,
@@ -168,7 +145,7 @@ size_t
 SideDataFactory<TYPE>::getSizeOfMemory(
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
 
    const size_t obj =
       tbox::MemoryUtilities::align(sizeof(SideData<TYPE>));
@@ -191,7 +168,7 @@ bool
 SideDataFactory<TYPE>::validCopyTo(
    const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
    bool valid_copy = false;
 
@@ -224,7 +201,7 @@ SideDataFactory<TYPE>::validCopyTo(
  *
  * Return a boolean value indicating how data for the side quantity will be
  * treated on coarse-fine interfaces.  This value is passed into the
- * constructor.  See the FaceVariable<DIM> class header file for more
+ * constructor.  See the FaceVariable class header file for more
  * information.
  *
  *************************************************************************

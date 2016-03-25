@@ -42,7 +42,7 @@ public:
    operator = (
       const BoxContainerSingleBlockIterator& r)
    {
-      d_mapped_boxes = r.d_mapped_boxes;
+      d_boxes = r.d_boxes;
       d_iter = r.d_iter;
       d_block_id = r.d_block_id;
       return *this;
@@ -73,7 +73,7 @@ public:
    operator == (
       const BoxContainerSingleBlockIterator& r) const
    {
-      return d_mapped_boxes == r.d_mapped_boxes &&
+      return d_boxes == r.d_boxes &&
              d_block_id == r.d_block_id &&
              d_iter == r.d_iter;
    }
@@ -85,7 +85,7 @@ public:
    operator != (
       const BoxContainerSingleBlockIterator& r) const
    {
-      return d_mapped_boxes != r.d_mapped_boxes ||
+      return d_boxes != r.d_boxes ||
              d_block_id != r.d_block_id ||
              d_iter != r.d_iter;
    }
@@ -131,7 +131,7 @@ private:
    /*!
     * @brief BoxContainer being iterated through.
     */
-   const BoxContainer* d_mapped_boxes;
+   const BoxContainer* d_boxes;
 
    /*!
     * @brief The BlockId.

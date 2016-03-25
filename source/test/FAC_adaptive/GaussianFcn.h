@@ -146,7 +146,7 @@ private:
    //! Amplitude
    double d_amp;
    //! Center
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    //! Lambda
    double d_lambda;
 

@@ -44,6 +44,8 @@
 #include <fstream>
 #include <iomanip>
 
+#include "boost/shared_ptr.hpp"
+
 using namespace SAMRAI;
 
 /* Helper function declarations */
@@ -74,13 +76,13 @@ int main(
       TBOX_ERROR("Usage: " << argv[0] << " [dimension]");
    }
 
-   const int d = atoi(argv[1]);
+   const unsigned short d = static_cast<unsigned short>(atoi(argv[1]));
    TBOX_ASSERT(d > 0);
-   TBOX_ASSERT(d <= SAMRAI_MAXIMUM_DIMENSION_VALUE);
+   TBOX_ASSERT(d <= SAMRAI::MAX_DIM_VAL);
    const tbox::Dimension dim(d);
 
    const std::string log_fn = std::string("cell_cplxtest.")
-      + tbox::Utilities::intToString(dim, 1) + "d.log";
+      + tbox::Utilities::intToString(dim.getValue(), 1) + "d.log";
    tbox::PIO::logAllNodes(log_fn);
 
    /*
@@ -91,8 +93,8 @@ int main(
       int ln, iv;
 
       // Make a dummy hierarchy domain
-      double lo[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      double hi[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double lo[SAMRAI::MAX_DIM_VAL];
+      double hi[SAMRAI::MAX_DIM_VAL];
 
       hier::Index clo0(dim);
       hier::Index chi0(dim);
@@ -128,18 +130,18 @@ int main(
          }
       }
 
-      hier::Box coarse0(clo0, chi0);
-      hier::Box coarse1(clo1, chi1);
-      hier::Box fine0(flo0, fhi0);
-      hier::Box fine1(flo1, fhi1);
+      hier::Box coarse0(clo0, chi0, hier::BlockId(0));
+      hier::Box coarse1(clo1, chi1, hier::BlockId(0));
+      hier::Box fine0(flo0, fhi0, hier::BlockId(0));
+      hier::Box fine1(flo1, fhi1, hier::BlockId(0));
       hier::IntVector ratio(dim, 2);
 
-      hier::BoxContainer coarse_domain(dim);
-      hier::BoxContainer fine_boxes(dim);
-      coarse_domain.appendItem(coarse0);
-      coarse_domain.appendItem(coarse1);
-      fine_boxes.appendItem(fine0);
-      fine_boxes.appendItem(fine1);
+      hier::BoxContainer coarse_domain;
+      hier::BoxContainer fine_boxes;
+      coarse_domain.pushBack(coarse0);
+      coarse_domain.pushBack(coarse1);
+      fine_boxes.pushBack(fine0);
+      fine_boxes.pushBack(fine1);
 
       boost::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
@@ -151,13 +153,14 @@ int main(
       boost::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
-      // Note: For these simple tests we allow at most 2 processors.
+      hierarchy->setMaxNumberOfLevels(2);
+      hierarchy->setRatioToCoarserLevel(ratio, 1);
+
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       const int nproc = mpi.getSize();
-      TBOX_ASSERT(nproc < 3);
 
-      const int n_coarse_boxes = coarse_domain.getNumberOfBoxes();
-      const int n_fine_boxes = fine_boxes.getNumberOfBoxes();
+      const int n_coarse_boxes = coarse_domain.size();
+      const int n_fine_boxes = fine_boxes.size();
 
       hier::BoxLevel layer0(hier::IntVector(dim, 1), geometry);
       hier::BoxLevel layer1(ratio, geometry);
@@ -165,24 +168,24 @@ int main(
       hier::BoxContainer::iterator coarse_itr(coarse_domain);
       for (int ib = 0; ib < n_coarse_boxes; ib++, ++coarse_itr) {
          if (nproc > 1) {
-            if (ib == layer0.getRank()) {
-               layer0.addBox(hier::Box(*coarse_itr, ib,
-                     layer0.getRank()));
+            if (ib == layer0.getMPI().getRank()) {
+               layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib),
+                  layer0.getMPI().getRank()));
             }
          } else {
-            layer0.addBox(hier::Box(*coarse_itr, ib, 0));
+            layer0.addBox(hier::Box(*coarse_itr, hier::LocalId(ib), 0));
          }
       }
 
       hier::BoxContainer::iterator fine_itr(fine_boxes);
       for (int ib = 0; ib < n_fine_boxes; ib++, ++fine_itr) {
          if (nproc > 1) {
-            if (ib == layer1.getRank()) {
-               layer1.addBox(hier::Box(*fine_itr, ib,
-                     layer1.getRank()));
+            if (ib == layer1.getMPI().getRank()) {
+               layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib),
+                  layer1.getMPI().getRank()));
             }
          } else {
-            layer1.addBox(hier::Box(*fine_itr, ib, 0));
+            layer1.addBox(hier::Box(*fine_itr, hier::LocalId(ib), 0));
          }
       }
 
@@ -238,7 +241,6 @@ int main(
             1));
 
       boost::shared_ptr<hier::Patch> patch;
-      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom;
 
       // Initialize control volume data for cell-centered components
       hier::Box coarse_fine = fine0 + fine1;
@@ -248,15 +250,20 @@ int main(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            patch = level->getPatch(ip());
-            pgeom = patch->getPatchGeometry();
+            patch = *ip;
+            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+               patch->getPatchGeometry(),
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             double cell_vol = dx[0];
             for (int i = 1; i < dim.getValue(); i++) {
                cell_vol *= dx[i];
             }
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id));
+               patch->getPatchData(cwgt_id),
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
             if (ln == 0) cvdata->fillAll(0.0, (coarse_fine * patch->getBox()));
          }
@@ -273,14 +280,16 @@ int main(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            patch = level->getPatch(ip());
+            patch = *ip;
             boost::shared_ptr<pdat::CellData<double> > cvdata(
-               patch->getPatchData(cwgt_id));
+               patch->getPatchData(cwgt_id),
+               BOOST_CAST_TAG);
+
+            TBOX_ASSERT(cvdata);
 
             pdat::CellIterator cend(cvdata->getBox(), false);
             for (pdat::CellIterator c(cvdata->getBox(), true);
-                 c != cend && vol_test_passed;
-                 ++c) {
+                 c != cend && vol_test_passed; ++c) {
                pdat::CellIndex cell_index = *c;
 
                if (ln == 0) {
@@ -534,8 +543,10 @@ int main(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
-         patch = level_zero->getPatch(ip());
-         cdata = patch->getPatchData(cvindx[2]);
+         patch = *ip;
+         cdata = BOOST_CAST<pdat::CellData<dcomplex>,
+                            hier::PatchData>(patch->getPatchData(cvindx[2]));
+         TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
          hier::Index index1(dim, 3);
          index1(0) = 5;
@@ -551,16 +562,17 @@ int main(
       bool bogus_value_test_passed = true;
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
-         patch = level_zero->getPatch(ipp());
-         cdata = patch->getPatchData(cvindx[2]);
+         patch = *ipp;
+         cdata = BOOST_CAST<pdat::CellData<dcomplex>,
+                            hier::PatchData>(patch->getPatchData(cvindx[2]));
+         TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
          hier::Index index1(dim, 3);
          index1(0) = 5;
 
          pdat::CellIterator cend(cdata->getBox(), false);
          for (pdat::CellIterator c(cdata->getBox(), true);
-              c != cend && bogus_value_test_passed;
-              ++c) {
+              c != cend && bogus_value_test_passed; ++c) {
             pdat::CellIndex cell_index = *c;
 
             if (cell_index == pdat::CellIndex(index0)) {
@@ -744,7 +756,7 @@ int main(
       cwgt.reset();
 
       geometry.reset();
-      hierarchy.set();
+      hierarchy.reset();
       cell_ops.reset();
       cwgt_ops.reset();
 
@@ -778,9 +790,12 @@ complexDataSameAsValue(
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         patch = level->getPatch(ip());
+         patch = *ip;
          boost::shared_ptr<pdat::CellData<dcomplex> > cvdata(
-            patch->getPatchData(desc_id));
+            patch->getPatchData(desc_id),
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(cvdata);
 
          pdat::CellIterator cend(cvdata->getBox(), false);
          for (pdat::CellIterator c(cvdata->getBox(), true);
@@ -810,14 +825,17 @@ doubleDataSameAsValue(
    bool test_passed = true;
 
    int ln;
-   boost::shared_ptr<hier::Patch> patch
+   boost::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ln++) {
       boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         patch = level->getPatch(ip());
+         patch = *ip;
          boost::shared_ptr<pdat::CellData<double> > cvdata(
-            patch->getPatchData(desc_id));
+            patch->getPatchData(desc_id),
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(cvdata);
 
          pdat::CellIterator cend(cvdata->getBox(), false);
          for (pdat::CellIterator c(cvdata->getBox(), true);

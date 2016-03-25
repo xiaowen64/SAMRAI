@@ -18,7 +18,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -64,13 +64,32 @@ public:
     * constitute the intersection.  The boxes are given in the
     * destination coordinate space and must be shifted by
     * -(getSourceOffset()) to lie in the source index space.  The axis
-    * argument represents which axis is desired: X=0, Y=1, and
-    * Z=2. This method over-rides the virtual function in the
-    * hier::BoxOverlap base class.
+    * argument represents which axis is desired: X=0, Y=1, and Z=2.
+    *
+    * @pre (axis >= 0) && (axis < d_dst_boxes.size())
     */
    virtual const hier::BoxContainer&
    getDestinationBoxContainer(
       const int axis) const;
+
+   /*!
+    * @brief Get a BoxContainer representing the source boxes of the overlap.
+    *
+    * The src_boxes container will be filled with edge-centered source
+    * boxes of the overlap in the source coordinate space.  The given
+    * axis direction is the axis in destination space on input and
+    * in source space on output.
+    *
+    * @param[out] src_boxes
+    * @param[in,out] axis_direction
+    *
+    * @pre src_boxes.isEmpty()
+    * @pre axis_direction >= 0 && axis_direction < d_dst_boxes.size()
+    * @post axis_direction >= 0 && axis_direction < d_dst_boxes.size()
+    */
+   virtual void
+   getSourceBoxContainer(hier::BoxContainer& src_boxes,
+                         int& axis_direction) const;
 
    /**
     * Return the offset between the destination and source index spaces.

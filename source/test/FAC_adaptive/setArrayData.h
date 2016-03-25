@@ -28,7 +28,7 @@ setArrayDataTo(
    const double* xhi,
    const double* h
    ,
-   const double* coef = NULL);
+   const double* coef = 0);
 
 void
 setArrayDataTo(
@@ -42,7 +42,7 @@ setArrayDataTo(
    const double* xhi,
    const double* h
    ,
-   const double* coef = NULL);
+   const double* coef = 0);
 void
 setArrayDataTo(
    MDA_Access<double, 3, MDA_OrderColMajor<3> >& s
@@ -55,7 +55,7 @@ setArrayDataTo(
    const double* xhi,
    const double* h
    ,
-   const double* coef = NULL);
+   const double* coef = 0);
 
 void
 setArrayDataToSinusoidal(

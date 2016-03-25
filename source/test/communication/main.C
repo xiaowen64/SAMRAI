@@ -16,7 +16,7 @@ using namespace std;
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include "CommTester.h"
-#include "VisItDerivedData.h"
+#include "DerivedVisOwnerData.h"
 
 #include "SAMRAI/tbox/InputDatabase.h"
 #include "SAMRAI/tbox/InputManager.h"
@@ -41,7 +41,7 @@ using namespace std;
 #include "OuterfaceDataTest.h"
 //#include "MultiVariableDataTest.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -298,7 +298,7 @@ int main(
        * Create communication tester and patch data test object
        */
 
-      PatchDataTestStrategy* patch_data_test = NULL;
+      PatchDataTestStrategy* patch_data_test = 0;
 
       if (test_to_run == "CellDataTest") {
          patch_data_test = new CellDataTest("CellDataTest",
@@ -376,7 +376,6 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
-            dim,
             "StandardTaggingAndInitializer",
             comm_tester.get(),
             input_db->getDatabase("StandardTaggingAndInitializer")));
@@ -404,7 +403,7 @@ int main(
          time_man->getTimer("test::main::performCoarsenOperations"));
 
       const bool plot = main_db->getBoolWithDefault("plot", false);
-      VisItDerivedData vdd;
+      DerivedVisOwnerData vdd;
       if (plot) {
 #ifdef HAVE_HDF5
          const std::string visit_filename = base_name + ".visit";

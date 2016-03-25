@@ -20,7 +20,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -31,7 +31,7 @@ namespace pdat {
  * hier::BoxGeometry and it computes intersections between face-
  * centered box geometries for communication operations.
  *
- * See header file for FaceData<DIM> class for a more detailed
+ * See header file for FaceData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see hier::BoxGeometry
@@ -49,10 +49,12 @@ public:
    /*!
     * @brief Convert an AMR index box space box into an face geometry box.
     * An face geometry box extends the given AMR index box space box
-    * by one in upper dimension for the face normal coordinate direction.
+    * by one in upper end for the face normal coordinate direction.
     *
     * Recall that box indices are cyclically shifted such that the face normal
     * direction is the first coordinate index.  See SideData header file.
+    *
+    * @pre (face_normal >= 0) && (face_normal < box.getDim().getValue())
     */
    static hier::Box
    toFaceBox(
@@ -95,6 +97,9 @@ public:
    /*!
     * @brief Construct the face geometry object given an AMR index
     * space box and ghost cell width.
+    *
+    * @pre box.getDim() == ghosts.getDim()
+    * @pre ghosts.min() >= 0
     */
    FaceGeometry(
       const hier::Box& box,
@@ -108,6 +113,8 @@ public:
    /*!
     * @brief Compute the overlap in face-centered index space between
     * the source box geometry and the destination box geometry.
+    *
+    * @pre getBox().getDim() == src_mask.getDim()
     */
    virtual boost::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
@@ -118,6 +125,23 @@ public:
       const bool overwrite_interior,
       const hier::Transformation& transformation,
       const bool retry,
+      const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
+
+   /*!
+    * @brief Compute the face-centered destination boxes that represent
+    * the overlap between the source box geometry and the destination
+    * box geometry.
+    *
+    * @pre src_mask.getDim() == transformation.getOffset.getDim()
+    */
+   void
+   computeDestinationBoxes(
+      tbox::Array<hier::BoxContainer>& dst_boxes,
+      const FaceGeometry& src_geometry,
+      const hier::Box& src_mask,
+      const hier::Box& fill_box,
+      const bool overwrite_interior,
+      const hier::Transformation& transformation,
       const hier::BoxContainer& dst_restrict_boxes = hier::BoxContainer()) const;
 
    /*!

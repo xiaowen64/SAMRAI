@@ -22,11 +22,11 @@
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 BEGIN_BOOST_WARNING_SUPPRESSION
-#include <boost/unordered_map.hpp>
+#include "boost/unordered_map.hpp"
 END_BOOST_WARNING_SUPPRESSION
 
 namespace SAMRAI {
@@ -135,6 +135,9 @@ public:
     * @param[in]  var The Variable for which the corresponding coarsening
     *                 operator should match.
     * @param[in]  op_name The string identifier of the coarsening operator.
+    *
+    * @pre var
+    * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
    boost::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
@@ -155,6 +158,9 @@ public:
     * @param[in]  var The Variable for which the corresponding refinement
     *                 operator should match.
     * @param[in]  op_name The string identifier of the refinement operator.
+    *
+    * @pre var
+    * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
    boost::shared_ptr<RefineOperator>
    lookupRefineOperator(
@@ -176,6 +182,9 @@ public:
     *                 interpolation operator should match.
     * @param[in]  op_name The string identifier of the time interpolation
     *                     operator.  \b Default: STD_LINEAR_TIME_INTERPOLATE
+    *
+    * @pre var
+    * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
    boost::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
@@ -199,7 +208,7 @@ public:
     * @see hier::CoarsenOperator::getMaxCoarsenOpStencilWidth().
     */
    IntVector
-   getMaxTransferOpStencilWidth();
+   getMaxTransferOpStencilWidth( const tbox::Dimension &dim );
 
    /*!
     * @brief Set a minimum value on the value returned by
@@ -212,25 +221,32 @@ public:
     * in getMaxTransferOpStencilWidth().
     *
     * @param[in]  min_value The minimum value to set.
+    *
+    * @pre getMinTransferOpStencilWidth().getDim() == min_value.getDim()
     */
    void
    setMinTransferOpStencilWidth(
       const IntVector& min_value)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(d_min_stencil_width, min_value);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(getMinTransferOpStencilWidth(), min_value);
       d_min_stencil_width = min_value;
    }
 
-   /*!
-    * @brief Get the dimension of the hier::BaseGridGeometry holding this
-    * object.
-    *
-    * @return The dimension of the hier::BaseGridGeometry holding this object.
-    */
-   const tbox::Dimension&
-   getDim() const
+   const IntVector&
+   getMinTransferOpStencilWidth() const
    {
-      return d_dim;
+      return d_min_stencil_width;
+   }
+
+   /*!
+    * @brief
+    */
+   bool
+   hasOperators()
+   {
+      return !d_refine_operators.empty() ||
+             !d_coarsen_operators.empty() ||
+             !d_time_operators.empty();
    }
 
    /*!
@@ -280,11 +296,6 @@ private:
     * @brief Value set by setMinTransferOpStencilWidth().
     */
    IntVector d_min_stencil_width;
-
-   /*!
-    * @brief The dimension of the grid geometry holding this object.
-    */
-   tbox::Dimension d_dim;
 
    /*!
     * @brief true if a call to getMaxTransferOpStencilWidth has been made.

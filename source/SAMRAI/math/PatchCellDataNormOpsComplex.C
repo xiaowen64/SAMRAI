@@ -13,6 +13,8 @@
 
 #include "SAMRAI/math/PatchCellDataNormOpsComplex.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 
@@ -31,13 +33,13 @@ PatchCellDataNormOpsComplex::L1Norm(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval;
    if (!cvol) {
       retval = d_array_ops.L1Norm(data->getArrayData(), box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.L1NormWithControlVolume(data->getArrayData(),
             cvol->getArrayData(),
@@ -53,13 +55,13 @@ PatchCellDataNormOpsComplex::L2Norm(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval;
    if (!cvol) {
       retval = d_array_ops.L2Norm(data->getArrayData(), box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.L2NormWithControlVolume(data->getArrayData(),
             cvol->getArrayData(),
@@ -76,7 +78,7 @@ PatchCellDataNormOpsComplex::weightedL2Norm(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    double retval;
    if (!cvol) {
@@ -84,7 +86,7 @@ PatchCellDataNormOpsComplex::weightedL2Norm(
             weight->getArrayData(),
             box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.weightedL2NormWithControlVolume(
             data->getArrayData(),
@@ -102,13 +104,13 @@ PatchCellDataNormOpsComplex::RMSNorm(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval = L2Norm(data, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval /= sqrt(sumControlVolumes(data, cvol, box));
    }
@@ -123,13 +125,13 @@ PatchCellDataNormOpsComplex::weightedRMSNorm(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    double retval = weightedL2Norm(data, weight, box, cvol);
    if (!cvol) {
       retval /= sqrt((double)numberOfEntries(data, box));
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval /= sqrt(sumControlVolumes(data, cvol, box));
    }
@@ -143,13 +145,13 @@ PatchCellDataNormOpsComplex::maxNorm(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    double retval;
    if (!cvol) {
       retval = d_array_ops.maxNorm(data->getArrayData(), box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       retval = d_array_ops.maxNormWithControlVolume(data->getArrayData(),
             cvol->getArrayData(),
@@ -166,7 +168,7 @@ PatchCellDataNormOpsComplex::dot(
    const boost::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data1, *data2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data1, *data2, box);
 
    dcomplex retval;
    if (!cvol) {
@@ -174,7 +176,7 @@ PatchCellDataNormOpsComplex::dot(
             data2->getArrayData(),
             box);
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data1, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data1, *cvol);
 
       retval = d_array_ops.dotWithControlVolume(
             data1->getArrayData(),

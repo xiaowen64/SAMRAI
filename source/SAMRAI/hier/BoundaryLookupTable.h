@@ -78,14 +78,17 @@ public:
     *
     * @return  const reference to integer array of length codim
     *          containing the active directions for this boundary case.
+    *
+    * @pre (codim > 0) && (codim <= getDim().getValue())
+    * @pre (loc >= 0) && (loc < getMaxLocationIndex(codim - 1))
     */
    const tbox::Array<int>&
    getDirections(
       int loc,
       int codim) const
    {
-      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
-      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < getMaxLocationIndex(codim - 1)));
       int iloc = loc / (1 << codim);
       return d_table[codim - 1][iloc];
    }
@@ -109,6 +112,13 @@ public:
       return d_max_li;
    }
 
+   int
+   getMaxLocationIndex(
+      int i) const
+   {
+      return d_max_li[i];
+   }
+
    /*!
     * @brief Determines if given boundary information indicates a
     * a lower boundary region.
@@ -125,6 +135,10 @@ public:
     * @return bool true if the boundary type of codimension codim indexed
     * by loc is a lower boundary in the specified direction;
     * return false if the boundary is an upper boundary.
+    *
+    * @pre (codim > 0) && (codim <= getDim().getValue()))
+    * @pre (loc >= 0) && (loc < getMaxLocationIndex(codim - 1))
+    * @pre (dir_index >= 0) && (dir_index < codim)
     */
    bool
    isLower(
@@ -132,8 +146,8 @@ public:
       int codim,
       int dir_index) const
    {
-      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
-      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < getMaxLocationIndex(codim - 1)));
       TBOX_ASSERT((dir_index >= 0) && (dir_index < codim));
       return !isUpper(loc, codim, dir_index);
    }
@@ -154,6 +168,10 @@ public:
     * @return bool true if the boundary type of codimension codim indexed
     * by loc is an upper boundary in the specified direction;
     * return false if the boundary is a lower boundary.
+    *
+    * @pre (codim > 0) && (codim <= getDim().getValue())
+    * @pre (loc >= 0) && (loc < getMaxLocationIndex(codim - 1))
+    * @pre (dir_index >= 0) && (dir_index < codim)
     */
    bool
    isUpper(
@@ -161,8 +179,8 @@ public:
       int codim,
       int dir_index) const
    {
-      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
-      TBOX_ASSERT((loc >= 0) && (loc < d_max_li[codim - 1]));
+      TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
+      TBOX_ASSERT((loc >= 0) && (loc < getMaxLocationIndex(codim - 1)));
       TBOX_ASSERT((dir_index >= 0) && (dir_index < codim));
       return (loc % (1 << codim)) & (1 << (dir_index));
    }
@@ -184,13 +202,21 @@ public:
     *
     * @param codim  codimension
     * @return       Array of IntVectors, one element for each valid location
+    *
+    * @pre (codim > 0) && (codim <= getDim().getValue())
     */
    const tbox::Array<IntVector>&
    getBoundaryDirections(
       int codim) const
    {
-      TBOX_ASSERT((codim > 0) && (codim <= d_dim.getValue()));
+      TBOX_ASSERT((codim > 0) && (codim <= getDim().getValue()));
       return d_bdry_dirs[codim - 1];
+   }
+
+   const tbox::Dimension&
+   getDim() const
+   {
+      return d_dim;
    }
 
 protected:
@@ -220,18 +246,23 @@ protected:
 
 private:
    /*!
-    * @brief Build table by recursively computing the entries in the
+    * @brief Build static table by recursively computing the entries in the
     * lookup table for a given codimension.
     *
-    * TODO:  Document the parameters.
+    * @param table      Array to hold data for the table
+    * @param work       Storage where values are computed for the table
+    * @param rec_level  Level of recursion
+    * @param ptr        Pointer to pass the table array recursively
+    * @param codim      Codimension being worked on
+    * @param ibeg       Beginning of iteration over dimensions
     */
    void
    buildTable(int* table,
-              int codim,
-              int ibeg,
-              int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-              int& lvl,
-              int * & ptr);
+              int(&work)[SAMRAI::MAX_DIM_VAL],
+              int& rec_level,
+              int * & ptr,
+              const int codim,
+              const int ibeg);
 
    /*!
     * @brief Build table of direction IntVectors
@@ -256,8 +287,7 @@ private:
     * @brief Static data members used to control access to and destruction of
     * singleton variable database instance.
     */
-   static BoundaryLookupTable* s_lookup_table_instance[tbox::Dimension::
-                                                       MAXIMUM_DIMENSION_VALUE];
+   static BoundaryLookupTable* s_lookup_table_instance[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Dimension of the object
@@ -280,7 +310,7 @@ private:
     * @brief Data member used to store the lookup table.
     */
    tbox::Array<tbox::Array<int> >
-   d_table[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      d_table[SAMRAI::MAX_DIM_VAL];
 
    /*!
     * @brief Array to hold information about possible directions for each

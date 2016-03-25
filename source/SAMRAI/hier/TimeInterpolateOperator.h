@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/Variable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -45,7 +45,7 @@ namespace hier {
  * subclass must implement the interpolation operation in the timeInterpolate()
  * function.  Then, the new operator must be added to the operator list
  * for the appropriate transfer geometry object using the
- * Geometry<DIM>::addTimeInterpolateOperator() function.
+ * BaseGridGeometry::addTimeInterpolateOperator() function.
  *
  * Although time interpolation operators usually depend only on patch data
  * centering and data type and not the mesh coordinate system, they are

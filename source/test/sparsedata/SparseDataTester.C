@@ -244,10 +244,10 @@ SparseDataTester::testDatabaseInterface()
    _fillObject(sample);
    boost::shared_ptr<tbox::Database> input_db(
       new tbox::InputDatabase("input_db"));
-   sample->putUnregisteredToDatabase(input_db);
+   sample->putToRestart(input_db);
 
    boost::shared_ptr<SparseDataType> sample2(_createEmptySparseData());
-   sample2->getFromDatabase(input_db);
+   sample2->getFromRestart(input_db);
 
    SparseDataType::iterator iter1(sample.get());
    SparseDataType::iterator iter2(sample2.get());

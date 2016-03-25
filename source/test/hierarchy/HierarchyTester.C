@@ -41,10 +41,8 @@ HierarchyTester::HierarchyTester(
    d_dim(dim),
    d_ratio(dim, 0)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(hier_test_db);
-#endif
 
    d_object_name = object_name;
 
@@ -108,9 +106,8 @@ HierarchyTester::~HierarchyTester()
 void HierarchyTester::setupInitialHierarchy(
    boost::shared_ptr<Database> main_input_db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
+
    boost::shared_ptr<CartesianGridGeometry> grid_geometry(
       new CartesianGridGeometry(
          d_dim,
@@ -134,7 +131,6 @@ void HierarchyTester::setupInitialHierarchy(
 
    boost::shared_ptr<StandardTagAndInitialize> dummy_error_detector(
       new StandardTagAndInitialize(
-         d_dim,
          "StandardTagAndInitialize",
          this,
          main_input_db->getDatabase("StandardTagAndInitialize")));
@@ -152,9 +148,10 @@ void HierarchyTester::setupInitialHierarchy(
 
    for (int ln = 0; d_initial_patch_hierarchy->levelCanBeRefined(ln); ln++) {
       d_gridding_algorithm->makeFinerLevel(
-         0.0,                                      // dummy time
-         true,                                     // indicates initial time
-         0);                                       // dummy tag buffer
+         0,                                        // dummy tag buffer
+         true,                                     // indicates initial cycle
+         0,                                        // dummy cycle
+         0.0);                                     // dummy time
 
    }
 
@@ -172,16 +169,14 @@ int HierarchyTester::runHierarchyTestAndVerify()
       d_test_patch_hierarchy =
          d_initial_patch_hierarchy->makeRefinedPatchHierarchy(
             "FinePatchHierarchy",
-            d_ratio,
-            false);
+            d_ratio);
    }
 
    if (d_do_coarsen_test) {
       d_test_patch_hierarchy =
          d_initial_patch_hierarchy->makeCoarsenedPatchHierarchy(
             "CoarsePatchHierarchy",
-            d_ratio,
-            false);
+            d_ratio);
    }
 
    /*
@@ -397,55 +392,55 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
       for (hier::PatchLevel::iterator ip(test_level->begin());
            ip != test_level->end(); ++ip) {
-         const BoxId& mapped_box_id = ip->getBox().getId();
+         const BoxId& box_id = ip->getBox().getBoxId();
          // Test #9:
          if (d_do_refine_test) {
-            if (!Box::refine(init_level->getBoxForPatch(mapped_box_id),
-                   d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(mapped_box_id))) {
+            if (!Box::refine(init_level->getBoxForPatch(box_id),
+                   d_ratio).isSpatiallyEqual(test_level->getBoxForPatch(box_id))) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
-                          << " refined patch box with array index " << mapped_box_id
+                          << " refined patch box with array index " << box_id
                           << " is not a proper refinement of initial domain "
                           << "box with same index" << std::endl;
             }
          }
 
          if (d_do_coarsen_test) {
-            if (!Box::coarsen(init_level->getBoxForPatch(mapped_box_id), d_ratio).isSpatiallyEqual(
-                   test_level->getBoxForPatch(mapped_box_id))) {
+            if (!Box::coarsen(init_level->getBoxForPatch(box_id), d_ratio).isSpatiallyEqual(
+                   test_level->getBoxForPatch(box_id))) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
-                          << " coarsened patch box with array index " << mapped_box_id
+                          << " coarsened patch box with array index " << box_id
                           << " is not a proper coarsening of initial domain "
                           << "box with same index" << std::endl;
             }
          }
 
          // Test #10:
-         if (!init_connector.neighborhoodEqual(mapped_box_id, test_connector)) {
+         if (!init_connector.neighborhoodEqual(box_id, test_connector)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10: for level number " << ln
                        << " initial and test level have different number of "
-                       << "domain neighbors for patch number " << mapped_box_id << std::endl;
+                       << "domain neighbors for patch number " << box_id << std::endl;
          }
 
          // Test #11:
-         if (init_level->getMappingForPatch(mapped_box_id) !=
-             test_level->getMappingForPatch(mapped_box_id)) {
+         if (init_level->getMappingForPatch(box_id) !=
+             test_level->getMappingForPatch(box_id)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #11: for level number " << ln
                        << " initial and test level have different processor "
-                       << "mapping for patch number " << mapped_box_id << std::endl;
+                       << "mapping for patch number " << box_id << std::endl;
          }
 
          // Test #12:
-         if (init_level->patchTouchesRegularBoundary(mapped_box_id) !=
-             test_level->patchTouchesRegularBoundary(mapped_box_id)) {
+         if (init_level->patchTouchesRegularBoundary(box_id) !=
+             test_level->patchTouchesRegularBoundary(box_id)) {
             fail_count++;
             tbox::perr << "FAILED: - Test #12: for level number " << ln
                        << " initial and test level do not match for "
                        << "patchTouchesRegularBoundary() "
-                       << "for patch number " << mapped_box_id << std::endl;
+                       << "for patch number " << box_id << std::endl;
          }
       }
 
@@ -456,11 +451,11 @@ int HierarchyTester::runHierarchyTestAndVerify()
        */
       for (PatchLevel::iterator tip(test_level->begin());
            tip != test_level->end(); ++tip) {
-         const BoxId& mapped_box_id = tip->getBox().getId();
+         const BoxId& box_id = tip->getBox().getBoxId();
          boost::shared_ptr<Patch> test_patch(
-            test_level->getPatch(mapped_box_id));
+            test_level->getPatch(box_id));
          boost::shared_ptr<Patch> init_patch(
-            init_level->getPatch(mapped_box_id));
+            init_level->getPatch(box_id));
 
          // Test #13:
          if (d_do_refine_test) {
@@ -468,7 +463,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
                    test_patch->getBox())) {
                fail_count++;
                tbox::perr << "FAILED: - Test #13: for level number " << ln
-                          << " box for test level patch " << mapped_box_id
+                          << " box for test level patch " << box_id
                           << " is not a proper refinement of box "
                           << "for initial level patch with same number"
                           << std::endl;
@@ -479,7 +474,7 @@ int HierarchyTester::runHierarchyTestAndVerify()
                    test_patch->getBox())) {
                fail_count++;
                tbox::perr << "FAILED: - Test #13: for level number " << ln
-                          << " box for test level patch " << mapped_box_id
+                          << " box for test level patch " << box_id
                           << " is not a proper coarsening of box "
                           << "for initial level patch with same number"
                           << std::endl;

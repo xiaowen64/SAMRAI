@@ -36,14 +36,14 @@ extern "C" {
 #endif
 
 // in cartcoarsen1d.f:
-void F77_FUNC(cartwgtavgoutsidedoub1d, CARTWGTAVGOUTSIDEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgoutsidedoub1d, CARTWGTAVGOUTSIDEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen2d.f:
-void F77_FUNC(cartwgtavgoutsidedoub2d0, CARTWGTAVGOUTSIDEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgoutsidedoub2d0, CARTWGTAVGOUTSIDEDOUB2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -53,7 +53,7 @@ void F77_FUNC(cartwgtavgoutsidedoub2d0, CARTWGTAVGOUTSIDEDOUB2D0) (const int&,
    const int *, const double *, const double *,
    const double *, double *);
 
-void F77_FUNC(cartwgtavgoutsidedoub2d1, CARTWGTAVGOUTSIDEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgoutsidedoub2d1, CARTWGTAVGOUTSIDEDOUB2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -63,7 +63,7 @@ void F77_FUNC(cartwgtavgoutsidedoub2d1, CARTWGTAVGOUTSIDEDOUB2D1) (const int&,
    const int *, const double *, const double *,
    const double *, double *);
 // in cartcoarsen3d.f:
-void F77_FUNC(cartwgtavgoutsidedoub3d0, CARTWGTAVGOUTSIDEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgoutsidedoub3d0, CARTWGTAVGOUTSIDEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -72,7 +72,7 @@ void F77_FUNC(cartwgtavgoutsidedoub3d0, CARTWGTAVGOUTSIDEDOUB3D0) (const int&,
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void F77_FUNC(cartwgtavgoutsidedoub3d1, CARTWGTAVGOUTSIDEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgoutsidedoub3d1, CARTWGTAVGOUTSIDEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -81,7 +81,7 @@ void F77_FUNC(cartwgtavgoutsidedoub3d1, CARTWGTAVGOUTSIDEDOUB3D1) (const int&,
    const int&, const int&, const int&,
    const int *, const double *, const double *,
    const double *, double *);
-void F77_FUNC(cartwgtavgoutsidedoub3d2, CARTWGTAVGOUTSIDEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(cartwgtavgoutsidedoub3d2, CARTWGTAVGOUTSIDEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -98,9 +98,8 @@ namespace geom {
 // using namespace std;
 
 CartesianOutersideDoubleWeightedAverage::
-CartesianOutersideDoubleWeightedAverage(
-   const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "CONSERVATIVE_COARSEN")
+CartesianOutersideDoubleWeightedAverage():
+   hier::CoarsenOperator("CONSERVATIVE_COARSEN")
 {
 }
 
@@ -116,9 +115,9 @@ CartesianOutersideDoubleWeightedAverage::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianOutersideDoubleWeightedAverage::getStencilWidth() const
+CartesianOutersideDoubleWeightedAverage::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -130,16 +129,16 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
+   const tbox::Dimension& dim(fine.getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    boost::shared_ptr<pdat::OutersideData<double> > fdata(
       fine.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::OutersideData<double> > cdata(
       coarse.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -152,10 +151,13 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(fgeom);
+   TBOX_ASSERT(cgeom);
 
    const hier::Index ifirstc = coarse_box.lower();
    const hier::Index ilastc = coarse_box.upper();
@@ -164,7 +166,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
       // loop over lower and upper outerside arrays
       for (int i = 0; i < 2; i++) {
          if ((dim == tbox::Dimension(1))) {
-            F77_FUNC(cartwgtavgoutsidedoub1d,
+            SAMRAI_F77_FUNC(cartwgtavgoutsidedoub1d,
                CARTWGTAVGOUTSIDEDOUB1D) (ifirstc(0), ilastc(0),
                filo(0), fihi(0),
                cilo(0), cihi(0),
@@ -174,7 +176,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
          } else if ((dim == tbox::Dimension(2))) {
-            F77_FUNC(cartwgtavgoutsidedoub2d0,
+            SAMRAI_F77_FUNC(cartwgtavgoutsidedoub2d0,
                CARTWGTAVGOUTSIDEDOUB2D0) (ifirstc(0), ifirstc(1), ilastc(0),
                ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
@@ -184,7 +186,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
                cgeom->getDx(),
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
-            F77_FUNC(cartwgtavgoutsidedoub2d1,
+            SAMRAI_F77_FUNC(cartwgtavgoutsidedoub2d1,
                CARTWGTAVGOUTSIDEDOUB2D1) (ifirstc(0), ifirstc(1), ilastc(0),
                ilastc(1),
                filo(0), filo(1), fihi(0), fihi(1),
@@ -195,7 +197,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
                fdata->getPointer(1, i, d),
                cdata->getPointer(1, i, d));
          } else if ((dim == tbox::Dimension(3))) {
-            F77_FUNC(cartwgtavgoutsidedoub3d0,
+            SAMRAI_F77_FUNC(cartwgtavgoutsidedoub3d0,
                CARTWGTAVGOUTSIDEDOUB3D0) (ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),
@@ -207,7 +209,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
                cgeom->getDx(),
                fdata->getPointer(0, i, d),
                cdata->getPointer(0, i, d));
-            F77_FUNC(cartwgtavgoutsidedoub3d1,
+            SAMRAI_F77_FUNC(cartwgtavgoutsidedoub3d1,
                CARTWGTAVGOUTSIDEDOUB3D1) (ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),
@@ -219,7 +221,7 @@ CartesianOutersideDoubleWeightedAverage::coarsen(
                cgeom->getDx(),
                fdata->getPointer(1, i, d),
                cdata->getPointer(1, i, d));
-            F77_FUNC(cartwgtavgoutsidedoub3d2,
+            SAMRAI_F77_FUNC(cartwgtavgoutsidedoub3d2,
                CARTWGTAVGOUTSIDEDOUB3D2) (ifirstc(0), ifirstc(1), ifirstc(2),
                ilastc(0), ilastc(1), ilastc(2),
                filo(0), filo(1), filo(2),

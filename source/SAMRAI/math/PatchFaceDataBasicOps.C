@@ -32,31 +32,6 @@ PatchFaceDataBasicOps<TYPE>::~PatchFaceDataBasicOps()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchFaceDataBasicOps<TYPE>::PatchFaceDataBasicOps(
-   const PatchFaceDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchFaceDataBasicOps<TYPE>::operator = (
-   const PatchFaceDataBasicOps<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General basic templated opertions for face data.
  *
  *************************************************************************
@@ -71,7 +46,7 @@ PatchFaceDataBasicOps<TYPE>::scale(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -92,7 +67,7 @@ PatchFaceDataBasicOps<TYPE>::addScalar(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -113,7 +88,7 @@ PatchFaceDataBasicOps<TYPE>::add(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -134,7 +109,7 @@ PatchFaceDataBasicOps<TYPE>::subtract(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -155,7 +130,7 @@ PatchFaceDataBasicOps<TYPE>::multiply(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -176,7 +151,7 @@ PatchFaceDataBasicOps<TYPE>::divide(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -196,7 +171,7 @@ PatchFaceDataBasicOps<TYPE>::reciprocal(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -219,7 +194,7 @@ PatchFaceDataBasicOps<TYPE>::linearSum(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -242,7 +217,7 @@ PatchFaceDataBasicOps<TYPE>::axpy(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -265,7 +240,7 @@ PatchFaceDataBasicOps<TYPE>::axmy(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src1 && src2);
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst, *src1, *src2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst, *src1, *src2, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -287,7 +262,7 @@ PatchFaceDataBasicOps<TYPE>::setRandomValues(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -305,7 +280,7 @@ PatchFaceDataBasicOps<TYPE>::min(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -325,7 +300,7 @@ PatchFaceDataBasicOps<TYPE>::max(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 

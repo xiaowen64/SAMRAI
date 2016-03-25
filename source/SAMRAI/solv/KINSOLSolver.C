@@ -26,68 +26,46 @@ KINSOLSolver::KINSOLSolver(
    const std::string& object_name,
    KINSOLAbstractFunctions* my_functions,
    const int uses_preconditioner,
-   const int uses_jac_times_vector)
+   const int uses_jac_times_vector) :
+  d_object_name(object_name),
+  d_solution_vector(0),
+  d_KINSOL_functions(my_functions),
+  d_uses_preconditioner(uses_preconditioner),
+  d_uses_jac_times_vector(uses_jac_times_vector),
+  d_kin_mem(0),
+  d_kinsol_log_file(0),
+  d_kinsol_log_file_name("kinsol.log"),
+  d_soln_scale(0),
+  d_my_soln_scale_vector(false),
+  d_fval_scale(0),
+  d_my_fval_scale_vector(false),
+  d_constraints(0),
+  d_KINSOL_needs_initialization(true),
+  d_krylov_dimension(KINSPILS_MAXL),
+  d_max_restarts(0),
+  d_max_solves_no_set(MSBSET_DEFAULT),
+  d_max_iter(MXITER_DEFAULT),
+  d_max_newton_step(-1.0),
+  d_global_strategy(KIN_NONE),
+  d_residual_tol(-1.0),
+  d_step_tol(-1.0),
+  d_maxsub(MSBSET_SUB_DEFAULT),
+  d_no_initial_setup(0),
+  d_no_residual_monitoring(0),
+  d_omega_min(0.00001),
+  d_omega_max(0.9),
+  d_omega(0.0),
+  d_no_min_eps(0),
+  d_max_beta_fails(MXNBCF_DEFAULT),
+  d_eta_choice(KIN_ETACONSTANT),
+  d_eta_constant(0.1),
+  d_eta_gamma(0.9),
+  d_eta_alpha(2.0),
+  d_relative_function_error(-1.0),
+  d_print_level(0)
 {
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(!(my_functions == (KINSOLAbstractFunctions *)NULL));
-
-   d_object_name = object_name;
-   d_KINSOL_functions = my_functions;
-   d_uses_preconditioner = uses_preconditioner;
-   d_uses_jac_times_vector = uses_jac_times_vector;
-
-   d_KINSOL_needs_initialization = true;
-
-   /*
-    * Default parameters to safe values or to KINSOL defaults.
-    */
-
-   d_kin_mem = NULL;
-   d_kinsol_log_file = NULL;
-   d_solution_vector = NULL;
-   d_constraints = NULL;
-   d_soln_scale = NULL;
-   d_fval_scale = NULL;
-
-   d_my_soln_scale_vector = false;
-   d_my_fval_scale_vector = false;
-
-   d_krylov_dimension = KINSPILS_MAXL;
-
-   d_max_restarts = 0;
-   d_max_solves_no_set = MSBSET_DEFAULT;
-
-   d_no_min_eps = 0;
-
-   d_max_beta_fails = MXNBCF_DEFAULT;
-
-   d_no_initial_setup = 0;
-   d_no_residual_monitoring = 0;
-
-   d_global_strategy = KIN_NONE;
-   d_residual_tol = -1;
-   d_step_tol = -1;
-
-   d_eta_choice = KIN_ETACONSTANT;
-   d_eta_constant = 0.1;
-
-   d_eta_gamma = 0.9;
-   d_eta_alpha = 2.0;
-
-   d_omega_min = 0.00001;
-   d_omega_max = 0.9;
-
-   d_omega = 0.0;
-
-   d_max_iter = MXITER_DEFAULT;
-   d_max_newton_step = -1.0;
-
-   d_maxsub = MSBSET_SUB_DEFAULT;
-
-   d_relative_function_error = -1;
-
-   d_print_level = 0;
-
+   TBOX_ASSERT(my_functions != 0);
 }
 
 void
@@ -95,21 +73,21 @@ KINSOLSolver::freeInternalVectors() {
 
    if (d_my_soln_scale_vector && d_my_fval_scale_vector && d_soln_scale) {
       d_soln_scale->freeVector();
-      d_soln_scale = NULL;
-      d_fval_scale = NULL;
+      d_soln_scale = 0;
+      d_fval_scale = 0;
       d_my_soln_scale_vector = false;
       d_my_fval_scale_vector = false;
    }
 
    if (d_my_soln_scale_vector && d_soln_scale) {
       d_soln_scale->freeVector();
-      d_soln_scale = NULL;
+      d_soln_scale = 0;
       d_my_soln_scale_vector = false;
    }
 
    if (d_my_fval_scale_vector && d_fval_scale) {
       d_fval_scale->freeVector();
-      d_fval_scale = NULL;
+      d_fval_scale = 0;
       d_my_fval_scale_vector = false;
    }
 }
@@ -142,7 +120,7 @@ KINSOLSolver::initialize(
    SundialsAbstractVector* uscale,
    SundialsAbstractVector* fscale)
 {
-   TBOX_ASSERT(!(solution == (SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(solution != 0);
 
    d_solution_vector = solution;
 
@@ -177,7 +155,7 @@ KINSOLSolver::initialize(
 void
 KINSOLSolver::initializeKINSOL()
 {
-   TBOX_ASSERT(!(d_solution_vector == (SundialsAbstractVector *)NULL));
+   TBOX_ASSERT(d_solution_vector != 0);
 
    if (d_KINSOL_needs_initialization) {
 
@@ -191,22 +169,22 @@ KINSOLSolver::initializeKINSOL()
        * KINSOL function pointers.
        */
 
-      KINSpilsPrecSetupFn precond_set = NULL;
-      KINSpilsPrecSolveFn precond_solve = NULL;
-      KINSpilsJacTimesVecFn jac_times_vec = NULL;
+      KINSpilsPrecSetupFn precond_set = 0;
+      KINSpilsPrecSolveFn precond_solve = 0;
+      KINSpilsJacTimesVecFn jac_times_vec = 0;
 
       if (d_uses_preconditioner) {
          precond_set = KINSOLSolver::KINSOLPrecondSet;
          precond_solve = KINSOLSolver::KINSOLPrecondSolve;
       } else {
-         precond_set = NULL;
-         precond_solve = NULL;
+         precond_set = 0;
+         precond_solve = 0;
       }
 
       if (d_uses_jac_times_vector) {
          jac_times_vec = KINSOLSolver::KINSOLJacobianTimesVector;
       } else {
-         jac_times_vec = NULL;
+         jac_times_vec = 0;
       }
 
       if (d_kin_mem) KINFree(&d_kin_mem);
@@ -272,7 +250,7 @@ KINSOLSolver::initializeKINSOL()
       }
 
       ierr = KINSetConstraints(d_kin_mem,
-            (d_constraints != NULL) ? d_constraints->getNVector() : NULL);
+            (d_constraints != 0) ? d_constraints->getNVector() : 0);
       KINSOL_SAMRAI_ERROR(ierr);
 
       // Keep default unless user specifies one.
@@ -290,7 +268,7 @@ KINSOLSolver::initializeKINSOL()
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSetConstraints(d_kin_mem,
-            d_constraints == NULL ? NULL : d_constraints->getNVector());
+            d_constraints == 0 ? 0 : d_constraints->getNVector());
       KINSOL_SAMRAI_ERROR(ierr);
 
       ierr = KINSetNumMaxIters(d_kin_mem, d_max_iter);
@@ -385,13 +363,10 @@ KINSOLSolver::setLogFileData(
    if (!(log_fname == d_kinsol_log_file_name)) {
       if (!log_fname.empty()) {
          d_kinsol_log_file_name = log_fname;
-      } else {
-         d_kinsol_log_file_name = "kinsol.log";
       }
-      d_KINSOL_needs_initialization = true;
    }
-
    d_print_level = flag;
+   d_KINSOL_needs_initialization = true;
 }
 
 /*

@@ -52,10 +52,13 @@ using namespace std;
 #ifdef HAVE_SUNDIALS
 #include "SAMRAI/solv/KINSOL_SAMRAIContext.h"
 #endif
+#ifdef HAVE_HYPRE
+#include "SAMRAI/solv/CellPoissonHypreSolver.h"
+#endif
 #include "ModifiedBratuProblem.h"
 #include "SAMRAI/solv/NonlinearSolverStrategy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -288,21 +291,74 @@ int main(
             grid_geometry,
             input_db->getDatabase("PatchHierarchy")));
 
-      ModifiedBratuProblem* bratu_model = new ModifiedBratuProblem(
-            "ModifiedBratuProblem",
-            dim,
-            input_db->getDatabase("ModifiedBratuProblem"),
-            grid_geometry, visit_data_writer);
+      std::string mod_bratu_prob_name = "ModifiedBratuProblem";
+      std::string fac_solver_name = mod_bratu_prob_name + ":FAC_solver";
+      std::string fac_ops_name = fac_solver_name + "::fac_ops";
+      std::string fac_precond_name = fac_solver_name + "::fac_precond";
+      std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
 
-      solv::NonlinearSolverStrategy* nonlinear_solver = NULL;
+#ifdef HAVE_HYPRE
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+         new solv::CellPoissonHypreSolver(
+            dim,
+            hypre_poisson_name,
+            input_db->isDatabase("hypre_solver") ?
+            input_db->getDatabase("hypre_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            hypre_poisson,
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#else
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#endif
+
+      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+         new solv::FACPreconditioner(
+            fac_precond_name,
+            fac_ops,
+            input_db->isDatabase("fac_precond") ?
+            input_db->getDatabase("fac_precond") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver(
+         new solv::CellPoissonFACSolver(
+            dim,
+            fac_solver_name,
+            fac_precond,
+            fac_ops,
+            input_db->isDatabase("fac_solver") ?
+            input_db->getDatabase("fac_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      ModifiedBratuProblem* bratu_model = new ModifiedBratuProblem(
+            mod_bratu_prob_name,
+            dim,
+            fac_solver,
+            input_db->getDatabase("ModifiedBratuProblem"),
+            grid_geometry,
+            visit_data_writer);
+
+      solv::NonlinearSolverStrategy* nonlinear_solver = 0;
 
       if (nonlinear_solver_package == "PETSc-SNES") {
 
 #ifdef HAVE_PETSC
          nonlinear_solver =
             new solv::SNES_SAMRAIContext("SNESSolver",
-               input_db->getDatabase("SNESSolver"),
-               bratu_model);
+               bratu_model,
+               input_db->getDatabase("SNESSolver"));
 #else
          TBOX_ERROR("Cannot use PETSc-SNES option because SAMRAI was\n"
             << "not configured to use it.");
@@ -313,8 +369,8 @@ int main(
 #ifdef HAVE_SUNDIALS
          nonlinear_solver =
             new solv::KINSOL_SAMRAIContext("KINSOLSolver",
-               input_db->getDatabase("KINSOLSolver"),
-               bratu_model);
+               bratu_model,
+               input_db->getDatabase("KINSOLSolver"));
 #else
          TBOX_ERROR("Cannot use KINSOL option because SAMRAI was\n"
             << "not configured to use it.");
@@ -336,11 +392,9 @@ int main(
 
       boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             bratu_model,
-            input_db->
-            getDatabase("StandardTagAndInitialize")));
+            input_db->getDatabase("StandardTagAndInitialize")));
 
       boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(dim));
@@ -417,7 +471,7 @@ int main(
 
       if (tbox::RestartManager::getManager()->isFromRestart()) {
 
-         patch_hierarchy->getFromRestart();
+         patch_hierarchy->initializeHierarchy();
 
          gridding_algorithm->getTagAndInitializeStrategy()->
          resetHierarchyConfiguration(patch_hierarchy,
@@ -429,13 +483,14 @@ int main(
          gridding_algorithm->makeCoarsestLevel(sim_time);
 
          bool done = false;
-         bool initial_time = true;
+         bool initial_cycle = true;
          for (int lnum = 0;
               patch_hierarchy->levelCanBeRefined(lnum) && !done; lnum++) {
             gridding_algorithm->makeFinerLevel(
-               sim_time,
-               initial_time,
-               tag_buffer[lnum]);
+               tag_buffer[lnum],
+               initial_cycle,
+               imp_integrator->getIntegratorStep(),
+               sim_time);
             done = !(patch_hierarchy->finerLevelExists(lnum));
          }
 
@@ -521,8 +576,9 @@ int main(
             if ((regrid_interval > 0)
                 && ((iteration_num % regrid_interval) == 0)) {
                gridding_algorithm->regridAllFinerLevels(0,
-                  sim_time,
-                  tag_buffer);
+                  tag_buffer,
+                  iteration_num,
+                  sim_time);
 #if defined(HAVE_PETSC) || defined(HAVE_SUNDIALS)
                bratu_model->setVectorWeights(patch_hierarchy);
 #endif

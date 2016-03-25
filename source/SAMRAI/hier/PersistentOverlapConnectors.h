@@ -36,28 +36,41 @@ class BoxLevel;
  * and copied into the collection.  Connectors can also be
  * automatically computed using a non-scalable global search.
  *
- * If the input database contains a PersistentOverlapConnectors database,
- * the following inputs are recognized:
+ * <b> Input Parameters </b>
  *
- * <b>bool check_created_connectors:</b> When true, checks Connectors when
- * they are created.  The check is an non-scalable operation and is
- * meant for debugging.
+ * <b> Definitions: </b>
+ *    - \b always_create_missing_connector
+ *       When true, override findConnector() to behave like
+ *       findOrCreateConnector().  This essentially ensures that any Connectors
+ *       sought are always found.
  *
- * <b>bool check_accessed_connectors:</b> When true, check Connectors when
- * they are accessed.  The check is an non-scalable operation and is
- * meant for debugging.
- *
- * <b>bool always_create_missing_connector:</b> When true, override
- * findConnector() to behave like findOrCreateConnector().  This
- * essentially ensures that any Connectors sought are always found.
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>always_create_missing_connector</td>
+ *     <td>bool</td>
+ *     <td>TRUE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
  * @note
- * Creating Connectors this way (setting always_create_missing_connector
- * to true) is non-scalable. Nevertheless, the default is true, so that
- * application writers need not to worry about creating Connectors in
- * a scalable way.  For performance, this should be set to false.  To
- * selectively enable automatic Connector generation, set this to false and
- * use findOrCreateConnector() instead of findConnector() where one is
+ * Setting always_create_missing_connector to true is non-scalable.
+ * Nevertheless, the default is true, so that application writers
+ * need not worry about creating Connectors in a scalable way.  For
+ * performance, this should be set to false.  To selectively enable
+ * automatic Connector generation, set this to false and use
+ * findOrCreateConnector() instead of findConnector() where one is
  * unsure if the Connector has been created.
  *
  * @see findConnector()
@@ -87,6 +100,9 @@ public:
     * @param[in] connector_width
     *
     * @return A const reference to the newly created overlap Connector.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    createConnector(
@@ -106,6 +122,9 @@ public:
     * @param[in] head
     * @param[in] connector_width
     * @param[in] relationships
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    createConnector(
@@ -121,6 +140,8 @@ public:
     *
     * @param[in] head
     * @param[in] connector
+    *
+    * @pre myBoxLevel().isInitialized()
     */
    void
    cacheConnector(
@@ -152,6 +173,9 @@ public:
     *      match the requested width exactly.
     *
     * @return The Connector which matches the search criterion.
+    *
+    * @pre myBoxLevel().isInitialized()
+    * @pre head.isInitialized()
     */
    const Connector&
    findConnector(
@@ -216,6 +240,12 @@ public:
    void
    clear();
 
+   const BoxLevel&
+   myBoxLevel()
+   {
+      return d_my_box_level;
+   }
+
 private:
    //@{ @name Methods meant only for BoxLevel to use.
 
@@ -223,11 +253,17 @@ private:
     * @brief Constructor, to be called from the BoxLevel
     * allocating the object.
     *
-    * @param my_mapped_box_level The BoxLevel served by this
+    * @param my_box_level The BoxLevel served by this
     * object.
     */
    explicit PersistentOverlapConnectors(
-      const BoxLevel& my_mapped_box_level);
+      const BoxLevel& my_box_level);
+
+   /*
+    * Read from the input database.
+    */
+   void
+   getFromInput();
 
    //@}
 
@@ -254,7 +290,7 @@ private:
    /*!
     * @brief Reference to the BoxLevel served by this object.
     */
-   const BoxLevel& d_my_mapped_box_level;
+   const BoxLevel& d_my_box_level;
 
    /*!
     * @brief Whether to check overlap Connectors when they are created.

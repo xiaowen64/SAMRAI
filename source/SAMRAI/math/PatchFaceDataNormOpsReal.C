@@ -32,31 +32,6 @@ PatchFaceDataNormOpsReal<TYPE>::~PatchFaceDataNormOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchFaceDataNormOpsReal<TYPE>::PatchFaceDataNormOpsReal(
-   const PatchFaceDataNormOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchFaceDataNormOpsReal<TYPE>::operator = (
-   const PatchFaceDataNormOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * Compute the number of data entries on a patch in the given box.
  *
  *************************************************************************
@@ -69,7 +44,7 @@ PatchFaceDataNormOpsReal<TYPE>::numberOfEntries(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -119,7 +94,7 @@ PatchFaceDataNormOpsReal<TYPE>::abs(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -139,7 +114,7 @@ PatchFaceDataNormOpsReal<TYPE>::L1Norm(
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -150,7 +125,7 @@ PatchFaceDataNormOpsReal<TYPE>::L1Norm(
          retval += d_array_ops.L1Norm(data->getArrayData(d), face_box);
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
@@ -170,7 +145,7 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -182,7 +157,7 @@ PatchFaceDataNormOpsReal<TYPE>::L2Norm(
          retval += aval * aval;
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);
@@ -205,7 +180,7 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
    const boost::shared_ptr<pdat::FaceData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    int dimVal = data->getDim().getValue();
 
@@ -219,7 +194,7 @@ PatchFaceDataNormOpsReal<TYPE>::weightedL2Norm(
          retval += aval * aval;
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          const hier::Box face_box = pdat::FaceGeometry::toFaceBox(box, d);

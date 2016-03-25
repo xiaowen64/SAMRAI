@@ -20,14 +20,14 @@
 #include "SAMRAI/xfer/CoarsenClasses.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace xfer {
 
 /*!
- * @brief Concrete subclass of CoarsenTransactionFactory base class that allocates
- * CoarsenCopyTransaction objects for a CoarsenSchedule object.
+ * @brief Concrete subclass of CoarsenTransactionFactory base class that
+ * allocates CoarsenCopyTransaction objects for a CoarsenSchedule object.
  *
  * @see xfer::CoarsenCopyTransaction
  */
@@ -46,7 +46,8 @@ public:
    virtual ~StandardCoarsenTransactionFactory();
 
    /*!
-    * @brief Set the array of CoarsenClass::Data items used by the transactions.
+    * @brief Set the array of CoarsenClass::Data items used by the
+    * transactions.
     */
    virtual void
    setCoarsenItems(
@@ -54,7 +55,8 @@ public:
       int num_coarsen_items);
 
    /*!
-    * @brief Clear the array of CoarsenClass::Data items used by the transactions.
+    * @brief Clear the array of CoarsenClass::Data items used by the
+    * transactions.
     */
    virtual void
    unsetCoarsenItems();
@@ -64,19 +66,24 @@ public:
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between patches.
-    * @param dst_mapped_box Destination Box in destination patch level.
-    * @param src_mapped_box Source Box in source patch level.
+    * @param overlap        boost::shared_ptr to overlap region between
+    *                       patches.
+    * @param dst_box        Destination Box in destination patch level.
+    * @param src_box        Source Box in source patch level.
     * @param citem_id       Integer index of CoarsenClass::Data item associated
     *                       with transaction.
+    *
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_box.getDim()) &&
+    *      (dst_level->getDim() == src_box.getDim())
     */
    virtual boost::shared_ptr<tbox::Transaction>
    allocate(
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       int citem_id) const;
 
 private:

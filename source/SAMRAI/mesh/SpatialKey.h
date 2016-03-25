@@ -155,7 +155,7 @@ public:
     * Set this key from the index space coordinates and the level number.
     *
     * The values of i, j, and k default to 0 to handle cases
-    * where the number of dimensions in the problem is not 3.
+    * where the dimensions of the problem is not 3.
     * The default value of level_num is also 0.
     */
    void

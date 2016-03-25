@@ -14,26 +14,32 @@ SUBDIR        = source/test/applications/ConvDiff
 VPATH         = @srcdir@
 TESTTOOLS     = ../../testtools
 OBJECT        = ../../../..
+TESTINCLUDE   = $(SAMRAI)/source/test/testlib
+TESTLIBDIR    = $(OBJECT)/source/test/testlib
+TESTLIB       = $(TESTLIBDIR)/libSAMRAI_test$(LIB_SUFFIX)
 
 default: check	
 
 include $(OBJECT)/config/Makefile.config
 
-AUTOTEST      = $(SAMRAI)/source/test/applications
-CPPFLAGS_EXTRA= -I$(AUTOTEST) -DTESTING=1
+CPPFLAGS_EXTRA = -I$(TESTINCLUDE) -DTESTING=1
 
 NUM_TESTS = 2
 
 TEST_NPROCS = @TEST_NPROCS@
 
-CXX_OBJS      = main.o ConvDiff.o MainRestartData.o AutoTester.o
+CXX_OBJS      = main.o ConvDiff.o MainRestartData.o
 F77_OBJS      = compute_rhs2d.o init2d.o rkstep2d.o tag_cells2d.o \
 		compute_rhs3d.o init3d.o rkstep3d.o tag_cells3d.o
 
 
 main:	$(CXX_OBJS) $(F77_OBJS) $(LIBSAMRAIDEPEND)
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS)	\
+	$(MAKE) testlib
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) $(CXX_OBJS) $(F77_OBJS) $(TESTLIB) \
 	$(LIBSAMRAI3D) $(LIBSAMRAI) $(LDLIBS) -o main
+
+testlib:
+	(cd $(TESTLIBDIR) && $(MAKE) library) || exit 1
 
 check:
 	$(MAKE) check2d

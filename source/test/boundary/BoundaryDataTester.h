@@ -26,7 +26,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Array.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace std;
@@ -68,8 +68,8 @@ public:
     * They are not needed for this example since we only have one level
     * in the hierarchy.
     */
-   hier::IntVector getRefineOpStencilWidth() const {
-      return hier::IntVector(d_dim, 0);
+   hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const {
+      return hier::IntVector(dim, 0);
    }
 
    void preprocessRefine(
@@ -145,6 +145,14 @@ public:
    void
    printClassData(
       ostream& os) const;
+
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
+   }
 
 private:
    /*

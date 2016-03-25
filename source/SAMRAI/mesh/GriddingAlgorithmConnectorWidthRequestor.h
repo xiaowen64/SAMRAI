@@ -80,6 +80,14 @@ private:
     *
     * @param[in] max_ghost_width_at_coarse The maximum ghost cell
     * width to be used on the coarse level.
+    *
+    * @pre (dim == coarse_to_fine_width.getDim()) &&
+    *      (dim == coarse_to_coarse_width.getDim()) &&
+    *      (dim == fine_to_fine_width.getDim()) &&
+    *      (dim == fine_to_coarse_ratio.getDim()) &&
+    *      (dim == nesting_buffer_at_fine.getDim()) &&
+    *      (dim == max_stencil_width_at_coarse.getDim()) &&
+    *      (dim == max_ghost_width_at_coarse.getDim())
     */
    void
    computeCoarserLevelConnectorWidthsFromFines(

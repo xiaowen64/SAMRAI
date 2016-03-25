@@ -42,19 +42,19 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/PatchLevelFullFillPattern.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace solv {
 
 boost::shared_ptr<pdat::CellVariable<double> >
-CellPoissonFACOps::s_cell_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonFACOps::s_cell_scratch_var[SAMRAI::MAX_DIM_VAL];
 
 boost::shared_ptr<pdat::SideVariable<double> >
-CellPoissonFACOps::s_flux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonFACOps::s_flux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
 boost::shared_ptr<pdat::OutersideVariable<double> >
-CellPoissonFACOps::s_oflux_scratch_var[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+CellPoissonFACOps::s_oflux_scratch_var[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 CellPoissonFACOps::s_finalize_handler(
@@ -70,7 +70,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
+void SAMRAI_F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
    double* xflux,
    double* yflux,
    const int* fluxgi,
@@ -87,7 +87,7 @@ void F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
+void SAMRAI_F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
    double* xflux,
    double* yflux,
    const int* fluxgi,
@@ -101,7 +101,7 @@ void F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -126,7 +126,7 @@ void F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -148,7 +148,7 @@ void F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -171,7 +171,7 @@ void F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -191,7 +191,7 @@ void F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
+void SAMRAI_F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -213,7 +213,7 @@ void F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
+void SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -233,7 +233,7 @@ void F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
    const int* jfirst,
    const int* jlast,
    const double* dx);
-void F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
+void SAMRAI_F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -254,7 +254,7 @@ void F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
    const int* blower,
    const int* bupper,
    const double* dx);
-void F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
+void SAMRAI_F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
    const double* xflux,
    const double* yflux,
    const int* fluxgi,
@@ -273,7 +273,7 @@ void F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
    const int* bupper,
    const double* dx);
 
-void F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
+void SAMRAI_F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
    double* xflux,
    double* yflux,
    double* zflux,
@@ -297,7 +297,7 @@ void F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
+void SAMRAI_F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
    double* xflux,
    double* yflux,
    double* zflux,
@@ -316,7 +316,7 @@ void F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -350,7 +350,7 @@ void F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -379,7 +379,7 @@ void F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -410,7 +410,7 @@ void F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
+void SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -436,7 +436,7 @@ void F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
    const double* dx,
    const int* offset,
    const double* maxres);
-void F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
+void SAMRAI_F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -466,7 +466,7 @@ void F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
+void SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -493,7 +493,7 @@ void F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
    const int* kfirst,
    const int* klast,
    const double* dx);
-void F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
+void SAMRAI_F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -521,7 +521,7 @@ void F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
    const int* blower,
    const int* bupper,
    const double* dx);
-void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
+void SAMRAI_F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
    const double* xflux,
    const double* yflux,
    const double* zflux,
@@ -552,38 +552,26 @@ void F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
  * Constructor.
  ********************************************************************
  */
+#ifdef HAVE_HYPRE
 CellPoissonFACOps::CellPoissonFACOps(
+   const boost::shared_ptr<CellPoissonHypreSolver>& hypre_solver,
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& database):
+   const boost::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_ln_min(-1),
    d_ln_max(-1),
    d_poisson_spec(object_name + "::Poisson specs"),
-   d_smoothing_choice("redblack"),
-   d_coarse_solver_choice(
-#ifdef HAVE_HYPRE
-      "hypre"
-#else
-      "redblack"
-#endif
-
-      ),
+   d_coarse_solver_choice("hypre"),
    d_cf_discretization("Ewing"),
    d_prolongation_method("CONSTANT_REFINE"),
-   d_coarse_solver_tolerance(1.e-8),
-   d_coarse_solver_max_iterations(10),
+   d_coarse_solver_tolerance(1.e-10),
+   d_coarse_solver_max_iterations(20),
    d_residual_tolerance_during_smoothing(-1.0),
    d_flux_id(-1),
-#ifdef HAVE_HYPRE
-   d_hypre_solver(dim,
-                  object_name + "::hypre_solver",
-                  database && database->isDatabase("hypre_solver") ?
-                  database->getDatabase("hypre_solver") :
-                  boost::shared_ptr<tbox::Database>()),
-#endif
-   d_physical_bc_coef(NULL),
+   d_hypre_solver(hypre_solver),
+   d_physical_bc_coef(0),
    d_context(hier::VariableDatabase::getDatabase()->getContext(
              object_name + "::PRIVATE_CONTEXT")),
    d_cell_scratch_id(-1),
@@ -591,9 +579,52 @@ CellPoissonFACOps::CellPoissonFACOps(
    d_oflux_scratch_id(-1),
    d_bc_helper(dim,
                d_object_name + "::bc helper"),
-   d_enable_logging(false),
-   d_preconditioner(NULL)
+   d_enable_logging(false)
 {
+   buildObject(input_db);
+}
+#else
+CellPoissonFACOps::CellPoissonFACOps(
+   const tbox::Dimension& dim,
+   const std::string& object_name,
+   const boost::shared_ptr<tbox::Database>& input_db):
+   d_dim(dim),
+   d_object_name(object_name),
+   d_ln_min(-1),
+   d_ln_max(-1),
+   d_poisson_spec(object_name + "::Poisson specs"),
+   d_coarse_solver_choice("redblack"),
+   d_cf_discretization("Ewing"),
+   d_prolongation_method("CONSTANT_REFINE"),
+   d_coarse_solver_tolerance(1.e-8),
+   d_coarse_solver_max_iterations(500),
+   d_residual_tolerance_during_smoothing(-1.0),
+   d_flux_id(-1),
+   d_physical_bc_coef(0),
+   d_context(hier::VariableDatabase::getDatabase()->getContext(
+             object_name + "::PRIVATE_CONTEXT")),
+   d_cell_scratch_id(-1),
+   d_flux_scratch_id(-1),
+   d_oflux_scratch_id(-1),
+   d_bc_helper(dim,
+               d_object_name + "::bc helper"),
+   d_enable_logging(false)
+{
+   buildObject(input_db);
+}
+#endif
+
+CellPoissonFACOps::~CellPoissonFACOps()
+{
+}
+
+void
+CellPoissonFACOps::buildObject(
+   const boost::shared_ptr<tbox::Database>& input_db)
+{
+   if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
+      TBOX_ERROR("CellPoissonFACOps : DIM == 1 or > 3 not implemented yet.\n");
+   }
 
    t_restrict_solution = tbox::TimerManager::getManager()->
       getTimer("solv::CellPoissonFACOps::restrictSolution()");
@@ -610,83 +641,102 @@ CellPoissonFACOps::CellPoissonFACOps(
    t_compute_residual_norm = tbox::TimerManager::getManager()->
       getTimer("solv::CellPoissonFACOps::computeResidualNorm()");
 
-   if (d_dim == tbox::Dimension(1) || d_dim > tbox::Dimension(3)) {
-      TBOX_ERROR("CellPoissonFACOps : DIM == 1 or > 3 not implemented yet.\n");
-   }
-
-   if (!s_cell_scratch_var[dim.getValue() - 1]) {
-      TBOX_ASSERT(!s_cell_scratch_var[dim.getValue() - 1]);
-      TBOX_ASSERT(!s_cell_scratch_var[dim.getValue() - 1]);
+   if (!s_cell_scratch_var[d_dim.getValue() - 1]) {
+      TBOX_ASSERT(!s_cell_scratch_var[d_dim.getValue() - 1]);
 
       std::ostringstream ss;
-      ss << "CellPoissonFACOps::private_cell_scratch" << dim.getValue();
-      s_cell_scratch_var[dim.getValue() - 1].reset(
-         new pdat::CellVariable<double>(dim, ss.str()));
+      ss << "CellPoissonFACOps::private_cell_scratch" << d_dim.getValue();
+      s_cell_scratch_var[d_dim.getValue() - 1].reset(
+         new pdat::CellVariable<double>(d_dim, ss.str()));
       ss.str("");
-      ss << "CellPoissonFACOps::private_flux_scratch" << dim.getValue();
-      s_flux_scratch_var[dim.getValue() - 1].reset(
-         new pdat::SideVariable<double>(dim, ss.str()));
+      ss << "CellPoissonFACOps::private_flux_scratch" << d_dim.getValue();
+      s_flux_scratch_var[d_dim.getValue() - 1].reset(
+         new pdat::SideVariable<double>(d_dim, ss.str(),
+            hier::IntVector::getOne(d_dim)));
       ss.str("");
-      ss << "CellPoissonFACOps::private_oflux_scratch" << dim.getValue();
-      s_oflux_scratch_var[dim.getValue() - 1].reset(
-         new pdat::OutersideVariable<double>(dim, ss.str()));
+      ss << "CellPoissonFACOps::private_oflux_scratch" << d_dim.getValue();
+      s_oflux_scratch_var[d_dim.getValue() - 1].reset(
+         new pdat::OutersideVariable<double>(d_dim, ss.str()));
    }
-
-   hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
-   d_cell_scratch_id = vdb->
-      registerVariableAndContext(s_cell_scratch_var[dim.getValue() - 1],
-         d_context,
-         hier::IntVector::getOne(dim));
-   d_flux_scratch_id = vdb->
-      registerVariableAndContext(s_flux_scratch_var[dim.getValue() - 1],
-         d_context,
-         hier::IntVector::getZero(d_dim));
-   d_oflux_scratch_id = vdb->
-      registerVariableAndContext(s_oflux_scratch_var[dim.getValue() - 1],
-         d_context,
-         hier::IntVector::getZero(d_dim));
 
    /*
     * Some variables initialized by default are overriden by input.
     */
-   if (database) {
+   getFromInput(input_db);
 
-      d_coarse_solver_choice =
-         database->getStringWithDefault("coarse_solver_choice",
-            d_coarse_solver_choice);
-      d_coarse_solver_tolerance =
-         database->getDoubleWithDefault("coarse_solver_tolerance",
-            d_coarse_solver_tolerance);
-      d_coarse_solver_max_iterations =
-         database->getIntegerWithDefault("coarse_solver_max_iterations",
-            d_coarse_solver_max_iterations);
-      d_smoothing_choice =
-         database->getStringWithDefault("smoothing_choice",
-            d_smoothing_choice);
-
-      d_cf_discretization =
-         database->getStringWithDefault("cf_discretization",
-            d_cf_discretization);
-
-      d_prolongation_method =
-         database->getStringWithDefault("prolongation_method",
-            d_prolongation_method);
-
-      d_enable_logging =
-         database->getBoolWithDefault("enable_logging",
-            d_enable_logging);
-
-   }
+   hier::VariableDatabase* vdb = hier::VariableDatabase::getDatabase();
+   d_cell_scratch_id = vdb->
+      registerVariableAndContext(s_cell_scratch_var[d_dim.getValue() - 1],
+         d_context,
+         hier::IntVector::getOne(d_dim));
+   d_flux_scratch_id = vdb->
+      registerVariableAndContext(s_flux_scratch_var[d_dim.getValue() - 1],
+         d_context,
+         hier::IntVector::getZero(d_dim));
+   d_oflux_scratch_id = vdb->
+      registerVariableAndContext(s_oflux_scratch_var[d_dim.getValue() - 1],
+         d_context,
+         hier::IntVector::getZero(d_dim));
 
    /*
     * Check input validity and correctness.
     */
    checkInputPatchDataIndices();
-
 }
 
-CellPoissonFACOps::~CellPoissonFACOps()
+/*
+ ************************************************************************
+ * Read input parameters from database.
+ ************************************************************************
+ */
+void
+CellPoissonFACOps::getFromInput(
+   const boost::shared_ptr<tbox::Database>& input_db)
 {
+   if (input_db) {
+      d_coarse_solver_choice =
+         input_db->getStringWithDefault("coarse_solver_choice",
+            d_coarse_solver_choice);
+      if (!(d_coarse_solver_choice == "hypre" ||
+            d_coarse_solver_choice == "redblack" ||
+            d_coarse_solver_choice == "jacobi")) {
+         INPUT_VALUE_ERROR("coarse_solver_choice");
+      }
+
+      d_coarse_solver_tolerance =
+         input_db->getDoubleWithDefault("coarse_solver_tolerance",
+            d_coarse_solver_tolerance);
+      if (!(d_coarse_solver_tolerance > 0)) {
+         INPUT_RANGE_ERROR("coarse_solver_tolerance");
+      }
+
+      d_coarse_solver_max_iterations =
+         input_db->getIntegerWithDefault("coarse_solver_max_iterations",
+            d_coarse_solver_max_iterations);
+      if (!(d_coarse_solver_max_iterations >= 1)) {
+         INPUT_RANGE_ERROR("coarse_solver_max_iterations");
+      }
+
+      d_cf_discretization =
+         input_db->getStringWithDefault("cf_discretization", "Ewing");
+      if (!(d_cf_discretization == "Ewing" ||
+            d_cf_discretization == "CONSTANT_REFINE" ||
+            d_cf_discretization == "LINEAR_REFINE" ||
+            d_cf_discretization == "CONSERVATIVE_LINEAR_REFINE")) {
+         INPUT_VALUE_ERROR("cf_discretization");
+      }
+
+      d_prolongation_method =
+         input_db->getStringWithDefault("prolongation_method",
+            "CONSTANT_REFINE");
+      if (!(d_prolongation_method == "CONSTANT_REFINE" ||
+            d_prolongation_method == "LINEAR_REFINE" ||
+            d_prolongation_method == "CONSERVATIVE_LINEAR_REFINE")) {
+         INPUT_VALUE_ERROR("prolongation_method");
+      }
+
+      d_enable_logging = input_db->getBoolWithDefault("enable_logging", false);
+   }
 }
 
 /*
@@ -719,7 +769,7 @@ CellPoissonFACOps::initializeOperatorState(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 
-   if (d_physical_bc_coef == NULL) {
+   if (d_physical_bc_coef == 0) {
       /*
        * It's an error not to have bc object set.
        * Note that the bc object cannot be passed in through
@@ -760,11 +810,8 @@ CellPoissonFACOps::initializeOperatorState(
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_var(
          var,
-         boost::detail::dynamic_cast_tag());
-      if (!cell_var) {
-         TBOX_ERROR(d_object_name
-            << ": RHS variable is not cell-centered double\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_var);
    }
    {
       vdb->mapIndexToVariable(solution.getComponentDescriptorIndex(0),
@@ -775,11 +822,8 @@ CellPoissonFACOps::initializeOperatorState(
       }
       boost::shared_ptr<pdat::CellVariable<double> > cell_var(
          var,
-         boost::detail::dynamic_cast_tag());
-      if (!cell_var) {
-         TBOX_ERROR(d_object_name
-            << ": Solution variable is not cell-centered double\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(cell_var);
    }
    for (ln = d_ln_min; ln <= d_ln_max; ++ln) {
       boost::shared_ptr<hier::PatchLevel> level_ptr(
@@ -796,11 +840,8 @@ CellPoissonFACOps::initializeOperatorState(
              */
             boost::shared_ptr<pdat::CellData<double> > cd(
                fd,
-               boost::detail::dynamic_cast_tag());
-            if (!cd) {
-               TBOX_ERROR(d_object_name
-                  << ": RHS data is not cell-centered double\n");
-            }
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(cd);
             if (cd->getDepth() > 1) {
                TBOX_WARNING(d_object_name
                   << ": RHS data has multiple depths.\n"
@@ -808,19 +849,15 @@ CellPoissonFACOps::initializeOperatorState(
             }
          }
          boost::shared_ptr<hier::PatchData> ud(
-            patch.getPatchData(solution.getComponentDescriptorIndex(0)),
-            boost::detail::dynamic_cast_tag());
+            patch.getPatchData(solution.getComponentDescriptorIndex(0)));
          if (ud) {
             /*
              * Some data checks can only be done if the data already exists.
              */
             boost::shared_ptr<pdat::CellData<double> > cd(
                ud,
-               boost::detail::dynamic_cast_tag());
-            if (!cd) {
-               TBOX_ERROR(d_object_name
-                  << ": Solution data is not cell-centered double\n");
-            }
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(cd);
             if (cd->getDepth() > 1) {
                TBOX_WARNING(d_object_name
                   << ": Solution data has multiple depths.\n"
@@ -861,14 +898,14 @@ CellPoissonFACOps::initializeOperatorState(
    }
 #ifdef HAVE_HYPRE
    if (d_coarse_solver_choice == "hypre") {
-      d_hypre_solver.initializeSolverState(d_hierarchy, d_ln_min);
+      d_hypre_solver->initializeSolverState(d_hierarchy, d_ln_min);
       /*
        * Share the boundary condition object with the hypre solver
        * to make sure that boundary condition settings are consistent
        * between the two objects.
        */
-      d_hypre_solver.setPhysicalBcCoefObject(d_physical_bc_coef);
-      d_hypre_solver.setMatrixCoefficients(d_poisson_spec);
+      d_hypre_solver->setPhysicalBcCoefObject(d_physical_bc_coef);
+      d_hypre_solver->setMatrixCoefficients(d_poisson_spec);
    }
 #endif
 
@@ -884,7 +921,8 @@ CellPoissonFACOps::initializeOperatorState(
     */
    boost::shared_ptr<geom::CartesianGridGeometry> geometry(
       d_hierarchy->getGridGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(geometry);
    boost::shared_ptr<hier::Variable> variable;
 
    vdb->mapIndexToVariable(d_cell_scratch_id, variable);
@@ -917,27 +955,27 @@ CellPoissonFACOps::initializeOperatorState(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (!d_prolongation_refine_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find prolongation refine operator");
+         << ": Cannot find prolongation refine operator" << std::endl);
    }
    if (!d_urestriction_coarsen_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find restriction coarsening operator");
+         << ": Cannot find restriction coarsening operator" << std::endl);
    }
    if (!d_rrestriction_coarsen_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find restriction coarsening operator");
+         << ": Cannot find restriction coarsening operator" << std::endl);
    }
    if (!d_flux_coarsen_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find flux coarsening operator");
+         << ": Cannot find flux coarsening operator" << std::endl);
    }
    if (!d_ghostfill_refine_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find ghost filling refinement operator");
+         << ": Cannot find ghost filling refinement operator" << std::endl);
    }
    if (!d_ghostfill_nocoarse_refine_operator) {
       TBOX_ERROR(d_object_name
-         << ": Cannot find ghost filling refinement operator");
+         << ": Cannot find ghost filling refinement operator" << std::endl);
    }
 #endif
 
@@ -959,7 +997,7 @@ CellPoissonFACOps::initializeOperatorState(
    d_flux_coarsen_schedules.resizeArray(d_ln_max + 1);
 
    d_prolongation_refine_algorithm.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_urestriction_coarsen_algorithm.reset(
       new xfer::CoarsenAlgorithm(d_dim));
    d_rrestriction_coarsen_algorithm.reset(
@@ -967,9 +1005,9 @@ CellPoissonFACOps::initializeOperatorState(
    d_flux_coarsen_algorithm.reset(
       new xfer::CoarsenAlgorithm(d_dim));
    d_ghostfill_refine_algorithm.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
    d_ghostfill_nocoarse_refine_algorithm.reset(
-      new xfer::RefineAlgorithm(d_dim));
+      new xfer::RefineAlgorithm());
 
    d_prolongation_refine_algorithm->registerRefine(
       d_cell_scratch_id,
@@ -1091,7 +1129,7 @@ CellPoissonFACOps::deallocateOperatorState()
       }
       d_cf_boundary.resizeArray(0);
 #ifdef HAVE_HYPRE
-      d_hypre_solver.deallocateSolverState();
+      d_hypre_solver->deallocateSolverState();
 #endif
       d_hierarchy.reset();
       d_ln_min = -1;
@@ -1229,7 +1267,7 @@ CellPoissonFACOps::prolongErrorAndCorrect(
    if (s.getPatchHierarchy() != d_hierarchy
        || d.getPatchHierarchy() != d_hierarchy) {
       TBOX_ERROR(d_object_name << ": Vector hierarchy does not match\n"
-         "internal state hierarchy.");
+         "internal state hierarchy." << std::endl);
    }
 #endif
 
@@ -1286,17 +1324,11 @@ CellPoissonFACOps::smoothError(
    t_smooth_error->start();
 
    checkInputPatchDataIndices();
-   if (d_smoothing_choice == "redblack") {
-      smoothErrorByRedBlack(data,
-         residual,
-         ln,
-         num_sweeps,
-         d_residual_tolerance_during_smoothing);
-   } else {
-      TBOX_ERROR(d_object_name << ": Bad smoothing choice '"
-                               << d_smoothing_choice
-                               << "' in CellPoissonFACOps.");
-   }
+   smoothErrorByRedBlack(data,
+      residual,
+      ln,
+      num_sweeps,
+      d_residual_tolerance_during_smoothing);
 
    t_smooth_error->stop();
 }
@@ -1323,7 +1355,7 @@ CellPoissonFACOps::smoothErrorByRedBlack(
    if (data.getPatchHierarchy() != d_hierarchy
        || residual.getPatchHierarchy() != d_hierarchy) {
       TBOX_ERROR(d_object_name << ": Vector hierarchy does not match\n"
-         "internal hierarchy.");
+         "internal hierarchy." << std::endl);
    }
 #endif
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
@@ -1384,13 +1416,17 @@ CellPoissonFACOps::smoothErrorByRedBlack(
 
          boost::shared_ptr<pdat::CellData<double> > err_data(
             data.getComponentPatchData(0, *patch),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > residual_data(
             residual.getComponentPatchData(0, *patch),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::SideData<double> > flux_data(
             patch->getPatchData(flux_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(err_data);
+         TBOX_ASSERT(residual_data);
+         TBOX_ASSERT(flux_data);
 
          computeFluxOnPatch(
             *patch,
@@ -1432,13 +1468,17 @@ CellPoissonFACOps::smoothErrorByRedBlack(
 
          boost::shared_ptr<pdat::CellData<double> > err_data(
             data.getComponentPatchData(0, *patch),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > residual_data(
             residual.getComponentPatchData(0, *patch),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::SideData<double> > flux_data(
             patch->getPatchData(flux_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(err_data);
+         TBOX_ASSERT(residual_data);
+         TBOX_ASSERT(flux_data);
 
          computeFluxOnPatch(
             *patch,
@@ -1492,14 +1532,15 @@ CellPoissonFACOps::ewingFixFlux(
    pdat::SideData<double>& flux_data,
    const hier::IntVector& ratio_to_coarser) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, patch, soln_data, flux_data,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, soln_data, flux_data,
       ratio_to_coarser);
 
    const int patch_ln = patch.getPatchLevelNumber();
    const hier::GlobalId id = patch.getGlobalId();
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
    const hier::Box& patch_box(patch.getBox());
    const hier::Index& plower = patch_box.lower();
@@ -1513,7 +1554,9 @@ CellPoissonFACOps::ewingFixFlux(
 
       boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
          patch.getPatchData(d_poisson_spec.getDPatchDataId()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(diffcoef_data);
 
       for (bn = 0; bn < nboxes; ++bn) {
          const hier::BoundaryBox& boundary_box = bboxes[bn];
@@ -1525,7 +1568,7 @@ CellPoissonFACOps::ewingFixFlux(
          const hier::Index& bupper = bdry_box.upper();
          const int location_index = boundary_box.getLocationIndex();
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
+            SAMRAI_F77_FUNC(ewingfixfluxvardc2d, EWINGFIXFLUXVARDC2D) (
                flux_data.getPointer(0), flux_data.getPointer(1),
                &flux_data.getGhostCellWidth()[0],
                &flux_data.getGhostCellWidth()[1],
@@ -1541,7 +1584,7 @@ CellPoissonFACOps::ewingFixFlux(
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
+            SAMRAI_F77_FUNC(ewingfixfluxvardc3d, EWINGFIXFLUXVARDC3D) (
                flux_data.getPointer(0),
                flux_data.getPointer(1),
                flux_data.getPointer(2),
@@ -1584,7 +1627,7 @@ CellPoissonFACOps::ewingFixFlux(
          const hier::Index& bupper = bdry_box.upper();
          const int location_index = boundary_box.getLocationIndex();
          if (d_dim == tbox::Dimension(2)) {
-            F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
+            SAMRAI_F77_FUNC(ewingfixfluxcondc2d, EWINGFIXFLUXCONDC2D) (
                flux_data.getPointer(0), flux_data.getPointer(1),
                &flux_data.getGhostCellWidth()[0],
                &flux_data.getGhostCellWidth()[1],
@@ -1599,7 +1642,7 @@ CellPoissonFACOps::ewingFixFlux(
                &blower[0], &bupper[0],
                dx);
          } else if (d_dim == tbox::Dimension(3)) {
-            F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
+            SAMRAI_F77_FUNC(ewingfixfluxcondc3d, EWINGFIXFLUXCONDC3D) (
                flux_data.getPointer(0),
                flux_data.getPointer(1),
                flux_data.getPointer(2),
@@ -1661,7 +1704,8 @@ CellPoissonFACOps::solveCoarsestLevel(
       TBOX_ERROR(d_object_name << ": Coarse level solver choice '"
                                << d_coarse_solver_choice
                                << "' unavailable in "
-                               << "scapCellPoissonOps::solveCoarsestLevel.");
+                               << "scapCellPoissonOps::solveCoarsestLevel."
+                               << std::endl);
 #else
       return_value = solveCoarsestLevel_HYPRE(data, residual, coarsest_ln);
 #endif
@@ -1669,7 +1713,8 @@ CellPoissonFACOps::solveCoarsestLevel(
       TBOX_ERROR(
          d_object_name << ": Bad coarse level solver choice '"
                        << d_coarse_solver_choice
-                       << "' in scapCellPoissonOps::solveCoarsestLevel.");
+                       << "' in scapCellPoissonOps::solveCoarsestLevel."
+                       << std::endl);
    }
 
    xeqScheduleGhostFillNoCoarse(data.getComponentDescriptorIndex(0),
@@ -1700,17 +1745,18 @@ CellPoissonFACOps::solveCoarsestLevel_HYPRE(
    TBOX_ERROR(d_object_name << ": Coarse level solver choice '"
                             << d_coarse_solver_choice
                             << "' unavailable in "
-                            << "CellPoissonFACOps::solveCoarsestLevel_HYPRE.");
+                            << "CellPoissonFACOps::solveCoarsestLevel_HYPRE."
+                            << std::endl);
 
    return 0;
 
 #else
 
    checkInputPatchDataIndices();
-   d_hypre_solver.setStoppingCriteria(d_coarse_solver_max_iterations,
+   d_hypre_solver->setStoppingCriteria(d_coarse_solver_max_iterations,
       d_coarse_solver_tolerance);
    const int solver_ret =
-      d_hypre_solver.solveSystem(
+      d_hypre_solver->solveSystem(
          data.getComponentDescriptorIndex(0),
          residual.getComponentDescriptorIndex(0),
          true);
@@ -1721,8 +1767,8 @@ CellPoissonFACOps::solveCoarsestLevel_HYPRE(
    if (d_enable_logging) tbox::plog
       << d_object_name << " Hypre solve " << (solver_ret ? "" : "NOT ")
       << "converged\n"
-      << "\titerations: " << d_hypre_solver.getNumberOfIterations() << "\n"
-      << "\tresidual: " << d_hypre_solver.getRelativeResidualNorm() << "\n";
+      << "\titerations: " << d_hypre_solver->getNumberOfIterations() << "\n"
+      << "\tresidual: " << d_hypre_solver->getRelativeResidualNorm() << "\n";
 
    return !solver_ret;
 
@@ -1754,7 +1800,7 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
        || solution.getPatchHierarchy() != d_hierarchy
        || rhs.getPatchHierarchy() != d_hierarchy) {
       TBOX_ERROR(d_object_name << ": Vector hierarchy does not match\n"
-         "internal hierarchy.");
+         "internal hierarchy." << std::endl);
    }
 #endif
    boost::shared_ptr<hier::PatchLevel> level(d_hierarchy->getPatchLevel(ln));
@@ -1826,10 +1872,14 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
 
       boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::SideData<double> > flux_data(
          patch->getPatchData(flux_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(soln_data);
+      TBOX_ASSERT(flux_data);
+
       computeFluxOnPatch(
          *patch,
          level->getRatioToCoarserLevel(),
@@ -1854,16 +1904,22 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
       const boost::shared_ptr<hier::Patch>& patch = *pi;
       boost::shared_ptr<pdat::CellData<double> > soln_data(
          solution.getComponentPatchData(0, *patch),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > rhs_data(
          rhs.getComponentPatchData(0, *patch),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > residual_data(
          residual.getComponentPatchData(0, *patch),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::SideData<double> > flux_data(
          patch->getPatchData(flux_id),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(soln_data);
+      TBOX_ASSERT(rhs_data);
+      TBOX_ASSERT(residual_data);
+      TBOX_ASSERT(flux_data);
+
       computeResidualOnPatch(*patch,
          *flux_data,
          *soln_data,
@@ -1880,7 +1936,7 @@ CellPoissonFACOps::computeCompositeResidualOnLevel(
           */
          boost::shared_ptr<pdat::OutersideData<double> > oflux_data(
             patch->getPatchData(d_oflux_scratch_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(oflux_data);
 
@@ -1949,13 +2005,14 @@ CellPoissonFACOps::computeVectorWeights(
    int finest_ln) const
 {
    TBOX_ASSERT(hierarchy);
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, *hierarchy);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *hierarchy);
 
    if (coarsest_ln == -1) coarsest_ln = 0;
    if (finest_ln == -1) finest_ln = hierarchy->getFinestLevelNumber();
    if (finest_ln < coarsest_ln) {
       TBOX_ERROR(d_object_name
-         << ": Illegal level number range.  finest_ln < coarsest_ln.");
+         << ": Illegal level number range.  finest_ln < coarsest_ln."
+         << std::endl);
    }
 
    int ln;
@@ -1971,7 +2028,10 @@ CellPoissonFACOps::computeVectorWeights(
          const boost::shared_ptr<hier::Patch>& patch = *p;
          boost::shared_ptr<geom::CartesianPatchGeometry> patch_geometry(
             patch->getPatchGeometry(),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+
+         TBOX_ASSERT(patch_geometry);
+
          const double* dx = patch_geometry->getDx();
          double cell_vol = dx[0];
          if (d_dim > tbox::Dimension(1)) {
@@ -1984,11 +2044,8 @@ CellPoissonFACOps::computeVectorWeights(
 
          boost::shared_ptr<pdat::CellData<double> > w(
             patch->getPatchData(weight_id),
-            boost::detail::dynamic_cast_tag());
-         if (!w) {
-            TBOX_ERROR(d_object_name
-               << ": weight id must refer to a pdat::CellVariable");
-         }
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(w);
          w->fillAll(cell_vol);
       }
 
@@ -2029,7 +2086,8 @@ CellPoissonFACOps::computeVectorWeights(
                if (!intersection.empty()) {
                   boost::shared_ptr<pdat::CellData<double> > w(
                      patch->getPatchData(weight_id),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(w);
                   w->fillAll(0.0, intersection);
 
                }  // assignment only in non-empty intersection
@@ -2059,11 +2117,9 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
       vdb.mapIndexToVariable(d_poisson_spec.getDPatchDataId(), var);
       boost::shared_ptr<pdat::SideVariable<double> > diffcoef_var(
          var,
-         boost::detail::dynamic_cast_tag());
-      if (!diffcoef_var) {
-         TBOX_ERROR(d_object_name
-            << ": Bad diffusion coefficient patch data index.");
-      }
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(diffcoef_var);
    }
 
    if (!d_poisson_spec.cIsConstant() && !d_poisson_spec.cIsZero()) {
@@ -2071,10 +2127,9 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
       vdb.mapIndexToVariable(d_poisson_spec.getCPatchDataId(), var);
       boost::shared_ptr<pdat::CellVariable<double> > scalar_field_var(
          var,
-         boost::detail::dynamic_cast_tag());
-      if (!scalar_field_var) {
-         TBOX_ERROR(d_object_name << ": Bad linear term patch data index.");
-      }
+         BOOST_CAST_TAG);
+
+      TBOX_ASSERT(scalar_field_var);
    }
 
    if (d_flux_id != -1) {
@@ -2082,7 +2137,7 @@ CellPoissonFACOps::checkInputPatchDataIndices() const
       vdb.mapIndexToVariable(d_flux_id, var);
       boost::shared_ptr<pdat::SideVariable<double> > flux_var(
          var,
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
 
       TBOX_ASSERT(flux_var);
    }
@@ -2104,15 +2159,16 @@ CellPoissonFACOps::computeFluxOnPatch(
    const pdat::CellData<double>& w_data,
    pdat::SideData<double>& Dgradw_data) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, patch, ratio_to_coarser_level, w_data,
-      Dgradw_data);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, ratio_to_coarser_level,
+      w_data, Dgradw_data);
    TBOX_ASSERT(patch.inHierarchy());
    TBOX_ASSERT(w_data.getGhostCellWidth() >=
       hier::IntVector::getOne(ratio_to_coarser_level.getDim()));
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
    const int* upper = &box.upper()[0];
@@ -2121,7 +2177,7 @@ CellPoissonFACOps::computeFluxOnPatch(
    if (d_poisson_spec.dIsConstant()) {
       double D_value = d_poisson_spec.getDConstant();
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
+         SAMRAI_F77_FUNC(compfluxcondc2d, COMPFLUXCONDC2D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             &Dgradw_data.getGhostCellWidth()[0],
@@ -2134,7 +2190,7 @@ CellPoissonFACOps::computeFluxOnPatch(
             &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
+         SAMRAI_F77_FUNC(compfluxcondc3d, COMPFLUXCONDC3D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             Dgradw_data.getPointer(2),
@@ -2153,10 +2209,11 @@ CellPoissonFACOps::computeFluxOnPatch(
       }
    } else {
       boost::shared_ptr<pdat::SideData<double> > D_data(
-         boost::dynamic_pointer_cast<pdat::SideData<double>, hier::PatchData>(
+         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getDPatchDataId())));
+      TBOX_ASSERT(D_data);
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
+         SAMRAI_F77_FUNC(compfluxvardc2d, COMPFLUXVARDC2D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             &Dgradw_data.getGhostCellWidth()[0],
@@ -2173,7 +2230,7 @@ CellPoissonFACOps::computeFluxOnPatch(
             dx);
       }
       if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
+         SAMRAI_F77_FUNC(compfluxvardc3d, COMPFLUXVARDC3D) (
             Dgradw_data.getPointer(0),
             Dgradw_data.getPointer(1),
             Dgradw_data.getPointer(2),
@@ -2216,12 +2273,13 @@ CellPoissonFACOps::computeResidualOnPatch(
    const pdat::CellData<double>& rhs_data,
    pdat::CellData<double>& residual_data) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS5(d_dim, patch, flux_data, soln_data, rhs_data,
-      residual_data);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY5(d_dim, patch, flux_data, soln_data,
+      rhs_data, residual_data);
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
    const int* upper = &box.upper()[0];
@@ -2230,10 +2288,11 @@ CellPoissonFACOps::computeResidualOnPatch(
    double scalar_field_constant;
    if (d_poisson_spec.cIsVariable()) {
       boost::shared_ptr<pdat::CellData<double> > scalar_field_data(
-         boost::dynamic_pointer_cast<pdat::CellData<double>, hier::PatchData>(
+         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_poisson_spec.getCPatchDataId())));
+      TBOX_ASSERT(scalar_field_data);
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
+         SAMRAI_F77_FUNC(compresvarsca2d, COMPRESVARSCA2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2253,7 +2312,7 @@ CellPoissonFACOps::computeResidualOnPatch(
             &lower[0], &upper[0], &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
+         SAMRAI_F77_FUNC(compresvarsca3d, COMPRESVARSCA3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2282,7 +2341,7 @@ CellPoissonFACOps::computeResidualOnPatch(
    } else if (d_poisson_spec.cIsConstant()) {
       scalar_field_constant = d_poisson_spec.getCConstant();
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
+         SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2300,7 +2359,7 @@ CellPoissonFACOps::computeResidualOnPatch(
             &lower[0], &upper[0], &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
+         SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2326,7 +2385,7 @@ CellPoissonFACOps::computeResidualOnPatch(
    } else {
       scalar_field_constant = 0.0;
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
+         SAMRAI_F77_FUNC(compresconsca2d, COMPRESCONSCA2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2344,7 +2403,7 @@ CellPoissonFACOps::computeResidualOnPatch(
             &lower[0], &upper[0], &lower[1], &upper[1],
             dx);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
+         SAMRAI_F77_FUNC(compresconsca3d, COMPRESCONSCA3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2379,13 +2438,15 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    char red_or_black,
    double* p_maxres) const
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, patch, flux_data, soln_data, rhs_data);
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(d_dim, patch, flux_data, soln_data,
+      rhs_data);
    TBOX_ASSERT(red_or_black == 'r' || red_or_black == 'b');
 
    const int offset = red_or_black == 'r' ? 0 : 1;
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const hier::Box& box = patch.getBox();
    const int* lower = &box.lower()[0];
    const int* upper = &box.upper()[0];
@@ -2397,25 +2458,26 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
    double diffcoef_constant;
 
    if (d_poisson_spec.cIsVariable()) {
-      scalar_field_data =
-         boost::dynamic_pointer_cast<pdat::CellData<double>,
-                                     hier::PatchData>(patch.getPatchData(d_poisson_spec.getCPatchDataId()));
+      scalar_field_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         patch.getPatchData(d_poisson_spec.getCPatchDataId()));
    } else if (d_poisson_spec.cIsConstant()) {
       scalar_field_constant = d_poisson_spec.getCConstant();
    } else {
       scalar_field_constant = 0.0;
    }
    if (d_poisson_spec.dIsVariable()) {
-      diffcoef_data = boost::dynamic_pointer_cast<pdat::SideData<double>,
-                                                  hier::PatchData>(patch.getPatchData(d_poisson_spec.getDPatchDataId()));
+      diffcoef_data = BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         patch.getPatchData(d_poisson_spec.getDPatchDataId()));
    } else {
       diffcoef_constant = d_poisson_spec.getDConstant();
    }
 
    double maxres = 0.0;
    if (d_poisson_spec.dIsVariable() && d_poisson_spec.cIsVariable()) {
+      TBOX_ASSERT(scalar_field_data);
+      TBOX_ASSERT(diffcoef_data);
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf2d, RBGSWITHFLUXMAXVARDCVARSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2438,7 +2500,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcvarsf3d, RBGSWITHFLUXMAXVARDCVARSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2470,8 +2532,9 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             &offset, &maxres);
       }
    } else if (d_poisson_spec.dIsVariable() && d_poisson_spec.cIsConstant()) {
+      TBOX_ASSERT(diffcoef_data);
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2492,7 +2555,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2521,8 +2584,9 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             &offset, &maxres);
       }
    } else if (d_poisson_spec.dIsVariable() && d_poisson_spec.cIsZero()) {
+      TBOX_ASSERT(diffcoef_data);
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf2d, RBGSWITHFLUXMAXVARDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2543,7 +2607,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxvardcconsf3d, RBGSWITHFLUXMAXVARDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2572,8 +2636,9 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             &offset, &maxres);
       }
    } else if (!d_poisson_spec.dIsVariable() && d_poisson_spec.cIsVariable()) {
+      TBOX_ASSERT(scalar_field_data);
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf2d, RBGSWITHFLUXMAXCONDCVARSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2593,7 +2658,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcvarsf3d, RBGSWITHFLUXMAXCONDCVARSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2621,7 +2686,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (!d_poisson_spec.dIsVariable() && d_poisson_spec.cIsConstant()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2639,7 +2704,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2664,7 +2729,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
       }
    } else if (!d_poisson_spec.dIsVariable() && d_poisson_spec.cIsZero()) {
       if (d_dim == tbox::Dimension(2)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf2d, RBGSWITHFLUXMAXCONDCCONSF2D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             &flux_data.getGhostCellWidth()[0],
@@ -2682,7 +2747,7 @@ CellPoissonFACOps::redOrBlackSmoothingOnPatch(
             dx,
             &offset, &maxres);
       } else if (d_dim == tbox::Dimension(3)) {
-         F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
+         SAMRAI_F77_FUNC(rbgswithfluxmaxcondcconsf3d, RBGSWITHFLUXMAXCONDCCONSF3D) (
             flux_data.getPointer(0),
             flux_data.getPointer(1),
             flux_data.getPointer(2),
@@ -2718,9 +2783,9 @@ CellPoissonFACOps::xeqScheduleProlongation(
    int dest_ln)
 {
    if (!d_prolongation_refine_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
-   xfer::RefineAlgorithm refiner(d_dim);
+   xfer::RefineAlgorithm refiner;
    refiner.registerRefine(dst_id,
       src_id,
       scr_id,
@@ -2738,7 +2803,7 @@ CellPoissonFACOps::xeqScheduleURestriction(
    int dest_ln)
 {
    if (!d_urestriction_coarsen_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
    xfer::CoarsenAlgorithm coarsener(d_dim);
@@ -2758,7 +2823,7 @@ CellPoissonFACOps::xeqScheduleRRestriction(
    int dest_ln)
 {
    if (!d_rrestriction_coarsen_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
    xfer::CoarsenAlgorithm coarsener(d_dim);
@@ -2778,7 +2843,7 @@ CellPoissonFACOps::xeqScheduleFluxCoarsen(
    int dest_ln)
 {
    if (!d_flux_coarsen_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
 
    xfer::CoarsenAlgorithm coarsener(d_dim);
@@ -2797,9 +2862,9 @@ CellPoissonFACOps::xeqScheduleGhostFill(
    int dest_ln)
 {
    if (!d_ghostfill_refine_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
-   xfer::RefineAlgorithm refiner(d_dim);
+   xfer::RefineAlgorithm refiner;
    refiner.
    registerRefine(dst_id,
       dst_id,
@@ -2818,9 +2883,9 @@ CellPoissonFACOps::xeqScheduleGhostFillNoCoarse(
    int dest_ln)
 {
    if (!d_ghostfill_nocoarse_refine_schedules[dest_ln]) {
-      TBOX_ERROR("Expected schedule not found.");
+      TBOX_ERROR("Expected schedule not found." << std::endl);
    }
-   xfer::RefineAlgorithm refiner(d_dim);
+   xfer::RefineAlgorithm refiner;
    refiner.
    registerRefine(dst_id,
       dst_id,
@@ -2836,7 +2901,7 @@ CellPoissonFACOps::xeqScheduleGhostFillNoCoarse(
 void
 CellPoissonFACOps::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_cell_scratch_var[d].reset();
       s_flux_scratch_var[d].reset();
       s_oflux_scratch_var[d].reset();

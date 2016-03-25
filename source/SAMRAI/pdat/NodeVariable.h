@@ -22,12 +22,12 @@ namespace SAMRAI {
 namespace pdat {
 
 /*!
- * Class NodeVariable<DIM> is a templated variable class used to define
+ * Class NodeVariable<TYPE> is a templated variable class used to define
  * node-centered quantities on an AMR mesh.   It is a subclass of
  * hier::Variable and is templated on the type of the underlying data
  * (e.g., double, int, bool, etc.).
  *
- * See header file for NodeData<DIM> class for a more detailed
+ * See header file for NodeData<TYPE> class for a more detailed
  * description of the data layout.
  *
  * @see pdat::NodeData
@@ -86,11 +86,14 @@ public:
 private:
    bool d_fine_boundary_represents_var;
 
+   // Unimplemented copy constructor
    NodeVariable(
-      const NodeVariable<TYPE>&);          // not implemented
+      const NodeVariable<TYPE>&);
+
+   // Unimplemented assignment operator
    void
    operator = (
-      const NodeVariable<TYPE>&);               // not implemented
+      const NodeVariable<TYPE>&);
 };
 
 }

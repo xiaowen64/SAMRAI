@@ -17,7 +17,7 @@
 #include "SAMRAI/pdat/NodeGeometry.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -71,7 +71,7 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
    const bool overwrite_interior,
    const hier::Transformation& transformation) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(dst_patch_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(dst_patch_box, src_mask);
    NULL_USE(overwrite_interior);
 
    hier::BoxContainer dst_boxes;
@@ -87,9 +87,9 @@ SecondLayerNodeNoCornersVariableFillPattern::calculateOverlap(
       computeStencilBoxes(stencil_boxes, dst_patch_box);
 
       const NodeGeometry* t_dst =
-         dynamic_cast<const NodeGeometry *>(&dst_geometry);
+         CPP_CAST<const NodeGeometry *>(&dst_geometry);
       const NodeGeometry* t_src =
-         dynamic_cast<const NodeGeometry *>(&src_geometry);
+         CPP_CAST<const NodeGeometry *>(&src_geometry);
 
       TBOX_ASSERT(t_dst);
       TBOX_ASSERT(t_src);

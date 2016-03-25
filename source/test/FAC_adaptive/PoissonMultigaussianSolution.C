@@ -116,7 +116,7 @@ double PoissonMultigaussianSolution::sourceFcn(
    d_gauss_const_iterator i;
    for (i = d_gauss_begin; i != d_gauss_end; ++i) {
       const GaussianFcn& gauss = *i;
-      double gauss_ctr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double gauss_ctr[SAMRAI::MAX_DIM_VAL];
       gauss.getCenter(gauss_ctr);
       double tval;
       tval = 4 * gauss.getLambda() * ((x - gauss_ctr[0]) * (x - gauss_ctr[0])
@@ -137,7 +137,7 @@ double PoissonMultigaussianSolution::sourceFcn(
    d_gauss_const_iterator i;
    for (i = d_gauss_begin; i != d_gauss_end; ++i) {
       const GaussianFcn& gauss = *i;
-      double gauss_ctr[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      double gauss_ctr[SAMRAI::MAX_DIM_VAL];
       gauss.getCenter(gauss_ctr);
       double tval;
       tval = 4 * gauss.getLambda() * ((x - gauss_ctr[0]) * (x - gauss_ctr[0])
@@ -158,7 +158,8 @@ void PoissonMultigaussianSolution::setGridData(
 {
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
 
    const double* h = patch_geom->getDx();
    const double* xl = patch_geom->getXLower();
@@ -166,7 +167,7 @@ void PoissonMultigaussianSolution::setGridData(
 
    {
       /* Set cell-centered data. */
-      double sl[tbox::Dimension::MAXIMUM_DIMENSION_VALUE]; // Like XLower, except for cell.
+      double sl[SAMRAI::MAX_DIM_VAL]; // Like XLower, except for cell.
       int j;
       for (j = 0; j < d_dim.getValue(); ++j) {
          sl[j] = xl[j] + 0.5 * h[j];
@@ -225,7 +226,8 @@ void PoissonMultigaussianSolution::setBcCoefs(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    /*
     * Set to an inhomogeneous Dirichlet boundary condition.
     */

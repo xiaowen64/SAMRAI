@@ -39,9 +39,9 @@ namespace xfer {
  *************************************************************************
  */
 
-std::string
-CoarsenSchedule::s_schedule_generation_method = "DLBG";
+std::string CoarsenSchedule::s_schedule_generation_method = "DLBG";
 bool CoarsenSchedule::s_extra_debug = false;
+bool CoarsenSchedule::s_read_static_input = false;
 
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_coarsen_data;
 boost::shared_ptr<tbox::Timer> CoarsenSchedule::t_gen_sched_n_squared;
@@ -101,9 +101,11 @@ CoarsenSchedule::CoarsenSchedule(
    CoarsenPatchStrategy* patch_strategy,
    bool fill_coarse_data):
    d_number_coarsen_items(0),
-   d_coarsen_items((const CoarsenClasses::Data **)NULL),
+   d_coarsen_items(0),
    d_crse_level(crse_level),
    d_fine_level(fine_level),
+   d_temp_to_coarse(crse_level->getDim()),
+   d_coarse_to_temp(crse_level->getDim()),
    d_coarsen_patch_strategy(patch_strategy),
    d_transaction_factory(transaction_factory),
    d_ratio_between_levels(crse_level->getDim()),
@@ -112,7 +114,10 @@ CoarsenSchedule::CoarsenSchedule(
    TBOX_ASSERT(crse_level);
    TBOX_ASSERT(fine_level);
    TBOX_ASSERT(coarsen_classes);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*crse_level, *fine_level);
+   TBOX_ASSERT(transaction_factory);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*crse_level, *fine_level);
+
+   getFromInput();
 
    if ( s_extra_debug ) {
       tbox::plog << "CoarsenSchedule::CoarsenSchedule " << this << " entered" << std::endl;
@@ -181,6 +186,28 @@ CoarsenSchedule::CoarsenSchedule(
 CoarsenSchedule::~CoarsenSchedule()
 {
    clearCoarsenItems();
+}
+
+/*
+ * ***********************************************************************
+ *
+ * Read static member data from input database once.
+ *
+ * ***********************************************************************
+ */
+void
+CoarsenSchedule::getFromInput()
+{
+   if (!s_read_static_input) {
+      s_read_static_input = true;
+      boost::shared_ptr<tbox::Database> idb(
+         tbox::InputManager::getInputDatabase());
+      if (idb && idb->isDatabase("CoarsenSchedule")) {
+         boost::shared_ptr<tbox::Database> csdb(
+            idb->getDatabase("CoarsenSchedule"));
+         s_extra_debug = csdb->getBoolWithDefault("DEV_extra_debug", false);
+      }
+   }
 }
 
 /*
@@ -324,11 +351,11 @@ CoarsenSchedule::generateTemporaryLevel()
    const hier::Connector& coarse_to_fine =
       d_crse_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
          *d_fine_level->getBoxLevel(),
-         transpose_width);
+         transpose_width, true);
    const hier::Connector& fine_to_coarse =
       d_fine_level->getBoxLevel()->getPersistentOverlapConnectors().findConnector(
          *d_crse_level->getBoxLevel(),
-         min_gcw);
+         min_gcw, true);
 
    /*
     * Generate temporary BoxLevel and Connectors.
@@ -342,7 +369,6 @@ CoarsenSchedule::generateTemporaryLevel()
     * temp are very similar to those between coarse and fine.
     */
    d_coarse_to_temp = coarse_to_fine;
-   d_coarse_to_temp.setConnectorType(hier::Connector::BASE_GENERATED);
    d_coarse_to_temp.setBase(*d_crse_level->getBoxLevel());
    d_coarse_to_temp.setHead(*d_temp_crse_level->getBoxLevel());
    d_coarse_to_temp.setWidth(coarse_to_fine.getConnectorWidth(), true);
@@ -356,7 +382,6 @@ CoarsenSchedule::generateTemporaryLevel()
     * keeping the neighborhoods that we just set.
     */
    d_temp_to_coarse = fine_to_coarse;
-   d_temp_to_coarse.setConnectorType(hier::Connector::BASE_GENERATED);
    d_temp_to_coarse.setBase(*d_temp_crse_level->getBoxLevel());
    d_temp_to_coarse.setHead(coarse_to_fine.getBase());
    d_temp_to_coarse.setWidth(coarse_to_fine.getConnectorWidth(), true);
@@ -378,12 +403,10 @@ CoarsenSchedule::generateTemporaryLevel()
 void
 CoarsenSchedule::setupRefineAlgorithm()
 {
-   const tbox::Dimension& dim(d_crse_level->getDim());
-
    if (d_fill_coarse_data) {
       t_coarse_data_fill->barrierAndStart();
 
-      d_precoarsen_refine_algorithm.reset(new RefineAlgorithm(dim));
+      d_precoarsen_refine_algorithm.reset(new RefineAlgorithm());
 
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
          const int src_id = d_coarsen_items[ici]->d_src;
@@ -426,7 +449,7 @@ CoarsenSchedule::generateSchedule()
       t_coarse_data_fill->barrierAndStart();
       d_precoarsen_refine_schedule =
          d_precoarsen_refine_algorithm->createSchedule(d_temp_crse_level,
-            d_crse_level, NULL);
+            d_crse_level, 0);
       t_coarse_data_fill->stop();
    }
 
@@ -480,15 +503,15 @@ CoarsenSchedule::generateScheduleNSquared()
    hier::BoxContainer::const_iterator crse_itr_dp(d_crse_level->getBoxes());
    for (int dp = 0; dp < dst_npatches; dp++, ++crse_itr_dp) {
 
-      const hier::Box dst_mapped_box(*crse_itr_dp,
-                                     hier::LocalId(dp),
-                                     dst_mapping.getProcessorAssignment(dp));
+      const hier::Box dst_box(*crse_itr_dp,
+                              hier::LocalId(dp),
+                              dst_mapping.getProcessorAssignment(dp));
 
       hier::BoxContainer::const_iterator crse_itr_sp(
          d_temp_crse_level->getBoxes());
       for (int sp = 0; sp < src_npatches; sp++, ++crse_itr_sp) {
 
-         const hier::Box src_mapped_box(
+         const hier::Box src_box(
             *crse_itr_sp,
             hier::LocalId(sp),
             src_mapping.getProcessorAssignment(sp));
@@ -496,8 +519,8 @@ CoarsenSchedule::generateScheduleNSquared()
          if (dst_mapping.isMappingLocal(dp)
              || src_mapping.isMappingLocal(sp)) {
 
-            constructScheduleTransactions(d_crse_level, dst_mapped_box,
-               d_temp_crse_level, src_mapped_box);
+            constructScheduleTransactions(d_crse_level, dst_box,
+               d_temp_crse_level, src_box);
 
          }  // if either source or destination patch is local
 
@@ -523,7 +546,7 @@ CoarsenSchedule::generateScheduleDLBG()
     */
    /*
     * Restructure the d_temp_to_coarse edge data to arange neighbors by the
-    * coarse mapped_boxes, as required to match the transaction ordering on the
+    * coarse boxes, as required to match the transaction ordering on the
     * receiving processors.  At the same time, shift temp-coarse pairs to
     * make the coarse shifts zero.
     */
@@ -536,57 +559,57 @@ CoarsenSchedule::generateScheduleDLBG()
         ei != temp_eto_coarse_bycoarse.end(); ++ei) {
 
       /*
-       * coarse_mapped_box can be remote (by definition of FullNeighborhoodSet).
-       * local_temp_mapped_boxes are the local source mapped_boxes that
-       * contribute data to coarse_mapped_box.
+       * coarse_box can be remote (by definition of FullNeighborhoodSet).
+       * local_temp_boxes are the local source boxes that contribute data
+       * to box.
        */
-      const hier::Box& coarse_mapped_box = ei->first;
-      const hier::BoxContainer& local_temp_mapped_boxes = ei->second;
-      TBOX_ASSERT(!coarse_mapped_box.isPeriodicImage());
+      const hier::Box& coarse_box = ei->first;
+      const hier::BoxContainer& local_temp_boxes = ei->second;
+      TBOX_ASSERT(!coarse_box.isPeriodicImage());
 
       /*
-       * Construct transactions for data going from local source mapped_boxes
-       * to remote coarse mapped_boxes.
+       * Construct transactions for data going from local source boxes
+       * to remote coarse boxes.
        */
       for (hier::BoxContainer::const_iterator ni =
-              local_temp_mapped_boxes.begin();
-           ni != local_temp_mapped_boxes.end(); ++ni) {
-         const hier::Box& temp_mapped_box = *ni;
-         if (temp_mapped_box.getOwnerRank() ==
-             coarse_mapped_box.getOwnerRank()) {
+              local_temp_boxes.begin();
+           ni != local_temp_boxes.end(); ++ni) {
+         const hier::Box& temp_box = *ni;
+         if (temp_box.getOwnerRank() ==
+             coarse_box.getOwnerRank()) {
             /*
-             * Disregard local coarse_mapped_box to avoid duplicating same
+             * Disregard local coarse_box to avoid duplicating same
              * transactions created by the second loop below.
              */
             continue;
          }
          constructScheduleTransactions(d_crse_level,
-            coarse_mapped_box,
+            coarse_box,
             d_temp_crse_level,
-            temp_mapped_box);
+            temp_box);
       }
 
    }
 
    /*
-    * Construct receiving transactions for local dst mapped_boxes.
+    * Construct receiving transactions for local dst boxes.
     */
-   const BoxLevel& coarse_mapped_box_level = *d_crse_level->getBoxLevel();
+   const BoxLevel& coarse_box_level = *d_crse_level->getBoxLevel();
    for (hier::Connector::ConstNeighborhoodIterator ei = d_coarse_to_temp.begin();
         ei != d_coarse_to_temp.end(); ++ei) {
 
       const hier::BoxId& dst_gid = *ei;
-      const hier::Box& dst_mapped_box =
-         *coarse_mapped_box_level.getBoxStrict(dst_gid);
+      const hier::Box& dst_box =
+         *coarse_box_level.getBoxStrict(dst_gid);
 
       for (hier::Connector::ConstNeighborIterator ni = d_coarse_to_temp.begin(ei);
            ni != d_coarse_to_temp.end(ei); ++ni) {
-         const hier::Box& src_mapped_box = *ni;
+         const hier::Box& src_box = *ni;
 
          constructScheduleTransactions(d_crse_level,
-            dst_mapped_box,
+            dst_box,
             d_temp_crse_level,
-            src_mapped_box);
+            src_box);
 
       }
 
@@ -605,10 +628,10 @@ CoarsenSchedule::generateScheduleDLBG()
  * owners see them.  Transactions must have the same order on the
  * sending and receiving processors.
  *
- * 2. It shifts periodic image dst mapped_boxes back to the zero-shift position,
- * and applies a similar shift to src mapped_boxes so that the overlap is
+ * 2. It shifts periodic image dst boxes back to the zero-shift position,
+ * and applies a similar shift to src boxes so that the overlap is
  * unchanged.  The constructScheduleTransactions method requires all
- * shifts to be absorbed in the src mapped_box.
+ * shifts to be absorbed in the src box.
  ***********************************************************************
  */
 void
@@ -620,27 +643,25 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
 
    const hier::PeriodicShiftCatalog* shift_catalog =
       hier::PeriodicShiftCatalog::getCatalog(dim);
-   const BoxLevel& src_mapped_box_level = src_to_dst.getBase();
+   const BoxLevel& src_box_level = src_to_dst.getBase();
    const hier::IntVector& src_ratio(src_to_dst.getBase().getRefinementRatio());
    const hier::IntVector& dst_ratio(src_to_dst.getHead().getRefinementRatio());
 
    /*
-    * These are the counterparts to shifted dst mapped_boxes and unshifted src
-    * mapped_boxes.
+    * These are the counterparts to shifted dst boxes and unshifted src boxes.
     */
-   hier::Box shifted_mapped_box(dim), unshifted_nabr(dim);
+   hier::Box shifted_box(dim), unshifted_nabr(dim);
    full_inverted_edges.clear();
    for (hier::Connector::ConstNeighborhoodIterator ci = src_to_dst.begin();
         ci != src_to_dst.end();
         ++ci) {
-      const hier::Box& mapped_box =
-         *src_mapped_box_level.getBoxStrict(*ci);
+      const hier::Box& box = *src_box_level.getBoxStrict(*ci);
       for (hier::Connector::ConstNeighborIterator na = src_to_dst.begin(ci);
            na != src_to_dst.end(ci); ++na) {
          const hier::Box& nabr = *na;
          if (nabr.isPeriodicImage()) {
-            shifted_mapped_box.initialize(
-               mapped_box,
+            shifted_box.initialize(
+               box,
                shift_catalog->getOppositeShiftNumber(nabr.getPeriodicId()),
                src_ratio);
             unshifted_nabr.initialize(
@@ -648,9 +669,9 @@ CoarsenSchedule::restructureNeighborhoodSetsByDstNodes(
                shift_catalog->getZeroShiftNumber(),
                dst_ratio);
 
-            full_inverted_edges[unshifted_nabr].insert(shifted_mapped_box);
+            full_inverted_edges[unshifted_nabr].insert(shifted_box);
          } else {
-            full_inverted_edges[nabr].insert(mapped_box);
+            full_inverted_edges[nabr].insert(box);
          }
       }
    }
@@ -673,7 +694,7 @@ CoarsenSchedule::getMaxGhostsToGrow() const
    /*
     * Box, face and side elements of adjacent cells overlap even though
     * the cells do not overlap.  Therefore, we always grow at least one
-    * cell catch overlaps of mapped_box, face and side elements.
+    * cell catch overlaps of box, face and side elements.
     */
    hier::IntVector gcw(dim, 1);
 
@@ -684,7 +705,7 @@ CoarsenSchedule::getMaxGhostsToGrow() const
 
       hier::IntVector gcw1 = d_coarsen_items[ici]->d_gcw_to_coarsen;
       if (d_coarsen_items[ici]->d_opcoarsen) {
-         gcw1 += d_coarsen_items[ici]->d_opcoarsen->getStencilWidth();
+         gcw1 += d_coarsen_items[ici]->d_opcoarsen->getStencilWidth(dim);
       }
       gcw.max(gcw1);
    }
@@ -705,20 +726,20 @@ CoarsenSchedule::getMaxGhostsToGrow() const
 void
 CoarsenSchedule::constructScheduleTransactions(
    const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const hier::Box& dst_mapped_box,
+   const hier::Box& dst_box,
    const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const hier::Box& src_mapped_box)
+   const hier::Box& src_box)
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
 
    const tbox::Dimension& dim(d_crse_level->getDim());
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim,
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY4(dim,
       *dst_level,
       *src_level,
-      dst_mapped_box,
-      src_mapped_box);
+      dst_box,
+      src_box);
 
    const hier::IntVector& constant_zero_intvector(hier::IntVector::getZero(dim));
    const hier::IntVector& constant_one_intvector(hier::IntVector::getOne(dim));
@@ -727,10 +748,10 @@ CoarsenSchedule::constructScheduleTransactions(
       tbox::plog << "CoarsenSchedule::constructScheduleTransactions:"
                  << "\n  src: L" << src_level->getLevelNumber()
                  << "R" << src_level->getRatioToLevelZero()
-                 << " / " << src_mapped_box << ""
+                 << " / " << src_box << ""
                  << "\n  dst: L" << dst_level->getLevelNumber()
                  << "R" << dst_level->getRatioToLevelZero()
-                 << " / " << dst_mapped_box
+                 << " / " << dst_box
                  << std::endl;
    }
 
@@ -738,9 +759,6 @@ CoarsenSchedule::constructScheduleTransactions(
       dst_level->getPatchDescriptor());
    boost::shared_ptr<hier::PatchDescriptor> src_patch_descriptor(
       src_level->getPatchDescriptor());
-
-   const hier::Box& dst_box = dst_mapped_box;
-   const hier::Box& src_box = src_mapped_box;
 
    const int num_equiv_classes =
       d_coarsen_classes->getNumberOfEquivalenceClasses();
@@ -753,19 +771,19 @@ CoarsenSchedule::constructScheduleTransactions(
     */
    hier::IntVector src_shift(dim, 0);
    hier::IntVector dst_shift(dim, 0);
-   hier::Box unshifted_src_box = src_mapped_box;
-   hier::Box unshifted_dst_box = dst_mapped_box;
-   if (src_mapped_box.isPeriodicImage()) {
-      TBOX_ASSERT(!dst_mapped_box.isPeriodicImage());
+   hier::Box unshifted_src_box = src_box;
+   hier::Box unshifted_dst_box = dst_box;
+   if (src_box.isPeriodicImage()) {
+      TBOX_ASSERT(!dst_box.isPeriodicImage());
       src_shift = shift_catalog->shiftNumberToShiftDistance(
-            src_mapped_box.getPeriodicId());
+            src_box.getPeriodicId());
       src_shift *= src_level->getRatioToLevelZero();
       unshifted_src_box.shift(-src_shift);
    }
-   if (dst_mapped_box.isPeriodicImage()) {
-      TBOX_ASSERT(!src_mapped_box.isPeriodicImage());
+   if (dst_box.isPeriodicImage()) {
+      TBOX_ASSERT(!src_box.isPeriodicImage());
       dst_shift = shift_catalog->shiftNumberToShiftDistance(
-            dst_mapped_box.getPeriodicId());
+            dst_box.getPeriodicId());
       dst_shift *= dst_level->getRatioToLevelZero();
       unshifted_dst_box.shift(-dst_shift);
    }
@@ -773,27 +791,27 @@ CoarsenSchedule::constructScheduleTransactions(
    /*
     * Transformation initialized to src_shift with no rotation.
     * It will never be modified in single-block runs, nor in multiblock runs
-    * when src_mapped_box and dst_mapped_box are on the same block.
+    * when src_box and dst_box are on the same block.
     */
    hier::Transformation transformation(src_shift);
 
    /*
-    * When src_mapped_box and dst_mapped_box are on different blocks
+    * When src_box and dst_box are on different blocks
     * transformed_src_box is a representation of the source box in the
     * destination coordinate system.
     *
     * For all other cases, transformed_src_box is simply a copy of the
-    * box from src_mapped_box.
+    * box from src_box.
     */
-   hier::Box transformed_src_box(src_mapped_box);
+   hier::Box transformed_src_box(src_box);
 
    /*
     * When needed, transform the source box and determine if src and
     * dst touch at an enhance connectivity singularity.
     */
-   if (src_mapped_box.getBlockId() != dst_mapped_box.getBlockId()) {
-      const hier::BlockId& dst_block_id = dst_mapped_box.getBlockId();
-      const hier::BlockId& src_block_id = src_mapped_box.getBlockId();
+   if (src_box.getBlockId() != dst_box.getBlockId()) {
+      const hier::BlockId& dst_block_id = dst_box.getBlockId();
+      const hier::BlockId& src_block_id = src_box.getBlockId();
 
       boost::shared_ptr<hier::BaseGridGeometry> grid_geometry(
          d_crse_level->getGridGeometry());
@@ -887,7 +905,7 @@ CoarsenSchedule::constructScheduleTransactions(
          rep_item.d_var_fill_pattern->calculateOverlap(
             *dst_pdf->getBoxGeometry(unshifted_dst_box),
             *src_pdf->getBoxGeometry(unshifted_src_box),
-            dst_mapped_box,
+            dst_box,
             src_mask,
             dst_fill_box,
             true, transformation));
@@ -919,8 +937,8 @@ CoarsenSchedule::constructScheduleTransactions(
                d_transaction_factory->allocate(dst_level,
                   src_level,
                   overlap,
-                  dst_mapped_box,
-                  src_mapped_box,
+                  dst_box,
+                  src_box,
                   citem_count);
          }
       }
@@ -1066,7 +1084,7 @@ CoarsenSchedule::initialCheckCoarsenClassItems() const
 
    hier::IntVector user_gcw(dim, 0);
    if (d_coarsen_patch_strategy) {
-      user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth();
+      user_gcw = d_coarsen_patch_strategy->getCoarsenOpStencilWidth(dim);
    }
 
    for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
@@ -1140,10 +1158,10 @@ CoarsenSchedule::clearCoarsenItems()
 {
    if (d_coarsen_items) {
       for (size_t ici = 0; ici < d_number_coarsen_items; ici++) {
-         d_coarsen_items[ici] = (CoarsenClasses::Data *)NULL;
+         d_coarsen_items[ici] = 0;
       }
       delete[] d_coarsen_items;
-      d_coarsen_items = (const CoarsenClasses::Data **)NULL;
+      d_coarsen_items = 0;
       d_number_coarsen_items = 0;
    }
 }
@@ -1189,14 +1207,6 @@ CoarsenSchedule::printClassData(
 void
 CoarsenSchedule::initializeCallback()
 {
-   boost::shared_ptr<tbox::Database> idb(
-      tbox::InputManager::getInputDatabase());
-   if (idb && idb->isDatabase("CoarsenSchedule")) {
-      boost::shared_ptr<tbox::Database> rsdb(idb->getDatabase(
-                                            "CoarsenSchedule"));
-      s_extra_debug =
-         rsdb->getBoolWithDefault("extra_debug", s_extra_debug);
-   }
    t_coarsen_data = tbox::TimerManager::getManager()->
       getTimer("xfer::CoarsenSchedule::coarsenData()");
    t_gen_sched_n_squared = tbox::TimerManager::getManager()->

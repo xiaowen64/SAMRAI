@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -35,6 +35,7 @@ OuterfaceGeometry::OuterfaceGeometry(
    d_box(box),
    d_ghosts(ghosts)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
    TBOX_ASSERT(ghosts.min() >= 0);
 }
 
@@ -68,7 +69,7 @@ OuterfaceGeometry::calculateOverlap(
    const bool retry,
    const hier::BoxContainer& dst_restrict_boxes) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(d_box, src_mask);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_box, src_mask);
 
    const FaceGeometry* t_dst =
       dynamic_cast<const FaceGeometry *>(&dst_geometry);
@@ -76,7 +77,7 @@ OuterfaceGeometry::calculateOverlap(
       dynamic_cast<const OuterfaceGeometry *>(&src_geometry);
 
    boost::shared_ptr<hier::BoxOverlap> over;
-   if ((t_src != NULL) && (t_dst != NULL)) {
+   if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
    } else if (retry) {
@@ -175,7 +176,7 @@ OuterfaceGeometry::doOverlap(
 
          }  // if (!together.empty())
 
-         if (dst_restrict_boxes.size() && dst_boxes[d].size()) {
+         if (!dst_restrict_boxes.isEmpty() && !dst_boxes[d].isEmpty()) {
             hier::BoxContainer face_restrict_boxes;
             for (hier::BoxContainer::const_iterator b(dst_restrict_boxes);
                  b != dst_restrict_boxes.end(); ++b) {

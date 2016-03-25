@@ -18,7 +18,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace mesh {
@@ -39,18 +39,65 @@ namespace mesh {
  * behavior can be set at run-time via member functions, including
  * dynamic reconfiguration of balance operations.
  *
- * Required input keys: NONE
+ * <b> Input Parameters </b>
  *
- * Optional input keys, data types, and defaults:
+ * <b> Definitions: </b>
+ *    - \b bin_pack_method
+ *       String value indicating the type of bin packing to use to map patches
+ *       to processors.  Currently, two options are supported: "GREEDY" and
+ *       "SPATIAL".  The "GREEDY" method simply maps each patch (box) to the
+ *       first processor (bin), in ascending tbox::MPI process number, whose
+ *       difference between the average workload and its current workload is
+ *       less than the workload of the patch in question.  The "SPATIAL" method
+ *       first constructs an ordering of the patches (boxes) by passing a
+ *       Morton-type curve through the center of each box.  Then, it attempts
+ *       to map the patches to processors by assigning patches that are near
+ *       each other on the curve to the same processor.  If no input value is
+ *       specified, a default value of "SPATIAL" is used.  The input value
+ *       will be used for all levels and will below.
  *
- *    - \b processor_layout Integer array (length = DIM) indicating
- *    the way in which the domain should be chopped when a level can
- *    be described as a single parallelepiped region (i.e., a box). If
- *    no input value is provided, or if the product of these entries
- *    does not equal the number of processors, then the processor
- *    layout computed will be computed from the dimensions of the
- *    domain box and the number of processors in use if necessary.
+ *    - \b max_workload_factor
+ *       Double array (length = number of levels) used during the box-splitting
+ *       phase to determine which boxes to split.  Specifically, boxes will be
+ *       chopped if their estimated workload is greater than
+ *       max_workload_factor * A, where A is the average workload
+ *       (i.e., A = (total work)/(num processors)).  The default value for this
+ *       parameter is 1.0.  It can be set to any value greater than zero,
+ *       either in the input file or via the setMaxWorkloadFactor() member
+ *       function below.
  *
+ *    - \b workload_tolerance
+ *       Double array (length = number of levels) used during the box-splitting
+ *       phase to determine which boxes to split.  The tolerance value can be
+ *       use to prevent splitting of boxes when the computed box workload is
+ *       close to the computed ideal workload.  A box is split if:<br>
+ *       ( box_workload <= ( (1. + workload_tolerance) * ideal_workload ) )<br>
+ *       Tolerance values should be greater than or equal to 0.0 and less
+ *       then 1.0.  Large values will probably have undesirable results.
+ *       It can be set either in the input file or via the
+ *       setWorkloadTolerance() member function below.<br>
+ *       NOTE: If a length is less than max levels then finest value
+ *       specified is use for finer levels.  If length is greater
+ *       than max levels, the values are ignored.
+ *
+ *    - \b ignore_level_box_union_is_single_box
+ *       Boolean flag to control chopping of level boxes when the union of the
+ *       input boxes passed to the loadBalanceBoxes() routine is a single box.
+ *       The default value is false, which means that the domain will be
+ *       chopped to make patch boxes based on the (single box) union of the
+ *       boxes describing the level regardless of the input boxes.  When the
+ *       value is set to true, either via the setIgnoreLevelDomainIsSingleBox()
+ *       function or an input file, the domain will be chopped by chopping each
+ *       of the input boxes.
+ *
+ *    - \b processor_layout
+ *       Integer array (length = DIM) indicating the way in which the domain
+ *       should be chopped when a level can be described as a single
+ *       parallelepiped region (i.e., a box).  If no input value is provided,
+ *       or if the product of these entries does not equal the number of
+ *       processors, then the processor layout computed will be computed from
+ *       the size of the domain box and the number of processors in use if
+ *       necessary.<br>
  *       NOTE: The largest patch size constraint specified in the
  *       input for the GriddingAlgorithm object takes precedence
  *       over the processor layout specification.  That is, if the
@@ -59,91 +106,66 @@ namespace mesh {
  *       be ignored and boxes obeying the patch size constrint will
  *       result.
  *
- *    - \b bin_pack_method String value indicating the type of bin
- *    packing to use to map patches to processors.  Currently, two
- *    options are supported: "GREEDY", "SPATIAL". The "GREEDY" process
- *    simply maps each patch (box) to the first processor (bin), in
- *    ascending tbox::MPI process number, whose difference between the
- *    average workload and its current workload is less than the
- *    workload of the patch in question. The "SPATIAL" process first
- *    constructs an ordering of the patches (boxes) by passing a
- *    Morton-type curve through the center of each box.  Then, it
- *    attempts to map the patches to processors by assigning patches
- *    that are near each other on the curve to the same processor.  If
- *    no input value is specified, a default value of "SPATIAL" is
- *    used.  The input value will be used for all levels and will
- *    remain so until reset via the setBinPackMethod() member function
- *    below.
- *
- *    - \b max_workload_factor Double array (length = number of
- *    levels) used during the box-splitting phase to determine which
- *    boxes to split.  Specifically, boxes will be chopped if their
- *    estimated workload is greater than max_workload_factor * A,
- *    where A is the average workload (i.e., A = (total work)/(nume
- *    processors)).  The default value for this parameter is 1.0. It
- *    can be set to any value greater than zero, either in the input
- *    file or via the setMaxWorkloadFactor() member function below.
- *
- *    Example input:
- *
- *       max_workload_factor = 0.8
- *
- *       Sets the workload factor to 0.8 for all levels.
- *
- *       max_workload_factor = 0.8 , 0.9
- *
- *       Sets the workload factor to 0.8 for level 0 and 0.9 for all
- *       other levels.
- *
- *       NOTE: If a length is less than max levels then finest value
- *       specified is use for finer levels.  If length is greater
- *       than max levels, the values are ignored.
- *
- *       NOTE: Setting this value > 1.0 increases the splitting
- *       threshold which effectively reduces the total number of boxes
- *       generated.  Setting it less than 1.0 decreases the splitting
- *       threshold and will generally increase the total number of
- *       boxes.
- *
- *    - \b workload_tolerance Double array (length = number of levels)
- *    used during the box-splitting phase to determine which boxes to
- *    split.  The tolerance value can be use to prevent splitting of
- *    boxes when the computed box workload is close to the computed
- *    ideal workload.  A box is split if:
- *
- *    ( box_workload <= ( (1. + workload_tolerance) * ideal_workload ) )
- *
- *    Tolerance values should be greater than or equal to 0.0 and less
- *    then 1.0.  Large values will probably have undesirable results.
- *    The default value for this parameter is 0.0. It can be set to
- *    either in the input file or via the setWorkloadTolerance()
- *    member function below.
- *
- *       NOTE: If a length is less than max levels then finest value
- *       specified is use for finer levels.  If length is greater
- *       than max levels, the values are ignored.
- *
- *    - \b ignore_level_box_union_is_single_box Boolean flag to
- *    control chopping of level boxes when the union of the input
- *    boxes passed to the loadBalanceBoxes() routine is a single box.
- *    The default value is false, which means that the domain will be
- *    chopped to make patch boxes based on the (single box) union of
- *    the boxes describing the level regardless of the input boxes.
- *    When the value is set to true, either via the
- *    setIgnoreLevelDomainIsSingleBox() function or an input file, the
- *    domain will be chopped by chopping each of the input boxes.
- *
+ * <b> Details: </b> <br>
+ * <table>
+ *   <tr>
+ *     <th>parameter</th>
+ *     <th>type</th>
+ *     <th>default</th>
+ *     <th>range</th>
+ *     <th>opt/req</th>
+ *     <th>behavior on restart</th>
+ *   </tr>
+ *   <tr>
+ *     <td>bin_pack_method</td>
+ *     <td>string</td>
+ *     <td>"SPATIAL"</td>
+ *     <td>"SPATIAL", "GREEDY"</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>max_workload_factor</td>
+ *     <td>Array<double></td>
+ *     <td>none</td>
+ *     <td>0.0 <= all values</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>workload_tolerance</td>
+ *     <td>Array<double></td>
+ *     <td>none</td>
+ *     <td>0.0 <= all values < 1.0</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>ignore_level_box_union_is_single_box</td>
+ *     <td>bool</td>
+ *     <td>FALSE</td>
+ *     <td>TRUE, FALSE</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ *   <tr>
+ *     <td>processor_layout</td>
+ *     <td>int[]</td>
+ *     <td>N/A</td>
+ *     <td>N/A</td>
+ *     <td>opt</td>
+ *     <td>Not written to restart.  Value in input db used.</td>
+ *   </tr>
+ * </table>
  *
  * A sample input file entry might look like:
  *
- * \verbatim
- *
+ * @code
  *    processor_layout = 4 , 4 , 4    // number of processors is 64
  *    bin_pack = "GREEDY"
  *    max_workload_factor = 0.9
  *    ignore_level_box_union_is_single_box = TRUE
- *
- * \endverbatim
+ * @endcode
  *
  * Performance warning: This class implements a sequential algorithm.
  * The time it takes to this balancer increases with processor count.
@@ -168,6 +190,8 @@ public:
     * @param[in] input_db (optional) database pointer providing parameters from
     *                   input file.  This pointer may be null indicating no
     *                   input will be read.
+    *
+    * @pre !name.empty()
     */
    ChopAndPackLoadBalancer(
       const tbox::Dimension& dim,
@@ -207,6 +231,8 @@ public:
     * @param level_number  Optional integer number for level to which factor
     *                      is applied. If no value is given, the factor will
     *                      be used for all levels.
+    *
+    * @pre factor > 0.0
     */
    void
    setMaxWorkloadFactor(
@@ -223,6 +249,8 @@ public:
     * @param level_number  Optional integer number for level to which factor
     *                      is applied. If no value is given, the value will
     *                      be used for all levels.
+    *
+    * @pre tolerance > 0.0
     */
    void
    setWorkloadTolerance(
@@ -238,6 +266,8 @@ public:
     * @param level_number  Optional integer number for level on which data id
     *                      is used.  If no value is given, the data will be
     *                      used for all levels.
+    *
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -268,6 +298,8 @@ public:
     *                      bin-packing method will be used. If no value is
     *                      given, the prescribed methods will be used on all
     *                      levels.
+    *
+    * @pre (method == "GREEDY") || (method == "SPATIAL")
     */
    void
    setBinPackMethod(
@@ -318,9 +350,9 @@ public:
     * function is pure virtual in the LoadBalanceStrategy base class.
     *
     * The load balancing algorithm should ignore any periodic image Boxes
-    * in the input balance_mapped_box_level.
+    * in the input balance_box_level.
     *
-    * @param balance_mapped_box_level
+    * @param balance_box_level
     * @param balance_to_anchor
     * @param anchor_to_balance
     * @param hierarchy       Input patch hierarchy in which level will reside.
@@ -328,11 +360,11 @@ public:
     *                        This value must be >= 0.
     * @param unbalanced_to_attractor
     * @param attractor_to_unbalanced 
-    * @param min_size        Input integer vector of minimum dimensions for
+    * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
-    * @param max_size        Input integer vector of maximum dimensions for
+    * @param max_size        Input integer vector of maximum sizes for
     *                        output boxes. All entries must be >= min_size.
-    * @param domain_mapped_box_level
+    * @param domain_box_level
     * @param bad_interval    Input integer vector used to create boxes near
     *                        physical domain boundary with sufficient number
     *                        of cells.  No box face will be closer to the
@@ -348,17 +380,22 @@ public:
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
     * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
+    *                        correct sizes.  The length of each box
+    *                        direction will be an integer multiple of the
     *                        corresponding cut factor vector entry.  All
     *                        vector entries must be > 0.  See hier::BoxUtilities
     *                        documentation for more details.
     * @param rank_group      Needed for compatibility with parent class.
     *                        This argument is ignored.
+    *
+    * @pre (d_dim == balance_box_level.getDim()) &&
+    *      (d_dim == min_size.getDim()) && (d_dim == max_size.getDim()) &&
+    *      (d_dim == domain_box_level.getDim()) &&
+    *      (d_dim == bad_interval.getDim()) && (d_dim == cut_factor.getDim())
     */
    void
    loadBalanceBoxLevel(
-      hier::BoxLevel& balance_mapped_box_level,
+      hier::BoxLevel& balance_box_level,
       hier::Connector& balance_to_anchor,
       hier::Connector& anchor_to_balance,
       const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
@@ -367,7 +404,7 @@ public:
       const hier::Connector& attractor_to_unbalanced,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
-      const hier::BoxLevel& domain_mapped_box_level,
+      const hier::BoxLevel& domain_box_level,
       const hier::IntVector& bad_interval,
       const hier::IntVector& cut_factor, // Default v2.x.x = hier::IntVector::getOne(tbox::Dimension(DIM))
       const tbox::RankGroup& rank_group = tbox::RankGroup()) const;
@@ -404,7 +441,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& db);
+      const boost::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Given a list of boxes, representing the domain of a level in the AMR
@@ -426,13 +463,13 @@ private:
     * @param ratio_to_hierarchy_level_zero  Input integer vector indicating
     *                        ratio between index space of level to load balance
     *                        and hierarchy level 0 (i.e., coarsest hierarchy level).
-    * @param min_size        Input integer vector of minimum dimensions for
+    * @param min_size        Input integer vector of minimum sizes for
     *                        output boxes. All entries must be > 0.
-    * @param max_size        Input integer vector of maximum dimensions for
+    * @param max_size        Input integer vector of maximum sizes for
     *                        output boxes. All entries must be >= min_size.
     * @param cut_factor      Input integer vector used to create boxes with
-    *                        correct dimensions.  The length of each box
-    *                        dimension will be an integer multiple of the
+    *                        correct sizes.  The length of each box
+    *                        direction will be an integer multiple of the
     *                        corresponding cut factor vector entry.  All
     *                        vector entries must be > 0.  See hier::BoxUtilities
     *                        documentation for more details.
@@ -450,6 +487,18 @@ private:
     *                        will be either in the domain interior or outside
     *                        the domain.  All entries must be >= 0. See
     *                        hier::BoxUtilities documentation for more details.
+    *
+    * @pre (ratio_to_hierarchy_level_zero.getDim() == min_size.getDim()) &&
+    *      (ratio_to_hierarchy_level_zero.getDim() == max_size.getDim()) &&
+    *      (ratio_to_hierarchy_level_zero.getDim() == cut_factor.getDim()) &&
+    *      (ratio_to_hierarchy_level_zero.getDim() == bad_interval.getDim())
+    * @pre hierarchy
+    * @pre level_number >= 0
+    * @pre !physical_domain.isEmpty()
+    * @pre min_size > hier::IntVector::getZero(d_dim)
+    * @pre max_size >= min_size
+    * @pre cut_factor > hier::IntVector::getZero(d_dim)
+    * @pre bad_interval >= hier::IntVector::getZero(d_dim)
     */
    void
    loadBalanceBoxes(
@@ -535,6 +584,8 @@ private:
     * by all processors, and their associated weights.
     * If all processors input arrays have zero length, an error
     * is thrown.
+    *
+    * @pre box_list_in.size() == weights_in.getSize()
     */
    void
    exchangeBoxContainersAndWeightArrays(

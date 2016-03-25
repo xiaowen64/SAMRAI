@@ -68,8 +68,7 @@ public:
     * The variable context constructor creates a context with the given
     * name and increments the context index counter.
     *
-    * When assertion checking is active, an unrecoverable assertion results
-    * when the name std::string is empty.
+    * @pre !name.empty()
     */
    explicit VariableContext(
       const std::string& name);

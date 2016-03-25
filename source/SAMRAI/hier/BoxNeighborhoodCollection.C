@@ -29,7 +29,7 @@ BoxNeighborhoodCollection::BoxNeighborhoodCollection(
    // For each base Box in base_boxes create an empty neighborhood.
    for (BoxContainer::const_iterator itr(base_boxes.begin());
         itr != base_boxes.end(); ++itr) {
-      insert(itr->getId());
+      insert(itr->getBoxId());
    }
 }
 
@@ -688,42 +688,42 @@ BoxNeighborhoodCollection::getFromIntBuffer(
    return;
 }
 
-// These are defined in NeighborhoodSet but it's not clear that they
-// are ever called or even needed.
 void
-BoxNeighborhoodCollection::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+BoxNeighborhoodCollection::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
    // This appears to be used in the RedistributedRestartUtility.
-   database->putBool("d_is_edge_set", true);
+   restart_db->putBool("d_is_edge_set", true);
 
-   database->putInteger(
+   restart_db->putInteger(
       "HIER_BOX_NBRHD_COLLECTION_VERSION",
       HIER_BOX_NBRHD_COLLECTION_VERSION);
    const int num_neighborhoods = numBoxNeighborhoods();
-   database->putInteger("number_of_sets", num_neighborhoods);
+   restart_db->putInteger("number_of_sets", num_neighborhoods);
 
    if (num_neighborhoods > 0) {
 
       std::vector<int> owners(num_neighborhoods);
       std::vector<int> local_indices(num_neighborhoods);
       std::vector<int> periodic_ids(num_neighborhoods);
+      int counter = 0;
       for (ConstIterator ei = begin(); ei != end(); ++ei) {
          const BoxId& base_box_id = *ei;
-         owners.push_back(base_box_id.getOwnerRank());
-         local_indices.push_back(base_box_id.getLocalId().getValue());
-         periodic_ids.push_back(base_box_id.getPeriodicId().getPeriodicValue());
+         owners[counter] = base_box_id.getOwnerRank();
+         local_indices[counter] = base_box_id.getLocalId().getValue();
+         periodic_ids[counter] = base_box_id.getPeriodicId().getPeriodicValue();
+         ++counter;
       }
 
-      database->putIntegerArray(
+      restart_db->putIntegerArray(
          "owners",
          &owners[0],
          num_neighborhoods);
-      database->putIntegerArray(
+      restart_db->putIntegerArray(
          "local_indices",
          &local_indices[0],
          num_neighborhoods);
-      database->putIntegerArray(
+      restart_db->putIntegerArray(
          "periodic_ids",
          &periodic_ids[0],
          num_neighborhoods);
@@ -736,10 +736,11 @@ BoxNeighborhoodCollection::putUnregisteredToDatabase(
             + tbox::Utilities::processorToString(mbid.getOwnerRank())
             + tbox::Utilities::patchToString(mbid.getLocalId().getValue())
             + tbox::Utilities::intToString(mbid.getPeriodicId().getPeriodicValue());
-         tbox::Database& nbr_db = *database->putDatabase(set_name);
+	 boost::shared_ptr<tbox::Database> nbr_db =
+            restart_db->putDatabase(set_name);
 
          const int mbs_size = numNeighbors(ei);
-         nbr_db.putInteger("mapped_box_set_size", mbs_size);
+         nbr_db->putInteger("mapped_box_set_size", mbs_size);
 
          if (mbs_size > 0) {
 
@@ -750,34 +751,35 @@ BoxNeighborhoodCollection::putUnregisteredToDatabase(
 
             tbox::Array<tbox::DatabaseBox> db_box_array(mbs_size);
 
-            int counter = -1;
+            counter = 0;
 
             for (ConstNeighborIterator ni = begin(ei); ni != end(ei); ++ni) {
                const Box& nbr = *ni;
-               local_ids.push_back(nbr.getLocalId().getValue());
-               ranks.push_back(nbr.getOwnerRank());
-               block_ids.push_back(nbr.getBlockId().getBlockValue());
-               periodic_ids.push_back(nbr.getPeriodicId().getPeriodicValue());
-               db_box_array[++counter] = nbr;
+               local_ids[counter] = nbr.getLocalId().getValue();
+               ranks[counter] = nbr.getOwnerRank();
+               block_ids[counter] = nbr.getBlockId().getBlockValue();
+               periodic_ids[counter] = nbr.getPeriodicId().getPeriodicValue();
+               db_box_array[counter] = nbr;
+               ++counter;
             }
 
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "local_indices",
                &local_ids[0],
                mbs_size);
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "ranks",
                &ranks[0],
                mbs_size);
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "block_ids",
                &block_ids[0],
                mbs_size);
-            nbr_db.putIntegerArray(
+            nbr_db->putIntegerArray(
                "periodic_ids",
                &periodic_ids[0],
                mbs_size);
-            nbr_db.putDatabaseBoxArray(
+            nbr_db->putDatabaseBoxArray(
                "boxes",
                &db_box_array[0],
                mbs_size);
@@ -788,24 +790,30 @@ BoxNeighborhoodCollection::putUnregisteredToDatabase(
 }
 
 void
-BoxNeighborhoodCollection::getFromDatabase(
-   tbox::Database& database)
+BoxNeighborhoodCollection::getFromRestart(
+   tbox::Database& restart_db)
 {
-   const unsigned int number_of_sets = database.getInteger("number_of_sets");
+   int version = restart_db.getInteger("HIER_BOX_NBRHD_COLLECTION_VERSION");
+   if (version != HIER_BOX_NBRHD_COLLECTION_VERSION) {
+      TBOX_ERROR("BoxNeighborhoodCollection::getFromRestart() error...\n"
+         << "   Restart file version different than class version.");
+   }
+
+   const unsigned int number_of_sets = restart_db.getInteger("number_of_sets");
    if (number_of_sets > 0) {
 
       std::vector<int> owners(number_of_sets);
       std::vector<int> local_indices(number_of_sets);
       std::vector<int> periodic_ids(number_of_sets);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "owners",
          &owners[0],
          number_of_sets);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "local_indices",
          &local_indices[0],
          number_of_sets);
-      database.getIntegerArray(
+      restart_db.getIntegerArray(
          "periodic_ids",
          &periodic_ids[0],
          number_of_sets);
@@ -823,7 +831,7 @@ BoxNeighborhoodCollection::getFromDatabase(
             + tbox::Utilities::patchToString(box_id.getLocalId().getValue())
             + tbox::Utilities::intToString(box_id.getPeriodicId().getPeriodicValue());
          boost::shared_ptr<tbox::Database> nbr_db(
-            database.getDatabase(set_name));
+            restart_db.getDatabase(set_name));
          const unsigned int mbs_size =
             nbr_db->getInteger("mapped_box_set_size");
          Iterator base_box_loc = insert(box_id).first;

@@ -37,21 +37,22 @@ class IntVector
 {
 public:
    /**
-    * Creates an uninitialized vector.
+    * @brief Creates an uninitialized vector.
     */
    explicit IntVector(
       const tbox::Dimension& dim);
 
    /**
-    * Construct an integer vector with all components equal to the argument.
+    * @brief Construct an integer vector with all components equal to the
+    *        argument.
     */
    IntVector(
       const tbox::Dimension& dim,
       const int i);
 
    /**
-    * Construct a n-dimensional integer vector with the value with
-    * values provided by the array.
+    * @brief Construct a n-dimensional integer vector with the value with
+    *        values provided by the array.
     *
     * Dimension inferred from array size.
     */
@@ -59,8 +60,8 @@ public:
       const tbox::Array<int>& a);
 
    /**
-    * Construct a n-dimensional integer vector with the value with
-    * values provided by the array.
+    * @brief Construct a n-dimensional integer vector with
+    *        values provided by the array.
     *
     */
    IntVector(
@@ -68,36 +69,27 @@ public:
       const int array[]);
 
    /**
-    * Construct an integer vector equal to the argument.
+    * @brief Construct an integer vector equal to the argument.
     */
    IntVector(
       const IntVector& rhs);
 
    /**
-    * The assignment operator sets the integer vector equal to the argument.
+    * @brief The assignment operator sets the integer vector equal to the
+    *        argument.
     *
-    * An assignment to an uninitialized Index is allowed but assigning
-    * from an uninitialized Index will result in an assert.
+    * @pre getDim() == rhs.getDim()
     */
    IntVector&
    operator = (
       const IntVector& rhs)
    {
-      /*
-       * Allow assignment of to an uninitialized but do not allow
-       * assignment from an uninitialized.
-       */
-      if (d_dim.isValid()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      } else {
-         TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-         d_dim = rhs.getDim();
-      }
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] = rhs.d_vector[i];
       }
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-      for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+      for (int i = getDim().getValue(); i < SAMRAI::MAX_DIM_VAL; i++) {
          d_vector[i] = tbox::MathUtilities<int>::getMin();
       }
 #endif
@@ -105,245 +97,260 @@ public:
    }
 
    /**
-    * The integer vector destructor does nothing interesting.
+    * @brief The integer vector destructor does nothing interesting.
     */
    virtual ~IntVector();
 
    /**
-    * Return the specified component of the vector.  No bounds checking.
+    * @brief Return the specified component of the vector.  No bounds checking.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
     */
    int&
    operator [] (
       const int i)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_vector[i];
    }
 
    /**
-    * Return the specified component of the vector as a const integer.
+    * @brief Return the specified component of the vector as a const integer.
     * No bounds checking.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
     */
    const int&
    operator [] (
       const int i) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_vector[i];
    }
 
 
    /**
-    * Return the specified component of the vector.  No bounds checking.
+    * @brief Return the specified component of the vector.  No bounds checking.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
     */
    int&
    operator () (
       const int i)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_vector[i];
    }
 
    /**
-    * Return the specified component of the vector as a const integer.
+    * @brief Return the specified component of the vector as a const integer.
     * No bounds checking.
+    *
+    * @pre (i >= 0) && (i < getDim().getValue())
     */
    const int&
    operator () (
       const int i) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      TBOX_ASSERT(i >= 0 && i < d_dim.getValue());
+      TBOX_ASSERT(i >= 0 && i < getDim().getValue());
       return d_vector[i];
    }
 
    /**
-    * Plus-equals operator for two integer vectors.
+    * @brief Plus-equals operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector&
    operator += (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] += rhs.d_vector[i];
       }
       return *this;
    }
 
    /**
-    * Plus operator for two integer vectors.
+    * @brief Plus operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector
    operator + (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp(*this);
       tmp += rhs;
       return tmp;
    }
 
    /**
-    * Plus-equals operator for an integer vector and an integer.
+    * @brief Plus-equals operator for an integer vector and an integer.
     */
    IntVector&
    operator += (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] += rhs;
       }
       return *this;
    }
 
    /**
-    * Plus operator for an integer vector and an integer.
+    * @brief Plus operator for an integer vector and an integer.
     */
    IntVector
    operator + (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp += rhs;
       return tmp;
    }
 
    /**
-    * Minus-equals operator for two integer vectors.
+    * @brief Minus-equals operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector&
    operator -= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] -= rhs.d_vector[i];
       }
       return *this;
    }
 
    /**
-    * Minus operator for two integer vectors.
+    * @brief Minus operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector
    operator - (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp = *this;
       tmp -= rhs;
       return tmp;
    }
 
    /**
-    * Minus-equals operator for an integer vector and an integer.
+    * @brief Minus-equals operator for an integer vector and an integer.
     */
    IntVector&
    operator -= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] -= rhs;
       }
       return *this;
    }
 
    /**
-    * Minus operator for an integer vector and an integer.
+    * @brief Minus operator for an integer vector and an integer.
     */
    IntVector
    operator - (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp -= rhs;
       return tmp;
    }
 
    /**
-    * Times-equals operator for two integer vectors.
+    * @brief Times-equals operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector&
    operator *= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] *= rhs.d_vector[i];
       }
       return *this;
    }
 
    /**
-    * Times operator for two integer vectors.
+    * @brief Times operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector
    operator * (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp = *this;
       tmp *= rhs;
       return tmp;
    }
 
    /**
-    * Times-equals operator for an integer vector and an integer.
+    * @brief Times-equals operator for an integer vector and an integer.
     */
    IntVector&
    operator *= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] *= rhs;
       }
       return *this;
    }
 
    /**
-    * Times operator for an integer vector and an integer.
+    * @brief Times operator for an integer vector and an integer.
     */
    IntVector
    operator * (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp *= rhs;
       return tmp;
    }
 
    /**
-    * Assign-quotient operator for two integer vectors.
+    * @brief Assign-quotient operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector&
    operator /= (
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] /= rhs.d_vector[i];
       }
       return *this;
    }
 
    /**
-    * Component-wise ceilingDivide quotient (integer divide with rounding up).
+    * @brief Component-wise ceilingDivide quotient (integer divide with
+    *        rounding up).
+    *
+    * @pre getDim() == denominator.getDim()
     */
    void
    ceilingDivide(
       const IntVector& denominator)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, denominator);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, denominator);
       for (int i = 0; i < getDim().getValue(); i++) {
          /*
           * This is the formula for integer divide, rounding away from
@@ -363,14 +370,17 @@ public:
    }
 
    /**
-    * Component-wise ceilingDivide quotient (integer divide with rounding up).
+    * @brief Component-wise ceilingDivide quotient (integer divide with
+    *        rounding up).
+    *
+    * @pre numerator.getDim() == denominator.getDim()
     */
    static IntVector
    ceilingDivide(
       const IntVector& numerator,
       const IntVector& denominator)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(numerator, denominator);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(numerator, denominator);
       IntVector rval(numerator.getDim());
       for (int i = 0; i < numerator.getDim().getValue(); i++) {
          /*
@@ -392,190 +402,201 @@ public:
    }
 
    /**
-    * Quotient operator for two integer vectors.
+    * @brief Quotient operator for two integer vectors.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    IntVector
    operator / (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       IntVector tmp = *this;
       tmp /= rhs;
       return tmp;
    }
 
    /**
-    * Assign-quotient operator for an integer vector and an integer.
+    * @brief Assign-quotient operator for an integer vector and an integer.
     */
    IntVector&
    operator /= (
       const int rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); i++) {
          d_vector[i] /= rhs;
       }
       return *this;
    }
 
    /**
-    * Quotient operator for an integer vector and an integer.
+    * @brief Quotient operator for an integer vector and an integer.
     */
    IntVector
    operator / (
       const int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       IntVector tmp = *this;
       tmp /= rhs;
       return tmp;
    }
 
    /**
-    * Unary minus to negate an integer vector.
+    * @brief Unary minus to negate an integer vector.
     */
    IntVector
    operator - () const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
-      IntVector tmp(d_dim);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      IntVector tmp(getDim());
+      for (int i = 0; i < getDim().getValue(); i++) {
          tmp.d_vector[i] = -d_vector[i];
       }
       return tmp;
    }
 
    /**
-    * Returns true if all components are equal to a given integer.
+    * @brief Returns true if all components are equal to a given integer.
     */
    bool
    operator == (
       int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = d_vector[i] == rhs;
       }
       return result;
    }
 
    /**
-    * Returns true if some components are not equal to a given integer.
+    * @brief Returns true if some components are not equal to a given integer.
     */
    bool
    operator != (
       int rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = d_vector[i] != rhs;
       }
       return result;
    }
 
    /**
-    * Returns true if two vector objects are equal.  All components
-    * must be the same for equality.
+    * @brief Returns true if two vector objects are equal.  All components
+    *        must be the same for equality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator == (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = result && (d_vector[i] == rhs.d_vector[i]);
       }
       return result;
    }
 
    /**
-    * Returns true if two vector objects are not equal.  Any of
-    * the components may be different for inequality.
+    * @brief Returns true if two vector objects are not equal.  Any of
+    *        the components may be different for inequality.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator != (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       return !(*this == rhs);
    }
 
    /**
-    * Returns true if each integer in vector is less than
-    * corresponding integer in comparison vector.
+    * @brief Returns true if each integer in vector is less than
+    *        corresponding integer in comparison vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator < (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = result && (d_vector[i] < rhs.d_vector[i]);
       }
       return result;
    }
 
    /**
-    * Returns true if each integer in vector is less or equal to
-    * corresponding integer in comparison vector.
+    * @brief Returns true if each integer in vector is less or equal to
+    *        corresponding integer in comparison vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator <= (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = result && (d_vector[i] <= rhs.d_vector[i]);
       }
       return result;
    }
 
    /**
-    * Returns true if each integer in vector is greater than
-    * corresponding integer in comparison vector.
+    * @brief Returns true if each integer in vector is greater than
+    *        corresponding integer in comparison vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator > (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = result && (d_vector[i] > rhs.d_vector[i]);
       }
       return result;
    }
 
    /**
-    * Returns true if each integer in vector is greater or equal to
-    * corresponding integer in comparison vector.
+    * @brief Returns true if each integer in vector is greater or equal to
+    *        corresponding integer in comparison vector.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    bool
    operator >= (
       const IntVector& rhs) const
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
       bool result = true;
-      for (int i = 0; result && (i < d_dim.getValue()); i++) {
+      for (int i = 0; result && (i < getDim().getValue()); i++) {
          result = result && (d_vector[i] >= rhs.d_vector[i]);
       }
       return result;
    }
 
    /**
-    * Return the component-wise minimum of two integer vector objects.
+    * @brief Return the component-wise minimum of two integer vector objects.
+    *
+    * @pre getDim() == rhs.getDim()
     */
    void
    min(
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, rhs);
+      for (int i = 0; i < getDim().getValue(); i++) {
          if (rhs.d_vector[i] < d_vector[i]) {
             d_vector[i] = rhs.d_vector[i];
          }
@@ -583,14 +604,13 @@ public:
    }
 
    /**
-    * Return the minimum entry in an integer vector.
+    * @brief Return the minimum entry in an integer vector.
     */
    int
    min() const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       int min = d_vector[0];
-      for (int i = 1; i < d_dim.getValue(); i++) {
+      for (int i = 1; i < getDim().getValue(); i++) {
          if (d_vector[i] < min) {
             min = d_vector[i];
          }
@@ -599,14 +619,13 @@ public:
    }
 
    /**
-    * Return the component-wise maximum of two integer vector objects.
+    * @brief Return the component-wise maximum of two integer vector objects.
     */
    void
    max(
       const IntVector& rhs)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, rhs);
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); i++) {
          if (rhs.d_vector[i] > d_vector[i]) {
             d_vector[i] = rhs.d_vector[i];
          }
@@ -614,14 +633,13 @@ public:
    }
 
    /**
-    * Return the maximum entry in an integer vector.
+    * @brief Return the maximum entry in an integer vector.
     */
    int
    max() const
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(d_dim);
       int max = d_vector[0];
-      for (int i = 1; i < d_dim.getValue(); i++) {
+      for (int i = 1; i < getDim().getValue(); i++) {
          if (d_vector[i] > max) {
             max = d_vector[i];
          }
@@ -630,68 +648,74 @@ public:
    }
 
    /**
-    * Utility function to take the minimum of two integer vector objects.
+    * @brief Utility function to take the minimum of two integer vector
+    *        objects.
+    *
+    * @pre a.getDim() == b.getDim()
     */
    static IntVector
    min(
       const IntVector& a,
       const IntVector& b)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(a, b);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
       IntVector tmp = a;
       tmp.min(b);
       return tmp;
    }
 
    /**
-    * Utility function to take the maximum of two integer vector objects.
+    * @brief Utility function to take the maximum of two integer vector
+    *        objects.
+    *
+    * @pre a.getDim() == b.getDim()
     */
    static IntVector
    max(
       const IntVector& a,
       const IntVector& b)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(a, b);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(a, b);
       IntVector tmp = a;
       tmp.max(b);
       return tmp;
    }
 
    /**
-    * Return the product of the entries in the integer vector.
+    * @brief Return the product of the entries in the integer vector.
     */
    int
    getProduct() const
    {
       int prod = 1;
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      for (int i = 0; i < getDim().getValue(); i++) {
          prod *= d_vector[i];
       }
       return prod;
    }
 
    /**
-    * Store the object state to the specified database
-    * with the provided name.
+    * @brief Store the object state to the specified restart database
+    *        with the provided name.
     *
     */
    virtual void
-   putUnregisteredToDatabase(
-      tbox::Database& database,
+   putToRestart(
+      tbox::Database& restart_db,
       const std::string& name) const;
 
    /**
-    * Restores the object state from the specified database
-    * with the provided name.
+    * @brief Restores the object giving it the provided name and getting its
+    *        state from the specified restart database.
     *
     */
    virtual void
-   getFromDatabase(
-      tbox::Database& database,
+   getFromRestart(
+      tbox::Database& restart_db,
       const std::string& name);
 
    /**
-    * Return the dimension of this object.
+    * @brief Return the dimension of this object.
     */
    const tbox::Dimension&
    getDim() const
@@ -734,8 +758,8 @@ public:
       const IntVector& values);
 
    /**
-    * Read an integer vector from an input stream.  The format for
-    * the input is (i0,...,in) for an n-dimensional vector.
+    * @brief Read an integer vector from an input stream.  The format for
+    *        the input is (i0,...,in) for an n-dimensional vector.
     */
    friend std::istream&
    operator >> (
@@ -743,26 +767,20 @@ public:
       IntVector& rhs);
 
    /**
-    * Write an integer vector into an output stream.  The format for
-    * the output is (i0,...,in) for an n-dimensional vector.
+    * @brief Write an integer vector into an output stream.  The format for
+    *        the output is (i0,...,in) for an n-dimensional vector.
     */
    friend std::ostream&
    operator << (
       std::ostream& s,
       const IntVector& rhs);
 
-   friend class std::vector<IntVector>;
-
-protected:
-   /**
-    * Default ctor for IntVector is protected to disallow normal use.
-    * This is needed by the poorly designed STL container library.
-    *
-    *
+private:
+   /*
+    * Unimplemented default constructor
     */
    IntVector();
 
-private:
    /*!
     * @brief Initialize static objects and register shutdown routine.
     *
@@ -782,10 +800,10 @@ private:
 
    tbox::Dimension d_dim;
 
-   int d_vector[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   int d_vector[SAMRAI::MAX_DIM_VAL];
 
-   static IntVector* s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static IntVector* s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static IntVector* s_zeros[SAMRAI::MAX_DIM_VAL];
+   static IntVector* s_ones[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

@@ -39,10 +39,9 @@ namespace mesh {
  *************************************************************************
  */
 
-MultiblockGriddingTagger::MultiblockGriddingTagger(
-   const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(dim),
-   d_dim(dim)
+MultiblockGriddingTagger::MultiblockGriddingTagger():
+   xfer::RefinePatchStrategy(),
+   xfer::SingularityPatchStrategy()
 {
 }
 
@@ -51,9 +50,9 @@ MultiblockGriddingTagger::~MultiblockGriddingTagger()
 }
 
 hier::IntVector
-MultiblockGriddingTagger::getRefineOpStencilWidth() const
+MultiblockGriddingTagger::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(d_dim);
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -74,14 +73,8 @@ MultiblockGriddingTagger::setScratchTagPatchDataIndex(
    } else {
       boost::shared_ptr<pdat::CellVariable<int> > t_check_var(
          check_var,
-         boost::detail::dynamic_cast_tag());
-      if (!t_check_var) {
-         TBOX_ERROR(
-            "MultiblockGriddingTagger::setScratchTagPatchDataIndex error...\n"
-            << "Given patch data index = " << buf_tag_indx
-            << " does not map to cell-centered"
-            << "\ninteger data in VariableDatabase." << std::endl);
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(t_check_var);
    }
 
    d_buf_tag_indx = buf_tag_indx;
@@ -93,13 +86,15 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
    const double fill_time,
    const hier::IntVector& ghost_width_to_fill)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS1(d_dim, patch);
-
    NULL_USE(fill_time);
+
+   const tbox::Dimension &dim = patch.getDim();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       patch.getPatchData(d_buf_tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(tag_data);
 
    hier::IntVector gcw =
       hier::IntVector::min(ghost_width_to_fill,
@@ -107,7 +102,7 @@ MultiblockGriddingTagger::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
-   for (int d = 0; d < d_dim.getValue(); d++) {
+   for (int d = 0; d < dim.getValue(); d++) {
 
       tbox::Array<hier::BoundaryBox> bbox =
          pgeom->getCodimensionBoundaries(d + 1);
@@ -129,26 +124,26 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
-   const double fill_time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
-   NULL_USE(fill_time);
    NULL_USE(boundary_box);
    NULL_USE(grid_geometry);
 
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS3(d_dim, patch, fill_box, boundary_box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(patch, fill_box, boundary_box);
 
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::BoxId& dst_mb_id = patch.getBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getBox().getBoxId();
 
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const boost::shared_ptr<pdat::CellData<int> > tag_data(
       patch.getPatchData(d_buf_tag_indx),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(tag_data);
 
    hier::Box sing_fill_box(tag_data->getGhostBox() * fill_box);
    tag_data->fillAll(0, sing_fill_box);
@@ -167,7 +162,7 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
               ei != dst_to_encon.end(ni); ++ei) {
 
             boost::shared_ptr<hier::Patch> encon_patch(
-               encon_level.getPatch(ei->getId()));
+               encon_level.getPatch(ei->getBoxId()));
 
             const hier::BlockId& encon_blk_id = ei->getBlockId();
 
@@ -206,12 +201,13 @@ MultiblockGriddingTagger::fillSingularityBoundaryConditions(
 
                hier::Transformation back_trans(back_rotate, back_shift,
                                                encon_fill_box.getBlockId(),
-                                               encon_patch->getBox().getBlockId()); 
-                                               
+                                               encon_patch->getBox().getBlockId());
 
                boost::shared_ptr<pdat::CellData<int> > sing_data(
                   encon_patch->getPatchData(d_buf_tag_indx),
-                  boost::detail::dynamic_cast_tag());
+                  BOOST_CAST_TAG);
+
+               TBOX_ASSERT(sing_data);
 
                pdat::CellIterator ciend(encon_fill_box, false);
                for (pdat::CellIterator ci(encon_fill_box, true);
@@ -250,7 +246,7 @@ MultiblockGriddingTagger::postprocessRefine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(d_dim, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
    NULL_USE(fine);
    NULL_USE(coarse);

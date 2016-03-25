@@ -46,6 +46,12 @@ public:
    virtual ~OverlapConnectorAlgorithm();
 
    /*!
+    * @brief Read extra debugging flag from input database.
+    */
+   void
+   getFromInput();
+
+   /*!
     * @brief Discover and add overlaps from base to head for an
     * overlap Connector.
     *
@@ -96,15 +102,20 @@ public:
     *
     * @param[out] neighbors
     * @param[in] connector
-    * @param[in] mapped_box_id
-    * @param[in] connector_width
+    * @param[in] box_id
+    * @param[in] gcw
+    *
+    * @pre gcw <= connector.getConnectorWidth()
+    * @pre (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (box_id.getOwnerRank() == connector.getMPI().getRank())
+    * @pre connector.getBase().hasBox(box_id)
     */
    void
    extractNeighbors(
       Connector::NeighborSet& neighbors,
       const Connector& connector,
-      const BoxId& mapped_box_id,
-      const IntVector& connector_width) const;
+      const BoxId& box_id,
+      const IntVector& gcw) const;
 
    /*!
     * @brief Like extractNeighbors above except that it computes all
@@ -112,13 +123,20 @@ public:
     *
     * @param[out] other
     * @param[in] connector
-    * @param[in] connector_width
+    * @param[in] gcw
+    *
+    * @pre gcw <= connector.getConnectorWidth()
+    * @pre for the box_id of each neighborhood base box in connector,
+    *      (connector.getParallelState() == BoxLevel::GLOBALIZED) ||
+    *      (box_id.getOwnerRank() == connector.getMPI().getRank())
+    * @pre for the box_id of each neighborhood base box in connector,
+    *      connector.getBase().hasBox(box_id)
     */
    void
    extractNeighbors(
       Connector& other,
       const Connector& connector,
-      const IntVector& connector_width) const;
+      const IntVector& gcw) const;
 
    /*!
     * @brief Compute the overlap Connectors between BoxLevels
@@ -415,13 +433,17 @@ public:
     * @see findOverlaps()
     *
     * @param[in] connector
-    * @param[in] ignore_self_overlap Ignore a mapped_box's overlap with itself
-    * @param[in] assert_completeness If false, ignore missing overlaps. This will
-    *   still look for overlaps that should not be there.
+    * @param[in] ignore_self_overlap Ignore a box's overlap with itself
+    * @param[in] assert_completeness If false, ignore missing overlaps. This
+    *   will still look for overlaps that should not be there.
     * @param[in] ignore_periodic_images If true, do not require neighbors
     *   that are periodic images.
     *
     * @return Number of overlap errors found locally.
+    *
+    * @pre (connector.getBase().isInitialized()) &&
+    *      (connector.getHead().isInitialized())
+    * @pre !connector.hasPeriodicLocalNeighborhoodBaseBoxes()
     */
    int
    checkOverlapCorrectness(
@@ -445,6 +467,9 @@ public:
     * @param[in] ignore_self_overlap
     * @param[in] assert_completeness
     * @param[in] ignore_periodic_images
+    *
+    * @pre (connector.getBase().isInitialized()) &&
+    *      (connector.getHead().isInitialized())
     */
    void
    assertOverlapCorrectness(
@@ -470,6 +495,9 @@ public:
     * @param[out] missing
     * @param[out] extra
     * @param[in] ignore_self_overlap
+    *
+    * @pre (connector.getBase().isInitialized()) &&
+    *      (connector.getHead().isInitialized())
     */
    void
    findOverlapErrors(
@@ -477,6 +505,15 @@ public:
       Connector& missing,
       Connector& extra,
       bool ignore_self_overlap = false) const;
+
+   /*!
+    * @brief Get the name of this object.
+    */
+   const std::string
+   getObjectName() const
+   {
+      return "OverlapConnectorAlgorithm";
+   }
 
 private:
    // Internal shorthand.
@@ -574,7 +611,7 @@ private:
     * outgoing information in message buffers.
     */
    void
-   privateModify_removeAndCache(
+   privateBridge_removeAndCache(
       std::map<int, std::vector<int> >& neighbor_removal_mesg,
       Connector& overlap_connector,
       Connector* overlap_connector_transpose,
@@ -605,7 +642,7 @@ private:
       NeighborSet& visible_base_nabrs,
       NeighborSet::iterator& base_ni,
       std::vector<int>& send_mesg,
-      const int remote_mapped_box_counter_index,
+      const int remote_box_counter_index,
       Connector& bridging_connector,
       NeighborSet& referenced_head_nabrs,
       const BoxContainer& head_rbbt) const;
@@ -613,7 +650,7 @@ private:
    //! @brief Utility used in privateBridge()
    void
    privateBridge_unshiftOverlappingNeighbors(
-      const Box& mapped_box,
+      const Box& box,
       BoxContainer& neighbors,
       BoxContainer& scratch_space,
       //std::vector<Box>& neighbors,
@@ -622,7 +659,7 @@ private:
 
    /*!
     * @brief Discover and add overlaps from base and externally
-    * provided head mapped_box_level.
+    * provided head box_level.
     *
     * Relationships found are added to appropriate neighbor lists.  No overlap is
     * removed.  If existing overlaps are invalid, remove them first.
@@ -632,14 +669,16 @@ private:
     * the same refinement ratio as d_head.
     *
     * The ignore_self_overlap directs the method to not list
-    * a mapped_box as its own neighbor.  This should be true only
-    * when the head and tail objects represent the same mapped_box_level
+    * a box as its own neighbor.  This should be true only
+    * when the head and tail objects represent the same box_level
     * (regardless of whether they are the same objects), and
     * you want to disregard self-overlaps.
-    * Two mapped_boxes are considered the same if
-    * - The mapped_boxes are equal by comparison (they have the same
+    * Two boxes are considered the same if
+    * - The boxes are equal by comparison (they have the same
     *   owner and the same indices), and
-    * - They are from mapped_box_levels with the same refinement ratio.
+    * - They are from box_levels with the same refinement ratio.
+    *
+    * @pre head.getParallelState() == BoxLevel::GLOBALIZED
     */
    void
    findOverlaps_rbbt(
@@ -662,6 +701,9 @@ private:
     */
    static void
    finalizeCallback();
+
+   // Extra checks independent of optimization/debug.
+   static char s_print_steps;
 
    /*!
     * @brief Private communicator object shared by all objects in class,

@@ -32,7 +32,7 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -87,7 +87,6 @@ int main(
    // Note: For these simple tests we allow at most 2 processors.
    tbox::SAMRAI_MPI mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
    const int nproc = mpi.getSize();
-   TBOX_ASSERT(nproc < 3);
 
    // Currently this test only works for 2 dimensions.
    const tbox::Dimension dim(2);
@@ -215,10 +214,12 @@ int main(
             // access sample data from patch
             boost::shared_ptr<LSparseData> sample1(
                patch->getPatchData(data_id1),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
             boost::shared_ptr<LSparseData> sample2(
                patch->getPatchData(data_id2),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(sample1);
+            TBOX_ASSERT(sample2);
 
             // add items to the sparse data objects.
             pdat::CellIterator ic(patch->getBox(), true);
@@ -349,7 +350,8 @@ checkIterators(
 
          boost::shared_ptr<LSparseData> sample(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(sample);
 
          // Test #1a: check empty.  This should be false.
          if (sample->empty()) {
@@ -411,13 +413,16 @@ bool checkCopyOps(
          const boost::shared_ptr<hier::Patch>& patch = *ip;
          boost::shared_ptr<LSparseData> control(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<LSparseData> copiedTo(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<LSparseData> copiedFrom(
             patch->getPatchData(data_id2),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(control);
+         TBOX_ASSERT(copiedTo);
+         TBOX_ASSERT(copiedFrom);
 
          int edit = copiedTo->size() / 2;
          LSparseData::iterator ct_it(copiedTo.get());
@@ -487,7 +492,8 @@ bool checkRemoveOps(
 
          boost::shared_ptr<LSparseData> sample(
             patch->getPatchData(data_id1),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(sample);
 
          LSparseData::iterator it;
          int stop = sample->size() / 2;
@@ -547,11 +553,6 @@ getGeometry(
    hier::Box coarse1(hier::Index(0, 3), hier::Index(9, 4), hier::BlockId(0));
    hier::Box fine0(hier::Index(4, 4), hier::Index(7, 7), hier::BlockId(0));
    hier::Box fine1(hier::Index(8, 4), hier::Index(13, 7), hier::BlockId(0));
-
-   coarse0.initialize(coarse0, hier::LocalId(0), 0);
-   coarse1.initialize(coarse1, hier::LocalId(1), 0);
-   fine0.initialize(fine0, hier::LocalId(0), 0);
-   fine1.initialize(fine1, hier::LocalId(1), 0);
 
    coarse_domain.pushBack(coarse0);
    coarse_domain.pushBack(coarse1);

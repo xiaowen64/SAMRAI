@@ -34,6 +34,8 @@ boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_receive_and_u
 boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_MPI_wait;
 boost::shared_ptr<tbox::Timer> MappingConnectorAlgorithm::t_modify_misc;
 
+char MappingConnectorAlgorithm::s_print_steps = '\0';
+
 const std::string MappingConnectorAlgorithm::s_dbgbord;
 
 int MappingConnectorAlgorithm::s_operation_mpi_tag = 0;
@@ -63,6 +65,7 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
    d_sanity_check_inputs(false),
    d_sanity_check_outputs(false)
 {
+   getFromInput();
 }
 
 /*
@@ -72,6 +75,31 @@ MappingConnectorAlgorithm::MappingConnectorAlgorithm():
 
 MappingConnectorAlgorithm::~MappingConnectorAlgorithm()
 {
+}
+
+/*
+ ***********************************************************************
+ ***********************************************************************
+ */
+void
+MappingConnectorAlgorithm::getFromInput()
+{
+   if (s_print_steps == '\0') {
+      s_print_steps = 'n';
+      if (tbox::InputManager::inputDatabaseExists()) {
+         boost::shared_ptr<tbox::Database> idb(
+            tbox::InputManager::getInputDatabase());
+         if (idb->isDatabase("MappingConnectorAlgorithm")) {
+            boost::shared_ptr<tbox::Database> ocu_db(
+               idb->getDatabase("MappingConnectorAlgorithm"));
+            s_print_steps =
+               ocu_db->getCharWithDefault("DEV_print_modify_steps", 'n');
+            if (!(s_print_steps == 'n' || s_print_steps == 'y')) {
+               INPUT_VALUE_ERROR("DEV_print_modify_steps");
+            }
+         }
+      }
+   }
 }
 
 /*
@@ -113,7 +141,7 @@ MappingConnectorAlgorithm::modify(
 
    /*
     * Ensure that Connectors incident to and from old agree on
-    * what the old mapped_box_level is.
+    * what the old box_level is.
     */
    const Connector& anchor_to_old = anchor_to_mapped;
    const Connector& old_to_anchor = mapped_to_anchor;
@@ -131,11 +159,10 @@ MappingConnectorAlgorithm::modify(
          << "\n"
          << "new_to_old is  TO  " << &new_to_old.getHead()
          << "\n"
-         << "old_to_anchor is FROM " << &old_to_anchor.getBase() << "\n"
-         );
+         << "old_to_anchor is FROM " << &old_to_anchor.getBase() << "\n");
    }
    /*
-    * Ensure that head and base mapped_box_levels in argument agree with
+    * Ensure that head and base box_levels in argument agree with
     * head and base in the object.
     */
    if (&anchor_to_old.getBase() != &old_to_anchor.getHead()) {
@@ -143,8 +170,7 @@ MappingConnectorAlgorithm::modify(
          << "Given Connectors to and from base of modify do not refer\n"
          << "to the base of the modify in:\n"
          << "anchor_to_old is FROM " << &anchor_to_old.getBase() << "\n"
-         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n"
-         );
+         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n");
    }
    if (&old_to_new.getHead() != &new_to_old.getBase()) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -153,22 +179,19 @@ MappingConnectorAlgorithm::modify(
          << "new_to_old is FROM " << &new_to_old.getBase()
          << "\n"
          << "old_to_new is  TO  " << &old_to_new.getHead()
-         << "\n"
-         );
+         << "\n");
    }
    if (!anchor_to_old.isTransposeOf(old_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between base and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See MappingConnectorAlgorithm::isTransposeOf().\n"
-         );
+         << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (!new_to_old.isTransposeOf(old_to_new)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between head and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See MappingConnectorAlgorithm::isTransposeOf().\n"
-         );
+         << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (anchor_to_old.getParallelState() != BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -178,9 +201,9 @@ MappingConnectorAlgorithm::modify(
 
    if (s_print_steps == 'y') {
       tbox::plog
-      << "MappingConnectorAlgorithm::modify: old mapped_box_level:\n"
+      << "MappingConnectorAlgorithm::modify: old box_level:\n"
       << old_to_new.getBase().format(s_dbgbord, 2)
-      << "MappingConnectorAlgorithm::modify: new mapped_box_level:\n"
+      << "MappingConnectorAlgorithm::modify: new box_level:\n"
       << new_to_old.getBase().format(s_dbgbord, 2)
       << "MappingConnectorAlgorithm::modify: old_to_new:\n"
       << old_to_new.format(s_dbgbord, 2)
@@ -190,13 +213,13 @@ MappingConnectorAlgorithm::modify(
 
    if (0) {
       // Expensive input checking.
-      const BoxLevel& anchor_mapped_box_level = anchor_to_old.getBase();
-      const BoxLevel& old_mapped_box_level = old_to_new.getBase();
+      const BoxLevel& anchor_box_level = anchor_to_old.getBase();
+      const BoxLevel& old_box_level = old_to_new.getBase();
 
       tbox::plog
-      << "anchor mapped_box_level:\n" << anchor_mapped_box_level.format(s_dbgbord, 2)
+      << "anchor box_level:\n" << anchor_box_level.format(s_dbgbord, 2)
       << "anchor_to_old:\n" << anchor_to_old.format(s_dbgbord, 2)
-      << "old mapped_box_level:\n" << old_mapped_box_level.format(s_dbgbord, 2)
+      << "old box_level:\n" << old_box_level.format(s_dbgbord, 2)
       << "old_to_new:\n" << old_to_new.format(s_dbgbord, 2)
       << "new_to_old:\n" << new_to_old.format(s_dbgbord, 2);
 
@@ -252,16 +275,16 @@ MappingConnectorAlgorithm::modify(
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
             const Box find_box(na->getDim(), *ci);
-            const Box& mapped_box(
+            const Box& box(
                *old_to_new.getBase().getBoxes().find(find_box));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
-               "only allows local mappings.  The local mapped_box\n"
-               << mapped_box << " has a non-local map to\n"
+               "only allows local mappings.  The local box\n"
+               << box << " has a non-local map to\n"
                << *na << "\n"
                << "To modify using non-local maps, the\n"
                << "reverse mapping must be provide and\n"
                << "the four-argument version of modify\n"
-               << "must be used.");
+               << "must be used." << std::endl);
          }
       }
    }
@@ -274,7 +297,7 @@ MappingConnectorAlgorithm::modify(
 
    /*
     * Ensure that Connectors incident to and from old agree on
-    * what the old mapped_box_level is.
+    * what the old box_level is.
     */
 
    if (old != &old_to_new.getBase() ||
@@ -285,11 +308,10 @@ MappingConnectorAlgorithm::modify(
          << "anchor_to_old is  TO   " << &anchor_to_old.getHead() << "\n"
          << "old_to_anchor is FROM  " << &old_to_anchor.getBase() << "\n"
          << "old_to_new is FROM " << &old_to_new.getBase()
-         << "\n"
-         );
+         << "\n");
    }
    /*
-    * Ensure that head and base mapped_box_levels in argument agree with
+    * Ensure that head and base box_levels in argument agree with
     * head and base in the object.
     */
    if (&anchor_to_old.getBase() != &old_to_anchor.getHead()) {
@@ -297,15 +319,13 @@ MappingConnectorAlgorithm::modify(
          << "Given Connectors to and from base of modify do not refer\n"
          << "to the base of the modify in MappingConnectorAlgorithm::modify:\n"
          << "anchor_to_old is FROM " << &anchor_to_old.getBase() << "\n"
-         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n"
-         );
+         << "old_to_anchor is  TO  " << &old_to_anchor.getHead() << "\n");
    }
    if (!anchor_to_old.isTransposeOf(old_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between base and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See MappingConnectorAlgorithm::isTransposeOf().\n"
-         );
+         << "See MappingConnectorAlgorithm::isTransposeOf().\n");
    }
    if (anchor_to_old.getParallelState() != BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -314,22 +334,22 @@ MappingConnectorAlgorithm::modify(
    }
 
    if (s_print_steps == 'y') {
-      const BoxLevel& anchor_mapped_box_level = anchor_to_mapped.getBase();
-      const BoxLevel& old_mapped_box_level = old_to_new.getBase();
+      const BoxLevel& anchor_box_level = anchor_to_mapped.getBase();
+      const BoxLevel& old_box_level = old_to_new.getBase();
 
       tbox::plog
-      << "MappingConnectorAlgorithm::modify: anchor mapped_box_level:\n"
-      << anchor_mapped_box_level.format(s_dbgbord, 2)
+      << "MappingConnectorAlgorithm::modify: anchor box_level:\n"
+      << anchor_box_level.format(s_dbgbord, 2)
       << "MappingConnectorAlgorithm::modify: anchor_to_old:\n"
       << anchor_to_old.format(s_dbgbord, 2)
-      << "MappingConnectorAlgorithm::modify: old mapped_box_level:\n"
-      << old_mapped_box_level.format(s_dbgbord, 2)
+      << "MappingConnectorAlgorithm::modify: old box_level:\n"
+      << old_box_level.format(s_dbgbord, 2)
       << "MappingConnectorAlgorithm::modify: old_to_new:\n"
       << old_to_new.format(s_dbgbord, 2)
       << "MappingConnectorAlgorithm::modify: No new_to_old.\n";
    }
 
-   Connector dummy_new_to_old;
+   Connector dummy_new_to_old(anchor_to_mapped.getRatio().getDim());
    privateModify(anchor_to_mapped,
       mapped_to_anchor,
       old_to_new,
@@ -356,16 +376,15 @@ MappingConnectorAlgorithm::modify(
 {
    /*
     * Ensure that connectors incident to and from old agree on
-    * what the old mapped_box_level is.
+    * what the old box_level is.
     */
    if (&anchor_to_mapped.getHead() != &old_to_new.getBase()) {
       TBOX_ERROR(
          "Bad input for MappingConnectorAlgorithm::modify:\n"
-         << "Input MappingConnectorAlgorithm do not agree on what the old mapped_box_level is.\n"
+         << "Input MappingConnectorAlgorithm do not agree on what the old box_level is.\n"
          << "anchor_to_mapped is  TO  " << &anchor_to_mapped.getHead() << "\n"
          << "old_to_new is FROM " << &old_to_new.getBase()
-         << "\n"
-         );
+         << "\n");
    }
 
    if (anchor_to_mapped.getParallelState() != BoxLevel::DISTRIBUTED) {
@@ -383,17 +402,16 @@ MappingConnectorAlgorithm::modify(
       for (Connector::ConstNeighborIterator na = old_to_new.begin(ci);
            na != old_to_new.end(ci); ++na) {
          if (na->getOwnerRank() != old_to_new.getMPI().getRank()) {
-            const Box& mapped_box(
-               *old_to_new.getBase().getBoxes().
-               find(Box(na->getDim(), *ci)));
+            const Box& box(
+               *old_to_new.getBase().getBoxes().find(Box(na->getDim(), *ci)));
             TBOX_ERROR("MappingConnectorAlgorithm::modify: this version of modify\n"
-               "only allows local mappings.  The local mapped_box\n"
-               << mapped_box << " has a non-local map to\n"
+               "only allows local mappings.  The local box\n"
+               << box << " has a non-local map to\n"
                << *na << "\n"
                << "To modify using non-local maps, the\n"
                << "reverse mapping must be provide and\n"
                << "the four-argument version of modify\n"
-               << "must be used.");
+               << "must be used." << std::endl);
          }
       }
    }
@@ -407,29 +425,28 @@ MappingConnectorAlgorithm::modify(
     * No need to check that anchor_to_mapped is strictly local,
     * because initializeToLocalTranspose checks that.
     */
-   Connector mapped_to_anchor;
+   Connector mapped_to_anchor(anchor_to_mapped.getRatio().getDim());
    mapped_to_anchor.initializeToLocalTranspose(anchor_to_mapped);
 
    if (s_print_steps == 'y') {
-      const BoxLevel& anchor_mapped_box_level = anchor_to_mapped.getBase();
-      const BoxLevel& old_mapped_box_level = old_to_new.getBase();
-      const BoxLevel& new_mapped_box_level =
-         old_to_new.getHead();
+      const BoxLevel& anchor_box_level = anchor_to_mapped.getBase();
+      const BoxLevel& old_box_level = old_to_new.getBase();
+      const BoxLevel& new_box_level = old_to_new.getHead();
 
       tbox::plog
-      << "MappingConnectorAlgorithm::modify: anchor mapped_box_level:\n"
-      << anchor_mapped_box_level.format(s_dbgbord, 2)
+      << "MappingConnectorAlgorithm::modify: anchor box_level:\n"
+      << anchor_box_level.format(s_dbgbord, 2)
       << "MappingConnectorAlgorithm::modify: anchor_to_old:\n"
       << anchor_to_mapped.format(s_dbgbord, 2)
-      << "MappingConnectorAlgorithm::modify: old mapped_box_level:\n"
-      << old_mapped_box_level.format(s_dbgbord, 2)
+      << "MappingConnectorAlgorithm::modify: old box_level:\n"
+      << old_box_level.format(s_dbgbord, 2)
       << "MappingConnectorAlgorithm::modify: old_to_new:\n"
       << old_to_new.format(s_dbgbord, 2)
-      << "MappingConnectorAlgorithm::modify: new mapped_box_level:\n"
-      << new_mapped_box_level.format(s_dbgbord, 2);
+      << "MappingConnectorAlgorithm::modify: new box_level:\n"
+      << new_box_level.format(s_dbgbord, 2);
    }
 
-   Connector dummy_new_to_old;
+   Connector dummy_new_to_old(anchor_to_mapped.getRatio().getDim());
    privateModify(anchor_to_mapped,
       mapped_to_anchor,
       old_to_new,
@@ -468,7 +485,7 @@ MappingConnectorAlgorithm::modify(
  * are shrunken by the width of the mapping.
  *
  * At this time, new_to_old is only used to determine the remote
- * owners that must be notified of a local mapped_box being mapped.
+ * owners that must be notified of a local box being mapped.
  * The Connector object contains more info than required, so it can be
  * replaced by something more concise.  However, requiring a transpose
  * Connector lets us use some canned sanity checks.  The use of the
@@ -575,7 +592,7 @@ MappingConnectorAlgorithm::privateModify(
          << "anchor--->mapped:\n" << anchor_to_new.format("", 0)
          << "Connector width of anchor--->mapped will shrink\n"
          << "by " << shrinkage_in_anchor_index_space << " which\n"
-         << "will result in a non-positive width.");
+         << "will result in a non-positive width." << std::endl);
    }
    const IntVector new_to_anchor_width =
       Connector::convertHeadWidthToBase(
@@ -652,7 +669,7 @@ MappingConnectorAlgorithm::privateModify(
     * Object for communicating relationship changes.
     */
    tbox::AsyncCommStage comm_stage;
-   tbox::AsyncCommPeer<int> * all_comms(NULL);
+   tbox::AsyncCommPeer<int> * all_comms(0);
 
    t_modify_misc->stop();
 
@@ -668,7 +685,8 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       outgoing_ranks,
       t_modify_MPI_wait,
-      s_operation_mpi_tag);
+      s_operation_mpi_tag,
+      s_print_steps == 'y');
 
    t_modify_setup_comm->stop();
 
@@ -737,7 +755,8 @@ MappingConnectorAlgorithm::privateModify(
       incoming_ranks,
       all_comms,
       comm_stage,
-      t_modify_receive_and_unpack);
+      t_modify_receive_and_unpack,
+      s_print_steps == 'y');
 
    t_modify_misc->start();
 
@@ -757,7 +776,7 @@ MappingConnectorAlgorithm::privateModify(
       TBOX_WARNING("MappingConnectorAlgorithm::privateModify: generated\n"
          << "overlap Connectors with non-integer ratio between\n"
          << "the base and head.  The results are not guaranteed\n"
-         << "to be complete overlap Connectors.");
+         << "to be complete overlap Connectors." << std::endl);
    }
    t_modify_misc->stop();
 
@@ -783,12 +802,12 @@ MappingConnectorAlgorithm::privateModify(
       new_to_anchor.setBase(*mutable_new, true);
       anchor_to_new.setHead(*mutable_new, true);
    } else {
-      if (mutable_new != NULL) {
+      if (mutable_new != 0) {
          *mutable_new = old_to_new.getHead();
          new_to_anchor.setBase(*mutable_new, true);
          anchor_to_new.setHead(*mutable_new, true);
       }
-      if (mutable_old != NULL) {
+      if (mutable_old != 0) {
          *mutable_old = old_to_new.getBase();
       }
    }
@@ -816,10 +835,9 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
     * Ensure that Connectors incident to and from the old agree on
     * what the old is.
     */
-   if (&old != &old_to_new.getBase() ||
-       (new_to_old.isFinalized() && &old !=
-        &new_to_old.getHead()) ||
-       &old != &anchor_to_mapped.getHead()) {
+   if ((&old != &old_to_new.getBase()) ||
+       (new_to_old.isFinalized() && (&old != &new_to_old.getHead())) ||
+       (&old != &anchor_to_mapped.getHead())) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors to anchor and new of modify are not incident\n"
          << "from the same old in MappingConnectorAlgorithm::modify:\n"
@@ -828,11 +846,10 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
          << "\n"
          << "new_to_old is  TO  " << &new_to_old.getHead()
          << "\n"
-         << "mapped_to_anchor is FROM " << &mapped_to_anchor.getBase() << "\n"
-         );
+         << "mapped_to_anchor is FROM " << &mapped_to_anchor.getBase() << "\n");
    }
    /*
-    * Ensure that new and anchor mapped_box_levels in argument agree with
+    * Ensure that new and anchor box_levels in argument agree with
     * new and anchor in the object.
     */
    if (&mapped_to_anchor.getHead() != &anchor_to_mapped.getBase()) {
@@ -841,8 +858,7 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
          << "to the anchor of the modify in MappingConnectorAlgorithm::modify:\n"
          << "anchor_to_mapped is FROM " << &anchor_to_mapped.getBase() << "\n"
          << "mapped_to_anchor is  TO  " << &mapped_to_anchor.getHead() << "\n"
-         << "anchor of modify is    " << &anchor_to_mapped.getBase() << "\n"
-         );
+         << "anchor of modify is    " << &anchor_to_mapped.getBase() << "\n");
    }
    if (new_to_old.isFinalized() && &old_to_new.getHead() !=
        &new_to_old.getBase()) {
@@ -853,23 +869,20 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
          << "\n"
          << "old_to_new is  TO  " << &old_to_new.getHead()
          << "\n"
-         << "new of modify is    " << &anchor_to_mapped.getHead() << "\n"
-         );
+         << "new of modify is    " << &anchor_to_mapped.getHead() << "\n");
    }
    if (!anchor_to_mapped.isTransposeOf(mapped_to_anchor)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between anchor and mapped of modify\n"
          << "are not transposes of each other.\n"
-         << "See Connector::isTransposeOf().\n"
-         );
+         << "See Connector::isTransposeOf().\n");
    }
    if (new_to_old.isFinalized() &&
        !new_to_old.isTransposeOf(old_to_new)) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
          << "Given Connectors between new and old of modify\n"
          << "are not transposes of each other.\n"
-         << "See Connector::isTransposeOf().\n"
-         );
+         << "See Connector::isTransposeOf().\n");
    }
    if (anchor_to_mapped.getParallelState() != BoxLevel::DISTRIBUTED) {
       TBOX_ERROR("Bad input for MappingConnectorAlgorithm::modify:\n"
@@ -897,7 +910,7 @@ MappingConnectorAlgorithm::privateModify_checkParameters(
       size_t nerrs = findMappingErrors(old_to_new);
       if (nerrs != 0) {
          TBOX_ERROR("MappingConnectorUtil::privateModify: found errors in\n"
-            << "mapping Connector.");
+            << "mapping Connector." << std::endl);
       }
    }
 }
@@ -922,16 +935,16 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
    const int rank(mpi.getRank());
 
    /*
-    * Remove relationships with old mapped_boxes (because
+    * Remove relationships with old boxes (because
     * they are going away). These are Boxes mapped by
     * old_to_new.
     *
     * Erase local old Boxes from new_to_anchor.
     *
-    * If the old mapped_boxes have neighbors in the anchor
+    * If the old boxes have neighbors in the anchor
     * BoxLevel, some relationships from anchor_eto_old should be
-    * erased also.  For each neighbor from a remote anchor mapped_box to a
-    * local old mapped_box, add data to mesg_to_owners saying what
+    * erased also.  For each neighbor from a remote anchor box to a
+    * local old box, add data to mesg_to_owners saying what
     * Box is disappearing and what anchor Box should
     * no longer reference it.
     */
@@ -939,7 +952,7 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
         iold != old_to_new.end(); ++iold) {
 
       const BoxId& old_gid_gone = *iold;
-      const Box old_mapped_box_gone(dim, old_gid_gone);
+      const Box old_box_gone(dim, old_gid_gone);
 
       if (new_to_anchor->hasNeighborSet(old_gid_gone)) {
          // old_gid_gone exists in new_to_anchor.  Remove it.
@@ -948,7 +961,7 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
             new_to_anchor->find(old_gid_gone);
 
          if (s_print_steps == 'y') {
-            tbox::plog << "Box " << old_mapped_box_gone
+            tbox::plog << "Box " << old_box_gone
                        << " is gone." << std::endl;
          }
 
@@ -967,25 +980,25 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
                do {
 
                   if (s_print_steps == 'y') {
-                     tbox::plog << "  Fixing affected mapped_box " << *ianchor
+                     tbox::plog << "  Fixing affected box " << *ianchor
                                 << std::endl;
                   }
 
-                  TBOX_ASSERT(anchor_to_new.hasNeighborSet(ianchor->getId()));
+                  TBOX_ASSERT(anchor_to_new.hasNeighborSet(ianchor->getBoxId()));
 
                   if (s_print_steps == 'y') {
                      anchor_to_new.writeNeighborhoodToErrorStream(
-                        ianchor->getId());
+                        ianchor->getBoxId());
                      tbox::plog << std::endl;
                   }
-                  if (anchor_to_new.hasLocalNeighbor(ianchor->getId(),
-                                                     old_mapped_box_gone)) {
+                  if (anchor_to_new.hasLocalNeighbor(ianchor->getBoxId(),
+                                                     old_box_gone)) {
                      if (s_print_steps == 'y') {
-                        tbox::plog << "    Removing neighbor " << old_mapped_box_gone
+                        tbox::plog << "    Removing neighbor " << old_box_gone
                                    << " from list for " << *ianchor << std::endl;
                      }
-                     anchor_to_new.eraseNeighbor(old_mapped_box_gone,
-                                                 ianchor->getId());
+                     anchor_to_new.eraseNeighbor(old_box_gone,
+                                                 ianchor->getBoxId());
                   }
 
                   ++ianchor;
@@ -1001,7 +1014,7 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
             } else {
                // Tell owner of nabr to erase references to old_gid_gone.
                std::vector<int>& mesg = neighbor_removal_mesg[anchor_nabr_owner];
-               // mesg[0] is the counter for how many mapped_boxes are removed.
+               // mesg[0] is the counter for how many boxes are removed.
                if (mesg.empty()) {
                   mesg.insert(mesg.end(), 1);
                } else {
@@ -1025,8 +1038,8 @@ MappingConnectorAlgorithm::privateModify_removeAndCache(
          }
 
          /*
-          * Erase relationships from old_mapped_box_gone to anchor
-          * mapped_box_level.
+          * Erase relationships from old_box_gone to anchor
+          * box_level.
           */
          new_to_anchor->eraseLocalNeighborhood(old_gid_gone);
 
@@ -1108,7 +1121,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
       if (anchor_ni == visible_anchor_nabrs.end() &&
           new_ni == visible_new_nabrs.end()) {
          /*
-          * There are no visible mapped_boxes owned by rank higher than
+          * There are no visible boxes owned by rank higher than
           * local process.  So loop from the beginning.
           */
          anchor_ni = visible_anchor_nabrs.begin();
@@ -1174,14 +1187,14 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
           * Content of send_mesg:
           * - neighbor-removal section cached in neighbor_removal_mesg.
           * - offset to the reference section (see below)
-          * - number of anchor mapped_boxes for which neighbors are found
-          * - number of new mapped_boxes for which neighbors are found
-          *   - id of base/head mapped_box
-          *   - number of neighbors found for base/head mapped_box.
+          * - number of anchor boxes for which neighbors are found
+          * - number of new boxes for which neighbors are found
+          *   - id of base/head box
+          *   - number of neighbors found for base/head box.
           *     - BoxId of neighbors found.
           *       Boxes of found neighbors are given in the
           *       reference section of the message.
-          * - reference section: all the mapped_boxes referenced as
+          * - reference section: all the boxes referenced as
           *   neighbors (accumulated in referenced_anchor_nabrs
           *   and referenced_new_nabrs).
           *   - number of referenced base neighbors
@@ -1212,11 +1225,11 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
 
          // Indices of certain positions in send_mesg.
          const int idx_offset_to_ref = static_cast<int>(send_mesg.size());
-         const int idx_num_anchor_mapped_boxes = idx_offset_to_ref + 1;
-         const int idx_num_new_mapped_boxes = idx_offset_to_ref + 2;
+         const int idx_num_anchor_boxes = idx_offset_to_ref + 1;
+         const int idx_num_new_boxes = idx_offset_to_ref + 2;
          send_mesg.insert(send_mesg.end(), 3, 0);
 
-         // Mapped_boxes referenced in the message, used when adding ref section.
+         // Boxes referenced in the message, used when adding ref section.
          BoxContainer referenced_anchor_nabrs; // Referenced neighbors in anchor.
          BoxContainer referenced_new_nabrs; // Referenced neighbors in new.
 
@@ -1229,7 +1242,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
             visible_anchor_nabrs,
             anchor_ni,
             send_mesg,
-            idx_num_anchor_mapped_boxes,
+            idx_num_anchor_boxes,
             anchor_to_new,
             referenced_new_nabrs,
             anchor_to_old,
@@ -1247,7 +1260,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
             visible_new_nabrs,
             new_ni,
             send_mesg,
-            idx_num_new_mapped_boxes,
+            idx_num_new_boxes,
             *new_to_anchor,
             referenced_anchor_nabrs,
             *new_to_anchor,
@@ -1280,7 +1293,8 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
                referenced_new_nabrs,
                referenced_anchor_nabrs,
                outgoing_comm,
-               dim);
+               dim,
+               s_print_steps == 'y');
 
             TBOX_ASSERT(owners_sent_to.find(curr_owner) == owners_sent_to.end());
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1290,15 +1304,15 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
          }
 
          /*
-          * If we come to the end of visible mapped_boxes, go back and
-          * work on the mapped_boxes owned by processors with lower rank
+          * If we come to the end of visible boxes, go back and
+          * work on the boxes owned by processors with lower rank
           * than the local rank.  (This is part of the optimization to
           * reduce communication time.)
           */
          if (anchor_ni == visible_anchor_nabrs.end() &&
              new_ni == visible_new_nabrs.end()) {
             /*
-             * There are no mapped_boxes that are owned by rank higher
+             * There are no boxes that are owned by rank higher
              * than local process and that we want to find neighbors for.
              * So loop from the beginning.
              */
@@ -1325,7 +1339,7 @@ MappingConnectorAlgorithm::privateModify_discoverAndSend(
  * Save local and semilocal overlaps in bridging_connector.  For
  * remote overlaps, pack in send_mesg, add head Box to
  * referenced_head_nabrs and increment
- * send_mesg[remote_mapped_box_counter_index].
+ * send_mesg[remote_box_counter_index].
  *
  ***********************************************************************
  */
@@ -1425,7 +1439,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
                  na != found_nabrs.end(); ++na) {
                const Box& nabr = *na;
                referenced_head_nabrs.insert(nabr);
-               nabr.getId().putToIntBuffer(submesg);
+               nabr.getBoxId().putToIntBuffer(submesg);
                submesg += BoxId::commBufferSize();
             }
          }
@@ -1438,7 +1452,7 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
              */
             if (!found_nabrs.empty()) {
                Connector::NeighborhoodIterator base_box_itr =
-                  mapped_connector.makeEmptyLocalNeighborhood(base_box.getId());
+                  mapped_connector.makeEmptyLocalNeighborhood(base_box.getBoxId());
                for (std::vector<Box>::const_iterator na = found_nabrs.begin();
                     na != found_nabrs.end(); ++na) {
                   mapped_connector.insertLocalNeighbor(*na, base_box_itr);
@@ -1470,9 +1484,9 @@ MappingConnectorAlgorithm::privateModify_findOverlapsForOneProcess(
 void
 MappingConnectorAlgorithm::assertMappingValidity(
    const Connector& connector,
-   char is_local_map) const
+   MappingType map_type) const
 {
-   size_t nerr = findMappingErrors(connector, is_local_map);
+   size_t nerr = findMappingErrors(connector, map_type);
    if (nerr != 0) {
       tbox::perr << "MappingConnectorAlgorithm::assertMappingValidity found\n"
                  << nerr << " errors.\n"
@@ -1481,7 +1495,7 @@ MappingConnectorAlgorithm::assertMappingValidity(
                  << "post-map:\n" << connector.getHead().format("POST: ", 2)
                  << std::endl;
       TBOX_ERROR("MappingConnectorAlgorithm::assertMappingValidity exiting due\n"
-         << "to above errors.");
+         << "to above errors." << std::endl);
    }
 }
 
@@ -1493,43 +1507,45 @@ MappingConnectorAlgorithm::assertMappingValidity(
 size_t
 MappingConnectorAlgorithm::findMappingErrors(
    const Connector& connector,
-   char is_local_map) const
+   MappingType map_type) const
 {
    const tbox::SAMRAI_MPI& mpi(connector.getMPI());
 
    // Need to know whether this is a local map.
-   if (is_local_map == '\0') {
+   if (map_type == UNKNOWN) {
       if (mpi.getSize() > 1) {
          for (Connector::ConstNeighborhoodIterator ei = connector.begin();
               ei != connector.end(); ++ei) {
             for (Connector::ConstNeighborIterator ni = connector.begin(ei);
                  ni != connector.end(ei); ++ni) {
                if ((*ni).getOwnerRank() != connector.getMPI().getRank()) {
-                  is_local_map = 'n';
+                  map_type = NOT_LOCAL;
                   break;
                }
             }
-            if (is_local_map == 'n') {
+            if (map_type == NOT_LOCAL) {
                break;
             }
          }
-         if (is_local_map != 'n') {
-            is_local_map = 'y';
+         if (map_type == UNKNOWN) {
+            map_type = LOCAL;
          }
-         int tmpi = is_local_map == 'y' ? 0 : 1;
+         int tmpi = map_type == LOCAL ? 0 : 1;
          int tmpj; // For some reason, MPI_IN_PLACE is undeclared!
          mpi.Allreduce(&tmpi, &tmpj, 1, MPI_INT, MPI_MAX);
-         if (tmpj > 0) is_local_map = 'n';
+         if (tmpj > 0) {
+            map_type = NOT_LOCAL;
+         }
       } else {
-         is_local_map = 'y';
+         map_type = LOCAL;
       }
    }
 
    /*
     * If not a local map, we need a globalized copy of the head.
     */
-   const BoxLevel& new_mapped_box_level =
-      is_local_map == 'y' ? connector.getHead() :
+   const BoxLevel& new_box_level =
+      map_type == LOCAL ? connector.getHead() :
       connector.getHead().getGlobalizedVersion();
 
    int error_count = 0;
@@ -1539,30 +1555,29 @@ MappingConnectorAlgorithm::findMappingErrors(
     * the new BoxLevel.  There should be a mapping for each
     * Box that changed or disappeared.
     */
-   const BoxContainer& old_mapped_boxes = connector.getBase().getBoxes();
-   for (RealBoxConstIterator ni(old_mapped_boxes.realBegin());
-        ni != old_mapped_boxes.realEnd(); ++ni) {
-      const Box& old_mapped_box = *ni;
-      if (!new_mapped_box_level.hasBox(old_mapped_box)) {
-         // old_mapped_box disappeared.  Require a mapping for old_mapped_box.
-         if (!connector.hasNeighborSet(old_mapped_box.getId())) {
+   const BoxContainer& old_boxes = connector.getBase().getBoxes();
+   for (RealBoxConstIterator ni(old_boxes.realBegin());
+        ni != old_boxes.realEnd(); ++ni) {
+      const Box& old_box = *ni;
+      if (!new_box_level.hasBox(old_box)) {
+         // old_box disappeared.  Require a mapping for old_box.
+         if (!connector.hasNeighborSet(old_box.getBoxId())) {
             ++error_count;
             tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                        << error_count
-                       << "): old mapped_box " << old_mapped_box
+                       << "): old box " << old_box
                        << " disappeared without being mapped." << std::endl;
          }
       } else {
-         const Box& new_mapped_box =
-            *(new_mapped_box_level.getBoxStrict(old_mapped_box));
-         if (!new_mapped_box.isSpatiallyEqual(old_mapped_box)) {
-            // old_mapped_box has changed its box.  A mapping must exist for it.
-            if (!connector.hasNeighborSet(old_mapped_box.getId())) {
+         const Box& new_box = *(new_box_level.getBoxStrict(old_box));
+         if (!new_box.isSpatiallyEqual(old_box)) {
+            // old_box has changed its box.  A mapping must exist for it.
+            if (!connector.hasNeighborSet(old_box.getBoxId())) {
                ++error_count;
                tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                           << error_count
-                          << "): old mapped_box " << old_mapped_box
-                          << " changed to " << new_mapped_box
+                          << "): old box " << old_box
+                          << " changed to " << new_box
                           << " without being mapped." << std::endl;
             }
          }
@@ -1579,17 +1594,16 @@ MappingConnectorAlgorithm::findMappingErrors(
       const BoxId& gid = *ei;
 
       if (!connector.getBase().hasBox(gid)) {
-         // Mapping does not go from a old mapped_box.
+         // Mapping does not go from a old box.
          ++error_count;
          tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                     << error_count
                     << "): mapping given for nonexistent index " << gid
                     << std::endl;
       } else {
-         const Box& old_mapped_box =
-            *(connector.getBase().getBoxStrict(gid));
+         const Box& old_box = *(connector.getBase().getBoxStrict(gid));
 
-         Box grown_box(old_mapped_box);
+         Box grown_box(old_box);
          grown_box.grow(connector.getConnectorWidth());
 
          for (Connector::ConstNeighborIterator ni = connector.begin(ei);
@@ -1600,30 +1614,30 @@ MappingConnectorAlgorithm::findMappingErrors(
                ++error_count;
                tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                           << error_count
-                          << "): old mapped_box " << old_mapped_box
+                          << "): old box " << old_box
                           << " grown by " << connector.getConnectorWidth()
                           << " to " << grown_box << " does not contain neighbor "
                           << nabr << std::endl;
             }
 
-            if (!new_mapped_box_level.hasBox(nabr)) {
+            if (!new_box_level.hasBox(nabr)) {
                ++error_count;
                tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                           << error_count
-                          << "): old mapped_box " << old_mapped_box
-                          << " mapped to nonexistent new mapped_box "
+                          << "): old box " << old_box
+                          << " mapped to nonexistent new box "
                           << nabr << std::endl;
             } else {
-               const Box& head_mapped_box =
-                  *(new_mapped_box_level.getBoxStrict(nabr.getId()));
-               if (!nabr.isSpatiallyEqual(head_mapped_box)) {
+               const Box& head_box =
+                  *(new_box_level.getBoxStrict(nabr.getBoxId()));
+               if (!nabr.isSpatiallyEqual(head_box)) {
                   ++error_count;
                   tbox::perr << "MappingConnectorAlgorithm::findMappingError ("
                              << error_count
-                             << "): old mapped_box " << old_mapped_box
+                             << "): old box " << old_box
                              << " mapped to neighbor " << nabr
-                             << " inconsistent new mapped_box "
-                             << head_mapped_box << std::endl;
+                             << " inconsistent new box "
+                             << head_box << std::endl;
                }
             }
 
@@ -1652,26 +1666,6 @@ MappingConnectorAlgorithm::initializeCallback()
    if (tbox::SAMRAI_MPI::usingMPI()) {
       const tbox::SAMRAI_MPI& mpi(tbox::SAMRAI_MPI::getSAMRAIWorld());
       s_class_mpi.dupCommunicator(mpi);
-   }
-
-   /*
-    * - gets timers from the TimerManager.
-    * - sets up their deallocation.
-    * - sets up debugging flags.
-    */
-
-   if (s_print_steps == '\0') {
-      if (tbox::InputManager::inputDatabaseExists()) {
-         s_print_steps = 'n';
-         boost::shared_ptr<tbox::Database> idb(
-            tbox::InputManager::getInputDatabase());
-         if (idb->isDatabase("MappingConnectorAlgorithm")) {
-            boost::shared_ptr<tbox::Database> ocu_db(
-               idb->getDatabase("MappingConnectorAlgorithm"));
-            s_print_steps = ocu_db->getCharWithDefault("print_modify_steps",
-                  s_print_steps);
-         }
-      }
    }
 
    t_modify = tbox::TimerManager::getManager()->

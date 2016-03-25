@@ -58,6 +58,9 @@ public:
     * shift number.
     *
     * @param[in] shift_number
+    *
+    * @pre shift_number.isValid()
+    * @pre shift_number.getPeriodicValue() < getNumberOfShifts()
     */
    const IntVector&
    shiftNumberToShiftDistance(
@@ -107,6 +110,9 @@ public:
     * the shift distance of the given shift number.
     *
     * @param[in] shift_number
+    *
+    * @pre shift_number.isValid()
+    * @pre shift_number.getPeriodicValue() < getNumberOfShifts()
     */
    const PeriodicId&
    getOppositeShiftNumber(
@@ -209,12 +215,7 @@ private:
    static void
    finalizeCallback();
 
-   const tbox::Dimension d_dim;
-
-   static PeriodicShiftCatalog* s_periodic_shift_catalog_instance[tbox::
-                                                                  Dimension::
-                                                                  MAXIMUM_DIMENSION_VALUE
-   ];
+   static PeriodicShiftCatalog* s_periodic_shift_catalog_instance[SAMRAI::MAX_DIM_VAL];
 
    std::vector<IntVector> d_shifts;
 

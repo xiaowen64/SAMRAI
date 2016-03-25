@@ -39,7 +39,7 @@ PatchEdgeDataNormOpsComplex::numberOfEntries(
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
    int retval = 0;
@@ -84,7 +84,7 @@ PatchEdgeDataNormOpsComplex::abs(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = box.getDim().getValue();
    for (int d = 0; d < dimVal; d++) {
@@ -101,7 +101,7 @@ PatchEdgeDataNormOpsComplex::L1Norm(
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -112,7 +112,7 @@ PatchEdgeDataNormOpsComplex::L1Norm(
          retval += d_array_ops.L1Norm(data->getArrayData(d), edge_box);
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
@@ -131,7 +131,7 @@ PatchEdgeDataNormOpsComplex::L2Norm(
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -143,7 +143,7 @@ PatchEdgeDataNormOpsComplex::L2Norm(
          retval += aval * aval;
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);
@@ -165,7 +165,7 @@ PatchEdgeDataNormOpsComplex::weightedL2Norm(
    const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*data, *weight, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
 
    int dimVal = box.getDim().getValue();
 
@@ -179,7 +179,7 @@ PatchEdgeDataNormOpsComplex::weightedL2Norm(
          retval += aval * aval;
       }
    } else {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*data, *cvol);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*data, *cvol);
 
       for (int d = 0; d < dimVal; d++) {
          const hier::Box edge_box = pdat::EdgeGeometry::toEdgeBox(box, d);

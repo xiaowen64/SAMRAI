@@ -23,11 +23,11 @@ namespace SAMRAI {
 namespace xfer {
 
 /*!
- * @brief Abstract base class defining the interface for all concrete transaction
- * factory objects that generate data transaction objects used with a CoarsenSchedule
- * object.  A concrete subclass will allocate new transaction objects.  This class
- * is an example of the ``Abstract Factory'' method described in the Design Patterns
- * book by Gamma, et al.
+ * @brief Abstract base class defining the interface for all concrete
+ * transaction factory objects that generate data transaction objects used with
+ * a CoarsenSchedule object.  A concrete subclass will allocate new transaction
+ * objects.  This class is an example of the ``Abstract Factory'' method
+ * described in the Design Patterns book by Gamma, et al.
  *
  * To add a new type of Transaction object MyCoarsenTransaction:
  *
@@ -37,8 +37,8 @@ namespace xfer {
  *       concrete subclass; in particular, the allocate() function must return
  *       a new instance of the desired transaction object.
  * -# The type of the transaction allocated by the concrete factory is a
- *       Transaction<DIM>.  Thus, the new transaction object must be derived
- *       from the Transaction<DIM> base class and implement the abstract
+ *       Transaction.  Thus, the new transaction object must be derived
+ *       from the Transaction base class and implement the abstract
  *       virtual functions declared by the base class.
  *
  * @see tbox::Transaction
@@ -59,8 +59,8 @@ public:
 
    /*!
     * @brief Pure virtual function to set the array of CoarsenClass::Data items
-    * associated with the coarsen schedule.  Typical concrete transactions used by
-    * the schedule use this information to communicate data.  This operation
+    * associated with the coarsen schedule.  Typical concrete transactions used
+    * by the schedule use this information to communicate data.  This operation
     * is called by the coarsen schedule during the execution of the
     * CoarsenSchedule::fillData() routine before data communication
     * operations begin.
@@ -71,23 +71,23 @@ public:
       int num_coarsen_items) = 0;
 
    /*!
-    * @brief Pure virtual function to clear the array of CoarsenClass::Data items
-    * associated with the coarsen schedule.  This operation is called by the
-    * coarsen schedule after data communication operations are complete.
+    * @brief Pure virtual function to clear the array of CoarsenClass::Data
+    * items associated with the coarsen schedule.  This operation is called by
+    * the coarsen schedule after data communication operations are complete.
     */
    virtual void
    unsetCoarsenItems() = 0;
 
    /*!
-    * @brief Pure virtual function to allocate a concrete coarsen transaction object.
-    * This routine is called by the coarsen schedule during construction of the
-    * schedule.
+    * @brief Pure virtual function to allocate a concrete coarsen transaction
+    * object.  This routine is called by the coarsen schedule during
+    * construction of the schedule.
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
     * @param overlap        boost::shared_ptr to overlap region between patches.
-    * @param dst_mapped_box Destination Box in destination patch level.
-    * @param src_mapped_box Source Box in source patch level.
+    * @param dst_box        Destination Box in destination patch level.
+    * @param src_box        Source Box in source patch level.
     * @param citem_id       Integer index of CoarsenClass::Data item associated
     *                       with transaction.
     */
@@ -96,13 +96,13 @@ public:
       const boost::shared_ptr<hier::PatchLevel>& dst_level,
       const boost::shared_ptr<hier::PatchLevel>& src_level,
       const boost::shared_ptr<hier::BoxOverlap>& overlap,
-      const hier::Box& dst_mapped_box,
-      const hier::Box& src_mapped_box,
+      const hier::Box& dst_box,
+      const hier::Box& src_box,
       int citem_id) const = 0;
 
 private:
    CoarsenTransactionFactory(
-      const CoarsenTransactionFactory&);                        // not implemented
+      const CoarsenTransactionFactory&);                  // not implemented
    void
    operator = (
       const CoarsenTransactionFactory&);                  // not implemented

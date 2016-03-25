@@ -40,14 +40,14 @@ PatchGeometry::PatchGeometry(
    NULL_USE(touches_periodic_bdry);
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(ratio_to_level_zero,
+   TBOX_ASSERT_OBJDIM_EQUALITY3(ratio_to_level_zero,
       touches_regular_bdry,
       touches_periodic_bdry);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 
    /*
-    * All components of ratio must me nonzero.  Additionally, all components
+    * All components of ratio must be nonzero.  Additionally, all components
     * of ratio not equal to 1 must have the same sign.
     */
    int i;
@@ -89,7 +89,7 @@ PatchGeometry::getBoundaryFillBox(
    const IntVector& gcw) const
 {
 
-   TBOX_DIM_ASSERT_CHECK_ARGS3(bbox, patch_box, gcw);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(bbox, patch_box, gcw);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    for (int i = 0; i < d_dim.getValue(); i++) {
@@ -109,10 +109,10 @@ PatchGeometry::getBoundaryFillBox(
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    const tbox::Array<int>& location_index_max = blut->getMaxLocationIndices();
+#endif
    TBOX_ASSERT(bdry_type > 0);
    TBOX_ASSERT(bdry_type <= d_dim.getValue());
    TBOX_ASSERT(location_index >= 0);
-#endif
 
    if (!fill_box.empty()) {
 
@@ -156,9 +156,9 @@ PatchGeometry::setCodimensionBoundaries(
    for (int i = 0; i < bdry_boxes.size(); i++) {
       TBOX_ASSERT(bdry_boxes[i].getBoundaryType() == codim);
    }
+#endif
    TBOX_ASSERT(codim <= d_dim.getValue());
    TBOX_ASSERT(codim > 0);
-#endif
 
    d_patch_boundaries[codim - 1].resizeArray(bdry_boxes.size(),
       BoundaryBox(d_dim));
@@ -197,16 +197,10 @@ PatchGeometry::printClassData(
    }
 }
 
-PatchGeometry::TwoDimBool::TwoDimBool():
-   d_dim(tbox::Dimension::getInvalidDimension())
-{
-}
-
 PatchGeometry::TwoDimBool::TwoDimBool(
    const tbox::Dimension& dim):
    d_dim(dim)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
    setAll(false);
 }
 

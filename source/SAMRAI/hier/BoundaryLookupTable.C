@@ -26,8 +26,7 @@ namespace SAMRAI {
 namespace hier {
 
 BoundaryLookupTable *
-BoundaryLookupTable::s_lookup_table_instance[tbox::Dimension::MAXIMUM_DIMENSION_VALUE
-] = { (BoundaryLookupTable *)NULL };
+BoundaryLookupTable::s_lookup_table_instance[SAMRAI::MAX_DIM_VAL] = {0};
 
 tbox::StartupShutdownManager::Handler
 BoundaryLookupTable::s_finalize_handler(
@@ -50,24 +49,28 @@ BoundaryLookupTable::BoundaryLookupTable(
    d_dim(dim)
 {
    if (d_table[0].isNull()) {
-      int factrl[tbox::Dimension::MAXIMUM_DIMENSION_VALUE + 1];
+      const int dim_val = d_dim.getValue();
+      int factrl[SAMRAI::MAX_DIM_VAL + 1];
       factrl[0] = 1;
-      for (int i = 1; i <= d_dim.getValue(); i++) factrl[i] = i * factrl[i - 1];
-      d_ncomb.resizeArray(d_dim.getValue());
-      d_max_li.resizeArray(d_dim.getValue());
-      for (int codim = 1; codim <= d_dim.getValue(); codim++) {
+      for (int i = 1; i <= dim_val; ++i) {
+         factrl[i] = i * factrl[i - 1];
+      }
+
+      d_ncomb.resizeArray(dim_val);
+      d_max_li.resizeArray(dim_val);
+      for (int codim = 1; codim <= dim_val; codim++) {
          int cdm1 = codim - 1;
-         d_ncomb[cdm1] = factrl[d_dim.getValue()]
-            / (factrl[codim] * factrl[d_dim.getValue() - codim]);
+         d_ncomb[cdm1] = factrl[dim_val]
+            / (factrl[codim] * factrl[dim_val - codim]);
 
          tbox::Array<int> work;
          work.resizeArray(codim * d_ncomb[cdm1]);
 
-         int recursive_work[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int recursive_work[SAMRAI::MAX_DIM_VAL];
          int recursive_work_lvl = 0;
          int* recursive_work_ptr;
-         buildTable(work.getPointer(), codim, 1, recursive_work,
-            recursive_work_lvl, recursive_work_ptr);
+         buildTable(work.getPointer(), recursive_work,
+            recursive_work_lvl, recursive_work_ptr, codim, 1);
 
          d_table[cdm1].resizeArray(d_ncomb[cdm1]);
          for (int j = 0; j < d_ncomb[cdm1]; j++) {
@@ -100,19 +103,21 @@ BoundaryLookupTable::~BoundaryLookupTable()
 void
 BoundaryLookupTable::buildTable(
    int* table,
-   int codim,
-   int ibeg,
-   int(&work)[tbox::Dimension::MAXIMUM_DIMENSION_VALUE],
-   int& lvl,
-   int *& ptr)
+   int(&work)[SAMRAI::MAX_DIM_VAL],
+   int& rec_level,
+   int *& ptr,
+   const int codim,
+   const int ibeg)
 {
-   lvl++;
-   if (lvl == 1) ptr = table;
-   int iend = d_dim.getValue() - codim + lvl;
+   rec_level++;
+   if (rec_level == 1) {
+      ptr = table;
+   }
+   int iend = d_dim.getValue() - codim + rec_level;
    for (int i = ibeg; i <= iend; i++) {
-      work[lvl - 1] = i;
-      if (lvl != codim) {
-         buildTable(ptr, codim, i + 1, work, lvl, ptr);
+      work[rec_level - 1] = i;
+      if (rec_level != codim) {
+         buildTable(ptr, work, rec_level, ptr, codim, i + 1);
       } else {
          for (int j = 0; j < codim; j++) {
             *(ptr + j) = work[j];
@@ -120,7 +125,7 @@ BoundaryLookupTable::buildTable(
          ptr += codim;
       }
    }
-   lvl--;
+   rec_level--;
 }
 
 /*
@@ -171,11 +176,11 @@ BoundaryLookupTable::buildBoundaryDirectionVectors()
 void
 BoundaryLookupTable::finalizeCallback()
 {
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++i) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       if (s_lookup_table_instance[i]) {
          delete s_lookup_table_instance[i];
       }
-      s_lookup_table_instance[i] = ((BoundaryLookupTable *)NULL);
+      s_lookup_table_instance[i] = 0;
    }
 
 }

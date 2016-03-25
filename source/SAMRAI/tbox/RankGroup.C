@@ -208,6 +208,7 @@ RankGroup::size() const
 
       default:
          TBOX_ERROR("RankGroup has not been set with a valid storage method");
+         break;
    }
 
    return size;
@@ -243,6 +244,7 @@ RankGroup::getMappedRank(
 
       default:
          TBOX_ERROR("RankGroup has not been set with a valid storage method");
+         break;
    }
 
    return mapped_rank;
@@ -298,6 +300,7 @@ RankGroup::getMapIndex(
 
       default:
          TBOX_ERROR("RankGroup has not been set with a valid storage method");
+         break;
    }
 
    return map_id;

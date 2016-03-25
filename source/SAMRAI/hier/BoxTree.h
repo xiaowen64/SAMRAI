@@ -16,7 +16,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Timer.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <list>
 
@@ -87,14 +87,15 @@ private:
     *
     * @param[in] dim
     *
-    * @param[in] boxes.  No empty boxes are allowed.  An assertion
-    *                           failure will occur if the boxes in this
-    *                           input set do not all have the same BlockId.
+    * @param[in] boxes
     *
     * @param[in] min_number Split up sets of boxes while the number of
     * boxes in a subset is greater than this value.  Setting to a
     * larger value tends to make tree building faster but tree
     * searching slower, and vice versa.  @b Default: 10
+    *
+    * @pre for each box in boxes, !box.empty()
+    * @pre each box in boxes has a valid, identical BlockId
     */
    BoxTree(
       const tbox::Dimension& dim,
@@ -158,6 +159,12 @@ private:
       return d_dim;
    }
 
+   const BlockId&
+   getBlockId() const
+   {
+      return d_block_id;
+   }
+
    //@}
 
    //@{
@@ -170,6 +177,8 @@ private:
     *
     * @param[in] box The box is assumed to be in same index space as
     * those in the tree.
+    *
+    * @pre getDim() == box.getDim()
     */
    bool
    hasOverlap(
@@ -188,8 +197,9 @@ private:
     * with box.
     *
     * @param[in] box the specified box whose overlaps are requested.
-    * An assertion failure will occur if the box does not have the same
-    * BlockId as the tree.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre box.getBlockId() == getBlockId()
     */
    void
    findOverlapBoxes(
@@ -208,8 +218,9 @@ private:
     * entry of this method
     *
     * @param[in] box the specified box whose overlaps are requested.
-    * An assertion failure will occur if the box does not have the same
-    * BlockId as the tree.
+    *
+    * @pre getDim() == box.getDim()
+    * @pre box.getBlockId() == getBlockId()
     */
    void
    findOverlapBoxes(
@@ -311,25 +322,23 @@ private:
     * @brief Dimension along which the input box triples are
     * partitioned.
     */
-   int d_partition_dim;
+   int d_partition_dir;
 
    /*
     * Timers are static to keep the objects light-weight.
     */
-   static boost::shared_ptr<tbox::Timer> t_build_tree[tbox::Dimension::
-                                                      MAXIMUM_DIMENSION_VALUE];
-   static boost::shared_ptr<tbox::Timer> t_search[tbox::Dimension::
-                                                  MAXIMUM_DIMENSION_VALUE];
+   static boost::shared_ptr<tbox::Timer> t_build_tree[SAMRAI::MAX_DIM_VAL];
+   static boost::shared_ptr<tbox::Timer> t_search[SAMRAI::MAX_DIM_VAL];
 
-   static unsigned int s_num_build[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_generate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_duplicate[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_num_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_max_sorted_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_max_found_box[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-   static unsigned int s_max_lin_search[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static unsigned int s_num_build[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_generate[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_duplicate[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_search[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_sorted_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_num_found_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_max_sorted_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_max_found_box[SAMRAI::MAX_DIM_VAL];
+   static unsigned int s_max_lin_search[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

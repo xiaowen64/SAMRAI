@@ -35,14 +35,14 @@ extern "C" {
 #endif
 
 // in conrefine1d.f:
-void F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine2d.f:
-void F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -50,7 +50,7 @@ void F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (const int&, const int&,
    const int *,
    const double *, double *);
 // in conrefine3d.f:
-void F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -66,9 +66,8 @@ void F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-CellDoubleConstantRefine::CellDoubleConstantRefine(
-   const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "CONSTANT_REFINE")
+CellDoubleConstantRefine::CellDoubleConstantRefine():
+   hier::RefineOperator("CONSTANT_REFINE")
 {
 }
 
@@ -83,9 +82,9 @@ CellDoubleConstantRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CellDoubleConstantRefine::getStencilWidth() const
+CellDoubleConstantRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -97,10 +96,9 @@ CellDoubleConstantRefine::refine(
    const hier::BoxOverlap& fine_overlap,
    const hier::IntVector& ratio) const
 {
-   const CellOverlap* t_overlap =
-      dynamic_cast<const CellOverlap *>(&fine_overlap);
+   const CellOverlap* t_overlap = CPP_CAST<const CellOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
@@ -124,15 +122,15 @@ CellDoubleConstantRefine::refine(
 {
    boost::shared_ptr<CellData<double> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<CellData<double> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
-   TBOX_DIM_ASSERT_CHECK_ARGS5(*this, fine, coarse, fine_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(fine, coarse, fine_box, ratio);
 
    const hier::Box cgbox(cdata->getGhostBox());
 
@@ -148,16 +146,16 @@ CellDoubleConstantRefine::refine(
    const hier::Index ilastf = fine_box.upper();
 
    for (int d = 0; d < fdata->getDepth(); d++) {
-      if (getDim() == tbox::Dimension(1)) {
-         F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (ifirstc(0), ilastc(0),
+      if (fine.getDim() == tbox::Dimension(1)) {
+         SAMRAI_F77_FUNC(conrefcelldoub1d, CONREFCELLDOUB1D) (ifirstc(0), ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
             filo(0), fihi(0),
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(2)) {
-         F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (ifirstc(0), ifirstc(1),
+      } else if (fine.getDim() == tbox::Dimension(2)) {
+         SAMRAI_F77_FUNC(conrefcelldoub2d, CONREFCELLDOUB2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -165,8 +163,8 @@ CellDoubleConstantRefine::refine(
             &ratio[0],
             cdata->getPointer(d),
             fdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(3)) {
-         F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (ifirstc(0), ifirstc(1),
+      } else if (fine.getDim() == tbox::Dimension(3)) {
+         SAMRAI_F77_FUNC(conrefcelldoub3d, CONREFCELLDOUB3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

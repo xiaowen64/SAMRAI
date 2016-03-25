@@ -25,7 +25,7 @@
 
 #include "PatchDataTestStrategy.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace std;

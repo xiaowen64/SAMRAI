@@ -37,31 +37,6 @@ PatchFaceDataOpsReal<TYPE>::~PatchFaceDataOpsReal()
 /*
  *************************************************************************
  *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-PatchFaceDataOpsReal<TYPE>::PatchFaceDataOpsReal(
-   const PatchFaceDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-PatchFaceDataOpsReal<TYPE>::operator = (
-   const PatchFaceDataOpsReal<TYPE>& foo)
-{
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
  * General templated operations for real face-centered patch data.
  *
  *************************************************************************
@@ -78,10 +53,10 @@ PatchFaceDataOpsReal<TYPE>::swapData(
 
    boost::shared_ptr<pdat::FaceData<TYPE> > d1(
       patch->getPatchData(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::FaceData<TYPE> > d2(
       patch->getPatchData(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(d1 && d2);
    TBOX_ASSERT(d1->getDepth() && d2->getDepth());
@@ -100,7 +75,7 @@ PatchFaceDataOpsReal<TYPE>::printData(
    std::ostream& s) const
 {
    TBOX_ASSERT(data);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
 
    s << "Data box = " << box << std::endl;
    data->print(box, s);
@@ -115,7 +90,7 @@ PatchFaceDataOpsReal<TYPE>::copyData(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*dst, *src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*dst, *src, box);
 
    int dimVal = dst->getDim().getValue();
 
@@ -133,7 +108,7 @@ PatchFaceDataOpsReal<TYPE>::setToScalar(
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*dst, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*dst, box);
 
    dst->fillAll(alpha, box);
 }

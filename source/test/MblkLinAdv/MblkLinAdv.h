@@ -59,6 +59,7 @@ using namespace SAMRAI;
 class MblkLinAdv:
    public tbox::Serializable,
    public MblkHyperbolicPatchStrategy,
+   public xfer::SingularityPatchStrategy,
    public appu::BoundaryUtilityStrategy
 {
 public:
@@ -233,7 +234,6 @@ public:
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
       const hier::Connector& dst_to_encon,
-      const double fill_time,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
       const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
@@ -254,8 +254,8 @@ public:
     * declared in the tbox::Serializable abstract base class.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -317,7 +317,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    void
@@ -404,7 +404,7 @@ private:
    /**
     * linear advection velocity vector
     */
-   double d_advection_velocity[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_advection_velocity[SAMRAI::MAX_DIM_VAL];
 
    /*
     *  Parameters for numerical method:
@@ -436,7 +436,7 @@ private:
     * Input for SPHERE problem
     */
    double d_radius;
-   double d_center[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_center[SAMRAI::MAX_DIM_VAL];
    double d_uval_inside;
    double d_uval_outside;
 
@@ -477,7 +477,7 @@ private:
     * Input for Sine problem initialization
     */
    double d_amplitude;
-   double d_frequency[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   double d_frequency[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Refinement criteria parameters for gradient detector and

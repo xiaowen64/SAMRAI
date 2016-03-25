@@ -139,12 +139,13 @@ HierarchyEdgeDataOpsComplex::copyData(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -161,11 +162,11 @@ HierarchyEdgeDataOpsComplex::swapData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > d1fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d1fact);
    boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > d2fact(
       d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
    TBOX_ASSERT(d1fact->getGhostCellWidth() == d2fact->getGhostCellWidth());
@@ -214,7 +215,7 @@ HierarchyEdgeDataOpsComplex::printData(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -245,7 +246,7 @@ HierarchyEdgeDataOpsComplex::setToScalar(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -285,12 +286,13 @@ HierarchyEdgeDataOpsComplex::scale(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -320,12 +322,13 @@ HierarchyEdgeDataOpsComplex::addScalar(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > dst(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(dst);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : dst->getGhostBox());
 
@@ -355,15 +358,17 @@ HierarchyEdgeDataOpsComplex::add(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -393,15 +398,17 @@ HierarchyEdgeDataOpsComplex::subtract(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -431,15 +438,17 @@ HierarchyEdgeDataOpsComplex::multiply(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -469,15 +478,17 @@ HierarchyEdgeDataOpsComplex::divide(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -506,12 +517,13 @@ HierarchyEdgeDataOpsComplex::reciprocal(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -543,15 +555,17 @@ HierarchyEdgeDataOpsComplex::linearSum(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -582,15 +596,17 @@ HierarchyEdgeDataOpsComplex::axpy(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -621,15 +637,17 @@ HierarchyEdgeDataOpsComplex::axmy(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s1(
             p->getPatchData(src1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > s2(
             p->getPatchData(src2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(s1);
+         TBOX_ASSERT(s2);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -658,12 +676,13 @@ HierarchyEdgeDataOpsComplex::abs(
 
          boost::shared_ptr<pdat::EdgeData<double> > d(
             p->getPatchData(dst_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > src(
             p->getPatchData(src_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
+         TBOX_ASSERT(src);
 
          hier::Box box = (interior_only ? p->getBox() : d->getGhostBox());
 
@@ -693,7 +712,7 @@ HierarchyEdgeDataOpsComplex::setRandomValues(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(d);
 
@@ -731,7 +750,7 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
 
      boost::shared_ptr<pdat::EdgeDataFactory<dcomplex> > dfact(
         d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id),
-        boost::detail::dynamic_cast_tag());
+        BOOST_CAST_TAG);
 
       TBOX_ASSERT(dfact);
 
@@ -768,7 +787,7 @@ HierarchyEdgeDataOpsComplex::numberOfEntries(
               ip != level->end(); ++ip) {
             boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
                (*ip)->getPatchData(data_id),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
 
             TBOX_ASSERT(d);
 
@@ -811,11 +830,12 @@ HierarchyEdgeDataOpsComplex::sumControlVolumes(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<double> > cv(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
+         TBOX_ASSERT(d);
          TBOX_ASSERT(cv);
 
          hier::Box box = cv->getGhostBox();
@@ -854,13 +874,13 @@ HierarchyEdgeDataOpsComplex::L1Norm(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(d);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(d);
 
             box = d->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -916,16 +936,17 @@ HierarchyEdgeDataOpsComplex::weightedL2Norm(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > w(
             p->getPatchData(wgt_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(d);
+         TBOX_ASSERT(w);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(d);
 
             box = d->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1000,13 +1021,13 @@ HierarchyEdgeDataOpsComplex::maxNorm(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(d);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(d);
 
             box = d->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1051,16 +1072,17 @@ HierarchyEdgeDataOpsComplex::dot(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d1(
             p->getPatchData(data1_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<dcomplex> > d2(
             p->getPatchData(data2_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<hier::PatchData> pd;
+
+         TBOX_ASSERT(d1);
+         TBOX_ASSERT(d2);
 
          hier::Box box = p->getBox();
          if (vol_id >= 0) {
-
-            TBOX_ASSERT(d1);
 
             box = d1->getGhostBox();
             pd = p->getPatchData(vol_id);
@@ -1073,11 +1095,23 @@ HierarchyEdgeDataOpsComplex::dot(
       }
    }
 
-   dcomplex global_dot = dprod;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&dprod, &global_dot, 1, MPI_DOUBLE_COMPLEX, MPI_SUM);
+      // It should be possible to do this with a single Allreduce and a
+      // datatype of MPI_C_DOUBLE_COMPLEX.  However, while recent versions of
+      // openmpi define this datatype their implementations of Allreduce do not
+      // recognize it.
+      double real_part = dprod.real();
+      double imag_part = dprod.imag();
+      double global_real_part;
+      double global_imag_part;
+      mpi.Allreduce(&real_part, &global_real_part, 1, MPI_DOUBLE, MPI_SUM);
+      mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
+      dcomplex global_dot(global_real_part, global_imag_part);
+      return global_dot;
    }
-   return global_dot;
+   else {
+      return dprod;
+   }
 }
 
 dcomplex
@@ -1103,10 +1137,10 @@ HierarchyEdgeDataOpsComplex::integral(
 
          boost::shared_ptr<pdat::EdgeData<dcomplex> > data(
             p->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::EdgeData<double> > vol(
             p->getPatchData(vol_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(vol);
@@ -1117,11 +1151,23 @@ HierarchyEdgeDataOpsComplex::integral(
       }
    }
 
-   dcomplex global_integral = local_integral;
    if (mpi.getSize() > 1) {
-      mpi.Allreduce(&local_integral, &global_integral, 1, MPI_DOUBLE_COMPLEX, MPI_SUM);
+      // It should be possible to do this with a single Allreduce and a
+      // datatype of MPI_C_DOUBLE_COMPLEX.  However, while recent versions of
+      // openmpi define this datatype their implementations of Allreduce do not
+      // recognize it.
+      double real_part = local_integral.real();
+      double imag_part = local_integral.imag();
+      double global_real_part;
+      double global_imag_part;
+      mpi.Allreduce(&real_part, &global_real_part, 1, MPI_DOUBLE, MPI_SUM);
+      mpi.Allreduce(&imag_part, &global_imag_part, 1, MPI_DOUBLE, MPI_SUM);
+      dcomplex global_integral(global_real_part, global_imag_part);
+      return global_integral;
    }
-   return global_integral;
+   else {
+      return local_integral;
+   }
 }
 
 }

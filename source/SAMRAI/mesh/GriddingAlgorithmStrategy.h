@@ -16,7 +16,7 @@
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace mesh {
@@ -63,8 +63,8 @@ public:
     * selected for refinement, no new level should be added to the
     * hierarchy.
     *
-    * The boolean argument initial_time indicates whether the routine
-    * is called at the initial simulation time.  If true, this routine
+    * The boolean argument initial_cycle indicates whether the routine
+    * is called at the initial simulation cycle.  If true, this routine
     * is being used to build individual levels during the construction of
     * the AMR hierarchy at the initial simulation time.  If false, the
     * routine is being used to add new levels to the hierarchy at some
@@ -78,20 +78,22 @@ public:
     * selected for refinement should be buffered before new finer
     * level boxes are constructed.
     *
-    * @param level_time Current simulation time.
-    * @param initial_time Must be true if level_time is the initial time
-    *                     of the simulation, false otherwise
     * @param tag_buffer Size of buffer around tagged cells that will be
     *                   covered by the fine level.  Must be non-negative.
+    * @param initial_cycle Must be true if level_cycle is the initial cycle
+    *                      of the simulation, false otherwise
+    * @param cycle Current simulation cycle.
+    * @param level_time Current simulation time.
     * @param regrid_start_time The simulation time when the regridding
     *                          operation began (this parameter is ignored
     *                          except when using Richardson extrapolation)
     */
    virtual void
    makeFinerLevel(
-      const double level_time,
-      const bool initial_time,
       const int tag_buffer,
+      const bool initial_cycle,
+      const int cycle,
+      const double level_time,
       const double regrid_start_time = 0.0) = 0;
 
    /*!
@@ -121,9 +123,11 @@ public:
     *
     * @param level_number Coarsest level on which cells will be tagged for
     *                     refinement
-    * @param regrid_time Simulation time when regridding occurs
     * @param tag_buffer See tag_buffer in makeFinerLevel.
     *                   There is one value per level in the hierarchy.
+    * @param cycle Simulation cycle when regridding occurs
+    * @param level_time Simulation time of the level corresponding to level_num
+    *                   when regridding occurs
     * @param regrid_start_time The simulation time when the regridding
     *                          operation began on each level (this parameter
     *                          is ignored except when using Richardson
@@ -134,8 +138,9 @@ public:
    virtual void
    regridAllFinerLevels(
       const int level_number,
-      const double regrid_time,
       const tbox::Array<int>& tag_buffer,
+      const int cycle,
+      const double level_time,
       tbox::Array<double> regrid_start_time = tbox::Array<double>(),
       const bool level_is_coarsest_to_sync = true) = 0;
 

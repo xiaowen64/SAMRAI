@@ -56,7 +56,7 @@ Schedule::s_initialize_finalize_handler(
  */
 
 Schedule::Schedule():
-   d_coms(NULL),
+   d_coms(0),
    d_com_stage(),
    d_mpi(SAMRAI_MPI::getSAMRAIWorld()),
    d_first_tag(s_default_first_tag),
@@ -74,7 +74,7 @@ Schedule::Schedule():
  */
 Schedule::~Schedule()
 {
-   if (d_coms != NULL) {
+   if (allocatedCommunicationObjects()) {
       TBOX_ERROR("Destructing a schedule while communication is pending\n"
          << "leads to lost messages.  Aborting.");
    }
@@ -410,9 +410,9 @@ Schedule::processCompletedCommunications()
            d_com_stage.advanceSome() ) {
 
       AsyncCommPeer<char>* completed_comm =
-         dynamic_cast<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
+         CPP_CAST<AsyncCommPeer<char> *>(d_com_stage.popCompletionQueue());
 
-      TBOX_ASSERT(completed_comm != NULL);
+      TBOX_ASSERT(completed_comm != 0);
       TBOX_ASSERT(completed_comm->isDone());
       if (static_cast<size_t>(completed_comm - d_coms) < d_recv_sets.size()) {
 

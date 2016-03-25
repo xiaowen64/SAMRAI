@@ -37,7 +37,7 @@ extern "C" {
 #endif
 
 // in cartrefine1d.f:
-void F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -46,7 +46,7 @@ void F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (const int&,
    const double *, double *,
    double *, double *);
 // in cartrefine2d.f:
-void F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (const int&,
    const double *, double *,
    double *, double *, double *, double *);
 // in cartrefine3d.f:
-void F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (const int&,
+void SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -84,9 +84,8 @@ namespace geom {
 // using namespace std;
 
 CartesianCellDoubleConservativeLinearRefine::
-CartesianCellDoubleConservativeLinearRefine(
-   const tbox::Dimension& dim):
-   hier::RefineOperator(dim, "CONSERVATIVE_LINEAR_REFINE")
+CartesianCellDoubleConservativeLinearRefine():
+   hier::RefineOperator("CONSERVATIVE_LINEAR_REFINE")
 {
 }
 
@@ -102,9 +101,9 @@ CartesianCellDoubleConservativeLinearRefine::getOperatorPriority() const
 }
 
 hier::IntVector
-CartesianCellDoubleConservativeLinearRefine::getStencilWidth() const
+CartesianCellDoubleConservativeLinearRefine::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getOne(getDim());
+   return hier::IntVector::getOne(dim);
 }
 
 void
@@ -117,9 +116,9 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::IntVector& ratio) const
 {
    const pdat::CellOverlap* t_overlap =
-      dynamic_cast<const pdat::CellOverlap *>(&fine_overlap);
+      CPP_CAST<const pdat::CellOverlap *>(&fine_overlap);
 
-   TBOX_ASSERT(t_overlap != NULL);
+   TBOX_ASSERT(t_overlap != 0);
 
    const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer();
    for (hier::BoxContainer::const_iterator b(boxes); b != boxes.end(); ++b) {
@@ -141,15 +140,15 @@ CartesianCellDoubleConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   const tbox::Dimension& dim(getDim());
-   TBOX_DIM_ASSERT_CHECK_DIM_ARGS4(dim, fine, coarse, fine_box, ratio);
+   const tbox::Dimension& dim(fine.getDim());
+   TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
    boost::shared_ptr<pdat::CellData<double> > cdata(
       coarse.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<pdat::CellData<double> > fdata(
       fine.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
@@ -163,10 +162,13 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       coarse.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       fine.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+
+   TBOX_ASSERT(cgeom);
+   TBOX_ASSERT(fgeom);
 
    const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
    const hier::Index ifirstc = coarse_box.lower();
@@ -180,7 +182,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
 
    for (int d = 0; d < fdata->getDepth(); d++) {
       if ((dim == tbox::Dimension(1))) {
-         F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcelldoub1d, CARTCLINREFCELLDOUB1D) (ifirstc(0),
             ilastc(0),
             ifirstf(0), ilastf(0),
             cilo(0), cihi(0),
@@ -196,7 +198,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          tbox::Array<double> diff1(cgbox.numberCells(1) + 1);
          pdat::CellData<double> slope1(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcelldoub2d, CARTCLINREFCELLDOUB2D) (ifirstc(0),
             ifirstc(1), ilastc(0), ilastc(1),
             ifirstf(0), ifirstf(1), ilastf(0), ilastf(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
@@ -216,7 +218,7 @@ CartesianCellDoubleConservativeLinearRefine::refine(
          tbox::Array<double> diff2(cgbox.numberCells(2) + 1);
          pdat::CellData<double> slope2(cgbox, 1, tmp_ghosts);
 
-         F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (ifirstc(0),
+         SAMRAI_F77_FUNC(cartclinrefcelldoub3d, CARTCLINREFCELLDOUB3D) (ifirstc(0),
             ifirstc(1), ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             ifirstf(0), ifirstf(1), ifirstf(2),

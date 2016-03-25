@@ -34,20 +34,17 @@ ABRTest {
 
 
 BergerRigoutsos {
-  // log_node_history = TRUE
-  log_cluster_summary = TRUE
-    // algo_advance_mode: "SYNCHRONOUS", "ADVANCE_SOME", "ROUND_ROBIN" or "ADVANCE_ANY"
-  // algo_advance_mode = "ADVANCE_ANY"
-  algo_advance_mode = "ADVANCE_SOME"
-  // algo_advance_mode = "SYNCHRONOUS"
-  // owner_mode: "SINGLE_OWNER", "MOST_OVERLAP" (default), "FEWEST_OWNED", "LEAST_ACTIVE"
-  // owner_mode = "SINGLE_OWNER"
-  owner_mode = "MOST_OVERLAP"
-  // owner_mode = "FEWEST_OWNED"
-  // owner_mode = "LEAST_ACTIVE"
-  use_level_boxes = FALSE
-  use_private_communicator = TRUE
-  max_gcw = 0, 0
+  // DEV_log_node_history = TRUE
+  DEV_log_cluster_summary = TRUE
+  // DEV_algo_advance_mode: "SYNCHRONOUS", "ADVANCE_SOME", "ROUND_ROBIN" or "ADVANCE_ANY"
+  // DEV_algo_advance_mode = "ADVANCE_ANY"
+  DEV_algo_advance_mode = "ADVANCE_SOME"
+  // DEV_algo_advance_mode = "SYNCHRONOUS"
+  // DEV_owner_mode: "SINGLE_OWNER", "MOST_OVERLAP" (default), "FEWEST_OWNED", "LEAST_ACTIVE"
+  // DEV_owner_mode = "SINGLE_OWNER"
+  DEV_owner_mode = "MOST_OVERLAP"
+  // DEV_owner_mode = "FEWEST_OWNED"
+  // DEV_owner_mode = "LEAST_ACTIVE"
 }
 
 
@@ -68,16 +65,15 @@ StandardTagAndInitialize {
 }
 
 TreeLoadBalancer {
-  report_load_balance = TRUE
-  num_cycles = 2
+  DEV_report_load_balance = TRUE
 
   // Debugging options
-  check_map = FALSE
-  check_connectivity = FALSE
-  print_steps = FALSE
-  print_swap_steps = FALSE
-  print_break_steps = FALSE
-  print_edge_steps = FALSE
+  DEV_check_map = FALSE
+  DEV_check_connectivity = FALSE
+  DEV_print_steps = FALSE
+  DEV_print_swap_steps = FALSE
+  DEV_print_break_steps = FALSE
+  DEV_print_edge_steps = FALSE
 }
 
 PatchHierarchy {
@@ -113,11 +109,8 @@ GriddingAlgorithm {
    combine_efficiency = 0.85
 
    check_nonrefined_tags = "IGNORE"
-   sort_boxes_after_clustering = TRUE
    sequentialize_patch_indices = TRUE // For VisIt
-   // extend_tags_to_bdry = TRUE
-   // use_new_alg = TRUE
-   print_steps = TRUE
+   DEV_print_steps = TRUE
 }
 
 

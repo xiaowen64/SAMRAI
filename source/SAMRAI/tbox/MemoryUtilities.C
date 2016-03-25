@@ -22,7 +22,7 @@
 #endif
 #ifdef HAVE_TAU
 #if (PROFILING_ON || TRACING_ON)
-#include <Profile/Profiler.h>
+#include "Profile/Profiler.h"
 /* Register an "event" with Tau to track memory usage. */
 TAU_PROFILE_STMT(TauUserEvent ue("memory use"))
 #endif

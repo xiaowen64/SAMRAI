@@ -40,11 +40,9 @@ OuterfaceDataTest::OuterfaceDataTest(
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -86,9 +84,7 @@ OuterfaceDataTest::~OuterfaceDataTest()
 void OuterfaceDataTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -147,7 +143,7 @@ void OuterfaceDataTest::readTestInput(
 void OuterfaceDataTest::registerVariables(
    CommTester* commtest)
 {
-   TBOX_ASSERT(commtest != (CommTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    const tbox::Dimension dim(d_dim);
 
@@ -265,9 +261,7 @@ void OuterfaceDataTest::checkPatchInteriorData(
    const hier::Box& interior,
    const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
@@ -340,13 +334,12 @@ void OuterfaceDataTest::setLinearData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -409,13 +402,12 @@ void OuterfaceDataTest::setLinearData(
 {
    NULL_USE(box);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -516,7 +508,8 @@ bool OuterfaceDataTest::verifyResults(
 
          boost::shared_ptr<pdat::FaceData<double> > face_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(face_data);
          int depth = face_data->getDepth();
          hier::Box dbox = face_data->getGhostBox();
 

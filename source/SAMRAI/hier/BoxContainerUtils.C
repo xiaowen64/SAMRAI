@@ -32,7 +32,7 @@ BoxContainerUtils::BoxContainerUtils()
 
 void
 BoxContainerUtils::recursivePrintBoxVector(
-   const std::vector<Box>& mapped_boxes,
+   const std::vector<Box>& boxes,
    std::ostream& os,
    const std::string& border,
    int detail_depth)
@@ -40,8 +40,8 @@ BoxContainerUtils::recursivePrintBoxVector(
    NULL_USE(detail_depth);
 
    os << border;
-   for (std::vector<Box>::const_iterator ni = mapped_boxes.begin();
-        ni != mapped_boxes.end();
+   for (std::vector<Box>::const_iterator ni = boxes.begin();
+        ni != boxes.end();
         ++ni) {
       os << "  " << *ni;
    }

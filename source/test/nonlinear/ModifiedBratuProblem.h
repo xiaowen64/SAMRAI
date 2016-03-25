@@ -64,7 +64,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace SAMRAI;
@@ -106,6 +106,7 @@ public:
    ModifiedBratuProblem(
       const string& object_name,
       const tbox::Dimension& dim,
+      const boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
       boost::shared_ptr<tbox::Database> input_db,
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
       boost::shared_ptr<appu::VisItDataWriter> visit_data_writer =
@@ -340,9 +341,9 @@ public:
       NULL_USE(ratio);
    }
 
-   hier::IntVector getRefineOpStencilWidth() const
+   hier::IntVector getRefineOpStencilWidth( const tbox::Dimension &dim ) const
    {
-      return hier::IntVector(d_dim, 0);
+      return hier::IntVector(dim, 0);
    }
 
    //@}
@@ -380,21 +381,29 @@ public:
       NULL_USE(ratio);
    }
 
-   hier::IntVector getCoarsenOpStencilWidth() const
+   hier::IntVector getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
    {
-      return hier::IntVector(d_dim, 0);
+      return hier::IntVector(dim, 0);
+   }
+
+   /*!
+    * @brief Return the dimension of this object.
+    */
+   const tbox::Dimension& getDim() const
+   {
+      return d_dim;
    }
 
    //@}
 
    /**
-    * Write data members to given data base for restart.
+    * Write data members to given database for restart.
     *
-    * Overloaded from tbox::Serializable.
+    * Inherited from tbox::Serializable.
     */
    void
-   putToDatabase(
-      const boost::shared_ptr<tbox::Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Write class data to given output stream.
@@ -405,16 +414,14 @@ public:
 
 private:
    /*
-    * Functions to read data from input and restart databases. If the boolean
-    * flag is true, all data members are read from restart.  They can
-    * later be overwritten from values in the input file.  When the flag
-    * is false, all data values are set from thos given in input.
+    * Functions to read data from input database. If the boolean
+    * flag is true, all data members must be present in input.
     *
     * An assertion results if the database pointer is null.
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> db,
+      boost::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /*

@@ -37,11 +37,9 @@ NodeDataTest::NodeDataTest(
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -81,9 +79,7 @@ NodeDataTest::~NodeDataTest()
 void NodeDataTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Read coeeficients of linear profile to test interpolation.
@@ -124,9 +120,7 @@ void NodeDataTest::readTestInput(
 void NodeDataTest::registerVariables(
    CommTester* commtest)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(commtest != (CommTester *)NULL);
-#endif
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 
@@ -163,13 +157,12 @@ void NodeDataTest::setLinearData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const pdat::NodeIndex loweri(
       patch.getBox().lower(), (pdat::NodeIndex::Corner)0);
    const double* dx = pgeom->getDx();
@@ -210,9 +203,8 @@ void NodeDataTest::setPeriodicData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
+
    NULL_USE(patch);
 
    const double* xlo = d_cart_grid_geometry->getXLower();
@@ -224,7 +216,8 @@ void NodeDataTest::setPeriodicData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    const int depth = data->getDepth();
@@ -269,7 +262,8 @@ void NodeDataTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(node_data);
 
          hier::Box dbox = node_data->getBox();
 
@@ -287,7 +281,8 @@ void NodeDataTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(node_data);
 
          hier::Box dbox = node_data->getGhostBox();
 
@@ -308,9 +303,7 @@ void NodeDataTest::checkPatchInteriorData(
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    const bool is_periodic =
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim,
@@ -355,7 +348,8 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
 
    const tbox::Array<hier::BoundaryBox> node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -377,7 +371,8 @@ void NodeDataTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(node_data);
 
       hier::Box patch_interior = node_data->getBox();
       checkPatchInteriorData(node_data, patch_interior, patch);
@@ -496,7 +491,8 @@ bool NodeDataTest::verifyResults(
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(node_data);
          int depth = node_data->getDepth();
          hier::Box dbox = node_data->getGhostBox();
 

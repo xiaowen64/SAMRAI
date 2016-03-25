@@ -18,7 +18,7 @@ namespace SAMRAI {
 namespace hier {
 
 /*!
- * @brief A utility for writing out various statistics of MappedBoxes.
+ * @brief A utility for writing out various statistics of Boxes.
  */
 class BoxLevelStatistics
 {
@@ -35,6 +35,8 @@ public:
     * collective communication.
     *
     * @param[in] box_level BoxLevel to compute statistics for.
+    *
+    * @pre box_level.isInitialized()
     */
    explicit BoxLevelStatistics(
       const BoxLevel &box_level);

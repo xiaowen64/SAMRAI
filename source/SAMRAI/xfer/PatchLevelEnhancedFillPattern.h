@@ -45,28 +45,31 @@ public:
    virtual ~PatchLevelEnhancedFillPattern();
 
    /*!
-    * @brief Compute the mapped boxes representing the region that will
+    * @brief Compute the boxes representing the region that will
     *        be filled by a RefineSchedule.
     *
-    * This is currently unimplemented until BoxLevel is
-    * multiblock-aware.  An error will occur if this is called.
+    * The fill boxes will exist only for destination patches that touch
+    * a block boundary at enhanced connectivity.  The fill boxes will be
+    * the portion of the ghost regions of those patches lying across the
+    * enhanced connectivity boundary.
     *
-    * @param[out] fill_mapped_boxes    Output BoxLevel to be filled
+    * @param[out] fill_box_level       Output BoxLevel to be filled
     * @param[out] dst_to_fill          Output Connector between
-    *                                  dst_mapped_box_level and
-    *                                  and fill_mapped_boxes
-    * @param[in] dst_mapped_box_level  destination level
+    *                                  dst_box_level and fill_box_level
+    * @param[in] dst_box_level         destination level
     * @param[in] dst_to_dst            Connector of destination to itself
     * @param[in] dst_to_src            Connector of destination to source
     * @param[in] src_to_dst            Connector of source to destination
     * @param[in] fill_ghost_width      Ghost width being filled by refine
     *                                  schedule
+    *
+    * @pre dst_box_level.getDim() == fill_ghost_width.getDim()
     */
    void
    computeFillBoxesAndNeighborhoodSets(
-      hier::BoxLevel& fill_mapped_boxes,
+      hier::BoxLevel& fill_box_level,
       hier::Connector& dst_to_fill,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector& dst_to_dst,
       const hier::Connector& dst_to_src,
       const hier::Connector& src_to_dst,
@@ -88,11 +91,13 @@ public:
     * method should never be called.  It is implemented here to satisfy
     * the pure virtual interface from the base class.  An error will result
     * if this is ever called.
+    *
+    * @pre needsToCommunicateDestinationFillBoxes()
     */
    void
    computeDestinationFillBoxesOnSourceProc(
       FillSet& dst_fill_boxes_on_src_proc,
-      const hier::BoxLevel& dst_mapped_box_level,
+      const hier::BoxLevel& dst_box_level,
       const hier::Connector& src_to_dst,
       const hier::IntVector& fill_ghost_width);
 

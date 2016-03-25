@@ -49,31 +49,34 @@
 #include "SAMRAI/math/PatchCellDataOpsReal.h"
 #include "SAMRAI/math/HierarchyCellDataOpsReal.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <sstream>
 #include <iomanip>
 #include <cstring>
 #include <stdlib.h>
+
+#include <cmath>
 
 using namespace SAMRAI;
 
 AdaptivePoisson::AdaptivePoisson(
    const std::string& object_name,
    const tbox::Dimension& dim,
+   boost::shared_ptr<solv::CellPoissonFACOps>& fac_ops,
+   boost::shared_ptr<solv::FACPreconditioner>& fac_precond,
    tbox::Database& database,
    /*! Standard output stream */ std::ostream* out_stream,
    /*! Log output stream */ std::ostream* log_stream):
    d_name(object_name),
    d_dim(dim),
-   d_fac_ops(d_dim,
-             object_name + ":scalar poisson operator",
-             database.getDatabase("ScalarPoissonOps")),
-   d_fac_preconditioner("FAC preconditioner for Poisson's equation",
-                        d_fac_ops),
+   d_fac_ops(fac_ops),
+   d_fac_preconditioner(fac_precond),
    d_context_persistent(new hier::VariableContext("PERSISTENT")),
    d_context_scratch(new hier::VariableContext("SCRATCH")),
-   d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef", 1)),
-   d_flux(new pdat::SideVariable<double>(d_dim, "flux", 1)),
+   d_diffcoef(new pdat::SideVariable<double>(d_dim, "solution:diffcoef",
+      hier::IntVector::getOne(d_dim), 1)),
+   d_flux(new pdat::SideVariable<double>(d_dim, "flux",
+      hier::IntVector::getOne(d_dim), 1)),
    d_scalar(new pdat::CellVariable<double>(d_dim, "solution:scalar", 1)),
    d_constant_source(new pdat::CellVariable<double>(
       d_dim, "poisson source", 1)),
@@ -93,7 +96,7 @@ AdaptivePoisson::AdaptivePoisson(
    d_polynomial_solution(dim),
    d_gaussian_diffcoef_solution(dim),
    d_robin_refine_patch(d_dim, object_name + "Refine patch implementation"),
-   d_physical_bc_coef(NULL),
+   d_physical_bc_coef(0),
    d_adaption_threshold(0.5),
    d_finest_plot_level(9999999),
    d_finest_dbg_plot_ln(database.getIntegerWithDefault("finest_dbg_plot_ln", 99))
@@ -178,7 +181,7 @@ AdaptivePoisson::AdaptivePoisson(
     * Experiment with algorithm choices in solv::FACPreconditioner.
     */
    std::string fac_algo = database.getStringWithDefault("fac_algo", "default");
-   d_fac_preconditioner.setAlgorithmChoice(fac_algo);
+   d_fac_preconditioner->setAlgorithmChoice(fac_algo);
 
    d_adaption_threshold =
       database.getDoubleWithDefault("adaption_threshold",
@@ -264,12 +267,10 @@ AdaptivePoisson::AdaptivePoisson(
     * Tell ScalarPoissonOperator where to find some of the data
     * we are providing it.
     */
-   d_fac_ops.setPoissonSpecifications(d_sps);
-   d_fac_ops.setFluxId(-1);
+   d_fac_ops->setPoissonSpecifications(d_sps);
+   d_fac_ops->setFluxId(-1);
 
-   d_fac_ops.setPhysicalBcCoefObject(d_physical_bc_coef);
-
-   d_fac_ops.setProlongationMethod("LINEAR_REFINE");
+   d_fac_ops->setPhysicalBcCoefObject(d_physical_bc_coef);
 
    tbox::plog << "Gaussian solution parameters:\n"
               << d_gaussian_solution << "\n\n" << std::endl;
@@ -283,7 +284,7 @@ AdaptivePoisson::AdaptivePoisson(
 #endif
    tbox::plog << "Problem name is: " << d_problem_name << "\n\n" << std::endl;
 
-   d_fac_ops.setPreconditioner(&d_fac_preconditioner);
+   d_fac_ops->setPreconditioner(d_fac_preconditioner.get());
 }
 
 void AdaptivePoisson::initializeLevelData(
@@ -338,13 +339,15 @@ void AdaptivePoisson::initializeLevelData(
 
       boost::shared_ptr<pdat::SideData<double> > diffcoef_data(
          patch.getPatchData(d_diffcoef_persistent),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > exact_data(
          patch.getPatchData(d_exact_persistent),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
       boost::shared_ptr<pdat::CellData<double> > source_data(
          patch.getPatchData(d_constant_source_persistent),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(exact_data);
+      TBOX_ASSERT(source_data);
 
       /* Set source function and exact solution. */
       if (d_problem_name == "sine") {
@@ -364,6 +367,7 @@ void AdaptivePoisson::initializeLevelData(
             *exact_data,
             *source_data);
       } else if (d_problem_name == "gauss-coef") {
+         TBOX_ASSERT(diffcoef_data);
          d_gaussian_diffcoef_solution.setGridData(patch,
             *diffcoef_data,
             *exact_data,
@@ -378,10 +382,11 @@ void AdaptivePoisson::initializeLevelData(
     * Refine solution data from coarser level and, if provided, old level.
     */
    {
-      xfer::RefineAlgorithm refiner(d_dim);
+      xfer::RefineAlgorithm refiner;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
          patch_hierarchy->getGridGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
       boost::shared_ptr<hier::RefineOperator> accurate_refine_op =
          grid_geometry.
@@ -433,7 +438,7 @@ void AdaptivePoisson::initializeLevelData(
    }
 
    /* Set vector weight. */
-   d_fac_ops.computeVectorWeights(hierarchy, d_weight_persistent);
+   d_fac_ops->computeVectorWeights(hierarchy, d_weight_persistent);
 }
 
 void AdaptivePoisson::resetHierarchyConfiguration(
@@ -493,10 +498,8 @@ void AdaptivePoisson::applyGradientDetector(
       }
       boost::shared_ptr<pdat::CellData<int> > tag_cell_data_(
          tag_data,
-         boost::detail::dynamic_cast_tag());
-      if (!tag_cell_data_) {
-         TBOX_ERROR("Data index " << tag_index << " is not cell int data.\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(tag_cell_data_);
       boost::shared_ptr<hier::PatchData> soln_data(
          patch.getPatchData(d_scalar_persistent));
       if (!soln_data) {
@@ -505,11 +508,8 @@ void AdaptivePoisson::applyGradientDetector(
       }
       boost::shared_ptr<pdat::CellData<double> > soln_cell_data_(
          soln_data,
-         boost::detail::dynamic_cast_tag());
-      if (!soln_cell_data_) {
-         TBOX_ERROR("Data index " << d_scalar_persistent
-                                  << " is not cell int data.\n");
-      }
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(soln_cell_data_);
       pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<int>& tag_cell_data = *tag_cell_data_;
       pdat::CellData<double> estimate_data(patch.getBox(),
@@ -598,7 +598,8 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
    if (variable_name == "Gradient Function") {
       boost::shared_ptr<pdat::CellData<double> > soln_cell_data_(
          patch.getPatchData(d_scalar_persistent),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(soln_cell_data_);
       const pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<double> estimate_data(region,
                                            1,
@@ -757,13 +758,16 @@ int AdaptivePoisson::computeError(
           */
          boost::shared_ptr<pdat::CellData<double> > current_solution(
             patch->getPatchData(d_scalar_persistent),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > exact_solution(
             patch->getPatchData(d_exact_persistent),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > weight(
             patch->getPatchData(d_weight_persistent),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(current_solution);
+         TBOX_ASSERT(exact_solution);
+         TBOX_ASSERT(weight);
 
          {
             const int* lower = &current_solution->getBox().lower()[0];
@@ -872,10 +876,6 @@ int AdaptivePoisson::computeError(
 
 int AdaptivePoisson::solvePoisson(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-   int max_cycles,
-   double residual_tol,
-   int pre_sweeps,
-   int post_sweeps,
    std::string initial_u)
 {
 
@@ -914,10 +914,12 @@ int AdaptivePoisson::solvePoisson(
 
          boost::shared_ptr<pdat::CellData<double> > source_data(
             patch->getPatchData(d_constant_source_persistent),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
          boost::shared_ptr<pdat::CellData<double> > rhs_data(
             patch->getPatchData(d_rhs_scratch),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(source_data);
+         TBOX_ASSERT(rhs_data);
          math::PatchCellDataOpsReal<double> cell_ops;
          cell_ops.scale(rhs_data, 1.0, source_data, box);
 
@@ -928,7 +930,7 @@ int AdaptivePoisson::solvePoisson(
    if (0) {
       x.setToScalar(1.0);
       double weightsums =
-         d_fac_ops.computeResidualNorm(x, finest_ln, coarsest_ln);
+         d_fac_ops->computeResidualNorm(x, finest_ln, coarsest_ln);
       tbox::pout << "weightsums: " << weightsums << std::endl;
    }
 
@@ -957,31 +959,29 @@ int AdaptivePoisson::solvePoisson(
    /*
     * Set up FAC preconditioner object.
     */
-   d_fac_preconditioner.setMaxCycles(max_cycles);
-   d_fac_preconditioner.setResidualTolerance(residual_tol);
-   d_fac_preconditioner.setPresmoothingSweeps(pre_sweeps);
-   d_fac_preconditioner.setPostsmoothingSweeps(post_sweeps);
-   if (d_lstream) d_fac_preconditioner.printClassData(*d_lstream);
-   d_fac_preconditioner.initializeSolverState(x, b);
+   if (d_lstream) {
+      d_fac_preconditioner->printClassData(*d_lstream);
+   }
+   d_fac_preconditioner->initializeSolverState(x, b);
 
    /*
     * Solve the system.
     */
-   d_fac_preconditioner.solveSystem(x, b);
+   d_fac_preconditioner->solveSystem(x, b);
    if (d_lstream) *d_lstream
       << "FAC solve completed with\n"
       << std::setw(30) << "number of iterations: "
-      << d_fac_preconditioner.getNumberOfIterations() << "\n"
+      << d_fac_preconditioner->getNumberOfIterations() << "\n"
       << std::setw(30) << "residual norm: "
-      << d_fac_preconditioner.getResidualNorm() << "\n"
+      << d_fac_preconditioner->getResidualNorm() << "\n"
       ;
-   d_fac_preconditioner.deallocateSolverState();
+   d_fac_preconditioner->deallocateSolverState();
 
    /*
     * Get data on the solve.
     */
    double avg_convergence_factor, final_convergence_factor;
-   d_fac_preconditioner.getConvergenceFactors(avg_convergence_factor,
+   d_fac_preconditioner->getConvergenceFactors(avg_convergence_factor,
       final_convergence_factor);
    if (d_lstream) *d_lstream
       << "Final result: \n"
@@ -998,10 +998,11 @@ int AdaptivePoisson::solvePoisson(
     * the solver finishes.
     */
    {
-      xfer::RefineAlgorithm refiner(d_dim);
+      xfer::RefineAlgorithm refiner;
       boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
          hierarchy->getGridGeometry(),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
       boost::shared_ptr<hier::RefineOperator> accurate_refine_op(
          grid_geometry.lookupRefineOperator(d_scalar, "LINEAR_REFINE"));

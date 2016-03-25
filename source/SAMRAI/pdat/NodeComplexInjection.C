@@ -36,20 +36,20 @@ extern "C" {
 #endif
 
 // in concoarsen1d.f:
-void F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen2d.f:
-void F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int&, const int&, const int&, const int&,
    const int *,
    const dcomplex *, dcomplex *);
 // in concoarsen3d.f:
-void F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
+void SAMRAI_F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -63,9 +63,8 @@ void F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (const int&, const int&,
 namespace SAMRAI {
 namespace pdat {
 
-NodeComplexInjection::NodeComplexInjection(
-   const tbox::Dimension& dim):
-   hier::CoarsenOperator(dim, "CONSTANT_COARSEN")
+NodeComplexInjection::NodeComplexInjection():
+   hier::CoarsenOperator("CONSTANT_COARSEN")
 {
 }
 
@@ -80,9 +79,9 @@ NodeComplexInjection::getOperatorPriority() const
 }
 
 hier::IntVector
-NodeComplexInjection::getStencilWidth() const
+NodeComplexInjection::getStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector::getZero(getDim());
+   return hier::IntVector::getZero(dim);
 }
 
 void
@@ -94,14 +93,14 @@ NodeComplexInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS5(*this, coarse, fine, coarse_box, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
    boost::shared_ptr<NodeData<dcomplex> > fdata(
       fine.getPatchData(src_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
    boost::shared_ptr<NodeData<dcomplex> > cdata(
       coarse.getPatchData(dst_component),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
 
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -116,23 +115,23 @@ NodeComplexInjection::coarsen(
    const hier::Index ilastc = coarse_box.upper();
 
    for (int d = 0; d < cdata->getDepth(); d++) {
-      if (getDim() == tbox::Dimension(1)) {
-         F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (ifirstc(0), ilastc(0),
+      if (fine.getDim() == tbox::Dimension(1)) {
+         SAMRAI_F77_FUNC(conavgnodecplx1d, CONAVGNODECPLX1D) (ifirstc(0), ilastc(0),
             filo(0), fihi(0),
             cilo(0), cihi(0),
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(2)) {
-         F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (ifirstc(0), ifirstc(1),
+      } else if (fine.getDim() == tbox::Dimension(2)) {
+         SAMRAI_F77_FUNC(conavgnodecplx2d, CONAVGNODECPLX2D) (ifirstc(0), ifirstc(1),
             ilastc(0), ilastc(1),
             filo(0), filo(1), fihi(0), fihi(1),
             cilo(0), cilo(1), cihi(0), cihi(1),
             &ratio[0],
             fdata->getPointer(d),
             cdata->getPointer(d));
-      } else if (getDim() == tbox::Dimension(3)) {
-         F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (ifirstc(0), ifirstc(1),
+      } else if (fine.getDim() == tbox::Dimension(3)) {
+         SAMRAI_F77_FUNC(conavgnodecplx3d, CONAVGNODECPLX3D) (ifirstc(0), ifirstc(1),
             ifirstc(2),
             ilastc(0), ilastc(1), ilastc(2),
             filo(0), filo(1), filo(2),

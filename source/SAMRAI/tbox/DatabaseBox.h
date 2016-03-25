@@ -15,12 +15,6 @@
 
 #include "SAMRAI/tbox/Dimension.h"
 
-#ifndef DatabaseBox_MAX_DIM
-#define DatabaseBox_MAX_DIM 3
-#else
-Macro overloaded : DatabaseBox_MAX_DIM
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -33,14 +27,14 @@ namespace tbox {
  */
 struct DatabaseBox_POD {
    int d_dimension;
-   int d_lo[DatabaseBox_MAX_DIM];
-   int d_hi[DatabaseBox_MAX_DIM];
+   int d_lo[SAMRAI::MAX_DIM_VAL];
+   int d_hi[SAMRAI::MAX_DIM_VAL];
 };
 
 /**
- * Class DatabaseBox represents a one, two, or three dimensional box in the
- * AMR index space.  It is defined by lower and upper bounds given by integer
- * arrays.
+ * Class DatabaseBox represents a box of up to MAX_DIM_VAL
+ * dimensions in the AMR index space.  It is defined by lower and
+ * upper bounds given by integer arrays.
  *
  * This box is an auxilliary data structure used by the database routines to
  * manipulate boxes.  This box type removes cyclic dependencies among the
@@ -62,8 +56,7 @@ public:
 
    /**
     * Create a box of the specified dimension describing the index space
-    * between lower and upper.  The dimension argument must be zero, one,
-    * two, or three.
+    * between lower and upper.
     */
    DatabaseBox(
       const Dimension& dim,
@@ -90,8 +83,8 @@ public:
 
    /**
     * Return whether the box is empty.  A box is empty if it has dimension
-    * zero or if any of the upper dimensions is less than its corresponding
-    * lower dimension.
+    * zero or if any part of the upper index is less than its corresponding
+    * part of the lower index.
     */
    bool
    empty() const;
@@ -99,63 +92,68 @@ public:
    /**
     * Return the dimension of this object.
     */
-   const Dimension&
-   getDim() const
+   const int&
+   getDimVal() const
    {
-      return d_dim;
+      return d_data.d_dimension;
    }
 
    void
    setDim(
       const Dimension& dim)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(dim);
-      TBOX_ASSERT(dim.getValue() <= DatabaseBox_MAX_DIM);
-      d_dim = Dimension(dim);
-      d_data.d_dimension = d_dim.getValue();
+      d_data.d_dimension = dim.getValue();
    }
 
    /**
     * Return the specified component (non-const) of the lower index of the box.
+    *
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int&
    lower(
       const int i)
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_lo[i];
    }
 
    /**
     * Return the specified component (non-const) of the upper index of the box.
+    *
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int&
    upper(
       const int i)
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_hi[i];
    }
 
    /**
     * Return the specified component (const) of the lower index of the box.
+    *
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int
    lower(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_lo[i];
    }
 
    /**
     * Return the specified component (const) of the upper index of the box.
+    *
+    * @pre (i >= 0) && (i < getDimVal())
     */
    int
    upper(
       const int i) const
    {
-      TBOX_ASSERT((i >= 0) && (i < d_data.d_dimension));
+      TBOX_ASSERT((i >= 0) && (i < getDimVal()));
       return d_data.d_hi[i];
    }
 
@@ -179,8 +177,6 @@ public:
     * mirror this structure in defining a compound type for HDF.
     */
    DatabaseBox_POD d_data;
-
-   Dimension d_dim;
 };
 
 }

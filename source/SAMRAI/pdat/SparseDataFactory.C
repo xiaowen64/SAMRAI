@@ -18,8 +18,8 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
-#include <boost/shared_ptr.hpp>
-#include <boost/make_shared.hpp>
+#include "boost/shared_ptr.hpp"
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -51,7 +51,7 @@ boost::shared_ptr<hier::PatchDataFactory>
 SparseDataFactory<BOX_GEOMETRY>::cloneFactory(
    const hier::IntVector& ghosts)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
    return boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
       ghosts,
       d_dbl_attributes,
@@ -63,7 +63,7 @@ boost::shared_ptr<hier::PatchData>
 SparseDataFactory<BOX_GEOMETRY>::allocate(
    const hier::Patch& patch) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, patch);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
    return boost::make_shared<SparseData<BOX_GEOMETRY> >(
          patch.getBox(),
          d_ghosts,
@@ -76,7 +76,7 @@ boost::shared_ptr<hier::BoxGeometry>
 SparseDataFactory<BOX_GEOMETRY>::getBoxGeometry(
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    return boost::make_shared<BOX_GEOMETRY>(box, d_ghosts);
 }
 
@@ -85,7 +85,7 @@ size_t
 SparseDataFactory<BOX_GEOMETRY>::getSizeOfMemory(
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
    NULL_USE(box);
    return tbox::MemoryUtilities::align(
       sizeof(SparseData<BOX_GEOMETRY>));
@@ -96,7 +96,7 @@ bool
 SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
    const boost::shared_ptr<PatchDataFactory>& dst_pdf) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *dst_pdf);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
    bool valid_copy = false;
 
    if (!valid_copy) {

@@ -25,7 +25,7 @@ namespace SAMRAI {
 namespace hier {
 
 /**
- * Class RefineOperator<DIM> is an abstract base class for each
+ * Class RefineOperator is an abstract base class for each
  * spatial refinement operator used in the SAMRAI framework.  This class
  * defines the interface between numerical refinement routines and the
  * rest of the framework.  Each concrete refinement operator subclass
@@ -73,9 +73,7 @@ public:
     * registered under this name with the hier::TransferOperatorRegistry class.
     * The name must be unique, as duplicate names are not allowed.
     */
-   RefineOperator(
-      const tbox::Dimension& dim,
-      const std::string& name);
+   RefineOperator(const std::string& name);
 
    /**
     * The virtual destructor for the refinement operator does
@@ -106,9 +104,11 @@ public:
     * The SAMRAI transfer routines guarantee that the source patch will
     * contain sufficient ghost cell data surrounding the interior to
     * satisfy the stencil width requirements for each refinement operator.
+    * If your implementation doesn't work with the given dimension, return
+    * zero.
     */
    virtual IntVector
-   getStencilWidth() const = 0;
+   getStencilWidth( const tbox::Dimension &dim ) const = 0;
 
    /**
     * Refine the source component on the coarse patch to the destination
@@ -135,15 +135,6 @@ public:
    static IntVector
    getMaxRefineOpStencilWidth(
       const tbox::Dimension& dim);
-
-   /**
-    * Return the dimension of this object.
-    */
-   const tbox::Dimension&
-   getDim() const
-   {
-      return d_dim;
-   }
 
 private:
    RefineOperator(
@@ -189,8 +180,6 @@ private:
    }
 
    const std::string d_name;
-
-   const tbox::Dimension d_dim;
 
    static std::multimap<std::string, RefineOperator *> s_lookup_table;
 

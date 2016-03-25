@@ -153,6 +153,7 @@ Euler {
 
 
 Main {
+   dim = 3
 // log file parameters
    log_file_name    = "room-3d.log"
    log_all_nodes    = TRUE

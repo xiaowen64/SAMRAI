@@ -15,7 +15,7 @@
 #include "SAMRAI/pdat/OutersideDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -47,35 +47,10 @@ template<class TYPE>
 int OutersideVariable<TYPE>::getDepth() const
 {
    boost::shared_ptr<OutersideDataFactory<TYPE> > factory(
-      getPatchDataFactory());
+      getPatchDataFactory(),
+      BOOST_CAST_TAG);
    TBOX_ASSERT(factory);
    return factory->getDepth();
-}
-
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-OutersideVariable<TYPE>::OutersideVariable(
-   const OutersideVariable<TYPE>& foo):
-   hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void OutersideVariable<TYPE>::operator = (
-   const OutersideVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 }

@@ -294,6 +294,7 @@ bool txt_next_val(
         << __FILE__ << endl;
 
    exit(1);
+   return false;
 }
 
 void txt2data(
@@ -332,17 +333,10 @@ bool SingleLevelTestCase(
    hier::BoxContainer level_boxes;
    txt2boxes(levelboxes_txt, level_boxes);
 
-   hier::BoxContainer domain_boxes;
-   hier::LocalId domain_id(0);
-   for (hier::BoxContainer::iterator itr(level_boxes);
-        itr != level_boxes.end(); ++itr) {
-      domain_boxes.pushBack(hier::Box(*itr, domain_id++, 0));
-   }
-
    boost::shared_ptr<geom::GridGeometry> geom(
       new geom::GridGeometry(
          "GridGeometry",
-         domain_boxes));
+         level_boxes));
 
    boost::shared_ptr<hier::PatchHierarchy> hierarchy(
       new hier::PatchHierarchy("hier", geom));
@@ -377,7 +371,7 @@ bool SingleLevelTestCase(
 
    // There is one variable-context pair with a gcw of 2
 
-   xfer::RefineAlgorithm refine_alg(dim);
+   xfer::RefineAlgorithm refine_alg;
 
    boost::shared_ptr<hier::VariableContext> context(
       hier::VariableDatabase::getDatabase()->getContext("CONTEXT"));
@@ -394,8 +388,6 @@ bool SingleLevelTestCase(
 
    level->allocatePatchData(data_id);
 
-   TBOX_ASSERT(mpi.getSize() <= 2);
-
    if (pattern_name == "FIRST_LAYER_CELL_NO_CORNERS_FILL_PATTERN" ||
        pattern_name == "FIRST_LAYER_CELL_FILL_PATTERN") {
       // Loop over each patch and initialize data
@@ -404,7 +396,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cdata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -422,7 +415,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ndata);
 
          int data_txt_id = patch->getBox().getLocalId().getValue();
          if (mpi.getRank() == 1) {
@@ -453,7 +447,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::CellData<int> > cdata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(cdata);
 
          pdat::CellData<int> expected(cdata->getBox(),
                                       cdata->getDepth(),
@@ -483,7 +478,8 @@ bool SingleLevelTestCase(
          const boost::shared_ptr<hier::Patch>& patch(*p);
          boost::shared_ptr<pdat::NodeData<int> > ndata(
             patch->getPatchData(data_id),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(ndata);
 
          pdat::NodeData<int> expected(ndata->getBox(),
                                       ndata->getDepth(),

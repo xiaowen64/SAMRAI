@@ -15,6 +15,8 @@
 
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <cmath>
+
 namespace SAMRAI {
 namespace math {
 
@@ -40,7 +42,7 @@ ArrayDataNormOpsComplex::abs(
    const pdat::ArrayData<dcomplex>& src,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(dst, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(dst, src, box);
    TBOX_ASSERT(dst.getDepth() == src.getDepth());
 
    int dimVal = dst.getDim().getValue();
@@ -51,10 +53,10 @@ ArrayDataNormOpsComplex::abs(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int src_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int src_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          dst_w[i] = dst_box.numberCells(i);
@@ -79,8 +81,8 @@ ArrayDataNormOpsComplex::abs(
          int dst_counter = dst_begin;
          int src_counter = src_begin;
 
-         int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int src_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int dst_b[SAMRAI::MAX_DIM_VAL];
+         int src_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             dst_b[nd] = dst_counter;
             src_b[nd] = src_counter;
@@ -134,7 +136,7 @@ ArrayDataNormOpsComplex::sumControlVolumes(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -146,9 +148,9 @@ ArrayDataNormOpsComplex::sumControlVolumes(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          cv_w[i] = cv_box.numberCells(i);
@@ -171,7 +173,7 @@ ArrayDataNormOpsComplex::sumControlVolumes(
 
          int cv_counter = cv_begin;
 
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             cv_b[nd] = cv_counter;
          }
@@ -220,7 +222,7 @@ ArrayDataNormOpsComplex::L1NormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -236,10 +238,10 @@ ArrayDataNormOpsComplex::L1NormWithControlVolume(
 
       TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -263,8 +265,8 @@ ArrayDataNormOpsComplex::L1NormWithControlVolume(
          int d_counter = d_begin;
          int cv_counter = cv_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             cv_b[nd] = cv_counter;
@@ -317,7 +319,7 @@ ArrayDataNormOpsComplex::L1Norm(
    const pdat::ArrayData<dcomplex>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -328,9 +330,9 @@ ArrayDataNormOpsComplex::L1Norm(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -351,7 +353,7 @@ ArrayDataNormOpsComplex::L1Norm(
 
          int d_counter = d_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }
@@ -400,7 +402,7 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(data1, data2, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(data1, data2, cvol, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
    int dimVal = data1.getDim().getValue();
@@ -419,11 +421,11 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
       TBOX_ASSERT(d1depth == data2.getDepth());
       TBOX_ASSERT((d1depth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d1_w[SAMRAI::MAX_DIM_VAL];
+      int d2_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
@@ -452,9 +454,9 @@ ArrayDataNormOpsComplex::dotWithControlVolume(
          int d2_counter = d2_begin;
          int cv_counter = cv_begin;
 
-         int d1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int d2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d1_b[SAMRAI::MAX_DIM_VAL];
+         int d2_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
@@ -517,7 +519,7 @@ ArrayDataNormOpsComplex::dot(
    const pdat::ArrayData<dcomplex>& data2,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data1, data2, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data1, data2, box);
    TBOX_ASSERT(data1.getDepth() == data2.getDepth());
 
    int dimVal = data1.getDim().getValue();
@@ -533,10 +535,10 @@ ArrayDataNormOpsComplex::dot(
 
       TBOX_ASSERT(d1depth == data2.getDepth());
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d1_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d2_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d1_w[SAMRAI::MAX_DIM_VAL];
+      int d2_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d1_w[i] = d1_box.numberCells(i);
@@ -560,8 +562,8 @@ ArrayDataNormOpsComplex::dot(
          int d1_counter = d1_begin;
          int d2_counter = d2_begin;
 
-         int d1_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int d2_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d1_b[SAMRAI::MAX_DIM_VAL];
+         int d2_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d1_b[nd] = d1_counter;
             d2_b[nd] = d2_counter;
@@ -617,7 +619,7 @@ ArrayDataNormOpsComplex::integral(
    const pdat::ArrayData<double>& vol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, vol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, vol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -633,10 +635,10 @@ ArrayDataNormOpsComplex::integral(
 
       TBOX_ASSERT((ddepth == vdepth) || (vdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int v_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int v_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -660,8 +662,8 @@ ArrayDataNormOpsComplex::integral(
          int d_counter = d_begin;
          int v_counter = v_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int v_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int v_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             v_b[nd] = v_counter;
@@ -716,7 +718,7 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(data, wgt, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(data, wgt, cvol, box);
    TBOX_ASSERT(data.getDepth() == wgt.getDepth());
 
    int dimVal = data.getDim().getValue();
@@ -734,11 +736,11 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
 
       TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int w_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int w_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          w_w[i] = w_box.numberCells(i);
@@ -767,9 +769,9 @@ ArrayDataNormOpsComplex::weightedL2NormWithControlVolume(
          int w_counter = w_begin;
          int cv_counter = cv_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int w_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int w_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             w_b[nd] = w_counter;
@@ -830,7 +832,7 @@ ArrayDataNormOpsComplex::weightedL2Norm(
    const pdat::ArrayData<dcomplex>& wgt,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, wgt, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, wgt, box);
    TBOX_ASSERT(data.getDepth() == wgt.getDepth());
 
    int dimVal = data.getDim().getValue();
@@ -843,10 +845,10 @@ ArrayDataNormOpsComplex::weightedL2Norm(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int w_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int w_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          w_w[i] = w_box.numberCells(i);
@@ -872,8 +874,8 @@ ArrayDataNormOpsComplex::weightedL2Norm(
          int d_counter = d_begin;
          int w_counter = w_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int w_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int w_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             w_b[nd] = w_counter;
@@ -927,7 +929,7 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
    const pdat::ArrayData<double>& cvol,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(data, cvol, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(data, cvol, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -943,10 +945,10 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
 
       TBOX_ASSERT((ddepth == cvdepth) || (cvdepth == 1));
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int cv_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int cv_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -970,8 +972,8 @@ ArrayDataNormOpsComplex::maxNormWithControlVolume(
          int d_counter = d_begin;
          int cv_counter = cv_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-         int cv_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
+         int cv_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
             cv_b[nd] = cv_counter;
@@ -1027,7 +1029,7 @@ ArrayDataNormOpsComplex::maxNorm(
    const pdat::ArrayData<dcomplex>& data,
    const hier::Box& box) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(data, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(data, box);
 
    int dimVal = data.getDim().getValue();
 
@@ -1038,9 +1040,9 @@ ArrayDataNormOpsComplex::maxNorm(
 
    if (!ibox.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int d_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int d_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
       for (int i = 0; i < dimVal; i++) {
          box_w[i] = ibox.numberCells(i);
          d_w[i] = d_box.numberCells(i);
@@ -1060,7 +1062,7 @@ ArrayDataNormOpsComplex::maxNorm(
 
          int d_counter = d_begin;
 
-         int d_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+         int d_b[SAMRAI::MAX_DIM_VAL];
          for (int nd = 0; nd < dimVal; nd++) {
             d_b[nd] = d_counter;
          }

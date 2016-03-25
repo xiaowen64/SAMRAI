@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /*
  *************************************************************************
@@ -36,7 +36,7 @@ extern "C" {
 #endif
 
 // in lintimint1d.f:
-void F77_FUNC(lintimeintoutsidedoub1d, LINTIMEINTOUTSIDEDOUB1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutsidedoub1d, LINTIMEINTOUTSIDEDOUB1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -45,7 +45,7 @@ void F77_FUNC(lintimeintoutsidedoub1d, LINTIMEINTOUTSIDEDOUB1D) (const int&,
    const double *, const double *,
    double *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintoutsidedoub2d0, LINTIMEINTOUTSIDEDOUB2D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutsidedoub2d0, LINTIMEINTOUTSIDEDOUB2D0) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(lintimeintoutsidedoub2d0, LINTIMEINTOUTSIDEDOUB2D0) (const int&,
    const double&,
    const double *, const double *,
    double *);
-void F77_FUNC(lintimeintoutsidedoub2d1, LINTIMEINTOUTSIDEDOUB2D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutsidedoub2d1, LINTIMEINTOUTSIDEDOUB2D1) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -70,7 +70,7 @@ void F77_FUNC(lintimeintoutsidedoub2d1, LINTIMEINTOUTSIDEDOUB2D1) (const int&,
    const double *, const double *,
    double *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintoutsidedoub3d0, LINTIMEINTOUTSIDEDOUB3D0) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutsidedoub3d0, LINTIMEINTOUTSIDEDOUB3D0) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -82,7 +82,7 @@ void F77_FUNC(lintimeintoutsidedoub3d0, LINTIMEINTOUTSIDEDOUB3D0) (const int&,
    const double&,
    const double *, const double *,
    double *);
-void F77_FUNC(lintimeintoutsidedoub3d1, LINTIMEINTOUTSIDEDOUB3D1) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutsidedoub3d1, LINTIMEINTOUTSIDEDOUB3D1) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -94,7 +94,7 @@ void F77_FUNC(lintimeintoutsidedoub3d1, LINTIMEINTOUTSIDEDOUB3D1) (const int&,
    const double&,
    const double *, const double *,
    double *);
-void F77_FUNC(lintimeintoutsidedoub3d2, LINTIMEINTOUTSIDEDOUB3D2) (const int&,
+void SAMRAI_F77_FUNC(lintimeintoutsidedoub3d2, LINTIMEINTOUTSIDEDOUB3D2) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -130,19 +130,19 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const OutersideData<double>* old_dat =
-      dynamic_cast<const OutersideData<double> *>(&src_data_old);
+      CPP_CAST<const OutersideData<double> *>(&src_data_old);
    const OutersideData<double>* new_dat =
-      dynamic_cast<const OutersideData<double> *>(&src_data_new);
+      CPP_CAST<const OutersideData<double> *>(&src_data_new);
    OutersideData<double>* dst_dat =
-      dynamic_cast<OutersideData<double> *>(&dst_data);
+      CPP_CAST<OutersideData<double> *>(&dst_data);
 
-   TBOX_ASSERT(old_dat != NULL);
-   TBOX_ASSERT(new_dat != NULL);
-   TBOX_ASSERT(dst_dat != NULL);
+   TBOX_ASSERT(old_dat != 0);
+   TBOX_ASSERT(new_dat != 0);
+   TBOX_ASSERT(dst_dat != 0);
    TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst_data, where, src_data_old, src_data_new);
 
    const hier::Index old_ilo = old_dat->getGhostBox().lower();
    const hier::Index old_ihi = old_dat->getGhostBox().upper();
@@ -176,7 +176,7 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
       // loop over lower and upper outerside arrays
       for (int i = 0; i < 2; i++) {
          if (dim == tbox::Dimension(1)) {
-            F77_FUNC(lintimeintoutsidedoub1d,
+            SAMRAI_F77_FUNC(lintimeintoutsidedoub1d,
                LINTIMEINTOUTSIDEDOUB1D) (ifirst(0), ilast(0),
                old_ilo(0), old_ihi(0),
                new_ilo(0), new_ihi(0),
@@ -186,7 +186,7 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
                new_dat->getPointer(0, i, d),
                dst_dat->getPointer(0, i, d));
          } else if (dim == tbox::Dimension(2)) {
-            F77_FUNC(lintimeintoutsidedoub2d0,
+            SAMRAI_F77_FUNC(lintimeintoutsidedoub2d0,
                LINTIMEINTOUTSIDEDOUB2D0) (ifirst(0), ifirst(1), ilast(0),
                ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -196,7 +196,7 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(0, i, d),
                new_dat->getPointer(0, i, d),
                dst_dat->getPointer(0, i, d));
-            F77_FUNC(lintimeintoutsidedoub2d1,
+            SAMRAI_F77_FUNC(lintimeintoutsidedoub2d1,
                LINTIMEINTOUTSIDEDOUB2D1) (ifirst(0), ifirst(1), ilast(0),
                ilast(1),
                old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
@@ -207,7 +207,7 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
                new_dat->getPointer(1, i, d),
                dst_dat->getPointer(1, i, d));
          } else if (dim == tbox::Dimension(3)) {
-            F77_FUNC(lintimeintoutsidedoub3d0,
+            SAMRAI_F77_FUNC(lintimeintoutsidedoub3d0,
                LINTIMEINTOUTSIDEDOUB3D0) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -220,7 +220,7 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(0, i, d),
                new_dat->getPointer(0, i, d),
                dst_dat->getPointer(0, i, d));
-            F77_FUNC(lintimeintoutsidedoub3d1,
+            SAMRAI_F77_FUNC(lintimeintoutsidedoub3d1,
                LINTIMEINTOUTSIDEDOUB3D1) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),
@@ -233,7 +233,7 @@ OutersideDoubleLinearTimeInterpolateOp::timeInterpolate(
                old_dat->getPointer(1, i, d),
                new_dat->getPointer(1, i, d),
                dst_dat->getPointer(1, i, d));
-            F77_FUNC(lintimeintoutsidedoub3d2,
+            SAMRAI_F77_FUNC(lintimeintoutsidedoub3d2,
                LINTIMEINTOUTSIDEDOUB3D2) (ifirst(0), ifirst(1), ifirst(2),
                ilast(0), ilast(1), ilast(2),
                old_ilo(0), old_ilo(1), old_ilo(2),

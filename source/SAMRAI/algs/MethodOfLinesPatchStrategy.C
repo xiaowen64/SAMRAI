@@ -27,11 +27,9 @@ namespace algs {
  *************************************************************************
  */
 
-MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(
-   const tbox::Dimension& dim):
-   xfer::RefinePatchStrategy(dim),
-   xfer::CoarsenPatchStrategy(dim),
-   d_dim(dim)
+MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy():
+   xfer::RefinePatchStrategy(),
+   xfer::CoarsenPatchStrategy()
 {
    d_interior_with_ghosts.reset();
    d_interior.reset();
@@ -39,18 +37,6 @@ MethodOfLinesPatchStrategy::MethodOfLinesPatchStrategy(
 
 MethodOfLinesPatchStrategy::~MethodOfLinesPatchStrategy()
 {
-}
-
-hier::IntVector
-MethodOfLinesPatchStrategy::getRefineOpStencilWidth() const
-{
-   return hier::IntVector::getZero(d_dim);
-}
-
-hier::IntVector
-MethodOfLinesPatchStrategy::getCoarsenOpStencilWidth() const
-{
-   return hier::IntVector::getZero(d_dim);
 }
 
 }

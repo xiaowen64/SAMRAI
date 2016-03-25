@@ -35,8 +35,8 @@
 namespace SAMRAI {
 namespace hier {
 
-const int BoxLevel::HIER_MAPPED_BOX_LEVEL_VERSION = 0;
-const int BoxLevel::MAPPED_BOX_LEVEL_NUMBER_OF_STATS = 20;
+const int BoxLevel::HIER_BOX_LEVEL_VERSION = 0;
+const int BoxLevel::BOX_LEVEL_NUMBER_OF_STATS = 20;
 
 boost::shared_ptr<tbox::Timer> BoxLevel::t_initialize_private;
 boost::shared_ptr<tbox::Timer> BoxLevel::t_acquire_remote_boxes;
@@ -51,40 +51,6 @@ BoxLevel::s_initialize_finalize_handler(
    0,
    BoxLevel::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
-
-BoxLevel::BoxLevel():
-   d_mpi(tbox::SAMRAI_MPI::commNull),
-   d_ratio(tbox::Dimension::getInvalidDimension(), 0),
-
-   d_local_number_of_cells(0),
-   d_global_number_of_cells(-1),
-   d_local_number_of_boxes(0),
-   d_global_number_of_boxes(-1),
-
-   d_max_number_of_boxes(-1),
-   d_min_number_of_boxes(-1),
-   d_max_number_of_cells(-1),
-   d_min_number_of_cells(-1),
-
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
-
-   d_local_bounding_box(0),
-   d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
-   d_global_data_up_to_date(false),
-
-   d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
-   d_handle(),
-   d_grid_geometry()
-{
-   // This ctor should never be invoked.
-   TBOX_ERROR("Somehow, we entered code that was never meant to be used.");
-}
 
 BoxLevel::BoxLevel(
    const tbox::Dimension& dim):
@@ -102,19 +68,19 @@ BoxLevel::BoxLevel(
    d_max_number_of_cells(-1),
    d_min_number_of_cells(-1),
 
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
+   d_local_max_box_size(),
+   d_global_max_box_size(),
+   d_local_min_box_size(),
+   d_global_min_box_size(),
 
-   d_local_bounding_box(0),
+   d_local_bounding_box(),
    d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
+   d_global_bounding_box(),
    d_global_data_up_to_date(false),
 
    d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
    d_handle(),
    d_grid_geometry()
 {
@@ -148,8 +114,8 @@ BoxLevel::BoxLevel(
    d_global_data_up_to_date(rhs.d_global_data_up_to_date),
 
    d_parallel_state(rhs.d_parallel_state),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
    d_handle(),
    d_grid_geometry(rhs.d_grid_geometry)
 {
@@ -174,19 +140,19 @@ BoxLevel::BoxLevel(
    d_max_number_of_cells(-1),
    d_min_number_of_cells(-1),
 
-   d_local_max_box_size(0),
-   d_global_max_box_size(0),
-   d_local_min_box_size(0),
-   d_global_min_box_size(0),
+   d_local_max_box_size(),
+   d_global_max_box_size(),
+   d_local_min_box_size(),
+   d_global_min_box_size(),
 
-   d_local_bounding_box(0),
+   d_local_bounding_box(),
    d_local_bounding_box_up_to_date(false),
-   d_global_bounding_box(0),
+   d_global_bounding_box(),
    d_global_data_up_to_date(false),
 
    d_parallel_state(DISTRIBUTED),
-   d_globalized_version(NULL),
-   d_persistent_overlap_connectors(NULL),
+   d_globalized_version(0),
+   d_persistent_overlap_connectors(0),
    d_handle(),
    d_grid_geometry()
 {
@@ -196,9 +162,9 @@ BoxLevel::BoxLevel(
 BoxLevel::~BoxLevel()
 {
    clear();
-   if (d_persistent_overlap_connectors != NULL) {
+   if (d_persistent_overlap_connectors != 0) {
       delete d_persistent_overlap_connectors;
-      d_persistent_overlap_connectors = NULL;
+      d_persistent_overlap_connectors = 0;
    }
 }
 
@@ -304,7 +270,7 @@ BoxLevel::initializePrivate(
    const tbox::SAMRAI_MPI& mpi,
    const ParallelState parallel_state)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
    t_initialize_private->start();
 
    clearForBoxChanges();
@@ -447,7 +413,7 @@ BoxLevel::swap(
 
    if (&level_a != &level_b) {
       if (level_a.isInitialized() && level_b.isInitialized()) {
-         TBOX_DIM_ASSERT_CHECK_ARGS2(level_a, level_b);
+         TBOX_ASSERT_OBJDIM_EQUALITY2(level_a, level_b);
       }
 
       level_a.clearPersistentOverlapConnectors();
@@ -639,9 +605,7 @@ BoxLevel::cacheGlobalReducedData() const
 
          std::vector<int> send_mesg;
          send_mesg.reserve(nblocks * 4 * dim.getValue() + 4);
-         int bishift;
          for (int bn = 0; bn < nblocks; ++bn) {
-            bishift = bn * nblocks;
             for (int i = 0; i < dim.getValue(); ++i) {
                send_mesg.push_back(-d_local_bounding_box[bn].lower()[i]);
                send_mesg.push_back(d_local_bounding_box[bn].upper()[i]);
@@ -696,10 +660,11 @@ BoxLevel::getLocalNumberOfBoxes(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
       TBOX_ERROR(
-         "Non-local boxes are not available in DISTRIBUTED mode.");
+         "Non-local boxes are not available in DISTRIBUTED mode."
+         << std::endl);
    }
-   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 
    if (rank == d_mpi.getRank()) {
       return d_local_number_of_boxes;
@@ -724,10 +689,11 @@ BoxLevel::getLocalNumberOfCells(
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state == DISTRIBUTED && rank != d_mpi.getRank()) {
       TBOX_ERROR(
-         "Non-local boxes are not available in DISTRIBUTED mode.");
+         "Non-local boxes are not available in DISTRIBUTED mode."
+         << std::endl);
    }
-   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 #endif
+   TBOX_ASSERT(rank >= 0 && rank < d_mpi.getSize());
 
    if (rank == d_mpi.getRank()) {
       return d_local_number_of_cells;
@@ -775,19 +741,14 @@ BoxLevel::setParallelState(
    if (!isInitialized()) {
       TBOX_ERROR(
          "BoxLevel::setParallelState: Cannot change the parallel state of\n"
-         << "an uninitialized BoxLevel.  See BoxLevel::initialize()");
+         << "an uninitialized BoxLevel.  See BoxLevel::initialize()"
+         << std::endl);
    }
 #endif
-   if (parallel_state != DISTRIBUTED && parallel_state != GLOBALIZED) {
-      TBOX_ERROR(
-         "BoxLevel::setParallelState: Invalid distribution state: "
-         << parallel_state << "\n");
-   }
-
    if (d_parallel_state == DISTRIBUTED && parallel_state == GLOBALIZED) {
       acquireRemoteBoxes();
-   } else if (d_parallel_state == GLOBALIZED && parallel_state ==
-              DISTRIBUTED) {
+   } else if (d_parallel_state == GLOBALIZED &&
+              parallel_state == DISTRIBUTED) {
       d_global_boxes.clear();
    }
    d_parallel_state = parallel_state;
@@ -989,27 +950,14 @@ BoxLevel::acquireRemoteBoxes_unpack(
 BoxContainer::const_iterator
 BoxLevel::addBox(
    const Box& box,
-   const BlockId& block_id,
-   const bool use_vacant_index)
+   const BlockId& block_id)
 {
    const tbox::Dimension& dim(getDim());
-   /*
-    * FIXME: bug: if some procs add a Box and others do not,
-    * their d_computed_global_* flags will be inconsistent
-    * resulting in incomplete participation in future communication
-    * calls to compute those parameters.
-    *
-    * This problem is not exclusive to box adding.
-    * It would also happen if some call initialize()
-    * and others do not.  But because box adding is finer grained
-    * than initialize(), it is more likely that some processors
-    * will skip over the box adding.
-    */
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually adding Boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state.");
+         << "DISTRIBUTED state." << std::endl);
    }
    if (box.getBlockId() != BlockId::invalidId()) {
       TBOX_ASSERT(box.getBlockId() == block_id);
@@ -1020,7 +968,7 @@ BoxLevel::addBox(
 
    BoxContainer::iterator new_iterator(d_boxes);
 
-   if (d_boxes.size() == 0) {
+   if (d_boxes.isEmpty()) {
       Box new_box(
          box,
          LocalId::getZero(),
@@ -1036,29 +984,6 @@ BoxLevel::addBox(
          --ni;
       } while (ni->isPeriodicImage());
       LocalId new_index = ni->getLocalId() + 1;
-      if (use_vacant_index) {
-         TBOX_ASSERT(new_index >= 0);
-
-         if (new_index.getValue() !=
-             static_cast<int>(d_local_number_of_boxes)) {
-            /*
-             * There is a smaller unused index we can use for the new index.
-             */
-            for (new_index = 0, ni = d_boxes.begin();
-                 ni != d_boxes.end();
-                 ++ni) {
-               if (new_index != (*ni).getLocalId()) {
-                  break;
-               }
-               if (!ni->isPeriodicImage()) {
-                  ++new_index;
-               }
-            }
-            // We should have found an unused index.
-            TBOX_ASSERT(ni != d_boxes.end());
-         }
-      }
-
       Box new_box(
          box, new_index, d_mpi.getRank());
       new_box.setBlockId(block_id);
@@ -1085,19 +1010,12 @@ BoxLevel::addPeriodicBox(
    const Box& ref_box,
    const PeriodicId& shift_number)
 {
-   // FIXME: We don't allow individually adding remote Boxes even in globalized state.  We probably shouldn't allow adding remote images either.
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (shift_number ==
        PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()) {
       TBOX_ERROR(
-         "BoxLevel::addPeriodicBox cannot be used to add regular box.");
-   }
-   if (d_parallel_state != GLOBALIZED && ref_box.getOwnerRank() !=
-       d_mpi.getRank()) {
-      TBOX_ERROR(
-         "BoxLevel::addPeriodicBox: Cannot add remote Box\n"
-         << "(owned by rank " << ref_box.getOwnerRank() << ")\n"
-         << "when not in GLOBALIZED state.");
+         "BoxLevel::addPeriodicBox cannot be used to add regular box."
+         << std::endl);
    }
 #endif
 
@@ -1143,14 +1061,6 @@ void
 BoxLevel::addBox(
    const Box& box)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
-   if (d_parallel_state != GLOBALIZED && box.getOwnerRank() != d_mpi.getRank()) {
-      TBOX_ERROR("BoxLevel::addBox: Cannot add remote Box\n"
-         << "(owned by rank " << box.getOwnerRank() << ")\n"
-         << "when not in GLOBALIZED state.");
-   }
-#endif
-
    clearForBoxChanges(false);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -1192,14 +1102,8 @@ BoxLevel::addBox(
          d_local_bounding_box[box.getBlockId().getBlockValue()] += box;
          d_local_max_box_size[box.getBlockId().getBlockValue()].max(box_size);
          d_local_min_box_size[box.getBlockId().getBlockValue()].min(box_size);
+         d_global_data_up_to_date = false;
       }
-      d_global_data_up_to_date = false;
-      /*
-       * FIXME: bug: if some procs add a real Box and others do not,
-       * their d_global_data_up_to_date flags will be inconsistent
-       * resulting in incomplete participation in future collective
-       * communication to compute that parameter.
-       */
    }
 
    if (d_parallel_state == GLOBALIZED) {
@@ -1223,7 +1127,7 @@ BoxLevel::eraseBox(
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state.");
+         << "distributed state." << std::endl);
    }
 #endif
 
@@ -1267,22 +1171,11 @@ void
 BoxLevel::eraseBox(
    const Box& box)
 {
-   /*
-    * FIXME: bug: if some procs erase some Boxes and others do
-    * not, their d_computed_global_* flags will be inconsistent
-    * resulting in incomplete participation in future communication
-    * calls to compute those parameters.
-    *
-    * This problem is not exclusive to box adding/erasing.  It would
-    * also happen if some call initialize() and others do not.  But
-    * because box adding is finer grained than initialize(), it is
-    * more likely that some processors will skip over the box adding.
-    */
 #ifdef DEBUG_CHECK_ASSERTIONS
    if (d_parallel_state != DISTRIBUTED) {
       TBOX_ERROR("Individually erasing Boxes is a local process\n"
          << "so it can only be performed in\n"
-         << "distributed state.");
+         << "distributed state." << std::endl);
    }
 #endif
 
@@ -1311,12 +1204,12 @@ BoxLevel::getGlobalizedVersion() const
       return *this;
    }
 
-   if (d_globalized_version == NULL) {
+   if (d_globalized_version == 0) {
       BoxLevel* globalized_version = new BoxLevel(*this);
       globalized_version->setParallelState(GLOBALIZED);
       TBOX_ASSERT(globalized_version->getParallelState() == GLOBALIZED);
       d_globalized_version = globalized_version;
-      globalized_version = NULL;
+      globalized_version = 0;
    }
 
    TBOX_ASSERT(d_globalized_version->getParallelState() == GLOBALIZED);
@@ -1330,7 +1223,7 @@ BoxLevel::getGlobalizedVersion() const
 PersistentOverlapConnectors&
 BoxLevel::getPersistentOverlapConnectors() const
 {
-   if (d_persistent_overlap_connectors == NULL) {
+   if (d_persistent_overlap_connectors == 0) {
       d_persistent_overlap_connectors = new PersistentOverlapConnectors(*this);
    }
    return *d_persistent_overlap_connectors;
@@ -1390,7 +1283,7 @@ BoxLevel::hasBox(
       if (d_parallel_state == DISTRIBUTED) {
          TBOX_ERROR("BoxLevel: Cannot check on remote Box "
             << box << " while in DISTRIBUTED mode.\n"
-            << "See BoxLevel::setParallelState().");
+            << "See BoxLevel::setParallelState()." << std::endl);
       }
 #endif
       BoxContainer::const_iterator ni = d_global_boxes.find(box);
@@ -1412,7 +1305,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
 
       return ni;
@@ -1421,7 +1314,7 @@ BoxLevel::getBoxStrict(
       if (d_parallel_state != GLOBALIZED) {
          TBOX_ERROR(
             "BoxLevel::getBox: cannot get remote box "
-            << box << " without being in globalized state.");
+            << box << " without being in globalized state." << std::endl);
       }
 #endif
       BoxContainer::const_iterator ni = d_global_boxes.find(box);
@@ -1429,7 +1322,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
 
       return ni;
@@ -1449,19 +1342,18 @@ BoxLevel::getBoxStrict(
       TBOX_ERROR(
          "BoxLevel::getBoxStrict: cannot get remote box " << box_id
                                                                  <<
-         " without being in globalized state.");
+         " without being in globalized state." << std::endl);
    }
 #endif
 
-   Box box(getDim(),
-                  box_id);
+   Box box(getDim(), box_id);
    if (box.getOwnerRank() == d_mpi.getRank()) {
       BoxContainer::const_iterator ni = d_boxes.find(box);
       if (ni == d_boxes.end()) {
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
       return ni;
    } else {
@@ -1470,7 +1362,7 @@ BoxLevel::getBoxStrict(
          TBOX_ERROR(
             "BoxContainer::getBoxStrict: requested box "
             << box
-            << " does not exist in the box_level.");
+            << " does not exist in the box_level." << std::endl);
       }
       return ni;
    }
@@ -1491,25 +1383,27 @@ BoxLevel::getGlobalBoxes(BoxContainer& global_boxes) const
 
 /*
  ***********************************************************************
- * Write the BoxLevel to a database.
+ * Write the BoxLevel to a restart database.
  *
  * Write only local parts.
  ***********************************************************************
  */
 
 void
-BoxLevel::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
+BoxLevel::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   database->putBool("d_is_mapped_box_level", true);
-   database->putInteger(
-      "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_MAPPED_BOX_LEVEL_VERSION);
-   database->putInteger("d_nproc", d_mpi.getSize());
-   database->putInteger("d_rank", d_mpi.getRank());
-   database->putInteger("dim", d_ratio.getDim().getValue());
-   database->putIntegerArray(
+   // This appears to be used in the RedistributedRestartUtility.
+   restart_db->putBool("d_is_mapped_box_level", true);
+
+   restart_db->putInteger(
+      "HIER_MAPPED_BOX_LEVEL_VERSION", HIER_BOX_LEVEL_VERSION);
+   restart_db->putInteger("d_nproc", d_mpi.getSize());
+   restart_db->putInteger("d_rank", d_mpi.getRank());
+   restart_db->putInteger("dim", d_ratio.getDim().getValue());
+   restart_db->putIntegerArray(
       "d_ratio", &d_ratio[0], d_ratio.getDim().getValue());
-   getBoxes().putUnregisteredToDatabase(database->putDatabase("mapped_boxes"));
+   getBoxes().putToRestart(restart_db->putDatabase("mapped_boxes"));
 }
 
 /*
@@ -1519,23 +1413,24 @@ BoxLevel::putUnregisteredToDatabase(
  */
 
 void
-BoxLevel::getFromDatabase(
-   tbox::Database& database,
+BoxLevel::getFromRestart(
+   tbox::Database& restart_db,
    const boost::shared_ptr<const BaseGridGeometry>& grid_geom)
 {
-   TBOX_ASSERT(database.isInteger("dim"));
-   const tbox::Dimension dim(static_cast<unsigned short>(database.getInteger("dim")));
+   TBOX_ASSERT(restart_db.isInteger("dim"));
+   const tbox::Dimension dim(static_cast<unsigned short>(
+      restart_db.getInteger("dim")));
    TBOX_ASSERT(getDim() == dim);
 
    IntVector ratio(dim);
-   database.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
+   restart_db.getIntegerArray("d_ratio", &ratio[0], dim.getValue());
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-   const int version = database.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
-   const int nproc = database.getInteger("d_nproc");
-   const int rank = database.getInteger("d_rank");
+   const int version = restart_db.getInteger("HIER_MAPPED_BOX_LEVEL_VERSION");
+   const int nproc = restart_db.getInteger("d_nproc");
+   const int rank = restart_db.getInteger("d_rank");
    TBOX_ASSERT(ratio >= IntVector::getOne(dim));
-   TBOX_ASSERT(version <= HIER_MAPPED_BOX_LEVEL_VERSION);
+   TBOX_ASSERT(version <= HIER_BOX_LEVEL_VERSION);
 #endif
 
    /*
@@ -1552,21 +1447,21 @@ BoxLevel::getFromDatabase(
       }
    } else {
       TBOX_WARNING(
-         "BoxLevel::getFromDatabase: Uninitialized MPI communicator.\n"
-         << "Using tbox::SAMRAI_MPI::getSAMRAIWorld().");
+         "BoxLevel::getFromRestart: Uninitialized MPI communicator.\n"
+         << "Using tbox::SAMRAI_MPI::getSAMRAIWorld()." << std::endl);
       initialize(ratio, grid_geom,
          tbox::SAMRAI_MPI::getSAMRAIWorld(), DISTRIBUTED);
    }
 
    /*
     * Failing these asserts means that we don't have a compatible
-    * database for the number of processors or we are reading another
+    * restart database for the number of processors or we are reading another
     * processor's data.
     */
    TBOX_ASSERT(nproc == d_mpi.getSize());
    TBOX_ASSERT(rank == d_mpi.getRank());
 
-   d_boxes.getFromDatabase(*database.getDatabase("mapped_boxes"));
+   d_boxes.getFromRestart(*restart_db.getDatabase("mapped_boxes"));
    computeLocalRedundantData();
 
 }

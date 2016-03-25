@@ -8,21 +8,6 @@
  *                (3d sinusoidal fronusoidal frontt) 
  *
  ************************************************************************/
-log_actions = 'n'
-check_input_connectors = 'n'
-check_output_connectors = 'n'
-check_connectors = 'n'
-print_layer_hierarchy = 'n'
-DistributedLoadBalancer_print_steps = 'n'
-DistributedLoadBalancer_check_connectivity = 'n'
-check_map = 'n'
-check_connectivity = 'n'
-print_steps = 'n'
-print_swap_steps = 'n'
-print_break_steps = 'n'
-print_edge_steps = 'n'
-
-
 LinAdv {
    advection_velocity = 2.0e0 , 0.01e0, 0.01e0
 
@@ -146,15 +131,13 @@ LinAdv {
 }
 
 BergerRigoutsos {
-   algo_advance_mode = "ADVANCE_SOME"
-   owner_mode = "MOST_OVERLAP"
-   log_node_history = FALSE
-   use_level_boxes = FALSE
-   use_private_communicator = TRUE
+   DEV_algo_advance_mode = "ADVANCE_SOME"
+   DEV_owner_mode = "MOST_OVERLAP"
+   DEV_log_node_history = FALSE
    sort_output_nodes = TRUE
-   log_cluster_summary = TRUE
-   barrier_before = TRUE
-   barrier_after = TRUE
+   DEV_log_cluster_summary = TRUE
+   DEV_barrier_before = TRUE
+   DEV_barrier_after = TRUE
 }
 
 Main {
@@ -256,19 +239,11 @@ PatchHierarchy {
 
 GriddingAlgorithm {
    enforce_proper_nesting = TRUE
-   extend_to_domain_boundary = TRUE
+   DEV_extend_to_domain_boundary = TRUE
    check_nonrefined_tags = "IGNORE"
-   // load_balance = FALSE
+   // DEV_load_balance = FALSE
    combine_efficiency = 0.7
    efficiency_tolerance = 0.85
-   barrier_before_regrid = TRUE
-   barrier_before_find_refinement = TRUE
-   barrier_before_cluster = TRUE
-   barrier_before_nest = TRUE
-   barrier_before_limit = TRUE
-   barrier_before_extend = TRUE
-   barrier_before_balance = TRUE
-   barrier_after_find_refinement = TRUE
 }
 
 StandardTagAndInitialize {
@@ -287,7 +262,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.1125e0 // procs 1, 2
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
 
 TimeRefinementIntegrator {
@@ -299,30 +274,10 @@ TimeRefinementIntegrator {
    // tag_buffer            = 0, 0, 0, 0, 0, 0
 }
 
-LoadBalancer{
-  processors = 1, 1
-  bin_pack_method = "GREEDY"
-  // bin_pack_method = "SPATIAL"
-  ignore_level_box_union_is_single_box = TRUE
-}
-
-DistributedLoadBalancer{
-  algorithm_index = 1
-  report_load_balance = FALSE
-  dummy = FALSE
-  OldLoadBalancer{
-    processors = 1, 1
-    bin_pack_method = "GREEDY"
-    // bin_pack_method = "SPATIAL"
-    ignore_level_box_union_is_single_box = TRUE
-  }
-  barrier_before_balance = FALSE
-}
-
 TreeLoadBalancer {
-  report_load_balance = FALSE
-  barrier_before = TRUE
-  barrier_after = TRUE
+  DEV_report_load_balance = FALSE
+  DEV_barrier_before = TRUE
+  DEV_barrier_after = TRUE
   n_root_cycles = 2
 }
 
@@ -339,7 +294,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.1125e0 // procs 1, 2
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -370,7 +325,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.1125e0 // procs 1, 2
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -397,7 +352,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.1125e0 // procs 1, 2
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -424,7 +379,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.225e0  // procs 4, 8, 16
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -451,7 +406,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.225e0  // procs 4, 8, 16
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -478,7 +433,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.225e0  // procs 4, 8, 16
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -505,7 +460,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.45e0   // procs 32, 64, 128
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -532,7 +487,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.45e0   // procs 32, 64, 128
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -559,7 +514,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.45e0   // procs 32, 64, 128
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -586,7 +541,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.9e0    // procs 256, 512, 1024
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -613,7 +568,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.9e0    // procs 256, 512, 1024
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE
@@ -640,7 +595,7 @@ HyperbolicLevelIntegrator {
    cfl_init                 = 0.9e0    // procs 256, 512, 1024
    lag_dt_computation       = TRUE
    use_ghosts_to_compute_dt = TRUE
-   distinguish_mpi_reduction_costs = TRUE
+   DEV_distinguish_mpi_reduction_costs = TRUE
 }
    SinusoidalFrontTagger {
       allocate_data = FALSE

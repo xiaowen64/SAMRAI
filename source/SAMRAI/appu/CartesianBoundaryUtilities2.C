@@ -33,17 +33,17 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 
-void F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&, const int&, const int&);
 
-void F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (const int&, const int&,
    const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&);
 
-void F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -55,7 +55,7 @@ void F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (const int&, const int&,
    double *,
    const int&);
 
-void F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (const int&, const int&,
+void SAMRAI_F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (const int&, const int&,
    const int&, const int&,
    const int&, const int&,
    const int&, const int&,
@@ -103,30 +103,34 @@ bool CartesianBoundaryUtilities2::s_fortran_constants_stuffed = false;
  */
 
 void
-CartesianBoundaryUtilities2::readBoundaryInput(
+CartesianBoundaryUtilities2::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(bdry_strategy != 0);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
+
+   if (!input_db) {
+      TBOX_ERROR(": CartesianBoundaryUtility2::getFromInput()\n"
+         << "no input database supplied" << std::endl);
+   }
 
    if (!s_fortran_constants_stuffed) {
       stuff2dBdryFortConst();
    }
 
    read2dBdryEdges(bdry_strategy,
-      bdry_db,
+      input_db,
       edge_conds,
       periodic);
 
-   read2dBdryNodes(bdry_db,
+   read2dBdryNodes(input_db,
       edge_conds,
       node_conds,
       periodic);
@@ -162,7 +166,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -172,7 +176,8 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -198,7 +203,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartedgebdry2d, GETCARTEDGEBDRY2D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ibeg(0), iend(0),
          ibeg(1), iend(1),
@@ -243,7 +248,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
    TBOX_ASSERT(bdry_edge_values.getSize() == NUM_2D_EDGES * (vardata->getDepth()));
 
    TBOX_DIM_ASSERT(ghost_fill_width.getDim() == tbox::Dimension(2));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*vardata, patch, ghost_fill_width);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*vardata, patch, ghost_fill_width);
 
    NULL_USE(varname);
 
@@ -253,7 +258,8 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
 
    const hier::Box& interior(patch.getBox());
@@ -279,7 +285,7 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
       const hier::Index& ibeg(fill_box.lower());
       const hier::Index& iend(fill_box.upper());
 
-      F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (ifirst(0), ilast(0),
+      SAMRAI_F77_FUNC(getcartnodebdry2d, GETCARTNODEBDRY2D) (ifirst(0), ilast(0),
          ifirst(1), ilast(1),
          ibeg(0), iend(0),
          ibeg(1), iend(1),
@@ -383,14 +389,14 @@ CartesianBoundaryUtilities2::checkBdryData(
    const hier::IntVector& gcw_to_check,
    const hier::BoundaryBox& bbox,
    int bcase,
-   double bstate)
+   const double& bstate)
 {
    TBOX_ASSERT(!varname.empty());
    TBOX_ASSERT(data_id >= 0);
    TBOX_ASSERT(depth >= 0);
 
    TBOX_DIM_ASSERT(gcw_to_check.getDim() == tbox::Dimension(2));
-   TBOX_DIM_ASSERT_CHECK_ARGS3(patch, gcw_to_check, bbox);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(patch, gcw_to_check, bbox);
 
    int num_bad_values = 0;
 
@@ -399,11 +405,13 @@ CartesianBoundaryUtilities2::checkBdryData(
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
 
    boost::shared_ptr<pdat::CellData<double> > vardata(
       patch.getPatchData(data_id),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(vardata);
 
    std::string bdry_type_str;
    if (btype == Bdry::EDGE2D) {
@@ -543,14 +551,14 @@ CartesianBoundaryUtilities2::checkBdryData(
 void
 CartesianBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    tbox::Array<int>& edge_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
-   TBOX_ASSERT(bdry_strategy != (BoundaryUtilityStrategy *)NULL);
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(bdry_strategy != 0);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
 
    int num_per_dirs = 0;
@@ -589,41 +597,27 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
          }
 
          if (need_data_read) {
-            if (bdry_db->keyExists(bdry_loc_str)) {
-               boost::shared_ptr<tbox::Database> bdry_loc_db(
-                  bdry_db->getDatabase(bdry_loc_str));
-               if (bdry_loc_db) {
-                  if (bdry_loc_db->keyExists("boundary_condition")) {
-                     std::string bdry_cond_str =
-                        bdry_loc_db->getString("boundary_condition");
-                     if (bdry_cond_str == "FLOW") {
-                        edge_conds[s] = BdryCond::FLOW;
-                     } else if (bdry_cond_str == "REFLECT") {
-                        edge_conds[s] = BdryCond::REFLECT;
-                     } else if (bdry_cond_str == "DIRICHLET") {
-                        edge_conds[s] = BdryCond::DIRICHLET;
-                        bdry_strategy->
-                        readDirichletBoundaryDataEntry(bdry_loc_db,
-                           bdry_loc_str,
-                           s);
-                     } else if (bdry_cond_str == "NEUMANN") {
-                        edge_conds[s] = BdryCond::NEUMANN;
-                        bdry_strategy->
-                        readNeumannBoundaryDataEntry(bdry_loc_db,
-                           bdry_loc_str,
-                           s);
-                     } else {
-                        TBOX_ERROR("Unknown edge boundary string = "
-                           << bdry_cond_str << " found in input." << std::endl);
-                     }
-                  } else {
-                     TBOX_ERROR("'boundary_condition' entry missing from "
-                        << bdry_loc_str << " input database." << std::endl);
-                  }
-               }
+            boost::shared_ptr<tbox::Database> bdry_loc_db(
+               input_db->getDatabase(bdry_loc_str));
+            std::string bdry_cond_str =
+               bdry_loc_db->getString("boundary_condition");
+            if (bdry_cond_str == "FLOW") {
+               edge_conds[s] = BdryCond::FLOW;
+            } else if (bdry_cond_str == "REFLECT") {
+               edge_conds[s] = BdryCond::REFLECT;
+            } else if (bdry_cond_str == "DIRICHLET") {
+               edge_conds[s] = BdryCond::DIRICHLET;
+               bdry_strategy->readDirichletBoundaryDataEntry(bdry_loc_db,
+                  bdry_loc_str,
+                  s);
+            } else if (bdry_cond_str == "NEUMANN") {
+               edge_conds[s] = BdryCond::NEUMANN;
+               bdry_strategy->readNeumannBoundaryDataEntry(bdry_loc_db,
+                  bdry_loc_str,
+                  s);
             } else {
-               TBOX_ERROR(bdry_loc_str
-                  << " database entry not found in input." << std::endl);
+               TBOX_ERROR("Unknown edge boundary string = "
+                  << bdry_cond_str << " found in input." << std::endl);
             }
          } // if (need_data_read)
 
@@ -639,14 +633,14 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
 
 void
 CartesianBoundaryUtilities2::read2dBdryNodes(
-   const boost::shared_ptr<tbox::Database>& bdry_db,
+   const boost::shared_ptr<tbox::Database>& input_db,
    const tbox::Array<int>& edge_conds,
    tbox::Array<int>& node_conds,
    const hier::IntVector& periodic)
 {
    TBOX_DIM_ASSERT(periodic.getDim() == tbox::Dimension(2));
 
-   TBOX_ASSERT(bdry_db);
+   TBOX_ASSERT(input_db);
    TBOX_ASSERT(edge_conds.getSize() == NUM_2D_EDGES);
    TBOX_ASSERT(node_conds.getSize() == NUM_2D_NODES);
 
@@ -680,157 +674,144 @@ CartesianBoundaryUtilities2::read2dBdryNodes(
             default: NULL_STATEMENT;
          }
 
-         if (bdry_db->keyExists(bdry_loc_str)) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db(
-               bdry_db->getDatabase(bdry_loc_str));
-            if (bdry_loc_db) {
-               if (bdry_loc_db->keyExists("boundary_condition")) {
-                  std::string bdry_cond_str =
-                     bdry_loc_db->getString("boundary_condition");
-                  if (bdry_cond_str == "XFLOW") {
-                     node_conds[s] = BdryCond::XFLOW;
-                  } else if (bdry_cond_str == "YFLOW") {
-                     node_conds[s] = BdryCond::YFLOW;
-                  } else if (bdry_cond_str == "XREFLECT") {
-                     node_conds[s] = BdryCond::XREFLECT;
-                  } else if (bdry_cond_str == "YREFLECT") {
-                     node_conds[s] = BdryCond::YREFLECT;
-                  } else if (bdry_cond_str == "XDIRICHLET") {
-                     node_conds[s] = BdryCond::XDIRICHLET;
-                  } else if (bdry_cond_str == "YDIRICHLET") {
-                     node_conds[s] = BdryCond::YDIRICHLET;
-                  } else if (bdry_cond_str == "XNEUMANN") {
-                     node_conds[s] = BdryCond::XNEUMANN;
-                  } else if (bdry_cond_str == "YNEUMANN") {
-                     node_conds[s] = BdryCond::YNEUMANN;
-                  } else {
-                     TBOX_ERROR("Unknown node boundary string = "
-                        << bdry_cond_str << " found in input." << std::endl);
-                  }
+         boost::shared_ptr<tbox::Database> bdry_loc_db(
+            input_db->getDatabase(bdry_loc_str));
+         std::string bdry_cond_str =
+            bdry_loc_db->getString("boundary_condition");
+         if (bdry_cond_str == "XFLOW") {
+            node_conds[s] = BdryCond::XFLOW;
+         } else if (bdry_cond_str == "YFLOW") {
+            node_conds[s] = BdryCond::YFLOW;
+         } else if (bdry_cond_str == "XREFLECT") {
+            node_conds[s] = BdryCond::XREFLECT;
+         } else if (bdry_cond_str == "YREFLECT") {
+            node_conds[s] = BdryCond::YREFLECT;
+         } else if (bdry_cond_str == "XDIRICHLET") {
+            node_conds[s] = BdryCond::XDIRICHLET;
+         } else if (bdry_cond_str == "YDIRICHLET") {
+            node_conds[s] = BdryCond::YDIRICHLET;
+         } else if (bdry_cond_str == "XNEUMANN") {
+            node_conds[s] = BdryCond::XNEUMANN;
+         } else if (bdry_cond_str == "YNEUMANN") {
+            node_conds[s] = BdryCond::YNEUMANN;
+         } else {
+            TBOX_ERROR("Unknown node boundary string = "
+               << bdry_cond_str << " found in input." << std::endl);
+         }
 
-                  std::string proper_edge;
-                  std::string proper_edge_data;
-                  bool no_edge_data_found = false;
-                  if (bdry_cond_str == "XFLOW" ||
-                      bdry_cond_str == "XDIRICHLET" ||
-                      bdry_cond_str == "XNEUMANN" ||
-                      bdry_cond_str == "XREFLECT") {
-                     if (s == NodeBdyLoc2D::XLO_YLO ||
-                         s == NodeBdyLoc2D::XLO_YHI) {
-                        proper_edge = "XLO";
-                        if (bdry_cond_str == "XFLOW" &&
-                            edge_conds[BdryLoc::XLO] != BdryCond::FLOW) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "XDIRICHLET" &&
-                            edge_conds[BdryLoc::XLO] != BdryCond::DIRICHLET) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "XNEUMANN" &&
-                            edge_conds[BdryLoc::XLO] != BdryCond::NEUMANN) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "XREFLECT" &&
-                            edge_conds[BdryLoc::XLO] != BdryCond::REFLECT) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "REFLECT";
-                        }
-                     } else {
-                        proper_edge = "XHI";
-                        if (bdry_cond_str == "XFLOW" &&
-                            edge_conds[BdryLoc::XHI] != BdryCond::FLOW) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "XDIRICHLET" &&
-                            edge_conds[BdryLoc::XHI] != BdryCond::DIRICHLET) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "XNEUMANN" &&
-                            edge_conds[BdryLoc::XHI] != BdryCond::NEUMANN) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "XREFLECT" &&
-                            edge_conds[BdryLoc::XHI] != BdryCond::REFLECT) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "REFLECT";
-                        }
-                     }
-                  } else if (bdry_cond_str == "YFLOW" ||
-                             bdry_cond_str == "YDIRICHLET" ||
-                             bdry_cond_str == "YNEUMANN" ||
-                             bdry_cond_str == "YREFLECT") {
-                     if (s == NodeBdyLoc2D::XLO_YLO ||
-                         s == NodeBdyLoc2D::XHI_YLO) {
-                        proper_edge = "YLO";
-                        if (bdry_cond_str == "YFLOW" &&
-                            edge_conds[BdryLoc::YLO] != BdryCond::FLOW) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "YDIRICHLET" &&
-                            edge_conds[BdryLoc::YLO] != BdryCond::DIRICHLET) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "YNEUMANN" &&
-                            edge_conds[BdryLoc::YLO] != BdryCond::NEUMANN) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "YREFLECT" &&
-                            edge_conds[BdryLoc::YLO] != BdryCond::REFLECT) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "REFLECT";
-                        }
-                     } else {
-                        proper_edge = "YHI";
-                        if (bdry_cond_str == "YFLOW" &&
-                            edge_conds[BdryLoc::YHI] != BdryCond::FLOW) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "FLOW";
-                        }
-                        if (bdry_cond_str == "YDIRICHLET" &&
-                            edge_conds[BdryLoc::YHI] != BdryCond::DIRICHLET) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "DIRICHLET";
-                        }
-                        if (bdry_cond_str == "YNEUMANN" &&
-                            edge_conds[BdryLoc::YHI] != BdryCond::NEUMANN) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "NEUMANN";
-                        }
-                        if (bdry_cond_str == "YREFLECT" &&
-                            edge_conds[BdryLoc::YHI] != BdryCond::REFLECT) {
-                           no_edge_data_found = true;
-                           proper_edge_data = "REFLECT";
-                        }
-                     }
-                  }
-                  if (no_edge_data_found) {
-                     TBOX_ERROR(
-                        "Bdry condition " << bdry_cond_str
-                                          << " found for "
-                                          << bdry_loc_str
-                                          << "\n but no "
-                                          << proper_edge_data
-                                          << " data found for edge "
-                                          << proper_edge << std::endl);
-                  }
-
-               } else {
-                  TBOX_ERROR("'boundary_condition' entry missing from "
-                     << bdry_loc_str << " input database." << std::endl);
+         std::string proper_edge;
+         std::string proper_edge_data;
+         bool no_edge_data_found = false;
+         if (bdry_cond_str == "XFLOW" ||
+             bdry_cond_str == "XDIRICHLET" ||
+             bdry_cond_str == "XNEUMANN" ||
+             bdry_cond_str == "XREFLECT") {
+            if (s == NodeBdyLoc2D::XLO_YLO ||
+                s == NodeBdyLoc2D::XLO_YHI) {
+               proper_edge = "XLO";
+               if (bdry_cond_str == "XFLOW" &&
+                   edge_conds[BdryLoc::XLO] != BdryCond::FLOW) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "FLOW";
+               }
+               if (bdry_cond_str == "XDIRICHLET" &&
+                   edge_conds[BdryLoc::XLO] != BdryCond::DIRICHLET) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "XNEUMANN" &&
+                   edge_conds[BdryLoc::XLO] != BdryCond::NEUMANN) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "XREFLECT" &&
+                   edge_conds[BdryLoc::XLO] != BdryCond::REFLECT) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "REFLECT";
+               }
+            } else {
+               proper_edge = "XHI";
+               if (bdry_cond_str == "XFLOW" &&
+                   edge_conds[BdryLoc::XHI] != BdryCond::FLOW) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "FLOW";
+               }
+               if (bdry_cond_str == "XDIRICHLET" &&
+                   edge_conds[BdryLoc::XHI] != BdryCond::DIRICHLET) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "XNEUMANN" &&
+                   edge_conds[BdryLoc::XHI] != BdryCond::NEUMANN) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "XREFLECT" &&
+                   edge_conds[BdryLoc::XHI] != BdryCond::REFLECT) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "REFLECT";
                }
             }
-         } else {
-            TBOX_ERROR(bdry_loc_str
-               << " database entry not found in input." << std::endl);
+         } else if (bdry_cond_str == "YFLOW" ||
+                    bdry_cond_str == "YDIRICHLET" ||
+                    bdry_cond_str == "YNEUMANN" ||
+                    bdry_cond_str == "YREFLECT") {
+            if (s == NodeBdyLoc2D::XLO_YLO ||
+                s == NodeBdyLoc2D::XHI_YLO) {
+               proper_edge = "YLO";
+               if (bdry_cond_str == "YFLOW" &&
+                   edge_conds[BdryLoc::YLO] != BdryCond::FLOW) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "FLOW";
+               }
+               if (bdry_cond_str == "YDIRICHLET" &&
+                   edge_conds[BdryLoc::YLO] != BdryCond::DIRICHLET) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "YNEUMANN" &&
+                   edge_conds[BdryLoc::YLO] != BdryCond::NEUMANN) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "YREFLECT" &&
+                   edge_conds[BdryLoc::YLO] != BdryCond::REFLECT) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "REFLECT";
+               }
+            } else {
+               proper_edge = "YHI";
+               if (bdry_cond_str == "YFLOW" &&
+                   edge_conds[BdryLoc::YHI] != BdryCond::FLOW) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "FLOW";
+               }
+               if (bdry_cond_str == "YDIRICHLET" &&
+                   edge_conds[BdryLoc::YHI] != BdryCond::DIRICHLET) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "DIRICHLET";
+               }
+               if (bdry_cond_str == "YNEUMANN" &&
+                   edge_conds[BdryLoc::YHI] != BdryCond::NEUMANN) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "NEUMANN";
+               }
+               if (bdry_cond_str == "YREFLECT" &&
+                   edge_conds[BdryLoc::YHI] != BdryCond::REFLECT) {
+                  no_edge_data_found = true;
+                  proper_edge_data = "REFLECT";
+               }
+            }
+         }
+         if (no_edge_data_found) {
+            TBOX_ERROR(
+               "Bdry condition " << bdry_cond_str
+                                 << " found for "
+                                 << bdry_loc_str
+                                 << "\n but no "
+                                 << proper_edge_data
+                                 << " data found for edge "
+                                 << proper_edge << std::endl);
          }
 
       } // for (int s = 0 ...
@@ -923,10 +904,10 @@ CartesianBoundaryUtilities2::get2dBdryDirectionCheckValues(
 void
 CartesianBoundaryUtilities2::stuff2dBdryFortConst()
 {
-   F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (BdryLoc::XLO, BdryLoc::XHI,
+   SAMRAI_F77_FUNC(stufcartbdryloc2d, STUFCARTBDRYLOC2D) (BdryLoc::XLO, BdryLoc::XHI,
       BdryLoc::YLO, BdryLoc::YHI, NodeBdyLoc2D::XLO_YLO, NodeBdyLoc2D::XHI_YLO,
       NodeBdyLoc2D::XLO_YHI, NodeBdyLoc2D::XHI_YHI);
-   F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (BdryCond::FLOW,
+   SAMRAI_F77_FUNC(stufcartbdrycond2d, STUFCARTBDRYCOND2D) (BdryCond::FLOW,
       BdryCond::XFLOW, BdryCond::YFLOW,
       BdryCond::REFLECT,
       BdryCond::XREFLECT, BdryCond::YREFLECT,

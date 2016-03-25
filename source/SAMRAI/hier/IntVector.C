@@ -17,8 +17,8 @@
 namespace SAMRAI {
 namespace hier {
 
-IntVector * IntVector::s_zeros[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-IntVector * IntVector::s_ones[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+IntVector * IntVector::s_zeros[SAMRAI::MAX_DIM_VAL];
+IntVector * IntVector::s_ones[SAMRAI::MAX_DIM_VAL];
 
 tbox::StartupShutdownManager::Handler
 IntVector::s_initialize_finalize_handler(
@@ -28,26 +28,12 @@ IntVector::s_initialize_finalize_handler(
    IntVector::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-IntVector::IntVector():
-   d_dim(tbox::Dimension::getInvalidDimension())
-{
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-      d_vector[i] = tbox::MathUtilities<int>::getMin();
-   }
-#endif
-}
-
 IntVector::IntVector(
    const tbox::Dimension& dim):
    d_dim(dim)
 {
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!d_dim.isValid()) ||
-      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
-
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
       d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
@@ -59,39 +45,27 @@ IntVector::IntVector(
    const int value):
    d_dim(dim)
 {
-   // an explicit setting Invalid is allowed.
-   TBOX_DIM_ASSERT((!d_dim.isValid()) ||
-      (d_dim >= tbox::Dimension(1) && d_dim <= tbox::Dimension::getMaxDimension()));
-
-   if (d_dim.isValid()) {
-      for (int i = 0; i < d_dim.getValue(); i++)
-         d_vector[i] = value;
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_vector[i] = value;
+   }
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-      for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE;
-           i++) {
-         d_vector[i] = tbox::MathUtilities<int>::getMin();
-      }
-#endif
-   } else {
-      for (int i = 0; i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
-         d_vector[i] = tbox::MathUtilities<int>::getMin();
-      }
+   for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
+      d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
+#endif
 }
 
 IntVector::IntVector(
    const tbox::Array<int>& a):
    d_dim(static_cast<unsigned short>(a.getSize()))
 {
-   TBOX_DIM_ASSERT(a.getSize() > 1 &&
-      a.getSize() <= tbox::Dimension::MAXIMUM_DIMENSION_VALUE);
-
-   for (int i = 0; i < d_dim.getValue(); i++)
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       d_vector[i] = a[i];
+   }
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
-   for (int i = d_dim.getValue(); i < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; i++) {
+   for (int i = d_dim.getValue(); i < SAMRAI::MAX_DIM_VAL; ++i) {
       d_vector[i] = tbox::MathUtilities<int>::getMin();
    }
 #endif
@@ -101,14 +75,8 @@ IntVector::IntVector(
    const IntVector& rhs):
    d_dim(rhs.getDim())
 {
-   /*
-    * STL needs to be able to copy invalid values.
-    */
-   if (rhs.getDim().isValid()) {
-      TBOX_DIM_ASSERT_CHECK_DIM(rhs.getDim());
-
-      for (int i = 0; i < d_dim.getValue(); i++)
-         d_vector[i] = rhs.d_vector[i];
+   for (int i = 0; i < d_dim.getValue(); ++i) {
+      d_vector[i] = rhs.d_vector[i];
    }
 }
 
@@ -117,10 +85,9 @@ IntVector::IntVector(
    const int array[]):
    d_dim(dim)
 {
-   TBOX_DIM_ASSERT_CHECK_DIM(dim);
-
-   for (int i = 0; i < d_dim.getValue(); i++)
+   for (int i = 0; i < d_dim.getValue(); ++i) {
       d_vector[i] = array[i];
+   }
 }
 
 IntVector::~IntVector()
@@ -162,21 +129,21 @@ std::ostream& operator << (
 }
 
 void
-IntVector::putUnregisteredToDatabase(
-   tbox::Database& database,
+IntVector::putToRestart(
+   tbox::Database& restart_db,
    const std::string& name) const
 {
-   database.putIntegerArray(name, d_vector, d_dim.getValue());
+   restart_db.putIntegerArray(name, d_vector, d_dim.getValue());
 }
 
 void
-IntVector::getFromDatabase(
-   tbox::Database& database,
+IntVector::getFromRestart(
+   tbox::Database& restart_db,
    const std::string& name)
 {
-   int d = database.getArraySize(name);
-   d_dim = tbox::Dimension(static_cast<unsigned short>(d));
-   database.getIntegerArray(name, d_vector, d_dim.getValue());
+   TBOX_ASSERT(d_dim.getValue() ==
+      static_cast<unsigned short>(restart_db.getArraySize(name)));
+   restart_db.getIntegerArray(name, d_vector, d_dim.getValue());
 }
 
 /*
@@ -212,11 +179,11 @@ IntVector::sortIntVector(
 void
 IntVector::initializeCallback()
 {
-   for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_zeros[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 0);
    }
 
-   for (unsigned short d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (unsigned short d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       s_ones[d] = new IntVector(tbox::Dimension(static_cast<unsigned short>(d + 1)), 1);
    }
 }
@@ -224,7 +191,7 @@ IntVector::initializeCallback()
 void
 IntVector::finalizeCallback()
 {
-   for (int d = 0; d < tbox::Dimension::MAXIMUM_DIMENSION_VALUE; ++d) {
+   for (int d = 0; d < SAMRAI::MAX_DIM_VAL; ++d) {
       delete s_zeros[d];
       delete s_ones[d];
    }

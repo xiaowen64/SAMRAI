@@ -16,7 +16,7 @@
 #include "SAMRAI/pdat/OuteredgeData.h"
 #include "SAMRAI/algs/OuteredgeSumTransaction.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {
@@ -60,7 +60,7 @@ void
 OuteredgeSumTransactionFactory::unsetRefineItems()
 {
    OuteredgeSumTransaction::unsetRefineItems();
-   d_refine_items = (const xfer::RefineClasses::Data **)NULL;
+   d_refine_items = 0;
    d_number_refine_items = 0;
 }
 
@@ -86,7 +86,13 @@ OuteredgeSumTransactionFactory::allocate(
    NULL_USE(box);
    NULL_USE(use_time_interpolation);
 
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
+   TBOX_ASSERT(dst_node.getLocalId() >= 0);
+   TBOX_ASSERT(src_node.getLocalId() >= 0);
+   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return boost::make_shared<OuteredgeSumTransaction>(dst_level,
       src_level,
@@ -105,7 +111,13 @@ OuteredgeSumTransactionFactory::allocate(
    const hier::Box& src_node,
    int ritem_id) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS4(*dst_level, *src_level, dst_node, src_node);
+   TBOX_ASSERT(dst_level);
+   TBOX_ASSERT(src_level);
+   TBOX_ASSERT(overlap);
+   TBOX_ASSERT(dst_node.getLocalId() >= 0);
+   TBOX_ASSERT(src_node.getLocalId() >= 0);
+   TBOX_ASSERT(ritem_id >= 0);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
    return allocate(dst_level,
       src_level,
@@ -143,7 +155,8 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
          if (preprocess_vector.isSet(n)) {
             boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
                patch->getPatchData(n),
-               boost::detail::dynamic_cast_tag());
+               BOOST_CAST_TAG);
+            TBOX_ASSERT(oedge_data);
             oedge_data->fillAll(0.0);
          }
       }

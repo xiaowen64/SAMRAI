@@ -21,7 +21,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 /*
  *************************************************************************
@@ -35,7 +35,7 @@ extern "C" {
 #pragma warning (disable:1419)
 #endif
 // in lintimint1d.f:
-void F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -44,7 +44,7 @@ void F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (const int&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint2d.f:
-void F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int&,
    const int&,
    const int&, const int&,
    const int&, const int&,
@@ -57,7 +57,7 @@ void F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (const int&,
    const dcomplex *, const dcomplex *,
    dcomplex *);
 // in lintimint3d.f:
-void F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (const int&,
+void SAMRAI_F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (const int&,
    const int&, const int&,
    const int&, const int&, const int&,
    const int&, const int&, const int&,
@@ -93,19 +93,19 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
    const tbox::Dimension& dim(where.getDim());
 
    const CellData<dcomplex>* old_dat =
-      dynamic_cast<const CellData<dcomplex> *>(&src_data_old);
+      CPP_CAST<const CellData<dcomplex> *>(&src_data_old);
    const CellData<dcomplex>* new_dat =
-      dynamic_cast<const CellData<dcomplex> *>(&src_data_new);
+      CPP_CAST<const CellData<dcomplex> *>(&src_data_new);
    CellData<dcomplex>* dst_dat =
-      dynamic_cast<CellData<dcomplex> *>(&dst_data);
+      CPP_CAST<CellData<dcomplex> *>(&dst_data);
 
-   TBOX_ASSERT(old_dat != NULL);
-   TBOX_ASSERT(new_dat != NULL);
-   TBOX_ASSERT(dst_dat != NULL);
+   TBOX_ASSERT(old_dat != 0);
+   TBOX_ASSERT(new_dat != 0);
+   TBOX_ASSERT(dst_dat != 0);
    TBOX_ASSERT((where * old_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * new_dat->getGhostBox()).isSpatiallyEqual(where));
    TBOX_ASSERT((where * dst_dat->getGhostBox()).isSpatiallyEqual(where));
-   TBOX_DIM_ASSERT_CHECK_ARGS4(dst_data, where, src_data_old, src_data_new);
+   TBOX_ASSERT_OBJDIM_EQUALITY4(dst_data, where, src_data_old, src_data_new);
 
    const hier::Index old_ilo = old_dat->getGhostBox().lower();
    const hier::Index old_ihi = old_dat->getGhostBox().upper();
@@ -137,7 +137,7 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
 
    for (int d = 0; d < dst_dat->getDepth(); d++) {
       if (dim == tbox::Dimension(1)) {
-         F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintcellcmplx1d, LINTIMEINTCELLCMPLX1D) (ifirst(0),
             ilast(0),
             old_ilo(0), old_ihi(0),
             new_ilo(0), new_ihi(0),
@@ -147,7 +147,7 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
       } else if (dim == tbox::Dimension(2)) {
-         F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintcellcmplx2d, LINTIMEINTCELLCMPLX2D) (ifirst(0),
             ifirst(1), ilast(0), ilast(1),
             old_ilo(0), old_ilo(1), old_ihi(0), old_ihi(1),
             new_ilo(0), new_ilo(1), new_ihi(0), new_ihi(1),
@@ -157,7 +157,7 @@ CellComplexLinearTimeInterpolateOp::timeInterpolate(
             new_dat->getPointer(d),
             dst_dat->getPointer(d));
       } else if (dim == tbox::Dimension(3)) {
-         F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (ifirst(0),
+         SAMRAI_F77_FUNC(lintimeintcellcmplx3d, LINTIMEINTCELLCMPLX3D) (ifirst(0),
             ifirst(1), ifirst(2),
             ilast(0), ilast(1), ilast(2),
             old_ilo(0), old_ilo(1), old_ilo(2),

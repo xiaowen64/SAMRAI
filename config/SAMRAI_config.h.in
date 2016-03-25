@@ -6,21 +6,12 @@
 #define INCLUDED_SAMRAI_CONFIG_H
 
 #define SAMRAI_VERSION_MAJOR 3
-#define SAMRAI_VERSION_MINOR 4
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_MINOR 5
+#define SAMRAI_VERSION_PATCHLEVEL 0
 
-
-/* Define if bool type is not properly supported */
-#undef BOOL_IS_BROKEN
 
 /* Define if std::fill_n returns void */
 #undef CASC_STD_FILL_N_RETURNS_VOID
-
-/* Define if DBL_MAX is not in float.h */
-#undef DBL_MAX_IS_BROKEN
-
-/* Define if DBL_SNAN is not in float.h */
-#undef DBL_SNAN_IS_BROKEN
 
 /* Enable assertion checking */
 #undef DEBUG_CHECK_ASSERTIONS
@@ -43,19 +34,13 @@
 
 /* Define to a macro mangling the given C identifier (in lower and upper
    case), which must not contain underscores, for linking with Fortran. */
-#undef F77_FUNC
+#undef SAMRAI_F77_FUNC
 
-/* As F77_FUNC, but for C identifiers containing underscores. */
-#undef F77_FUNC_
+/* As SAMRAI_F77_FUNC, but for C identifiers containing underscores. */
+#undef SAMRAI_F77_FUNC_
 
 /* Define if F77 and FC dummy `main' functions are identical. */
 #undef FC_DUMMY_MAIN_EQ_F77
-
-/* Define if FLT_MAX is not in float.h */
-#undef FLT_MAX_IS_BROKEN
-
-/* Define if FLT_SNAN is not in float.h */
-#undef FLT_SNAN_IS_BROKEN
 
 /* BLAS library is available so use it */
 #undef HAVE_BLAS
@@ -210,14 +195,8 @@
 /* Header file for iomanip */
 #undef IOMANIP_HEADER_FILE
 
-/* The iomanip header file is broken */
-#undef IOMANIP_IS_BROKEN
-
 /* Header file for iostream */
 #undef IOSTREAM_HEADER_FILE
-
-/* The iostream header file is broken */
-#undef IOSTREAM_IS_BROKEN
 
 /* LACKS_CMATH */
 #undef LACKS_CMATH
@@ -294,9 +273,6 @@
 /* LACK_ISO_SSTREAM */
 #undef LACK_ISO_SSTREAM
 
-/* Define if NAN is not in float.h */
-#undef NAN_IS_BROKEN
-
 /* The type ostringstream is broken */
 #undef OSTRINGSTREAM_TYPE_IS_BROKEN
 
@@ -318,9 +294,6 @@
 /* Define to the version of this package. */
 // Removed due to name conflict #undef PACKAGE_VERSION
 
-/* Define if restrict is not properly supported */
-#undef RESTRICT_IS_BROKEN
-
 /* Maximum dimension allowed */
 #undef SAMRAI_MAXIMUM_DIMENSION
 
@@ -329,9 +302,6 @@
 
 /* Header file for stl-sstream */
 #undef STL_SSTREAM_HEADER_FILE
-
-/* The stl-sstream header file is broken */
-#undef STL_SSTREAM_IS_BROKEN
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #undef X_DISPLAY_MISSING
@@ -343,6 +313,10 @@
 #undef __BGL_FAMILY__
 
 
+
+namespace SAMRAI {
+   static const unsigned short MAX_DIM_VAL = SAMRAI_MAXIMUM_DIMENSION;
+}
 
 /*
  * Prevent inclusion of mpi C++ bindings in mpi.h includes.

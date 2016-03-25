@@ -61,9 +61,7 @@ PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
 void PatchMultiblockTestStrategy::readVariableInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    tbox::Array<string> var_keys = db->getAllKeys();
    int nkeys = var_keys.getSize();
@@ -129,9 +127,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 void PatchMultiblockTestStrategy::readRefinementInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    tbox::Array<string> box_keys = db->getAllKeys();
    int nkeys = box_keys.getSize();
@@ -161,10 +157,8 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
       boost::shared_ptr<pdat::CellData<int> > tags(
          patch.getPatchData(tag_index),
-         boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+         BOOST_CAST_TAG);
       TBOX_ASSERT(tags);
-#endif
       tags->fillAll(0);
 
       const hier::Box pbox = patch.getBox();

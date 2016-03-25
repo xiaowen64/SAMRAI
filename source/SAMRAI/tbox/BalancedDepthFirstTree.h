@@ -93,6 +93,8 @@ public:
     * @param rank The rank whose parent and children are sought.
     *
     * @param do_left_leaf_switch
+    *
+    * @pre (first_rank <= rank) && (rank <= last_rank)
     */
    void
    initialize(

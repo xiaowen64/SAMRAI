@@ -39,8 +39,8 @@ Array<bool>::Array(
       }
 
    } else {
-      d_objects = (bool *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -60,8 +60,8 @@ Array<char>::Array(
       }
 
    } else {
-      d_objects = (char *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -81,8 +81,8 @@ Array<int>::Array(
       }
 
    } else {
-      d_objects = (int *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -102,8 +102,8 @@ Array<float>::Array(
       }
 
    } else {
-      d_objects = (float *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -123,8 +123,8 @@ Array<double>::Array(
       }
 
    } else {
-      d_objects = (double *)NULL;
-      d_counter = (ReferenceCounter *)NULL;
+      d_objects = 0;
+      d_counter = 0;
       d_elements = 0;
    }
 }
@@ -138,8 +138,8 @@ Array<bool>::deleteObjects()
       delete d_counter;
    }
 
-   d_objects = (bool *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 
@@ -152,8 +152,8 @@ Array<char>::deleteObjects()
       delete d_counter;
    }
 
-   d_objects = (char *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 
@@ -166,8 +166,8 @@ Array<int>::deleteObjects()
       delete d_counter;
    }
 
-   d_objects = (int *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 
@@ -180,8 +180,8 @@ Array<float>::deleteObjects()
       delete d_counter;
    }
 
-   d_objects = (float *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 
@@ -194,8 +194,8 @@ Array<double>::deleteObjects()
       delete d_counter;
    }
 
-   d_objects = (double *)NULL;
-   d_counter = (ReferenceCounter *)NULL;
+   d_objects = 0;
+   d_counter = 0;
    d_elements = 0;
 }
 

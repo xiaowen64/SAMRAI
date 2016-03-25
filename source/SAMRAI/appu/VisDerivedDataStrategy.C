@@ -4,8 +4,7 @@
  * information, see COPYRIGHT and COPYING.LESSER.
  *
  * Copyright:     (c) 1997-2012 Lawrence Livermore National Security, LLC
- * Description:   Interface for writing user-defined data to either VisIt or
- *                Vizamrai dump file
+ * Description:   Interface for writing user-defined data to VisIt
  *
  ************************************************************************/
 

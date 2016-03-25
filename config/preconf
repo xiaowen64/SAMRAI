@@ -31,6 +31,7 @@ aclocal"$AUTOMAKE_VERSION" -I `pwd`/config --output=config/aclocal.m4
 # using autoconf, and we don't use these macros anyway.
 autoheader"$AUTOCONF_VERSION" -I config
 sed -i -e 's/^\(#undef \(PACKAGE\|VERSION\)\)/\/\/ Removed due to name conflict \1/' config/SAMRAI_config.h.in
+sed -i -e 's/\(F77_FUNC\)/SAMRAI_\1/' config/SAMRAI_config.h.in
 
 # This generates configure
 autoconf"$AUTOCONF_VERSION" -I config || exit 1

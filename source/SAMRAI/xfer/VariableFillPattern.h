@@ -17,7 +17,7 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -104,8 +104,8 @@ public:
     * @param[in] data_box    box representing the full extent of the region
     *                        covered by a patch data object, including all
     *                        ghosts (cell-centered representation)
-    * @param[in] patch_data_factory patch data factory for the data that is to be
-    *                               filled
+    * @param[in] patch_data_factory patch data factory for the data that is to
+    *                               be filled
     *
     * @return                boost::shared_ptr to the calculated overlap object
     */

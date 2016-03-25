@@ -30,11 +30,10 @@ NodeMultiblockTest::NodeMultiblockTest(
 {
    NULL_USE(do_refine);
    NULL_USE(do_coarsen);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -70,9 +69,7 @@ NodeMultiblockTest::~NodeMultiblockTest()
 void NodeMultiblockTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    /*
     * Base class reads variable parameters and boxes to refine.
@@ -85,7 +82,7 @@ void NodeMultiblockTest::readTestInput(
 void NodeMultiblockTest::registerVariables(
    MultiblockTester* commtest)
 {
-   TBOX_ASSERT(commtest != (MultiblockTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 
@@ -126,7 +123,8 @@ void NodeMultiblockTest::initializeDataOnPatch(
 
          boost::shared_ptr<pdat::NodeData<double> > node_data(
             patch.getPatchData(d_variables[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(node_data);
 
          hier::Box dbox = node_data->getGhostBox();
 
@@ -182,7 +180,8 @@ void NodeMultiblockTest::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(node_data);
 
       /*
        * Set node boundary data.
@@ -306,7 +305,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
-   const hier::BoxId& dst_mb_id = patch.getBox().getId();
+   const hier::BoxId& dst_mb_id = patch.getBox().getBoxId();
    const hier::BlockId& patch_blk_id = patch.getBox().getBlockId();
 
    const std::list<hier::BaseGridGeometry::Neighbor>& neighbors =
@@ -316,7 +315,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(node_data);
 
       hier::Box sing_fill_box(node_data->getGhostBox() * fill_box);
 
@@ -359,7 +359,7 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
                boost::shared_ptr<hier::Patch> encon_patch(
-                  encon_level.getPatch(ei->getId()));
+                  encon_level.getPatch(ei->getBoxId()));
 
                hier::Transformation::RotationIdentifier rotation =
                   hier::Transformation::NO_ROTATE;
@@ -401,7 +401,8 @@ void NodeMultiblockTest::fillSingularityBoundaryConditions(
 
                   boost::shared_ptr<pdat::NodeData<double> > sing_data(
                      encon_patch->getPatchData(d_variables[i], getDataContext()),
-                     boost::detail::dynamic_cast_tag());
+                     BOOST_CAST_TAG);
+                  TBOX_ASSERT(sing_data);
 
                   pdat::NodeIterator ciend(sing_fill_box, false);
                   for (pdat::NodeIterator ci(sing_fill_box, true);
@@ -527,7 +528,8 @@ bool NodeMultiblockTest::verifyResults(
 
       boost::shared_ptr<pdat::NodeData<double> > node_data(
          patch.getPatchData(d_variables[i], getDataContext()),
-         boost::detail::dynamic_cast_tag());
+         BOOST_CAST_TAG);
+      TBOX_ASSERT(node_data);
       int depth = node_data->getDepth();
 
       hier::Box interior_box(pbox);

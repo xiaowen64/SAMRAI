@@ -45,17 +45,15 @@ BoundaryDataTester::BoundaryDataTester(
    const tbox::Dimension& dim,
    boost::shared_ptr<tbox::Database> input_db,
    boost::shared_ptr<geom::CartesianGridGeometry> grid_geom):
-   xfer::RefinePatchStrategy(dim),
+   xfer::RefinePatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_grid_geometry(grid_geom),
    d_variable_context(
       hier::VariableDatabase::getDatabase()->getContext("BOUNDARY_TEST"))
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(input_db);
-#endif
 
    readVariableInputAndMakeVariables(input_db);
 
@@ -93,10 +91,8 @@ void BoundaryDataTester::setPhysicalBoundaryConditions(
 
       boost::shared_ptr<pdat::CellData<double> > cvdata(
          patch.getPatchData(d_variables[iv], d_variable_context),
-         boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+         BOOST_CAST_TAG);
       TBOX_ASSERT(cvdata);
-#endif
 
       tbox::plog << "\n   iv = " << iv << " : " << d_variable_name[iv] << endl;
       tbox::plog << "   depth = " << cvdata->getDepth() << endl;
@@ -197,7 +193,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(cvdata);
          cvdata->getArrayData().undefineData();
@@ -212,7 +208,7 @@ void BoundaryDataTester::initializeDataOnPatchInteriors(
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch->getPatchData(d_variables[iv], d_variable_context),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
 
          TBOX_ASSERT(cvdata);
          for (int id = 0; id < cvdata->getDepth(); id++) {
@@ -245,16 +241,14 @@ int BoundaryDataTester::runBoundaryTest(
    boost::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(level_number == 0);
-#endif
 
    int d_fail_count = 0;
 
    hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
 
-   xfer::RefineAlgorithm boundary_fill(d_dim);
+   xfer::RefineAlgorithm boundary_fill;
 
    for (int iv = 0; iv < d_variables.getSize(); iv++) {
       int datid =
@@ -267,9 +261,7 @@ int BoundaryDataTester::runBoundaryTest(
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(level);
-#endif
 
    boundary_fill.createSchedule(level, this)->fillData(0.0);
 
@@ -447,8 +439,8 @@ void BoundaryDataTester::setBoundaryDataDefaults()
          d_variable_bc_values[iv].resizeArray(NUM_3D_FACES
             * d_variable_depth[iv]);
       }
-      tbox::MathUtilities<double>::setArrayToSignalingNaN(d_variable_bc_values[
-            iv]);
+      tbox::MathUtilities<double>::setArrayToSignalingNaN(
+         d_variable_bc_values[iv]);
    }
 
 }
@@ -482,11 +474,9 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
    string& db_name,
    int bdry_location_index)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
    TBOX_ASSERT(!db_name.empty());
    TBOX_ASSERT(d_variable_bc_values.getSize() == d_variable_name.getSize());
-#endif
 
    for (int iv = 0; iv < d_variable_name.getSize(); iv++) {
 
@@ -529,9 +519,7 @@ void BoundaryDataTester::readBoundaryDataStateEntry(
 void BoundaryDataTester::readBoundaryDataInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
 
    hier::IntVector periodic(d_grid_geometry->getPeriodicShift(hier::IntVector(
                                   d_dim,
@@ -550,7 +538,7 @@ void BoundaryDataTester::readBoundaryDataInput(
 
          if (d_dim == tbox::Dimension(2)) {
             appu::CartesianBoundaryUtilities2::
-            readBoundaryInput(this,
+            getFromInput(this,
                bdry_db,
                d_master_bdry_edge_conds,
                d_master_bdry_node_conds,
@@ -558,7 +546,7 @@ void BoundaryDataTester::readBoundaryDataInput(
          }
          if (d_dim == tbox::Dimension(3)) {
             appu::CartesianBoundaryUtilities3::
-            readBoundaryInput(this,
+            getFromInput(this,
                bdry_db,
                d_master_bdry_face_conds,
                d_master_bdry_edge_conds,
@@ -696,24 +684,21 @@ void BoundaryDataTester::checkBoundaryData(
 
    const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const tbox::Array<hier::BoundaryBox> bdry_boxes =
       pgeom->getCodimensionBoundaries(btype);
 
    for (int i = 0; i < bdry_boxes.getSize(); i++) {
       hier::BoundaryBox bbox = bdry_boxes[i];
-#ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(bbox.getBoundaryType() == btype);
-#endif
       int bloc = bbox.getLocationIndex();
 
       for (int iv = 0; iv < d_variables.getSize(); iv++) {
          boost::shared_ptr<pdat::CellData<double> > cvdata(
             patch.getPatchData(d_variables[iv], d_variable_context),
-            boost::detail::dynamic_cast_tag());
-#ifdef DEBUG_CHECK_ASSERTIONS
+            BOOST_CAST_TAG);
          TBOX_ASSERT(cvdata);
-#endif
 
          int depth = d_variable_depth[iv];
 
@@ -895,7 +880,7 @@ void BoundaryDataTester::printClassData(
       os << "d_variable_context = "
          << d_variable_context->getName() << endl;
    } else {
-      os << "d_variable_context = NULL" << endl;
+      os << "d_variable_context = 0" << endl;
    }
 
    os << "\nVariables ...\n" << endl;
@@ -954,7 +939,8 @@ void BoundaryDataTester::printClassData(
             << d_scalar_bdry_face_conds[j] << endl;
          os << "       d_vector_bdry_face_conds[" << j << "] = "
             << d_vector_bdry_face_conds[j] << endl;
-         if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET) {
+         if (d_master_bdry_face_conds[j] == BdryCond::DIRICHLET ||
+             d_master_bdry_face_conds[j] == BdryCond::NEUMANN) {
             for (i = 0; i < d_variable_name.getSize(); i++) {
                os << d_variable_name[i] << " bdry edge value[" << j << "] = "
                   << d_variable_bc_values[i][j * d_variable_depth[i]];

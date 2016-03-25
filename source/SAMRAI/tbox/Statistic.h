@@ -136,9 +136,9 @@ public:
     * Record double processor statistic value. The optional sequence number
     * argument identifies where in timestep sequence the value should be.
     * If the sequence number is not specified, an internal counter will
-    * determine the appropriate sequence number. When assertion checking
-    * is active, an unrecoverable assertion will result if this function
-    * is called and "PATCH_STAT" was specified in the constructor.
+    * determine the appropriate sequence number.
+    *
+    * @pre getType() == "PROC_STAT"
     */
    void
    recordProcStat(
@@ -151,9 +151,9 @@ public:
     * argument identifies where in timestep sequence the value should be.
     * The sequence number MUST be explicitly specified because the number
     * of patches on each processor will generally be different at
-    * each sequence step.  When assertion checking is active, an
-    * unrecoverable assertion will result if this function is called and
-    * "PROC_STAT" was specified in the constructor.
+    * each sequence step.
+    *
+    * @pre getType() == "PATCH_STAT"
     */
    void
    recordPatchStat(
@@ -181,6 +181,8 @@ public:
 
    /**
     * Pack contents of statistic data structure into message stream.
+    *
+    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() != 0
     */
    void
    packStream(
@@ -188,6 +190,8 @@ public:
 
    /**
     * Unpack contents of statistic data structure from message stream.
+    *
+    * @pre SAMRAI_MPI::getSAMRAIWorld().getRank() == 0
     */
    void
    unpackStream(
@@ -196,6 +200,8 @@ public:
    /**
     * Print statistic data to given output stream.  Floating point precision
     * can be specified (default is 12).
+    *
+    * @pre precision > 0
     */
    void
    printClassData(
@@ -203,20 +209,23 @@ public:
       int precision = 12) const;
 
    /**
-    * Write statistic data members to database. When assertion checking
-    * is on, the database pointer must be non-null.
+    * Write statistic data members to restart database. The restart_db pointer
+    * must be non-null.
+    *
+    * @pre restart_db
     */
    void
-   putUnregisteredToDatabase(
-      const boost::shared_ptr<Database>& db) const;
+   putToRestart(
+      const boost::shared_ptr<Database>& restart_db) const;
 
    /**
-    * Read restarted times from restart database.  When assertion checking
-    * is on, the database pointer must be non-null.
+    * Read restarted times from restart database.
+    *
+    * @pre restart_db
     */
    void
    getFromRestart(
-      const boost::shared_ptr<Database>& db);
+      const boost::shared_ptr<Database>& restart_db);
 
    /*
     * These structures are used to store statistic data entries.
@@ -239,6 +248,11 @@ protected:
    /**
     * The constructor for the Statistic class sets the name string
     * and the statistic type for a statistic object.
+    *
+    * @pre !name.empty()
+    * @pre !stat_type.empty()
+    * @pre (stat_type == "PROC_STAT") || (stat_type = "PATCH_STAT")
+    * @pre instance_id > -1
     */
    Statistic(
       const std::string& name,

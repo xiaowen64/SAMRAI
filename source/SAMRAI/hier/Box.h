@@ -87,6 +87,9 @@ public:
     * @param[in] lower     Lower extent
     * @param[in] upper     Upper extent
     * @param[in] block_id  Block where the Box exists
+    *
+    * @pre lower.getDim() == upper.getDim()
+    * @pre block_id != BlockId::invalidId()
     */
    Box(
       const Index& lower,
@@ -118,6 +121,10 @@ public:
     * periodic_id is non-zero, specify the Box in the position shifted
     * according to the @c periodic_id.  The default argument for @c
     * periodic_id corresponds to the zero-shift.
+    *
+    * @pre periodic_id.isValid()
+    * @pre periodic_id.getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(box.getDim())->getNumberOfShifts()
     */
    Box(
       const Box& box,
@@ -136,6 +143,10 @@ public:
     * @param[in] id
     *
     * @param[in] periodic_id
+    *
+    * @pre periodic_id.isValid()
+    * @pre periodic_id.getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts()
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
@@ -156,7 +167,11 @@ public:
     *
     * @param[in] dim
     *
-    * @param[in] mapped_box_id
+    * @param[in] box_id
+    *
+    * @pre box_id.getPeriodicId().isValid()
+    * @pre box_id.getPeriodicId().getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(dim)->getNumberOfShifts()
     */
    /*
     * TODO: Constructors initializing boxes are only used to construct
@@ -166,7 +181,7 @@ public:
     */
    Box(
       const tbox::Dimension& dim,
-      const BoxId& mapped_box_id);
+      const BoxId& box_id);
 
    /*!
     * @brief "Copy" constructor allowing change in PeriodicId.
@@ -178,8 +193,14 @@ public:
     * the shift in @c other.  The box will be set to the real box
     * shifted to the position specified by this value.
     *
-    * @param[in] refinement_ratio The index space where the Box
-    * lives.
+    * @param[in] refinement_ratio The index space where the Box lives.
+    *
+    * @pre other.getDim() == refinement_ratio.getDim()
+    * @pre periodic_id.isValid()
+    * @pre periodic_id.getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(other.getDim())->getNumberOfShifts()
+    * @pre (refinement_ratio > IntVector::getZero(other.getDim())) ||
+    *      (refinement_ratio < IntVector::getZero(other.getDim()))
     *
     * @see initialize( const Box&, const int, const IntVector&);
     */
@@ -206,6 +227,8 @@ public:
     * this is not zero, specify @c box in the shifted position.  The
     * default argument for @c periodic_id corresponds to the
     * zero-shift.
+    *
+    * @pre idLocked()
     */
    void
    initialize(
@@ -217,10 +240,10 @@ public:
       d_lo = box.d_lo;
       d_hi = box.d_hi;
       d_block_id = box.d_block_id;
-      if (!d_id_locked) {
+      if (!idLocked()) {
          d_id.initialize(local_id, owner_rank, periodic_id);
       } else {
-         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer.");
+         TBOX_ERROR("Attempted to change BoxId that is locked in an ordered BoxContainer." << std::endl);
       }
    }
 
@@ -235,8 +258,16 @@ public:
     * shift in @c other.  The box will be set to the real box shifted
     * to the position specified by this value.
     *
-    * @param[in] refinement_ratio The index space where the Box
-    * lives.
+    * @param[in] refinement_ratio The index space where the Box lives.
+    *
+    * @pre (getDim() == other.getDim()) &&
+    *      (getDim() == refinement_ratio.getDim())
+    * @pre periodic_id.isValid()
+    * @pre periodic_id.getPeriodicValue() <
+    *      PeriodicShiftCatalog::getCatalog(getDim())->getNumberOfShifts()
+    * @pre (refinement_ratio > IntVector::getZero(getDim())) ||
+    *      (refinement_ratio < IntVector::getZero(getDim()))
+    * @pre !idLocked()
     */
    void
    initialize(
@@ -254,7 +285,7 @@ public:
 
    //! @brief Get the BoxId.
    const BoxId&
-   getId() const
+   getBoxId() const
    {
       return d_id;
    }
@@ -338,13 +369,13 @@ public:
       bool
       operator () (const Box& b1, const Box& b2) const
       {
-         return b1.getId() < b2.getId();
+         return b1.getBoxId() < b2.getBoxId();
       }
 
       bool
       operator () (const Box* b1, const Box* b2) const
       {
-         return b1->getId() < b2->getId();
+         return b1->getBoxId() < b2->getBoxId();
       }
    };
 
@@ -414,12 +445,14 @@ public:
    /*!
     * @brief assignment operator
     *
-    * An assignment to an uninitialized box is allowed but assigning
-    * from an uninitialized box will result in an assertion failure
+    * @param rhs
+    *
+    * @pre (this == &rhs) || (getDim() == rhs.getDim())
+    * @pre (this == &rhs) || !idLocked()
     */
    Box&
    operator = (
-      const Box& box);
+      const Box& rhs);
 
    /*!
     * @brief Return a non-const lower index of the box.
@@ -593,10 +626,10 @@ public:
    }
 
    /*!
-    * @brief Return the dimension of the box that is longest.
+    * @brief Return the direction of the box that is longest.
     */
    int
-   longestDimension() const;
+   longestDirection() const;
 
    /*!
     * @brief Given an index, calculate the offset of the index into the box.
@@ -623,6 +656,10 @@ public:
     * This function assumes column-major (e.g., Fortran) ordering of
     * the indices within the box.  This operation is a convenience
     * function for array indexing operations.
+    *
+    * @param offset
+    *
+    * @pre (offset >= 0) && (offset <= size())
     */
    Index
    index(
@@ -630,6 +667,8 @@ public:
 
    /*!
     * @brief Check whether an index lies within the bounds of the box.
+    *
+    * @param p
     */
    bool
    contains(
@@ -646,11 +685,15 @@ public:
    /*!
     * @brief Check whether a given box lies within the bounds of the box.
     *
-    * If @c b is empty, always return true.
+    * If @c box is empty, always return true.
+    *
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
     */
    bool
    contains(
-      const Box& b) const;
+      const Box& box) const;
 
    /*!
     * @brief Check whether two boxes represent the same portion of index space
@@ -674,9 +717,12 @@ public:
    /*!
     * @brief Calculate the intersection of the index spaces of two boxes.
     *
-    * The intersection with an empty box always yields an empty box.  If the
-    * two boxes have different BlockIds and are both non-empty, an error will
-    * occur.
+    * The intersection with an empty box always yields an empty box.
+    *
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    Box
    operator * (
@@ -686,9 +732,12 @@ public:
     * @brief Calculate the intersection of the index spaces of this and the
     * given box.
     *
-    * The intersection with an empty box always yields an empty box.  If the
-    * two boxes have different BlockIds and are both non-empty, an error will
-    * occur.
+    * The intersection with an empty box always yields an empty box.
+    *
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    Box
    &operator *= (
@@ -698,9 +747,13 @@ public:
     * @brief Box intersection.
     * 
     * Calculate the intersection of the index spaces of two boxes.  The
-    * intersection with an empty box always yields an empty box.  If the
-    * two boxes have different BlockIds and are both non-empty, an error will
-    * occur.
+    * intersection with an empty box always yields an empty box.
+    *
+    * @param other
+    * @param result
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    void
    intersect(
@@ -711,6 +764,11 @@ public:
     * @brief check if boxes intersect.
     *
     * Returns true if two boxes have a non-empty intersection.
+    *
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    bool
    intersects(
@@ -724,8 +782,12 @@ public:
     * contains both boxes.
     *
     * If one box is empty and the other is non-empty, the non-empty box will
-    * be returned.  If both boxes are non-empty and have different BlockIds,
-    * an assertion failure will occur.
+    * be returned.
+    *
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (getBlock_id() == box.getBlockId()) || empty() || box.empty()
     */
    Box
    operator + (
@@ -739,8 +801,10 @@ public:
     *
     * If the argument box is empty, this box will be unchanged.
     *
-    * If the two boxes are both non-empty and have different BlockIds, and
-    * assertion failure will occur.
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
+    * @pre (getBlockId() == box.getBlockId()) || empty() || box.empty()
     */
    Box&
    operator += (
@@ -756,6 +820,10 @@ public:
     * the return value is true and this box becomes equal to the non-empty box.
     * If both boxes are empty, the return value is true and this box remains
     * empty.
+    *
+    * @param box
+    *
+    * @pre getDim() == box.getDim()
     */
    bool
    coalesceWith(
@@ -765,15 +833,19 @@ public:
     * @brief Grow this box by the specified ghost cell width.
     *
     * The lower bound decremented by the width, and the upper bound is
-    * incremented by the width.  All dimensions are grown by the corresponding
+    * incremented by the width.  All directions are grown by the corresponding
     * component in the IntVector; ghost cell widths may be different in each
-    * dimension.  Negative ghost cell widths will shrink the box.
+    * direction.  Negative ghost cell widths will shrink the box.
+    *
+    * @param ghosts
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    void
    grow(
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
          d_hi += ghosts;
@@ -787,6 +859,11 @@ public:
     * The lower bound is decremented by the width, and the upper bound is
     * incremented by the width.  Note that negative ghost cell widths
     * will shrink the box.
+    *
+    * @param direction
+    * @param ghosts
+    *
+    * @pre (direction >= 0) && (direction < getDim().getValue())
     */
    void
    grow(
@@ -803,12 +880,16 @@ public:
    /*!
     * @brief Similar to grow() functions. However, box is only grown in lower
     * directions (i.e., only lower index is changed).
+    *
+    * @param ghosts
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    void
    growLower(
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_lo -= ghosts;
       }
@@ -817,6 +898,11 @@ public:
    /*!
     * @brief Similar to grow() functions. However, box is only grown in lower
     * bound of given direction in index space.
+    *
+    * @param direction
+    * @param ghosts
+    *
+    * @pre (direction >= 0) && (direction < getDim().getValue())
     */
    void
    growLower(
@@ -832,12 +918,16 @@ public:
    /*!
     * @brief Similar to grow() function. However, box is only grown in upper
     * directions (i.e., only upper index is changed).
+    *
+    * @param ghosts
+    *
+    * @pre getDim() == ghosts.getDim()
     */
    void
    growUpper(
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
       if (!empty()) {
          d_hi += ghosts;
       }
@@ -846,6 +936,11 @@ public:
    /*!
     * @brief Similar to grow() functions. However, box is only grown in upper
     * bound of given direction in index space.
+    *
+    * @param direction
+    * @param ghosts
+    *
+    * @pre (direction >= 0) && (direction < getDim().getValue())
     */
    void
    growUpper(
@@ -864,6 +959,11 @@ public:
     *
     * The sign of @c ghosts refer to whether the box is lengthened in
     * the upper or lower side.
+    *
+    * @param direction
+    * @param ghosts
+    *
+    * @pre (direction >= 0) && (direction < getDim().getValue())
     */
    void
    lengthen(
@@ -876,6 +976,11 @@ public:
     *
     * The sign of @c ghosts refer to whether the box is shortened in
     * the upper or lower side.
+    *
+    * @param direction
+    * @param ghosts
+    *
+    * @pre (direction >= 0) && (direction < getDim().getValue())
     */
    void
    shorten(
@@ -886,12 +991,16 @@ public:
     * @brief Shift this box by the specified offset.
     *
     * The box will be located at (lower+offset, upper+offset).
+    *
+    * @param offset
+    *
+    * @pre getDim() == offset.getDim()
     */
    void
    shift(
       const IntVector& offset)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, offset);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, offset);
       d_lo += offset;
       d_hi += offset;
    }
@@ -901,6 +1010,11 @@ public:
     * specified direction in index space.
     *
     * The box will located at (lower+offset, upper+offset) in that direction.
+    *
+    * @param direction
+    * @param offset
+    *
+    * @pre (direction >= 0) && (direction < getDim().getValue())
     */
    void
    shift(
@@ -913,7 +1027,11 @@ public:
    }
 
    /*!
-    * Rotate 90 degrees around origin.
+    * @brief Rotate 90 degrees around origin.
+    *
+    * @param rotation_ident
+    *
+    * @pre (getDim().getValue() == 2) || (getDim().getValue() == 3)
     */
    void
    rotate(
@@ -924,6 +1042,10 @@ public:
     *
     * Each component of the box is multiplied by the refinement ratio,
     * then @c (ratio-1) is added to the upper corner.
+    *
+    * @param ratio
+    *
+    * @pre getDim() == ratio.getDim()
     */
    void
    refine(
@@ -937,12 +1059,16 @@ public:
     * are the parents of the refined box.  In other words, refining a
     * coarsened box will always yield a box that is equal to or larger
     * than the original box.
+    *
+    * @param ratio
+    *
+    * @pre getDim() == ratio.getDim()
     */
    void
    coarsen(
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ratio);
       for (int i = 0; i < getDim().getValue(); i++) {
          d_lo(i) = coarsen(d_lo(i), ratio(i));
          d_hi(i) = coarsen(d_hi(i), ratio(i));
@@ -951,12 +1077,16 @@ public:
 
    /*!
     * @brief This assignment operator constructs a Box given a DatabaseBox.
+    *
+    * @param box
+    *
+    * @pre getDim().getValue() == box.getDimVal()
     */
    Box&
    operator = (
       const tbox::DatabaseBox& box)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(*this, box);
+      TBOX_ASSERT(getDim().getValue() == box.getDimVal());
 #ifdef BOX_TELEMETRY
       // Increment the cumulative assigned count only.
       ++s_cumulative_assigned_ct;
@@ -1008,13 +1138,18 @@ public:
    /*!
     * @brief Static function to grow a box by the specified vector ghost cell
     * width.
+    *
+    * @param box
+    * @param ghosts
+    *
+    * @pre box.getDim() == ghosts.getDim()
     */
    static Box
    grow(
       const Box& box,
       const IntVector& ghosts)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ghosts);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, ghosts);
       Box tmp = box;
       tmp.grow(ghosts);
       return tmp;
@@ -1022,26 +1157,36 @@ public:
 
    /*!
     * @brief Static function to shift a box by the specified offset.
+    *
+    * @param box
+    * @param offset
+    *
+    * @pre box.getDim() == offset.getDim()
     */
    static Box
    shift(
       const Box& box,
       const IntVector& offset)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, offset);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, offset);
       return Box(box.lower() + offset, box.upper() + offset, box.d_block_id);
    }
 
    /*!
     * @brief Static function to refine the index space of a box by the
     * specified refinement ratio.
+    *
+    * @param box
+    * @param ratio
+    *
+    * @pre box.getDim() == ratio.getDim()
     */
    static Box
    refine(
       const Box& box,
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, ratio);
       Box tmp = box;
       tmp.refine(ratio);
       return tmp;
@@ -1050,13 +1195,18 @@ public:
    /*!
     * @brief Static function to coarsen the index space of a box by the
     * specified coarsening ratio.
+    *
+    * @param box
+    * @param ratio
+    *
+    * @pre box.getDim() == ratio.getDim()
     */
    static Box
    coarsen(
       const Box& box,
       const IntVector& ratio)
    {
-      TBOX_DIM_ASSERT_CHECK_ARGS2(box, ratio);
+      TBOX_ASSERT_OBJDIM_EQUALITY2(box, ratio);
       Box tmp = box;
       tmp.coarsen(ratio);
       return tmp;
@@ -1079,6 +1229,15 @@ public:
    lockId()
    {
       d_id_locked = true;
+   }
+
+   /*!
+    * @brief Returns true if the BoxId of this Box is locked.
+    */
+   bool
+   idLocked()
+   {
+      return d_id_locked;
    }
 
    /*!
@@ -1108,7 +1267,6 @@ public:
    getEmptyBox(
       const tbox::Dimension& dim)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(dim);
       return *(s_emptys[dim.getValue() - 1]);
    }
 
@@ -1120,7 +1278,6 @@ public:
    getUniverse(
       const tbox::Dimension& dim)
    {
-      TBOX_DIM_ASSERT_CHECK_DIM(dim);
       return *(s_universes[dim.getValue() - 1]);
    }
 
@@ -1130,10 +1287,7 @@ public:
     */
    typedef BoxIterator iterator;
 
-   template<class>
-   friend class pdat::ArrayData;
    friend class BoxIterator;
-   friend class std::vector<Box>;
 
 #ifdef BOX_TELEMETRY
    // These are to optionally track the cumulative number of Boxes constructed,
@@ -1150,9 +1304,7 @@ public:
 
 private:
    /**
-    * The default constructor creates an uninitialized box.
-    *
-    * This should never be invoked, it will cause assertions
+    * Unimplemented default constructor.
     */
    Box();
 
@@ -1206,13 +1358,13 @@ private:
     * them in multiple places.
     */
 
-   static Box* s_emptys[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Box* s_emptys[SAMRAI::MAX_DIM_VAL];
 
    /*
     * Box that represents the maximum allowed index extents,
     * the "universe" that can be represented.
     */
-   static Box* s_universes[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
+   static Box* s_universes[SAMRAI::MAX_DIM_VAL];
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

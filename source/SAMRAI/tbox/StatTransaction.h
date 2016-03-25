@@ -16,7 +16,7 @@
 #include "SAMRAI/tbox/Statistic.h"
 #include "SAMRAI/tbox/Transaction.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {

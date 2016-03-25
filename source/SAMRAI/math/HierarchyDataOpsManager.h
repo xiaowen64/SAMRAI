@@ -20,7 +20,7 @@
 #include "SAMRAI/tbox/Array.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace math {
@@ -102,6 +102,11 @@ public:
    /*!
     * \brief Return pointer to operation object for a double variable
     * on the given hierarchy.
+    *
+    * @pre variable
+    * @pre hierarchy
+    * @pre variable->getDim() == hierarchy.getDim()
+    * @pre returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsReal<double> >
    getOperationsDouble(
@@ -115,6 +120,11 @@ public:
    /*!
     * \brief Return pointer to operation object for a float variable
     * on the given hierarchy.
+    *
+    * @pre variable
+    * @pre hierarchy
+    * @pre variable->getDim() == hierarchy.getDim()
+    * @pre returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsReal<float> >
    getOperationsFloat(
@@ -128,6 +138,11 @@ public:
    /*!
     * \brief Return pointer to operation object for a complex variable
     * on the given hierarchy.
+    *
+    * @pre variable
+    * @pre hierarchy
+    * @pre variable->getDim() == hierarchy.getDim()
+    * @pre returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsComplex>
    getOperationsComplex(
@@ -141,6 +156,11 @@ public:
    /*!
     * \brief Return pointer to operation object for a integer variable
     * on the given hierarchy.
+    *
+    * @pre variable
+    * @pre hierarchy
+    * @pre variable->getDim() == hierarchy.getDim()
+    * @pre returned value not NULL
     */
    virtual boost::shared_ptr<HierarchyDataOpsInteger>
    getOperationsInteger(
@@ -170,6 +190,8 @@ protected:
     * Initialize Singleton instance with instance of subclass.  This function
     * is used to make the singleton object unique when inheriting from this
     * base class.
+    *
+    * @pre !s_pdat_op_manager_instance
     */
    void
    registerSingletonSubclassInstance(

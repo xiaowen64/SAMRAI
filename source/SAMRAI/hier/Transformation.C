@@ -116,6 +116,29 @@ Transformation::inverseTransform(
 /*
  * ************************************************************************
  *
+ * Get Transformation object that is the inverse of 'this'.
+ *
+ * ************************************************************************
+ */
+Transformation
+Transformation::getInverseTransformation() const
+{
+   const tbox::Dimension& dim = d_offset.getDim();
+   IntVector inv_offset(dim);
+   calculateReverseShift(inv_offset, d_offset, d_rotation);
+
+   RotationIdentifier inv_rotate =
+       getReverseRotationIdentifier(d_rotation, dim);
+
+   return (Transformation(inv_rotate,
+                          inv_offset,
+                          d_end_block,
+                          d_begin_block));
+}
+
+/*
+ * ************************************************************************
+ *
  * Get a RotationIdentifier value associated with given string input
  *
  * ************************************************************************
@@ -158,7 +181,8 @@ Transformation::getRotationIdentifier(
          }
       }
       if (is_error) {
-         TBOX_ERROR("Rotation_input " << rotation_string[0] << " "
+         TBOX_ERROR("Transformation::getRotationIdentifier "
+                                      << rotation_string[0] << " "
                                       << rotation_string[1] << " "
                                       << " is invalid.\n");
       }
@@ -337,13 +361,15 @@ Transformation::getRotationIdentifier(
       }
 
       if (is_error) {
-         TBOX_ERROR("Rotation_input " << rotation_string[0] << " "
-                                      << rotation_string[1] << " " << rotation_string[2]
+         TBOX_ERROR("Transformation::getRotationIdentifier "
+                                      << rotation_string[0] << " "
+                                      << rotation_string[1] << " "
+                                      << rotation_string[2]
                                       << " is invalid.\n");
       }
    } else {
       TBOX_ERROR(
-         "Transformation::RotationIdentifier : DIM = 1 or > 3 not implemented");
+         "Transformation::getRotationIdentifier : DIM = 1 or > 3 not implemented");
    }
 
    return id;
@@ -473,6 +499,9 @@ Transformation::getReverseRotationIdentifier(
             reverse_id = IUP_JUP_KUP;
             break;
       }
+   } else {
+      TBOX_ERROR(
+         "Transformation::getReverseRotationIdentifier : DIM = 1 or > 3 not implemented");
    }
 
    return reverse_id;
@@ -492,7 +521,7 @@ Transformation::calculateReverseShift(
    const IntVector& shift,
    const RotationIdentifier rotation)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(back_shift, shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(back_shift, shift);
 
    const tbox::Dimension& dim(back_shift.getDim());
 
@@ -617,6 +646,8 @@ Transformation::calculateReverseShift(
          TBOX_ERROR("Transformation::calculateReverseShift error...\n"
             << " Invalid RotationIdentifier value given" << std::endl);
       }
+   } else {
+      TBOX_ERROR("Transformation::calculateReverseShift : DIM = 1 or > 3 not implemented");
    }
 }
 

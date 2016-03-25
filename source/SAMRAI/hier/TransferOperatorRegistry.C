@@ -30,7 +30,6 @@ namespace hier {
 TransferOperatorRegistry::TransferOperatorRegistry(
    const tbox::Dimension& dim):
    d_min_stencil_width(dim, 0),
-   d_dim(dim),
    d_max_op_stencil_width_req(false)
 {
 }
@@ -52,12 +51,15 @@ TransferOperatorRegistry::addCoarsenOperator(
    const char* var_type_name,
    const boost::shared_ptr<CoarsenOperator>& coarsen_op)
 {
-   if (d_max_op_stencil_width_req &&
-       (coarsen_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
-      TBOX_WARNING(
-         "Adding coarsen operator " << coarsen_op->getOperatorName()
-                                    << "\nwith stencil width greater than current maximum\n"
-                                    << "after call to getMaxTransferOpStencilWidth.\n");
+   if (d_max_op_stencil_width_req) {
+      for ( short unsigned int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
+         if (coarsen_op->getStencilWidth(tbox::Dimension(d)) > getMaxTransferOpStencilWidth(tbox::Dimension(d))) {
+            TBOX_WARNING(
+               "Adding coarsen operator " << coarsen_op->getOperatorName()
+               << "\nwith stencil width greater than current maximum\n"
+               << "after call to getMaxTransferOpStencilWidth.\n");
+         }
+      }
    }
    boost::unordered_map<std::string, boost::unordered_map<std::string,
       boost::shared_ptr<CoarsenOperator> > >::iterator coarsen_ops =
@@ -76,12 +78,15 @@ TransferOperatorRegistry::addRefineOperator(
    const char* var_type_name,
    const boost::shared_ptr<RefineOperator>& refine_op)
 {
-   if (d_max_op_stencil_width_req &&
-       (refine_op->getStencilWidth() > getMaxTransferOpStencilWidth())) {
-      TBOX_WARNING(
-         "Adding refine operator " << refine_op->getOperatorName()
-                                   << "\nwith stencil width greater than current maximum\n"
-                                   << "after call to getMaxTransferOpStencilWidth.\n");
+   if (d_max_op_stencil_width_req) {
+      for ( short unsigned int d(1); d<=SAMRAI::MAX_DIM_VAL; ++d ) {
+         if (refine_op->getStencilWidth(tbox::Dimension(d)) > getMaxTransferOpStencilWidth(tbox::Dimension(d))) {
+            TBOX_WARNING(
+               "Adding refine operator " << refine_op->getOperatorName()
+               << "\nwith stencil width greater than current maximum\n"
+               << "after call to getMaxTransferOpStencilWidth.\n");
+         }
+      }
    }
    boost::unordered_map<std::string, boost::unordered_map<std::string,
       boost::shared_ptr<RefineOperator> > >::iterator refine_ops =
@@ -127,7 +132,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, *var);
 
    boost::shared_ptr<CoarsenOperator> coarsen_op;
 
@@ -136,9 +141,7 @@ TransferOperatorRegistry::lookupCoarsenOperator(
        (op_name.empty())) {
    }
    else {
-      if (d_coarsen_operators.empty()) {
-         grid_geometry.buildOperators();
-      }
+      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<CoarsenOperator> > >::iterator coarsen_ops =
@@ -171,7 +174,7 @@ TransferOperatorRegistry::lookupRefineOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, *var);
 
    boost::shared_ptr<RefineOperator> refine_op;
 
@@ -180,9 +183,7 @@ TransferOperatorRegistry::lookupRefineOperator(
        (op_name.empty())) {
    }
    else {
-      if (d_refine_operators.empty()) {
-         grid_geometry.buildOperators();
-      }
+      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<RefineOperator> > >::iterator refine_ops =
@@ -215,7 +216,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
    const std::string& op_name)
 {
    TBOX_ASSERT(var);
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, *var);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(d_min_stencil_width, *var);
 
    boost::shared_ptr<TimeInterpolateOperator> time_op;
 
@@ -223,9 +224,7 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
        (op_name.empty())) {
    }
    else {
-      if (d_time_operators.empty()) {
-         grid_geometry.buildOperators();
-      }
+      grid_geometry.buildOperators();
 
       boost::unordered_map<std::string, boost::unordered_map<std::string,
          boost::shared_ptr<TimeInterpolateOperator> > >::iterator time_ops =
@@ -258,11 +257,14 @@ TransferOperatorRegistry::lookupTimeInterpolateOperator(
  *************************************************************************
  */
 IntVector
-TransferOperatorRegistry::getMaxTransferOpStencilWidth()
+TransferOperatorRegistry::getMaxTransferOpStencilWidth( const tbox::Dimension &dim )
 {
-   IntVector max_width(d_min_stencil_width);
-   max_width.max(RefineOperator::getMaxRefineOpStencilWidth(getDim()));
-   max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(getDim()));
+   IntVector max_width(dim,0);
+   if ( d_min_stencil_width.getDim() == dim ) {
+      max_width.max(d_min_stencil_width);
+   }
+   max_width.max(RefineOperator::getMaxRefineOpStencilWidth(dim));
+   max_width.max(CoarsenOperator::getMaxCoarsenOpStencilWidth(dim));
    d_max_op_stencil_width_req = true;
    return max_width;
 }

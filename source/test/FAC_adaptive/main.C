@@ -43,7 +43,7 @@
 #include "SAMRAI/mesh/StandardTagAndInitialize.h"
 #include "SAMRAI/solv/FACPreconditioner.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -163,12 +163,56 @@ int main(
        * Create the problem-specific object implementing the required
        * SAMRAI virtual functions.
        */
-      AdaptivePoisson
-      adaptive_poisson("AdaptivePoisson",
-                       dim,
-                       *(input_db->getDatabase("AdaptivePoisson")),
-                       &tbox::pout,
-                       &tbox::plog);
+ 
+      std::string adaptive_poisson_name = "AdaptivePoisson";
+      std::string fac_ops_name =
+         adaptive_poisson_name + ":scalar poisson operator";
+      std::string fac_precond_name =
+         "FAC preconditioner for Poisson's equation";
+      std::string hypre_poisson_name = fac_ops_name + "::hypre_solver";
+
+#ifdef HAVE_HYPRE
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_poisson(
+         new solv::CellPoissonHypreSolver(
+            dim,
+            hypre_poisson_name,
+            input_db->isDatabase("hypre_solver") ?
+            input_db->getDatabase("hypre_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            hypre_poisson,
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#else
+      boost::shared_ptr<solv::CellPoissonFACOps> fac_ops(
+         new solv::CellPoissonFACOps(
+            dim,
+            fac_ops_name,
+            input_db->isDatabase("fac_ops") ?
+            input_db->getDatabase("fac_ops") :
+            boost::shared_ptr<tbox::Database>()));
+#endif
+
+      boost::shared_ptr<solv::FACPreconditioner> fac_precond(
+         new solv::FACPreconditioner(
+            fac_precond_name,
+            fac_ops,
+            input_db->isDatabase("fac_precond") ?
+            input_db->getDatabase("fac_precond") :
+            boost::shared_ptr<tbox::Database>()));
+
+      AdaptivePoisson adaptive_poisson(adaptive_poisson_name,
+         dim,
+         fac_ops,
+         fac_precond,
+         *(input_db->getDatabase("AdaptivePoisson")),
+         &tbox::pout,
+         &tbox::plog);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer
@@ -176,7 +220,6 @@ int main(
        */
       boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             &adaptive_poisson,
             input_db->getDatabase("StandardTagAndInitialize")));
@@ -248,19 +291,9 @@ int main(
          /*
           * Solve.
           */
-         string max_cycles_str = "max_cycles";
-         int max_cycles = main_db->getIntegerWithDefault(max_cycles_str, 10);
-         double residual_tol = main_db->getDoubleWithDefault("residual_tol",
-               1e-6);
          tbox::pout.setf(ios::scientific);
-         int pre_sweeps = main_db->getIntegerWithDefault("pre_sweeps", 5);
-         int post_sweeps = main_db->getIntegerWithDefault("post_sweeps", 5);
          string initial_u = main_db->getStringWithDefault("initial_u", "0.0");
          adaptive_poisson.solvePoisson(patch_hierarchy,
-            max_cycles,
-            residual_tol,
-            pre_sweeps,
-            post_sweeps,
             adaption_number ? string() : initial_u);
          tbox::Array<double> l2norms(patch_hierarchy->getNumberOfLevels());
          tbox::Array<double> linorms(patch_hierarchy->getNumberOfLevels());
@@ -320,8 +353,9 @@ int main(
             }
             gridding_algorithm->regridAllFinerLevels(
                0,
-               0.0,
-               tag_buffer);
+               tag_buffer,
+               0,
+               0.0);
             tbox::plog << "Newly adapted hierarchy\n";
             patch_hierarchy->recursivePrint(tbox::plog, "    ", 1);
             if (0) {

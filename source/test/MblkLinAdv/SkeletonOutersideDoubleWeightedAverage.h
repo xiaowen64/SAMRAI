@@ -22,7 +22,7 @@
 #endif
 #include "SAMRAI/hier/CoarsenOperator.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace std;
 using namespace SAMRAI;
@@ -63,7 +63,7 @@ public:
     * zeros.  That is, its stencil does not extend outside the fine box.
     */
    hier::IntVector
-   getStencilWidth() const;
+   getStencilWidth( const tbox::Dimension &dim ) const;
 
    /**
     * Coarsen the source component on the fine patch to the destination
@@ -99,6 +99,7 @@ private:
       const int level_number,
       double* dx) const;
 
+   const tbox::Dimension d_dim;
    tbox::Array<tbox::Array<double> > d_dx;
 
 };

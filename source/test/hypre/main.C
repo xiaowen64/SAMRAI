@@ -30,7 +30,7 @@ using namespace std;
 
 #include "HyprePoisson.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -165,12 +165,32 @@ int main(
        * process that includes making the initial guess, specifying the
        * boundary conditions and call the solver.
        */
+
+      std::string hypre_poisson_name = base_name + "::HyprePoisson";
+      std::string hypre_solver_name = hypre_poisson_name + "::poisson_hypre";
+      std::string bc_coefs_name = hypre_poisson_name + "::bc_coefs";
+
+      boost::shared_ptr<solv::CellPoissonHypreSolver> hypre_solver(
+         new solv::CellPoissonHypreSolver(
+            dim,
+            hypre_poisson_name,
+            input_db->isDatabase("hypre_solver") ?
+            input_db->getDatabase("hypre_solver") :
+            boost::shared_ptr<tbox::Database>()));
+
+      boost::shared_ptr<solv::LocationIndexRobinBcCoefs> bc_coefs(
+         new solv::LocationIndexRobinBcCoefs(
+            dim,
+            bc_coefs_name,
+            input_db->isDatabase("bc_coefs") ?
+            input_db->getDatabase("bc_coefs") :
+            boost::shared_ptr<tbox::Database>()));
+
       HyprePoisson hypre_poisson(
-         base_name + "::HyprePoisson",
+         hypre_poisson_name,
          dim,
-         input_db->isDatabase("HyprePoisson") ?
-         input_db->getDatabase("HyprePoisson") :
-         boost::shared_ptr<tbox::Database>());
+         hypre_solver,
+         bc_coefs);
 
       /*
        * Create the tag-and-initializer, box-generator and load-balancer
@@ -178,7 +198,6 @@ int main(
        */
       boost::shared_ptr<mesh::StandardTagAndInitialize> tag_and_initializer(
          new mesh::StandardTagAndInitialize(
-            dim,
             "CellTaggingMethod",
             &hypre_poisson,
             input_db->getDatabase("StandardTagAndInitialize")));

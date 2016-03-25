@@ -17,14 +17,15 @@
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
-#include <boost/shared_ptr.hpp>
+#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace algs {
 
 /*!
- * @brief Concrete subclass of the xfer::RefineTransactionFactory base class that
- * allocates outeredge sum transaction objects for a xfer::RefineSchedule object.
+ * @brief Concrete subclass of the xfer::RefineTransactionFactory base class
+ * that allocates outeredge sum transaction objects for a xfer::RefineSchedule
+ * object.
  *
  * @see xfer::RefineTransactionFactory
  * @see xfer::OuteredgeSumTransaction
@@ -44,7 +45,8 @@ public:
    virtual ~OuteredgeSumTransactionFactory();
 
    /*!
-    * @brief Set the array of xfer::RefineClass<DIM>::Data items used by the transactions.
+    * @brief Set the array of xfer::RefineClasses::Data items used by the
+    * transactions.
     */
    void
    setRefineItems(
@@ -52,7 +54,8 @@ public:
       int num_refine_items);
 
    /*!
-    * @brief Clear the array of xfer::RefineClass<DIM>::Data items used by the transactions.
+    * @brief Clear the array of xfer::RefineClasses::Data items used by the
+    * transactions.
     */
    void
    unsetRefineItems();
@@ -62,16 +65,28 @@ public:
     *
     * @param dst_level      boost::shared_ptr to destination patch level.
     * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between patches.
+    * @param overlap        boost::shared_ptr to overlap region between
+    *                       patches.
     * @param dst_node       Destination Box in destination patch level.
     * @param src_node       Source Box in source patch level.
-    * @param ritem_id       Integer index of xfer::RefineClass<DIM>::Data item
+    * @param ritem_id       Integer index of xfer::RefineClasses::Data item
     *                       associated with transaction.
     * @param box            Optional const reference to box defining region of
-    *                       refine transaction.  Use next method if not required.
-    * @param use_time_interpolation  Optional boolean flag indicating whether the
-    *                       refine transaction involves time interpolation.
+    *                       refine transaction.  Use next method if not
+    *                       required.
+    * @param use_time_interpolation  Optional boolean flag indicating whether
+    *                       the refine transaction involves time interpolation.
     *                       Default is false.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre overlap
+    * @pre dst_node.getLocalId() >= 0
+    * @pre src_node.getLocalId() >= 0
+    * @pre ritem_id >= 0
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_node.getDim()) &&
+    *      (dst_level->getDim() == src_node.getDim())
     */
    boost::shared_ptr<tbox::Transaction>
    allocate(
@@ -89,6 +104,16 @@ public:
     *
     * Same as previous allocate routine but with default empty box and no
     * timer interpolation.
+    *
+    * @pre dst_level
+    * @pre src_level
+    * @pre overlap
+    * @pre dst_node.getLocalId() >= 0
+    * @pre src_node.getLocalId() >= 0
+    * @pre ritem_id >= 0
+    * @pre (dst_level->getDim() == src_level->getDim()) &&
+    *      (dst_level->getDim() == dst_node.getDim()) &&
+    *      (dst_level->getDim() == src_node.getDim())
     */
    boost::shared_ptr<tbox::Transaction>
    allocate(
@@ -103,12 +128,15 @@ public:
     * @brief Function to initialize scratch space data for the sum transactions
     * (patch data components indicated by the component selector) to zero.
     *
-    * @param level        boost::shared_ptr to patch level holding scratch data.
+    * @param level        boost::shared_ptr to patch level holding scratch
+    *                     data.
     * @param fill_time    Double value of simulation time at which preprocess
     *                     operation is called.
-    * @param preprocess_vector Const reference to hier::ComponentSelector indicating
-    *                     patch data array indices of scratch patch data objects
-    *                     to preprocess.
+    * @param preprocess_vector Const reference to hier::ComponentSelector
+    *                     indicating patch data array indices of scratch patch
+    *                     data objects to preprocess.
+    *
+    * @pre level
     */
    void
    preprocessScratchSpace(

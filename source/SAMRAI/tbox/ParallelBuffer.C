@@ -42,9 +42,9 @@ ParallelBuffer::ParallelBuffer()
 {
    d_active = true;
    d_prefix = std::string();
-   d_ostream1 = NULL;
-   d_ostream2 = NULL;
-   d_buffer = NULL;
+   d_ostream1 = 0;
+   d_ostream2 = 0;
+   d_buffer = 0;
    d_buffer_size = 0;
    d_buffer_ptr = 0;
 }
@@ -80,7 +80,7 @@ ParallelBuffer::setActive(
 {
    if (!active && d_buffer) {
       delete[] d_buffer;
-      d_buffer = NULL;
+      d_buffer = 0;
       d_buffer_size = 0;
       d_buffer_ptr = 0;
    }

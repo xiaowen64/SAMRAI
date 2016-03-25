@@ -15,7 +15,7 @@
 #include "SAMRAI/pdat/NodeDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include <boost/make_shared.hpp>
+#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -53,35 +53,11 @@ NodeVariable<TYPE>::~NodeVariable()
 template<class TYPE>
 int NodeVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<NodeDataFactory<TYPE> > factory(getPatchDataFactory());
+   boost::shared_ptr<NodeDataFactory<TYPE> > factory(
+      getPatchDataFactory(),
+      BOOST_CAST_TAG);
    TBOX_ASSERT(factory);
    return factory->getDepth();
-}
-
-/*
- *************************************************************************
- *
- * These are private and should not be used.  They are defined here
- * because some template instantiation methods fail if some member
- * functions are left undefined.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-NodeVariable<TYPE>::NodeVariable(
-   const NodeVariable<TYPE>& foo):
-   hier::Variable(NULL,
-                  boost::shared_ptr<hier::PatchDataFactory>())
-{
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void NodeVariable<TYPE>::operator = (
-   const NodeVariable<TYPE>& foo)
-{
-   NULL_USE(foo);
 }
 
 }

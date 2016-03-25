@@ -62,23 +62,6 @@ ArrayData<TYPE>::getSizeOfData(
 /*
  *************************************************************************
  *
- * Default constructor creates an object that absolutely should
- * not be used until it is initialized using initializeArray().
- *
- *************************************************************************
- */
-template<class TYPE>
-ArrayData<TYPE>::ArrayData():
-   d_dim(tbox::Dimension::getInvalidDimension()),
-   d_depth(0),
-   d_offset(0),
-   d_array(0)
-{
-}
-
-/*
- *************************************************************************
- *
  * The main constructor allocates data for the given box and depth.  It
  * does not initialize the memory.  The destructor automatically
  * deallocates memory via the array destructor.
@@ -90,7 +73,6 @@ template<class TYPE>
 ArrayData<TYPE>::ArrayData(
    const hier::Box& box,
    int depth):
-   d_dim(box.getDim()),
    d_depth(depth),
    d_offset(box.size()),
    d_box(box),
@@ -108,93 +90,11 @@ ArrayData<TYPE>::~ArrayData()
 {
 }
 
-/*
- *************************************************************************
- *
- * The const constructor and assignment operator are not actually used
- * but are defined here for compilers that require an implementation for
- * every declaration.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-ArrayData<TYPE>::ArrayData(
-   const ArrayData<TYPE>& foo):
-   d_dim(foo.d_dim),
-   d_depth(0),
-   d_offset(0),
-   d_box(d_dim),
-   d_array(0)
-{
-   /*
-    * Throw an assertion if this method is used.
-    */
-   TBOX_ASSERT(true);
-   NULL_USE(foo);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::operator = (
-   const ArrayData<TYPE>& foo)
-{
-   /*
-    * Throw an assertion if this method is used.
-    */
-   TBOX_ASSERT(true);
-   NULL_USE(foo);
-}
-
-/*
- *************************************************************************
- *
- * Initialize the array using the specified box, depth.
- *
- *************************************************************************
- */
-
-template<class TYPE>
-void
-ArrayData<TYPE>::initializeArray(
-   const hier::Box& box,
-   int depth)
-{
-   TBOX_ASSERT(depth > 0);
-
-   d_dim = box.getDim();
-   d_depth = depth;
-   d_offset = box.size();
-   d_box = box;
-
-   /*
-    * If array is a different size then create a new one, otherwise
-    * just use existing array; there is no reason to
-    * deallocate/allocate if existing is the correct size.
-    *
-    * Also note that the array is not initialized to anything.  This is
-    * to avoid the performance hit of initializing but is potentially
-    * bad.  In debug mode will explicitly initialize the array.
-    *
-    * Performance timing of some sample applications (LinAdv) showed
-    * the impact of initialization was significant.  This is probably
-    * not the safest programming practice.
-    */
-   if (d_array.size() != depth * d_offset) {
-      d_array = tbox::Array<TYPE>(depth * d_offset,
-                                  tbox::Array<TYPE>::UNINITIALIZED);
-   }
-
-#ifdef DEBUG_INITIALIZE_UNDEFINED
-   undefineData();
-#endif
-}
-
 template<class TYPE>
 bool
 ArrayData<TYPE>::isInitialized() const
 {
-   return d_depth > 0;
+   return d_depth * d_offset > 0;
 }
 
 template<class TYPE>
@@ -216,6 +116,21 @@ int
 ArrayData<TYPE>::getOffset() const
 {
    return d_offset;
+}
+
+template<class TYPE>
+int
+ArrayData<TYPE>::getIndex(
+   const hier::Index& i,
+   int d) const
+{
+   TBOX_ASSERT((d >= 0) && (d < d_depth));
+
+   int index = d_box.offset(i) + d * d_offset;
+
+   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
+
+   return index;
 }
 
 template<class TYPE>
@@ -244,13 +159,10 @@ ArrayData<TYPE>::operator () (
    const hier::Index& i,
    int d)
 {
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   const int index = d_box.offset(i) + d * d_offset;
-
-   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
-
-   return d_array[index];
+   return d_array[getIndex(i, d)];
 }
 
 template<class TYPE>
@@ -259,15 +171,10 @@ ArrayData<TYPE>::operator () (
    const hier::Index& i,
    int d) const
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, i);
-
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, i);
    TBOX_ASSERT((d >= 0) && (d < d_depth));
 
-   const int index = d_box.offset(i) + d * d_offset;
-
-   TBOX_ASSERT((index >= 0) && (index < d_depth * d_offset));
-
-   return d_array[index];
+   return d_array[getIndex(i, d)];
 }
 
 /*
@@ -290,7 +197,7 @@ ArrayData<TYPE>::copy(
    const ArrayData<TYPE>& src,
    const hier::Box& box)
 {
-   TBOX_DIM_ASSERT_CHECK_ARGS3(*this, src, box);
+   TBOX_ASSERT_OBJDIM_EQUALITY3(*this, src, box);
 
    CopyOperation<TYPE> copyop;
 
@@ -318,7 +225,7 @@ ArrayData<TYPE>::copy(
          const int dst_start_depth = 0;
          const int src_start_depth = 0;
          const int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
-         const hier::IntVector src_shift(d_dim, 0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -353,7 +260,7 @@ ArrayData<TYPE>::copy(
    const hier::IntVector& src_shift)
 {
 
-   if (src_shift == hier::IntVector::getZero(d_dim)) {
+   if (src_shift == hier::IntVector::getZero(box.getDim())) {
 
       copy(src, box);
 
@@ -394,7 +301,7 @@ ArrayData<TYPE>::copy(
    const hier::Transformation& transformation)
 {
    if (transformation.getRotation() == hier::Transformation::NO_ROTATE
-       && transformation.getOffset() == hier::IntVector::getZero(d_dim)) {
+       && transformation.getOffset() == hier::IntVector::getZero(box.getDim())) {
 
       copy(src, box);
 
@@ -511,7 +418,7 @@ ArrayData<TYPE>::copyDepth(
          const int dst_start_depth = dst_depth;
          const int src_start_depth = src_depth;
          const int num_depth = 1;
-         const hier::IntVector src_shift(d_dim, 0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, CopyOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -575,7 +482,7 @@ ArrayData<TYPE>::sum(
          const int dst_start_depth = 0;
          const int src_start_depth = 0;
          const int num_depth = (d_depth < src.d_depth ? d_depth : src.d_depth);
-         const hier::IntVector src_shift(d_dim, 0);
+         const hier::IntVector src_shift(box.getDim(), 0);
 
          ArrayDataOperationUtilities<TYPE, SumOperation<TYPE> >::
          doArrayDataOperationOnBox(*this,
@@ -610,7 +517,7 @@ ArrayData<TYPE>::sum(
    const hier::IntVector& src_shift)
 {
 
-   if (src_shift == hier::IntVector::getZero(d_dim)) {
+   if (src_shift == hier::IntVector::getZero(box.getDim())) {
 
       sum(src, box);
 
@@ -674,7 +581,7 @@ ArrayData<TYPE>::getDataStreamSize(
    NULL_USE(source_shift);
 #endif
 
-   TBOX_DIM_ASSERT_CHECK_ARGS2(*this, source_shift);
+   TBOX_ASSERT_OBJDIM_EQUALITY2(*this, source_shift);
 
    const int nelements = boxes.getTotalSizeOfBoxes();
 
@@ -974,10 +881,12 @@ ArrayData<TYPE>::fill(
 
    if (!ispace.empty()) {
 
-      int box_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dst_w[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      int dim_counter[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int i = 0; i < d_dim.getValue(); i++) {
+      const tbox::Dimension& dim = box.getDim();
+
+      int box_w[SAMRAI::MAX_DIM_VAL];
+      int dst_w[SAMRAI::MAX_DIM_VAL];
+      int dim_counter[SAMRAI::MAX_DIM_VAL];
+      for (int i = 0; i < dim.getValue(); i++) {
          box_w[i] = ispace.numberCells(i);
          dst_w[i] = d_box.numberCells(i);
          dim_counter[i] = 0;
@@ -987,8 +896,8 @@ ArrayData<TYPE>::fill(
 
       int dst_counter = d_box.offset(ispace.lower()) + d * d_offset;
 
-      int dst_b[tbox::Dimension::MAXIMUM_DIMENSION_VALUE];
-      for (int nd = 0; nd < d_dim.getValue(); nd++) {
+      int dst_b[SAMRAI::MAX_DIM_VAL];
+      for (int nd = 0; nd < dim.getValue(); nd++) {
          dst_b[nd] = dst_counter;
       }
 
@@ -1001,7 +910,7 @@ ArrayData<TYPE>::fill(
          }
          int dim_jump = 0;
 
-         for (int j = 1; j < d_dim.getValue(); j++) {
+         for (int j = 1; j < dim.getValue(); j++) {
             if (dim_counter[j] < box_w[j] - 1) {
                ++dim_counter[j];
                dim_jump = j;
@@ -1031,92 +940,61 @@ ArrayData<TYPE>::fill(
  *
  * Checks to make sure that class and restart file version numbers are
  * equal.  If so, reads in d_depth, d_offset, and d_box from the
- * database.  Then calls getSpecializedFromDatabase() to read in the
- * actual data.
+ * database.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-ArrayData<TYPE>::getFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
+ArrayData<TYPE>::getFromRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db)
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   int ver = database->getInteger("PDAT_ARRAYDATA_VERSION");
+   int ver = restart_db->getInteger("PDAT_ARRAYDATA_VERSION");
    if (ver != PDAT_ARRAYDATA_VERSION) {
-      TBOX_ERROR("ArrayData::getFromDatabase error...\n"
+      TBOX_ERROR("ArrayData::getFromRestart error...\n"
          << " : Restart file version different than class version" << std::endl);
    }
 
-   d_depth = database->getInteger("d_depth");
-   d_offset = database->getInteger("d_offset");
-   d_box = database->getDatabaseBox("d_box");
+   d_depth = restart_db->getInteger("d_depth");
+   d_offset = restart_db->getInteger("d_offset");
+   d_box = restart_db->getDatabaseBox("d_box");
 
-   getSpecializedFromDatabase(database);
+   restart_db->getArray("d_array", d_array);
 }
 
 /*
  *************************************************************************
  *
- * Write out the class version number, d_depth, d_offset, and d_box
- * to the database.  Then calls putSpecializedToDatabase() to write
- * in the actual data.
+ * Write out the class version number, d_depth, d_offset, d_box, and
+ * d_array to the restart database.
  *
  *************************************************************************
  */
 
 template<class TYPE>
 void
-ArrayData<TYPE>::putUnregisteredToDatabase(
-   const boost::shared_ptr<tbox::Database>& database,
-   bool data_only) const
+ArrayData<TYPE>::putToRestart(
+   const boost::shared_ptr<tbox::Database>& restart_db) const
 {
-   TBOX_ASSERT(database);
+   TBOX_ASSERT(restart_db);
 
-   if (!data_only) {
-      database->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);
+   restart_db->putInteger("PDAT_ARRAYDATA_VERSION", PDAT_ARRAYDATA_VERSION);
 
-      database->putInteger("d_depth", d_depth);
-      database->putInteger("d_offset", d_offset);
-      database->putDatabaseBox("d_box", d_box);
-   }
+   restart_db->putInteger("d_depth", d_depth);
+   restart_db->putInteger("d_offset", d_offset);
+   restart_db->putDatabaseBox("d_box", d_box);
 
-   putSpecializedToDatabase(database);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::putSpecializedToDatabase(
-   const boost::shared_ptr<tbox::Database>& database) const
-{
-   database->putArray("d_array", d_array);
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::getSpecializedFromDatabase(
-   const boost::shared_ptr<tbox::Database>& database)
-{
-   database->getArray("d_array", d_array);
+   restart_db->putArray("d_array", d_array);
 }
 
 template<class TYPE>
 const tbox::Dimension&
 ArrayData<TYPE>::getDim() const
 {
-   return d_dim;
-}
-
-template<class TYPE>
-void
-ArrayData<TYPE>::invalidateArray(
-   const tbox::Dimension& dim) {
-   d_dim = dim;
-   d_depth = 0;
-   d_offset = 0;
-   d_box = hier::Box::getEmptyBox(dim);
+   return d_box.getDim();
 }
 
 template<class TYPE>

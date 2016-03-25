@@ -41,8 +41,9 @@ MultiblockTester::MultiblockTester(
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
-   xfer::CoarsenPatchStrategy(dim),
-   xfer::RefinePatchStrategy(dim),
+   xfer::CoarsenPatchStrategy(),
+   xfer::RefinePatchStrategy(),
+   xfer::SingularityPatchStrategy(),
    d_object_name(object_name),
    d_dim(dim),
    d_data_test_strategy(data_test),
@@ -51,6 +52,7 @@ MultiblockTester::MultiblockTester(
    d_refine_option(refine_option),
    d_patch_hierarchy(hierarchy),
    d_fake_time(0.0),
+   d_fake_cycle(0),
    d_source(
      hier::VariableDatabase::getDatabase()->getContext("SOURCE")),
    d_destination(
@@ -63,15 +65,14 @@ MultiblockTester::MultiblockTester(
       hier::VariableDatabase::getDatabase()->getContext("DESTINATION")),
    d_reset_refine_scratch(
       hier::VariableDatabase::getDatabase()->getContext("REFINE_SCRATCH")),
-   d_reset_refine_algorithm(dim),
+   d_reset_refine_algorithm(),
    d_reset_coarsen_algorithm(dim),
    d_is_reset(false)
 {
    NULL_USE(main_input_db);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(!object_name.empty());
-   TBOX_ASSERT(data_test != (PatchMultiblockTestStrategy *)NULL);
-#endif
+   TBOX_ASSERT(data_test != 0);
 
    if (!do_refine) {
       d_do_coarsen = do_coarsen;
@@ -138,13 +139,13 @@ void MultiblockTester::registerVariable(
       refine_operator = xfer_geom->lookupRefineOperator(src_variable,
             operator_name);
 
-      d_mblk_refine_alg.reset(new xfer::RefineAlgorithm(d_dim));
+      d_mblk_refine_alg.reset(new xfer::RefineAlgorithm());
 
       hier::IntVector scratch_ghosts =
          hier::IntVector::max(src_ghosts, dst_ghosts);
       scratch_ghosts.max(hier::IntVector(d_dim, 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth());
+         scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -213,7 +214,7 @@ void MultiblockTester::registerVariableForReset(
 
       scratch_ghosts.max(hier::IntVector(d_dim, 1));
       if (refine_operator) {
-         scratch_ghosts.max(refine_operator->getStencilWidth());
+         scratch_ghosts.max(refine_operator->getStencilWidth(d_dim));
       }
       int scratch_id =
          variable_db->registerVariableAndContext(src_variable,
@@ -248,10 +249,8 @@ void MultiblockTester::registerVariableForReset(
 void MultiblockTester::createRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       d_patch_hierarchy->getPatchLevel(level_number));
@@ -288,10 +287,8 @@ void MultiblockTester::createRefineSchedule(
 void MultiblockTester::resetRefineSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_refine) {
 
@@ -351,10 +348,8 @@ void MultiblockTester::createCoarsenSchedule(
 void MultiblockTester::resetCoarsenSchedule(
    const int level_number)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= d_patch_hierarchy->getFinestLevelNumber()));
-#endif
 
    if (d_do_coarsen && (level_number > 0)) {
 
@@ -463,11 +458,10 @@ void MultiblockTester::initializeLevelData(
    NULL_USE(initial_time);
    NULL_USE(old_level);
    NULL_USE(allocate_data);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
    TBOX_ASSERT(level_number >= 0);
-#endif
 
    boost::shared_ptr<hier::PatchHierarchy> mblk_hierarchy(hierarchy);
 
@@ -539,10 +533,9 @@ void MultiblockTester::applyGradientDetector(
    NULL_USE(dt_time);
    NULL_USE(initial_time);
    NULL_USE(uses_richardson_extrapolation_too);
-#ifdef DEBUG_CHECK_ASSERTIONS
+
    TBOX_ASSERT(hierarchy);
    TBOX_ASSERT(hierarchy->getPatchLevel(level_number));
-#endif
 
    boost::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
@@ -596,14 +589,10 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
    const hier::Connector& dst_to_encon,
-   const double time,
    const hier::Box& fill_box,
    const hier::BoundaryBox& boundary_box,
    const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
-   NULL_USE(grid_geometry);
-   NULL_USE(time);
-
    boost::shared_ptr<hier::VariableContext> save_context(
       d_data_test_strategy->getDataContext());
 
@@ -624,9 +613,9 @@ void MultiblockTester::fillSingularityBoundaryConditions(
    d_data_test_strategy->setDataContext(save_context);
 }
 
-hier::IntVector MultiblockTester::getRefineOpStencilWidth() const
+hier::IntVector MultiblockTester::getRefineOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector(d_dim, 0);
+   return hier::IntVector(dim, 0);
 }
 
 void MultiblockTester::preprocessRefine(
@@ -649,9 +638,9 @@ void MultiblockTester::postprocessRefine(
       fine_box, ratio);
 }
 
-hier::IntVector MultiblockTester::getCoarsenOpStencilWidth() const
+hier::IntVector MultiblockTester::getCoarsenOpStencilWidth( const tbox::Dimension &dim ) const
 {
-   return hier::IntVector(d_dim, 0);
+   return hier::IntVector(dim, 0);
 }
 
 void MultiblockTester::preprocessCoarsen(
@@ -690,9 +679,7 @@ void MultiblockTester::setupHierarchy(
    boost::shared_ptr<tbox::Database> main_input_db,
    boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(main_input_db);
-#endif
 
    boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
       new mesh::BergerRigoutsos(d_dim));
@@ -711,17 +698,19 @@ void MultiblockTester::setupHierarchy(
          cell_tagger,
          box_generator,
          load_balancer,
-         load_balancer,
-         true));
+         load_balancer));
 
    int fake_tag_buffer = 0;
 
    gridding_alg->makeCoarsestLevel(d_fake_time);
 
-   bool initial_time = true;
+   bool initial_cycle = true;
    for (int ln = 0; d_patch_hierarchy->levelCanBeRefined(ln); ln++) {
-      gridding_alg->makeFinerLevel(d_fake_time,
-         initial_time, fake_tag_buffer,
+      gridding_alg->makeFinerLevel(
+         fake_tag_buffer,
+         initial_cycle,
+         d_fake_cycle,
+         d_fake_time,
          d_fake_time);
    }
 

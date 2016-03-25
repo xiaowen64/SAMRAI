@@ -40,11 +40,9 @@ OutersideDataTest::OutersideDataTest(
    PatchDataTestStrategy(dim),
    d_dim(dim)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!object_name.empty());
    TBOX_ASSERT(main_input_db);
    TBOX_ASSERT(!refine_option.empty());
-#endif
 
    d_object_name = object_name;
 
@@ -93,10 +91,7 @@ OutersideDataTest::~OutersideDataTest()
 void OutersideDataTest::readTestInput(
    boost::shared_ptr<tbox::Database> db)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(db);
-#endif
-
    /*
     * Base class reads variable parameters and boxes to refine.
     */
@@ -153,7 +148,7 @@ void OutersideDataTest::readTestInput(
 void OutersideDataTest::registerVariables(
    CommTester* commtest)
 {
-   TBOX_ASSERT(commtest != (CommTester *)NULL);
+   TBOX_ASSERT(commtest != 0);
 
    int nvars = d_variable_src_name.getSize();
 
@@ -170,6 +165,7 @@ void OutersideDataTest::registerVariables(
          new pdat::SideVariable<double>(
             d_dim,
             d_variable_dst_name[i],
+            hier::IntVector::getOne(d_dim),
             d_variable_depth[i],
             d_use_fine_value_at_interface[i]));
 
@@ -269,9 +265,7 @@ void OutersideDataTest::checkPatchInteriorData(
    const hier::Box& interior,
    const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
@@ -341,13 +335,12 @@ void OutersideDataTest::setLinearData(
    const hier::Box& box,
    const hier::Patch& patch) const
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x, y, z;
@@ -407,13 +400,12 @@ void OutersideDataTest::setLinearData(
 {
    NULL_USE(box);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(data);
-#endif
 
    boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
       patch.getPatchGeometry(),
-      boost::detail::dynamic_cast_tag());
+      BOOST_CAST_TAG);
+   TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
    const double* lowerx = pgeom->getXLower();
    double x = 0., y = 0., z = 0.;
@@ -509,7 +501,8 @@ bool OutersideDataTest::verifyResults(
 
          boost::shared_ptr<pdat::SideData<double> > side_data(
             patch.getPatchData(d_variables_dst[i], getDataContext()),
-            boost::detail::dynamic_cast_tag());
+            BOOST_CAST_TAG);
+         TBOX_ASSERT(side_data);
          int depth = side_data->getDepth();
          hier::Box dbox = side_data->getGhostBox();
 
