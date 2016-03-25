@@ -47,7 +47,7 @@ Inheritance diagram for SAMRAI::math::PatchCellDataNormOpsReal&lt; TYPE &gt;:</d
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a95ecfe8d3b595b413e0d5d23d3784077">PatchCellDataNormOpsReal</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a66d6ff7c4e50aea87f0db8eac68eae72">~PatchCellDataNormOpsReal</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a6f2529766f03384eda32ee9bd39eac07">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a9c4f2a6fa14a9fea62fbea53ac1b314c">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a937653a9da130ebb74ca764b84ae32b4">sumControlVolumes</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;cvol, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#aebca4e27e59104e35312726d0fa7cfc4">abs</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#af423c8504f560b1fa6b493070356c861">L1Norm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; double &gt; &gt;()) const </td></tr>
@@ -107,14 +107,14 @@ template&lt;class TYPE &gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a6f2529766f03384eda32ee9bd39eac07"></a><!-- doxytag: member="SAMRAI::math::PatchCellDataNormOpsReal::numberOfEntries" ref="a6f2529766f03384eda32ee9bd39eac07" args="(const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
+<a class="anchor" id="a9c4f2a6fa14a9fea62fbea53ac1b314c"></a><!-- doxytag: member="SAMRAI::math::PatchCellDataNormOpsReal::numberOfEntries" ref="a9c4f2a6fa14a9fea62fbea53ac1b314c" args="(const boost::shared_ptr&lt; pdat::CellData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE&gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html">SAMRAI::math::PatchCellDataNormOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html">SAMRAI::math::PatchCellDataNormOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1CellData.html">pdat::CellData</a>&lt; TYPE &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>data</em>, </td>
@@ -138,7 +138,7 @@ template&lt;class TYPE&gt; </div>
 <dd>
 data-&gt;getDim() == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchCellDataNormOpsReal_8C_source.html#l00168">SAMRAI::math::PatchCellDataNormOpsReal&lt; TYPE &gt;::RMSNorm()</a>, and <a class="el" href="PatchCellDataNormOpsReal_8C_source.html#l00186">SAMRAI::math::PatchCellDataNormOpsReal&lt; TYPE &gt;::weightedRMSNorm()</a>.</p>
 
@@ -269,7 +269,7 @@ data-&gt;getDim() == box.getDim() </dd>
 
 <p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01705">SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l00956">SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkload()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01707">SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l00958">SAMRAI::mesh::BalanceUtilities::computeNonUniformWorkload()</a>.</p>
 
 </div>
 </div>
@@ -581,7 +581,7 @@ template&lt;class TYPE&gt; </div>
 <li>source/SAMRAI/math/<a class="el" href="PatchCellDataNormOpsReal_8C.html">PatchCellDataNormOpsReal.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -82,8 +82,8 @@ Inheritance diagram for SAMRAI::pdat::FaceData&lt; TYPE &gt;:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fast copy (i.e., source and this face data objects are defined over the same box) to this destination face data object from the given source face data object at the specified depths.  <a href="#a86ddb488764ded2ad0de94dfa5b33fc8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#aa3150192ec08c55f8c5d5b1ab4727f1b">canEstimateStreamSizeFromBox</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if the patch data object can estimate the stream size required to fit its data using only index space information (i.e., a box).  <a href="#aa3150192ec08c55f8c5d5b1ab4727f1b"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a88acffb022851abad7fa9a7b5907759d">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region.  <a href="#a88acffb022851abad7fa9a7b5907759d"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a92f51713da60bf28c02613b6f0319462">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region.  <a href="#a92f51713da60bf28c02613b6f0319462"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#adaac55e65df871c52a79f8e0410a0efc">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack data in this patch data object lying in the specified box overlap region into the stream. The overlap must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM.  <a href="#adaac55e65df871c52a79f8e0410a0efc"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a7535898c38f52bb5e713548f50f24f8f">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
@@ -100,10 +100,10 @@ Inheritance diagram for SAMRAI::pdat::FaceData&lt; TYPE &gt;:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face data values residing in the specified box. If the depth of the array is greater than one, all depths are printed.  <a href="#ac585617ce11ca3e6cace6083800c6518"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a66110fb111860c6106e1fb672f9e8ea6">print</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face data values at the given array depth in the specified box.  <a href="#a66110fb111860c6106e1fb672f9e8ea6"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#aabd4a2de3af816d03863fdd54d004007">printAxis</a> (int face_normal, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face centered data values for specified face normal direction residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#aabd4a2de3af816d03863fdd54d004007"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a3cd6028449f476d0ab8d86b9c7a4ecf9">printAxis</a> (int face_normal, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face centered data values for specified face normal direction residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#a3cd6028449f476d0ab8d86b9c7a4ecf9"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#ae225d957ed800015cf4ee57e0a130470">printAxis</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> face_normal, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face centered data values for specified face normal direction residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#ae225d957ed800015cf4ee57e0a130470"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a3a0a261d1d3dc906492d80b889ceac5c">printAxis</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> face_normal, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int depth, std::ostream &amp;os=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>, int prec=12) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print all face centered data values for specified face normal direction residing in the specified box. If the depth of the data is greater than one, all depths are printed.  <a href="#a3a0a261d1d3dc906492d80b889ceac5c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a5ddb3eb92b8805c387f2371896252fd2">getFromRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#a1711b39e29880233043a3c3062573a54">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
@@ -213,7 +213,7 @@ depth &gt; 0 </dd>
 <dd>
 ghosts.min() &gt;= 0 </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="PatchData_8h_source.html#l00093">SAMRAI::hier::PatchData::getGhostBox()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00593">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="PatchData_8h_source.html#l00093">SAMRAI::hier::PatchData::getGhostBox()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00595">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 </div>
 </div>
@@ -286,7 +286,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 depth &gt; 0 </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00888">SAMRAI::hier::Box::grow()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00915">SAMRAI::hier::Box::grow()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 </div>
 </div>
@@ -533,7 +533,7 @@ template&lt;class TYPE &gt; </div>
 <p>Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be an <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html" title="Class FaceData&lt;TYPE&gt; provides an implementation for data defined at cell faces...">FaceData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == src.getDim() </dd></dl>
 
-<p>References <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData::copy2()</a>, <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData::copy2()</a>, <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -561,7 +561,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 dynamic_cast&lt;FaceData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -596,7 +596,7 @@ template&lt;class TYPE &gt; </div>
 <p>Currently, source data must be <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html" title="Class FaceData&lt;TYPE&gt; provides an implementation for data defined at cell faces...">FaceData</a> of the same DIM and TYPE and the overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1FaceOverlap.html">FaceOverlap</a> of the same DIM. If not, then an unrecoverable error results.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == src.getDim() </dd></dl>
 
-<p>References <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData::copy2()</a>, <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData::copy2()</a>, <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -635,7 +635,7 @@ dynamic_cast&lt;FaceData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd>
 <dd>
 dynamic_cast&lt;const FaceOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -669,7 +669,7 @@ template&lt;class TYPE &gt; </div>
 <p>Copy data from source to destination (i.e., this) patch data object on the given CELL-centered AMR index box. </p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == src.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == box.getDim()) </dd></dl>
 
-<p>References <a class="el" href="FaceData_8C_source.html#l00127">SAMRAI::pdat::FaceData&lt; TYPE &gt;::getArrayData()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="FaceData_8C_source.html#l00127">SAMRAI::pdat::FaceData&lt; TYPE &gt;::getArrayData()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 </div>
 </div>
@@ -709,7 +709,7 @@ template&lt;class TYPE &gt; </div>
 <p>Fast copy (i.e., source and this face data objects are defined over the same box) to this destination face data object from the given source face data object at the specified depths. </p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == src.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -737,14 +737,14 @@ template&lt;class TYPE &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a88acffb022851abad7fa9a7b5907759d"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getDataStreamSize" ref="a88acffb022851abad7fa9a7b5907759d" args="(const hier::BoxOverlap &amp;overlap) const " -->
+<a class="anchor" id="a92f51713da60bf28c02613b6f0319462"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::getDataStreamSize" ref="a92f51713da60bf28c02613b6f0319462" args="(const hier::BoxOverlap &amp;overlap) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getDataStreamSize </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::getDataStreamSize </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em></td>
@@ -759,9 +759,9 @@ template&lt;class TYPE &gt; </div>
 <p>This routine is defined for the standard types (bool, char, double, float, int, and dcomplex).</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const FaceOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a79afb3717c2858e760eb43d1c92e8aed">SAMRAI::hier::PatchData</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a53047fb5af2549e50c5a717beeb0caa7">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="FaceOverlap_8C_source.html#l00044">SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00100">SAMRAI::pdat::FaceOverlap::getSourceOffset()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="FaceOverlap_8C_source.html#l00044">SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00100">SAMRAI::pdat::FaceOverlap::getSourceOffset()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -797,7 +797,7 @@ template&lt;class TYPE &gt; </div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a9b73721b1f1f580e99626de07f91d950">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="Transformation_8h_source.html#l00214">SAMRAI::hier::Transformation::getBeginBlock()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00044">SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Transformation_8h_source.html#l00222">SAMRAI::hier::Transformation::getEndBlock()</a>, <a class="el" href="Transformation_8h_source.html#l00149">SAMRAI::hier::Transformation::getRotation()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00100">SAMRAI::pdat::FaceOverlap::getSourceOffset()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00106">SAMRAI::pdat::FaceOverlap::getTransformation()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Transformation_8h_source.html#l00214">SAMRAI::hier::Transformation::getBeginBlock()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00044">SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Transformation_8h_source.html#l00222">SAMRAI::hier::Transformation::getEndBlock()</a>, <a class="el" href="Transformation_8h_source.html#l00149">SAMRAI::hier::Transformation::getRotation()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00100">SAMRAI::pdat::FaceOverlap::getSourceOffset()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00106">SAMRAI::pdat::FaceOverlap::getTransformation()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -833,7 +833,7 @@ template&lt;class TYPE &gt; </div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#ada56faab0c403e0c8b2e95ad28515a00">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="FaceOverlap_8C_source.html#l00044">SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00100">SAMRAI::pdat::FaceOverlap::getSourceOffset()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00044">SAMRAI::pdat::FaceOverlap::getDestinationBoxContainer()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="FaceOverlap_8C_source.html#l00100">SAMRAI::pdat::FaceOverlap::getSourceOffset()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -867,7 +867,7 @@ template&lt;class TYPE &gt; </div>
 <p>Fill all values at depth d with the value t. </p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>(d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#af4f11c9ada9a1496e7207f8ea353c3ea" title="Return the depth (e.g., the number of components in each spatial location) of the...">getDepth()</a>) </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -909,7 +909,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 (d &gt;= 0) &amp;&amp; (d &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#af4f11c9ada9a1496e7207f8ea353c3ea" title="Return the depth (e.g., the number of components in each spatial location) of the...">getDepth()</a>) </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 </div>
 </div>
@@ -933,7 +933,7 @@ template&lt;class TYPE &gt; </div>
 
 <p>Fill all depth components with value t. </p>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -967,7 +967,7 @@ template&lt;class TYPE &gt; </div>
 <p>Fill all depth components within the box with value t. </p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1015,7 @@ template&lt;class TYPE &gt; </div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="FaceData_8C_source.html#l00700">SAMRAI::pdat::FaceData&lt; TYPE &gt;::printAxis()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="FaceData_8C_source.html#l00700">SAMRAI::pdat::FaceData&lt; TYPE &gt;::printAxis()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -1072,11 +1072,11 @@ template&lt;class TYPE &gt; </div>
 <dd>
 (depth &gt;= 0) &amp;&amp; (depth &lt; <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html#af4f11c9ada9a1496e7207f8ea353c3ea" title="Return the depth (e.g., the number of components in each spatial location) of the...">getDepth()</a>) </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="FaceData_8C_source.html#l00700">SAMRAI::pdat::FaceData&lt; TYPE &gt;::printAxis()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="FaceData_8C_source.html#l00700">SAMRAI::pdat::FaceData&lt; TYPE &gt;::printAxis()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="aabd4a2de3af816d03863fdd54d004007"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::printAxis" ref="aabd4a2de3af816d03863fdd54d004007" args="(int face_normal, const hier::Box &amp;box, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
+<a class="anchor" id="ae225d957ed800015cf4ee57e0a130470"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::printAxis" ref="ae225d957ed800015cf4ee57e0a130470" args="(tbox::Dimension::dir_t face_normal, const hier::Box &amp;box, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1085,7 +1085,7 @@ template&lt;class TYPE &gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::printAxis </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>, </td>
         </tr>
         <tr>
@@ -1135,7 +1135,7 @@ template&lt;class TYPE &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a3cd6028449f476d0ab8d86b9c7a4ecf9"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::printAxis" ref="a3cd6028449f476d0ab8d86b9c7a4ecf9" args="(int face_normal, const hier::Box &amp;box, int depth, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
+<a class="anchor" id="a3a0a261d1d3dc906492d80b889ceac5c"></a><!-- doxytag: member="SAMRAI::pdat::FaceData::printAxis" ref="a3a0a261d1d3dc906492d80b889ceac5c" args="(tbox::Dimension::dir_t face_normal, const hier::Box &amp;box, int depth, std::ostream &amp;os=tbox::plog, int prec=12) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -1144,7 +1144,7 @@ template&lt;class TYPE &gt; </div>
         <tr>
           <td class="memname">void <a class="el" href="classSAMRAI_1_1pdat_1_1FaceData.html">SAMRAI::pdat::FaceData</a>&lt; TYPE &gt;::printAxis </td>
           <td>(</td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>, </td>
         </tr>
         <tr>
@@ -1197,7 +1197,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 (face_normal &gt;= 0) &amp;&amp; (face_normal &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a>.getValue()) </dd></dl>
 
-<p>References <a class="el" href="FaceGeometry_8C_source.html#l00636">SAMRAI::pdat::FaceGeometry::begin()</a>, <a class="el" href="FaceGeometry_8C_source.html#l00644">SAMRAI::pdat::FaceGeometry::end()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="FaceGeometry_8C_source.html#l00642">SAMRAI::pdat::FaceGeometry::begin()</a>, <a class="el" href="FaceGeometry_8C_source.html#l00650">SAMRAI::pdat::FaceGeometry::end()</a>, <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -1223,7 +1223,7 @@ template&lt;class TYPE &gt; </div>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a78b67dc5c322c4def87ae730b4092696">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -1249,7 +1249,7 @@ template&lt;class TYPE &gt; </div>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a46f69705aaa6831bf10978dd2973f375">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00244">SAMRAI::hier::PatchData::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -1258,7 +1258,7 @@ template&lt;class TYPE &gt; </div>
 <li>source/SAMRAI/pdat/<a class="el" href="FaceData_8C.html">FaceData.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

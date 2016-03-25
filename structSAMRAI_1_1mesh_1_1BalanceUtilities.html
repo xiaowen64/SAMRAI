@@ -58,12 +58,8 @@
 <tr><td colspan="2"><div class="groupHeader">Load balance reporting.</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpc3e87dd8e53d99d16c11f853abf9a5ca"></a> </p>
 <br/><br/></div></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#a054d9a59baad0fe26c7cc310cf27999d">gatherAndReportLoadBalance</a> (double local_workload, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gather workloads in an MPI group and write out a summary of load balance efficiency.  <a href="#a054d9a59baad0fe26c7cc310cf27999d"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#a58e2e65bfc260d9a27d4ebe66cf44c72">gatherAndReportLoadBalance</a> (const std::vector&lt; double &gt; &amp;local_loads, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Gather a sequence of workloads in an MPI group and write out a summary of load balance efficiency.  <a href="#a58e2e65bfc260d9a27d4ebe66cf44c72"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#a20bee7295a9ef124f2616cd0da52c4de">reportLoadBalance</a> (const std::vector&lt; double &gt; &amp;workloads, std::ostream &amp;output_stream)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Write out a short report of how well load is balanced.  <a href="#a20bee7295a9ef124f2616cd0da52c4de"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#af35d39c4f2c79ea9fe32b1623c4e8ae9">reduceAndReportLoadBalance</a> (const std::vector&lt; double &gt; &amp;local_loads, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, std::ostream &amp;output_stream=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Globally reduce a sequence of workloads in an MPI group and write out a summary of load balance efficiency.  <a href="#af35d39c4f2c79ea9fe32b1623c4e8ae9"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Static Public Attributes</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#a4c3a6051043afc497fcdfc3a978e2631">BalanceUtilities_PREBALANCE0</a> = 5</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static const int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#ae20a69522f8e4d46f96b7df8e0a04e69">BalanceUtilities_PREBALANCE1</a> = 6</td></tr>
@@ -171,7 +167,7 @@ for each memeber of weights, w, w &gt;=0 </dd></dl>
 <dd>
 weights.size() == boxes.size() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00813">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="ProcessorMapping_8h_source.html#l00095">SAMRAI::hier::ProcessorMapping::getProcessorAssignment()</a>, <a class="el" href="ProcessorMapping_8C_source.html#l00077">SAMRAI::hier::ProcessorMapping::setMappingSize()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00817">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="ProcessorMapping_8h_source.html#l00095">SAMRAI::hier::ProcessorMapping::getProcessorAssignment()</a>, <a class="el" href="ProcessorMapping_8C_source.html#l00077">SAMRAI::hier::ProcessorMapping::setMappingSize()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -268,9 +264,9 @@ cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178dc
 <dd>
 bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178dc4477a52ff09e80a2c3e86944e7f" title="Return an IntVector of zeros of the specified dimension.">hier::IntVector::getZero</a>(min_size.getDim()) </dd>
 <dd>
-!physical_domain.isEmpty() </dd></dl>
+!physical_domain.empty() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00860">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BoxContainer_8h_source.html#l01041">SAMRAI::hier::BoxContainer::pushFront()</a>, <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>, <a class="el" href="BoxContainer_8h_source.html#l01218">SAMRAI::hier::BoxContainer::spliceBack()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00864">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l01045">SAMRAI::hier::BoxContainer::pushFront()</a>, <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, <a class="el" href="BoxContainer_8h_source.html#l01222">SAMRAI::hier::BoxContainer::spliceBack()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
 
 </div>
 </div>
@@ -374,9 +370,9 @@ cut_factor &gt; <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178dc
 <dd>
 bad_interval &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178dc4477a52ff09e80a2c3e86944e7f" title="Return an IntVector of zeros of the specified dimension.">hier::IntVector::getZero</a>(min_size.getDim()) </dd>
 <dd>
-!physical_domain.isEmpty() </dd></dl>
+!physical_domain.empty() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00860">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l00956">computeNonUniformWorkload()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BoxContainer_8h_source.html#l01041">SAMRAI::hier::BoxContainer::pushFront()</a>, <a class="el" href="BoxContainer_8h_source.html#l01218">SAMRAI::hier::BoxContainer::spliceBack()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00864">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l00958">computeNonUniformWorkload()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l01045">SAMRAI::hier::BoxContainer::pushFront()</a>, <a class="el" href="BoxContainer_8h_source.html#l01222">SAMRAI::hier::BoxContainer::spliceBack()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
 
 </div>
 </div>
@@ -425,7 +421,7 @@ num_procs &gt; 0 </dd>
 <dd>
 for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
 
-<p>References <a class="el" href="BalanceUtilities_8C_source.html#l01532">computeDomainIndependentProcessorLayout()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00686">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>.</p>
+<p>References <a class="el" href="BalanceUtilities_8C_source.html#l01534">computeDomainIndependentProcessorLayout()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00688">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>.</p>
 
 </div>
 </div>
@@ -474,9 +470,9 @@ num_procs &gt; 0 </dd>
 <dd>
 for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00686">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00688">SAMRAI::hier::IntVector::getProduct()</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01421">computeDomainDependentProcessorLayout()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01423">computeDomainDependentProcessorLayout()</a>.</p>
 
 </div>
 </div>
@@ -515,7 +511,7 @@ for each dimension, i, box.numberCells(i) &gt; 0 </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>boxes.size() == workload.size() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00813">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00817">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -566,7 +562,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 
 <p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchCellDataNormOpsReal_8C_source.html#l00094">SAMRAI::math::PatchCellDataNormOpsReal&lt; TYPE &gt;::L1Norm()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01328">recursiveBisectionNonuniform()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01330">recursiveBisectionNonuniform()</a>.</p>
 
 </div>
 </div>
@@ -625,9 +621,9 @@ param-&gt;getDim() == box.getDim() </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01244">SAMRAI::tbox::SAMRAI_MPI::AllReduce()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8C_source.html#l01784">SAMRAI::hier::BoxContainer::format()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxLevel_8h_source.html#l00500">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Box_8h_source.html#l00311">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="Connector_8h_source.html#l00412">SAMRAI::hier::Connector::getLocalNeighbors()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l00358">SAMRAI::hier::Connector::hasNeighborSet()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, and <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01269">SAMRAI::tbox::SAMRAI_MPI::AllReduce()</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8C_source.html#l01785">SAMRAI::hier::BoxContainer::format()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxLevel_8h_source.html#l00521">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Box_8h_source.html#l00316">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="Connector_8h_source.html#l00437">SAMRAI::hier::Connector::getLocalNeighbors()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l00383">SAMRAI::hier::Connector::hasNeighborSet()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, and <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>.</p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01836">findSmallBoxesInPostbalance()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01838">findSmallBoxesInPostbalance()</a>.</p>
 
 </div>
 </div>
@@ -694,7 +690,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00305">SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01774">findSmallBoxesInPostbalance()</a>, <a class="el" href="BoxLevel_8h_source.html#l00827">SAMRAI::hier::BoxLevel::getDim()</a>, and <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>.</p>
+<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00330">SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01776">findSmallBoxesInPostbalance()</a>, <a class="el" href="BoxLevel_8h_source.html#l00848">SAMRAI::hier::BoxLevel::getDim()</a>, and <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>.</p>
 
 </div>
 </div>
@@ -814,60 +810,12 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="a054d9a59baad0fe26c7cc310cf27999d"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance" ref="a054d9a59baad0fe26c7cc310cf27999d" args="(double local_workload, const tbox::SAMRAI_MPI &amp;mpi, std::ostream &amp;output_stream=tbox::plog)" -->
+<a class="anchor" id="af35d39c4f2c79ea9fe32b1623c4e8ae9"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::reduceAndReportLoadBalance" ref="af35d39c4f2c79ea9fe32b1623c4e8ae9" args="(const std::vector&lt; double &gt; &amp;local_loads, const tbox::SAMRAI_MPI &amp;mpi, std::ostream &amp;output_stream=tbox::plog)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance </td>
-          <td>(</td>
-          <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>local_workload</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>mpi</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>output_stream</em> = <code><a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a></code></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Gather workloads in an MPI group and write out a summary of load balance efficiency. </p>
-<p>To be used for performance evaluation. Not recommended for general use.</p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>local_workload</em>&nbsp;</td><td>Workload of the local process</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mpi</em>&nbsp;</td><td>Represents all processes involved in the load balancing.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00641">SAMRAI::tbox::SAMRAI_MPI::Allgather()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00050">MPI_DOUBLE</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01952">reportLoadBalance()</a>.</p>
-
-<p>Referenced by <a class="el" href="TreeLoadBalancer_8C_source.html#l00165">SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel()</a>, <a class="el" href="CascadePartitioner_8C_source.html#l00157">SAMRAI::mesh::CascadePartitioner::loadBalanceBoxLevel()</a>, <a class="el" href="TreeLoadBalancer_8C_source.html#l02013">SAMRAI::mesh::TreeLoadBalancer::printStatistics()</a>, and <a class="el" href="CascadePartitioner_8C_source.html#l00717">SAMRAI::mesh::CascadePartitioner::printStatistics()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="a58e2e65bfc260d9a27d4ebe66cf44c72"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance" ref="a58e2e65bfc260d9a27d4ebe66cf44c72" args="(const std::vector&lt; double &gt; &amp;local_loads, const tbox::SAMRAI_MPI &amp;mpi, std::ostream &amp;output_stream=tbox::plog)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance </td>
+          <td class="memname">void SAMRAI::mesh::BalanceUtilities::reduceAndReportLoadBalance </td>
           <td>(</td>
           <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>local_loads</em>, </td>
@@ -893,7 +841,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 </div>
 <div class="memdoc">
 
-<p>Gather a sequence of workloads in an MPI group and write out a summary of load balance efficiency. </p>
+<p>Globally reduce a sequence of workloads in an MPI group and write out a summary of load balance efficiency. </p>
 <p>Each value in the sequence of workloads represent a certain load the local process had over a sequence of load balancings.</p>
 <p>To be used for performance evaluation. Not recommended for general use.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
@@ -905,49 +853,9 @@ param-&gt;getDim() == box.getDim() </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00641">SAMRAI::tbox::SAMRAI_MPI::Allgather()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00050">MPI_DOUBLE</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01952">reportLoadBalance()</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01269">SAMRAI::tbox::SAMRAI_MPI::AllReduce()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00062">MPI_MAXLOC</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00060">MPI_MINLOC</a>, and <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>.</p>
 
-</div>
-</div>
-<a class="anchor" id="a20bee7295a9ef124f2616cd0da52c4de"></a><!-- doxytag: member="SAMRAI::mesh::BalanceUtilities::reportLoadBalance" ref="a20bee7295a9ef124f2616cd0da52c4de" args="(const std::vector&lt; double &gt; &amp;workloads, std::ostream &amp;output_stream)" -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void SAMRAI::mesh::BalanceUtilities::reportLoadBalance </td>
-          <td>(</td>
-          <td class="paramtype">const std::vector&lt; double &gt; &amp;&nbsp;</td>
-          <td class="paramname"> <em>workloads</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">std::ostream &amp;&nbsp;</td>
-          <td class="paramname"> <em>output_stream</em></td><td>&nbsp;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td><td><code> [static]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Write out a short report of how well load is balanced. </p>
-<p>Given the workloads of a number of processes, format and write out a brief report for assessing how well balanced the workloads are.</p>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>workloads</em>&nbsp;</td><td>One value for each process. The number of processes is taken to be the size of this container.</td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>output_stream</em>&nbsp;</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>workloads.size() == <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ab77c546bbc19ae9bae5c6480fba8c53a" title="Get the primary SAMRAI_MPI object owned by SAMRAI.">tbox::SAMRAI_MPI::getSAMRAIWorld()</a>.getSize() </dd></dl>
-
-<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
-
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01891">gatherAndReportLoadBalance()</a>.</p>
+<p>Referenced by <a class="el" href="TreeLoadBalancer_8C_source.html#l00165">SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel()</a>, <a class="el" href="CascadePartitioner_8C_source.html#l00166">SAMRAI::mesh::CascadePartitioner::loadBalanceBoxLevel()</a>, <a class="el" href="TreeLoadBalancer_8C_source.html#l02012">SAMRAI::mesh::TreeLoadBalancer::printStatistics()</a>, and <a class="el" href="CascadePartitioner_8C_source.html#l00767">SAMRAI::mesh::CascadePartitioner::printStatistics()</a>.</p>
 
 </div>
 </div>
@@ -982,7 +890,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxUtilities_8C_source.html#l00323">SAMRAI::hier::BoxUtilities::chopBoxes()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00813">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00059">SAMRAI::mesh::PartitioningParams::getBadInterval()</a>, <a class="el" href="Box_8h_source.html#l00326">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BoxLevel_8h_source.html#l00500">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Box_8h_source.html#l00311">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00063">SAMRAI::mesh::PartitioningParams::getCutFactor()</a>, <a class="el" href="BoxLevel_8h_source.html#l00827">SAMRAI::hier::BoxLevel::getDim()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00055">SAMRAI::mesh::PartitioningParams::getDomainBoxes()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxLevel_8C_source.html#l01320">SAMRAI::hier::BoxLevel::getLastLocalId()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00051">SAMRAI::mesh::PartitioningParams::getMaxBoxSize()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00047">SAMRAI::mesh::PartitioningParams::getMinBoxSize()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="Connector_8h_source.html#l00175">SAMRAI::hier::Connector::isFinalized()</a>, <a class="el" href="Box_8h_source.html#l00740">SAMRAI::hier::Box::isSpatiallyEqual()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00115">SAMRAI::hier::MappingConnectorAlgorithm::modify()</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l01415">SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="BoxLevel_8C_source.html#l00438">SAMRAI::hier::BoxLevel::swap()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxUtilities_8C_source.html#l00323">SAMRAI::hier::BoxUtilities::chopBoxes()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00817">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00059">SAMRAI::mesh::PartitioningParams::getBadInterval()</a>, <a class="el" href="Box_8h_source.html#l00331">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BoxLevel_8h_source.html#l00521">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Box_8h_source.html#l00316">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00063">SAMRAI::mesh::PartitioningParams::getCutFactor()</a>, <a class="el" href="BoxLevel_8h_source.html#l00848">SAMRAI::hier::BoxLevel::getDim()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00055">SAMRAI::mesh::PartitioningParams::getDomainBoxes()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxLevel_8C_source.html#l01361">SAMRAI::hier::BoxLevel::getLastLocalId()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00051">SAMRAI::mesh::PartitioningParams::getMaxBoxSize()</a>, <a class="el" href="PartitioningParams_8h_source.html#l00047">SAMRAI::mesh::PartitioningParams::getMinBoxSize()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="BoxLevel_8h_source.html#l00583">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="Connector_8h_source.html#l00200">SAMRAI::hier::Connector::isFinalized()</a>, <a class="el" href="Box_8h_source.html#l00767">SAMRAI::hier::Box::isSpatiallyEqual()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00139">SAMRAI::hier::MappingConnectorAlgorithm::modify()</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l01453">SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="BoxLevel_8C_source.html#l00486">SAMRAI::hier::BoxLevel::swap()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="TreeLoadBalancer_8C_source.html#l00165">SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel()</a>.</p>
 
@@ -1025,7 +933,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 <dd>
 !balance_to_anchor || (balance_to_anchor-&gt;checkTransposeCorrectness(balance_to_anchor-&gt;getTranspose()) == 0) </dd></dl>
 
-<p>References <a class="el" href="BalanceUtilities_8h_source.html#l00483">BalanceUtilities_PREBALANCE0</a>, <a class="el" href="BalanceUtilities_8h_source.html#l00484">BalanceUtilities_PREBALANCE1</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00502">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::beginRecv()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00245">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::beginSend()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00532">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::checkRecv()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00306">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::checkSend()</a>, <a class="el" href="Connector_8C_source.html#l01236">SAMRAI::hier::Connector::checkTransposeCorrectness()</a>, <a class="el" href="Box_8h_source.html#l00425">SAMRAI::hier::Box::commBufferSize()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00213">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::completeCurrentOperation()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxLevel_8h_source.html#l00500">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Box_8h_source.html#l00311">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="BoxLevel_8h_source.html#l00827">SAMRAI::hier::BoxLevel::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxId_8h_source.html#l00136">SAMRAI::hier::BoxId::getLocalId()</a>, <a class="el" href="RankGroup_8C_source.html#l00256">SAMRAI::tbox::RankGroup::getMappedRank()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00918">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::getRecvData()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00903">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::getRecvSize()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00161">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::initialize()</a>, <a class="el" href="Connector_8h_source.html#l00537">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, <a class="el" href="RankGroup_8C_source.html#l00175">SAMRAI::tbox::RankGroup::isMember()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00115">SAMRAI::hier::MappingConnectorAlgorithm::modify()</a>, <a class="el" href="Box_8C_source.html#l00707">SAMRAI::hier::Box::putToIntBuffer()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00856">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::setMPI()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00838">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::setMPITag()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00872">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::setPeerRank()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l01415">SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix()</a>, <a class="el" href="Connector_8h_source.html#l01142">SAMRAI::hier::Connector::setTranspose()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="RankGroup_8C_source.html#l00223">SAMRAI::tbox::RankGroup::size()</a>, <a class="el" href="BoxLevel_8C_source.html#l00438">SAMRAI::hier::BoxLevel::swap()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BalanceUtilities_8h_source.html#l00446">BalanceUtilities_PREBALANCE0</a>, <a class="el" href="BalanceUtilities_8h_source.html#l00447">BalanceUtilities_PREBALANCE1</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00502">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::beginRecv()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00245">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::beginSend()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00532">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::checkRecv()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00306">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::checkSend()</a>, <a class="el" href="Connector_8C_source.html#l01522">SAMRAI::hier::Connector::checkTransposeCorrectness()</a>, <a class="el" href="Box_8h_source.html#l00430">SAMRAI::hier::Box::commBufferSize()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00213">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::completeCurrentOperation()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxLevel_8h_source.html#l00521">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Box_8h_source.html#l00316">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="BoxLevel_8h_source.html#l00848">SAMRAI::hier::BoxLevel::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxId_8h_source.html#l00136">SAMRAI::hier::BoxId::getLocalId()</a>, <a class="el" href="RankGroup_8C_source.html#l00256">SAMRAI::tbox::RankGroup::getMappedRank()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00918">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::getRecvData()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00903">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::getRecvSize()</a>, <a class="el" href="BoxLevel_8h_source.html#l00583">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="Connector_8h_source.html#l01148">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00161">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::initialize()</a>, <a class="el" href="Connector_8h_source.html#l00562">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, <a class="el" href="RankGroup_8C_source.html#l00175">SAMRAI::tbox::RankGroup::isMember()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00139">SAMRAI::hier::MappingConnectorAlgorithm::modify()</a>, <a class="el" href="Box_8C_source.html#l00721">SAMRAI::hier::Box::putToIntBuffer()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00856">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::setMPI()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00838">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::setMPITag()</a>, <a class="el" href="AsyncCommPeer_8C_source.html#l00872">SAMRAI::tbox::AsyncCommPeer&lt; TYPE &gt;::setPeerRank()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l01453">SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix()</a>, <a class="el" href="Connector_8h_source.html#l01167">SAMRAI::hier::Connector::setTranspose()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="RankGroup_8C_source.html#l00223">SAMRAI::tbox::RankGroup::size()</a>, <a class="el" href="BoxLevel_8C_source.html#l00486">SAMRAI::hier::BoxLevel::swap()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="TreeLoadBalancer_8C_source.html#l00165">SAMRAI::mesh::TreeLoadBalancer::loadBalanceBoxLevel()</a>.</p>
 
@@ -1043,7 +951,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02201">prebalanceBoxLevel()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02147">prebalanceBoxLevel()</a>.</p>
 
 </div>
 </div>
@@ -1058,7 +966,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02201">prebalanceBoxLevel()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l02147">prebalanceBoxLevel()</a>.</p>
 
 </div>
 </div>
@@ -1067,7 +975,7 @@ param-&gt;getDim() == box.getDim() </dd></dl>
 <li>source/SAMRAI/mesh/<a class="el" href="BalanceUtilities_8C.html">BalanceUtilities.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -181,7 +181,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="VariableDatabase_8C_source.html#l00044">SAMRAI::hier::VariableDatabase::getDatabase()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="VariableDatabase_8C_source.html#l00214">SAMRAI::hier::VariableDatabase::getVariable()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, and <a class="el" href="VariableDatabase_8C_source.html#l00747">SAMRAI::hier::VariableDatabase::registerInternalSAMRAIVariable()</a>.</p>
+<p>References <a class="el" href="VariableDatabase_8C_source.html#l00044">SAMRAI::hier::VariableDatabase::getDatabase()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="VariableDatabase_8C_source.html#l00214">SAMRAI::hier::VariableDatabase::getVariable()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, and <a class="el" href="VariableDatabase_8C_source.html#l00747">SAMRAI::hier::VariableDatabase::registerInternalSAMRAIVariable()</a>.</p>
 
 </div>
 </div>
@@ -202,7 +202,7 @@
 
 <p>Destructor. </p>
 
-<p>References <a class="el" href="CellPoissonFACSolver_8C_source.html#l00242">deallocateSolverState()</a>, <a class="el" href="VariableDatabase_8C_source.html#l00044">SAMRAI::hier::VariableDatabase::getDatabase()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="CellPoissonFACSolver_8C_source.html#l00242">deallocateSolverState()</a>, <a class="el" href="VariableDatabase_8C_source.html#l00044">SAMRAI::hier::VariableDatabase::getDatabase()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -312,7 +312,7 @@ d_dim == hierarchy-&gt;getDim() </dd>
 <dd>
 (solution &gt;= 0) || (rhs &gt;= 0) </dd></dl>
 
-<p>References <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00514">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00599">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00513">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00598">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -361,7 +361,7 @@ d_dim == hierarchy-&gt;getDim() </dd>
 <p>The mixed boundary type is for a mixture of Dirichlet and Neumann boundary conditions are used at the physical domain boundary. The fluxes argument gives the patch data index of the outerface data that specifies the flux data for the Neumann conditions. The flags array is an outerface data array of integer flags that specifies whether Dirichlet (flag == zero) or Neumann (flag == one) conditions are to be used at a particular cell boundary face. Note that the flag data must be set before the matrix entries can be computed and the flux data must be set before the solver is called. The bdry_types argument can be used if the boundary conditions are mixed but one or more of the faces of the physical boundary are entirely either Dirichlet or Neumann boundaries. The bdry_types argument should be an array of 2*DIM integers, specifying the boundary conditions on each side of the physical domain. It should be ordered {x_lo, x_hi, y_lo, y_hi, z_lo, z_hi}, with the values for each face being 0 for Dirichlet conditions, 1 for Neumann conditions, and 2 for mixed boundary conditions. The bdry_type argument is never required, but if used it can sometimes make the PoissonHYPRESolver class more efficient.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>(d_bc_object == 0) || (d_bc_object == &amp;d_simple_bc) </dd></dl>
 
-<p>References <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00089">SAMRAI::solv::SimpleCellRobinBcCoefs::setBoundaries()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00088">SAMRAI::solv::SimpleCellRobinBcCoefs::setBoundaries()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -548,7 +548,7 @@ d_bc_object != 0 </dd>
 <dd>
 (solution &gt;= 0) || (rhs &gt;= 0) </dd></dl>
 
-<p>References <a class="el" href="PoissonSpecifications_8h_source.html#l00146">SAMRAI::solv::PoissonSpecifications::dIsConstant()</a>, <a class="el" href="PoissonSpecifications_8h_source.html#l00181">SAMRAI::solv::PoissonSpecifications::getDConstant()</a>, <a class="el" href="PoissonSpecifications_8h_source.html#l00161">SAMRAI::solv::PoissonSpecifications::getDPatchDataId()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8h_source.html#l00253">SAMRAI::solv::SimpleCellRobinBcCoefs::setDiffusionCoefConstant()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8h_source.html#l00236">SAMRAI::solv::SimpleCellRobinBcCoefs::setDiffusionCoefId()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00060">SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00233">TBOX_ASSERT_DIM_OBJDIM_EQUALITY1</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="PoissonSpecifications_8h_source.html#l00146">SAMRAI::solv::PoissonSpecifications::dIsConstant()</a>, <a class="el" href="PoissonSpecifications_8h_source.html#l00181">SAMRAI::solv::PoissonSpecifications::getDConstant()</a>, <a class="el" href="PoissonSpecifications_8h_source.html#l00161">SAMRAI::solv::PoissonSpecifications::getDPatchDataId()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8h_source.html#l00253">SAMRAI::solv::SimpleCellRobinBcCoefs::setDiffusionCoefConstant()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8h_source.html#l00236">SAMRAI::solv::SimpleCellRobinBcCoefs::setDiffusionCoefId()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00059">SAMRAI::solv::SimpleCellRobinBcCoefs::setHierarchy()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00233">TBOX_ASSERT_DIM_OBJDIM_EQUALITY1</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 <p>Referenced by <a class="el" href="CellPoissonFACSolver_8C_source.html#l00361">solveSystem()</a>.</p>
 
@@ -573,7 +573,7 @@ d_bc_object != 0 </dd>
 <p>Remove all hierarchy-dependent data set by initializeSolverState. It is safe to call <a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a6c5f98f4b42b2446883f04752f76a95c" title="Remove the solver&#39;s internal state data.">deallocateSolverState()</a> even state is already deallocated, but nothing is done in that case.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1solv_1_1CellPoissonFACSolver.html#a32daa5602688c39a0064e75ed7d0946b" title="Prepare the solver&#39;s internal state for solving.">initializeSolverState()</a> </dd></dl>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 <p>Referenced by <a class="el" href="CellPoissonFACSolver_8C_source.html#l00361">solveSystem()</a>, and <a class="el" href="CellPoissonFACSolver_8C_source.html#l00119">~CellPoissonFACSolver()</a>.</p>
 
@@ -680,7 +680,7 @@ d_bc_object != 0 </dd>
 <li>source/SAMRAI/solv/<a class="el" href="CellPoissonFACSolver_8C.html">CellPoissonFACSolver.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -51,7 +51,7 @@ Inheritance diagram for SAMRAI::math::HierarchySideDataOpsInteger:</div>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#ae1bcf7b3ada63eeea7340b4dce3b221f">resetLevels</a> (const int coarsest_level, const int finest_level)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const boost::shared_ptr<br class="typebreak"/>
 &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#ad34d64728ef6ca5f61793f39e8efd1a3">getPatchHierarchy</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#a4a219c4f2642c953239b246e389e61d2">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#a3faa4c2e0b58d942e6eafedb634f5009">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#a16684f27f909f1958d66c952979aafb3">copyData</a> (const int dst_id, const int src_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#ad0d41364f571bf3e49dd7728f6546829">swapData</a> (const int data1_id, const int data2_id) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#afef65514d4f599f164860ce254030750">printData</a> (const int data_id, std::ostream &amp;s, const bool interior_only=true) const </td></tr>
@@ -188,7 +188,7 @@ Inheritance diagram for SAMRAI::math::HierarchySideDataOpsInteger:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a7404ad14b10d5d3ad5afb9dc60160ea7">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="BoxUtilities_8C_source.html#l01750">SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="BoxUtilities_8C_source.html#l01762">SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchySideDataOpsInteger_8C_source.html#l00026">HierarchySideDataOpsInteger()</a>.</p>
 
@@ -214,12 +214,12 @@ Inheritance diagram for SAMRAI::math::HierarchySideDataOpsInteger:</div>
 
 </div>
 </div>
-<a class="anchor" id="a4a219c4f2642c953239b246e389e61d2"></a><!-- doxytag: member="SAMRAI::math::HierarchySideDataOpsInteger::numberOfEntries" ref="a4a219c4f2642c953239b246e389e61d2" args="(const int data_id, const bool interior_only=true) const " -->
+<a class="anchor" id="a3faa4c2e0b58d942e6eafedb634f5009"></a><!-- doxytag: member="SAMRAI::math::HierarchySideDataOpsInteger::numberOfEntries" ref="a3faa4c2e0b58d942e6eafedb634f5009" args="(const int data_id, const bool interior_only=true) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::math::HierarchySideDataOpsInteger::numberOfEntries </td>
+          <td class="memname">size_t SAMRAI::math::HierarchySideDataOpsInteger::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>data_id</em>, </td>
@@ -243,9 +243,9 @@ Inheritance diagram for SAMRAI::math::HierarchySideDataOpsInteger:</div>
 <dd>
 (d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= d_coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#ad34d64728ef6ca5f61793f39e8efd1a3">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a66f0c37ee81a36e93bb9cd33ffce352b">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#afcf9405d36d51f2c3b3472eabf90d3d1">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00052">MPI_INT</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchSideDataOpsInteger_8C_source.html#l00033">SAMRAI::math::PatchSideDataOpsInteger::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchSideDataOpsInteger_8C_source.html#l00033">SAMRAI::math::PatchSideDataOpsInteger::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -1058,7 +1058,7 @@ Inheritance diagram for SAMRAI::math::HierarchySideDataOpsInteger:</div>
 <li>source/SAMRAI/math/<a class="el" href="HierarchySideDataOpsInteger_8C.html">HierarchySideDataOpsInteger.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

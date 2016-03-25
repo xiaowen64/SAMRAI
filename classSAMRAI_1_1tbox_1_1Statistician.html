@@ -182,7 +182,7 @@
 
 <p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="Statistician_8C_source.html#l02644">SAMRAI::tbox::StatisticRestartDatabase::getFromRestart()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l00066">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l02281">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>, <a class="el" href="BoxTree_8C_source.html#l00626">SAMRAI::hier::BoxTree::printStatistics()</a>, and <a class="el" href="Statistician_8C_source.html#l02579">SAMRAI::tbox::StatisticRestartDatabase::putToRestart()</a>.</p>
+<p>Referenced by <a class="el" href="Statistician_8C_source.html#l02644">SAMRAI::tbox::StatisticRestartDatabase::getFromRestart()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l00066">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l02343">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>, <a class="el" href="BoxTree_8C_source.html#l00626">SAMRAI::hier::BoxTree::printStatistics()</a>, and <a class="el" href="Statistician_8C_source.html#l02579">SAMRAI::tbox::StatisticRestartDatabase::putToRestart()</a>.</p>
 
 </div>
 </div>
@@ -1439,7 +1439,7 @@
 <p>Typically, this routine is called after a calculation has completed so that statistic data can be retrieved, analized, printed to a file, etc. It is not essential that this routine be called, however, as each "get" and "print" routine checks to see if statistic data has been finalized before it peforms its function.</p>
 <p>If gather_individual_stats_on_proc_0 == true, the statistics are gathered on proc 0 for further access. If not, only globally-reduced (min, max, sum) values for "PROC_STATS" are available (on all processes). Non-local "PATCH_STATS" are only available if gather_individual_stats_on_proc_0 == true. </p>
 
-<p>References <a class="el" href="Schedule_8C_source.html#l00096">SAMRAI::tbox::Schedule::addTransaction()</a>, <a class="el" href="Statistician_8C_source.html#l02136">checkStatsForConsistency()</a>, <a class="el" href="Schedule_8C_source.html#l00178">SAMRAI::tbox::Schedule::communicate()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, and <a class="el" href="Schedule_8C_source.html#l00605">SAMRAI::tbox::Schedule::setTimerPrefix()</a>.</p>
+<p>References <a class="el" href="Schedule_8C_source.html#l00096">SAMRAI::tbox::Schedule::addTransaction()</a>, <a class="el" href="Statistician_8C_source.html#l02136">checkStatsForConsistency()</a>, <a class="el" href="Schedule_8C_source.html#l00178">SAMRAI::tbox::Schedule::communicate()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, and <a class="el" href="Schedule_8C_source.html#l00617">SAMRAI::tbox::Schedule::setTimerPrefix()</a>.</p>
 
 <p>Referenced by <a class="el" href="BoxTree_8C_source.html#l00626">SAMRAI::hier::BoxTree::printStatistics()</a>.</p>
 
@@ -1630,7 +1630,7 @@
 <p>Write tab-separated statistics data for specified processor. This method is identical to "printSpreadSheetOutput()" (above), but only prints data for a single processor. This may be useful for information that is the same across all processors. This method will only print processor stats. Any patch stats will be ignored.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ab77c546bbc19ae9bae5c6480fba8c53a" title="Get the primary SAMRAI_MPI object owned by SAMRAI.">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0) || (!d_must_call_finalize &amp;&amp; d_has_gathered_stats) </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="Statistician_8C_source.html#l00625">printGlobalProcStatDataFormatted()</a>, <a class="el" href="Utilities_8h_source.html#l00447">SAMRAI::tbox::Utilities::processorToString()</a>, <a class="el" href="Utilities_8C_source.html#l00037">SAMRAI::tbox::Utilities::recursiveMkdir()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="Statistician_8C_source.html#l00625">printGlobalProcStatDataFormatted()</a>, <a class="el" href="Utilities_8h_source.html#l00459">SAMRAI::tbox::Utilities::processorToString()</a>, <a class="el" href="Utilities_8C_source.html#l00037">SAMRAI::tbox::Utilities::recursiveMkdir()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -1759,7 +1759,7 @@
 <li>source/SAMRAI/tbox/<a class="el" href="Statistician_8C.html">Statistician.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

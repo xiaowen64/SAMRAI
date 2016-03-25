@@ -40,7 +40,7 @@
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a6ea1196eeab517860bd6f565948f65a9">ProcessorMapping</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html">ProcessorMapping</a> &amp;mapping)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a65c156ea31019baad65f04265668fc03">ProcessorMapping</a> (const std::vector&lt; int &gt; &amp;mapping)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a3c3f4b155f51aecabe44cf93c75a6edb">~ProcessorMapping</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#ad982e9a0e3774a88c30301273d1ddd68">setMappingSize</a> (const int n)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#ad4c39d86a041f5ebd3f7cbc892d875f9">setMappingSize</a> (const size_t n)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a8ca56ffa014904bd29660754548cee86">setNumberNodes</a> (const int n)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a2e9c9112d6b63f1eba59ada2864c120b">getProcessorAssignment</a> (const int i) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a252884616c15fe8c57db6a38db7f048b">setProcessorAssignment</a> (const int i, const int p)</td></tr>
@@ -68,7 +68,7 @@
       </table>
 </div>
 <div class="memdoc">
-<p>Create a default processor mapping array with 0 elements. Before the mapping can be used, its size should be set using the function <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#ad982e9a0e3774a88c30301273d1ddd68">setMappingSize()</a> and each element of the mapping should be set by <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a252884616c15fe8c57db6a38db7f048b">setProcessorAssignment()</a>. </p>
+<p>Create a default processor mapping array with 0 elements. Before the mapping can be used, its size should be set using the function <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#ad4c39d86a041f5ebd3f7cbc892d875f9">setMappingSize()</a> and each element of the mapping should be set by <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a252884616c15fe8c57db6a38db7f048b">setProcessorAssignment()</a>. </p>
 
 <p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, and <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>.</p>
 
@@ -156,14 +156,14 @@
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ad982e9a0e3774a88c30301273d1ddd68"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::setMappingSize" ref="ad982e9a0e3774a88c30301273d1ddd68" args="(const int n)" -->
+<a class="anchor" id="ad4c39d86a041f5ebd3f7cbc892d875f9"></a><!-- doxytag: member="SAMRAI::hier::ProcessorMapping::setMappingSize" ref="ad4c39d86a041f5ebd3f7cbc892d875f9" args="(const size_t n)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">void SAMRAI::hier::ProcessorMapping::setMappingSize </td>
           <td>(</td>
-          <td class="paramtype">const int&nbsp;</td>
+          <td class="paramtype">const size_t&nbsp;</td>
           <td class="paramname"> <em>n</em></td>
           <td>&nbsp;)&nbsp;</td>
           <td></td>
@@ -173,7 +173,7 @@
 <div class="memdoc">
 <p>Resize the mapping so that it has n elements. Before it can be used, each element should be set using <a class="el" href="classSAMRAI_1_1hier_1_1ProcessorMapping.html#a252884616c15fe8c57db6a38db7f048b">setProcessorAssignment()</a>. </p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l00986">SAMRAI::mesh::BalanceUtilities::binPack()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01066">SAMRAI::mesh::BalanceUtilities::spatialBinPack()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l00988">SAMRAI::mesh::BalanceUtilities::binPack()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01068">SAMRAI::mesh::BalanceUtilities::spatialBinPack()</a>.</p>
 
 </div>
 </div>
@@ -216,7 +216,7 @@
 
 <p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01705">SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency()</a>, <a class="el" href="ChopAndPackLoadBalancer_8C_source.html#l00254">SAMRAI::mesh::ChopAndPackLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01066">SAMRAI::mesh::BalanceUtilities::spatialBinPack()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l01707">SAMRAI::mesh::BalanceUtilities::computeLoadBalanceEfficiency()</a>, <a class="el" href="ChopAndPackLoadBalancer_8C_source.html#l00240">SAMRAI::mesh::ChopAndPackLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01068">SAMRAI::mesh::BalanceUtilities::spatialBinPack()</a>.</p>
 
 </div>
 </div>
@@ -251,7 +251,7 @@
 
 <p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l00986">SAMRAI::mesh::BalanceUtilities::binPack()</a>, and <a class="el" href="ProcessorMapping_8C_source.html#l00089">setProcessorMapping()</a>.</p>
+<p>Referenced by <a class="el" href="BalanceUtilities_8C_source.html#l00988">SAMRAI::mesh::BalanceUtilities::binPack()</a>, and <a class="el" href="ProcessorMapping_8C_source.html#l00089">setProcessorMapping()</a>.</p>
 
 </div>
 </div>
@@ -377,7 +377,7 @@
 <li>source/SAMRAI/hier/<a class="el" href="ProcessorMapping_8C.html">ProcessorMapping.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

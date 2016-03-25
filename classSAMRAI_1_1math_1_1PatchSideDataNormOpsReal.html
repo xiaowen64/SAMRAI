@@ -47,7 +47,7 @@ Inheritance diagram for SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;:</d
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#a435ad742fda66db7e3432b9b7ec80562">PatchSideDataNormOpsReal</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#ac22a0364795a802ded560722d8451e0b">~PatchSideDataNormOpsReal</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#a36416cd1c67bcbfb21365e50a1cccd63">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#ae152410d9d14a427ab2990ffe6c56a92">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#a17c33dc298d82cba119783bd70bb1f27">sumControlVolumes</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; double &gt; &gt; &amp;cvol, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#a4945f7828f0ef94145c5ba3203629c6b">abs</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#a47adfffb4160650db3de1cdfbfd8682e">L1Norm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; double &gt; &gt;()) const </td></tr>
@@ -107,14 +107,14 @@ template&lt;class TYPE &gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a36416cd1c67bcbfb21365e50a1cccd63"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsReal::numberOfEntries" ref="a36416cd1c67bcbfb21365e50a1cccd63" args="(const boost::shared_ptr&lt; pdat::SideData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
+<a class="anchor" id="ae152410d9d14a427ab2990ffe6c56a92"></a><!-- doxytag: member="SAMRAI::math::PatchSideDataNormOpsReal::numberOfEntries" ref="ae152410d9d14a427ab2990ffe6c56a92" args="(const boost::shared_ptr&lt; pdat::SideData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html">SAMRAI::math::PatchSideDataNormOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html">SAMRAI::math::PatchSideDataNormOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1SideData.html">pdat::SideData</a>&lt; TYPE &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>data</em>, </td>
@@ -138,7 +138,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 data-&gt;getDim() == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchSideDataNormOpsReal_8C_source.html#l00255">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;::RMSNorm()</a>, and <a class="el" href="PatchSideDataNormOpsReal_8C_source.html#l00276">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;::weightedRMSNorm()</a>.</p>
 
@@ -181,7 +181,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector()) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchSideDataNormOpsReal_8C_source.html#l00255">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;::RMSNorm()</a>, and <a class="el" href="PatchSideDataNormOpsReal_8C_source.html#l00276">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;::weightedRMSNorm()</a>.</p>
 
@@ -271,7 +271,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <dd>
 !cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 </div>
 </div>
@@ -316,7 +316,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <dd>
 !cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchSideDataNormOpsReal_8C_source.html#l00255">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;::RMSNorm()</a>.</p>
 
@@ -371,7 +371,7 @@ data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntV
 <dd>
 !cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchSideDataNormOpsReal_8C_source.html#l00276">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;::weightedRMSNorm()</a>.</p>
 
@@ -508,7 +508,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <dd>
 !cvol || (data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 </div>
 </div>
@@ -559,7 +559,7 @@ data1-&gt;getDirectionVector() == data2-&gt;getDirectionVector() </dd>
 <dd>
 !cvol || (data1-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data1-&gt;getDirectionVector(), cvol-&gt;getDirectionVector())) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 </div>
 </div>
@@ -602,7 +602,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f" title="Return the component-wise minimum of two integer vector objects.">hier::IntVector::min</a>(data-&gt;getDirectionVector(), vol-&gt;getDirectionVector()) </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00608">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00610">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="SideGeometry_8C_source.html#l00195">SAMRAI::pdat::SideGeometry::toSideBox()</a>.</p>
 
 </div>
 </div>
@@ -611,7 +611,7 @@ data-&gt;getDirectionVector() == <a class="el" href="classSAMRAI_1_1hier_1_1IntV
 <li>source/SAMRAI/math/<a class="el" href="PatchSideDataNormOpsReal_8C.html">PatchSideDataNormOpsReal.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

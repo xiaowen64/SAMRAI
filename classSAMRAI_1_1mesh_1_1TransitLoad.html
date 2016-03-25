@@ -54,8 +54,10 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a84c2cec640f254eb31f7f1ae69c238f4">~TransitLoad</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a25b686e4da587cef70252ec908b86ee2">adjustLoad</a> (<a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html">TransitLoad</a> &amp;hold_bin, double ideal_load, double low_load, double high_load)=0</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Adjust the load in this TransitSet by moving work between it and another TransitSet.  <a href="#a25b686e4da587cef70252ec908b86ee2"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a95150d1e1a88db69d9a36ebd9bf6bf8f">assignToLocalAndPopulateMaps</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balanced_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">hier::MappingConnector</a> &amp;balanced_to_unbalanced, <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">hier::MappingConnector</a> &amp;unbalanced_to_balanced, double flexible_load_tol=0.0)=0</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assign contents to local process and populate the balanced&lt;==&gt;unbalanced maps.  <a href="#a95150d1e1a88db69d9a36ebd9bf6bf8f"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ae64bded64f836423f2f1f377d318b5dc">assignToLocal</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balanced_box_level, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;unbalanced_box_level, double flexible_load_tol=0.0, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;alt_mpi=<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a>(MPI_COMM_NULL))=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assign contents to local process.  <a href="#ae64bded64f836423f2f1f377d318b5dc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ac1fb9621253eabd688c014bd03b85dcb">assignToLocalAndPopulateMaps</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;balanced_box_level, <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">hier::MappingConnector</a> &amp;balanced_to_unbalanced, <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnector.html">hier::MappingConnector</a> &amp;unbalanced_to_balanced, double flexible_load_tol=0.0, const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;alt_mpi=<a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a>(MPI_COMM_NULL))=0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assign contents to local process and populate the balanced&lt;==&gt;unbalanced maps.  <a href="#ac1fb9621253eabd688c014bd03b85dcb"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Methods required by prototype design pattern</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpe62b7c444e2790fe2e63e0386f993354"></a> </p>
 <br/><br/></div></td></tr>
@@ -116,7 +118,7 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <li>First, it's a container of loads that move around. The implementation may represent the work however it wants and should be able to shift load from one container to another. See <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a25b686e4da587cef70252ec908b86ee2" title="Adjust the load in this TransitSet by moving work between it and another TransitSet...">adjustLoad()</a>.</li>
 </ul>
 <ul>
-<li>Second, it generates the mappings between the pre- and post-balance BoxLevels. It must have this responsibility because the implementation alone knows how the work is represented. See <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a95150d1e1a88db69d9a36ebd9bf6bf8f" title="Assign contents to local process and populate the balanced&lt;==&gt;unbalanced maps...">assignToLocalAndPopulateMaps()</a>.</li>
+<li>Second, it generates the mappings between the pre- and post-balance BoxLevels. It must have this responsibility because the implementation alone knows how the work is represented. See <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#ac1fb9621253eabd688c014bd03b85dcb" title="Assign contents to local process and populate the balanced&lt;==&gt;unbalanced maps...">assignToLocalAndPopulateMaps()</a>.</li>
 </ul>
 <p>For usage examples, see <a class="el" href="classSAMRAI_1_1mesh_1_1TreeLoadBalancer.html" title="Provides load balancing routines for AMR hierarchy by implemementing the LoadBalancerStrategy...">mesh::TreeLoadBalancer</a>. </p>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
@@ -235,7 +237,7 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 
 <p>Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a2a7bd7e398e6d4a2dc1b5cd067f846d3">SAMRAI::mesh::BoxTransitSet</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#a3456a0440ca485a0115f9954f040f657">SAMRAI::mesh::VoucherTransitLoad</a>.</p>
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00696">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>, <a class="el" href="CascadePartitionerTree_8C_source.html#l00189">SAMRAI::mesh::CascadePartitionerTree::distributeLoad()</a>, <a class="el" href="CascadePartitionerTree_8C_source.html#l00685">SAMRAI::mesh::CascadePartitionerTree::printClassData()</a>, and <a class="el" href="TransitLoad_8C_source.html#l00053">recursivePrint()</a>.</p>
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00758">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>, <a class="el" href="CascadePartitionerTree_8C_source.html#l00189">SAMRAI::mesh::CascadePartitionerTree::distributeLoad()</a>, <a class="el" href="CascadePartitionerTree_8C_source.html#l00764">SAMRAI::mesh::CascadePartitionerTree::printClassData()</a>, and <a class="el" href="TransitLoad_8C_source.html#l00053">recursivePrint()</a>.</p>
 
 </div>
 </div>
@@ -259,6 +261,8 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 
 <p>Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a72ba240597139f5dd3f8514ab6d277f4">SAMRAI::mesh::BoxTransitSet</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#aaea9b78378d24ef8890c66fc32cd4683">SAMRAI::mesh::VoucherTransitLoad</a>.</p>
 
+<p>Referenced by <a class="el" href="CascadePartitionerTree_8C_source.html#l00189">SAMRAI::mesh::CascadePartitionerTree::distributeLoad()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="ad3f85694570866b2b6bfb7f45a0fe202"></a><!-- doxytag: member="SAMRAI::mesh::TransitLoad::insertAll" ref="ad3f85694570866b2b6bfb7f45a0fe202" args="(TransitLoad &amp;other)=0" -->
@@ -281,7 +285,7 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <p>Changes to other as an implementation side-effect is allowed. This and other are guaranteed to be the same concrete type.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>[i] Other <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a> container whose implementation matches this one. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>other</em>&nbsp;</td><td>[in] Other <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a> container whose implementation matches this one. </td></tr>
   </table>
   </dd>
 </dl>
@@ -355,7 +359,7 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 
 <p>References <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html#a89bbb90a70565df2fa528704ca03b9a3">getNumberOfItems()</a>.</p>
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00696">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>.</p>
+<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00758">SAMRAI::mesh::VoucherTransitLoad::adjustLoad()</a>.</p>
 
 </div>
 </div>
@@ -377,6 +381,8 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <p>Empty the container. </p>
 
 <p>Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a7edf7d618a15954fd223a2ba3b16073e">SAMRAI::mesh::BoxTransitSet</a>.</p>
+
+<p>Referenced by <a class="el" href="CascadePartitionerTree_8C_source.html#l00189">SAMRAI::mesh::CascadePartitionerTree::distributeLoad()</a>.</p>
 
 </div>
 </div>
@@ -475,7 +481,60 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 
 </div>
 </div>
-<a class="anchor" id="a95150d1e1a88db69d9a36ebd9bf6bf8f"></a><!-- doxytag: member="SAMRAI::mesh::TransitLoad::assignToLocalAndPopulateMaps" ref="a95150d1e1a88db69d9a36ebd9bf6bf8f" args="(hier::BoxLevel &amp;balanced_box_level, hier::MappingConnector &amp;balanced_to_unbalanced, hier::MappingConnector &amp;unbalanced_to_balanced, double flexible_load_tol=0.0)=0" -->
+<a class="anchor" id="ae64bded64f836423f2f1f377d318b5dc"></a><!-- doxytag: member="SAMRAI::mesh::TransitLoad::assignToLocal" ref="ae64bded64f836423f2f1f377d318b5dc" args="(hier::BoxLevel &amp;balanced_box_level, const hier::BoxLevel &amp;unbalanced_box_level, double flexible_load_tol=0.0, const tbox::SAMRAI_MPI &amp;alt_mpi=tbox::SAMRAI_MPI(MPI_COMM_NULL))=0" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void SAMRAI::mesh::TransitLoad::assignToLocal </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>balanced_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">hier::BoxLevel</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>unbalanced_box_level</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>flexible_load_tol</em> = <code>0.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>alt_mpi</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a>(MPI_COMM_NULL)</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [pure virtual]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Assign contents to local process. </p>
+<p>This method may use communication.</p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balanced_box_level</em>&nbsp;</td><td>Empty BoxLevel to populate with the contents of this <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a>.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>unbalanced_box_level</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>flexible_load_tol</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>alt_mpi</em>&nbsp;</td><td>Alternate SAMRAI_MPI to use for communication if needed, overriding that in balanced_box_level. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a38d938ed0b8e7a441808209c63599549">SAMRAI::mesh::BoxTransitSet</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#a007c71d9ccc2b35cdc1f62c924ff4f41">SAMRAI::mesh::VoucherTransitLoad</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ac1fb9621253eabd688c014bd03b85dcb"></a><!-- doxytag: member="SAMRAI::mesh::TransitLoad::assignToLocalAndPopulateMaps" ref="ac1fb9621253eabd688c014bd03b85dcb" args="(hier::BoxLevel &amp;balanced_box_level, hier::MappingConnector &amp;balanced_to_unbalanced, hier::MappingConnector &amp;unbalanced_to_balanced, double flexible_load_tol=0.0, const tbox::SAMRAI_MPI &amp;alt_mpi=tbox::SAMRAI_MPI(MPI_COMM_NULL))=0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -501,7 +560,13 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">double&nbsp;</td>
-          <td class="paramname"> <em>flexible_load_tol</em> = <code>0.0</code></td><td>&nbsp;</td>
+          <td class="paramname"> <em>flexible_load_tol</em> = <code>0.0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>alt_mpi</em> = <code><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a>(MPI_COMM_NULL)</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -513,18 +578,19 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <div class="memdoc">
 
 <p>Assign contents to local process and populate the balanced&lt;==&gt;unbalanced maps. </p>
-<p>This method uses communication to set up the map.</p>
+<p>This method may use communication.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balanced_box_level</em>&nbsp;</td><td>Empty BoxLevel to populate with the contents of this <a class="el" href="classSAMRAI_1_1mesh_1_1TransitLoad.html" title="Base class for container of work in transit during partitioning.">TransitLoad</a>.</td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balanced_to_unbalanced</em>&nbsp;</td><td>Empty Connector to populate with the balanced---&gt;unbalanced edges.</td></tr>
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>unbalanced_to_balanced</em>&nbsp;</td><td>Empty Connector to populate with the unbalanced---&gt;balanced edges.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>flexible_load_tol</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>alt_mpi</em>&nbsp;</td><td>Alternate SAMRAI_MPI to use for communication if needed, overriding that in balanced_box_level. </td></tr>
   </table>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a24fe2ba23bf6050dc581ceae8e7c49d9">SAMRAI::mesh::BoxTransitSet</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#a4a90f1b4558b36d66bc20b5b90f848bd">SAMRAI::mesh::VoucherTransitLoad</a>.</p>
+<p>Implemented in <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a4a9bfd66bd8b0e207d61087bf3624b8b">SAMRAI::mesh::BoxTransitSet</a>, and <a class="el" href="classSAMRAI_1_1mesh_1_1VoucherTransitLoad.html#ac2df82d4c3f95e89fe3e8c3f3e431e01">SAMRAI::mesh::VoucherTransitLoad</a>.</p>
 
 </div>
 </div>
@@ -546,8 +612,6 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 
 <p>Whether to allow box breaking. </p>
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00204">SAMRAI::mesh::VoucherTransitLoad::assignToLocalAndPopulateMaps()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a376beb14f249996d88fec9b169274761"></a><!-- doxytag: member="SAMRAI::mesh::TransitLoad::getAllowBoxBreaking" ref="a376beb14f249996d88fec9b169274761" args="() const " -->
@@ -567,7 +631,7 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 
 <p>Whether object may break up boxes. </p>
 
-<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00528">SAMRAI::mesh::BoxTransitSet::adjustLoad()</a>, and <a class="el" href="VoucherTransitLoad_8C_source.html#l00204">SAMRAI::mesh::VoucherTransitLoad::assignToLocalAndPopulateMaps()</a>.</p>
+<p>Referenced by <a class="el" href="BoxTransitSet_8C_source.html#l00564">SAMRAI::mesh::BoxTransitSet::adjustLoad()</a>.</p>
 
 </div>
 </div>
@@ -590,8 +654,6 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <p>Set threshold for resisting small and thin boxes. </p>
 <p>This is not a hard limit, but implementations should use it to determine when a box is getting too small in any coordinate direction. Default initial threshold is very small (practically unlimited). </p>
 
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00204">SAMRAI::mesh::VoucherTransitLoad::assignToLocalAndPopulateMaps()</a>.</p>
-
 </div>
 </div>
 <a class="anchor" id="a17c62da739bce53e942cae86c121a69b"></a><!-- doxytag: member="SAMRAI::mesh::TransitLoad::getThresholdWidth" ref="a17c62da739bce53e942cae86c121a69b" args="() const " -->
@@ -610,8 +672,6 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <div class="memdoc">
 
 <p>Return the threshold width for resisting small and thin boxes. </p>
-
-<p>Referenced by <a class="el" href="VoucherTransitLoad_8C_source.html#l00204">SAMRAI::mesh::VoucherTransitLoad::assignToLocalAndPopulateMaps()</a>.</p>
 
 </div>
 </div>
@@ -736,7 +796,7 @@ Inheritance diagram for SAMRAI::mesh::TransitLoad:</div>
 <li>source/SAMRAI/mesh/<a class="el" href="TransitLoad_8C.html">TransitLoad.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

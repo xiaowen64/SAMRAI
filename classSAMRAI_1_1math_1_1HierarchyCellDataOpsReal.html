@@ -69,7 +69,7 @@ Inheritance diagram for SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;:</d
 <tr><td class="memItemLeft" align="right" valign="top">TYPE&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a19e3246b54515800d4064f0ef21cf119">min</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">TYPE&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a7cc690e1a9b35bb7ac79ea67316835e4">max</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#aa28d66ab68c040175112813feda9291c">setRandomValues</a> (const int data_id, const TYPE &amp;width, const TYPE &amp;low, const bool interior_only=true) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#af15a57f8ead42bd92fb1201235604f5f">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#ad7a805f8dddd99c950544a74e75465dd">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a26879fb2f6083ab189a9946a6928340d">sumControlVolumes</a> (const int data_id, const int vol_id) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a4f2ebbc6b65ea40418e9fb48d309b592">L1Norm</a> (const int data_id, const int vol_id=-1, bool local_only=false) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a038f626b624cd49ae99898564ed278ef">L2Norm</a> (const int data_id, const int vol_id=-1, bool local_only=false) const </td></tr>
@@ -1089,14 +1089,14 @@ template&lt;class TYPE &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="af15a57f8ead42bd92fb1201235604f5f"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::numberOfEntries" ref="af15a57f8ead42bd92fb1201235604f5f" args="(const int data_id, const bool interior_only=true) const " -->
+<a class="anchor" id="ad7a805f8dddd99c950544a74e75465dd"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsReal::numberOfEntries" ref="ad7a805f8dddd99c950544a74e75465dd" args="(const int data_id, const bool interior_only=true) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">SAMRAI::math::HierarchyCellDataOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html">SAMRAI::math::HierarchyCellDataOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>data_id</em>, </td>
@@ -1120,9 +1120,9 @@ template&lt;class TYPE &gt; </div>
 <dd>
 (d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= d_coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a25907f7dd4b9362776de9d2f6c2cb7cf">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a078465e80470d620c46db51f04659151">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a6062b5d10f7706744b0b7ea0bb6729eb">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00052">MPI_INT</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyCellDataOpsReal_8C_source.html#l00948">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;::RMSNorm()</a>, and <a class="el" href="HierarchyCellDataOpsReal_8C_source.html#l00963">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;::weightedRMSNorm()</a>.</p>
 
@@ -1736,7 +1736,7 @@ template&lt;class TYPE &gt; </div>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyCellDataOpsReal_8C.html">HierarchyCellDataOpsReal.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

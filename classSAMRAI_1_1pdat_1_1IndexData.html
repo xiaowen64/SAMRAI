@@ -55,7 +55,7 @@ BOX_GEOMETRY &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="e
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a783668a670f8670f6abe44d95fdbfdf7">copy</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a16d1e1fa67694b8436d6227d81e49a02">copy2</a> (<a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html">hier::PatchData</a> &amp;dst, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#ae3f83e42f45ec7a0ada7cf37b1891b47">canEstimateStreamSizeFromBox</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#ac1ed20b9b3eebdf3da00077066b22cfa">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a855cfd8cc4b4d4e2061ac7d293b99889">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#aa65a4529dba173d4e15c2b8074f93406">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a93cd47ba0dd29264f7c08163a58aa6dd">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#ac8c2a5fcd8eebfaeffb94f2252430c42">appendItem</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> &amp;index, const TYPE &amp;item)</td></tr>
@@ -67,7 +67,7 @@ BOX_GEOMETRY &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="e
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a4ad2ee1b92fc104d366069ea0ad2a3dd">replaceAppendItem</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> &amp;index, const TYPE &amp;item)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a7d1158a59d3f9d6a78a31b45e34a077d">replaceAppendItemPointer</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> &amp;index, TYPE *item)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a24b91487eb39e85f6e98847bb8ececb5">removeItem</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a> &amp;index)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#aeb00a0856e22d8a17e6e5d21de8bc539">getNumberOfItems</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a93b988428cd67cf07a42ec5959d21bd1">getNumberOfItems</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a6e06c5fac816fce6403fdfaa83539225">removeInsideBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#ad39269d851f7a469fa6f41c0b99dcc46">removeOutsideBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a144b1148c739fd9e6b50d3012f85bc38">removeGhostItems</a> ()</td></tr>
@@ -95,7 +95,7 @@ BOX_GEOMETRY &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="e
 <li><b>-</b> Default constructor (taking no arguments).</li>
 <li><b>-</b> Assignment operator; i.e., TYPE&amp; operator=(const TYPE&amp; rhs)</li>
 <li><b>-</b> Copy; copySourceItem(const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">hier::Index</a>&amp; index, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; src_offset, const TYPE&amp; src_item)</li>
-<li><b>-</b> Return size of data; size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#ac1ed20b9b3eebdf3da00077066b22cfa">getDataStreamSize()</a></li>
+<li><b>-</b> Return size of data; size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a855cfd8cc4b4d4e2061ac7d293b99889">getDataStreamSize()</a></li>
 <li><b>-</b> Pack data into message stream; i.e., packStream(MessageStream&amp; stream,</li>
 <li><b>-</b> Unpack data from message stream; i.e., unpackStream(MessageStream&amp; stream, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a>&amp; offset)</li>
 <li><b>-</b> Write to restart; putToRestart(boost::shared_ptr&lt;tbox::Database&gt;&amp; restart_db)</li>
@@ -270,7 +270,7 @@ dynamic_cast&lt;const IndexData&lt;TYPE, BOX_GEOMETRY&gt; *&gt;(&amp;src) != 0 <
 <dd>
 dynamic_cast&lt;const typename BOX_GEOMETRY::Overlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
-<p>References <a class="el" href="IndexData_8C_source.html#l00487">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::appendItem()</a>, <a class="el" href="Box_8h_source.html#l00711">SAMRAI::hier::Box::contains()</a>, <a class="el" href="PatchData_8h_source.html#l00093">SAMRAI::hier::PatchData::getGhostBox()</a>, <a class="el" href="Box_8h_source.html#l00667">SAMRAI::hier::Box::offset()</a>, <a class="el" href="IndexData_8C_source.html#l00806">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeInsideBox()</a>, <a class="el" href="Box_8h_source.html#l01043">SAMRAI::hier::Box::shift()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="IndexData_8C_source.html#l00487">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::appendItem()</a>, <a class="el" href="Box_8h_source.html#l00738">SAMRAI::hier::Box::contains()</a>, <a class="el" href="PatchData_8h_source.html#l00093">SAMRAI::hier::PatchData::getGhostBox()</a>, <a class="el" href="Box_8h_source.html#l00694">SAMRAI::hier::Box::offset()</a>, <a class="el" href="IndexData_8C_source.html#l00806">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeInsideBox()</a>, <a class="el" href="Box_8h_source.html#l01076">SAMRAI::hier::Box::shift()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -329,14 +329,14 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="ac1ed20b9b3eebdf3da00077066b22cfa"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getDataStreamSize" ref="ac1ed20b9b3eebdf3da00077066b22cfa" args="(const hier::BoxOverlap &amp;overlap) const " -->
+<a class="anchor" id="a855cfd8cc4b4d4e2061ac7d293b99889"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getDataStreamSize" ref="a855cfd8cc4b4d4e2061ac7d293b99889" args="(const hier::BoxOverlap &amp;overlap) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getDataStreamSize </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getDataStreamSize </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em></td>
@@ -349,9 +349,9 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 <p>Calculate the number of bytes needed to stream the data lying in the specified box domain.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const typename BOX_GEOMETRY::Overlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a79afb3717c2858e760eb43d1c92e8aed">SAMRAI::hier::PatchData</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a53047fb5af2549e50c5a717beeb0caa7">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="Box_8C_source.html#l01115">SAMRAI::hier::Box::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Box_8C_source.html#l01125">SAMRAI::hier::Box::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="IndexData_8C_source.html#l00988">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::getItem()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l01043">SAMRAI::hier::Box::shift()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Box_8C_source.html#l01135">SAMRAI::hier::Box::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Box_8C_source.html#l01145">SAMRAI::hier::Box::end()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="IndexData_8C_source.html#l00988">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::getItem()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l01076">SAMRAI::hier::Box::shift()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -386,7 +386,7 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a9b73721b1f1f580e99626de07f91d950">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Box_8h_source.html#l00711">SAMRAI::hier::Box::contains()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="MessageStream_8h_source.html#l00188">SAMRAI::tbox::MessageStream::pack()</a>, <a class="el" href="Box_8h_source.html#l01043">SAMRAI::hier::Box::shift()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Box_8h_source.html#l00738">SAMRAI::hier::Box::contains()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="PatchData_8h_source.html#l00083">SAMRAI::hier::PatchData::getBox()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="MessageStream_8h_source.html#l00187">SAMRAI::tbox::MessageStream::pack()</a>, <a class="el" href="Box_8h_source.html#l01076">SAMRAI::hier::Box::shift()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -421,7 +421,7 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#ada56faab0c403e0c8b2e95ad28515a00">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="IndexData_8C_source.html#l00528">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::addItem()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IndexData_8C_source.html#l00806">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeInsideBox()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00248">SAMRAI::tbox::MessageStream::unpack()</a>.</p>
+<p>References <a class="el" href="IndexData_8C_source.html#l00528">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::addItem()</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IndexData_8C_source.html#l00806">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeInsideBox()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00247">SAMRAI::tbox::MessageStream::unpack()</a>.</p>
 
 </div>
 </div>
@@ -767,14 +767,14 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="aeb00a0856e22d8a17e6e5d21de8bc539"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getNumberOfItems" ref="aeb00a0856e22d8a17e6e5d21de8bc539" args="() const " -->
+<a class="anchor" id="a93b988428cd67cf07a42ec5959d21bd1"></a><!-- doxytag: member="SAMRAI::pdat::IndexData::getNumberOfItems" ref="a93b988428cd67cf07a42ec5959d21bd1" args="() const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getNumberOfItems </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html">SAMRAI::pdat::IndexData</a>&lt; TYPE, BOX_GEOMETRY &gt;::getNumberOfItems </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -810,7 +810,7 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 <p>Remove (deallocate) any items in the irregular index set located in the index space of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00711">SAMRAI::hier::Box::contains()</a>, <a class="el" href="IndexData_8C_source.html#l00680">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeItem()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00738">SAMRAI::hier::Box::contains()</a>, <a class="el" href="IndexData_8C_source.html#l00680">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeItem()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 <p>Referenced by <a class="el" href="IndexData_8C_source.html#l00237">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::copy()</a>, <a class="el" href="IndexData_8C_source.html#l00855">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeAllItems()</a>, and <a class="el" href="IndexData_8C_source.html#l00440">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::unpackStream()</a>.</p>
 
@@ -836,7 +836,7 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 <p>Remove (deallocate) any items in the irregular index set located outside of the index space of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00711">SAMRAI::hier::Box::contains()</a>, <a class="el" href="IndexData_8C_source.html#l00680">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeItem()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00738">SAMRAI::hier::Box::contains()</a>, <a class="el" href="IndexData_8C_source.html#l00680">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeItem()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 <p>Referenced by <a class="el" href="IndexData_8C_source.html#l00848">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::removeGhostItems()</a>.</p>
 
@@ -964,7 +964,7 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a78b67dc5c322c4def87ae730b4092696">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="IndexData_8C_source.html#l00487">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::appendItem()</a>, <a class="el" href="IntVector_8C_source.html#l00136">SAMRAI::hier::IntVector::getFromRestart()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="IndexData_8C_source.html#l00487">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::appendItem()</a>, <a class="el" href="IntVector_8C_source.html#l00136">SAMRAI::hier::IntVector::getFromRestart()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -990,7 +990,7 @@ template&lt;class TYPE , class BOX_GEOMETRY &gt; </div>
 
 <p>Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a46f69705aaa6831bf10978dd2973f375">SAMRAI::hier::PatchData</a>.</p>
 
-<p>References <a class="el" href="IndexData_8C_source.html#l00988">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::getItem()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="IndexData_8C_source.html#l00988">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::getItem()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -1015,7 +1015,7 @@ template&lt;class TYPE, class BOX_GEOMETRY&gt; </div>
 <li>source/SAMRAI/pdat/<a class="el" href="IndexData_8C.html">IndexData.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

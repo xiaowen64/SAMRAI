@@ -75,8 +75,8 @@
 <tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a3de374a3230456c3358ec6c878428963">numberOfPendingRequests</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of pending <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ac4f0d990b03eadfa60b081861dfa3748">SAMRAI_MPI::Request</a> objects on the stage.  <a href="#a3de374a3230456c3358ec6c878428963"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">class&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a92fd2d5106654703285851462a1f87a0">Member</a></td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html" title="Something on a stage, using MPI requests and statuses provided by the stage.">Member</a> is a friend so it can access private look-up and stage/destage methods. This avoids making those private methods public. This friendship is safe because <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html" title="Something on a stage, using MPI requests and statuses provided by the stage.">Member</a> is an integral part of the stage code.  <a href="#a92fd2d5106654703285851462a1f87a0"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">struct&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a7e310b7cc7c7bc63e0407731103cdde5">Member</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight"><a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html" title="Something on a stage, using MPI requests and statuses provided by the stage.">Member</a> is a friend so it can access private look-up and stage/destage methods. This avoids making those private methods public. This friendship is safe because <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html" title="Something on a stage, using MPI requests and statuses provided by the stage.">Member</a> is an integral part of the stage code.  <a href="#a7e310b7cc7c7bc63e0407731103cdde5"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Stage multiple non-blocking MPI communications so that codes waiting for them to complete can advance as their respective MPI communication operations are completed. </p>
@@ -153,7 +153,7 @@
 <p>This method uses MPI_Waitany, which may be prone to starvation. When a process is potentially receiving multiple messages from another processor, it is better to use <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#a0a92d78e5dfefa658d6a58552a8f4742" title="Advance to completion one or more Members (any Members) that are currently waiting...">advanceSome()</a>, which uses MPI_Waitsome, which avoids starvation.</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if there are still completed Members in the completion queue. </dd></dl>
 
-<p>References <a class="el" href="AsyncCommStage_8C_source.html#l00614">hasPendingRequests()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00043">MPI_ERR_IN_STATUS</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00138">SAMRAI::tbox::SAMRAI_MPI::Status::MPI_ERROR</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00042">MPI_REQUEST_NULL</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00039">MPI_SUCCESS</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00044">MPI_UNDEFINED</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00763">SAMRAI::tbox::SAMRAI_MPI::usingMPI()</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l00545">SAMRAI::tbox::SAMRAI_MPI::Waitany()</a>.</p>
+<p>References <a class="el" href="AsyncCommStage_8C_source.html#l00614">hasPendingRequests()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00043">MPI_ERR_IN_STATUS</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00138">SAMRAI::tbox::SAMRAI_MPI::Status::MPI_ERROR</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00042">MPI_REQUEST_NULL</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00039">MPI_SUCCESS</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00044">MPI_UNDEFINED</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00838">SAMRAI::tbox::SAMRAI_MPI::usingMPI()</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l00539">SAMRAI::tbox::SAMRAI_MPI::Waitany()</a>.</p>
 
 </div>
 </div>
@@ -176,7 +176,7 @@
 <p>The completed Members are accessible through <a class="el" href="classSAMRAI_1_1tbox_1_1AsyncCommStage.html#abb8d37947f445f7b0d56d6f4ca2931f4">popCompletionQueue()</a>.</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if there are still completed Members in the completion queue. </dd></dl>
 
-<p>References <a class="el" href="AsyncCommStage_8C_source.html#l00778">SAMRAI::tbox::AsyncCommStage::Member::hasPendingRequests()</a>, <a class="el" href="AsyncCommStage_8C_source.html#l00614">hasPendingRequests()</a>, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#a377ac960e58fbaa8c5d528c86c2d6100">SAMRAI::tbox::AsyncCommStage::Member::isDone()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00043">MPI_ERR_IN_STATUS</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00042">MPI_REQUEST_NULL</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00039">MPI_SUCCESS</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#afb9f55fd72f7f9713b0138e8cad7c87e">SAMRAI::tbox::AsyncCommStage::Member::proceedToNextWait()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00763">SAMRAI::tbox::SAMRAI_MPI::usingMPI()</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l00574">SAMRAI::tbox::SAMRAI_MPI::Waitsome()</a>.</p>
+<p>References <a class="el" href="AsyncCommStage_8C_source.html#l00778">SAMRAI::tbox::AsyncCommStage::Member::hasPendingRequests()</a>, <a class="el" href="AsyncCommStage_8C_source.html#l00614">hasPendingRequests()</a>, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#a377ac960e58fbaa8c5d528c86c2d6100">SAMRAI::tbox::AsyncCommStage::Member::isDone()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00043">MPI_ERR_IN_STATUS</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00042">MPI_REQUEST_NULL</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00039">MPI_SUCCESS</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#afb9f55fd72f7f9713b0138e8cad7c87e">SAMRAI::tbox::AsyncCommStage::Member::proceedToNextWait()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00838">SAMRAI::tbox::SAMRAI_MPI::usingMPI()</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l00568">SAMRAI::tbox::SAMRAI_MPI::Waitsome()</a>.</p>
 
 <p>Referenced by <a class="el" href="AsyncCommStage_8C_source.html#l00330">advanceAll()</a>, <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="BaseConnectorAlgorithm_8C_source.html#l00174">SAMRAI::hier::BaseConnectorAlgorithm::receiveAndUnpack()</a>.</p>
 
@@ -350,7 +350,7 @@
 <p>The timer is used only for the MPI communication wait. Timing does not include time the stage Members use to process the messages (the time spent in <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html#afb9f55fd72f7f9713b0138e8cad7c87e" title="If current MPI requests have completed, proceed to the next communication wait (or...">Member::proceedToNextWait()</a>).</p>
 <p>If not set, or NULL is given, none will be used. </p>
 
-<p>Referenced by <a class="el" href="CascadePartitioner_8C_source.html#l00059">SAMRAI::mesh::CascadePartitioner::CascadePartitioner()</a>, <a class="el" href="Schedule_8C_source.html#l00605">SAMRAI::tbox::Schedule::setTimerPrefix()</a>, <a class="el" href="BergerRigoutsos_8C_source.html#l01107">SAMRAI::mesh::BergerRigoutsos::setTimerPrefix()</a>, and <a class="el" href="BaseConnectorAlgorithm_8C_source.html#l00041">SAMRAI::hier::BaseConnectorAlgorithm::setupCommunication()</a>.</p>
+<p>Referenced by <a class="el" href="CascadePartitioner_8C_source.html#l00059">SAMRAI::mesh::CascadePartitioner::CascadePartitioner()</a>, <a class="el" href="Schedule_8C_source.html#l00617">SAMRAI::tbox::Schedule::setTimerPrefix()</a>, <a class="el" href="BergerRigoutsos_8C_source.html#l01071">SAMRAI::mesh::BergerRigoutsos::setTimerPrefix()</a>, and <a class="el" href="BaseConnectorAlgorithm_8C_source.html#l00041">SAMRAI::hier::BaseConnectorAlgorithm::setupCommunication()</a>.</p>
 
 </div>
 </div>
@@ -458,12 +458,12 @@
 </div>
 </div>
 <hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="a92fd2d5106654703285851462a1f87a0"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member" ref="a92fd2d5106654703285851462a1f87a0" args="" -->
+<a class="anchor" id="a7e310b7cc7c7bc63e0407731103cdde5"></a><!-- doxytag: member="SAMRAI::tbox::AsyncCommStage::Member" ref="a7e310b7cc7c7bc63e0407731103cdde5" args="" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">friend class <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a><code> [friend]</code></td>
+          <td class="memname">friend struct <a class="el" href="structSAMRAI_1_1tbox_1_1AsyncCommStage_1_1Member.html">Member</a><code> [friend]</code></td>
         </tr>
       </table>
 </div>
@@ -478,7 +478,7 @@
 <li>source/SAMRAI/tbox/<a class="el" href="AsyncCommStage_8C.html">AsyncCommStage.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

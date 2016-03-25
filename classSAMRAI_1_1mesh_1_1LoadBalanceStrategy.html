@@ -208,7 +208,7 @@ Inheritance diagram for SAMRAI::mesh::LoadBalanceStrategy:</div>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_box_level</em>&nbsp;</td><td>Input BoxLevel. On input, this is the pre-balance BoxLevel. On output, it is the balanced BoxLevel.</td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td>Connector between the balance_box_level and some given "anchor box_level". This must be accurate on input. On putput, connects the newly balanced balance_box_level to the anchor box_level.</td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td>Connector between the balance_box_level and some given "anchor box_level". This must be accurate on input. On putput, connects the newly balanced balance_box_level to the anchor box_level. If set to NULL, this parameter is ignored and Connector update is skipped.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The hierarchy where the work distribution data lives.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td>The number of the level where the work distribution data lives.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_size</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> representing mimimum box size.</td></tr>
@@ -276,7 +276,7 @@ Inheritance diagram for SAMRAI::mesh::LoadBalanceStrategy:</div>
 <li>source/SAMRAI/mesh/<a class="el" href="LoadBalanceStrategy_8C.html">LoadBalanceStrategy.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

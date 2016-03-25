@@ -45,8 +45,8 @@
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html#af64146241f1c674c38bb4f8ce68dfd5c">operator==</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a> &amp;iterator) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html#a239da8aada09e1cef74caa15c705aba7">operator!=</a> (const <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a> &amp;iterator) const </td></tr>
 <tr><td colspan="2"><h2>Friends</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html#a631fc56738044421448b71e3517a2525">FaceGeometry::begin</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int axis)</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html#afbd63c0d3c4e09bb2b0ec71df57d62c0">FaceGeometry::end</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int axis)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html#ac5fc9fae65c5e001890f0a7333f2d30e">FaceGeometry::begin</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> axis)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html#adba11abe79c22bbffa5daca17e06c729">FaceGeometry::end</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> axis)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Class <a class="el" href="classSAMRAI_1_1pdat_1_1FaceIterator.html">FaceIterator</a> is an iterator that provides methods for stepping through the index space associated with a face centered box. The indices are enumerated in column-major (e.g., Fortran) order. The iterator should be used as follows: </p>
@@ -173,7 +173,7 @@
 <div class="memdoc">
 <p>Pre-increment the iterator to point to the next index in the box. </p>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 </div>
 </div>
@@ -194,7 +194,7 @@
 <div class="memdoc">
 <p>Post-increment the iterator to point to the next index in the box. </p>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 </div>
 </div>
@@ -215,7 +215,7 @@
 <div class="memdoc">
 <p>Test two iterators for equality (same index value). </p>
 
-<p>References <a class="el" href="Box_8h_source.html#l00378">SAMRAI::hier::Box::isIdEqual()</a>, <a class="el" href="Box_8h_source.html#l00740">SAMRAI::hier::Box::isSpatiallyEqual()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00383">SAMRAI::hier::Box::isIdEqual()</a>, <a class="el" href="Box_8h_source.html#l00767">SAMRAI::hier::Box::isSpatiallyEqual()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -236,12 +236,12 @@
 <div class="memdoc">
 <p>Test two iterators for inequality (different index values). </p>
 
-<p>References <a class="el" href="Box_8h_source.html#l00378">SAMRAI::hier::Box::isIdEqual()</a>, <a class="el" href="Box_8h_source.html#l00740">SAMRAI::hier::Box::isSpatiallyEqual()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00383">SAMRAI::hier::Box::isIdEqual()</a>, <a class="el" href="Box_8h_source.html#l00767">SAMRAI::hier::Box::isSpatiallyEqual()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
 <hr/><h2>Friends And Related Function Documentation</h2>
-<a class="anchor" id="a631fc56738044421448b71e3517a2525"></a><!-- doxytag: member="SAMRAI::pdat::FaceIterator::FaceGeometry::begin" ref="a631fc56738044421448b71e3517a2525" args="(const hier::Box &amp;box, int axis)" -->
+<a class="anchor" id="ac5fc9fae65c5e001890f0a7333f2d30e"></a><!-- doxytag: member="SAMRAI::pdat::FaceIterator::FaceGeometry::begin" ref="ac5fc9fae65c5e001890f0a7333f2d30e" args="(const hier::Box &amp;box, tbox::Dimension::dir_t axis)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -254,7 +254,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>axis</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -268,7 +268,7 @@
 
 </div>
 </div>
-<a class="anchor" id="afbd63c0d3c4e09bb2b0ec71df57d62c0"></a><!-- doxytag: member="SAMRAI::pdat::FaceIterator::FaceGeometry::end" ref="afbd63c0d3c4e09bb2b0ec71df57d62c0" args="(const hier::Box &amp;box, int axis)" -->
+<a class="anchor" id="adba11abe79c22bbffa5daca17e06c729"></a><!-- doxytag: member="SAMRAI::pdat::FaceIterator::FaceGeometry::end" ref="adba11abe79c22bbffa5daca17e06c729" args="(const hier::Box &amp;box, tbox::Dimension::dir_t axis)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -281,7 +281,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>axis</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -300,7 +300,7 @@
 <li>source/SAMRAI/pdat/<a class="el" href="FaceIterator_8C.html">FaceIterator.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

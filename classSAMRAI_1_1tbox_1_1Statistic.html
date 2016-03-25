@@ -48,7 +48,7 @@
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#ab531dd70696f6d56916b2c2a71f264fe">recordProcStat</a> (double value, int seq_num=-1)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#a40df31ced40d0a05df6deb66acdc3132">recordPatchStat</a> (int patch_num, double value, int seq_num)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#a3c489fb098044945f9950fb8258ff5c8">canEstimateDataStreamSize</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#aa9b35300d5c97a078a7191b79e12fca7">getDataStreamSize</a> ()</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#a2bafdbcf3b8fdfc296f9bb52aae3ba2a">getDataStreamSize</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#ac5987455b321437de5afdc7dd41551dd">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> &amp;stream)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#a4c830bf6fcddd12d3fbfe1288a661f8e">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> &amp;stream)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#a93d91b17fd40975fd4ede2d5ac3dba2b">printClassData</a> (std::ostream &amp;stream, int precision=12) const </td></tr>
@@ -154,7 +154,7 @@ instance_id &gt; -1 </dd></dl>
 <div class="memdoc">
 <p>Return string name identifier for statistic object. </p>
 
-<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00365">printClassData()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l02281">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>.</p>
+<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00365">printClassData()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l02343">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>.</p>
 
 </div>
 </div>
@@ -194,7 +194,7 @@ instance_id &gt; -1 </dd></dl>
 <div class="memdoc">
 <p>Return integer instance identifier for statistic object. </p>
 
-<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00365">printClassData()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l02281">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>.</p>
+<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00365">printClassData()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l02343">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>.</p>
 
 </div>
 </div>
@@ -214,7 +214,7 @@ instance_id &gt; -1 </dd></dl>
 <div class="memdoc">
 <p>Return integer length of list of statistic sequence records. This value is either the length of the processor statistic list or the patch statistic list, whichever corresponds to the statistic type. </p>
 
-<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00365">printClassData()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l02281">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>.</p>
+<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00365">printClassData()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l02343">SAMRAI::mesh::GriddingAlgorithm::printStatistics()</a>.</p>
 
 </div>
 </div>
@@ -328,12 +328,12 @@ instance_id &gt; -1 </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="aa9b35300d5c97a078a7191b79e12fca7"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::getDataStreamSize" ref="aa9b35300d5c97a078a7191b79e12fca7" args="()" -->
+<a class="anchor" id="a2bafdbcf3b8fdfc296f9bb52aae3ba2a"></a><!-- doxytag: member="SAMRAI::tbox::Statistic::getDataStreamSize" ref="a2bafdbcf3b8fdfc296f9bb52aae3ba2a" args="()" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::tbox::Statistic::getDataStreamSize </td>
+          <td class="memname">size_t SAMRAI::tbox::Statistic::getDataStreamSize </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -342,7 +342,7 @@ instance_id &gt; -1 </dd></dl>
       </table>
 </div>
 <div class="memdoc">
-<p>Return integer number of bytes needed to stream the statistic data. This is the amount needed by the stat transaction class. </p>
+<p>Return number of bytes needed to stream the statistic data. This is the amount needed by the stat transaction class. </p>
 
 </div>
 </div>
@@ -364,7 +364,7 @@ instance_id &gt; -1 </dd></dl>
 <p>Pack contents of statistic data structure into message stream.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ab77c546bbc19ae9bae5c6480fba8c53a" title="Get the primary SAMRAI_MPI object owned by SAMRAI.">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() != 0 </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="MessageStream_8h_source.html#l00188">SAMRAI::tbox::MessageStream::pack()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="MessageStream_8h_source.html#l00187">SAMRAI::tbox::MessageStream::pack()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -386,7 +386,7 @@ instance_id &gt; -1 </dd></dl>
 <p>Unpack contents of statistic data structure from message stream.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ab77c546bbc19ae9bae5c6480fba8c53a" title="Get the primary SAMRAI_MPI object owned by SAMRAI.">SAMRAI_MPI::getSAMRAIWorld()</a>.getRank() == 0 </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="Statistic_8C_source.html#l00126">recordPatchStat()</a>, <a class="el" href="Statistic_8C_source.html#l00088">recordProcStat()</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, and <a class="el" href="MessageStream_8h_source.html#l00248">SAMRAI::tbox::MessageStream::unpack()</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, <a class="el" href="Statistic_8C_source.html#l00126">recordPatchStat()</a>, <a class="el" href="Statistic_8C_source.html#l00088">recordProcStat()</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, and <a class="el" href="MessageStream_8h_source.html#l00247">SAMRAI::tbox::MessageStream::unpack()</a>.</p>
 
 </div>
 </div>
@@ -520,7 +520,7 @@ instance_id &gt; -1 </dd></dl>
 <li>source/SAMRAI/tbox/<a class="el" href="Statistic_8C.html">Statistic.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

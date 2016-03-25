@@ -47,7 +47,7 @@ Inheritance diagram for SAMRAI::math::PatchNodeDataNormOpsReal&lt; TYPE &gt;:</d
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a27038b8d8b8683e7aac9c6cea847cfec">PatchNodeDataNormOpsReal</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a78a53942a470492a7ecbbb4313b8d51e">~PatchNodeDataNormOpsReal</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a72010ce64569f7e829e5fffce3dc2ce0">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#ab64672924ebb0131bece7bfd37614513">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#ad42a8e6dbeee4a7f2df5752710845c04">sumControlVolumes</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt; &amp;cvol, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a6d8d48b5e03aec74099d7e947572643e">abs</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;dst, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a831b14c36a1c2b740c9ec752add1b2fc">L1Norm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt;()) const </td></tr>
@@ -107,14 +107,14 @@ template&lt;class TYPE &gt; </div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a72010ce64569f7e829e5fffce3dc2ce0"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::numberOfEntries" ref="a72010ce64569f7e829e5fffce3dc2ce0" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
+<a class="anchor" id="ab64672924ebb0131bece7bfd37614513"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsReal::numberOfEntries" ref="ab64672924ebb0131bece7bfd37614513" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; TYPE &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html">SAMRAI::math::PatchNodeDataNormOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html">SAMRAI::math::PatchNodeDataNormOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; TYPE &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>data</em>, </td>
@@ -138,7 +138,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 data-&gt;getDim() == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchNodeDataNormOpsReal_8C_source.html#l00174">SAMRAI::math::PatchNodeDataNormOpsReal&lt; TYPE &gt;::RMSNorm()</a>, and <a class="el" href="PatchNodeDataNormOpsReal_8C_source.html#l00192">SAMRAI::math::PatchNodeDataNormOpsReal&lt; TYPE &gt;::weightedRMSNorm()</a>.</p>
 
@@ -577,7 +577,7 @@ template&lt;class TYPE &gt; </div>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataNormOpsReal_8C.html">PatchNodeDataNormOpsReal.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

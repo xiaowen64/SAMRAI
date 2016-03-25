@@ -47,7 +47,7 @@ Inheritance diagram for SAMRAI::math::PatchNodeDataOpsInteger:</div>
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#ace73805fd736e4dff0f7be1f69e657cd">PatchNodeDataOpsInteger</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#aa31af0021eb27b517b7d40c72ad05e8d">~PatchNodeDataOpsInteger</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#a9932453d38419397ff757269d98b0b69">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; int &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#aae360bad6e772550b45fa824ae73036d">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; int &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#abf736f31ccf80f77f4b92696bf629dca">copyData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; int &gt; &gt; &amp;dst, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; int &gt; &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#a34a73e739b9ccaf10b83313b81b27b66">swapData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &gt; &amp;patch, const int data1_id, const int data2_id) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataOpsInteger.html#a7743ff502fdf431c656327821c85f70e">printData</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; int &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, std::ostream &amp;s=<a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">tbox::plog</a>) const </td></tr>
@@ -95,12 +95,12 @@ Inheritance diagram for SAMRAI::math::PatchNodeDataOpsInteger:</div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a9932453d38419397ff757269d98b0b69"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::numberOfEntries" ref="a9932453d38419397ff757269d98b0b69" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
+<a class="anchor" id="aae360bad6e772550b45fa824ae73036d"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataOpsInteger::numberOfEntries" ref="aae360bad6e772550b45fa824ae73036d" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; int &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::math::PatchNodeDataOpsInteger::numberOfEntries </td>
+          <td class="memname">size_t SAMRAI::math::PatchNodeDataOpsInteger::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; int &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>data</em>, </td>
@@ -348,7 +348,7 @@ dst-&gt;getDim() == box.getDim() </dd></dl>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataOpsInteger_8C.html">PatchNodeDataOpsInteger.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

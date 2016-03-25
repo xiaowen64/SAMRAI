@@ -38,8 +38,9 @@
 <p><a href="classSAMRAI_1_1hier_1_1BoundaryLookupTable-members.html">List of all members.</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::vector&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#a20fd866c7874c268c2205fdd83da5d65">getDirections</a> (int loc, int codim) const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get array of active directions for specific boundary location and codimension case.  <a href="#a20fd866c7874c268c2205fdd83da5d65"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">const std::vector<br class="typebreak"/>
+&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#aaf27c94bcaec4327c88138bbc449671a">getDirections</a> (int loc, <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> codim) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get array of active directions for specific boundary location and codimension case.  <a href="#aaf27c94bcaec4327c88138bbc449671a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const std::vector&lt; int &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#a0300b3d69e1daf891e481eab193feb87">getMaxLocationIndices</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get array of maximum number of locations for each codimension boundary case.  <a href="#a0300b3d69e1daf891e481eab193feb87"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#a7ce783f3b7e0d302ad9648d33be245c2">getMaxLocationIndex</a> (int i) const </td></tr>
@@ -95,7 +96,7 @@
   </dd>
 </dl>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 <p>Referenced by <a class="el" href="BoundaryLookupTable_8h_source.html#l00058">getLookupTable()</a>.</p>
 
@@ -149,18 +150,18 @@
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Pointer to lookup table instance. </dd></dl>
 
-<p>References <a class="el" href="BoundaryLookupTable_8C_source.html#l00043">BoundaryLookupTable()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="BoundaryLookupTable_8C_source.html#l00043">BoundaryLookupTable()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 <p>Referenced by <a class="el" href="BoundaryBox_8C_source.html#l00036">SAMRAI::hier::BoundaryBox::BoundaryBox()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01033">SAMRAI::hier::BaseGridGeometry::getBoundaryBoxes()</a>, <a class="el" href="PatchGeometry_8C_source.html#l00075">SAMRAI::hier::PatchGeometry::getBoundaryFillBox()</a>, and <a class="el" href="BoundaryBox_8C_source.html#l00064">SAMRAI::hier::BoundaryBox::getBoundaryOrientation()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a20fd866c7874c268c2205fdd83da5d65"></a><!-- doxytag: member="SAMRAI::hier::BoundaryLookupTable::getDirections" ref="a20fd866c7874c268c2205fdd83da5d65" args="(int loc, int codim) const " -->
+<a class="anchor" id="aaf27c94bcaec4327c88138bbc449671a"></a><!-- doxytag: member="SAMRAI::hier::BoundaryLookupTable::getDirections" ref="aaf27c94bcaec4327c88138bbc449671a" args="(int loc, tbox::Dimension::dir_t codim) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const std::vector&lt;int&gt;&amp; SAMRAI::hier::BoundaryLookupTable::getDirections </td>
+          <td class="memname">const std::vector&lt;<a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&gt;&amp; SAMRAI::hier::BoundaryLookupTable::getDirections </td>
           <td>(</td>
           <td class="paramtype">int&nbsp;</td>
           <td class="paramname"> <em>loc</em>, </td>
@@ -168,7 +169,7 @@
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>codim</em></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -280,7 +281,7 @@
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>loc</em>&nbsp;</td><td>integer location index of boundary region </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>codim</em>&nbsp;</td><td>integer codimension of boundary region </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dir_index</em>&nbsp;</td><td>integer spatial direction identifier, an index into the array returned by <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#a20fd866c7874c268c2205fdd83da5d65" title="Get array of active directions for specific boundary location and codimension case...">getDirections()</a>.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dir_index</em>&nbsp;</td><td>integer spatial direction identifier, an index into the array returned by <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#aaf27c94bcaec4327c88138bbc449671a" title="Get array of active directions for specific boundary location and codimension case...">getDirections()</a>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -332,7 +333,7 @@
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"></td><td valign="top"><em>loc</em>&nbsp;</td><td>integer location index of boundary region </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>codim</em>&nbsp;</td><td>integer codimension of boundary region </td></tr>
-    <tr><td valign="top"></td><td valign="top"><em>dir_index</em>&nbsp;</td><td>integer spatial direction identifier, an index into the array returned by <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#a20fd866c7874c268c2205fdd83da5d65" title="Get array of active directions for specific boundary location and codimension case...">getDirections()</a>.</td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>dir_index</em>&nbsp;</td><td>integer spatial direction identifier, an index into the array returned by <a class="el" href="classSAMRAI_1_1hier_1_1BoundaryLookupTable.html#aaf27c94bcaec4327c88138bbc449671a" title="Get array of active directions for specific boundary location and codimension case...">getDirections()</a>.</td></tr>
   </table>
   </dd>
 </dl>
@@ -405,7 +406,7 @@
 <li>source/SAMRAI/hier/<a class="el" href="BoundaryLookupTable_8C.html">BoundaryLookupTable.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

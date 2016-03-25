@@ -51,7 +51,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a52132dcf242d96a12038f33d91ec8674">resetLevels</a> (const int coarsest_level, const int finest_level)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">const boost::shared_ptr<br class="typebreak"/>
 &lt; <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html">hier::PatchHierarchy</a> &gt;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a43ccd47dd0d37c251059f151085a5275">getPatchHierarchy</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#adb74d55be6055c5a75fb0db85f8e72cf">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a129fa21b319429d42b4a48a68374d2db">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a19fb75fe03b620c1861e9bf7a6f57a7a">copyData</a> (const int dst_id, const int src_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#aaffa84b84706bbde21ff615ac074b1fa">swapData</a> (const int data1_id, const int data2_id) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#abc59060e85d04318f0566cb8c4a11361">printData</a> (const int data_id, std::ostream &amp;s, const bool interior_only=true) const </td></tr>
@@ -188,7 +188,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a7404ad14b10d5d3ad5afb9dc60160ea7">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="BoxUtilities_8C_source.html#l01750">SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="BoxUtilities_8C_source.html#l01762">SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsInteger_8C_source.html#l00026">HierarchyFaceDataOpsInteger()</a>.</p>
 
@@ -214,12 +214,12 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 
 </div>
 </div>
-<a class="anchor" id="adb74d55be6055c5a75fb0db85f8e72cf"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::numberOfEntries" ref="adb74d55be6055c5a75fb0db85f8e72cf" args="(const int data_id, const bool interior_only=true) const " -->
+<a class="anchor" id="a129fa21b319429d42b4a48a68374d2db"></a><!-- doxytag: member="SAMRAI::math::HierarchyFaceDataOpsInteger::numberOfEntries" ref="a129fa21b319429d42b4a48a68374d2db" args="(const int data_id, const bool interior_only=true) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::math::HierarchyFaceDataOpsInteger::numberOfEntries </td>
+          <td class="memname">size_t SAMRAI::math::HierarchyFaceDataOpsInteger::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>data_id</em>, </td>
@@ -243,9 +243,9 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 <dd>
 (d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= d_coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a43ccd47dd0d37c251059f151085a5275">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a66f0c37ee81a36e93bb9cd33ffce352b">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#afcf9405d36d51f2c3b3472eabf90d3d1">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00052">MPI_INT</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00033">SAMRAI::math::PatchFaceDataOpsInteger::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00033">SAMRAI::math::PatchFaceDataOpsInteger::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -286,7 +286,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a51164cf54016e897f5bcfeab89510ef2">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00097">SAMRAI::math::PatchFaceDataOpsInteger::copyData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00099">SAMRAI::math::PatchFaceDataOpsInteger::copyData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -321,7 +321,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a45d74aba377f4b2068f56327ca101759">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00059">SAMRAI::math::PatchFaceDataOpsInteger::swapData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00061">SAMRAI::math::PatchFaceDataOpsInteger::swapData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -362,7 +362,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#af98f76de4c36a1acc715027fe3a0ec18">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00083">SAMRAI::math::PatchFaceDataOpsInteger::printData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00085">SAMRAI::math::PatchFaceDataOpsInteger::printData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -932,7 +932,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a62fc412ecb093c997fec02ac1559a06c">SAMRAI::math::HierarchyDataOpsInteger</a>.</p>
 
-<p>References <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00113">SAMRAI::math::PatchFaceDataOpsInteger::abs()</a>, <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="PatchFaceDataOpsInteger_8C_source.html#l00115">SAMRAI::math::PatchFaceDataOpsInteger::abs()</a>, <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -1058,7 +1058,7 @@ Inheritance diagram for SAMRAI::math::HierarchyFaceDataOpsInteger:</div>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyFaceDataOpsInteger_8C.html">HierarchyFaceDataOpsInteger.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

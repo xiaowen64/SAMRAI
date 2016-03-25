@@ -50,6 +50,8 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#a4addc736434c8328e65596266ec0bbf7">CenteredRankTree</a> ()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Constructor.  <a href="#a4addc736434c8328e65596266ec0bbf7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#af85c48b35645b6537a7ef75f0c94ee5b">CenteredRankTree</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;mpi, bool make_first_rank_the_root=true)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initializing constructor.  <a href="#af85c48b35645b6537a7ef75f0c94ee5b"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#a132f1070f031fb61774852ee6de7a785">CenteredRankTree</a> (int first_rank, int last_rank, int rank, bool make_first_rank_the_root=true)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Initializing constructor.  <a href="#a132f1070f031fb61774852ee6de7a785"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#aaa5123a889c49e18d3c1ad54009d6aaa">~CenteredRankTree</a> ()</td></tr>
@@ -123,6 +125,45 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 
 </div>
 </div>
+<a class="anchor" id="af85c48b35645b6537a7ef75f0c94ee5b"></a><!-- doxytag: member="SAMRAI::tbox::CenteredRankTree::CenteredRankTree" ref="af85c48b35645b6537a7ef75f0c94ee5b" args="(const SAMRAI_MPI &amp;mpi, bool make_first_rank_the_root=true)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">SAMRAI::tbox::CenteredRankTree::CenteredRankTree </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>mpi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>make_first_rank_the_root</em> = <code>true</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Initializing constructor. </p>
+<dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#a297e8746738b66514c58a92b5f753400" title="Set up the tree.">setupTree()</a></dd></dl>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>mpi</em>&nbsp;</td><td></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>make_first_rank_the_root</em>&nbsp;</td><td>See <a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#a7c5b6a4f5c4a22bae8fdb4bdf09fe8eb" title="Set whether to use the first rank in the range for the root instead of the rank at...">makeFirstRankTheRoot()</a> </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, and <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a132f1070f031fb61774852ee6de7a785"></a><!-- doxytag: member="SAMRAI::tbox::CenteredRankTree::CenteredRankTree" ref="a132f1070f031fb61774852ee6de7a785" args="(int first_rank, int last_rank, int rank, bool make_first_rank_the_root=true)" -->
 <div class="memitem">
 <div class="memproto">
@@ -167,11 +208,10 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>first_rank</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>last_rank</em>&nbsp;</td><td></td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>rank</em>&nbsp;</td><td></td></tr>
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>make_first_rank_the_root</em>&nbsp;</td><td>See <a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#a7c5b6a4f5c4a22bae8fdb4bdf09fe8eb" title="Set whether to use the first rank in the range for the root instead of the rank at...">makeFirstRankTheRoot()</a></td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>make_first_rank_the_root</em>&nbsp;</td><td>See <a class="el" href="classSAMRAI_1_1tbox_1_1CenteredRankTree.html#a7c5b6a4f5c4a22bae8fdb4bdf09fe8eb" title="Set whether to use the first rank in the range for the root instead of the rank at...">makeFirstRankTheRoot()</a> </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="see"><dt><b>See also:</b></dt><dd>initialize(). </dd></dl>
 
 </div>
 </div>
@@ -277,6 +317,8 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html#a9f7ac8101a51275a6eccdb132842dbc2">SAMRAI::tbox::RankTreeStrategy</a>.</p>
 
+<p>Referenced by <a class="el" href="Connector_8C_source.html#l00439">SAMRAI::hier::Connector::computeTransposeOf()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a7ec83848f437245eeea4b10b1ce8b6b1"></a><!-- doxytag: member="SAMRAI::tbox::CenteredRankTree::getChildRank" ref="a7ec83848f437245eeea4b10b1ce8b6b1" args="(unsigned int child_number) const " -->
@@ -301,6 +343,8 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 
 <p>References <a class="el" href="RankTreeStrategy_8h_source.html#l00142">SAMRAI::tbox::RankTreeStrategy::getInvalidRank()</a>.</p>
 
+<p>Referenced by <a class="el" href="Connector_8C_source.html#l00439">SAMRAI::hier::Connector::computeTransposeOf()</a>.</p>
+
 </div>
 </div>
 <a class="anchor" id="a30d1034c5623edc444747766cf5a945f"></a><!-- doxytag: member="SAMRAI::tbox::CenteredRankTree::getNumberOfChildren" ref="a30d1034c5623edc444747766cf5a945f" args="() const " -->
@@ -321,6 +365,8 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 <p>Return the number of children. </p>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html#aee6f62066cd27f2d87157b7a9e74fe17">SAMRAI::tbox::RankTreeStrategy</a>.</p>
+
+<p>Referenced by <a class="el" href="Connector_8C_source.html#l00439">SAMRAI::hier::Connector::computeTransposeOf()</a>.</p>
 
 </div>
 </div>
@@ -403,7 +449,6 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 <div class="memdoc">
 
 <p>Return the rank of the root of the tree. </p>
-<p>In this implementation, the root is the first_rank argument of initialize(). </p>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1tbox_1_1RankTreeStrategy.html#a8d8585f2c1a56755db2138a54d16e588">SAMRAI::tbox::RankTreeStrategy</a>.</p>
 
@@ -437,7 +482,7 @@ Inheritance diagram for SAMRAI::tbox::CenteredRankTree:</div>
 <li>source/SAMRAI/tbox/<a class="el" href="CenteredRankTree_8C.html">CenteredRankTree.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

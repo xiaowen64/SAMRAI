@@ -82,8 +82,8 @@ Inheritance diagram for SAMRAI::pdat::NodeData&lt; TYPE &gt;:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Fast copy (i.e., source and this node data objects are defined over the same box) from the given node source data object to this destination node data object at the specified depths.  <a href="#af4843b126109cd78e8c0a8804efc5a64"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html#adbe844b0f2ee7e7024e8f988bf7f0d1f">canEstimateStreamSizeFromBox</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return true if the patch data object can estimate the stream size required to fit its data using only index space information (i.e., a box).  <a href="#adbe844b0f2ee7e7024e8f988bf7f0d1f"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html#a71ea1e5fa3f07882801242cc87041848">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region.  <a href="#a71ea1e5fa3f07882801242cc87041848"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html#a36e002bd298a7d77c9ed9dc010fb9448">getDataStreamSize</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of bytes needed to stream the data in this patch data object lying in the specified box overlap region.  <a href="#a36e002bd298a7d77c9ed9dc010fb9448"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html#a27846f11bc1e06a055d387ebea0bc80a">packStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack data in this patch data object lying in the specified box overlap region into the stream. The overlap must be a <a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html">NodeOverlap</a> of the same DIM.  <a href="#a27846f11bc1e06a055d387ebea0bc80a"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html#a4359530e98f293858f3ee47d0182334c">unpackStream</a> (<a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">tbox::MessageStream</a> &amp;stream, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;overlap)</td></tr>
@@ -199,7 +199,7 @@ depth &gt; 0 </dd>
 <dd>
 ghosts.min() &gt;= 0 </dd></dl>
 
-<p>References <a class="el" href="PatchData_8h_source.html#l00093">SAMRAI::hier::PatchData::getGhostBox()</a>, <a class="el" href="IntVector_8h_source.html#l00593">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
+<p>References <a class="el" href="PatchData_8h_source.html#l00093">SAMRAI::hier::PatchData::getGhostBox()</a>, <a class="el" href="IntVector_8h_source.html#l00595">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
 
 </div>
 </div>
@@ -272,7 +272,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 depth &gt; 0 </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00888">SAMRAI::hier::Box::grow()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00915">SAMRAI::hier::Box::grow()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
 
 </div>
 </div>
@@ -438,7 +438,7 @@ template&lt;class TYPE &gt; </div>
 
 <p>Return a reference to the array data object of the node centered array. </p>
 
-<p>Referenced by <a class="el" href="OuternodeData_8C_source.html#l00345">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::copyDepth()</a>, <a class="el" href="OuternodeData_8C_source.html#l00375">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::copyDepth2()</a>, and <a class="el" href="NodeData_8C_source.html#l00228">SAMRAI::pdat::NodeData&lt; TYPE &gt;::copyOnBox()</a>.</p>
+<p>Referenced by <a class="el" href="OuternodeData_8C_source.html#l00347">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::copyDepth()</a>, <a class="el" href="OuternodeData_8C_source.html#l00377">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::copyDepth2()</a>, and <a class="el" href="NodeData_8C_source.html#l00228">SAMRAI::pdat::NodeData&lt; TYPE &gt;::copyOnBox()</a>.</p>
 
 </div>
 </div>
@@ -485,7 +485,7 @@ template&lt;class TYPE &gt; </div>
 <p>Data is copied where there is overlap in the underlying index space. The copy is performed on the interior plus the ghost cell width (for both the source and destination). Currently, source data must be a <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html" title="Class NodeData&lt;TYPE&gt; provides an implementation for data defined at nodes on...">NodeData</a> of the same DIM and TYPE. If not, then an unrecoverable error results.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == src.getDim() </dd></dl>
 
-<p>References <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData::copy2()</a>, <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a34a0b358ae9349e2bef0a8e3bf6b4278">SAMRAI::hier::PatchData::copy2()</a>, <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -513,7 +513,7 @@ template&lt;class TYPE &gt; </div>
 <dd>
 dynamic_cast&lt;NodeData&lt;TYPE&gt; *&gt;(&amp;dst) != 0 </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -661,7 +661,7 @@ template&lt;class TYPE &gt; </div>
 <p>Fast copy (i.e., source and this node data objects are defined over the same box) from the given node source data object to this destination node data object at the specified depths. </p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a4b2528593ae5bf177579d4d11afac2e3" title="Return the dimension of this object.">getDim()</a> == src.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -689,14 +689,14 @@ template&lt;class TYPE &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a71ea1e5fa3f07882801242cc87041848"></a><!-- doxytag: member="SAMRAI::pdat::NodeData::getDataStreamSize" ref="a71ea1e5fa3f07882801242cc87041848" args="(const hier::BoxOverlap &amp;overlap) const " -->
+<a class="anchor" id="a36e002bd298a7d77c9ed9dc010fb9448"></a><!-- doxytag: member="SAMRAI::pdat::NodeData::getDataStreamSize" ref="a36e002bd298a7d77c9ed9dc010fb9448" args="(const hier::BoxOverlap &amp;overlap) const " -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">int <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">SAMRAI::pdat::NodeData</a>&lt; TYPE &gt;::getDataStreamSize </td>
+          <td class="memname">size_t <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">SAMRAI::pdat::NodeData</a>&lt; TYPE &gt;::getDataStreamSize </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BoxOverlap.html">hier::BoxOverlap</a> &amp;&nbsp;</td>
           <td class="paramname"> <em>overlap</em></td>
@@ -711,7 +711,7 @@ template&lt;class TYPE &gt; </div>
 <p>This routine is defined for the standard types (bool, char, double, float, int, and dcomplex).</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>dynamic_cast&lt;const NodeOverlap *&gt;(&amp;overlap) != 0 </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a79afb3717c2858e760eb43d1c92e8aed">SAMRAI::hier::PatchData</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1PatchData.html#a53047fb5af2549e50c5a717beeb0caa7">SAMRAI::hier::PatchData</a>.</p>
 
 <p>References <a class="el" href="NodeOverlap_8C_source.html#l00035">SAMRAI::pdat::NodeOverlap::getDestinationBoxContainer()</a>, <a class="el" href="NodeOverlap_8C_source.html#l00058">SAMRAI::pdat::NodeOverlap::getSourceOffset()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
@@ -1085,7 +1085,7 @@ template&lt;class TYPE &gt; </div>
 <li>source/SAMRAI/pdat/<a class="el" href="NodeData_8C.html">NodeData.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

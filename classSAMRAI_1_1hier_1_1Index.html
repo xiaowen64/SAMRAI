@@ -104,6 +104,8 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Assign-quotient operator for an index and an integer.  <a href="#ad58c6f5ee27d315d270e04192908e896"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html#a74701ba7de5d98d52449665cdd80488e">operator/</a> (const int rhs) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Quotient operator for an index and an integer.  <a href="#a74701ba7de5d98d52449665cdd80488e"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html#ae31925b069cf9bcf3d3f2a2d36ce81ef">min</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;rhs)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the component-wise minimum of two integer vector objects.  <a href="#ae31925b069cf9bcf3d3f2a2d36ce81ef"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html#aa8acf838a6a645f18f8f410482bfcdd8">coarsen</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Coarsen the <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> by a given ratio.  <a href="#aa8acf838a6a645f18f8f410482bfcdd8"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
@@ -117,6 +119,8 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return an <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> with maximum index values for the specified dimension.  <a href="#ac4f853cdfff20e3b25c819769548069e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html#aff4f74c447921f6b754196c9f8cca710">coarsen</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;index, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;ratio)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Coarsen an <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> by a given ratio.  <a href="#aff4f74c447921f6b754196c9f8cca710"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1Index.html#a96a9d63e22b7fd60dc504b09ef3ea875">min</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;a, const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;b)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Utility function to take the minimum of two <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> objects.  <a href="#a96a9d63e22b7fd60dc504b09ef3ea875"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Class <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> implements a simple n-dimensional integer vector in the AMR index space. <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> is used as lower and upper bounds when creating a box and also when iterating over the cells in a box. An index is essentially an integer vector but it carries along the notion of indexing into AMR's abstract index space.</p>
@@ -202,7 +206,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 
 <p>Construct a two-dimensional index with the value (i,j). </p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00148">SAMRAI::tbox::Dimension::getMaxDimension()</a>, and <a class="el" href="Utilities_8h_source.html#l00338">TBOX_DIM_ASSERT</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00151">SAMRAI::tbox::Dimension::getMaxDimension()</a>, and <a class="el" href="Utilities_8h_source.html#l00338">TBOX_DIM_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -239,7 +243,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 
 <p>Construct a three-dimensional index with the value (i,j,k). </p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00148">SAMRAI::tbox::Dimension::getMaxDimension()</a>, and <a class="el" href="Utilities_8h_source.html#l00338">TBOX_DIM_ASSERT</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00151">SAMRAI::tbox::Dimension::getMaxDimension()</a>, and <a class="el" href="Utilities_8h_source.html#l00338">TBOX_DIM_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -805,6 +809,33 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 
 </div>
 </div>
+<a class="anchor" id="ae31925b069cf9bcf3d3f2a2d36ce81ef"></a><!-- doxytag: member="SAMRAI::hier::Index::min" ref="ae31925b069cf9bcf3d3f2a2d36ce81ef" args="(const Index &amp;rhs)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::Index::min </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>rhs</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Return the component-wise minimum of two integer vector objects. </p>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a8238adf575c71ea75e76200e44669371" title="Return the dimension of this object.">getDim()</a> == rhs.getDim() </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#ae3a617a75e07fe76870445a62e09193f">SAMRAI::hier::IntVector</a>.</p>
+
+<p>References <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+
+<p>Referenced by <a class="el" href="Box_8C_source.html#l00520">SAMRAI::hier::Box::intersect()</a>, <a class="el" href="Index_8h_source.html#l00448">min()</a>, <a class="el" href="Box_8C_source.html#l00476">SAMRAI::hier::Box::operator*()</a>, <a class="el" href="Box_8C_source.html#l00499">SAMRAI::hier::Box::operator*=()</a>, and <a class="el" href="Box_8C_source.html#l00582">SAMRAI::hier::Box::operator+=()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="aa8acf838a6a645f18f8f410482bfcdd8"></a><!-- doxytag: member="SAMRAI::hier::Index::coarsen" ref="aa8acf838a6a645f18f8f410482bfcdd8" args="(const IntVector &amp;ratio)" -->
 <div class="memitem">
 <div class="memproto">
@@ -825,9 +856,9 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <p>For positive indices, this is the same as dividing by the ratio.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a8238adf575c71ea75e76200e44669371" title="Return the dimension of this object.">getDim()</a> == ratio.getDim() </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
-<p>Referenced by <a class="el" href="Index_8h_source.html#l00412">coarsen()</a>.</p>
+<p>Referenced by <a class="el" href="Index_8h_source.html#l00429">coarsen()</a>.</p>
 
 </div>
 </div>
@@ -850,7 +881,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <p>Return an <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> of zeros of the specified dimension. </p>
 <p>Can be used to avoid object creation overheads. </p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -873,7 +904,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <p>Return an <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> of ones of the specified dimension. </p>
 <p>Can be used to avoid object creation overheads. </p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -896,7 +927,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <p>Return an <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> with minimum index values for the specified dimension. </p>
 <p>Can be used to avoid object creation overheads. </p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -919,7 +950,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <p>Return an <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> with maximum index values for the specified dimension. </p>
 <p>Can be used to avoid object creation overheads. </p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -952,7 +983,41 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <p>For positive indices, this is the same as dividing by the ratio.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>index.getDim() == ratio.getDim() </dd></dl>
 
-<p>References <a class="el" href="Index_8h_source.html#l00344">coarsen()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Index_8h_source.html#l00361">coarsen()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a96a9d63e22b7fd60dc504b09ef3ea875"></a><!-- doxytag: member="SAMRAI::hier::Index::min" ref="a96a9d63e22b7fd60dc504b09ef3ea875" args="(const Index &amp;a, const Index &amp;b)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> SAMRAI::hier::Index::min </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>b</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline, static]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Utility function to take the minimum of two <a class="el" href="classSAMRAI_1_1hier_1_1Index.html">Index</a> objects. </p>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>a.getDim() == b.getDim() </dd></dl>
+
+<p>Reimplemented from <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#abe9c65aba2f503e3496e17a0b0cec7b9">SAMRAI::hier::IntVector</a>.</p>
+
+<p>References <a class="el" href="Index_8h_source.html#l00342">min()</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -961,7 +1026,7 @@ Inheritance diagram for SAMRAI::hier::Index:</div>
 <li>source/SAMRAI/hier/<a class="el" href="Index_8C.html">Index.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

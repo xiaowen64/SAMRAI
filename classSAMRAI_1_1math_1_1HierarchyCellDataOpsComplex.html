@@ -67,7 +67,7 @@ Inheritance diagram for SAMRAI::math::HierarchyCellDataOpsComplex:</div>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a3034ef5ddfd9f662a22c03016e0f6676">axmy</a> (const int dst_id, const <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;alpha, const int src1_id, const int src2_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a12ff05ed95065b835325382a859e9f85">abs</a> (const int dst_id, const int src_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a4e2e889c16034e911bacbb752c901a3f">setRandomValues</a> (const int data_id, const <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;width, const <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;low, const bool interior_only=true) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a6f026567205e97002bd88e4ccb2b1fc1">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#af171ac4d8a313f05d3370fd52bddd327">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a670975713470ffa56874dfd4c2cecf81">sumControlVolumes</a> (const int data_id, const int vol_id) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a9dc4a2047f70da3911250f35e1e10c3a">L1Norm</a> (const int data_id, const int vol_id=-1) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a973b6221bb1cac7eec339f22ccdbcf94">L2Norm</a> (const int data_id, const int vol_id=-1) const </td></tr>
@@ -955,12 +955,12 @@ Inheritance diagram for SAMRAI::math::HierarchyCellDataOpsComplex:</div>
 
 </div>
 </div>
-<a class="anchor" id="a6f026567205e97002bd88e4ccb2b1fc1"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsComplex::numberOfEntries" ref="a6f026567205e97002bd88e4ccb2b1fc1" args="(const int data_id, const bool interior_only=true) const " -->
+<a class="anchor" id="af171ac4d8a313f05d3370fd52bddd327"></a><!-- doxytag: member="SAMRAI::math::HierarchyCellDataOpsComplex::numberOfEntries" ref="af171ac4d8a313f05d3370fd52bddd327" args="(const int data_id, const bool interior_only=true) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::math::HierarchyCellDataOpsComplex::numberOfEntries </td>
+          <td class="memname">size_t SAMRAI::math::HierarchyCellDataOpsComplex::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>data_id</em>, </td>
@@ -984,9 +984,9 @@ Inheritance diagram for SAMRAI::math::HierarchyCellDataOpsComplex:</div>
 <dd>
 (d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= d_coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#ad946bd9b12b10dbdcab2dc66e4658796">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#afeb6ab11f69b1e3e6f4e06c25514fa29">SAMRAI::math::HierarchyDataOpsComplex</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a10ffb437def92d04ecdac06bdddfe021">SAMRAI::math::HierarchyDataOpsComplex</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00052">MPI_INT</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchCellDataNormOpsComplex_8h_source.html#l00072">SAMRAI::math::PatchCellDataNormOpsComplex::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchCellDataNormOpsComplex_8h_source.html#l00072">SAMRAI::math::PatchCellDataNormOpsComplex::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyCellDataOpsComplex_8C_source.html#l00910">RMSNorm()</a>, and <a class="el" href="HierarchyCellDataOpsComplex_8C_source.html#l00924">weightedRMSNorm()</a>.</p>
 
@@ -1329,7 +1329,7 @@ Inheritance diagram for SAMRAI::math::HierarchyCellDataOpsComplex:</div>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyCellDataOpsComplex_8C.html">HierarchyCellDataOpsComplex.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

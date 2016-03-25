@@ -88,7 +88,7 @@ Inheritance diagram for SAMRAI::pdat::SideOverlap:</div>
 <div class="memdoc">
 <p>The constructor takes the list of boxes and the transformation from source to destination index spaces. This information is used later in the generation of communication schedules. </p>
 
-<p>References <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -189,12 +189,12 @@ Inheritance diagram for SAMRAI::pdat::SideOverlap:</div>
   </table>
   </dd>
 </dl>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>src_boxes.isEmpty() </dd>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>src_boxes.empty() </dd>
 <dd>
 normal_direction &gt;= 0 &amp;&amp; normal_direction &lt; d_dst_boxes.size() </dd></dl>
 <dl class="post"><dt><b>Postcondition:</b></dt><dd>normal_direction &gt;= 0 &amp;&amp; normal_direction &lt; d_dst_boxes.size() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Transformation_8C_source.html#l00120">SAMRAI::hier::Transformation::getInverseTransformation()</a>, <a class="el" href="Transformation_8h_source.html#l00149">SAMRAI::hier::Transformation::getRotation()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="SideGeometry_8C_source.html#l00298">SAMRAI::pdat::SideGeometry::transform()</a>, and <a class="el" href="Transformation_8C_source.html#l00078">SAMRAI::hier::Transformation::transform()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Transformation_8C_source.html#l00120">SAMRAI::hier::Transformation::getInverseTransformation()</a>, <a class="el" href="Transformation_8h_source.html#l00149">SAMRAI::hier::Transformation::getRotation()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="SideGeometry_8C_source.html#l00298">SAMRAI::pdat::SideGeometry::transform()</a>, and <a class="el" href="Transformation_8C_source.html#l00078">SAMRAI::hier::Transformation::transform()</a>.</p>
 
 </div>
 </div>
@@ -252,7 +252,7 @@ normal_direction &gt;= 0 &amp;&amp; normal_direction &lt; d_dst_boxes.size() </d
 <li>source/SAMRAI/pdat/<a class="el" href="SideOverlap_8C.html">SideOverlap.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

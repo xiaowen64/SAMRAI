@@ -50,8 +50,12 @@ Inheritance diagram for SAMRAI::hier::BaseGridGeometry:</div>
 <p><a href="classSAMRAI_1_1hier_1_1BaseGridGeometry-members.html">List of all members.</a></p>
 <table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html" title="Class ConstNeighborIterator iterates over the Neighbors of a block.">ConstNeighborIterator</a> iterates over the Neighbors of a block.  <a href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html">Neighbor</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class to represent the neighbor of a given block.  <a href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html" title="Class NeighborIterator iterates over the Neighbors of a block.">NeighborIterator</a> iterates over the Neighbors of a block.  <a href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html#_details">More...</a><br/></td></tr>
 <tr><td colspan="2"><h2>Public Types</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">typedef <a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry_1_1TwoDimBool.html">PatchGeometry::TwoDimBool</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a2c84daec71e1e05ec3bad88279b1ee71">TwoDimBool</a></td></tr>
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
@@ -139,9 +143,6 @@ Inheritance diagram for SAMRAI::hier::BaseGridGeometry:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Modify boxes by rotating and shifting from the index space of the input_block to the index space of the output_block at the resolution level defined by ratio_to_level_zero.  <a href="#a6a1defea91aa9a819792130ac87cafb9"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#af7d5a8c2276d52a38e2c335fa168f109">getTransformedBlock</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">BoxContainer</a> &amp;block_boxes, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;base_block, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;transformed_block)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Get a box array that describes the coarse-level domain of the transformed_block in terms of the index space of base_block.  <a href="#af7d5a8c2276d52a38e2c335fa168f109"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const std::map&lt; <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>, <br class="typebreak"/>
-<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html">Neighbor</a> &gt; &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ad2688a4c81f94a413d5e26b05027da9c">getNeighbors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return a map containing <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> objects describing all of the neighbors of the block indicated by the block_id.  <a href="#ad2688a4c81f94a413d5e26b05027da9c"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a8f7b5ea584e4bcb325fcc59bc2c0e654">getNumberOfNeighbors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the number of neighbors a specific block of the Multiblock domain has.  <a href="#a8f7b5ea584e4bcb325fcc59bc2c0e654"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ab6f08d17ed3d3108f575d44620c66b1d">areNeighbors</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_a, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_b) const </td></tr>
@@ -158,6 +159,18 @@ Inheritance diagram for SAMRAI::hier::BaseGridGeometry:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print object data to the specified output stream.  <a href="#a2a44cc9f46a022c854e761a8cef83e92"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a48bbb36fc2179d989b6a148f79c3b977">putToRestart</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1tbox_1_1Database.html">tbox::Database</a> &gt; &amp;restart_db) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Writes the state of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html" title="Class BaseGridGeometry manages the index space that determines the extent of the...">BaseGridGeometry</a> object to the restart database.  <a href="#a48bbb36fc2179d989b6a148f79c3b977"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#aa8dc2aa63809a1fcb871b0f7113bb8c7">begin</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id.  <a href="#aa8dc2aa63809a1fcb871b0f7113bb8c7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#af4ae32d7b43d4b7da7ac5e63f34325ba">end</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create iterator pointing one past the last <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id.  <a href="#af4ae32d7b43d4b7da7ac5e63f34325ba"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a099dea16fa497453a9963b235728a579">find</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;nbr_block_id)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create iterator pointing to the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> with block id nbr_block_id of the block with block id block_id.  <a href="#a099dea16fa497453a9963b235728a579"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ad18c824c2143c72a040eeaf15fafc1a7">begin</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id.  <a href="#ad18c824c2143c72a040eeaf15fafc1a7"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a08553405dd8ce85c303a80125041eaa3">end</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create iterator pointing one past the last <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id.  <a href="#a08553405dd8ce85c303a80125041eaa3"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a5f16ec1deb9cded31272d99331b26d6c">find</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;block_id, const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;nbr_block_id) const </td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Create iterator pointing to the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> with block id nbr_block_id of the block with block id block_id.  <a href="#a5f16ec1deb9cded31272d99331b26d6c"></a><br/></td></tr>
 <tr><td colspan="2"><div class="groupHeader">Functions for computing boundary boxes</div></td></tr>
 <tr><td colspan="2"><div class="groupText"><p><a class="anchor" id="amgrpb96fa6a7e9e916968deb2450c149616a"></a> </p>
 <br/><br/></div></td></tr>
@@ -293,9 +306,9 @@ input_db </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>!object_name.empty() </dd>
 <dd>
-!domain.isEmpty() </dd></dl>
+!domain.empty() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="RestartManager_8C_source.html#l00047">SAMRAI::tbox::RestartManager::getManager()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00769">getObjectName()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01408">setPhysicalDomain()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="RestartManager_8C_source.html#l00047">SAMRAI::tbox::RestartManager::getManager()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00769">getObjectName()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01408">setPhysicalDomain()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -362,9 +375,9 @@ input_db </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>!object_name.empty() </dd>
 <dd>
-!domain.isEmpty() </dd></dl>
+!domain.empty() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="RestartManager_8C_source.html#l00047">SAMRAI::tbox::RestartManager::getManager()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00769">getObjectName()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01408">setPhysicalDomain()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="RestartManager_8C_source.html#l00047">SAMRAI::tbox::RestartManager::getManager()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00769">getObjectName()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01408">setPhysicalDomain()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -411,7 +424,7 @@ input_db </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="PatchLevel_8h_source.html#l01260">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00342">computeBoxTouchingBoundaries()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="PatchLevel_8h_source.html#l01270">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="PatchLevel_8h_source.html#l00840">SAMRAI::hier::PatchLevel::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="PatchLevel_8h_source.html#l00651">SAMRAI::hier::PatchLevel::getRatioToLevelZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BoxContainer_8C_source.html#l01614">SAMRAI::hier::BoxContainer::makeTree()</a>, and <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>.</p>
+<p>References <a class="el" href="PatchLevel_8h_source.html#l01260">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00342">computeBoxTouchingBoundaries()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="PatchLevel_8h_source.html#l01270">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="PatchLevel_8h_source.html#l00840">SAMRAI::hier::PatchLevel::getDim()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="PatchLevel_8h_source.html#l00651">SAMRAI::hier::PatchLevel::getRatioToLevelZero()</a>, <a class="el" href="BoxContainer_8C_source.html#l01614">SAMRAI::hier::BoxContainer::makeTree()</a>, and <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>.</p>
 
 </div>
 </div>
@@ -470,7 +483,7 @@ input_db </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="Box_8h_source.html#l00932">SAMRAI::hier::Box::growLower()</a>, <a class="el" href="Box_8h_source.html#l00970">SAMRAI::hier::Box::growUpper()</a>, <a class="el" href="BoxContainer_8C_source.html#l01054">SAMRAI::hier::BoxContainer::intersectBoxes()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="BoxContainer_8C_source.html#l00785">SAMRAI::hier::BoxContainer::removeIntersections()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="Box_8h_source.html#l00961">SAMRAI::hier::Box::growLower()</a>, <a class="el" href="Box_8h_source.html#l01001">SAMRAI::hier::Box::growUpper()</a>, <a class="el" href="BoxContainer_8C_source.html#l01054">SAMRAI::hier::BoxContainer::intersectBoxes()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, <a class="el" href="BoxContainer_8C_source.html#l00785">SAMRAI::hier::BoxContainer::removeIntersections()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00287">findPatchesTouchingBoundaries()</a>.</p>
 
@@ -528,7 +541,7 @@ input_db </dd></dl>
 <dd>
 ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178dc4477a52ff09e80a2c3e86944e7f" title="Return an IntVector of zeros of the specified dimension.">IntVector::getZero</a>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a>) </dd></dl>
 
-<p>References <a class="el" href="PatchLevel_8h_source.html#l01260">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="PatchLevel_8h_source.html#l01270">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00486">setBoundaryBoxes()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00536">setGeometryDataOnPatch()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="PatchLevel_8h_source.html#l01260">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="PatchLevel_8h_source.html#l01270">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00486">setBoundaryBoxes()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00536">setGeometryDataOnPatch()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
 
 </div>
 </div>
@@ -558,7 +571,7 @@ ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == level.getDim() </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l00197">computeBoundaryBoxesOnLevel()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="PatchLevel_8h_source.html#l00329">SAMRAI::hier::PatchLevel::getPatch()</a>, <a class="el" href="PatchLevel_8h_source.html#l00387">SAMRAI::hier::PatchLevel::getPatchDescriptor()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01570">getPeriodicShift()</a>, <a class="el" href="PatchLevel_8h_source.html#l00550">SAMRAI::hier::PatchLevel::getPhysicalDomainArray()</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l00197">computeBoundaryBoxesOnLevel()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="PatchLevel_8h_source.html#l00329">SAMRAI::hier::PatchLevel::getPatch()</a>, <a class="el" href="PatchLevel_8h_source.html#l00387">SAMRAI::hier::PatchLevel::getPatchDescriptor()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01570">getPeriodicShift()</a>, <a class="el" href="PatchLevel_8h_source.html#l00550">SAMRAI::hier::PatchLevel::getPhysicalDomainArray()</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00437">setGeometryOnPatches()</a>.</p>
 
@@ -608,7 +621,7 @@ ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00860">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l00290">SAMRAI::hier::BoxContainer::insert()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00864">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l00290">SAMRAI::hier::BoxContainer::insert()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 <p>Referenced by <a class="el" href="PartitioningParams_8C_source.html#l00019">SAMRAI::mesh::PartitioningParams::PartitioningParams()</a>.</p>
 
@@ -691,7 +704,7 @@ ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
-<p>References <a class="el" href="BoxLevel_8h_source.html#l00991">SAMRAI::hier::BoxLevel::addBoxWithoutUpdate()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxLevel_8h_source.html#l00889">SAMRAI::hier::BoxLevel::coarsenBoxes()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::refineBoxes()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="BoxLevel_8h_source.html#l01012">SAMRAI::hier::BoxLevel::addBoxWithoutUpdate()</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxLevel_8h_source.html#l00910">SAMRAI::hier::BoxLevel::coarsenBoxes()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxLevel_8h_source.html#l00880">SAMRAI::hier::BoxLevel::refineBoxes()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -732,7 +745,7 @@ ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -773,7 +786,7 @@ ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
-<p>References <a class="el" href="BoxLevel_8h_source.html#l00991">SAMRAI::hier::BoxLevel::addBoxWithoutUpdate()</a>, <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="BoxLevel_8h_source.html#l01012">SAMRAI::hier::BoxLevel::addBoxWithoutUpdate()</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -812,13 +825,13 @@ ratio_to_level_zero != <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html
   </table>
   </dd>
 </dl>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>!domain.isEmpty() </dd>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>!domain.empty() </dd>
 <dd>
 for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().getBlockValue() &lt; number_blocks) </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00860">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8C_source.html#l00680">SAMRAI::hier::BoxContainer::getBoundingBox()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BoxContainer_8h_source.html#l01071">SAMRAI::hier::BoxContainer::pushBack()</a>, <a class="el" href="Box_8h_source.html#l00318">SAMRAI::hier::Box::setBlockId()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00864">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoxContainer_8C_source.html#l00680">SAMRAI::hier::BoxContainer::getBoundingBox()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="BoxContainer_8h_source.html#l01075">SAMRAI::hier::BoxContainer::pushBack()</a>, <a class="el" href="Box_8h_source.html#l00323">SAMRAI::hier::Box::setBlockId()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00103">BaseGridGeometry()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00281">SAMRAI::geom::CartesianGridGeometry::setGeometryData()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00103">BaseGridGeometry()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00279">SAMRAI::geom::CartesianGridGeometry::setGeometryData()</a>.</p>
 
 </div>
 </div>
@@ -840,7 +853,7 @@ for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().
 <p>Get the physical domain description on level zero. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>const reference to physical domain description for level 0. </dd></dl>
 
-<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00808">putToRestart()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00281">SAMRAI::geom::CartesianGridGeometry::setGeometryData()</a>.</p>
+<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00808">putToRestart()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00279">SAMRAI::geom::CartesianGridGeometry::setGeometryData()</a>.</p>
 
 </div>
 </div>
@@ -971,7 +984,7 @@ for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().
 <dl class="return"><dt><b>Returns:</b></dt><dd>The periodic shift in each direction for a domain represented by a refinement of the reference physical domain.</dd></dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ratio_to_level_zero.getDim() </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 <p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00808">putToRestart()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l00486">setBoundaryBoxes()</a>.</p>
 
@@ -1018,7 +1031,7 @@ for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().
 <p>The max stencil width is required by the DLBG to determine when two nearby boxes are defined as neighbors. The DLBG in turn provides the neighbor information for various operations such as schedule construction.</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The max stencil width of all transfer operators. </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
 </div>
 </div>
@@ -1147,7 +1160,7 @@ for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().
 
 <p>Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#a6d5b435ceb1561f19ff7db2c11a246c2">SAMRAI::geom::CartesianGridGeometry</a>.</p>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l00758">getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Patch_8h_source.html#l00333">SAMRAI::hier::Patch::setPatchGeometry()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00244">TBOX_ASSERT_DIM_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l00758">getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Patch_8h_source.html#l00333">SAMRAI::hier::Patch::setPatchGeometry()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00244">TBOX_ASSERT_DIM_OBJDIM_EQUALITY3</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00437">setGeometryOnPatches()</a>.</p>
 
@@ -1227,7 +1240,7 @@ for each box in domain: box.getBlockId().isValid() &amp;&amp; (box.getBlockId().
 <dd>
 ghost_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178dc4477a52ff09e80a2c3e86944e7f" title="Return an IntVector of zeros of the specified dimension.">IntVector::getZero</a>(ghost_width.getDim()) </dd></dl>
 
-<p>References <a class="el" href="PatchLevel_8h_source.html#l01260">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="PatchLevel_8h_source.html#l01270">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01033">getBoundaryBoxes()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00244">TBOX_ASSERT_DIM_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="PatchLevel_8h_source.html#l01260">SAMRAI::hier::PatchLevel::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="PatchLevel_8h_source.html#l01270">SAMRAI::hier::PatchLevel::end()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01033">getBoundaryBoxes()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00244">TBOX_ASSERT_DIM_OBJDIM_EQUALITY3</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00486">setBoundaryBoxes()</a>.</p>
 
@@ -1290,7 +1303,7 @@ ghost_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == box.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ghosts.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == periodic_shift.getDim()) </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l00528">SAMRAI::hier::BoxContainer::coalesce()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00087">SAMRAI::hier::BoundaryLookupTable::getDirections()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00058">SAMRAI::hier::BoundaryLookupTable::getLookupTable()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00111">SAMRAI::hier::BoundaryLookupTable::getMaxLocationIndices()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="BoxContainer_8h_source.html#l01910">SAMRAI::hier::BoxContainer::hasTree()</a>, <a class="el" href="BoxContainer_8C_source.html#l01054">SAMRAI::hier::BoxContainer::intersectBoxes()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00178">SAMRAI::hier::BoundaryLookupTable::isUpper()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="BoxContainer_8C_source.html#l01614">SAMRAI::hier::BoxContainer::makeTree()</a>, <a class="el" href="BoxContainer_8C_source.html#l00785">SAMRAI::hier::BoxContainer::removeIntersections()</a>, <a class="el" href="BoxContainer_8C_source.html#l01578">SAMRAI::hier::BoxContainer::shift()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00193">TBOX_ASSERT_OBJDIM_EQUALITY4</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l00528">SAMRAI::hier::BoxContainer::coalesce()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00087">SAMRAI::hier::BoundaryLookupTable::getDirections()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00058">SAMRAI::hier::BoundaryLookupTable::getLookupTable()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00111">SAMRAI::hier::BoundaryLookupTable::getMaxLocationIndices()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="BoxContainer_8h_source.html#l01916">SAMRAI::hier::BoxContainer::hasTree()</a>, <a class="el" href="BoxContainer_8C_source.html#l01054">SAMRAI::hier::BoxContainer::intersectBoxes()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00178">SAMRAI::hier::BoundaryLookupTable::isUpper()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, <a class="el" href="BoxContainer_8C_source.html#l01614">SAMRAI::hier::BoxContainer::makeTree()</a>, <a class="el" href="BoxContainer_8C_source.html#l00785">SAMRAI::hier::BoxContainer::removeIntersections()</a>, <a class="el" href="Box_8h_source.html#l00505">SAMRAI::hier::Box::setLower()</a>, <a class="el" href="Box_8h_source.html#l00525">SAMRAI::hier::Box::setUpper()</a>, <a class="el" href="BoxContainer_8C_source.html#l01578">SAMRAI::hier::BoxContainer::shift()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00193">TBOX_ASSERT_OBJDIM_EQUALITY4</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00197">computeBoundaryBoxesOnLevel()</a>.</p>
 
@@ -1325,7 +1338,7 @@ ghost_width &gt;= <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html#a178
 patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ab232ac0f62df4ddf63640075c9809593" title="Get the number of blocks in the geometry.">getNumberBlocks()</a> == <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#ab232ac0f62df4ddf63640075c9809593" title="Get the number of blocks in the geometry.">getNumberBlocks()</a></dd></dl>
 <p>TODO: Incorporate into regular boundary box computation once <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html" title="Container class for patches defined at a single level of the AMR hierarchy.">PatchLevel</a> is multiblock-aware. </p>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l00528">SAMRAI::hier::BoxContainer::coalesce()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="PatchLevel_8h_source.html#l00603">SAMRAI::hier::PatchLevel::getBoxLevel()</a>, <a class="el" href="PatchLevel_8h_source.html#l00409">SAMRAI::hier::PatchLevel::getGridGeometry()</a>, <a class="el" href="PatchLevel_8h_source.html#l00329">SAMRAI::hier::PatchLevel::getPatch()</a>, <a class="el" href="PatchLevel_8h_source.html#l00387">SAMRAI::hier::PatchLevel::getPatchDescriptor()</a>, <a class="el" href="PatchLevel_8h_source.html#l00556">SAMRAI::hier::PatchLevel::getPhysicalDomain()</a>, <a class="el" href="PatchLevel_8h_source.html#l00651">SAMRAI::hier::PatchLevel::getRatioToLevelZero()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="BoxContainer_8h_source.html#l01187">SAMRAI::hier::BoxContainer::spliceFront()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l00528">SAMRAI::hier::BoxContainer::coalesce()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="PatchLevel_8h_source.html#l00603">SAMRAI::hier::PatchLevel::getBoxLevel()</a>, <a class="el" href="PatchLevel_8h_source.html#l00409">SAMRAI::hier::PatchLevel::getGridGeometry()</a>, <a class="el" href="PatchLevel_8h_source.html#l00329">SAMRAI::hier::PatchLevel::getPatch()</a>, <a class="el" href="PatchLevel_8h_source.html#l00387">SAMRAI::hier::PatchLevel::getPatchDescriptor()</a>, <a class="el" href="PatchLevel_8h_source.html#l00556">SAMRAI::hier::PatchLevel::getPhysicalDomain()</a>, <a class="el" href="PatchLevel_8h_source.html#l00651">SAMRAI::hier::PatchLevel::getRatioToLevelZero()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="BoxContainer_8h_source.html#l01191">SAMRAI::hier::BoxContainer::spliceFront()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -1363,9 +1376,9 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
-<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00242">SAMRAI::geom::GridGeometry::buildOperators()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00394">SAMRAI::geom::CartesianGridGeometry::buildOperators()</a>.</p>
+<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00242">SAMRAI::geom::GridGeometry::buildOperators()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00392">SAMRAI::geom::CartesianGridGeometry::buildOperators()</a>.</p>
 
 </div>
 </div>
@@ -1403,9 +1416,9 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
-<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00242">SAMRAI::geom::GridGeometry::buildOperators()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00394">SAMRAI::geom::CartesianGridGeometry::buildOperators()</a>.</p>
+<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00242">SAMRAI::geom::GridGeometry::buildOperators()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00392">SAMRAI::geom::CartesianGridGeometry::buildOperators()</a>.</p>
 
 </div>
 </div>
@@ -1443,7 +1456,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
 <p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00242">SAMRAI::geom::GridGeometry::buildOperators()</a>.</p>
 
@@ -1484,7 +1497,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
 </div>
 </div>
@@ -1523,7 +1536,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
 </div>
 </div>
@@ -1562,7 +1575,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
 </div>
 </div>
@@ -1591,7 +1604,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
   </dd>
 </dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01208">d_transfer_operator_registry</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01682">d_transfer_operator_registry</a>.</p>
 
 </div>
 </div>
@@ -1613,9 +1626,9 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
 <p>Get the dimension of this object. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the dimension of this object. </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>.</p>
 
-<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00503">SAMRAI::geom::CartesianGridGeometry::printClassData()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00808">putToRestart()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00543">SAMRAI::geom::CartesianGridGeometry::putToRestart()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00281">SAMRAI::geom::CartesianGridGeometry::setGeometryData()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00536">setGeometryDataOnPatch()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00326">SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch()</a>.</p>
+<p>Referenced by <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00501">SAMRAI::geom::CartesianGridGeometry::printClassData()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00808">putToRestart()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00541">SAMRAI::geom::CartesianGridGeometry::putToRestart()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00279">SAMRAI::geom::CartesianGridGeometry::setGeometryData()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00536">setGeometryDataOnPatch()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00324">SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch()</a>.</p>
 
 </div>
 </div>
@@ -1637,7 +1650,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
 <p>Get the name of this object. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The name of this object. </dd></dl>
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00067">BaseGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00503">SAMRAI::geom::CartesianGridGeometry::printClassData()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l00180">~BaseGridGeometry()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00067">BaseGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00151">SAMRAI::geom::GridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00221">SAMRAI::geom::CartesianGridGeometry::makeCoarsenedGridGeometry()</a>, <a class="el" href="GridGeometry_8C_source.html#l00215">SAMRAI::geom::GridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00186">SAMRAI::geom::CartesianGridGeometry::makeRefinedGridGeometry()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00501">SAMRAI::geom::CartesianGridGeometry::printClassData()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l00180">~BaseGridGeometry()</a>.</p>
 
 </div>
 </div>
@@ -1690,7 +1703,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> = shift_b_to_a.getDim() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Transformation_8C_source.html#l00533">SAMRAI::hier::Transformation::calculateReverseShift()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Transformation_8C_source.html#l00397">SAMRAI::hier::Transformation::getReverseRotationIdentifier()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l00642">SAMRAI::hier::BoxContainer::rotate()</a>, <a class="el" href="BoxContainer_8C_source.html#l01578">SAMRAI::hier::BoxContainer::shift()</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, and <a class="el" href="BoxContainer_8C_source.html#l01441">SAMRAI::hier::BoxContainer::unorder()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="Transformation_8C_source.html#l00533">SAMRAI::hier::Transformation::calculateReverseShift()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Transformation_8C_source.html#l00397">SAMRAI::hier::Transformation::getReverseRotationIdentifier()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l00642">SAMRAI::hier::BoxContainer::rotate()</a>, <a class="el" href="BoxContainer_8C_source.html#l01578">SAMRAI::hier::BoxContainer::shift()</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, and <a class="el" href="BoxContainer_8C_source.html#l01441">SAMRAI::hier::BoxContainer::unorder()</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l01784">readBlockDataFromInput()</a>.</p>
 
@@ -1723,7 +1736,7 @@ patch_level.getGridGeometry()-&gt;<a class="el" href="classSAMRAI_1_1hier_1_1Bas
 <dd>
 d_number_blocks &gt; 1 </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l02415">chopDomain()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Box_8h_source.html#l00326">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Box_8h_source.html#l00311">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00888">SAMRAI::hier::Box::grow()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02616">transformBox()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l02419">chopDomain()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01590">find()</a>, <a class="el" href="Box_8h_source.html#l00331">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Box_8h_source.html#l00316">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00915">SAMRAI::hier::Box::grow()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="Box_8h_source.html#l00525">SAMRAI::hier::Box::setUpper()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02623">transformBox()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l01784">readBlockDataFromInput()</a>.</p>
 
@@ -1745,7 +1758,7 @@ d_number_blocks &gt; 1 </dd></dl>
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Box_8h_source.html#l00311">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="BoxContainer_8C_source.html#l01416">SAMRAI::hier::BoxContainer::order()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02616">transformBox()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01554">begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01590">find()</a>, <a class="el" href="Box_8h_source.html#l00316">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="BoxContainer_8C_source.html#l01416">SAMRAI::hier::BoxContainer::order()</a>, <a class="el" href="Box_8h_source.html#l00525">SAMRAI::hier::Box::setUpper()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02623">transformBox()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>.</p>
 
@@ -1786,7 +1799,7 @@ d_number_blocks &gt; 1 </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, and <a class="el" href="BoxContainer_8h_source.html#l01187">SAMRAI::hier::BoxContainer::spliceFront()</a>.</p>
+<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, and <a class="el" href="BoxContainer_8h_source.html#l01191">SAMRAI::hier::BoxContainer::spliceFront()</a>.</p>
 
 </div>
 </div>
@@ -1836,7 +1849,7 @@ d_number_blocks &gt; 1 </dd></dl>
 
 <p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02930">printClassData()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02937">printClassData()</a>.</p>
 
 </div>
 </div>
@@ -1890,9 +1903,9 @@ d_number_blocks &gt; 1 </dd></dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>(<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == box.getDim()) &amp;&amp; (<a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#a9d11d3bc88025b781369ec0868c7c1c3" title="Get the dimension of this object.">getDim()</a> == ratio.getDim())</dd></dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Whether the box has been transformed. True if there is a relationship between input_block and output_block. False if there is no such relationship. </dd></dl>
 
-<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00827">SAMRAI::hier::BaseGridGeometry::Neighbor::getRotationIdentifier()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00836">SAMRAI::hier::BaseGridGeometry::Neighbor::getShift()</a>, <a class="el" href="Box_8C_source.html#l00968">SAMRAI::hier::Box::rotate()</a>, <a class="el" href="Box_8h_source.html#l00318">SAMRAI::hier::Box::setBlockId()</a>, <a class="el" href="Box_8h_source.html#l01043">SAMRAI::hier::Box::shift()</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00827">SAMRAI::hier::BaseGridGeometry::Neighbor::getRotationIdentifier()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00836">SAMRAI::hier::BaseGridGeometry::Neighbor::getShift()</a>, <a class="el" href="Box_8C_source.html#l00988">SAMRAI::hier::Box::rotate()</a>, <a class="el" href="Box_8h_source.html#l00323">SAMRAI::hier::Box::setBlockId()</a>, <a class="el" href="Box_8h_source.html#l01076">SAMRAI::hier::Box::shift()</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02415">chopDomain()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02419">chopDomain()</a>, <a class="el" href="AssumedPartition_8C_source.html#l00239">SAMRAI::hier::AssumedPartition::findOverlaps()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>.</p>
 
 </div>
 </div>
@@ -1945,7 +1958,7 @@ d_number_blocks &gt; 1 </dd></dl>
 </dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>Whether the boxes have been transformed. True if there is a relationship between input_block and output_block. False if there is no such relationship. </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00827">SAMRAI::hier::BaseGridGeometry::Neighbor::getRotationIdentifier()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00836">SAMRAI::hier::BaseGridGeometry::Neighbor::getShift()</a>, <a class="el" href="BoxContainer_8C_source.html#l00642">SAMRAI::hier::BoxContainer::rotate()</a>, and <a class="el" href="BoxContainer_8C_source.html#l01578">SAMRAI::hier::BoxContainer::shift()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00827">SAMRAI::hier::BaseGridGeometry::Neighbor::getRotationIdentifier()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00836">SAMRAI::hier::BaseGridGeometry::Neighbor::getShift()</a>, <a class="el" href="BoxContainer_8C_source.html#l00642">SAMRAI::hier::BoxContainer::rotate()</a>, and <a class="el" href="BoxContainer_8C_source.html#l01578">SAMRAI::hier::BoxContainer::shift()</a>.</p>
 
 </div>
 </div>
@@ -1990,38 +2003,7 @@ d_number_blocks &gt; 1 </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
-
-</div>
-</div>
-<a class="anchor" id="ad2688a4c81f94a413d5e26b05027da9c"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::getNeighbors" ref="ad2688a4c81f94a413d5e26b05027da9c" args="(const BlockId &amp;block_id) const " -->
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const std::map&lt;<a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a>, <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html">Neighbor</a>&gt;&amp; SAMRAI::hier::BaseGridGeometry::getNeighbors </td>
-          <td>(</td>
-          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
-          <td class="paramname"> <em>block_id</em></td>
-          <td>&nbsp;)&nbsp;</td>
-          <td> const<code> [inline]</code></td>
-        </tr>
-      </table>
-</div>
-<div class="memdoc">
-
-<p>Return a map containing <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> objects describing all of the neighbors of the block indicated by the block_id. </p>
-<dl class="return"><dt><b>Returns:</b></dt><dd>The map holding the neighbors</dd></dl>
-<dl><dt><b>Parameters:</b></dt><dd>
-  <table border="0" cellspacing="2" cellpadding="0">
-    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
-
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02930">printClassData()</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, and <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
 
 </div>
 </div>
@@ -2089,9 +2071,9 @@ d_number_blocks &gt; 1 </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, and <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02859">getOffset()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l02836">getRotationIdentifier()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02866">getOffset()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l02843">getRotationIdentifier()</a>.</p>
 
 </div>
 </div>
@@ -2129,7 +2111,7 @@ d_number_blocks &gt; 1 </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, and <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>.</p>
 
 </div>
 </div>
@@ -2168,7 +2150,7 @@ d_number_blocks &gt; 1 </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>areNeighbors(dst, src) </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l02881">areNeighbors()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l02888">areNeighbors()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l01784">readBlockDataFromInput()</a>.</p>
 
@@ -2209,7 +2191,7 @@ d_number_blocks &gt; 1 </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>areNeighbors(dst, src) </dd></dl>
 
-<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l02881">areNeighbors()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8C_source.html#l02888">areNeighbors()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -2258,7 +2240,7 @@ d_number_blocks &gt; 1 </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#a2b7be3a14abd613b20a062bb6fe43f24">SAMRAI::geom::CartesianGridGeometry</a>.</p>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00799">SAMRAI::hier::BaseGridGeometry::Neighbor::getBlockId()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01074">getNeighbors()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00987">getSingularityBoxContainer()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00856">SAMRAI::hier::BaseGridGeometry::Neighbor::isSingularity()</a>, <a class="el" href="BoxContainer_8C_source.html#l01733">SAMRAI::hier::BoxContainer::print()</a>, and <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01554">begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01571">end()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00799">SAMRAI::hier::BaseGridGeometry::Neighbor::getBlockId()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00987">getSingularityBoxContainer()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00856">SAMRAI::hier::BaseGridGeometry::Neighbor::isSingularity()</a>, <a class="el" href="BoxContainer_8C_source.html#l01733">SAMRAI::hier::BoxContainer::print()</a>, and <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>.</p>
 
 </div>
 </div>
@@ -2289,7 +2271,195 @@ d_number_blocks &gt; 1 </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianGridGeometry.html#a1f724c022cc68e70e22d57ad5b9df048">SAMRAI::geom::CartesianGridGeometry</a>.</p>
 
-<p>References <a class="el" href="Transformation_8h_source.html#l00214">SAMRAI::hier::Transformation::getBeginBlock()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00799">SAMRAI::hier::BaseGridGeometry::Neighbor::getBlockId()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00758">getDim()</a>, <a class="el" href="Transformation_8h_source.html#l00222">SAMRAI::hier::Transformation::getEndBlock()</a>, <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01570">getPeriodicShift()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00337">getPhysicalDomain()</a>, <a class="el" href="Transformation_8h_source.html#l00149">SAMRAI::hier::Transformation::getRotation()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00818">SAMRAI::hier::BaseGridGeometry::Neighbor::getTransformation()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00809">SAMRAI::hier::BaseGridGeometry::Neighbor::getTransformedDomain()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00027">HIER_GRID_GEOMETRY_VERSION</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00856">SAMRAI::hier::BaseGridGeometry::Neighbor::isSingularity()</a>, <a class="el" href="IntVector_8C_source.html#l00128">SAMRAI::hier::IntVector::putToRestart()</a>, <a class="el" href="BoxContainer_8C_source.html#l01647">SAMRAI::hier::BoxContainer::putToRestart()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BaseGridGeometry_8h_source.html#l01554">begin()</a>, <a class="el" href="Transformation_8h_source.html#l00214">SAMRAI::hier::Transformation::getBeginBlock()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00799">SAMRAI::hier::BaseGridGeometry::Neighbor::getBlockId()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00758">getDim()</a>, <a class="el" href="Transformation_8h_source.html#l00222">SAMRAI::hier::Transformation::getEndBlock()</a>, <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01570">getPeriodicShift()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00337">getPhysicalDomain()</a>, <a class="el" href="Transformation_8h_source.html#l00149">SAMRAI::hier::Transformation::getRotation()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00818">SAMRAI::hier::BaseGridGeometry::Neighbor::getTransformation()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00809">SAMRAI::hier::BaseGridGeometry::Neighbor::getTransformedDomain()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00027">HIER_GRID_GEOMETRY_VERSION</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00856">SAMRAI::hier::BaseGridGeometry::Neighbor::isSingularity()</a>, <a class="el" href="IntVector_8C_source.html#l00128">SAMRAI::hier::IntVector::putToRestart()</a>, <a class="el" href="BoxContainer_8C_source.html#l01647">SAMRAI::hier::BoxContainer::putToRestart()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="aa8dc2aa63809a1fcb871b0f7113bb8c7"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::begin" ref="aa8dc2aa63809a1fcb871b0f7113bb8c7" args="(const BlockId &amp;block_id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a> SAMRAI::hier::BaseGridGeometry::begin </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Create iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>The block id of the block whose Neighbors are of interest.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with supplied block id. </dd></dl>
+
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02419">chopDomain()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02937">printClassData()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l00808">putToRestart()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="af4ae32d7b43d4b7da7ac5e63f34325ba"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::end" ref="af4ae32d7b43d4b7da7ac5e63f34325ba" args="(const BlockId &amp;block_id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a> SAMRAI::hier::BaseGridGeometry::end </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Create iterator pointing one past the last <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>The block id of the block whose Neighbors are of interest.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Iterator pointing one past the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with supplied block id. </dd></dl>
+
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02888">areNeighbors()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02910">areSingularityNeighbors()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02419">chopDomain()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02866">getOffset()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02843">getRotationIdentifier()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02689">getTransformedBlock()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02937">printClassData()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02623">transformBox()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l02656">transformBoxContainer()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="a099dea16fa497453a9963b235728a579"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::find" ref="a099dea16fa497453a9963b235728a579" args="(const BlockId &amp;block_id, const BlockId &amp;nbr_block_id)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1NeighborIterator.html">NeighborIterator</a> SAMRAI::hier::BaseGridGeometry::find </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>nbr_block_id</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td><code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Create iterator pointing to the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> with block id nbr_block_id of the block with block id block_id. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>The block id of the block whose Neighbors are of interest.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>nbr_block_id</em>&nbsp;</td><td>The block id of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of interest.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Iterator pointing to the requested <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with supplied block id. </dd></dl>
+
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02419">chopDomain()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ad18c824c2143c72a040eeaf15fafc1a7"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::begin" ref="ad18c824c2143c72a040eeaf15fafc1a7" args="(const BlockId &amp;block_id) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a> SAMRAI::hier::BaseGridGeometry::begin </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Create iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>The block id of the block whose Neighbors are of interest.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Iterator pointing to the first <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with supplied block id. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a08553405dd8ce85c303a80125041eaa3"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::end" ref="a08553405dd8ce85c303a80125041eaa3" args="(const BlockId &amp;block_id) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a> SAMRAI::hier::BaseGridGeometry::end </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Create iterator pointing one past the last <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with the supplied block id. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>The block id of the block whose Neighbors are of interest.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Iterator pointing one past the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with supplied block id. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5f16ec1deb9cded31272d99331b26d6c"></a><!-- doxytag: member="SAMRAI::hier::BaseGridGeometry::find" ref="a5f16ec1deb9cded31272d99331b26d6c" args="(const BlockId &amp;block_id, const BlockId &amp;nbr_block_id) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1ConstNeighborIterator.html">ConstNeighborIterator</a> SAMRAI::hier::BaseGridGeometry::find </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>block_id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1hier_1_1BlockId.html">BlockId</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>nbr_block_id</em></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td> const<code> [inline]</code></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Create iterator pointing to the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> with block id nbr_block_id of the block with block id block_id. </p>
+<dl><dt><b>Parameters:</b></dt><dd>
+  <table border="0" cellspacing="2" cellpadding="0">
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>block_id</em>&nbsp;</td><td>The block id of the block whose Neighbors are of interest.</td></tr>
+    <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>nbr_block_id</em>&nbsp;</td><td>The block id of the <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of interest.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="return"><dt><b>Returns:</b></dt><dd>Iterator pointing to the requested <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry_1_1Neighbor.html" title="Class to represent the neighbor of a given block.">Neighbor</a> of the block with supplied block id. </dd></dl>
 
 </div>
 </div>
@@ -2318,7 +2488,7 @@ d_number_blocks &gt; 1 </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>input_db </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l00528">SAMRAI::hier::BoxContainer::coalesce()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01210">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02836">getRotationIdentifier()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="BoxContainer_8C_source.html#l01054">SAMRAI::hier::BoxContainer::intersectBoxes()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02174">registerNeighbors()</a>, <a class="el" href="Box_8C_source.html#l00968">SAMRAI::hier::Box::rotate()</a>, <a class="el" href="Box_8h_source.html#l00318">SAMRAI::hier::Box::setBlockId()</a>, <a class="el" href="BoxContainer_8C_source.html#l00401">SAMRAI::hier::BoxContainer::simplify()</a>, <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="BoxContainer_8C_source.html#l01441">SAMRAI::hier::BoxContainer::unorder()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8C_source.html#l00528">SAMRAI::hier::BoxContainer::coalesce()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l01684">d_dim</a>, <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02843">getRotationIdentifier()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="BoxContainer_8C_source.html#l01054">SAMRAI::hier::BoxContainer::intersectBoxes()</a>, <a class="el" href="Utilities_8C_source.html#l00139">SAMRAI::tbox::Utilities::intToString()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Transformation_8h_source.html#l00065">SAMRAI::hier::Transformation::NO_ROTATE</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02174">registerNeighbors()</a>, <a class="el" href="Box_8C_source.html#l00988">SAMRAI::hier::Box::rotate()</a>, <a class="el" href="Box_8h_source.html#l00323">SAMRAI::hier::Box::setBlockId()</a>, <a class="el" href="Box_8h_source.html#l00505">SAMRAI::hier::Box::setLower()</a>, <a class="el" href="Box_8h_source.html#l00525">SAMRAI::hier::Box::setUpper()</a>, <a class="el" href="BoxContainer_8C_source.html#l00401">SAMRAI::hier::BoxContainer::simplify()</a>, <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, <a class="el" href="BoxContainer_8h_source.html#l00662">SAMRAI::hier::BoxContainer::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, <a class="el" href="BoxContainer_8C_source.html#l01441">SAMRAI::hier::BoxContainer::unorder()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 </div>
 </div>
@@ -2350,7 +2520,7 @@ d_number_blocks &gt; 1 </dd></dl>
 </div>
 <div class="memdoc">
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02705">adjustMultiblockPatchLevelBoundaries()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02415">chopDomain()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00197">computeBoundaryBoxesOnLevel()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00342">computeBoxTouchingBoundaries()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01183">computePhysicalDomain()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00287">findPatchesTouchingBoundaries()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01033">getBoundaryBoxes()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00758">getDim()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02859">getOffset()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01570">getPeriodicShift()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01784">readBlockDataFromInput()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02174">registerNeighbors()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00486">setBoundaryBoxes()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00437">setGeometryOnPatches()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l01408">setPhysicalDomain()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l02712">adjustMultiblockPatchLevelBoundaries()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02419">chopDomain()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00197">computeBoundaryBoxesOnLevel()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00342">computeBoxTouchingBoundaries()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01183">computePhysicalDomain()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00287">findPatchesTouchingBoundaries()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02249">findSingularities()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01033">getBoundaryBoxes()</a>, <a class="el" href="BaseGridGeometry_8h_source.html#l00758">getDim()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02866">getOffset()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01570">getPeriodicShift()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l01784">readBlockDataFromInput()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l02174">registerNeighbors()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00486">setBoundaryBoxes()</a>, <a class="el" href="BaseGridGeometry_8C_source.html#l00437">setGeometryOnPatches()</a>, and <a class="el" href="BaseGridGeometry_8C_source.html#l01408">setPhysicalDomain()</a>.</p>
 
 </div>
 </div>
@@ -2359,7 +2529,7 @@ d_number_blocks &gt; 1 </dd></dl>
 <li>source/SAMRAI/hier/<a class="el" href="BaseGridGeometry_8C.html">BaseGridGeometry.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

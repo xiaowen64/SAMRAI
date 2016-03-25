@@ -160,7 +160,9 @@
 : <a class="el" href="structSAMRAI_1_1tbox_1_1Utilities.html#a28401d4b41dcf9a5b251dc87ce188c9a">SAMRAI::tbox::Utilities</a>
 </li>
 <li>recursivePrint()
-: <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#a00c11404f06b3a72323cb3fc5d650309">SAMRAI::hier::BoxLevel</a>
+: <a class="el" href="classSAMRAI_1_1hier_1_1AssumedPartition.html#aca950c9d53727ba9fc5c1324677bfb79">SAMRAI::hier::AssumedPartition</a>
+, <a class="el" href="classSAMRAI_1_1hier_1_1AssumedPartitionBox.html#ae02aa4c2cbdf376d1491a5c0fad97203">SAMRAI::hier::AssumedPartitionBox</a>
+, <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html#a00c11404f06b3a72323cb3fc5d650309">SAMRAI::hier::BoxLevel</a>
 , <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#a38533c620f9a32a6137c4a2b0fcc1b4a">SAMRAI::hier::Connector</a>
 , <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#a4da217e46a2561b7e6e0cfca080041b1">SAMRAI::hier::Patch</a>
 , <a class="el" href="classSAMRAI_1_1hier_1_1PatchHierarchy.html#a925812d58056958a2f83f9f4196679d3">SAMRAI::hier::PatchHierarchy</a>
@@ -183,11 +185,15 @@
 , <a class="el" href="classMDA__OrderColMajor.html#a47c85d9493bab97e6122c1ed8456007d">MDA_OrderColMajor&lt; MDA_DIM &gt;</a>
 , <a class="el" href="classMDA__Access.html#a27648e4fcbc9a840bc584d5149e14823">MDA_Access&lt; MDA_TYPE, MDA_DIM, OrderType &gt;</a>
 </li>
+<li>reduceAndReportLoadBalance()
+: <a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#af35d39c4f2c79ea9fe32b1623c4e8ae9">SAMRAI::mesh::BalanceUtilities</a>
+</li>
 <li>ReferenceCounter()
 : <a class="el" href="classSAMRAI_1_1tbox_1_1ReferenceCounter.html#a6633699ca4ecf6f69363f217408cb300">SAMRAI::tbox::ReferenceCounter</a>
 </li>
 <li>refine()
-: <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#afef200d7181cfecd5c9444341dd7d09b">SAMRAI::geom::CartesianNodeFloatLinearRefine</a>
+: <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeDoubleLinearRefine.html#ad2f71e32f58d77e692a179cd5efd6929">SAMRAI::geom::CartesianNodeDoubleLinearRefine</a>
+, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#a1bebca8783bf0891310016cbe3ebe97f">SAMRAI::geom::CartesianNodeFloatLinearRefine</a>
 , <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideDoubleConservativeLinearRefine.html#a29ffad32d7388aa4b2e0b0d17e05ab92">SAMRAI::geom::CartesianSideDoubleConservativeLinearRefine</a>
 , <a class="el" href="classSAMRAI_1_1geom_1_1CartesianSideFloatConservativeLinearRefine.html#adab63cd265f624b2811360dbed40e3b7">SAMRAI::geom::CartesianSideFloatConservativeLinearRefine</a>
 , <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a39de04c4a599169534757fa77aa348f3">SAMRAI::hier::Box</a>
@@ -224,8 +230,6 @@
 , <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceDoubleConservativeLinearRefine.html#a6efb587548441f3c5b764ed4442d16d8">SAMRAI::geom::CartesianFaceDoubleConservativeLinearRefine</a>
 , <a class="el" href="classSAMRAI_1_1geom_1_1CartesianFaceFloatConservativeLinearRefine.html#a8c03e8385ee53f7749eac15612d674e6">SAMRAI::geom::CartesianFaceFloatConservativeLinearRefine</a>
 , <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeComplexLinearRefine.html#a2ca2c30396e5e5db129259322933328a">SAMRAI::geom::CartesianNodeComplexLinearRefine</a>
-, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeDoubleLinearRefine.html#ad2f71e32f58d77e692a179cd5efd6929">SAMRAI::geom::CartesianNodeDoubleLinearRefine</a>
-, <a class="el" href="classSAMRAI_1_1geom_1_1CartesianNodeFloatLinearRefine.html#a1bebca8783bf0891310016cbe3ebe97f">SAMRAI::geom::CartesianNodeFloatLinearRefine</a>
 </li>
 <li>RefineAlgorithm()
 : <a class="el" href="classSAMRAI_1_1xfer_1_1RefineAlgorithm.html#aaafec51a3a066ae0769bd955975d7c51">SAMRAI::xfer::RefineAlgorithm</a>
@@ -323,11 +327,11 @@
 : <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a01c0101c10011a41f25bd0bcfb4f5250">SAMRAI::appu::VisItDataWriter</a>
 </li>
 <li>registerSingletonSubclassInstance()
-: <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#a668201282a865fa2afe244a41944f172">SAMRAI::tbox::Statistician</a>
+: <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#a055dc8cf053a1bf6212094166dded0bb">SAMRAI::tbox::RestartManager</a>
 , <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#a8e8cb349c28777b5a21e0d506baab7ae">SAMRAI::tbox::TimerManager</a>
 , <a class="el" href="classSAMRAI_1_1hier_1_1VariableDatabase.html#a3c35c6ccdf74110a4ccbfbe075f90761">SAMRAI::hier::VariableDatabase</a>
-, <a class="el" href="classSAMRAI_1_1tbox_1_1RestartManager.html#a055dc8cf053a1bf6212094166dded0bb">SAMRAI::tbox::RestartManager</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsManager.html#a4e8d2157f324eecc117fb78e2cc8cd7a">SAMRAI::math::HierarchyDataOpsManager</a>
+, <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#a668201282a865fa2afe244a41944f172">SAMRAI::tbox::Statistician</a>
 </li>
 <li>registerSparseMaterialNames()
 : <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a58683e422a15f3263bcddc8841796e55">SAMRAI::appu::VisItDataWriter</a>
@@ -350,8 +354,8 @@
 : <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#ab9adaa4527f5028337efec539ae137c2">SAMRAI::appu::VisItDataWriter</a>
 </li>
 <li>regridAllFinerLevels()
-: <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#ad2d95b00ed6bf6b3b600565034ec4b22">SAMRAI::mesh::GriddingAlgorithm</a>
-, <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#a355e9c2c331a4a012370310d88cf96c2">SAMRAI::mesh::GriddingAlgorithmStrategy</a>
+: <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithmStrategy.html#a355e9c2c331a4a012370310d88cf96c2">SAMRAI::mesh::GriddingAlgorithmStrategy</a>
+, <a class="el" href="classSAMRAI_1_1mesh_1_1GriddingAlgorithm.html#ad2d95b00ed6bf6b3b600565034ec4b22">SAMRAI::mesh::GriddingAlgorithm</a>
 </li>
 <li>removeAllItems()
 : <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a275639b560e4f86afda769e80196a3f6">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;</a>
@@ -402,6 +406,9 @@
 <li>rend()
 : <a class="el" href="classSAMRAI_1_1mesh_1_1BoxTransitSet.html#a83862f275de28b20a116daa3c9f16849">SAMRAI::mesh::BoxTransitSet</a>
 </li>
+<li>reorderRelationshipsByHead()
+: <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html#a659efbe99af379f7c396d6392f01d17f">SAMRAI::hier::Connector</a>
+</li>
 <li>replaceAddItem()
 : <a class="el" href="classSAMRAI_1_1pdat_1_1IndexData.html#a252835ce846eb490af3469a5db72e074">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;</a>
 </li>
@@ -417,56 +424,53 @@
 <li>reportCompletionCode()
 : <a class="el" href="classSAMRAI_1_1solv_1_1SNES__SAMRAIContext.html#afbbb99801680fc15ec2caf3719d583d9">SAMRAI::solv::SNES_SAMRAIContext</a>
 </li>
-<li>reportLoadBalance()
-: <a class="el" href="structSAMRAI_1_1mesh_1_1BalanceUtilities.html#a20bee7295a9ef124f2616cd0da52c4de">SAMRAI::mesh::BalanceUtilities</a>
-</li>
 <li>Request_free()
 : <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#ad6727d11930a52cdb6859569228b93b9">SAMRAI::tbox::SAMRAI_MPI</a>
 </li>
 <li>reset()
-: <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#a83bad8aedc4726fa5fc4ed08a0c364db">SAMRAI::tbox::Timer</a>
-, <a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#aaa75797d2c0db7b1bf6dcaf6b10100d5">SAMRAI::tbox::Statistic</a>
+: <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#aa1bd3a33f26ba03bede3da2d4ecdd60e">SAMRAI::xfer::CoarsenSchedule</a>
 , <a class="el" href="classSAMRAI_1_1xfer_1_1RefineSchedule.html#a9ba836fc9d2192bc38511cada20b9d84">SAMRAI::xfer::RefineSchedule</a>
-, <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenSchedule.html#aa1bd3a33f26ba03bede3da2d4ecdd60e">SAMRAI::xfer::CoarsenSchedule</a>
+, <a class="el" href="classSAMRAI_1_1tbox_1_1Timer.html#a83bad8aedc4726fa5fc4ed08a0c364db">SAMRAI::tbox::Timer</a>
+, <a class="el" href="classSAMRAI_1_1tbox_1_1Statistic.html#aaa75797d2c0db7b1bf6dcaf6b10100d5">SAMRAI::tbox::Statistic</a>
 </li>
 <li>resetAllTimers()
 : <a class="el" href="classSAMRAI_1_1tbox_1_1TimerManager.html#a740b4143b708dc20b7e445794fc73fec">SAMRAI::tbox::TimerManager</a>
 </li>
 <li>resetDataToPreadvanceState()
-: <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a7cb2ba4233d041889d30005154e08527">SAMRAI::algs::HyperbolicLevelIntegrator</a>
+: <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#aac10b083ef1a64c8f0d1d85dc0550769">SAMRAI::algs::TimeRefinementLevelStrategy</a>
 , <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#ac4e1369e40bd23ce2b1eceb95f2d2c49">SAMRAI::mesh::StandardTagAndInitStrategy</a>
-, <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#aac10b083ef1a64c8f0d1d85dc0550769">SAMRAI::algs::TimeRefinementLevelStrategy</a>
+, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a7cb2ba4233d041889d30005154e08527">SAMRAI::algs::HyperbolicLevelIntegrator</a>
 </li>
 <li>resetHierarchyConfiguration()
 : <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#a58a9c2633af59ef28ab6fecf0761dd46">SAMRAI::mesh::TagAndInitializeStrategy</a>
-, <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#aa6d152fe6848d4726af682f3e250d12d">SAMRAI::mesh::StandardTagAndInitialize</a>
-, <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#a97a0d8a66c02d0c4c39701747aa61fac">SAMRAI::algs::MethodOfLinesIntegrator</a>
 , <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#a13d73fc9054fdc7830ebd81c372a2492">SAMRAI::mesh::StandardTagAndInitStrategy</a>
 , <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a537371effd1221180c639dd54f0ef057">SAMRAI::algs::HyperbolicLevelIntegrator</a>
+, <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#aa6d152fe6848d4726af682f3e250d12d">SAMRAI::mesh::StandardTagAndInitialize</a>
+, <a class="el" href="classSAMRAI_1_1algs_1_1MethodOfLinesIntegrator.html#a97a0d8a66c02d0c4c39701747aa61fac">SAMRAI::algs::MethodOfLinesIntegrator</a>
 </li>
 <li>resetLevelPlotQuantity()
 : <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html#a073d77fe139d6a5fd6a7b2ff9e5533b4">SAMRAI::appu::VisItDataWriter</a>
 </li>
 <li>resetLevels()
-: <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a52132dcf242d96a12038f33d91ec8674">SAMRAI::math::HierarchyFaceDataOpsInteger</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#a80c095e61a363fa65b77cd39e9b71728">SAMRAI::math::HierarchyEdgeDataOpsComplex</a>
+: <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsComplex.html#a8ffa9feba58413aed44a49d75de28a44">SAMRAI::math::HierarchyFaceDataOpsComplex</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsInteger.html#a40b924d369d1bae6b56cd75940b9366a">SAMRAI::math::HierarchyEdgeDataOpsInteger</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a5bde26d6e2da8a610e27722cd90267bc">SAMRAI::math::HierarchyCellDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a7404ad14b10d5d3ad5afb9dc60160ea7">SAMRAI::math::HierarchyDataOpsInteger</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsReal.html#af053933745fe91a2d7e68b817d13bd3c">SAMRAI::math::HierarchyEdgeDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a04c72e335af7d0834cc3e7fc49b2eafd">SAMRAI::math::HierarchyNodeDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a1249b192ebf8915393921e7ad6bc46e0">SAMRAI::math::HierarchyDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsReal.html#a63876dca16f20b55f6863e930f83d3f9">SAMRAI::math::HierarchyFaceDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsInteger.html#ac74f7a09d3e47beca9cfd6595eec9167">SAMRAI::math::HierarchyCellDataOpsInteger</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#adc5fe9a524e37ea24d62ba05de4ea2a9">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsComplex.html#a4d263ab2906c0a561d202cc94e63eda5">SAMRAI::math::HierarchySideDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#ada8ed5e9636dd157d6e2c0968515bb6c">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsComplex.html#a8ffa9feba58413aed44a49d75de28a44">SAMRAI::math::HierarchyFaceDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#a671291b63ea703578b795083ba6bb8fd">SAMRAI::solv::SAMRAIVectorReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsInteger.html#a5c15c94dbd9dcd992f0c7977e8d6518c">SAMRAI::math::HierarchyNodeDataOpsInteger</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsReal.html#a2f485f877abf6024517b73de9ac5df7e">SAMRAI::math::HierarchySideDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a1249b192ebf8915393921e7ad6bc46e0">SAMRAI::math::HierarchyDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsInteger.html#a7404ad14b10d5d3ad5afb9dc60160ea7">SAMRAI::math::HierarchyDataOpsInteger</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsInteger.html#ac74f7a09d3e47beca9cfd6595eec9167">SAMRAI::math::HierarchyCellDataOpsInteger</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#ada8ed5e9636dd157d6e2c0968515bb6c">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsInteger.html#ae1bcf7b3ada63eeea7340b4dce3b221f">SAMRAI::math::HierarchySideDataOpsInteger</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a04c72e335af7d0834cc3e7fc49b2eafd">SAMRAI::math::HierarchyNodeDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#a5bde26d6e2da8a610e27722cd90267bc">SAMRAI::math::HierarchyCellDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsReal.html#a63876dca16f20b55f6863e930f83d3f9">SAMRAI::math::HierarchyFaceDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#adc5fe9a524e37ea24d62ba05de4ea2a9">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#a80c095e61a363fa65b77cd39e9b71728">SAMRAI::math::HierarchyEdgeDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#a671291b63ea703578b795083ba6bb8fd">SAMRAI::solv::SAMRAIVectorReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsReal.html#af053933745fe91a2d7e68b817d13bd3c">SAMRAI::math::HierarchyEdgeDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsInteger.html#a52132dcf242d96a12038f33d91ec8674">SAMRAI::math::HierarchyFaceDataOpsInteger</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsInteger.html#a5c15c94dbd9dcd992f0c7977e8d6518c">SAMRAI::math::HierarchyNodeDataOpsInteger</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsReal.html#a4f2eab8c8418d9423df1f26c9af0b810">SAMRAI::math::HierarchyNodeDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsComplex.html#a4d263ab2906c0a561d202cc94e63eda5">SAMRAI::math::HierarchySideDataOpsComplex</a>
 </li>
 <li>resetPatchStatistics()
 : <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#a0122feba4be4a11f2dbedbaeef322be3">SAMRAI::tbox::Statistician</a>
@@ -475,8 +479,8 @@
 : <a class="el" href="classSAMRAI_1_1tbox_1_1Statistician.html#a17249fa02518c6fc44c4cfea72dc1c98">SAMRAI::tbox::Statistician</a>
 </li>
 <li>resetRefineBoxes()
-: <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#adcd8c213a5eea947f067e87fec50dcb6">SAMRAI::mesh::TagAndInitializeStrategy</a>
-, <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#ab68fd34ae965ff9b744734a72327c16d">SAMRAI::mesh::StandardTagAndInitialize</a>
+: <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitialize.html#ab68fd34ae965ff9b744734a72327c16d">SAMRAI::mesh::StandardTagAndInitialize</a>
+, <a class="el" href="classSAMRAI_1_1mesh_1_1TagAndInitializeStrategy.html#adcd8c213a5eea947f067e87fec50dcb6">SAMRAI::mesh::TagAndInitializeStrategy</a>
 </li>
 <li>resetSchedule()
 : <a class="el" href="classSAMRAI_1_1xfer_1_1CoarsenAlgorithm.html#a40da07dfe68d058346b8ae0de34ec748">SAMRAI::xfer::CoarsenAlgorithm</a>
@@ -491,8 +495,8 @@
 </li>
 <li>resetTimeDependentData()
 : <a class="el" href="classSAMRAI_1_1mesh_1_1StandardTagAndInitStrategy.html#a64ffdbc5e045072c85a585ec46c24d36">SAMRAI::mesh::StandardTagAndInitStrategy</a>
-, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a16caf57e64b65c96a79e9586ad7c7afd">SAMRAI::algs::HyperbolicLevelIntegrator</a>
 , <a class="el" href="classSAMRAI_1_1algs_1_1TimeRefinementLevelStrategy.html#a83e7418e4423dffa8ac5aadc3d5bd985">SAMRAI::algs::TimeRefinementLevelStrategy</a>
+, <a class="el" href="classSAMRAI_1_1algs_1_1HyperbolicLevelIntegrator.html#a16caf57e64b65c96a79e9586ad7c7afd">SAMRAI::algs::HyperbolicLevelIntegrator</a>
 </li>
 <li>resizeArray()
 : <a class="el" href="classSAMRAI_1_1tbox_1_1Array.html#a6500b59dd06b70fc01efe4815333c572">SAMRAI::tbox::Array&lt; TYPE &gt;</a>
@@ -518,46 +522,46 @@
 : <a class="el" href="structSAMRAI_1_1tbox_1_1PIO.html#a4a5b817e4f7b80eb952f8e1d9f478847">SAMRAI::tbox::PIO</a>
 </li>
 <li>RMSNorm()
-: <a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsComplex.html#a2948e25e255c5d1ea3c5d5695c1d4c3c">SAMRAI::math::PatchSideDataNormOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a57f07a5dd21fd624c209f79722aacc5d">SAMRAI::math::HierarchyNodeDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a7da2c27f588bc96407f70b93cbc6f51a">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a6c4ce7485d2282a0869ae65c25986a56">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;</a>
+: <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#a6c4ce7485d2282a0869ae65c25986a56">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchFaceDataNormOpsReal.html#a5b0483e7d7e85ac7308b3dd1178d5aa3">SAMRAI::math::PatchFaceDataNormOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsReal.html#acfdf5f0e837bd5da84e43d236171a8ab">SAMRAI::math::HierarchyEdgeDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsReal.html#ad20e18ad8d71c0fdae75c201b618aa9a">SAMRAI::math::HierarchySideDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#a760e7f0c9063655099c5080965fb5d76">SAMRAI::math::HierarchyEdgeDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#aad0a43d268cc045c6c029a7235db3e7e">SAMRAI::math::HierarchyCellDataOpsComplex</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsReal.html#af3b674af9bfce3f134553dd51ee82309">SAMRAI::math::PatchSideDataNormOpsReal&lt; TYPE &gt;</a>
 , <a class="el" href="classSAMRAI_1_1solv_1_1SAMRAIVectorReal.html#a0e926ab1c66e05602ae6fffa60767ad0">SAMRAI::solv::SAMRAIVectorReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a09ad15bd70dcbdb6122d9fd16fabf6af">SAMRAI::math::PatchNodeDataNormOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsReal.html#ad20e18ad8d71c0fdae75c201b618aa9a">SAMRAI::math::HierarchySideDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsComplex.html#aad0a43d268cc045c6c029a7235db3e7e">SAMRAI::math::HierarchyCellDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a56bb96df6445e094bd29a00e8516da63">SAMRAI::math::PatchNodeDataNormOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a840cac28188cc068c4dd2ccbf1ae58ab">SAMRAI::math::HierarchyDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchEdgeDataNormOpsComplex.html#a90e1818bb637a72cab0efb4b845bce3e">SAMRAI::math::PatchEdgeDataNormOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsReal.html#acfdf5f0e837bd5da84e43d236171a8ab">SAMRAI::math::HierarchyEdgeDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a5c4141f140272563942a4db227fbebbf">SAMRAI::math::PatchCellDataNormOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsComplex.html#ad4636a4fadb1197a9de2249464bdeacc">SAMRAI::math::HierarchySideDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsReal.html#a0575094e82c0e83d9eccc28ecaeb9bbb">SAMRAI::math::HierarchyNodeDataOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchEdgeDataNormOpsReal.html#aaabd63a73932dac9f8a900b077855b4b">SAMRAI::math::PatchEdgeDataNormOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsComplex.html#a760e7f0c9063655099c5080965fb5d76">SAMRAI::math::HierarchyEdgeDataOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchFaceDataNormOpsReal.html#a5b0483e7d7e85ac7308b3dd1178d5aa3">SAMRAI::math::PatchFaceDataNormOpsReal&lt; TYPE &gt;</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1PatchFaceDataNormOpsComplex.html#a9eb3304a69baa8c6606028eac08aaab8">SAMRAI::math::PatchFaceDataNormOpsComplex</a>
-, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsReal.html#a951942259efe15295ea5330e8d0bfaf0">SAMRAI::math::HierarchyFaceDataOpsReal&lt; TYPE &gt;</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsComplex.html#af57fa2436adf5761fe4a7ffb10edd654">SAMRAI::math::PatchCellDataNormOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchEdgeDataNormOpsReal.html#aaabd63a73932dac9f8a900b077855b4b">SAMRAI::math::PatchEdgeDataNormOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a840cac28188cc068c4dd2ccbf1ae58ab">SAMRAI::math::HierarchyDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a56bb96df6445e094bd29a00e8516da63">SAMRAI::math::PatchNodeDataNormOpsComplex</a>
 , <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsComplex.html#a08c7462a01dc414124d50135c2241794">SAMRAI::math::HierarchyFaceDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchSideDataNormOpsComplex.html#a2948e25e255c5d1ea3c5d5695c1d4c3c">SAMRAI::math::PatchSideDataNormOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a57f07a5dd21fd624c209f79722aacc5d">SAMRAI::math::HierarchyNodeDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchCellDataNormOpsReal.html#a5c4141f140272563942a4db227fbebbf">SAMRAI::math::PatchCellDataNormOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsReal.html#a951942259efe15295ea5330e8d0bfaf0">SAMRAI::math::HierarchyFaceDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsReal.html#a09ad15bd70dcbdb6122d9fd16fabf6af">SAMRAI::math::PatchNodeDataNormOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a7da2c27f588bc96407f70b93cbc6f51a">SAMRAI::math::HierarchyDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchFaceDataNormOpsComplex.html#a9eb3304a69baa8c6606028eac08aaab8">SAMRAI::math::PatchFaceDataNormOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsReal.html#a0575094e82c0e83d9eccc28ecaeb9bbb">SAMRAI::math::HierarchyNodeDataOpsReal&lt; TYPE &gt;</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsComplex.html#ad4636a4fadb1197a9de2249464bdeacc">SAMRAI::math::HierarchySideDataOpsComplex</a>
+, <a class="el" href="classSAMRAI_1_1math_1_1PatchEdgeDataNormOpsComplex.html#a90e1818bb637a72cab0efb4b845bce3e">SAMRAI::math::PatchEdgeDataNormOpsComplex</a>
 </li>
 <li>RobinBcCoefStrategy()
 : <a class="el" href="classSAMRAI_1_1solv_1_1RobinBcCoefStrategy.html#a6ce6120bcc74eff6a7fc4f813ebe2868">SAMRAI::solv::RobinBcCoefStrategy</a>
 </li>
 <li>rotate()
-: <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#a610b4fa87a46fb7225d10a76014d4c86">SAMRAI::hier::BoxContainer</a>
-, <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a2571400f751941031fc74c243a111dc4">SAMRAI::hier::Box</a>
+: <a class="el" href="classSAMRAI_1_1hier_1_1Box.html#a2571400f751941031fc74c243a111dc4">SAMRAI::hier::Box</a>
+, <a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html#a610b4fa87a46fb7225d10a76014d4c86">SAMRAI::hier::BoxContainer</a>
 </li>
 <li>rotateIndex()
-: <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#a8dd74566eb5d8a98af2bf9424c64caf2">SAMRAI::hier::Transformation</a>
+: <a class="el" href="classSAMRAI_1_1hier_1_1Transformation.html#a96cbf945644a5307cfde664cc8459099">SAMRAI::hier::Transformation</a>
 </li>
 <li>round()
-: <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#a1fc1c81d567a44852ce3b3ebd083046e">SAMRAI::tbox::MathUtilities&lt; TYPE &gt;</a>
+: <a class="el" href="classSAMRAI_1_1tbox_1_1MathUtilities.html#afc34dcca6300d321f514ba1f924f6d5f">SAMRAI::tbox::MathUtilities&lt; TYPE &gt;</a>
 </li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

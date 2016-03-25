@@ -145,7 +145,7 @@ Inheritance diagram for SAMRAI::pdat::NodeOverlap:</div>
 <div class="memdoc">
 <p>Return the list of boxes (in node centered index space) that constitute the intersection. The boxes are given in the destination coordinate space and must be shifted by -(<a class="el" href="classSAMRAI_1_1pdat_1_1NodeOverlap.html#a97cd95afd06407ce6f90fde157752b6b">getSourceOffset()</a>) to lie in the source index space. </p>
 
-<p>Referenced by <a class="el" href="OuternodeData_8C_source.html#l00466">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="NodeData_8C_source.html#l00337">SAMRAI::pdat::NodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="OuternodeData_8C_source.html#l00494">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::packStream()</a>, <a class="el" href="NodeData_8C_source.html#l00360">SAMRAI::pdat::NodeData&lt; TYPE &gt;::packStream()</a>, <a class="el" href="OuternodeData_8C_source.html#l00404">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::sum()</a>, <a class="el" href="OuternodeData_8C_source.html#l00523">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStream()</a>, <a class="el" href="NodeData_8C_source.html#l00444">SAMRAI::pdat::NodeData&lt; TYPE &gt;::unpackStream()</a>, and <a class="el" href="OuternodeData_8C_source.html#l00558">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStreamAndSum()</a>.</p>
+<p>Referenced by <a class="el" href="OuternodeData_8C_source.html#l00468">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="NodeData_8C_source.html#l00337">SAMRAI::pdat::NodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="OuternodeData_8C_source.html#l00496">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::packStream()</a>, <a class="el" href="NodeData_8C_source.html#l00360">SAMRAI::pdat::NodeData&lt; TYPE &gt;::packStream()</a>, <a class="el" href="OuternodeData_8C_source.html#l00406">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::sum()</a>, <a class="el" href="OuternodeData_8C_source.html#l00525">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStream()</a>, <a class="el" href="NodeData_8C_source.html#l00444">SAMRAI::pdat::NodeData&lt; TYPE &gt;::unpackStream()</a>, and <a class="el" href="OuternodeData_8C_source.html#l00560">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStreamAndSum()</a>.</p>
 
 </div>
 </div>
@@ -173,9 +173,9 @@ Inheritance diagram for SAMRAI::pdat::NodeOverlap:</div>
   </table>
   </dd>
 </dl>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>src_boxes.isEmpty() </dd></dl>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>src_boxes.empty() </dd></dl>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00813">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Transformation_8C_source.html#l00097">SAMRAI::hier::Transformation::inverseTransform()</a>, <a class="el" href="BoxContainer_8h_source.html#l00677">SAMRAI::hier::BoxContainer::isEmpty()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00694">SAMRAI::hier::BoxContainer::empty()</a>, <a class="el" href="BoxContainer_8h_source.html#l00817">SAMRAI::hier::BoxContainer::front()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="Transformation_8C_source.html#l00097">SAMRAI::hier::Transformation::inverseTransform()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -199,7 +199,7 @@ Inheritance diagram for SAMRAI::pdat::NodeOverlap:</div>
 
 <p>References <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>.</p>
 
-<p>Referenced by <a class="el" href="OuternodeData_8C_source.html#l00466">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="NodeData_8C_source.html#l00337">SAMRAI::pdat::NodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="OuternodeData_8C_source.html#l00494">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::packStream()</a>, <a class="el" href="OuternodeData_8C_source.html#l00404">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::sum()</a>, <a class="el" href="OuternodeData_8C_source.html#l00523">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStream()</a>, <a class="el" href="NodeData_8C_source.html#l00444">SAMRAI::pdat::NodeData&lt; TYPE &gt;::unpackStream()</a>, and <a class="el" href="OuternodeData_8C_source.html#l00558">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStreamAndSum()</a>.</p>
+<p>Referenced by <a class="el" href="OuternodeData_8C_source.html#l00468">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="NodeData_8C_source.html#l00337">SAMRAI::pdat::NodeData&lt; TYPE &gt;::getDataStreamSize()</a>, <a class="el" href="OuternodeData_8C_source.html#l00496">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::packStream()</a>, <a class="el" href="OuternodeData_8C_source.html#l00406">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::sum()</a>, <a class="el" href="OuternodeData_8C_source.html#l00525">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStream()</a>, <a class="el" href="NodeData_8C_source.html#l00444">SAMRAI::pdat::NodeData&lt; TYPE &gt;::unpackStream()</a>, and <a class="el" href="OuternodeData_8C_source.html#l00560">SAMRAI::pdat::OuternodeData&lt; TYPE &gt;::unpackStreamAndSum()</a>.</p>
 
 </div>
 </div>
@@ -233,7 +233,7 @@ Inheritance diagram for SAMRAI::pdat::NodeOverlap:</div>
 <li>source/SAMRAI/pdat/<a class="el" href="NodeOverlap_8C.html">NodeOverlap.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -67,7 +67,7 @@ Inheritance diagram for SAMRAI::math::HierarchyNodeDataOpsComplex:</div>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a877d188204719574ce2134cb3bf36c8a">axmy</a> (const int dst_id, const <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;alpha, const int src1_id, const int src2_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a0ba68d6fc6c0223f4fa750f31dcab609">abs</a> (const int dst_id, const int src_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a13850e6aa23b18e4f27a7c5f34c7600b">setRandomValues</a> (const int data_id, const <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;width, const <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &amp;low, const bool interior_only=true) const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a42ec1afd540ea2d37873edb72a5b440e">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#aba9a368a1b60f99f87745062e4440890">numberOfEntries</a> (const int data_id, const bool interior_only=true) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#aa412a1391c708d4c639d905468351c98">sumControlVolumes</a> (const int data_id, const int vol_id) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a846caebf1a1bae0b8ec08754903774d3">L1Norm</a> (const int data_id, const int vol_id=-1) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#af498601168080b0720cc19878fd1a01c">L2Norm</a> (const int data_id, const int vol_id=-1) const </td></tr>
@@ -195,7 +195,7 @@ Inheritance diagram for SAMRAI::math::HierarchyNodeDataOpsComplex:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a1249b192ebf8915393921e7ad6bc46e0">SAMRAI::math::HierarchyDataOpsComplex</a>.</p>
 
-<p>References <a class="el" href="BoxUtilities_8C_source.html#l01750">SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
+<p>References <a class="el" href="BoxUtilities_8C_source.html#l01762">SAMRAI::hier::BoxUtilities::makeNonOverlappingBoxContainers()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="NodeGeometry_8h_source.html#l00058">SAMRAI::pdat::NodeGeometry::toNodeBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyNodeDataOpsComplex_8C_source.html#l00025">HierarchyNodeDataOpsComplex()</a>.</p>
 
@@ -955,12 +955,12 @@ Inheritance diagram for SAMRAI::math::HierarchyNodeDataOpsComplex:</div>
 
 </div>
 </div>
-<a class="anchor" id="a42ec1afd540ea2d37873edb72a5b440e"></a><!-- doxytag: member="SAMRAI::math::HierarchyNodeDataOpsComplex::numberOfEntries" ref="a42ec1afd540ea2d37873edb72a5b440e" args="(const int data_id, const bool interior_only=true) const " -->
+<a class="anchor" id="aba9a368a1b60f99f87745062e4440890"></a><!-- doxytag: member="SAMRAI::math::HierarchyNodeDataOpsComplex::numberOfEntries" ref="aba9a368a1b60f99f87745062e4440890" args="(const int data_id, const bool interior_only=true) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::math::HierarchyNodeDataOpsComplex::numberOfEntries </td>
+          <td class="memname">size_t SAMRAI::math::HierarchyNodeDataOpsComplex::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>data_id</em>, </td>
@@ -984,9 +984,9 @@ Inheritance diagram for SAMRAI::math::HierarchyNodeDataOpsComplex:</div>
 <dd>
 (d_coarsest_level &gt;= 0) &amp;&amp; (d_finest_level &gt;= d_coarsest_level) &amp;&amp; (d_finest_level &lt;= <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsComplex.html#a5fb95f13500e9f3cfc1d34cfc2b7e802">getPatchHierarchy()</a>-&gt;getFinestLevelNumber()) </dd></dl>
 
-<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#afeb6ab11f69b1e3e6f4e06c25514fa29">SAMRAI::math::HierarchyDataOpsComplex</a>.</p>
+<p>Implements <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsComplex.html#a10ffb437def92d04ecdac06bdddfe021">SAMRAI::math::HierarchyDataOpsComplex</a>.</p>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00052">MPI_INT</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchNodeDataNormOpsComplex_8h_source.html#l00073">SAMRAI::math::PatchNodeDataNormOpsComplex::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00149">BOOST_CAST</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="PatchNodeDataNormOpsComplex_8h_source.html#l00073">SAMRAI::math::PatchNodeDataNormOpsComplex::numberOfEntries()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyNodeDataOpsComplex_8C_source.html#l00954">RMSNorm()</a>, and <a class="el" href="HierarchyNodeDataOpsComplex_8C_source.html#l00968">weightedRMSNorm()</a>.</p>
 
@@ -1329,7 +1329,7 @@ Inheritance diagram for SAMRAI::math::HierarchyNodeDataOpsComplex:</div>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyNodeDataOpsComplex_8C.html">HierarchyNodeDataOpsComplex.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

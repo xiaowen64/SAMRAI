@@ -62,7 +62,7 @@ Inheritance diagram for SAMRAI::pdat::OuteredgeGeometry:</div>
 <tr><td class="memItemLeft" align="right" valign="top">const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeGeometry.html#a289bc16c08d47bcce88e3ee3202d6303">getGhosts</a> () const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Return the ghost cell width for this outeredge box geometry object.  <a href="#a289bc16c08d47bcce88e3ee3202d6303"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeGeometry.html#a7b73a2c9e1fe36e1c1b7bac4ecd20e88">toOuteredgeBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, int axis, int face_normal, int side)</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeGeometry.html#afc9bebd01105137ecf430522142373f7">toOuteredgeBox</a> (const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> axis, <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a> face_normal, int side)</td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Class <a class="el" href="classSAMRAI_1_1pdat_1_1OuteredgeGeometry.html">OuteredgeGeometry</a> manages the mapping between the AMR index and the outeredge geometry index space. It is a subclass of <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html">hier::BoxGeometry</a> and it computes intersections between outeredge box geometries and edge or outeredge box geometries for communication operations.</p>
@@ -118,7 +118,7 @@ Inheritance diagram for SAMRAI::pdat::OuteredgeGeometry:</div>
 <dd>
 ghosts.min() &gt;= 0 </dd></dl>
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00593">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00595">SAMRAI::hier::IntVector::min()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -142,7 +142,7 @@ ghosts.min() &gt;= 0 </dd></dl>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a7b73a2c9e1fe36e1c1b7bac4ecd20e88"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeGeometry::toOuteredgeBox" ref="a7b73a2c9e1fe36e1c1b7bac4ecd20e88" args="(const hier::Box &amp;box, int axis, int face_normal, int side)" -->
+<a class="anchor" id="afc9bebd01105137ecf430522142373f7"></a><!-- doxytag: member="SAMRAI::pdat::OuteredgeGeometry::toOuteredgeBox" ref="afc9bebd01105137ecf430522142373f7" args="(const hier::Box &amp;box, tbox::Dimension::dir_t axis, tbox::Dimension::dir_t face_normal, int side)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -155,13 +155,13 @@ ghosts.min() &gt;= 0 </dd></dl>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>axis</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">int&nbsp;</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">tbox::Dimension::dir_t</a>&nbsp;</td>
           <td class="paramname"> <em>face_normal</em>, </td>
         </tr>
         <tr>
@@ -187,9 +187,9 @@ ghosts.min() &gt;= 0 </dd></dl>
 <dd>
 (side == 0) || (side == 1) </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="EdgeGeometry_8C_source.html#l00169">SAMRAI::pdat::EdgeGeometry::toEdgeBox()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Box_8h_source.html#l00505">SAMRAI::hier::Box::setLower()</a>, <a class="el" href="Box_8h_source.html#l00525">SAMRAI::hier::Box::setUpper()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="EdgeGeometry_8C_source.html#l00169">SAMRAI::pdat::EdgeGeometry::toEdgeBox()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
-<p>Referenced by <a class="el" href="OuteredgeData_8C_source.html#l00817">SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;::getDataBox()</a>, <a class="el" href="OuteredgeData_8C_source.html#l00770">SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;::getSizeOfData()</a>, and <a class="el" href="OuteredgeData_8C_source.html#l00041">SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;::OuteredgeData()</a>.</p>
+<p>Referenced by <a class="el" href="OuteredgeData_8C_source.html#l00821">SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;::getDataBox()</a>, <a class="el" href="OuteredgeData_8C_source.html#l00772">SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;::getSizeOfData()</a>, and <a class="el" href="OuteredgeData_8C_source.html#l00041">SAMRAI::pdat::OuteredgeData&lt; TYPE &gt;::OuteredgeData()</a>.</p>
 
 </div>
 </div>
@@ -292,7 +292,7 @@ ghosts.min() &gt;= 0 </dd></dl>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1hier_1_1BoxGeometry.html#ac1049473677a9dd0fbf7345fce08127e">SAMRAI::hier::BoxGeometry</a>.</p>
 
-<p>References <a class="el" href="BoxContainer_8h_source.html#l00701">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>, and <a class="el" href="EdgeGeometry_8C_source.html#l00169">SAMRAI::pdat::EdgeGeometry::toEdgeBox()</a>.</p>
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Transformation_8h_source.html#l00158">SAMRAI::hier::Transformation::getOffset()</a>, and <a class="el" href="EdgeGeometry_8C_source.html#l00169">SAMRAI::pdat::EdgeGeometry::toEdgeBox()</a>.</p>
 
 </div>
 </div>
@@ -339,7 +339,7 @@ ghosts.min() &gt;= 0 </dd></dl>
 <li>source/SAMRAI/pdat/<a class="el" href="OuteredgeGeometry_8C.html">OuteredgeGeometry.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

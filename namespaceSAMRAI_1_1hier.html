@@ -30,6 +30,10 @@
 <div class="contents">
 <h1>SAMRAI::hier Namespace Reference</h1><table border="0" cellpadding="0" cellspacing="0">
 <tr><td colspan="2"><h2>Classes</h2></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1AssumedPartition.html">AssumedPartition</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute an assumed partition of a set of boxes. The assumed partition should very fast to create and query and requires minimal storage.  <a href="classSAMRAI_1_1hier_1_1AssumedPartition.html#_details">More...</a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1AssumedPartitionBox.html">AssumedPartitionBox</a></td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Compute an assumed partition of a box. The assumed partition should very fast to create and query and requires minimal storage.  <a href="classSAMRAI_1_1hier_1_1AssumedPartitionBox.html#_details">More...</a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseConnectorAlgorithm.html">BaseConnectorAlgorithm</a></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">class &nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html">BaseGridGeometry</a></td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Class <a class="el" href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html" title="Class BaseGridGeometry manages the index space that determines the extent of the...">BaseGridGeometry</a> manages the index space that determines the extent of the coarse-level domain of a <a class="el" href="namespaceSAMRAI.html">SAMRAI</a> hierarchy.  <a href="classSAMRAI_1_1hier_1_1BaseGridGeometry.html#_details">More...</a><br/></td></tr>
@@ -208,7 +212,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, <a class="el" href="Utilities_8h_source.html#l00043">NULL_STATEMENT</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Utilities_8h_source.html#l00043">NULL_STATEMENT</a>, <a class="el" href="Box_8h_source.html#l00505">SAMRAI::hier::Box::setLower()</a>, and <a class="el" href="Box_8h_source.html#l00525">SAMRAI::hier::Box::setUpper()</a>.</p>
 
 </div>
 </div>
@@ -237,7 +241,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="Box_8h_source.html#l00583">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Box_8h_source.html#l00311">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="Box_8h_source.html#l00491">SAMRAI::hier::Box::lower()</a>, and <a class="el" href="Box_8h_source.html#l00500">SAMRAI::hier::Box::upper()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00614">SAMRAI::hier::Box::empty()</a>, <a class="el" href="Box_8h_source.html#l00331">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="Box_8h_source.html#l00316">SAMRAI::hier::Box::getBoxId()</a>, <a class="el" href="Box_8h_source.html#l00496">SAMRAI::hier::Box::lower()</a>, and <a class="el" href="Box_8h_source.html#l00516">SAMRAI::hier::Box::upper()</a>.</p>
 
 </div>
 </div>
@@ -341,7 +345,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="BoxLevelStatistics_8C_source.html#l00194">SAMRAI::hier::BoxLevelStatistics::printBoxStats()</a>, and <a class="el" href="BoxLevel_8C_source.html#l01595">SAMRAI::hier::BoxLevel::recursivePrint()</a>.</p>
+<p>References <a class="el" href="BoxLevelStatistics_8C_source.html#l00194">SAMRAI::hier::BoxLevelStatistics::printBoxStats()</a>, and <a class="el" href="BoxLevel_8C_source.html#l01636">SAMRAI::hier::BoxLevel::recursivePrint()</a>.</p>
 
 </div>
 </div>
@@ -370,7 +374,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="ConnectorStatistics_8C_source.html#l00233">SAMRAI::hier::ConnectorStatistics::printNeighborStats()</a>, and <a class="el" href="Connector_8C_source.html#l01056">SAMRAI::hier::Connector::recursivePrint()</a>.</p>
+<p>References <a class="el" href="ConnectorStatistics_8C_source.html#l00233">SAMRAI::hier::ConnectorStatistics::printNeighborStats()</a>, and <a class="el" href="Connector_8C_source.html#l01338">SAMRAI::hier::Connector::recursivePrint()</a>.</p>
 
 </div>
 </div>
@@ -426,7 +430,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -455,7 +459,7 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -483,6 +487,8 @@
       </table>
 </div>
 <div class="memdoc">
+
+<p>References <a class="el" href="LocalId_8h_source.html#l00111">SAMRAI::hier::LocalId::isValid()</a>.</p>
 
 </div>
 </div>
@@ -541,7 +547,7 @@
 </div>
 </div>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

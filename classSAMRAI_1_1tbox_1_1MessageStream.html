@@ -61,16 +61,16 @@
 <tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a7df6cb03f0096d6afd723e4578edae9c">operator&lt;&lt;</a> (const DATA_TYPE &amp;data)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack a single data item into message stream.  <a href="#a7df6cb03f0096d6afd723e4578edae9c"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename DATA_TYPE &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a19c4bc25caab54131a2dd57806aee8a8">pack</a> (const DATA_TYPE *data, unsigned int size=1)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack an array of data items into message stream.  <a href="#a19c4bc25caab54131a2dd57806aee8a8"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#af0b7ebe565783b1f8f7c7b36aa964050">pack</a> (const DATA_TYPE *data, size_t size=1)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack an array of data items into message stream.  <a href="#af0b7ebe565783b1f8f7c7b36aa964050"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a0f60dd394d0d401cb3fb56d47f8b8acd">pack</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> &amp;other)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Pack content of another data stream into this one.  <a href="#a0f60dd394d0d401cb3fb56d47f8b8acd"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename DATA_TYPE &gt; </td></tr>
 <tr><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html">MessageStream</a> &amp;&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#ab77aaff9ad8280913857fa5bb46484af">operator&gt;&gt;</a> (DATA_TYPE &amp;data)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack a single data item from message stream.  <a href="#ab77aaff9ad8280913857fa5bb46484af"></a><br/></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename DATA_TYPE &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a4f6b009c0094fdb9b89d27047cb0ecc7">unpack</a> (DATA_TYPE *data, unsigned int size=1)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack an array of data items from message stream.  <a href="#a4f6b009c0094fdb9b89d27047cb0ecc7"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">void&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a985ace3b98b5337af7c2207f7fd652ca">unpack</a> (DATA_TYPE *data, size_t size=1)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Unpack an array of data items from message stream.  <a href="#a985ace3b98b5337af7c2207f7fd652ca"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#ae30cd6a2521c410ecf200ef5b51ee606">printClassData</a> (std::ostream &amp;os) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Print out internal object data.  <a href="#ae30cd6a2521c410ecf200ef5b51ee606"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#ae6bbc71b9d411c03bee9b4bd6fd3b244">readMode</a> () const </td></tr>
@@ -85,8 +85,8 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Returns true if num_bytes can be copied out of the stream.  <a href="#ad6bdf492b2434081327dfffd8f9719b2"></a><br/></td></tr>
 <tr><td colspan="2"><h2>Static Public Member Functions</h2></td></tr>
 <tr><td class="memTemplParams" colspan="2">template&lt;typename DATA_TYPE &gt; </td></tr>
-<tr><td class="memTemplItemLeft" align="right" valign="top">static unsigned int&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a6785c939f2978aa8de2292ee3ee117d0">getSizeof</a> (unsigned int num_items=1)</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static method to get amount of message stream space needed to communicate data type indicated by template parameter.  <a href="#a6785c939f2978aa8de2292ee3ee117d0"></a><br/></td></tr>
+<tr><td class="memTemplItemLeft" align="right" valign="top">static size_t&nbsp;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a1c3db33b662b78f049eff5830f76cb23">getSizeof</a> (size_t num_items=1)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Static method to get amount of message stream space needed to communicate data type indicated by template parameter.  <a href="#a1c3db33b662b78f049eff5830f76cb23"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Class to provide buffers for communication of data. </p>
@@ -213,16 +213,16 @@ mode != Read || data_to_read != 0 </dd></dl>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a6785c939f2978aa8de2292ee3ee117d0"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::getSizeof" ref="a6785c939f2978aa8de2292ee3ee117d0" args="(unsigned int num_items=1)" -->
+<a class="anchor" id="a1c3db33b662b78f049eff5830f76cb23"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::getSizeof" ref="a1c3db33b662b78f049eff5830f76cb23" args="(size_t num_items=1)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename DATA_TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">static unsigned int SAMRAI::tbox::MessageStream::getSizeof </td>
+          <td class="memname">static size_t SAMRAI::tbox::MessageStream::getSizeof </td>
           <td>(</td>
-          <td class="paramtype">unsigned int&nbsp;</td>
+          <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>num_items</em> = <code>1</code></td>
           <td>&nbsp;)&nbsp;</td>
           <td><code> [inline, static]</code></td>
@@ -263,7 +263,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 
 <p>References <a class="el" href="MessageStream_8h_source.html#l00047">Read</a>.</p>
 
-<p>Referenced by <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="MessageStream_8h_source.html#l00207">pack()</a>.</p>
+<p>Referenced by <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="MessageStream_8h_source.html#l00206">pack()</a>.</p>
 
 </div>
 </div>
@@ -284,7 +284,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 
 <p>Return the current size of the buffer in bytes. </p>
 
-<p>Referenced by <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="MessageStream_8h_source.html#l00207">pack()</a>.</p>
+<p>Referenced by <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="MessageStream_8h_source.html#l00206">pack()</a>.</p>
 
 </div>
 </div>
@@ -307,7 +307,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 <p>It is an error to use this method for a Read-mode stream.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a8be4176ece50082e74e7344a2fdd97b5" title="Returns true if stream is in write mode.">writeMode()</a> </dd></dl>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00281">writeMode()</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00280">writeMode()</a>.</p>
 
 </div>
 </div>
@@ -329,7 +329,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 <p>Whether a Read-mode <a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html" title="Class to provide buffers for communication of data.">MessageStream</a> has reached the end of its data. </p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#ae6bbc71b9d411c03bee9b4bd6fd3b244" title="Returns true if stream is in read mode.">readMode()</a> </dd></dl>
 
-<p>References <a class="el" href="MessageStream_8h_source.html#l00272">readMode()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="MessageStream_8h_source.html#l00271">readMode()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -360,11 +360,11 @@ template&lt;typename DATA_TYPE &gt; </div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a8be4176ece50082e74e7344a2fdd97b5" title="Returns true if stream is in write mode.">writeMode()</a> </dd></dl>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00281">writeMode()</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00280">writeMode()</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a19c4bc25caab54131a2dd57806aee8a8"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::pack" ref="a19c4bc25caab54131a2dd57806aee8a8" args="(const DATA_TYPE *data, unsigned int size=1)" -->
+<a class="anchor" id="af0b7ebe565783b1f8f7c7b36aa964050"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::pack" ref="af0b7ebe565783b1f8f7c7b36aa964050" args="(const DATA_TYPE *data, size_t size=1)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -379,7 +379,7 @@ template&lt;typename DATA_TYPE &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&nbsp;</td>
+          <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>size</em> = <code>1</code></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -401,9 +401,9 @@ template&lt;typename DATA_TYPE &gt; </div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a8be4176ece50082e74e7344a2fdd97b5" title="Returns true if stream is in write mode.">writeMode()</a> </dd></dl>
 
-<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00281">writeMode()</a>.</p>
+<p>References <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00280">writeMode()</a>.</p>
 
-<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00232">SAMRAI::tbox::Statistic::packStream()</a>, <a class="el" href="IndexData_8C_source.html#l00390">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::packStream()</a>, <a class="el" href="ArrayData_8C_source.html#l00624">SAMRAI::pdat::ArrayData&lt; TYPE &gt;::packStream()</a>, and <a class="el" href="Box_8C_source.html#l00743">SAMRAI::hier::Box::putToMessageStream()</a>.</p>
+<p>Referenced by <a class="el" href="Statistic_8C_source.html#l00232">SAMRAI::tbox::Statistic::packStream()</a>, <a class="el" href="IndexData_8C_source.html#l00390">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::packStream()</a>, <a class="el" href="ArrayData_8C_source.html#l00624">SAMRAI::pdat::ArrayData&lt; TYPE &gt;::packStream()</a>, and <a class="el" href="Box_8C_source.html#l00758">SAMRAI::hier::Box::putToMessageStream()</a>.</p>
 
 </div>
 </div>
@@ -432,7 +432,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#a8be4176ece50082e74e7344a2fdd97b5" title="Returns true if stream is in write mode.">writeMode()</a> </dd></dl>
 
-<p>References <a class="el" href="MessageStream_8h_source.html#l00112">getBufferStart()</a>, <a class="el" href="MessageStream_8h_source.html#l00125">getCurrentSize()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00281">writeMode()</a>.</p>
+<p>References <a class="el" href="MessageStream_8h_source.html#l00111">getBufferStart()</a>, <a class="el" href="MessageStream_8h_source.html#l00124">getCurrentSize()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="MessageStream_8h_source.html#l00280">writeMode()</a>.</p>
 
 </div>
 </div>
@@ -463,11 +463,11 @@ template&lt;typename DATA_TYPE &gt; </div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#ae6bbc71b9d411c03bee9b4bd6fd3b244" title="Returns true if stream is in read mode.">readMode()</a> </dd></dl>
 
-<p>References <a class="el" href="MessageStream_8h_source.html#l00272">readMode()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="MessageStream_8h_source.html#l00271">readMode()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
-<a class="anchor" id="a4f6b009c0094fdb9b89d27047cb0ecc7"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::unpack" ref="a4f6b009c0094fdb9b89d27047cb0ecc7" args="(DATA_TYPE *data, unsigned int size=1)" -->
+<a class="anchor" id="a985ace3b98b5337af7c2207f7fd652ca"></a><!-- doxytag: member="SAMRAI::tbox::MessageStream::unpack" ref="a985ace3b98b5337af7c2207f7fd652ca" args="(DATA_TYPE *data, size_t size=1)" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
@@ -482,7 +482,7 @@ template&lt;typename DATA_TYPE &gt; </div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">unsigned int&nbsp;</td>
+          <td class="paramtype">size_t&nbsp;</td>
           <td class="paramname"> <em>size</em> = <code>1</code></td><td>&nbsp;</td>
         </tr>
         <tr>
@@ -504,9 +504,9 @@ template&lt;typename DATA_TYPE &gt; </div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1tbox_1_1MessageStream.html#ae6bbc71b9d411c03bee9b4bd6fd3b244" title="Returns true if stream is in read mode.">readMode()</a> </dd></dl>
 
-<p>References <a class="el" href="MessageStream_8h_source.html#l00272">readMode()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="MessageStream_8h_source.html#l00271">readMode()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="Box_8C_source.html#l00753">SAMRAI::hier::Box::getFromMessageStream()</a>, <a class="el" href="Statistic_8C_source.html#l00294">SAMRAI::tbox::Statistic::unpackStream()</a>, <a class="el" href="IndexData_8C_source.html#l00440">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::unpackStream()</a>, <a class="el" href="ArrayData_8C_source.html#l00724">SAMRAI::pdat::ArrayData&lt; TYPE &gt;::unpackStream()</a>, and <a class="el" href="ArrayData_8C_source.html#l00779">SAMRAI::pdat::ArrayData&lt; TYPE &gt;::unpackStreamAndSum()</a>.</p>
+<p>Referenced by <a class="el" href="Box_8C_source.html#l00768">SAMRAI::hier::Box::getFromMessageStream()</a>, <a class="el" href="Statistic_8C_source.html#l00294">SAMRAI::tbox::Statistic::unpackStream()</a>, <a class="el" href="IndexData_8C_source.html#l00440">SAMRAI::pdat::IndexData&lt; TYPE, BOX_GEOMETRY &gt;::unpackStream()</a>, <a class="el" href="ArrayData_8C_source.html#l00724">SAMRAI::pdat::ArrayData&lt; TYPE &gt;::unpackStream()</a>, and <a class="el" href="ArrayData_8C_source.html#l00779">SAMRAI::pdat::ArrayData&lt; TYPE &gt;::unpackStreamAndSum()</a>.</p>
 
 </div>
 </div>
@@ -555,7 +555,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 
 <p>References <a class="el" href="MessageStream_8h_source.html#l00047">Read</a>.</p>
 
-<p>Referenced by <a class="el" href="MessageStream_8h_source.html#l00151">endOfData()</a>, <a class="el" href="MessageStream_8h_source.html#l00226">operator&gt;&gt;()</a>, and <a class="el" href="MessageStream_8h_source.html#l00248">unpack()</a>.</p>
+<p>Referenced by <a class="el" href="MessageStream_8h_source.html#l00150">endOfData()</a>, <a class="el" href="MessageStream_8h_source.html#l00225">operator&gt;&gt;()</a>, and <a class="el" href="MessageStream_8h_source.html#l00247">unpack()</a>.</p>
 
 </div>
 </div>
@@ -578,7 +578,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 
 <p>References <a class="el" href="MessageStream_8h_source.html#l00047">Write</a>.</p>
 
-<p>Referenced by <a class="el" href="MessageStream_8h_source.html#l00139">growBufferAsNeeded()</a>, <a class="el" href="MessageStream_8h_source.html#l00167">operator&lt;&lt;()</a>, and <a class="el" href="MessageStream_8h_source.html#l00188">pack()</a>.</p>
+<p>Referenced by <a class="el" href="MessageStream_8h_source.html#l00138">growBufferAsNeeded()</a>, <a class="el" href="MessageStream_8h_source.html#l00166">operator&lt;&lt;()</a>, and <a class="el" href="MessageStream_8h_source.html#l00187">pack()</a>.</p>
 
 </div>
 </div>
@@ -646,7 +646,7 @@ template&lt;typename DATA_TYPE &gt; </div>
 <li>source/SAMRAI/tbox/<a class="el" href="MessageStream_8C.html">MessageStream.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -156,7 +156,7 @@
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>box.getLocalId() &gt;= 0 </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00340">SAMRAI::hier::Box::getLocalId()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00345">SAMRAI::hier::Box::getLocalId()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -199,7 +199,7 @@
 <p>Note that the patch data objects on a patch are free to interpret this box as appropriate for the "geometry" of their data (e.g., face-centered, node-centered, etc.)</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The box over which this patch is defined. </dd></dl>
 
-<p>Referenced by <a class="el" href="SideDataFactory_8C_source.html#l00102">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OutersideDataFactory_8C_source.html#l00081">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OuternodeDataFactory_8C_source.html#l00081">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OuterfaceDataFactory_8C_source.html#l00081">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OuteredgeDataFactory_8C_source.html#l00081">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="NodeDataFactory_8C_source.html#l00084">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="IndexDataFactory_8C_source.html#l00074">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;::allocate()</a>, <a class="el" href="FaceDataFactory_8C_source.html#l00085">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="EdgeDataFactory_8C_source.html#l00085">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="CellDataFactory_8C_source.html#l00085">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00120">SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00177">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00326">SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch()</a>, and <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
+<p>Referenced by <a class="el" href="SideDataFactory_8C_source.html#l00102">SAMRAI::pdat::SideDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OutersideDataFactory_8C_source.html#l00081">SAMRAI::pdat::OutersideDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OuternodeDataFactory_8C_source.html#l00081">SAMRAI::pdat::OuternodeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OuterfaceDataFactory_8C_source.html#l00081">SAMRAI::pdat::OuterfaceDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="OuteredgeDataFactory_8C_source.html#l00081">SAMRAI::pdat::OuteredgeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="NodeDataFactory_8C_source.html#l00084">SAMRAI::pdat::NodeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="IndexDataFactory_8C_source.html#l00074">SAMRAI::pdat::IndexDataFactory&lt; TYPE, BOX_GEOMETRY &gt;::allocate()</a>, <a class="el" href="FaceDataFactory_8C_source.html#l00085">SAMRAI::pdat::FaceDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="EdgeDataFactory_8C_source.html#l00085">SAMRAI::pdat::EdgeDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="CellDataFactory_8C_source.html#l00085">SAMRAI::pdat::CellDataFactory&lt; TYPE &gt;::allocate()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00120">SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00176">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>, <a class="el" href="CartesianGridGeometry_8C_source.html#l00324">SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch()</a>, and <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
 
 </div>
 </div>
@@ -222,9 +222,9 @@
 <p>The <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html" title="A locally determined, globally unique identifier.">GlobalId</a> is the patch's unique identifier within the <a class="el" href="classSAMRAI_1_1hier_1_1PatchLevel.html" title="Container class for patches defined at a single level of the AMR hierarchy.">PatchLevel</a>. It is identical to the <a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html" title="A locally determined, globally unique identifier.">GlobalId</a> of the Patch's <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a>.</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1GlobalId.html" title="A locally determined, globally unique identifier.">GlobalId</a> for this patch. </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00347">SAMRAI::hier::Box::getGlobalId()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00352">SAMRAI::hier::Box::getGlobalId()</a>.</p>
 
-<p>Referenced by <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00514">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00599">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, and <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00177">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>.</p>
+<p>Referenced by <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00513">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00598">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, and <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00176">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>.</p>
 
 </div>
 </div>
@@ -247,7 +247,7 @@
 <p>The <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html" title="Generic identifier for identifying things on the local process.">LocalId</a> is the same as that of the <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">Box</a> used to construct the <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html" title="A container for patch data objects defined over a box.">Patch</a>.</p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The <a class="el" href="classSAMRAI_1_1hier_1_1LocalId.html" title="Generic identifier for identifying things on the local process.">LocalId</a> of this patch. </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l00340">SAMRAI::hier::Box::getLocalId()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l00345">SAMRAI::hier::Box::getLocalId()</a>.</p>
 
 </div>
 </div>
@@ -303,7 +303,7 @@
 
 <p>References <a class="el" href="Patch_8h_source.html#l00539">numPatchData()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00514">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00120">SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions()</a>, <a class="el" href="SAMRAIVectorReal_8C_source.html#l01071">SAMRAI::solv::SAMRAIVectorReal&lt; TYPE &gt;::getComponentPatchData()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l00748">SAMRAI::solv::CellPoissonFACOps::initializeOperatorState()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00599">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00177">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>, <a class="el" href="GhostCellRobinBcCoefs_8C_source.html#l00102">SAMRAI::solv::GhostCellRobinBcCoefs::setBcCoefs()</a>, and <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
+<p>Referenced by <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00513">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00120">SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions()</a>, <a class="el" href="SAMRAIVectorReal_8C_source.html#l01071">SAMRAI::solv::SAMRAIVectorReal&lt; TYPE &gt;::getComponentPatchData()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l00748">SAMRAI::solv::CellPoissonFACOps::initializeOperatorState()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00598">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00176">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>, <a class="el" href="GhostCellRobinBcCoefs_8C_source.html#l00102">SAMRAI::solv::GhostCellRobinBcCoefs::setBcCoefs()</a>, and <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
 
 </div>
 </div>
@@ -644,7 +644,7 @@
   </dd>
 </dl>
 
-<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00536">SAMRAI::hier::BaseGridGeometry::setGeometryDataOnPatch()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00326">SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch()</a>.</p>
+<p>Referenced by <a class="el" href="BaseGridGeometry_8C_source.html#l00536">SAMRAI::hier::BaseGridGeometry::setGeometryDataOnPatch()</a>, and <a class="el" href="CartesianGridGeometry_8C_source.html#l00324">SAMRAI::geom::CartesianGridGeometry::setGeometryDataOnPatch()</a>.</p>
 
 </div>
 </div>
@@ -666,7 +666,7 @@
 <p>Get the patch geometry. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>pointer to patch geometry object. </dd></dl>
 
-<p>Referenced by <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00514">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00120">SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00599">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00177">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>, <a class="el" href="GhostCellRobinBcCoefs_8C_source.html#l00102">SAMRAI::solv::GhostCellRobinBcCoefs::setBcCoefs()</a>, and <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
+<p>Referenced by <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00513">SAMRAI::solv::SimpleCellRobinBcCoefs::cacheDirichletData()</a>, <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00120">SAMRAI::mesh::MultiblockGriddingTagger::fillSingularityBoundaryConditions()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00598">SAMRAI::solv::SimpleCellRobinBcCoefs::restoreDirichletData()</a>, <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00176">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>, <a class="el" href="GhostCellRobinBcCoefs_8C_source.html#l00102">SAMRAI::solv::GhostCellRobinBcCoefs::setBcCoefs()</a>, and <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
 
 </div>
 </div>
@@ -795,7 +795,7 @@ getPatchData(id) </dd></dl>
 <dl class="return"><dt><b>Returns:</b></dt><dd>The valid level number &gt;= 0 or undefined (-1) if the patch level does not align with the index space of a level in the hierarchy.</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1Patch.html#a647f9716b9e0da76115a166f10e819c3" title="Determine if the level holding this patch resides in a hierarchy.">inHierarchy()</a> </dd></dl>
 
-<p>Referenced by <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, and <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00177">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>.</p>
+<p>Referenced by <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, and <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00176">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>.</p>
 
 </div>
 </div>
@@ -844,7 +844,7 @@ getPatchData(id) </dd></dl>
 <p>Determine if the level holding this patch resides in a hierarchy. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>True if the level holding this patch resides in a hierarchy, otherwise false. </dd></dl>
 
-<p>Referenced by <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, and <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00177">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>.</p>
+<p>Referenced by <a class="el" href="CellPoissonFACOps_8C_source.html#l02145">SAMRAI::solv::CellPoissonFACOps::computeFluxOnPatch()</a>, and <a class="el" href="SimpleCellRobinBcCoefs_8C_source.html#l00176">SAMRAI::solv::SimpleCellRobinBcCoefs::setBcCoefs()</a>.</p>
 
 </div>
 </div>
@@ -904,7 +904,7 @@ getPatchData(id) </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
-<p>References <a class="el" href="PatchDataRestartManager_8C_source.html#l00036">SAMRAI::hier::PatchDataRestartManager::getManager()</a>, <a class="el" href="Box_8h_source.html#l00254">SAMRAI::hier::Box::initialize()</a>, <a class="el" href="PatchDataRestartManager_8h_source.html#l00052">SAMRAI::hier::PatchDataRestartManager::isPatchDataRegisteredForRestart()</a>, <a class="el" href="PatchDataRestartManager_8h_source.html#l00089">SAMRAI::hier::PatchDataRestartManager::registeredPatchDataMatches()</a>, <a class="el" href="ComponentSelector_8h_source.html#l00195">SAMRAI::hier::ComponentSelector::setFlag()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, and <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>.</p>
+<p>References <a class="el" href="PatchDataRestartManager_8C_source.html#l00036">SAMRAI::hier::PatchDataRestartManager::getManager()</a>, <a class="el" href="Box_8h_source.html#l00258">SAMRAI::hier::Box::initialize()</a>, <a class="el" href="PatchDataRestartManager_8h_source.html#l00052">SAMRAI::hier::PatchDataRestartManager::isPatchDataRegisteredForRestart()</a>, <a class="el" href="PatchDataRestartManager_8h_source.html#l00089">SAMRAI::hier::PatchDataRestartManager::registeredPatchDataMatches()</a>, <a class="el" href="ComponentSelector_8h_source.html#l00195">SAMRAI::hier::ComponentSelector::setFlag()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>, and <a class="el" href="Utilities_8h_source.html#l00070">TBOX_WARNING</a>.</p>
 
 </div>
 </div>
@@ -934,7 +934,7 @@ getPatchData(id) </dd></dl>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>restart_db </dd></dl>
 
-<p>References <a class="el" href="Patch_8h_source.html#l00231">checkAllocated()</a>, <a class="el" href="Box_8h_source.html#l00326">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Box_8h_source.html#l00340">SAMRAI::hier::Box::getLocalId()</a>, <a class="el" href="PatchDataRestartManager_8C_source.html#l00036">SAMRAI::hier::PatchDataRestartManager::getManager()</a>, <a class="el" href="Box_8h_source.html#l00354">SAMRAI::hier::Box::getOwnerRank()</a>, <a class="el" href="LocalId_8h_source.html#l00093">SAMRAI::hier::LocalId::getValue()</a>, <a class="el" href="PatchDataRestartManager_8h_source.html#l00052">SAMRAI::hier::PatchDataRestartManager::isPatchDataRegisteredForRestart()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Patch_8h_source.html#l00231">checkAllocated()</a>, <a class="el" href="Box_8h_source.html#l00331">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BlockId_8h_source.html#l00095">SAMRAI::hier::BlockId::getBlockValue()</a>, <a class="el" href="Box_8h_source.html#l00345">SAMRAI::hier::Box::getLocalId()</a>, <a class="el" href="PatchDataRestartManager_8C_source.html#l00036">SAMRAI::hier::PatchDataRestartManager::getManager()</a>, <a class="el" href="Box_8h_source.html#l00359">SAMRAI::hier::Box::getOwnerRank()</a>, <a class="el" href="LocalId_8h_source.html#l00093">SAMRAI::hier::LocalId::getValue()</a>, <a class="el" href="PatchDataRestartManager_8h_source.html#l00052">SAMRAI::hier::PatchDataRestartManager::isPatchDataRegisteredForRestart()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -980,7 +980,7 @@ getPatchData(id) </dd></dl>
   </dd>
 </dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="Box_8h_source.html#l00610">SAMRAI::hier::Box::numberCells()</a>, and <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="Box_8h_source.html#l00637">SAMRAI::hier::Box::numberCells()</a>, and <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>.</p>
 
 </div>
 </div>
@@ -1002,7 +1002,7 @@ getPatchData(id) </dd></dl>
 <p>Get the dimension of this object. </p>
 <dl class="return"><dt><b>Returns:</b></dt><dd>the dimension of this object. </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>.</p>
 
 <p>Referenced by <a class="el" href="MultiblockGriddingTagger_8C_source.html#l00081">SAMRAI::mesh::MultiblockGriddingTagger::setPhysicalBoundaryConditions()</a>.</p>
 
@@ -1071,7 +1071,7 @@ getPatchData(id) </dd></dl>
 <li>source/SAMRAI/hier/<a class="el" href="Patch_8C.html">Patch.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

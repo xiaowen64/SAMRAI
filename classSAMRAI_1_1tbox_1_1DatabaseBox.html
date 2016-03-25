@@ -41,7 +41,7 @@
 <tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#a87be791025860ff9c139a4c14752f931">operator=</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html">DatabaseBox</a> &amp;box)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ae1550be81cbdb0683778d317f7eed80e">~DatabaseBox</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#a3556f8790da33f4a65a45881b5d887c7">empty</a> () const </td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">const int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ab5164f4be232c643b770331629cd56bd">getDimVal</a> () const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">Dimension::dir_t</a>&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#aa77540a805d4000416d9ec8e5a79988e">getDimVal</a> () const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#a75455c1e197fbc7496ac10f70765df45">setDim</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html">Dimension</a> &amp;dim)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#a11281a37d76aea5244fc9b9cfc466e59">lower</a> (const int i)</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">int &amp;&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#aa763b074422d5f27c7dda90a7e62bc07">upper</a> (const int i)</td></tr>
@@ -108,7 +108,7 @@
 <div class="memdoc">
 <p>Create a box of the specified dimension describing the index space between lower and upper. </p>
 
-<p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00029">SAMRAI::tbox::DatabaseBox_POD::d_dimension</a>, <a class="el" href="DatabaseBox_8h_source.html#l00031">SAMRAI::tbox::DatabaseBox_POD::d_hi</a>, <a class="el" href="DatabaseBox_8h_source.html#l00030">SAMRAI::tbox::DatabaseBox_POD::d_lo</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00029">SAMRAI::tbox::DatabaseBox_POD::d_dimension</a>, <a class="el" href="DatabaseBox_8h_source.html#l00031">SAMRAI::tbox::DatabaseBox_POD::d_hi</a>, <a class="el" href="DatabaseBox_8h_source.html#l00030">SAMRAI::tbox::DatabaseBox_POD::d_lo</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -193,12 +193,12 @@
 
 </div>
 </div>
-<a class="anchor" id="ab5164f4be232c643b770331629cd56bd"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::getDimVal" ref="ab5164f4be232c643b770331629cd56bd" args="() const " -->
+<a class="anchor" id="aa77540a805d4000416d9ec8e5a79988e"></a><!-- doxytag: member="SAMRAI::tbox::DatabaseBox::getDimVal" ref="aa77540a805d4000416d9ec8e5a79988e" args="() const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">const int&amp; SAMRAI::tbox::DatabaseBox::getDimVal </td>
+          <td class="memname"><a class="el" href="classSAMRAI_1_1tbox_1_1Dimension.html#acca605e244511b1af03e7ee4f6e9179f">Dimension::dir_t</a> SAMRAI::tbox::DatabaseBox::getDimVal </td>
           <td>(</td>
           <td class="paramname"></td>
           <td>&nbsp;)&nbsp;</td>
@@ -211,7 +211,7 @@
 
 <p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, and <a class="el" href="DatabaseBox_8h_source.html#l00029">SAMRAI::tbox::DatabaseBox_POD::d_dimension</a>.</p>
 
-<p>Referenced by <a class="el" href="DatabaseBox_8h_source.html#l00114">lower()</a>, <a class="el" href="Box_8h_source.html#l01130">SAMRAI::hier::Box::operator=()</a>, <a class="el" href="Box_8C_source.html#l00697">SAMRAI::hier::Box::set_Box_from_DatabaseBox()</a>, and <a class="el" href="DatabaseBox_8h_source.html#l00127">upper()</a>.</p>
+<p>Referenced by <a class="el" href="DatabaseBox_8h_source.html#l00114">lower()</a>, <a class="el" href="Box_8h_source.html#l01163">SAMRAI::hier::Box::operator=()</a>, <a class="el" href="Box_8C_source.html#l00710">SAMRAI::hier::Box::set_Box_from_DatabaseBox()</a>, and <a class="el" href="DatabaseBox_8h_source.html#l00127">upper()</a>.</p>
 
 </div>
 </div>
@@ -231,9 +231,9 @@
 </div>
 <div class="memdoc">
 
-<p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00029">SAMRAI::tbox::DatabaseBox_POD::d_dimension</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00029">SAMRAI::tbox::DatabaseBox_POD::d_dimension</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
-<p>Referenced by <a class="el" href="Box_8C_source.html#l00682">SAMRAI::hier::Box::DatabaseBox_from_Box()</a>, and <a class="el" href="HDFDatabase_8C_source.html#l00968">SAMRAI::tbox::HDFDatabase::getDatabaseBoxVector()</a>.</p>
+<p>Referenced by <a class="el" href="Box_8C_source.html#l00695">SAMRAI::hier::Box::DatabaseBox_from_Box()</a>, and <a class="el" href="HDFDatabase_8C_source.html#l00970">SAMRAI::tbox::HDFDatabase::getDatabaseBoxVector()</a>.</p>
 
 </div>
 </div>
@@ -253,11 +253,11 @@
 </div>
 <div class="memdoc">
 <p>Return the specified component (non-const) of the lower index of the box.</p>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ab5164f4be232c643b770331629cd56bd">getDimVal()</a>) </dd></dl>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#aa77540a805d4000416d9ec8e5a79988e">getDimVal()</a>) </dd></dl>
 
 <p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00030">SAMRAI::tbox::DatabaseBox_POD::d_lo</a>, <a class="el" href="DatabaseBox_8h_source.html#l00096">getDimVal()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="Box_8C_source.html#l00682">SAMRAI::hier::Box::DatabaseBox_from_Box()</a>, and <a class="el" href="Box_8C_source.html#l00697">SAMRAI::hier::Box::set_Box_from_DatabaseBox()</a>.</p>
+<p>Referenced by <a class="el" href="Box_8C_source.html#l00695">SAMRAI::hier::Box::DatabaseBox_from_Box()</a>, and <a class="el" href="Box_8C_source.html#l00710">SAMRAI::hier::Box::set_Box_from_DatabaseBox()</a>.</p>
 
 </div>
 </div>
@@ -277,11 +277,11 @@
 </div>
 <div class="memdoc">
 <p>Return the specified component (non-const) of the upper index of the box.</p>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ab5164f4be232c643b770331629cd56bd">getDimVal()</a>) </dd></dl>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#aa77540a805d4000416d9ec8e5a79988e">getDimVal()</a>) </dd></dl>
 
 <p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00031">SAMRAI::tbox::DatabaseBox_POD::d_hi</a>, <a class="el" href="DatabaseBox_8h_source.html#l00096">getDimVal()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="Box_8C_source.html#l00682">SAMRAI::hier::Box::DatabaseBox_from_Box()</a>, and <a class="el" href="Box_8C_source.html#l00697">SAMRAI::hier::Box::set_Box_from_DatabaseBox()</a>.</p>
+<p>Referenced by <a class="el" href="Box_8C_source.html#l00695">SAMRAI::hier::Box::DatabaseBox_from_Box()</a>, and <a class="el" href="Box_8C_source.html#l00710">SAMRAI::hier::Box::set_Box_from_DatabaseBox()</a>.</p>
 
 </div>
 </div>
@@ -301,7 +301,7 @@
 </div>
 <div class="memdoc">
 <p>Return the specified component (const) of the lower index of the box.</p>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ab5164f4be232c643b770331629cd56bd">getDimVal()</a>) </dd></dl>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#aa77540a805d4000416d9ec8e5a79988e">getDimVal()</a>) </dd></dl>
 
 <p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00030">SAMRAI::tbox::DatabaseBox_POD::d_lo</a>, <a class="el" href="DatabaseBox_8h_source.html#l00096">getDimVal()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
@@ -323,7 +323,7 @@
 </div>
 <div class="memdoc">
 <p>Return the specified component (const) of the upper index of the box.</p>
-<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#ab5164f4be232c643b770331629cd56bd">getDimVal()</a>) </dd></dl>
+<dl class="pre"><dt><b>Precondition:</b></dt><dd>(i &gt;= 0) &amp;&amp; (i &lt; <a class="el" href="classSAMRAI_1_1tbox_1_1DatabaseBox.html#aa77540a805d4000416d9ec8e5a79988e">getDimVal()</a>) </dd></dl>
 
 <p>References <a class="el" href="DatabaseBox_8h_source.html#l00178">d_data</a>, <a class="el" href="DatabaseBox_8h_source.html#l00031">SAMRAI::tbox::DatabaseBox_POD::d_hi</a>, <a class="el" href="DatabaseBox_8h_source.html#l00096">getDimVal()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
@@ -375,7 +375,7 @@
 <li>source/SAMRAI/tbox/<a class="el" href="DatabaseBox_8C.html">DatabaseBox.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

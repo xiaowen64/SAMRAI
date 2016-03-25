@@ -129,7 +129,7 @@ Inheritance diagram for SAMRAI::math::PatchFaceDataNormOpsComplex:</div>
 <dd>
 data-&gt;getDim() == box.getDim() </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00641">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l00731">SAMRAI::math::HierarchyFaceDataOpsComplex::numberOfEntries()</a>, <a class="el" href="PatchFaceDataNormOpsComplex_8C_source.html#l00197">RMSNorm()</a>, and <a class="el" href="PatchFaceDataNormOpsComplex_8C_source.html#l00214">weightedRMSNorm()</a>.</p>
 
@@ -168,7 +168,7 @@ data-&gt;getDim() == box.getDim() </dd></dl>
 <p>Return sum of control volume entries for the face-centered data object.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>data &amp;&amp; cvol </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00130">SAMRAI::math::ArrayDataNormOpsComplex::sumControlVolumes()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00130">SAMRAI::math::ArrayDataNormOpsComplex::sumControlVolumes()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchFaceDataNormOpsComplex_8C_source.html#l00197">RMSNorm()</a>, <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l00804">SAMRAI::math::HierarchyFaceDataOpsComplex::sumControlVolumes()</a>, and <a class="el" href="PatchFaceDataNormOpsComplex_8C_source.html#l00214">weightedRMSNorm()</a>.</p>
 
@@ -209,7 +209,7 @@ data-&gt;getDim() == box.getDim() </dd></dl>
 <dd>
 (dst-&gt;getDim() == src-&gt;getDim()) &amp;&amp; (dst-&gt;getDim() == box.getDim()) </dd></dl>
 
-<p>References <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00036">SAMRAI::math::ArrayDataNormOpsComplex::abs()</a>, <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00036">SAMRAI::math::ArrayDataNormOpsComplex::abs()</a>, <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l00656">SAMRAI::math::HierarchyFaceDataOpsComplex::abs()</a>.</p>
 
@@ -252,7 +252,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <dd>
 !cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00314">SAMRAI::math::ArrayDataNormOpsComplex::L1Norm()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00216">SAMRAI::math::ArrayDataNormOpsComplex::L1NormWithControlVolume()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00314">SAMRAI::math::ArrayDataNormOpsComplex::L1Norm()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00216">SAMRAI::math::ArrayDataNormOpsComplex::L1NormWithControlVolume()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l00848">SAMRAI::math::HierarchyFaceDataOpsComplex::L1Norm()</a>.</p>
 
@@ -295,7 +295,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <dd>
 !cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8h_source.html#l00132">SAMRAI::math::ArrayDataNormOpsComplex::L2Norm()</a>, <a class="el" href="ArrayDataNormOpsComplex_8h_source.html#l00115">SAMRAI::math::ArrayDataNormOpsComplex::L2NormWithControlVolume()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8h_source.html#l00132">SAMRAI::math::ArrayDataNormOpsComplex::L2Norm()</a>, <a class="el" href="ArrayDataNormOpsComplex_8h_source.html#l00115">SAMRAI::math::ArrayDataNormOpsComplex::L2NormWithControlVolume()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchFaceDataNormOpsComplex_8C_source.html#l00197">RMSNorm()</a>.</p>
 
@@ -344,7 +344,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <dd>
 !cvol || (data-&gt;getDim() == cvol-&gt;getDim()) </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00826">SAMRAI::math::ArrayDataNormOpsComplex::weightedL2Norm()</a>, and <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00711">SAMRAI::math::ArrayDataNormOpsComplex::weightedL2NormWithControlVolume()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>, <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>, <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00826">SAMRAI::math::ArrayDataNormOpsComplex::weightedL2Norm()</a>, and <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00711">SAMRAI::math::ArrayDataNormOpsComplex::weightedL2NormWithControlVolume()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l00909">SAMRAI::math::HierarchyFaceDataOpsComplex::weightedL2Norm()</a>, and <a class="el" href="PatchFaceDataNormOpsComplex_8C_source.html#l00214">weightedRMSNorm()</a>.</p>
 
@@ -463,7 +463,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <p>Return the <img class="formulaInl" alt="$\max$" src="form_24.png"/>-norm of the data using the control volume to weight the contribution of each data entry to the maximum. That is, the return value is <img class="formulaInl" alt="$\max_i ( \sqrt{data_i * \bar{data_i}} )$" src="form_25.png"/>, where the max is over the data elements where <img class="formulaInl" alt="$cvol_i > 0$" src="form_9.png"/>. If the control volume is NULL, it is ignored during the computation of the maximum.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>data </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l01024">SAMRAI::math::ArrayDataNormOpsComplex::maxNorm()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00923">SAMRAI::math::ArrayDataNormOpsComplex::maxNormWithControlVolume()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l01024">SAMRAI::math::ArrayDataNormOpsComplex::maxNorm()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00923">SAMRAI::math::ArrayDataNormOpsComplex::maxNormWithControlVolume()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l00995">SAMRAI::math::HierarchyFaceDataOpsComplex::maxNorm()</a>.</p>
 
@@ -508,7 +508,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <p>Return the dot product of the two data arrays using the control volume to weight the contribution of each product to the sum. That is, the return value is the sum <img class="formulaInl" alt="$\sum_i ( data1_i * \bar{data2_i} * cvol_i )$" src="form_26.png"/>. If the control volume is NULL, it is ignored during the summation.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>data1 &amp;&amp; data2 </dd></dl>
 
-<p>References <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00513">SAMRAI::math::ArrayDataNormOpsComplex::dot()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00395">SAMRAI::math::ArrayDataNormOpsComplex::dotWithControlVolume()</a>, <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00513">SAMRAI::math::ArrayDataNormOpsComplex::dot()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00395">SAMRAI::math::ArrayDataNormOpsComplex::dotWithControlVolume()</a>, <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l01045">SAMRAI::math::HierarchyFaceDataOpsComplex::dot()</a>.</p>
 
@@ -547,7 +547,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <p>Return the integral of the function represented by the data array. The return value is the sum <img class="formulaInl" alt="$\sum_i ( data_i * vol_i )$" src="form_28.png"/>.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>data </dd></dl>
 
-<p>References <a class="el" href="Box_8h_source.html#l01263">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00613">SAMRAI::math::ArrayDataNormOpsComplex::integral()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
+<p>References <a class="el" href="Box_8h_source.html#l01296">SAMRAI::hier::Box::getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="ArrayDataNormOpsComplex_8C_source.html#l00613">SAMRAI::math::ArrayDataNormOpsComplex::integral()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="FaceGeometry_8C_source.html#l00097">SAMRAI::pdat::FaceGeometry::toFaceBox()</a>.</p>
 
 <p>Referenced by <a class="el" href="HierarchyFaceDataOpsComplex_8C_source.html#l01110">SAMRAI::math::HierarchyFaceDataOpsComplex::integral()</a>.</p>
 
@@ -558,7 +558,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <li>source/SAMRAI/math/<a class="el" href="PatchFaceDataNormOpsComplex_8C.html">PatchFaceDataNormOpsComplex.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

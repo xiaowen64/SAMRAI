@@ -74,7 +74,7 @@ boost::shared_ptr<br class="typebreak"/>
 <tr><td class="memItemLeft" align="right" valign="top">virtual TYPE&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a67cc50d084e62c93061af2b3e9f54443">min</a> (const int data_id, const bool interior_only=true) const =0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual TYPE&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a57d756a0bdc0cf91024fbd07009afd55">max</a> (const int data_id, const bool interior_only=true) const =0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a06aced8b3258e6e1916ad61a9f9732af">setRandomValues</a> (const int data_id, const TYPE &amp;width, const TYPE &amp;low, const bool interior_only=true) const =0</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a078465e80470d620c46db51f04659151">numberOfEntries</a> (const int data_id, const bool interior_only=true) const =0</td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a6062b5d10f7706744b0b7ea0bb6729eb">numberOfEntries</a> (const int data_id, const bool interior_only=true) const =0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a45dc7182885e3b43d17d8427d17e6320">sumControlVolumes</a> (const int data_id, const int vol_id) const =0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a58f9b0706ca4d2f548dc25b426034ef5">L1Norm</a> (const int data_id, const int vol_id=-1, bool local_only=false) const =0</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html#a1f9ce4bad63f1c1347382c142e470b94">L2Norm</a> (const int data_id, const int vol_id=-1, bool local_only=false) const =0</td></tr>
@@ -966,14 +966,14 @@ template&lt;class TYPE &gt; </div>
 
 </div>
 </div>
-<a class="anchor" id="a078465e80470d620c46db51f04659151"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsReal::numberOfEntries" ref="a078465e80470d620c46db51f04659151" args="(const int data_id, const bool interior_only=true) const =0" -->
+<a class="anchor" id="a6062b5d10f7706744b0b7ea0bb6729eb"></a><!-- doxytag: member="SAMRAI::math::HierarchyDataOpsReal::numberOfEntries" ref="a6062b5d10f7706744b0b7ea0bb6729eb" args="(const int data_id, const bool interior_only=true) const =0" -->
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;class TYPE &gt; </div>
       <table class="memname">
         <tr>
-          <td class="memname">virtual int <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">SAMRAI::math::HierarchyDataOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
+          <td class="memname">virtual size_t <a class="el" href="classSAMRAI_1_1math_1_1HierarchyDataOpsReal.html">SAMRAI::math::HierarchyDataOpsReal</a>&lt; TYPE &gt;::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const int&nbsp;</td>
           <td class="paramname"> <em>data_id</em>, </td>
@@ -994,7 +994,7 @@ template&lt;class TYPE &gt; </div>
 <div class="memdoc">
 <p>Return the total number of data values for the component on the set of hierarchy levels. If the boolean argument is true, the number of elements will be summed over patch interiors. If the boolean argument is false, all elements will be counted (including ghost values) over all patches. </p>
 
-<p>Implemented in <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#af15a57f8ead42bd92fb1201235604f5f">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsReal.html#aea66efad9cce95e2c96e01d267efa056">SAMRAI::math::HierarchyEdgeDataOpsReal&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsReal.html#adb67c82bff660b6c792548c737b9b8f0">SAMRAI::math::HierarchyFaceDataOpsReal&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsReal.html#a71f438bffc7b7862390af4883186df8c">SAMRAI::math::HierarchyNodeDataOpsReal&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsReal.html#a76618072deb56801f88f9ccaad96bad4">SAMRAI::math::HierarchySideDataOpsReal&lt; TYPE &gt;</a>.</p>
+<p>Implemented in <a class="el" href="classSAMRAI_1_1math_1_1HierarchyCellDataOpsReal.html#ad7a805f8dddd99c950544a74e75465dd">SAMRAI::math::HierarchyCellDataOpsReal&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyEdgeDataOpsReal.html#adddbc966a7442c72158d25d01e378d7f">SAMRAI::math::HierarchyEdgeDataOpsReal&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyFaceDataOpsReal.html#a916d51343884a15c01a6bf1b3779b036">SAMRAI::math::HierarchyFaceDataOpsReal&lt; TYPE &gt;</a>, <a class="el" href="classSAMRAI_1_1math_1_1HierarchyNodeDataOpsReal.html#a610a0367240c121f5fd02d429ae8007a">SAMRAI::math::HierarchyNodeDataOpsReal&lt; TYPE &gt;</a>, and <a class="el" href="classSAMRAI_1_1math_1_1HierarchySideDataOpsReal.html#a90b69e61d1a0fe4165e8d68b15ef895c">SAMRAI::math::HierarchySideDataOpsReal&lt; TYPE &gt;</a>.</p>
 
 </div>
 </div>
@@ -1505,7 +1505,7 @@ template&lt;class TYPE &gt; </div>
 <li>source/SAMRAI/math/<a class="el" href="HierarchyDataOpsReal_8C.html">HierarchyDataOpsReal.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

@@ -59,6 +59,7 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#ae332c260d625389d3d7ce6140fbcf788">findOverlaps</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const bool ignore_self_overlap=false) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Discover and add overlaps from base to head for an overlap <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html" title="A container which holds relationship connections between two BoxLevels.">Connector</a>.  <a href="#ae332c260d625389d3d7ce6140fbcf788"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a5f56d7303025dffaef086edf0185cf4f">findOverlaps</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxLevel.html">BoxLevel</a> &amp;globalized_head, const bool ignore_self_overlap=false) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a6b340a8cc4df1d6d7567b9d8da3abe87">findOverlaps_assumedPartition</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a117ab34c4e5ec7b7e2942dca5bc6460f">extractNeighbors</a> (<a class="el" href="classSAMRAI_1_1hier_1_1BoxContainer.html">Connector::NeighborSet</a> &amp;neighbors, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1BoxId.html">BoxId</a> &amp;box_id, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;gcw) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">For a given <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html" title="A container which holds relationship connections between two BoxLevels.">Connector</a>, get the subset of overlapping neighbors defined by the given <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html" title="A container which holds relationship connections between two BoxLevels.">Connector</a> width.  <a href="#a117ab34c4e5ec7b7e2942dca5bc6460f"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a00a49de1613717173249513c0e4a904a">extractNeighbors</a> (<a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;other, const <a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;connector, const <a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">IntVector</a> &amp;gcw) const </td></tr>
@@ -77,6 +78,8 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">When <code>do_check</code> is true, turn on sanity checks for input parameters.  <a href="#a29f448936a23f8dd367ce65c371466a8"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a7088a2d599fd1d4c7efca3d078207e98">setSanityCheckMethodPostconditions</a> (bool do_check)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">When <code>do_check</code> is true, turn on sanity checks for outputs.  <a href="#a7088a2d599fd1d4c7efca3d078207e98"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a2c5d518cee5fba53a393387a4110bb14">setSAMRAI_MPI</a> (const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;mpi, bool make_duplicate=true)</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Set the SAMRAI_MPI to use.  <a href="#a2c5d518cee5fba53a393387a4110bb14"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a2642092f5b583af36c564849ad2df1f7">setPrintSteps</a> (bool print_steps)</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">When <code>print_steps</code> is true, print what the code is doing.  <a href="#a2642092f5b583af36c564849ad2df1f7"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1hier_1_1OverlapConnectorAlgorithm.html#a8d69f7abe729ec94f3e4ca647116286e">setTimerPrefix</a> (const std::string &amp;timer_prefix)</td></tr>
@@ -106,7 +109,7 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
 
 <p>Constructor. </p>
 
-<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l01644">setTimerPrefix()</a>.</p>
+<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l01864">setTimerPrefix()</a>.</p>
 
 </div>
 </div>
@@ -126,6 +129,8 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
 <div class="memdoc">
 
 <p>Destructor. </p>
+
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01608">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>.</p>
 
 </div>
 </div>
@@ -194,9 +199,9 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BoxLevel_8C_source.html#l01269">SAMRAI::hier::BoxLevel::getGlobalizedVersion()</a>.</p>
+<p>References <a class="el" href="BoxLevel_8C_source.html#l01310">SAMRAI::hier::BoxLevel::getGlobalizedVersion()</a>.</p>
 
-<p>Referenced by <a class="el" href="BoxLevelConnectorUtils_8C_source.html#l00095">SAMRAI::hier::BoxLevelConnectorUtils::baseNestsInHead()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00362">findOverlaps()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00331">findOverlapsWithTranspose()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01836">SAMRAI::mesh::BalanceUtilities::findSmallBoxesInPostbalance()</a>, <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, <a class="el" href="ChopAndPackLoadBalancer_8C_source.html#l00254">SAMRAI::mesh::ChopAndPackLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l00317">SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel()</a>.</p>
+<p>Referenced by <a class="el" href="BoxLevelConnectorUtils_8C_source.html#l00095">SAMRAI::hier::BoxLevelConnectorUtils::baseNestsInHead()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00387">findOverlaps()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00356">findOverlapsWithTranspose()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01838">SAMRAI::mesh::BalanceUtilities::findSmallBoxesInPostbalance()</a>, <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, <a class="el" href="ChopAndPackLoadBalancer_8C_source.html#l00240">SAMRAI::mesh::ChopAndPackLoadBalancer::loadBalanceBoxLevel()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l00322">SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel()</a>.</p>
 
 </div>
 </div>
@@ -271,7 +276,7 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
   </dd>
 </dl>
 
-<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00305">findOverlaps()</a>.</p>
+<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00330">findOverlaps()</a>.</p>
 
 </div>
 </div>
@@ -311,7 +316,7 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
   </dd>
 </dl>
 
-<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00305">findOverlaps()</a>, <a class="el" href="BoxLevel_8C_source.html#l01269">SAMRAI::hier::BoxLevel::getGlobalizedVersion()</a>, and <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>.</p>
+<p>References <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00330">findOverlaps()</a>, <a class="el" href="BoxLevel_8C_source.html#l01310">SAMRAI::hier::BoxLevel::getGlobalizedVersion()</a>, and <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>.</p>
 
 </div>
 </div>
@@ -345,6 +350,28 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
       </table>
 </div>
 <div class="memdoc">
+
+</div>
+</div>
+<a class="anchor" id="a6b340a8cc4df1d6d7567b9d8da3abe87"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps_assumedPartition" ref="a6b340a8cc4df1d6d7567b9d8da3abe87" args="(Connector &amp;connector) const " -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::findOverlaps_assumedPartition </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classSAMRAI_1_1hier_1_1Connector.html">Connector</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>connector</em></td>
+          <td>&nbsp;)&nbsp;</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>References <a class="el" href="BoxContainer_8h_source.html#l00828">SAMRAI::hier::BoxContainer::back()</a>, <a class="el" href="BoxContainer_8h_source.html#l00705">SAMRAI::hier::BoxContainer::begin()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00600">bridgeWithNesting()</a>, <a class="el" href="Connector_8h_source.html#l00173">SAMRAI::hier::Connector::clear()</a>, <a class="el" href="BoxContainer_8h_source.html#l00864">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="BoxContainer_8C_source.html#l01602">SAMRAI::hier::BoxContainer::coarsen()</a>, <a class="el" href="Connector_8C_source.html#l00439">SAMRAI::hier::Connector::computeTransposeOf()</a>, <a class="el" href="Connector_8C_source.html#l01294">SAMRAI::hier::Connector::convertHeadWidthToBase()</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxLevel_8h_source.html#l00521">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="Connector_8h_source.html#l00982">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="BoxLevel_8h_source.html#l00848">SAMRAI::hier::BoxLevel::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00785">SAMRAI::hier::BoxLevel::getGlobalBoundingBox()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00798">SAMRAI::hier::Connector::getRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00583">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="BoxContainer_8C_source.html#l01565">SAMRAI::hier::BoxContainer::grow()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00296">SAMRAI::tbox::SAMRAI_MPI::hasNullCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01560">SAMRAI::tbox::SAMRAI_MPI::hasReceivableMessage()</a>, <a class="el" href="Connector_8h_source.html#l00562">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, <a class="el" href="Connector_8C_source.html#l00294">SAMRAI::hier::Connector::insertNeighbors()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00307">SAMRAI::tbox::SAMRAI_MPI::isCongruentWith()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00045">MPI_ANY_SOURCE</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00046">MPI_ANY_TAG</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="BoxContainer_8h_source.html#l01107">SAMRAI::hier::BoxContainer::push_back()</a>, <a class="el" href="BoxContainer_8C_source.html#l01590">SAMRAI::hier::BoxContainer::refine()</a>, <a class="el" href="Connector_8C_source.html#l00910">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="Connector_8C_source.html#l00932">SAMRAI::hier::Connector::setHead()</a>, <a class="el" href="Connector_8h_source.html#l01167">SAMRAI::hier::Connector::setTranspose()</a>, <a class="el" href="Connector_8C_source.html#l00953">SAMRAI::hier::Connector::setWidth()</a>, <a class="el" href="Box_8h_source.html#l00668">SAMRAI::hier::Box::size()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+
+<p>Referenced by <a class="el" href="GriddingAlgorithm_8C_source.html#l00322">SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel()</a>.</p>
 
 </div>
 </div>
@@ -402,7 +429,7 @@ Inheritance diagram for SAMRAI::hier::OverlapConnectorAlgorithm:</div>
 <dd>
 connector.getBase().hasBox(box_id) </dd></dl>
 
-<p>References <a class="el" href="Connector_8h_source.html#l00184">SAMRAI::hier::Connector::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00860">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="MappingConnector_8C_source.html#l00023">dbgbord</a>, <a class="el" href="BoxContainer_8h_source.html#l00712">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Connector_8h_source.html#l00202">SAMRAI::hier::Connector::end()</a>, <a class="el" href="Connector_8h_source.html#l00275">SAMRAI::hier::Connector::findLocal()</a>, <a class="el" href="Connector_8h_source.html#l01446">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01567">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Box_8h_source.html#l00326">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BoxLevel_8h_source.html#l01138">SAMRAI::hier::BoxLevel::getBox()</a>, <a class="el" href="Connector_8h_source.html#l00957">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="Connector_8h_source.html#l00801">SAMRAI::hier::Connector::getHeadCoarserFlag()</a>, <a class="el" href="Connector_8h_source.html#l00924">SAMRAI::hier::Connector::getMPI()</a>, <a class="el" href="BoxId_8h_source.html#l00127">SAMRAI::hier::BoxId::getOwnerRank()</a>, <a class="el" href="Connector_8h_source.html#l00912">SAMRAI::hier::Connector::getParallelState()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00773">SAMRAI::hier::Connector::getRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::GLOBALIZED</a>, <a class="el" href="Box_8h_source.html#l00888">SAMRAI::hier::Box::grow()</a>, <a class="el" href="BoxLevel_8h_source.html#l01249">SAMRAI::hier::BoxLevel::hasBox()</a>, <a class="el" href="BoxContainer_8C_source.html#l00290">SAMRAI::hier::BoxContainer::insert()</a>, <a class="el" href="Box_8C_source.html#l00529">SAMRAI::hier::Box::intersects()</a>, <a class="el" href="Box_8C_source.html#l00622">SAMRAI::hier::Box::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="Connector_8h_source.html#l00209">SAMRAI::hier::Connector::begin()</a>, <a class="el" href="BoxContainer_8h_source.html#l00864">SAMRAI::hier::BoxContainer::clear()</a>, <a class="el" href="MappingConnector_8C_source.html#l00023">dbgbord</a>, <a class="el" href="BoxContainer_8h_source.html#l00716">SAMRAI::hier::BoxContainer::end()</a>, <a class="el" href="Connector_8h_source.html#l00227">SAMRAI::hier::Connector::end()</a>, <a class="el" href="Connector_8h_source.html#l00300">SAMRAI::hier::Connector::findLocal()</a>, <a class="el" href="Connector_8h_source.html#l01488">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01608">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Box_8h_source.html#l00331">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BoxLevel_8h_source.html#l01159">SAMRAI::hier::BoxLevel::getBox()</a>, <a class="el" href="Connector_8h_source.html#l00982">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="Connector_8h_source.html#l00826">SAMRAI::hier::Connector::getHeadCoarserFlag()</a>, <a class="el" href="Connector_8h_source.html#l00949">SAMRAI::hier::Connector::getMPI()</a>, <a class="el" href="BoxId_8h_source.html#l00127">SAMRAI::hier::BoxId::getOwnerRank()</a>, <a class="el" href="Connector_8h_source.html#l00937">SAMRAI::hier::Connector::getParallelState()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00798">SAMRAI::hier::Connector::getRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00583">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::GLOBALIZED</a>, <a class="el" href="Box_8h_source.html#l00915">SAMRAI::hier::Box::grow()</a>, <a class="el" href="BoxLevel_8h_source.html#l01270">SAMRAI::hier::BoxLevel::hasBox()</a>, <a class="el" href="BoxContainer_8C_source.html#l00290">SAMRAI::hier::BoxContainer::insert()</a>, <a class="el" href="Box_8C_source.html#l00541">SAMRAI::hier::Box::intersects()</a>, <a class="el" href="Box_8C_source.html#l00635">SAMRAI::hier::Box::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -452,7 +479,7 @@ for the box_id of each neighborhood base box in connector, (connector.getParalle
 <dd>
 for the box_id of each neighborhood base box in connector, connector.getBase().hasBox(box_id) </dd></dl>
 
-<p>References <a class="el" href="Connector_8h_source.html#l00184">SAMRAI::hier::Connector::begin()</a>, <a class="el" href="Connector_8h_source.html#l00165">SAMRAI::hier::Connector::clearNeighborhoods()</a>, <a class="el" href="MappingConnector_8C_source.html#l00023">dbgbord</a>, <a class="el" href="Connector_8h_source.html#l00202">SAMRAI::hier::Connector::end()</a>, <a class="el" href="Connector_8h_source.html#l01446">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01567">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Box_8h_source.html#l00326">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BoxLevel_8h_source.html#l01138">SAMRAI::hier::BoxLevel::getBox()</a>, <a class="el" href="Connector_8h_source.html#l00957">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="Connector_8h_source.html#l00801">SAMRAI::hier::Connector::getHeadCoarserFlag()</a>, <a class="el" href="Connector_8h_source.html#l00924">SAMRAI::hier::Connector::getMPI()</a>, <a class="el" href="BoxId_8h_source.html#l00127">SAMRAI::hier::BoxId::getOwnerRank()</a>, <a class="el" href="Connector_8h_source.html#l00912">SAMRAI::hier::Connector::getParallelState()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00773">SAMRAI::hier::Connector::getRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::GLOBALIZED</a>, <a class="el" href="Box_8h_source.html#l00888">SAMRAI::hier::Box::grow()</a>, <a class="el" href="BoxLevel_8h_source.html#l01249">SAMRAI::hier::BoxLevel::hasBox()</a>, <a class="el" href="Connector_8h_source.html#l00537">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, <a class="el" href="Box_8C_source.html#l00529">SAMRAI::hier::Box::intersects()</a>, <a class="el" href="Connector_8h_source.html#l00624">SAMRAI::hier::Connector::makeEmptyLocalNeighborhood()</a>, <a class="el" href="Box_8C_source.html#l00622">SAMRAI::hier::Box::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="Connector_8h_source.html#l00209">SAMRAI::hier::Connector::begin()</a>, <a class="el" href="Connector_8h_source.html#l00190">SAMRAI::hier::Connector::clearNeighborhoods()</a>, <a class="el" href="MappingConnector_8C_source.html#l00023">dbgbord</a>, <a class="el" href="Connector_8h_source.html#l00227">SAMRAI::hier::Connector::end()</a>, <a class="el" href="Connector_8h_source.html#l01488">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01608">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Box_8h_source.html#l00331">SAMRAI::hier::Box::getBlockId()</a>, <a class="el" href="BoxLevel_8h_source.html#l01159">SAMRAI::hier::BoxLevel::getBox()</a>, <a class="el" href="Connector_8h_source.html#l00982">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="Connector_8h_source.html#l00826">SAMRAI::hier::Connector::getHeadCoarserFlag()</a>, <a class="el" href="Connector_8h_source.html#l00949">SAMRAI::hier::Connector::getMPI()</a>, <a class="el" href="BoxId_8h_source.html#l00127">SAMRAI::hier::BoxId::getOwnerRank()</a>, <a class="el" href="Connector_8h_source.html#l00937">SAMRAI::hier::Connector::getParallelState()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="Connector_8h_source.html#l00798">SAMRAI::hier::Connector::getRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00583">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="BoxLevel_8h_source.html#l00104">SAMRAI::hier::BoxLevel::GLOBALIZED</a>, <a class="el" href="Box_8h_source.html#l00915">SAMRAI::hier::Box::grow()</a>, <a class="el" href="BoxLevel_8h_source.html#l01270">SAMRAI::hier::BoxLevel::hasBox()</a>, <a class="el" href="Connector_8h_source.html#l00562">SAMRAI::hier::Connector::insertLocalNeighbor()</a>, <a class="el" href="Box_8C_source.html#l00541">SAMRAI::hier::Box::intersects()</a>, <a class="el" href="Connector_8h_source.html#l00649">SAMRAI::hier::Connector::makeEmptyLocalNeighborhood()</a>, <a class="el" href="Box_8C_source.html#l00635">SAMRAI::hier::Box::refine()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -566,9 +593,9 @@ for the box_id of each neighborhood base box in connector, connector.getBase().h
 <dd>
 cent_to_east.hasTranspose() </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00774">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00768">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01148">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00296">SAMRAI::tbox::SAMRAI_MPI::hasNullCommunicator()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
-<p>Referenced by <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l00317">SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l00614">SAMRAI::mesh::GriddingAlgorithm::makeFinerLevel()</a>.</p>
+<p>Referenced by <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00436">findOverlaps_assumedPartition()</a>, <a class="el" href="GraphLoadBalancer_8C_source.html#l00072">SAMRAI::mesh::GraphLoadBalancer::loadBalanceBoxLevel()</a>, <a class="el" href="GriddingAlgorithm_8C_source.html#l00322">SAMRAI::mesh::GriddingAlgorithm::makeCoarsestLevel()</a>, and <a class="el" href="GriddingAlgorithm_8C_source.html#l00664">SAMRAI::mesh::GriddingAlgorithm::makeFinerLevel()</a>.</p>
 
 </div>
 </div>
@@ -633,7 +660,7 @@ cent_to_east.hasTranspose() </dd></dl>
 cent_to_east.hasTranspose()</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd>bridgeWithNesting( Connector&amp; west_to_east, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const IntVector&amp; center_growth_to_nest_west, const IntVector&amp; center_growth_to_nest_east, const IntVector&amp; connector_width_limit, bool compute_transpose) const; </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00774">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00768">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01148">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00296">SAMRAI::tbox::SAMRAI_MPI::hasNullCommunicator()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="BoxLevelConnectorUtils_8C_source.html#l01270">SAMRAI::hier::BoxLevelConnectorUtils::addPeriodicImagesAndRelationships()</a>.</p>
 
@@ -691,7 +718,7 @@ cent_to_east.hasTranspose()</dd></dl>
 cent_to_east.hasTranspose()</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd>bridge( Connector&amp; west_to_east, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const IntVector&amp; connector_width_limit, bool compute_transpose) const; </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00774">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Connector_8h_source.html#l00957">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00768">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Connector_8h_source.html#l00982">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01148">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00296">SAMRAI::tbox::SAMRAI_MPI::hasNullCommunicator()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -742,7 +769,7 @@ cent_to_east.hasTranspose()</dd></dl>
 cent_to_east.hasTranspose()</dd></dl>
 <dl class="see"><dt><b>See also:</b></dt><dd>bridgeWithNesting( Connector&amp; west_to_east, const Connector&amp; west_to_center, const Connector&amp; center_to_east, const IntVector&amp; center_growth_to_nest_west, const IntVector&amp; center_growth_to_nest_east, const IntVector&amp; connector_width_limit, bool compute_transpose) const; </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00774">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00165">SAMRAI::hier::Connector::clearNeighborhoods()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Connector_8h_source.html#l00957">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00719">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00756">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00730">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="Connector_8C_source.html#l00628">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="Connector_8C_source.html#l00650">SAMRAI::hier::Connector::setHead()</a>, <a class="el" href="Connector_8C_source.html#l00671">SAMRAI::hier::Connector::setWidth()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l00768">SAMRAI::tbox::SAMRAI_MPI::Barrier()</a>, <a class="el" href="Connector_8h_source.html#l00190">SAMRAI::hier::Connector::clearNeighborhoods()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="Connector_8h_source.html#l00982">SAMRAI::hier::Connector::getConnectorWidth()</a>, <a class="el" href="IntVector_8h_source.html#l00721">SAMRAI::hier::IntVector::getDim()</a>, <a class="el" href="Connector_8h_source.html#l00781">SAMRAI::hier::Connector::getHead()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="Connector_8h_source.html#l01148">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="IntVector_8h_source.html#l00732">SAMRAI::hier::IntVector::getZero()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00296">SAMRAI::tbox::SAMRAI_MPI::hasNullCommunicator()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="Connector_8C_source.html#l00910">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="Connector_8C_source.html#l00932">SAMRAI::hier::Connector::setHead()</a>, <a class="el" href="Connector_8C_source.html#l00953">SAMRAI::hier::Connector::setWidth()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -829,6 +856,41 @@ cent_to_east.hasTranspose()</dd></dl>
 
 </div>
 </div>
+<a class="anchor" id="a2c5d518cee5fba53a393387a4110bb14"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::setSAMRAI_MPI" ref="a2c5d518cee5fba53a393387a4110bb14" args="(const tbox::SAMRAI_MPI &amp;mpi, bool make_duplicate=true)" -->
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void SAMRAI::hier::OverlapConnectorAlgorithm::setSAMRAI_MPI </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html">tbox::SAMRAI_MPI</a> &amp;&nbsp;</td>
+          <td class="paramname"> <em>mpi</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">bool&nbsp;</td>
+          <td class="paramname"> <em>make_duplicate</em> = <code>true</code></td><td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td><td></td>
+        </tr>
+      </table>
+</div>
+<div class="memdoc">
+
+<p>Set the SAMRAI_MPI to use. </p>
+<p>If set, communication will use the specified SAMRAI_MPI instead of the SAMRAI_MPI from BoxLevels. This protects communication operations from accidentally interacting with unrelated communications, but it limits operations to work only with metadata objects with comptatible (congruent) SAMRAI_MPI objects.</p>
+<p>If make_duplicate is true, the specified SAMRAI_MPI will be duplicated for exclusise use. The duplicate will be freed upon object destruction. </p>
+
+<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01583">SAMRAI::tbox::SAMRAI_MPI::dupCommunicator()</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l01608">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>.</p>
+
+<p>Referenced by <a class="el" href="GriddingAlgorithm_8C_source.html#l00066">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>.</p>
+
+</div>
+</div>
 <a class="anchor" id="a2642092f5b583af36c564849ad2df1f7"></a><!-- doxytag: member="SAMRAI::hier::OverlapConnectorAlgorithm::setPrintSteps" ref="a2642092f5b583af36c564849ad2df1f7" args="(bool print_steps)" -->
 <div class="memitem">
 <div class="memproto">
@@ -875,7 +937,7 @@ cent_to_east.hasTranspose()</dd></dl>
 <p>Setup names of timers. </p>
 <p>By default, timers are named "hier::OverlapConnectorAlgorithm::*", where the third field is the specific steps performed by the <a class="el" href="classSAMRAI_1_1hier_1_1MappingConnectorAlgorithm.html" title="Algorithms for using MappingConnectors representing changes to a BoxLevel.">MappingConnectorAlgorithm</a>. You can override the first two fields with this method. Conforming to the timer naming convention, timer_prefix should have the form "*::*". </p>
 
-<p>Referenced by <a class="el" href="GriddingAlgorithm_8C_source.html#l00066">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00062">OverlapConnectorAlgorithm()</a>, and <a class="el" href="TileClustering_8C_source.html#l00036">SAMRAI::mesh::TileClustering::TileClustering()</a>.</p>
+<p>Referenced by <a class="el" href="GriddingAlgorithm_8C_source.html#l00066">SAMRAI::mesh::GriddingAlgorithm::GriddingAlgorithm()</a>, <a class="el" href="OverlapConnectorAlgorithm_8C_source.html#l00061">OverlapConnectorAlgorithm()</a>, and <a class="el" href="TileClustering_8C_source.html#l00036">SAMRAI::mesh::TileClustering::TileClustering()</a>.</p>
 
 </div>
 </div>
@@ -903,7 +965,7 @@ cent_to_east.hasTranspose()</dd></dl>
 <li>source/SAMRAI/hier/<a class="el" href="OverlapConnectorAlgorithm_8C.html">OverlapConnectorAlgorithm.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

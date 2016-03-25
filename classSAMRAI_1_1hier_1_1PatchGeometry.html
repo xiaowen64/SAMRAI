@@ -107,7 +107,7 @@ Inheritance diagram for SAMRAI::hier::PatchGeometry:</div>
 <dd>
 all components of ratio_to_level_zero must be nonzero and all components of ratio_to_level_zero not equal to 1 must have the same sign </dd></dl>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00182">TBOX_ASSERT_OBJDIM_EQUALITY2</a>.</p>
 
 </div>
 </div>
@@ -175,7 +175,7 @@ all components of ratio_to_level_zero must be nonzero and all components of rati
   </dd>
 </dl>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="PatchGeometry_8C_source.html#l00140">setCodimensionBoundaries()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="PatchGeometry_8C_source.html#l00140">setCodimensionBoundaries()</a>.</p>
 
 </div>
 </div>
@@ -233,7 +233,7 @@ all components of ratio_to_level_zero must be nonzero and all components of rati
 <div class="memdoc">
 <p>Return vector of boundary box components for patch each of which intersects the patch at a single point (i.e., 0-dim intersection between cells in patch and cells in boundary box). </p>
 
-<p>References <a class="el" href="PatchGeometry_8h_source.html#l00338">getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="PatchGeometry_8h_source.html#l00338">getDim()</a>, and <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -254,7 +254,7 @@ all components of ratio_to_level_zero must be nonzero and all components of rati
 <p>Return vector of boundary box components for patch each of which intersects the patch along a 1-dim edge (i.e., 1-dim intersection between cells in patch and cells in boundary box).</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#a95faf99187865e1284c50dc8dbd5a7ea">getDim()</a>.getValue() &gt;= 2 </dd></dl>
 
-<p>References <a class="el" href="PatchGeometry_8h_source.html#l00338">getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="PatchGeometry_8h_source.html#l00338">getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -275,7 +275,7 @@ all components of ratio_to_level_zero must be nonzero and all components of rati
 <p>Return vector of boundary box components for patch each of which intersects the patch along a 2-dim face (i.e., 2-dim intersection between cells in patch and cells in boundary box).</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd><a class="el" href="classSAMRAI_1_1hier_1_1PatchGeometry.html#a95faf99187865e1284c50dc8dbd5a7ea">getDim()</a>.getValue() &gt;= 3 </dd></dl>
 
-<p>References <a class="el" href="PatchGeometry_8h_source.html#l00338">getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="PatchGeometry_8h_source.html#l00338">getDim()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -333,7 +333,7 @@ all components of ratio_to_level_zero must be nonzero and all components of rati
 <dd>
 for each boundary_box in bdry_boxes, getBoundaryType() == codim </dd></dl>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 <p>Referenced by <a class="el" href="PatchGeometry_8C_source.html#l00161">setBoundaryBoxesOnPatch()</a>.</p>
 
@@ -386,7 +386,7 @@ bbox.getDim() == gcw.getDim() </dd>
 <dd>
 all components of gcw are &gt;= 0 </dd></dl>
 
-<p>References <a class="el" href="BoundaryBox_8h_source.html#l00123">SAMRAI::hier::BoundaryBox::getBoundaryType()</a>, <a class="el" href="BoundaryBox_8h_source.html#l00092">SAMRAI::hier::BoundaryBox::getBox()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00087">SAMRAI::hier::BoundaryLookupTable::getDirections()</a>, <a class="el" href="BoundaryBox_8h_source.html#l00200">SAMRAI::hier::BoundaryBox::getLocationIndex()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00058">SAMRAI::hier::BoundaryLookupTable::getLookupTable()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00111">SAMRAI::hier::BoundaryLookupTable::getMaxLocationIndices()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00888">SAMRAI::hier::Box::grow()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00178">SAMRAI::hier::BoundaryLookupTable::isUpper()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
+<p>References <a class="el" href="BoundaryBox_8h_source.html#l00123">SAMRAI::hier::BoundaryBox::getBoundaryType()</a>, <a class="el" href="BoundaryBox_8h_source.html#l00092">SAMRAI::hier::BoundaryBox::getBox()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00087">SAMRAI::hier::BoundaryLookupTable::getDirections()</a>, <a class="el" href="BoundaryBox_8h_source.html#l00200">SAMRAI::hier::BoundaryBox::getLocationIndex()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00058">SAMRAI::hier::BoundaryLookupTable::getLookupTable()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00111">SAMRAI::hier::BoundaryLookupTable::getMaxLocationIndices()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Box_8h_source.html#l00915">SAMRAI::hier::Box::grow()</a>, <a class="el" href="BoundaryLookupTable_8h_source.html#l00178">SAMRAI::hier::BoundaryLookupTable::isUpper()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, and <a class="el" href="Utilities_8h_source.html#l00187">TBOX_ASSERT_OBJDIM_EQUALITY3</a>.</p>
 
 </div>
 </div>
@@ -491,7 +491,7 @@ all components of gcw are &gt;= 0 </dd></dl>
 
 <p>Reimplemented in <a class="el" href="classSAMRAI_1_1geom_1_1CartesianPatchGeometry.html#ac76f67b5dc9533f7f20157755040a368">SAMRAI::geom::CartesianPatchGeometry</a>.</p>
 
-<p>References <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>.</p>
+<p>References <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>.</p>
 
 </div>
 </div>
@@ -519,7 +519,7 @@ all components of gcw are &gt;= 0 </dd></dl>
 <li>source/SAMRAI/hier/<a class="el" href="PatchGeometry_8C.html">PatchGeometry.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

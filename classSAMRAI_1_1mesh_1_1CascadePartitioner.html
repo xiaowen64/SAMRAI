@@ -79,6 +79,9 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 <ul>
 <li><b>tile_size</b> Tile size when using tile mode. Tile mode restricts box cuts to tile boundaries. Default is 1, which is equivalent to no restriction.</li>
 </ul>
+<ul>
+<li><b>max_spread_procs</b> This parameter limits how many processes may receive the load of one process before updating Connectors. If a process has too much initial load, this limit causes the Connector to be updated gradually, alleviating the bottle-neck of one process doing an excessive amount of Connector updates.</li>
+</ul>
 <p><b> Details: </b> <br/>
  </p>
 <table border="1" cellspacing="3" cellpadding="3">
@@ -103,6 +106,14 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 </td><td><p>IntVector </p>
 </td><td><p>1 </p>
 </td><td><p>1- </p>
+</td><td><p>opt </p>
+</td><td><p>Not written to restart. Value in input db used.  </p>
+</td></tr>
+<tr>
+<td><p>max_spread_procs </p>
+</td><td><p>int </p>
+</td><td><p>500 </p>
+</td><td><p>&gt; 1 </p>
 </td><td><p>opt </p>
 </td><td><p>Not written to restart. Value in input db used.  </p>
 </td></tr>
@@ -150,7 +161,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 </dl>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>!name.empty() </dd></dl>
 
-<p>References <a class="el" href="AsyncCommStage_8h_source.html#l00508">SAMRAI::tbox::AsyncCommStage::setCommunicationWaitTimer()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l01415">SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
+<p>References <a class="el" href="AsyncCommStage_8h_source.html#l00508">SAMRAI::tbox::AsyncCommStage::setCommunicationWaitTimer()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l01453">SAMRAI::hier::MappingConnectorAlgorithm::setTimerPrefix()</a>, and <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>.</p>
 
 </div>
 </div>
@@ -171,7 +182,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 
 <p>Virtual destructor releases all internal storage. </p>
 
-<p>References <a class="el" href="CascadePartitioner_8C_source.html#l00527">freeMPICommunicator()</a>.</p>
+<p>References <a class="el" href="CascadePartitioner_8C_source.html#l00581">freeMPICommunicator()</a>.</p>
 
 </div>
 </div>
@@ -198,7 +209,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 <p>If the duplicate SAMRAI_MPI it is set, the <a class="el" href="classSAMRAI_1_1mesh_1_1CascadePartitioner.html" title="Provides load balancing routines for AMR hierarchy by implemementing the LoadBalancerStrategy...">CascadePartitioner</a> will only balance BoxLevels with congruent SAMRAI_MPI objects and will use the duplicate SAMRAI_MPI for communications. Otherwise, the SAMRAI_MPI of the BoxLevel will be used. The duplicate MPI communicator is freed when the object is destructed, or <a class="el" href="classSAMRAI_1_1mesh_1_1CascadePartitioner.html#a549aa54ee73d30dcd6089dca661e4cf6" title="Free the internal MPI communicator, if any has been set.">freeMPICommunicator()</a> is called.</p>
 <dl class="pre"><dt><b>Precondition:</b></dt><dd>samrai_mpi.getCommunicator() != <a class="el" href="classSAMRAI_1_1tbox_1_1SAMRAI__MPI.html#a67e6d6d61130222eed33f37725be9b8c">tbox::SAMRAI_MPI::commNull</a> </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00145">SAMRAI::tbox::SAMRAI_MPI::commNull</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01524">SAMRAI::tbox::SAMRAI_MPI::dupCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01549">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00233">SAMRAI::tbox::SAMRAI_MPI::getCommunicator()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00145">SAMRAI::tbox::SAMRAI_MPI::commNull</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01583">SAMRAI::tbox::SAMRAI_MPI::dupCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01608">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00233">SAMRAI::tbox::SAMRAI_MPI::getCommunicator()</a>, <a class="el" href="MappingConnectorAlgorithm_8C_source.html#l00084">SAMRAI::hier::MappingConnectorAlgorithm::setSAMRAI_MPI()</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -221,9 +232,9 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 <p>This is automatically done by the destructor, if needed.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1mesh_1_1CascadePartitioner.html#ab1c33f6a247c8e0d28b718365ea1365a" title="Set the internal SAMRAI_MPI to a duplicate of the given SAMRAI_MPI.">setSAMRAI_MPI()</a>. </dd></dl>
 
-<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00145">SAMRAI::tbox::SAMRAI_MPI::commNull</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l00368">SAMRAI::tbox::SAMRAI_MPI::Finalized()</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01549">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00233">SAMRAI::tbox::SAMRAI_MPI::getCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00037">MPI_COMM_NULL</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l01569">SAMRAI::tbox::SAMRAI_MPI::setCommunicator()</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00145">SAMRAI::tbox::SAMRAI_MPI::commNull</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l00368">SAMRAI::tbox::SAMRAI_MPI::Finalized()</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l01608">SAMRAI::tbox::SAMRAI_MPI::freeCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00233">SAMRAI::tbox::SAMRAI_MPI::getCommunicator()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00037">MPI_COMM_NULL</a>, and <a class="el" href="SAMRAI__MPI_8C_source.html#l01654">SAMRAI::tbox::SAMRAI_MPI::setCommunicator()</a>.</p>
 
-<p>Referenced by <a class="el" href="CascadePartitioner_8C_source.html#l00100">~CascadePartitioner()</a>.</p>
+<p>Referenced by <a class="el" href="CascadePartitioner_8C_source.html#l00109">~CascadePartitioner()</a>.</p>
 
 </div>
 </div>
@@ -302,7 +313,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 <p>Given a BoxLevel, representing the domain of a specified level in the AMR hierarchy, generate a new BoxLevel from which the patches for the level may be formed and update two Connectors incident on the changed BoxLevel. The union of the boxes in the balance_box_level is the same before and after the the method call.<dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
     <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_box_level</em>&nbsp;</td><td>Input BoxLevel. On input, this is the pre-balance BoxLevel. On output, it is the balanced BoxLevel.</td></tr>
-    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td>Connector between the balance_box_level and some given "anchor box_level". This must be accurate on input. On putput, connects the newly balanced balance_box_level to the anchor box_level.</td></tr>
+    <tr><td valign="top"><tt>[in,out]</tt>&nbsp;</td><td valign="top"><em>balance_to_anchor</em>&nbsp;</td><td>Connector between the balance_box_level and some given "anchor box_level". This must be accurate on input. On putput, connects the newly balanced balance_box_level to the anchor box_level. If set to NULL, this parameter is ignored and Connector update is skipped.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>hierarchy</em>&nbsp;</td><td>The hierarchy where the work distribution data lives.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>level_number</em>&nbsp;</td><td>The number of the level where the work distribution data lives.</td></tr>
     <tr><td valign="top"><tt>[in]</tt>&nbsp;</td><td valign="top"><em>min_size</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1IntVector.html">hier::IntVector</a> representing mimimum box size.</td></tr>
@@ -330,7 +341,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 
 <p>Implements <a class="el" href="classSAMRAI_1_1mesh_1_1LoadBalanceStrategy.html#a2a6934691d740a0930f1644d5271d6b2">SAMRAI::mesh::LoadBalanceStrategy</a>.</p>
 
-<p>References <a class="el" href="SAMRAI__MPI_8C_source.html#l01244">SAMRAI::tbox::SAMRAI_MPI::AllReduce()</a>, <a class="el" href="Connector_8C_source.html#l01798">SAMRAI::hier::Connector::checkOverlapCorrectness()</a>, <a class="el" href="Connector_8C_source.html#l01236">SAMRAI::hier::Connector::checkTransposeCorrectness()</a>, <a class="el" href="SAMRAI__MPI_8C_source.html#l00318">SAMRAI::tbox::SAMRAI_MPI::Comm_compare()</a>, <a class="el" href="Connector_8h_source.html#l01446">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01567">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01891">SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance()</a>, <a class="el" href="Connector_8h_source.html#l00729">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxLevel_8h_source.html#l00500">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00233">SAMRAI::tbox::SAMRAI_MPI::getCommunicator()</a>, <a class="el" href="BoxLevel_8h_source.html#l00838">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxLevel_8h_source.html#l00377">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="IntVector_8h_source.html#l00742">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="BoxLevel_8h_source.html#l00562">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="Connector_8h_source.html#l01123">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="Dimension_8h_source.html#l00133">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Connector_8h_source.html#l01112">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="Connector_8C_source.html#l00931">SAMRAI::hier::Connector::isTransposeOf()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00040">MPI_CONGRUENT</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00063">MPI_SUM</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ad72fd66574b63c87061563d2c66b5475">SAMRAI::tbox::perr</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="BoxLevel_8C_source.html#l00384">SAMRAI::hier::BoxLevel::removePeriodicImageBoxes()</a>, <a class="el" href="Connector_8h_source.html#l00581">SAMRAI::hier::Connector::removePeriodicRelationships()</a>, <a class="el" href="Connector_8C_source.html#l00628">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="RankGroup_8C_source.html#l00223">SAMRAI::tbox::RankGroup::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00233">TBOX_ASSERT_DIM_OBJDIM_EQUALITY1</a>, <a class="el" href="Utilities_8h_source.html#l00274">TBOX_ASSERT_DIM_OBJDIM_EQUALITY6</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
+<p>References <a class="el" href="Connector_8C_source.html#l02084">SAMRAI::hier::Connector::checkOverlapCorrectness()</a>, <a class="el" href="Connector_8C_source.html#l01522">SAMRAI::hier::Connector::checkTransposeCorrectness()</a>, <a class="el" href="Connector_8h_source.html#l01488">SAMRAI::hier::Connector::format()</a>, <a class="el" href="BoxLevel_8C_source.html#l01608">SAMRAI::hier::BoxLevel::format()</a>, <a class="el" href="Connector_8h_source.html#l00754">SAMRAI::hier::Connector::getBase()</a>, <a class="el" href="BoxLevel_8h_source.html#l00521">SAMRAI::hier::BoxLevel::getBoxes()</a>, <a class="el" href="BoxLevel_8h_source.html#l00859">SAMRAI::hier::BoxLevel::getGridGeometry()</a>, <a class="el" href="BoxLevel_8h_source.html#l00596">SAMRAI::hier::BoxLevel::getLocalNumberOfBoxes()</a>, <a class="el" href="BoxLevel_8h_source.html#l00398">SAMRAI::hier::BoxLevel::getMPI()</a>, <a class="el" href="IntVector_8h_source.html#l00744">SAMRAI::hier::IntVector::getOne()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00214">SAMRAI::tbox::SAMRAI_MPI::getRank()</a>, <a class="el" href="BoxLevel_8h_source.html#l00583">SAMRAI::hier::BoxLevel::getRefinementRatio()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00224">SAMRAI::tbox::SAMRAI_MPI::getSize()</a>, <a class="el" href="Connector_8h_source.html#l01148">SAMRAI::hier::Connector::getTranspose()</a>, <a class="el" href="Dimension_8h_source.html#l00136">SAMRAI::tbox::Dimension::getValue()</a>, <a class="el" href="Connector_8h_source.html#l01137">SAMRAI::hier::Connector::hasTranspose()</a>, <a class="el" href="SAMRAI__MPI_8h_source.html#l00307">SAMRAI::tbox::SAMRAI_MPI::isCongruentWith()</a>, <a class="el" href="Connector_8C_source.html#l01213">SAMRAI::hier::Connector::isTransposeOf()</a>, <a class="el" href="Utilities_8h_source.html#l00050">NULL_USE</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ad72fd66574b63c87061563d2c66b5475">SAMRAI::tbox::perr</a>, <a class="el" href="namespaceSAMRAI_1_1tbox.html#ab84041705493761fb17a8127e3a2dca2">SAMRAI::tbox::plog</a>, <a class="el" href="BalanceUtilities_8C_source.html#l01892">SAMRAI::mesh::BalanceUtilities::reduceAndReportLoadBalance()</a>, <a class="el" href="BoxLevel_8C_source.html#l00428">SAMRAI::hier::BoxLevel::removePeriodicImageBoxes()</a>, <a class="el" href="Connector_8h_source.html#l00606">SAMRAI::hier::Connector::removePeriodicRelationships()</a>, <a class="el" href="Connector_8C_source.html#l00910">SAMRAI::hier::Connector::setBase()</a>, <a class="el" href="RankGroup_8C_source.html#l00223">SAMRAI::tbox::RankGroup::size()</a>, <a class="el" href="Utilities_8h_source.html#l00110">TBOX_ASSERT</a>, <a class="el" href="Utilities_8h_source.html#l00233">TBOX_ASSERT_DIM_OBJDIM_EQUALITY1</a>, <a class="el" href="Utilities_8h_source.html#l00274">TBOX_ASSERT_DIM_OBJDIM_EQUALITY6</a>, and <a class="el" href="Utilities_8h_source.html#l00060">TBOX_ERROR</a>.</p>
 
 </div>
 </div>
@@ -358,7 +369,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
   </dd>
 </dl>
 
-<p>References <a class="el" href="BalanceUtilities_8C_source.html#l01891">SAMRAI::mesh::BalanceUtilities::gatherAndReportLoadBalance()</a>, and <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>.</p>
+<p>References <a class="el" href="SAMRAI__MPI_8h_source.html#l00166">SAMRAI::tbox::SAMRAI_MPI::getSAMRAIWorld()</a>, and <a class="el" href="BalanceUtilities_8C_source.html#l01892">SAMRAI::mesh::BalanceUtilities::reduceAndReportLoadBalance()</a>.</p>
 
 </div>
 </div>
@@ -468,7 +479,7 @@ Inheritance diagram for SAMRAI::mesh::CascadePartitioner:</div>
 <li>source/SAMRAI/mesh/<a class="el" href="CascadePartitioner_8C.html">CascadePartitioner.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

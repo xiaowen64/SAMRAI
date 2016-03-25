@@ -47,7 +47,7 @@ Inheritance diagram for SAMRAI::math::PatchNodeDataNormOpsComplex:</div>
 <tr><td colspan="2"><h2>Public Member Functions</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a7765f182fac61ac04be9e433986f4865">PatchNodeDataNormOpsComplex</a> ()</td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a0369a9d0c5933c9ee8fc572b1ea82ff4">~PatchNodeDataNormOpsComplex</a> ()</td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">int&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a91ca1804575534fee1f0eeefd9acf28b">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">size_t&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#ad89af34c07bd28238670db4b50d68510">numberOfEntries</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a5563516877c7f441e1fe725181eec025">sumControlVolumes</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &gt; &amp;data, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt; &amp;cvol, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">void&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a5c5464ee6e0f2412134e678ce2473314">abs</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt; &amp;dst, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &gt; &amp;src, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box) const </td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">double&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1math_1_1PatchNodeDataNormOpsComplex.html#a4255bc7dbf5be845d12f518be417fca4">L1Norm</a> (const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &gt; &amp;data, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;box, const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt; &amp;cvol=boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; double &gt; &gt;()) const </td></tr>
@@ -100,12 +100,12 @@ Inheritance diagram for SAMRAI::math::PatchNodeDataNormOpsComplex:</div>
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="a91ca1804575534fee1f0eeefd9acf28b"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsComplex::numberOfEntries" ref="a91ca1804575534fee1f0eeefd9acf28b" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
+<a class="anchor" id="ad89af34c07bd28238670db4b50d68510"></a><!-- doxytag: member="SAMRAI::math::PatchNodeDataNormOpsComplex::numberOfEntries" ref="ad89af34c07bd28238670db4b50d68510" args="(const boost::shared_ptr&lt; pdat::NodeData&lt; dcomplex &gt; &gt; &amp;data, const hier::Box &amp;box) const " -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">int SAMRAI::math::PatchNodeDataNormOpsComplex::numberOfEntries </td>
+          <td class="memname">size_t SAMRAI::math::PatchNodeDataNormOpsComplex::numberOfEntries </td>
           <td>(</td>
           <td class="paramtype">const boost::shared_ptr&lt; <a class="el" href="classSAMRAI_1_1pdat_1_1NodeData.html">pdat::NodeData</a>&lt; <a class="el" href="Complex_8h.html#aa7b4cfa83fe868296abd1ba4d67d9563">dcomplex</a> &gt; &gt; &amp;&nbsp;</td>
           <td class="paramname"> <em>data</em>, </td>
@@ -558,7 +558,7 @@ data-&gt;getDim() == box.getDim() </dd>
 <li>source/SAMRAI/math/<a class="el" href="PatchNodeDataNormOpsComplex_8C.html">PatchNodeDataNormOpsComplex.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>

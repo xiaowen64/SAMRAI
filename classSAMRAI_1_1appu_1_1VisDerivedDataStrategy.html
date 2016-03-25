@@ -42,14 +42,14 @@
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Default constructor for <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html" title="Class VisDerivedDataStrategy is an abstract base class that defines an interface...">VisDerivedDataStrategy</a>.  <a href="#a7a76f1cc6335c3ede2a513a07c8abdc4"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#a50f67bf4ee4cf6b86b514a92c5c9cf98">~VisDerivedDataStrategy</a> ()</td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">Destructor for <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html" title="Class VisDerivedDataStrategy is an abstract base class that defines an interface...">VisDerivedDataStrategy</a>.  <a href="#a50f67bf4ee4cf6b86b514a92c5c9cf98"></a><br/></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#ae97965266e0453219692ed0a438fe659">packDerivedDataIntoDoubleBuffer</a> (double *buffer, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;region, const std::string &amp;variable_name, int depth_index) const =0</td></tr>
-<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function calculates and packs derived cell-centered data to a 1D double precision buffer. In the case of the VisIt data writer, node-centered data may also be used. It is called once for each component of multicomponent data.  <a href="#ae97965266e0453219692ed0a438fe659"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#a86eb0cb786918c3683d54b96844b08c3">packDerivedDataIntoDoubleBuffer</a> (double *buffer, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;region, const std::string &amp;variable_name, int depth_index, double simulation_time=0.0) const =0</td></tr>
+<tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function calculates and packs derived cell-centered data to a 1D double precision buffer. In the case of the VisIt data writer, node-centered data may also be used. It is called once for each component of multicomponent data.  <a href="#a86eb0cb786918c3683d54b96844b08c3"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">virtual bool&nbsp;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#a45083218cdd8220f0894d5337b33cc58">packMixedDerivedDataIntoDoubleBuffer</a> (double *buffer, std::vector&lt; double &gt; &amp;mixbuffer, const <a class="el" href="classSAMRAI_1_1hier_1_1Patch.html">hier::Patch</a> &amp;patch, const <a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> &amp;region, const std::string &amp;variable_name, int depth_index) const </td></tr>
 <tr><td class="mdescLeft">&nbsp;</td><td class="mdescRight">This function calculates and packs derived cell-centered data to a 1D double precision buffer. It also packs material state varaibles for component materials in mixed zones for accurate visualization of mixed zones. In the case of the VisIt data writer, node-centered data may also be used. It is called once for each component of multicomponent data.  <a href="#a45083218cdd8220f0894d5337b33cc58"></a><br/></td></tr>
 </table>
 <hr/><a name="_details"></a><h2>Detailed Description</h2>
 <p>Class <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html" title="Class VisDerivedDataStrategy is an abstract base class that defines an interface...">VisDerivedDataStrategy</a> is an abstract base class that defines an interface allowing an <a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html" title="Class VisItDataWriter is used by SAMRAI-based application codes to generate VisIt...">VisItDataWriter</a> object to generate plot files that contain "derived" quantities; that is, data that does not reside on the hierarchy, but which is derived from data that does reside on the hierarchy. The derived data may be scalar, vector, or tensor, and cell-centered or node-centered. A concrete object of this type must be registered with the data writer if any derived variable is registered with the data writer. The registration of the concrete strategy object may be done independently using the method setDefaultDerivedDataWriter() from the relevant DataWriter class, or the concrete strategy object may be registered concurrently with the derived variable using the method registerDerivedPlotScalar/Vector/Tensor(). </p>
-<p>The concrete strategy object is responsible for supplying an implementation of the function <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#ae97965266e0453219692ed0a438fe659" title="This function calculates and packs derived cell-centered data to a 1D double precision...">packDerivedDataIntoDoubleBuffer()</a> which calculates the derived data and writes it into the double precision buffer passed in to it.</p>
+<p>The concrete strategy object is responsible for supplying an implementation of the function <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#a86eb0cb786918c3683d54b96844b08c3" title="This function calculates and packs derived cell-centered data to a 1D double precision...">packDerivedDataIntoDoubleBuffer()</a> which calculates the derived data and writes it into the double precision buffer passed in to it.</p>
 <dl class="see"><dt><b>See also:</b></dt><dd><a class="el" href="classSAMRAI_1_1appu_1_1VisItDataWriter.html" title="Class VisItDataWriter is used by SAMRAI-based application codes to generate VisIt...">appu::VisItDataWriter</a> </dd></dl>
 <hr/><h2>Constructor &amp; Destructor Documentation</h2>
 <a class="anchor" id="a7a76f1cc6335c3ede2a513a07c8abdc4"></a><!-- doxytag: member="SAMRAI::appu::VisDerivedDataStrategy::VisDerivedDataStrategy" ref="a7a76f1cc6335c3ede2a513a07c8abdc4" args="()" -->
@@ -91,7 +91,7 @@
 </div>
 </div>
 <hr/><h2>Member Function Documentation</h2>
-<a class="anchor" id="ae97965266e0453219692ed0a438fe659"></a><!-- doxytag: member="SAMRAI::appu::VisDerivedDataStrategy::packDerivedDataIntoDoubleBuffer" ref="ae97965266e0453219692ed0a438fe659" args="(double *buffer, const hier::Patch &amp;patch, const hier::Box &amp;region, const std::string &amp;variable_name, int depth_index) const =0" -->
+<a class="anchor" id="a86eb0cb786918c3683d54b96844b08c3"></a><!-- doxytag: member="SAMRAI::appu::VisDerivedDataStrategy::packDerivedDataIntoDoubleBuffer" ref="a86eb0cb786918c3683d54b96844b08c3" args="(double *buffer, const hier::Patch &amp;patch, const hier::Box &amp;region, const std::string &amp;variable_name, int depth_index, double simulation_time=0.0) const =0" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -123,7 +123,13 @@
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&nbsp;</td>
-          <td class="paramname"> <em>depth_index</em></td><td>&nbsp;</td>
+          <td class="paramname"> <em>depth_index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">double&nbsp;</td>
+          <td class="paramname"> <em>simulation_time</em> = <code>0.0</code></td><td>&nbsp;</td>
         </tr>
         <tr>
           <td></td>
@@ -136,7 +142,7 @@
 
 <p>This function calculates and packs derived cell-centered data to a 1D double precision buffer. In the case of the VisIt data writer, node-centered data may also be used. It is called once for each component of multicomponent data. </p>
 <p>The buffer will be already allocated. This routine is needed to construct data values that are not stored on the hierarchy, but which may be important to visualize. The data to be packed corresponds to the plot variable that the user has registered with the data writer using registerDerivedPlotScalar/Vector/Tensor() with the std::string "variable_name". The data to be packed is derived from the data that lives on the given patch. The box describes the patch region over which to pack the data. It is assumed that all data needed to compute the derived quantity exists on the given patch.</p>
-<p>The method <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#ae97965266e0453219692ed0a438fe659" title="This function calculates and packs derived cell-centered data to a 1D double precision...">packDerivedDataIntoDoubleBuffer()</a> will be called DIM times for vector data, and DIM*DIM times for tensor data, with the integer "depth_index" argument indicating the particular component of vector to be packed. For scalar values, the depth_index will be 0.</p>
+<p>The method <a class="el" href="classSAMRAI_1_1appu_1_1VisDerivedDataStrategy.html#a86eb0cb786918c3683d54b96844b08c3" title="This function calculates and packs derived cell-centered data to a 1D double precision...">packDerivedDataIntoDoubleBuffer()</a> will be called DIM times for vector data, and DIM*DIM times for tensor data, with the integer "depth_index" argument indicating the particular component of vector to be packed. For scalar values, the depth_index will be 0.</p>
 <p>This routine must include ghost data if the ghost_cell_width parameter was set when the derived data was registered. The data must be packed into the buffer in column major order, the ordering used by <a class="el" href="namespaceSAMRAI.html">SAMRAI</a>, i.e. (f(x_0,y_0,z_0), f(x_1,y_0,z_0), f(x_2,y_0,z_0), ...). If the derived data was registered as node-centered, a buffer of node-centered data is expected. Derived data need not be defined on all patches. It is the responsibility of this routine to determine if data exists on the patch and set the return value of of this routine appropriately: true if the data exists on the patch, false otherwise.</p>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table border="0" cellspacing="2" cellpadding="0">
@@ -145,6 +151,7 @@
     <tr><td valign="top"></td><td valign="top"><em>region</em>&nbsp;</td><td><a class="el" href="classSAMRAI_1_1hier_1_1Box.html">hier::Box</a> region over which to pack data. </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>variable_name</em>&nbsp;</td><td>Name identifier for the derived variable as registered in registerDerivedPlotScalar/Vector/Tensor(). </td></tr>
     <tr><td valign="top"></td><td valign="top"><em>depth_index</em>&nbsp;</td><td>For scalar quantities index will be zero. For vector data, index varies between 0 and DIM-1. For tensor data, index varies from 0 (DIM*DIM)-1. </td></tr>
+    <tr><td valign="top"></td><td valign="top"><em>simulation_time</em>&nbsp;</td><td>Optional argument specifying the double precision simulation time. Default is 0.0. </td></tr>
   </table>
   </dd>
 </dl>
@@ -228,7 +235,7 @@
 <li>source/SAMRAI/appu/<a class="el" href="VisDerivedDataStrategy_8C.html">VisDerivedDataStrategy.C</a></li>
 </ul>
 </div>
-<hr size="1"/><address style="text-align: right;"><small>Generated on 8 Oct 2014 for SAMRAI by&nbsp;
+<hr size="1"/><address style="text-align: right;"><small>Generated on 3 Dec 2014 for SAMRAI by&nbsp;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.6.1 </small></address>
 </body>
