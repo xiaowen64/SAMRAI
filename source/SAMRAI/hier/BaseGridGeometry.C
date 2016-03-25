@@ -74,6 +74,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
+   d_periodic_shift_catalog(d_dim),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_has_enhanced_connectivity(false)
 {
@@ -110,6 +111,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_object_name(object_name),
    d_physical_domain(),
    d_periodic_shift(IntVector::getZero(d_dim)),
+   d_periodic_shift_catalog(d_dim),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
    d_has_enhanced_connectivity(false)
@@ -144,6 +146,7 @@ BaseGridGeometry::BaseGridGeometry(
    d_object_name(object_name),
    d_physical_domain(),
    d_periodic_shift(IntVector::getZero(d_dim)),
+   d_periodic_shift_catalog(d_dim),
    d_max_data_ghost_width(IntVector(d_dim, -1)),
    d_number_of_block_singularities(0),
    d_has_enhanced_connectivity(false)
@@ -908,10 +911,7 @@ BaseGridGeometry::computeShiftsForBox(
 
    if (num_periodic_dirs > 0) {
 
-      const PeriodicShiftCatalog* periodic_shift_catalog =
-         PeriodicShiftCatalog::getCatalog(d_dim);
-
-      shifts.reserve(periodic_shift_catalog->getNumberOfShifts());
+      shifts.reserve(d_periodic_shift_catalog.getNumberOfShifts());
 
       BoundaryLookupTable* blut =
          BoundaryLookupTable::getLookupTable(d_dim);
@@ -1505,9 +1505,7 @@ BaseGridGeometry::resetDomainBoxContainer()
 
    if (is_periodic) {
 
-      PeriodicShiftCatalog* periodic_shift_catalog =
-         PeriodicShiftCatalog::getCatalog(d_dim);
-      periodic_shift_catalog->initializeShiftsByIndexDirections(d_periodic_shift);
+      d_periodic_shift_catalog.initializeShiftsByIndexDirections(d_periodic_shift);
 
       const IntVector& one_vector(IntVector::getOne(d_dim));
 
@@ -1515,11 +1513,14 @@ BaseGridGeometry::resetDomainBoxContainer()
            ni != d_physical_domain.end(); ++ni) {
 
          const Box& real_box = *ni;
-         TBOX_ASSERT(real_box.getPeriodicId() == periodic_shift_catalog->getZeroShiftNumber());
+         TBOX_ASSERT(real_box.getPeriodicId() == d_periodic_shift_catalog.getZeroShiftNumber());
 
-         for (int ishift = 1; ishift < periodic_shift_catalog->getNumberOfShifts();
+         for (int ishift = 1; ishift < d_periodic_shift_catalog.getNumberOfShifts();
               ++ishift) {
-            const Box image_box(real_box, PeriodicId(ishift), one_vector);
+            const Box image_box(real_box,
+                                PeriodicId(ishift),
+                                one_vector,
+                                d_periodic_shift_catalog);
             d_domain_with_images.pushBack(image_box);
          }
 

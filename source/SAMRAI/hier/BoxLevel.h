@@ -1048,7 +1048,7 @@ public:
     * @param[in] shift_number The valid shift number for the Box being
     *      added.  The shift amount is taken from the PeriodicShiftCatalog.
     *
-    * @pre shift_number != PeriodicShiftCatalog::getCatalog(getDim())->getZeroShiftNumber()
+    * @pre shift_number != getGridGeometry()->getPeriodicShiftCatalog().getZeroShiftNumber()
     */
    void
    addPeriodicBox(

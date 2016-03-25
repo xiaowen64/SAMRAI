@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/MultiblockBoxTree.h"
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
@@ -1672,13 +1673,16 @@ private:
     *
     * @param[out] real_box_vector
     * @param[out] periodic_image_box_vector
+    * @param[in] shift_catalog PeriodicShiftCatalog object that maps the
+    * PeriodicId to a specific shift.
     *
     * @pre isOrdered()
     */
    void
    separatePeriodicImages(
       std::vector<Box>& real_box_vector,
-      std::vector<Box>& periodic_image_box_vector) const;
+      std::vector<Box>& periodic_image_box_vector,
+      const PeriodicShiftCatalog& shift_catalog) const;
 
    /*!
     * @brief  Any members of this container that are periodic images will
@@ -1704,12 +1708,16 @@ private:
     *
     * @param[in] refinement_ratio Refinement ratio where the boxes live.
     *
+    * @param[in] shift_catalog PeriodicShiftCatalog object that maps the
+    * PeriodicId to a specific shift.
+    *
     * @pre isOrdered()
     */
    void
    unshiftPeriodicImageBoxes(
       BoxContainer& output_boxes,
-      const IntVector& refinement_ratio) const;
+      const IntVector& refinement_ratio,
+      const PeriodicShiftCatalog& shift_catalog) const;
 
    //@}
 

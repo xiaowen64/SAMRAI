@@ -1425,7 +1425,10 @@ TileClustering::coalesceClusters(
       for (size_t i = 0; i < box_vector.size(); ++i) tiles.pushBack(box_vector[i]);
       tiles.makeTree(tile_box_level.getGridGeometry().get());
       std::vector<hier::Box> real_box_vector, periodic_image_box_vector;
-      tag_boxes.separatePeriodicImages(real_box_vector, periodic_image_box_vector);
+      tag_boxes.separatePeriodicImages(
+         real_box_vector,
+         periodic_image_box_vector,
+         tile_box_level.getGridGeometry()->getPeriodicShiftCatalog());
 
       for (size_t ib = 0; ib < real_box_vector.size(); ++ib) {
 

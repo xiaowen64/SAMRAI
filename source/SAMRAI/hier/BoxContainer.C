@@ -605,7 +605,8 @@ BoxContainer::removePeriodicImageBoxes()
 void
 BoxContainer::separatePeriodicImages(
    std::vector<Box>& real_box_vector,
-   std::vector<Box>& periodic_image_box_vector) const
+   std::vector<Box>& periodic_image_box_vector,
+   const PeriodicShiftCatalog& shift_catalog) const
 {
    if (!d_ordered) {
       TBOX_ERROR("separatePeriodicImages called on unordered BoxContainer."
@@ -616,9 +617,7 @@ BoxContainer::separatePeriodicImages(
 
       const Box& first_element(*begin());
 
-      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                            first_element.getDim())->
-                                         getZeroShiftNumber());
+      const PeriodicId zero_shift_number(shift_catalog.getZeroShiftNumber());
 
       real_box_vector.reserve(real_box_vector.size() + size());
       for (const_iterator ni = begin(); ni != end(); ++ni) {
@@ -1380,7 +1379,8 @@ BoxContainer::getOwners(
 void
 BoxContainer::unshiftPeriodicImageBoxes(
    BoxContainer& output_boxes,
-   const IntVector& refinement_ratio) const
+   const IntVector& refinement_ratio,
+   const PeriodicShiftCatalog& shift_catalog) const
 {
    if (!d_ordered) {
       TBOX_ERROR("unshiftPeriodicImageBoxes called on unordered container."
@@ -1392,13 +1392,14 @@ BoxContainer::unshiftPeriodicImageBoxes(
    if (!empty()) {
       const Box& first_element(*begin());
 
-      const PeriodicId zero_shift_number(PeriodicShiftCatalog::getCatalog(
-                                            first_element.getDim())->
-                                         getZeroShiftNumber());
+      const PeriodicId zero_shift_number(shift_catalog.getZeroShiftNumber());
 
       for (const_iterator na = begin(); na != end(); ++na) {
          if (na->isPeriodicImage()) {
-            const Box unshifted_box(*na, zero_shift_number, refinement_ratio);
+            const Box unshifted_box(*na,
+                                    zero_shift_number,
+                                    refinement_ratio,
+                                    shift_catalog);
             hint = output_boxes.insert(hint, unshifted_box);
          } else {
             hint = output_boxes.insert(hint, *na);

@@ -3102,6 +3102,9 @@ GriddingAlgorithm::findRefinementBoxes(
    }
    t_find_boxes_containing_tags->stop();
 
+   const hier::PeriodicShiftCatalog& shift_catalog =
+      d_hierarchy->getGridGeometry()->getPeriodicShiftCatalog();
+
    if (new_box_level && new_box_level->getGlobalNumberOfBoxes() > 0) {
 
       if (d_check_connectors) {
@@ -3148,7 +3151,7 @@ GriddingAlgorithm::findRefinementBoxes(
             hier::IntVector::getZero(dim),
             d_tag_to_cluster_width[tag_ln],
             true);
-         if (hier::PeriodicShiftCatalog::getCatalog(dim)->isPeriodic()) {
+         if (shift_catalog.isPeriodic()) {
             tag_to_new->removePeriodicRelationships();
             tag_to_new->getTranspose().removePeriodicRelationships();
          }
@@ -4387,10 +4390,10 @@ GriddingAlgorithm::warnIfDomainTooSmallInPeriodicDir() const
 {
    const tbox::Dimension& dim = d_hierarchy->getDim();
 
-   const hier::PeriodicShiftCatalog* shift_catalog =
-      hier::PeriodicShiftCatalog::getCatalog(dim);
+   const hier::PeriodicShiftCatalog& shift_catalog =
+      d_hierarchy->getGridGeometry()->getPeriodicShiftCatalog();
 
-   if (shift_catalog->isPeriodic()) {
+   if (shift_catalog.isPeriodic()) {
 
       hier::IntVector periodic_shift(
          d_hierarchy->getGridGeometry()->getPeriodicShift(

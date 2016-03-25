@@ -132,7 +132,8 @@ PatchLevelFullFillPattern::computeDestinationFillBoxesOnSourceProc(
       src_to_dst.getLocalNeighbors(tmp_nabrs);
       tmp_nabrs.unshiftPeriodicImageBoxes(
          all_dst_nabrs,
-         dst_box_level.getRefinementRatio());
+         dst_box_level.getRefinementRatio(),
+         dst_box_level.getGridGeometry()->getPeriodicShiftCatalog());
    } else {
       src_to_dst.getLocalNeighbors(all_dst_nabrs);
    }

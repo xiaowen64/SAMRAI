@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/PatchGeometry.h"
+#include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/hier/RefineOperator.h"
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 #include "SAMRAI/hier/TransferOperatorRegistry.h"
@@ -421,6 +422,16 @@ public:
    IntVector
    getPeriodicShift(
       const IntVector& ratio_to_level_zero) const;
+
+   /*!
+    * @brief Get the periodic shift catalog object, used for mapping between
+    * a PeriodicId and an IntVector representation of a periodic shift.
+    */
+   const PeriodicShiftCatalog&
+   getPeriodicShiftCatalog() const
+   {
+      return d_periodic_shift_catalog;
+   }
 
    /*!
     * @brief Get the number of blocks in the geometry.
@@ -1848,6 +1859,12 @@ private:
     * An entry of zero means direction is not periodic.
     */
    IntVector d_periodic_shift;
+
+   /*!
+    * PeriodicShiftCatalog object that is constructed in accordance with
+    * this grid geometry's domain and periodic shift.
+    */
+   PeriodicShiftCatalog d_periodic_shift_catalog;
 
    /*!
     * Current maximum ghost cell width over all patch data objects

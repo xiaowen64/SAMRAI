@@ -9,7 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/hier/PeriodicShiftCatalog.h"
 #include "SAMRAI/tbox/PIO.h"
-#include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include <iomanip>
 
@@ -24,47 +23,6 @@
 namespace SAMRAI {
 namespace hier {
 
-PeriodicShiftCatalog * PeriodicShiftCatalog::s_periodic_shift_catalog_instance[
-   SAMRAI::MAX_DIM_VAL] = { 0 };
-
-tbox::StartupShutdownManager::Handler
-PeriodicShiftCatalog::s_finalize_handler(
-   0,
-   0,
-   0,
-   PeriodicShiftCatalog::finalizeCallback,
-   40);
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-PeriodicShiftCatalog *
-PeriodicShiftCatalog::getCatalog(
-   const tbox::Dimension& dim)
-{
-   if (s_periodic_shift_catalog_instance[dim.getValue() - 1] == 0) {
-      s_periodic_shift_catalog_instance[dim.getValue() - 1] = new PeriodicShiftCatalog(dim);
-   }
-   return s_periodic_shift_catalog_instance[dim.getValue() - 1];
-}
-
-/*
- ***********************************************************************
- ***********************************************************************
- */
-
-void
-PeriodicShiftCatalog::finalizeCallback()
-{
-   for (int i = 0; i < SAMRAI::MAX_DIM_VAL; ++i) {
-      if (s_periodic_shift_catalog_instance[i] != 0) {
-         delete s_periodic_shift_catalog_instance[i];
-         s_periodic_shift_catalog_instance[i] = 0;
-      }
-   }
-}
 
 /*
  ***********************************************************************
@@ -99,17 +57,15 @@ PeriodicShiftCatalog::setShifts(
    const tbox::Dimension& dim,
    const std::vector<IntVector>& shifts)
 {
-   getCatalog(dim);  // Causes singleton object creation if it does not yet exist.
-
    const int dim_index(dim.getValue() - 1);
 
    std::vector<IntVector> tmp_shifts;
-   s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.clear();
+   d_opposite_number.clear();
 
    const IntVector& zero_shift(IntVector::getZero(dim));
 
    // The first position is the zero-shift and its own opposite.
-   s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.push_back(
+   d_opposite_number.push_back(
       static_cast<PeriodicId>(static_cast<int>(tmp_shifts.size())));
    tmp_shifts.push_back(zero_shift);
 
@@ -133,36 +89,36 @@ PeriodicShiftCatalog::setShifts(
           */
          PeriodicId tmpId1(static_cast<int>(tmp_shifts.size()));
          PeriodicId tmpId2(static_cast<int>(tmp_shifts.size() + 1));
-         s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.push_back(tmpId2);
-         s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.push_back(tmpId1);
+         d_opposite_number.push_back(tmpId2);
+         d_opposite_number.push_back(tmpId1);
          tmp_shifts.push_back(*vi);
          tmp_shifts.push_back(-(*vi));
       }
 
    }
 
-   s_periodic_shift_catalog_instance[dim_index]->d_shifts = tmp_shifts;
-   s_periodic_shift_catalog_instance[dim_index]->d_zero_shift_number = 0;
+   d_shifts = tmp_shifts;
+   d_zero_shift_number = 0;
 
    // Write out the shift catalog to log file.
    tbox::plog << "\n\nPeriodicShiftCatalog has "
-              << s_periodic_shift_catalog_instance[dim_index]->d_shifts.size()
+              << d_shifts.size()
               << " shifts:\n";
    tbox::plog << "Shift   Opposite  Shift\n";
    tbox::plog << "Number  Shift     Vector\n";
    for (size_t i = 0;
-        i < s_periodic_shift_catalog_instance[dim_index]->d_shifts.size();
+        i < d_shifts.size();
         ++i) {
       tbox::plog << std::setw(3) << i << "      "
                  << std::setw(3)
-                 << s_periodic_shift_catalog_instance[dim_index]->d_opposite_number[i]
+                 << d_opposite_number[i]
                  << "      "
-                 << s_periodic_shift_catalog_instance[dim_index]->d_shifts[i] << "\n";
+                 << d_shifts[i] << "\n";
    }
    tbox::plog << "\n\n";
 
-   TBOX_ASSERT(s_periodic_shift_catalog_instance[dim_index]->d_shifts.size() ==
-      s_periodic_shift_catalog_instance[dim_index]->d_opposite_number.size());
+   TBOX_ASSERT(d_shifts.size() ==
+      d_opposite_number.size());
 }
 
 /*
