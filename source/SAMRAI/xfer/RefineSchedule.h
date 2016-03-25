@@ -450,6 +450,12 @@ private:
       const boost::shared_ptr<hier::PatchLevel>& level,
       double fill_time) const;
 
+   void
+   allocateWorkSpace(
+      hier::ComponentSelector& allocate_vector,
+      const boost::shared_ptr<hier::PatchLevel>& level,
+      double fill_time) const;
+
    /*!
     * @brief Recursively fill the destination level with data at the
     * given time.

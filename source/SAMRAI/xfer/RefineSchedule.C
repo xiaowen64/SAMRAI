@@ -2120,26 +2120,38 @@ RefineSchedule::recursiveFill(
        */
 
       hier::ComponentSelector allocate_vector;
+      hier::ComponentSelector work_allocate_vector;
       allocateScratchSpace(allocate_vector, d_coarse_interp_level, fill_time);
+      allocateWorkSpace(work_allocate_vector, d_coarse_interp_level, fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
+      hier::ComponentSelector encon_work_allocate_vector;
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          allocateScratchSpace(encon_allocate_vector,
+            d_coarse_interp_schedule->d_encon_level,
+            fill_time);
+         allocateWorkSpace(encon_work_allocate_vector,
             d_coarse_interp_schedule->d_encon_level,
             fill_time);
       }
 
       hier::ComponentSelector nbr_blk_fill_allocate_vector;
+      hier::ComponentSelector nbr_blk_fill_work_allocate_vector;
       if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
           d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
          allocateScratchSpace(nbr_blk_fill_allocate_vector,
             d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
+         allocateWorkSpace(nbr_blk_fill_work_allocate_vector,
+            d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
       }
 
       hier::ComponentSelector nbr_blk_fill_scratch_vector;
+      hier::ComponentSelector nbr_blk_fill_work_vector;
       hier::ComponentSelector nbr_blk_fill_dst_vector;
       if (d_nbr_blk_fill_level.get()) {
          allocateScratchSpace(nbr_blk_fill_scratch_vector,
+            d_nbr_blk_fill_level, fill_time);
+         allocateScratchSpace(nbr_blk_fill_work_vector,
             d_nbr_blk_fill_level, fill_time);
          allocateDestinationSpace(nbr_blk_fill_dst_vector,
             d_nbr_blk_fill_level, fill_time);
@@ -2169,21 +2181,28 @@ RefineSchedule::recursiveFill(
        */
 
       d_coarse_interp_level->deallocatePatchData(allocate_vector);
+      d_coarse_interp_level->deallocatePatchData(work_allocate_vector);
 
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          d_coarse_interp_schedule->d_encon_level->deallocatePatchData(
             encon_allocate_vector);
+         d_coarse_interp_schedule->d_encon_level->deallocatePatchData(
+            encon_work_allocate_vector);
       }
 
       if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
           d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
          d_coarse_interp_schedule->d_nbr_blk_fill_level->deallocatePatchData(
             nbr_blk_fill_allocate_vector);
+         d_coarse_interp_schedule->d_nbr_blk_fill_level->deallocatePatchData(
+            nbr_blk_fill_work_allocate_vector);
       }
 
       if (d_nbr_blk_fill_level.get()) {
          d_nbr_blk_fill_level->deallocatePatchData(
             nbr_blk_fill_scratch_vector);
+         d_nbr_blk_fill_level->deallocatePatchData(
+            nbr_blk_fill_work_vector);
          d_nbr_blk_fill_level->deallocatePatchData(
             nbr_blk_fill_dst_vector);
       }
@@ -2198,13 +2217,21 @@ RefineSchedule::recursiveFill(
        */
 
       hier::ComponentSelector allocate_vector;
+      hier::ComponentSelector work_allocate_vector;
       allocateScratchSpace(allocate_vector,
+                           d_coarse_interp_encon_level,
+                           fill_time);
+      allocateWorkSpace(work_allocate_vector,
                            d_coarse_interp_encon_level,
                            fill_time);
 
       hier::ComponentSelector encon_allocate_vector;
+      hier::ComponentSelector encon_work_allocate_vector;
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          allocateScratchSpace(encon_allocate_vector,
+            d_coarse_interp_encon_schedule->d_encon_level,
+            fill_time);
+         allocateWorkSpace(encon_work_allocate_vector,
             d_coarse_interp_encon_schedule->d_encon_level,
             fill_time);
       }
@@ -2233,10 +2260,13 @@ RefineSchedule::recursiveFill(
        */
 
       d_coarse_interp_encon_level->deallocatePatchData(allocate_vector);
+      d_coarse_interp_encon_level->deallocatePatchData(work_allocate_vector);
 
       if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
          d_coarse_interp_encon_schedule->d_encon_level->deallocatePatchData(
             encon_allocate_vector);
+         d_coarse_interp_encon_schedule->d_encon_level->deallocatePatchData(
+            encon_work_allocate_vector);
       }
 
    }
@@ -2440,6 +2470,7 @@ RefineSchedule::allocateScratchSpace(
          allocate_vector.setFlag(scratch_id);
       }
       preprocess_vector.setFlag(scratch_id);
+
    }
 
    level->allocatePatchData(allocate_vector, fill_time);
@@ -2461,19 +2492,44 @@ RefineSchedule::allocateDestinationSpace(
 
    allocate_vector.clrAllFlags();
 
-   hier::ComponentSelector preprocess_vector;
-
    for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
       const int dst_id = d_refine_items[iri]->d_dst;
       if (!level->checkAllocated(dst_id)) {
          allocate_vector.setFlag(dst_id);
       }
-      preprocess_vector.setFlag(dst_id);
    }
 
    level->allocatePatchData(allocate_vector, fill_time);
 
 }
+
+void
+RefineSchedule::allocateWorkSpace(
+   hier::ComponentSelector& allocate_vector,
+   const boost::shared_ptr<hier::PatchLevel>& level,
+   double fill_time) const
+{
+   TBOX_ASSERT(level);
+
+   allocate_vector.clrAllFlags();
+
+   for (size_t iri = 0; iri < d_number_refine_items; ++iri) {
+      for (std::vector<int>::const_iterator it =
+               d_refine_items[iri]->d_work.begin();
+            it != d_refine_items[iri]->d_work.end();
+            ++it)
+      {
+         const int work_id = *it;
+         if (!level->checkAllocated(work_id)) {
+            allocate_vector.setFlag(work_id);
+         }
+      }
+   }
+
+   level->allocatePatchData(allocate_vector, fill_time);
+
+}
+
 
 /*
  **************************************************************************
