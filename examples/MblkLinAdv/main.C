@@ -1,9 +1,9 @@
 //
 // File:        main.C
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1747 $
-// Modified:    $LastChangedDate: 2007-12-07 12:41:58 -0800 (Fri, 07 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1917 $
+// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 // Description: Main program for SAMRAI Linear Advection example problem.
 //
 

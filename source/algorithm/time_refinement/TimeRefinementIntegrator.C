@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/time_refinement/TimeRefinementIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/time_refinement/TimeRefinementIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2154 $
+// Modified:    $LastChangedDate: 2008-04-25 15:42:31 -0700 (Fri, 25 Apr 2008) $
 // Description: Time integration manager for AMR with local time stepping.
 //
 
@@ -219,7 +219,9 @@ template<int DIM> TimeRefinementIntegrator<DIM>::~TimeRefinementIntegrator()
 *************************************************************************
 */
 
-template<int DIM> double TimeRefinementIntegrator<DIM>::initializeHierarchy()
+template<int DIM> double TimeRefinementIntegrator<DIM>::initializeHierarchy(
+   const hier::BoxArray<DIM>& override_boxes,
+   const hier::ProcessorMapping& override_mapping)
 {
 
    t_initialize_hier->start();
@@ -240,7 +242,9 @@ template<int DIM> double TimeRefinementIntegrator<DIM>::initializeHierarchy()
    } else {
 
       d_gridding_algorithm->makeCoarsestLevel(d_patch_hierarchy,
-                                              d_start_time);
+                                              d_start_time,
+                                              override_boxes,
+                                              override_mapping);
 
       if (d_use_refined_timestepping) {
          initializeRefinedTimesteppingLevelData(0);
@@ -1500,7 +1504,7 @@ template<int DIM> void TimeRefinementIntegrator<DIM>::getFromInput(
             temp_tag_buffer.resizeArray(
                d_gridding_algorithm->getMaxLevels() - 1);
             for (int i = tsize;
-                 i < d_gridding_algorithm->getMaxLevels(); i++) {
+                 i < temp_tag_buffer.getSize(); i++) {
                temp_tag_buffer[i] = temp_tag_buffer[tsize-1];
             }
          }

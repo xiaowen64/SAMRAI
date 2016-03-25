@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/geometry/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1704 $
-## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2158 $
+## Modified:    $LastChangedDate: 2008-04-28 17:04:43 -0700 (Mon, 28 Apr 2008) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -40,33 +40,52 @@ for t in \
 BlockPatchGeometry BlockGridGeometry SkeletonCoarsen \
 SkeletonPatchGeometry SkeletonGridGeometry SkeletonCoarsen \
 SkeletonRefine CartesianPatchGeometry CartesianGridGeometry \
-CartesianCellFloatLinearRefine CartesianCellComplexLinearRefine \
-CartesianCellDoubleLinearRefine CartesianCellComplexWeightedAverage \
-CartesianCellFloatWeightedAverage \
-CartesianCellFloatConservativeLinearRefine \
-CartesianCellComplexConservativeLinearRefine \
+CartesianCellDoubleLinearRefine \
 CartesianCellDoubleConservativeLinearRefine \
 CartesianCellDoubleWeightedAverage \
 CartesianOutersideDoubleWeightedAverage \
-CartesianSideFloatConservativeLinearRefine \
-CartesianSideComplexWeightedAverage CartesianSideDoubleWeightedAverage \
+CartesianSideDoubleWeightedAverage \
 CartesianSideDoubleConservativeLinearRefine \
-CartesianSideFloatWeightedAverage \
-CartesianEdgeFloatConservativeLinearRefine \
-CartesianEdgeComplexWeightedAverage CartesianEdgeDoubleWeightedAverage \
+CartesianEdgeDoubleWeightedAverage \
 CartesianEdgeDoubleConservativeLinearRefine \
-CartesianEdgeFloatWeightedAverage CartesianNodeFloatLinearRefine \
-CartesianNodeComplexLinearRefine CartesianNodeDoubleLinearRefine \
-CartesianOuterfaceFloatWeightedAverage \
-CartesianOuterfaceComplexWeightedAverage \
+CartesianNodeDoubleLinearRefine \
 CartesianOuterfaceDoubleWeightedAverage \
-CartesianFaceComplexWeightedAverage CartesianFaceFloatWeightedAverage \
-CartesianFaceFloatConservativeLinearRefine \
 CartesianFaceDoubleWeightedAverage \
 CartesianFaceDoubleConservativeLinearRefine 
 do
 ${MT} default.filenames ./tmp geom $t NDIM
 done
+
+for t in \
+CartesianCellFloatLinearRefine \
+CartesianCellFloatWeightedAverage \
+CartesianCellFloatConservativeLinearRefine \
+CartesianSideFloatConservativeLinearRefine \
+CartesianSideFloatWeightedAverage \
+CartesianEdgeFloatConservativeLinearRefine \
+CartesianEdgeFloatWeightedAverage \
+CartesianNodeFloatLinearRefine \
+CartesianOuterfaceFloatWeightedAverage \
+CartesianFaceFloatWeightedAverage \
+CartesianFaceFloatConservativeLinearRefine 
+do
+${MT} Float.filenames ./tmp geom $t NDIM
+done
+
+for t in \
+CartesianCellComplexLinearRefine \
+CartesianCellComplexWeightedAverage \
+CartesianCellComplexConservativeLinearRefine \
+CartesianSideComplexWeightedAverage \
+CartesianEdgeComplexWeightedAverage \
+CartesianNodeComplexLinearRefine \
+CartesianOuterfaceComplexWeightedAverage \
+CartesianFaceComplexWeightedAverage CartesianFaceFloatWeightedAverage
+do
+${MT} Complex.filenames ./tmp geom $t NDIM
+done
+
+
 
 ${MT} default.filenames ./tmp tbox tbox::Pointer geom::BlockGridGeometry NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer geom::BlockPatchGeometry NDIM

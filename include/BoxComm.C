@@ -1,9 +1,9 @@
 //
-// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxComm.C $
+// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxComm.C $
 // Package:  SAMRAI hierarchy
-// Copyright:  (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:  $LastChangedRevision: 1704 $
-// Modified:  $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:  (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:  $LastChangedRevision: 2141 $
+// Modified:  $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility class for parallel communication of boxes
 //
 
@@ -107,8 +107,8 @@ template<int DIM> void BoxComm<DIM>::bcastBoxArray(BoxArray<DIM> &box_array, con
             for (int b=0; b<len; ++b) {
                int offset  = b*DIM*2;
                for (int i=0; i<DIM; ++i) {
-                  buffer[offset++] = box_array(b).lower(i);
-                  buffer[offset++] = box_array(b).upper(i);
+                  buffer[offset++] = box_array[b].lower(i);
+                  buffer[offset++] = box_array[b].upper(i);
                }
             }
          }
@@ -129,8 +129,8 @@ template<int DIM> void BoxComm<DIM>::bcastBoxArray(BoxArray<DIM> &box_array, con
             int offset  = 0;
             for (int b=0; b<len; ++b) {
                for (int j=0; j<DIM; ++j) {
-                  box_array(b).lower(j) = buffer[offset++];
-                  box_array(b).upper(j) = buffer[offset++];
+                  box_array[b].lower(j) = buffer[offset++];
+                  box_array[b].upper(j) = buffer[offset++];
                }
             }
          }
@@ -278,8 +278,8 @@ template<int DIM> void BoxComm<DIM>::exchangeBoxArraysAndWeightArrays(
    int offset = 0;
    for (int x = 0; x < size_in; ++x) {
      for (int i = 0; i < DIM; ++i) {
-       buf_in_ptr[offset++] = box_array_in(x).lower(i);
-       buf_in_ptr[offset++] = box_array_in(x).upper(i);
+	buf_in_ptr[offset++] = box_array_in[x].lower(i);
+	buf_in_ptr[offset++] = box_array_in[x].upper(i);
      }
    }
  
@@ -295,8 +295,8 @@ template<int DIM> void BoxComm<DIM>::exchangeBoxArraysAndWeightArrays(
    offset  = 0;
    for (int b = 0; b < size_out; ++b) {
      for (int j = 0; j < DIM; ++j) {
-       box_array_out(b).lower(j) = buf_out_ptr[offset++];
-       box_array_out(b).upper(j) = buf_out_ptr[offset++];
+       box_array_out[b].lower(j) = buf_out_ptr[offset++];
+       box_array_out[b].upper(j) = buf_out_ptr[offset++];
      }
    }
 

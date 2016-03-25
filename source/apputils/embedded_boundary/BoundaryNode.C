@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/BoundaryNode.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/BoundaryNode.C $
 // Package:     SAMRAI application
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Boundary node struct for embedded boundary implementations.
 //
 
@@ -164,7 +164,7 @@ BoundaryNode<DIM>::getNodeOnBoundary() const
 *************************************************************************
 */
 template<int DIM> int
-BoundaryNode<DIM>::getNumberNearestNeighborNodes() const 
+BoundaryNode<DIM>::getNumberOfNearestNeighborNodes() const 
 {
    return(d_num_nearest_neighbors);
 }
@@ -177,7 +177,7 @@ BoundaryNode<DIM>::getNumberNearestNeighborNodes() const
 *************************************************************************
 */
 template<int DIM> int
-BoundaryNode<DIM>::getNumberOutsideNeighborNodes() const 
+BoundaryNode<DIM>::getNumberOfOutsideNeighborNodes() const 
 {
    return(d_num_outside_neighbors);
 }

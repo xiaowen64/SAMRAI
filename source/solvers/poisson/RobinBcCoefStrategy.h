@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/RobinBcCoefStrategy.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/RobinBcCoefStrategy.h $
  * Package:     SAMRAI solver package
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1845 $
- * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description: Robin boundary condition problem-dependent interfaces
  */
 
@@ -11,30 +11,20 @@
 #define included_solv_RobinBcCoefStrategy
 
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 
 /*
  * SAMRAI classes
  */
 
-#ifndef included_hier_BoundaryBox
 #include "BoundaryBox.h"
-#endif
 
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
 
-#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 
 namespace SAMRAI {
@@ -154,6 +144,8 @@ public:
     * @param patch patch requiring bc coefficients
     * @param bdry_box boundary box showing where on the boundary
     *        the coefficient data is needed.
+    * @param fill_time solution time corresponding to filling, for use
+    *        when coefficients are time-dependent.
     */
    virtual void setBcCoefs (
       tbox::Pointer<pdat::ArrayData<DIM,double> > &acoef_data ,
@@ -161,7 +153,8 @@ public:
       tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
       const tbox::Pointer< hier::Variable<DIM> > &variable ,
       const hier::Patch<DIM> &patch ,
-      const hier::BoundaryBox<DIM> &bdry_box ) const = 0;
+      const hier::BoundaryBox<DIM> &bdry_box ,
+      const double fill_time=0.0 ) const = 0;
 
    /*
     * @brief Return how many cells past the edge or corner of the

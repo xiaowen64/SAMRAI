@@ -1,27 +1,23 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/IntVector.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/IntVector.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2143 $
+// Modified:	$LastChangedDate: 2008-04-23 09:37:15 -0700 (Wed, 23 Apr 2008) $
 // Description:	A N-dimensional integer vector
 //
 
 #ifndef included_hier_IntVector
 #define included_hier_IntVector
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
 
 namespace SAMRAI {
    namespace hier {
@@ -47,20 +43,17 @@ public:
    IntVector(const int i);
 
 
-#if (INCLUDE_DEPRACATED < 2) 
    /**
     * Construct a two-dimensional integer vector with the value (i,j).
-    * Provided for backward compatibility.
+    * Provided for 2D and 3D only.
     */
    IntVector(const int i, const int j);
 
    /**
     * Construct a three-dimensional integer vector with the value (i,j,k).
-    * Provided for backward compatibility.
+    * Provided for 2D and 3D only.
     */
    IntVector(const int i, const int j, const int k);
-
-#endif
 
    /**
     * Construct a n-dimensional integer vector with the value with

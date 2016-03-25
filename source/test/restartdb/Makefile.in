@@ -1,0 +1,72 @@
+##
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/restartdb/Makefile.in $
+## Package:	SAMRAI test
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2123 $
+## Modified:	$LastChangedDate: 2008-04-08 16:33:49 -0700 (Tue, 08 Apr 2008) $
+## Description:	makefile for the restart database and HDF5 tests
+##
+
+SAMRAI	      =	@top_srcdir@
+SRCDIR	      =	@srcdir@
+SUBDIR        = source/test/restartdb
+VPATH	      =	@srcdir@
+TESTTOOLS     = ../testtools
+OBJECT        = ../../..
+
+CPPFLAGS_EXTRA =  -DTESTING=1
+
+default: check	
+
+include $(OBJECT)/config/Makefile.config
+
+NUM_TESTS = 5
+
+TEST_NPROCS = @TEST_NPROCS@
+
+testHDF5: mainHDF5.o database_tests.o $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) mainHDF5.o database_tests.o \
+	$(LIBSAMRAI) $(LDLIBS) -o testHDF5
+
+testHDF5AppFileOpen: mainHDF5AppFileOpen.o database_tests.o $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) mainHDF5AppFileOpen.o database_tests.o \
+	$(LIBSAMRAI) $(LDLIBS) -o testHDF5AppFileOpen
+
+testSilo: mainSilo.o database_tests.o $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) mainSilo.o database_tests.o \
+	$(LIBSAMRAI) $(LDLIBS) -o testSilo
+
+testSiloAppFileOpen: mainSiloAppFileOpen.o database_tests.o $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) mainSiloAppFileOpen.o database_tests.o \
+	$(LIBSAMRAI) $(LDLIBS) -o testSiloAppFileOpen
+
+testMemory: mainMemory.o database_tests.o $(LIBSAMRAIDEPEND)
+	$(CXX) $(CXXFLAGS) $(LDFLAGS) mainMemory.o database_tests.o \
+	$(LIBSAMRAI) $(LDLIBS) -o testMemory
+
+check:	testHDF5 testHDF5AppFileOpen testSilo testSiloAppFileOpen testMemory
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testHDF5
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testHDF5AppFileOpen
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testSilo
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testSiloAppFileOpen
+	$(OBJECT)/config/serpa-run $(TEST_NPROCS) ./testMemory
+
+check2d:
+	$(MAKE) check
+
+check3d:
+	$(MAKE) check
+
+checktest:
+	rm -rf makecheck.logfile
+	$(MAKE) check >& makecheck.logfile
+	cat makecheck.logfile
+	$(TESTTOOLS)/testcount.sh $(TEST_NPROCS) $(NUM_TESTS) makecheck.logfile
+	rm -rf makecheck.logfile
+
+clean:
+	$(SAMCLEAN)
+	$(RM) testHDF5 testSilo
+	$(RM) -r test_dir *.silo *.hdf5
+
+include $(SRCDIR)/Makefile.depend

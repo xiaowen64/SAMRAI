@@ -1,52 +1,30 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.h $
 // Package:     SAMRAI multiblock
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
 #ifndef included_mesh_MultiblockGriddingAlgorithm
 #define included_mesh_MultiblockGriddingAlgorithm
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_mesh_BaseGriddingAlgorithm
 #include "BaseGriddingAlgorithm.h"
-#endif
-#ifndef included_mesh_BoxGeneratorStrategy
 #include "BoxGeneratorStrategy.h"
-#endif
-#ifndef included_hier_BoxIOUtility
 #include "BoxIOUtility.h"
-#endif
-#ifndef included_pdat_CellVariable
 #include "CellVariable.h"
-#endif
-#ifndef included_mesh_LoadBalanceStrategy
 #include "LoadBalanceStrategy.h"
-#endif
-#ifndef included_mesh_MultiblockGriddingTagger
 #include "MultiblockGriddingTagger.h"
-#endif
-#ifndef included_hier_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
-#endif
-#ifndef included_xfer_MultiblockRefineAlgorithm
 #include "MultiblockRefineAlgorithm.h"
-#endif
-#ifndef include_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_mesh_TagAndInitializeStrategy
 #include "TagAndInitializeStrategy.h"
-#endif
 
 namespace SAMRAI {
     namespace mesh {
@@ -346,12 +324,20 @@ public:
     * unrecoverable assertion will result if either the patch hierarchy
     * or its grid geometry is NULL.
     *
+    * The two optional arguments exist only for compatibility with the
+    * base class BaseGriddingAlgorithm.  If they are used in this function,
+    * they will be ignored.
+    *
     * @param multiblock Multiblock patch hierarchy on which level is created
     * @param level_time Simulation time for data on the new level
+    * @param override_boxes optional argument that will be ignored
+    * @param override_mapping optional argument that will be ignored
     */
    virtual void makeCoarsestLevel(
       tbox::Pointer< hier::BasePatchHierarchy<DIM> > multiblock,
-      const double level_time);
+      const double level_time,
+      const hier::BoxArray<DIM>& override_boxes = 0,
+      const hier::ProcessorMapping& override_mapping = 0);
 
    /*!
     * @brief Create new finer level in hierarchy

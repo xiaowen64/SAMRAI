@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/boundary/BoundaryDataTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/boundary/BoundaryDataTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Class to test usage of boundary utilities
 //
 
@@ -647,7 +647,7 @@ void BoundaryDataTester::checkBoundaryData(
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
    const tbox::Array<hier::BoundaryBox<NDIM> > bdry_boxes =
-      pgeom->getCodimensionBoundary(btype);
+      pgeom->getCodimensionBoundaries(btype);
 
    for (int i = 0; i < bdry_boxes.getSize(); i++ ) {
       hier::BoundaryBox<NDIM> bbox = bdry_boxes[i];

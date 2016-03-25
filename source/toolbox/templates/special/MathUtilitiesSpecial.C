@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/templates/special/MathUtilitiesSpecial.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/templates/special/MathUtilitiesSpecial.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1889 $
-// Modified:	$LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2172 $
+// Modified:	$LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description:	MathUtilities routines to set up handlers and get signaling NaNs
 //
 
@@ -18,8 +18,30 @@
 
 #include <float.h>
 #include <limits.h>
+#include <stdlib.h>
 
 #include "tbox/Complex.h"
+
+/*
+ * WARNING: This method should not be used.
+ *
+ * Force library templates to be created.
+ *
+ */
+void DontUseThisFunction_MathInstantiations(void) {
+
+   int    i = 1;
+   double d = 1.0;
+   float  f = 1.0;
+
+   /*
+    * These were needed by gcc 3.x compilers to force
+    * instantiations of a pow helper template.
+    */
+   d = std::pow(d,d);
+   d = std::pow(d,i);
+   f = std::pow(f,f);
+}
 
 /*
  * Floating point exception handling.  
@@ -36,7 +58,7 @@
 /*
  * The following lines setup exception handling headers on the Sun.  If we
  * use Sun's native compiler, just pull in the <sunmath.h> include file.
- * If we are under solaris but use a different compiler (e.g. KCC, g++)
+ * If we are under solaris but use a different compiler (e.g. g++)
  * we have to explicitly define the functions that <sunmath.h> defines,
  * since we don't have access to this file.
  */
@@ -297,6 +319,34 @@ dcomplex MathUtilities<dcomplex>::Rand(const dcomplex& low, const dcomplex& widt
    double real_part = real(width) * drand48() + real(low);
    double imag_part = imag(width) * drand48() + imag(low);
    return dcomplex(real_part, imag_part);
+}
+
+template<class TYPE>  
+TYPE round_internal(TYPE x)
+{
+   /* algorithm used from Steven G. Kargl */
+   double t;
+   if (x >= 0.0) {
+      t = ceil(x);
+      if (t - x > 0.5)
+        t -= 1.0;
+      return (t);
+    } else {
+      t = ceil(-x);
+      if (t + x > 0.5)
+        t -= 1.0;
+      return (-t);
+    }
+}
+
+template<>  
+float MathUtilities<float>::round(float x) {
+   return round_internal<float>(x);
+}
+
+template<>  
+double MathUtilities<double>::round(double x) {
+   return round_internal<double>(x);
 }
 
 }

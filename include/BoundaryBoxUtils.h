@@ -2,20 +2,16 @@
 // File:	$URL$
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2006 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1844 $
-// Modified:	$LastChangedDate: 2008-01-10 10:16:22 -0800 (Thu, 10 Jan 2008) $
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description:	Generic utilities for boundary box calculus.
 //
 
 #ifndef included_hier_BoundaryBoxUtils
 #define included_hier_BoundaryBoxUtils
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_BoundaryBox
 #include "BoundaryBox.h"
-#endif
 
 
 namespace SAMRAI {
@@ -74,15 +70,14 @@ const IntVector<DIM> &getOutwardShift() const;
 /*!
  * @brief Stretch box outward by the given ghost cell width.
  *
- * The number of direction extended is the same as the
+ * The number of direction affected is the same as the
  * codimension of the boundary.
  *
- * Note that the BoundaryBox is defined to be one cell
- * wide.  The output is the BoundaryBox, stretched to
- * cover the given ghost cell width.  This means that
- * if gcw is one, the output is identical to the BoundaryBox.
- * If the gcw is zero in any direction, the output will
- * shrink to nothing in that direction.
+ * Note that the BoundaryBox is defined to be one cell wide.  The
+ * output of this method is the BoundaryBox, stretched to cover the
+ * given ghost cell width.  This means that if gcw is one, the output
+ * is identical to the BoundaryBox.  If the gcw is zero in any
+ * direction, the output will shrink to nothing in that direction.
  *
  * Return the stretched box.
  */
@@ -104,6 +99,9 @@ void extendBoxOutward(
 
 /*!
  * @brief Shift box inward by the given distance.
+ *
+ * A positive distance shifts inward while a negative
+ * distance shifts outward.
  *
  * The number of direction shifted is the same as the
  * codimension of the boundary.
@@ -146,7 +144,7 @@ hier::BoundaryBox<DIM> trimBoundaryBox(
  * @brief Return box describing the index space of the outer surface of
  * a boundary box.
  *
- * Define a box describing the indices of the surface of the 
+ * Define a box describing the indices of the surface of the
  * the input boundary box.  A surface is a face in 3D and an edge
  * in 2D.  These surfaces lie on the boundary itself.
 
@@ -190,11 +188,8 @@ IntVector<DIM> d_outward;
 }
 }
 
-#ifndef DEBUG_NO_INLINE
-// #include "BoundaryBoxUtils.I"
-#endif
 #endif
 
 #ifdef INCLUDE_TEMPLATE_IMPLEMENTATION
-// #include "BoundaryBoxUtils.C"
+#include "BoundaryBoxUtils.C"
 #endif

@@ -1,33 +1,21 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxUtilities.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxUtilities.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Routines for processing boxes within a domain of index space.
 //
 
 #ifndef included_hier_BoxUtilities
 #define included_hier_BoxUtilities
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
 
 
 namespace SAMRAI {

@@ -1,82 +1,44 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/method_of_lines/MethodOfLinesIntegrator.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/method_of_lines/MethodOfLinesIntegrator.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Basic method-of-lines time integration algorithm
 //
 
 #ifndef included_algs_MethodOfLinesIntegrator
 #define included_algs_MethodOfLinesIntegrator
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
-#include "tbox/Array.h"
-#endif 
-#ifndef included_xfer_CoarsenAlgorithm
+#include "tbox/Array.h" 
 #include "CoarsenAlgorithm.h"
-#endif
-#ifndef included_xfer_CoarsenSchedule
 #include "CoarsenSchedule.h"
-#endif
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_tbox_Database
-#include "tbox/Database.h"
-#endif 
-#ifndef included_xfer_Geometry
+#include "tbox/Database.h" 
 #include "Geometry.h"
-#endif
-#ifndef included_mesh_GriddingAlgorithm
 #include "GriddingAlgorithm.h"
-#endif
-#ifndef included_tbox_List
-#include "tbox/List.h"
-#endif 
-#ifndef included_algs_MethodOfLinesPatchStrategy
+#include "tbox/List.h" 
 #include "MethodOfLinesPatchStrategy.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_tbox_Pointer
-#include "tbox/Pointer.h"
-#endif 
-#ifndef included_xfer_RefineAlgorithm
+#include "tbox/Pointer.h" 
 #include "RefineAlgorithm.h"
-#endif
-#ifndef included_xfer_RefineSchedule
 #include "RefineSchedule.h"
-#endif
-#ifndef included_tbox_Serializable
-#include "tbox/Serializable.h"
-#endif 
+#include "tbox/Serializable.h" 
 #ifndef included_String
 #include <string>
 #define included_String
 #endif 
-#ifndef included_mesh_StandardTagAndInitStrategy
 #include "StandardTagAndInitStrategy.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
 
 
 #ifndef NULL

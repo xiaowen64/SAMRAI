@@ -1,48 +1,30 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/edge/EdgeData.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/edge/EdgeData.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Templated edge centered patch data type
 //
 
 #ifndef included_pdat_EdgeData
 #define included_pdat_EdgeData
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_hier_PatchData
 #include "PatchData.h"
-#endif
-#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
-#endif
-#ifndef included_pdat_EdgeIndex
 #include "EdgeIndex.h"
-#endif
-#ifndef included_pdat_EdgeIterator
 #include "EdgeIterator.h"
-#endif
-#ifndef included_tbox_Arena
 #include "tbox/Arena.h"
-#endif
-#ifndef included_tbox_Complex
 #include "tbox/Complex.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace pdat {

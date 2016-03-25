@@ -1,10 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/outernode/OuternodeDataFactory.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/outernode/OuternodeDataFactory.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Release:	$Name$
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1973 $
+// Modified:	$LastChangedDate: 2008-02-11 16:39:15 -0800 (Mon, 11 Feb 2008) $
 // Description: Factory class for creating outernode data objects
 //
 

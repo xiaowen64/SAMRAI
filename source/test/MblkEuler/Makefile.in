@@ -1,7 +1,7 @@
 ##
 ## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/test/MblkEuler/Makefile.in $
 ## Package:	SAMRAI applications
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Revision:	$LastChangedRevision: 986 $
 ## Modified:	$LastChangedDate: 2006-02-16 16:06:29 -0800 (Thu, 16 Feb 2006) $
 ## Description:	makefile for multiblock sample application

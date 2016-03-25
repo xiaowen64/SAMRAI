@@ -1,33 +1,25 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/Box.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/Box.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1859 $
-// Modified:	$LastChangedDate: 2008-01-15 07:55:41 -0800 (Tue, 15 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Box representing a portion of the AMR index space
 //
 
 #ifndef included_hier_Box
 #define included_hier_Box
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_hier_Index
 #include "Index.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_DatabaseBox
 #include "tbox/DatabaseBox.h"
-#endif
 
 namespace SAMRAI {
    namespace hier {

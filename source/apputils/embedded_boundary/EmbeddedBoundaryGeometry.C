@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.C $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Compute and store geometry information about the 
 //              embedded boundary
 //              
@@ -163,6 +163,10 @@ EmbeddedBoundaryGeometry<DIM>::EmbeddedBoundaryGeometry(
    const tbox::Pointer<geom::CartesianGridGeometry<DIM> > grid_geom,
    const hier::IntVector<DIM>& nghosts) 
 {
+
+   if(DIM == 1 || DIM > 3) {
+      TBOX_ERROR("EmbeddedBoundaryGeometry<DIM> : DIM = 1 or > 3 not implemented");
+   }
 
    d_object_name = object_name;
 
@@ -486,7 +490,7 @@ EmbeddedBoundaryGeometry<DIM>::buildEmbeddedBoundaryOnLevel(
       int number_cells = 0;
       hier::BoxArray<DIM> level_boxes = level->getBoxes();
       for (int i = 0; i < level_boxes.getNumberOfBoxes(); i++) {
-         number_cells += level_boxes(i).size();
+         number_cells += level_boxes[i].size();
       }
 
       int cut_cells_on_level = tbox::SAMRAI_MPI::sumReduction(cut_cells_on_proc);
@@ -750,7 +754,7 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevelWithPackage(
      double time = t_patch->getTotalWallclockTime();
      tbox::Pointer< pdat::IndexData<DIM,appu::CutCell<DIM> > > eboundary =
         patch->getPatchData(d_ebdry_data_id);
-     int num_cutcells = eboundary->getNumberItems();
+     int num_cutcells = eboundary->getNumberOfItems();
      num_flowcells = num_flowcells - num_cutcells;
 
      // record stats
@@ -920,8 +924,8 @@ EmbeddedBoundaryGeometry<DIM>::computeEmbeddedBoundaryOnLevel(
    hier::Index<DIM> domain_ilo( tbox::MathUtilities<int>::getMax() );
    for (int n = 0; n < domain_boxes.getNumberOfBoxes(); n++) {
       for (i = 0; i < DIM; i++) {
-         if (domain_boxes(n).lower(i) < domain_ilo(i)) {
-            domain_ilo(i) = domain_boxes(n).lower(i);
+         if (domain_boxes[n].lower(i) < domain_ilo(i)) {
+            domain_ilo[i] = domain_boxes[n].lower(i);
          }
       }
    }
@@ -2195,9 +2199,9 @@ EmbeddedBoundaryGeometry<DIM>::calculateBoundaryNodeInformation(
       pdat::NodeIndex<DIM> ul(ic,hier::IntVector<DIM>(0,1));
       pdat::NodeIndex<DIM> ur(ic,hier::IntVector<DIM>(1,1));
 
-      int num_bdry_nodes = cut_cell.getNumberBoundaryNodes();
+      int num_bdry_nodes = cut_cell.getNumberOfBoundaryNodes();
       for (int j = 0; j < num_bdry_nodes; j++) {
-         pdat::NodeIndex<NDIM> bdry_node = 
+         pdat::NodeIndex<DIM> bdry_node = 
             cut_cell.getBoundaryNode(j).getIndex();
 
          double dist = EBGEOM_UNDEFINED;
@@ -2787,7 +2791,7 @@ EmbeddedBoundaryGeometry<DIM>::recursiveCalculateArea(
        *      1d  1 << 1 = 100 = 2
        *      2d  1 << 2 = 010 = 4
        */      
-      int area_ndim = DIM - 1;
+      const int area_ndim = DIM - 1;
       double lowers[(1 << area_ndim)][DIM];  // [ncorners][XYZ loc]
       double uppers[(1 << area_ndim)][DIM];  // [ncorners][XYZ loc]
       int classifications[(1 << area_ndim)];  // [ncorners]
@@ -2892,12 +2896,7 @@ EmbeddedBoundaryGeometry<DIM>::classifyCell(
    bool classify_cut = false;
    bool classify_solid = false;   
 
-   int corners = 1;
-
-   for (int i=0; i<DIM; i++) {
-      corners *=2;
-   }
-   const int ncorners = corners;
+   const int ncorners = 1 << DIM;
       
    bool is_inside = false;
    int i,c,n,inside_corner_ctr;
@@ -3122,7 +3121,7 @@ EmbeddedBoundaryGeometry<DIM>::setEmbeddedBoundaryAtPhysicalBoundaries(
       }            
 
       const tbox::Array<hier::BoundaryBox<DIM> >& node_bdry =
-         pgeom->getCodimensionBoundary(btype);
+         pgeom->getCodimensionBoundaries(btype);
       
       for (int i = 0; i < node_bdry.getSize(); i++) {
          
@@ -3190,7 +3189,7 @@ EmbeddedBoundaryGeometry<DIM>::setEmbeddedBoundaryAtPhysicalBoundaries(
       }            
 
       const tbox::Array<hier::BoundaryBox<DIM> >& edge_bdry =
-         pgeom->getCodimensionBoundary(btype);
+         pgeom->getCodimensionBoundaries(btype);
 
       for (int i = 0; i < edge_bdry.getSize(); i++) {
          
@@ -3246,11 +3245,9 @@ EmbeddedBoundaryGeometry<DIM>::setEmbeddedBoundaryAtPhysicalBoundaries(
           * Loop over FACE boundary boxes.
           */
          const tbox::Array<hier::BoundaryBox<DIM> >& face_bdry =
-            pgeom->getCodimensionBoundary(FACE3D_BDRY_TYPE);
+            pgeom->getCodimensionBoundaries(FACE3D_BDRY_TYPE);
          
          for (int i = 0; i < face_bdry.getSize(); i++) {
-            
-         
          
 #if 0
 
@@ -3351,7 +3348,7 @@ EmbeddedBoundaryGeometry<DIM>::doNativeShapeInsideOutside(
     * Create temporary array to store node flag for each shape.
     */
    int total_nodes = 1;
-   for (int i = 0; i < NDIM; i++) {
+   for (int i = 0; i < DIM; i++) {
       total_nodes *= nx[i];
    }
 
@@ -3428,23 +3425,20 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
    int i;
    int ln = level->getLevelNumber();
    int pid = tbox::SAMRAI_MPI::getRank();
-   tbox::pout << "\n  writing eb mesh to file = " << dirname 
-        << "/ebmesh-l" << ln << "-p" << pid << "\n" << std::endl;
    
-   std::string fileprefix = "ebmesh";
-   const int size = fileprefix.length() + 16;
-   char *buffer1 = new char[size];
-   sprintf(buffer1, "%s-l%d-p%d", fileprefix.c_str(), ln, pid);
-   std::string filename(buffer1);
-   filename = filename + ".hdf";
+   std::string filename = "ebmesh-l" + tbox::Utilities::intToString(ln) + 
+      "-p" + tbox::Utilities::intToString(pid) + ".hdf";
+
+   tbox::pout << "\n  writing eb mesh to file = " << dirname << "/" 
+	      << "/ebmesh-l" << ln << "-p" << pid << "\n" << std::endl;
+
    if (write_to_dir) filename = dirname + "/" + filename;
    
    /*
     * Open the HDF5 database with the supplied filename.
     */
-   tbox::Pointer<tbox::HDFDatabase> db = new tbox::HDFDatabase("root");
-   int stat = db->mount(filename,"W");
-   if (stat < 0) {
+   tbox::Pointer<tbox::Database> db = new tbox::HDFDatabase("root");
+   if(!db->create(filename)) {
      TBOX_ERROR(d_object_name << "writeLevelEmbeddedBoundaryDataToFile():" 
                 << "\n Error opening HDF database: " << filename << std::endl);
    }
@@ -3492,17 +3486,14 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
       /*
        * Create patch database to store solid and cut cell data.
        */
-      char *buffer2 = new char[16];
       int patch_id = patch->getPatchNumber();
-      sprintf(buffer2, "patch_db[%d]", patch_id);
-      std::string name2(buffer2);
-      delete buffer2;
+      std::string name2 = "patch_db[" + tbox::Utilities::intToString(patch_id)  + "]";
+
       tbox::Pointer<tbox::Database> patch_db = db->putDatabase(name2);
-      
       /*
        * Write solid cells for the patch.
        */
-      int num_solid_cells = solid_cells.getNumberItems();
+      int num_solid_cells = solid_cells.getNumberOfItems();
       patch_db->putInteger("num_solid_cells",num_solid_cells);
       
       if (num_solid_cells > 0) {
@@ -3526,7 +3517,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
       /*
        * Write cut cells for the patch
        */
-      int num_cut_cells = eboundary->getNumberItems();
+      int num_cut_cells = eboundary->getNumberOfItems();
       patch_db->putInteger("num_cut_cells",num_cut_cells);
          
       int cut_cell_ctr = 0;
@@ -3534,10 +3525,9 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
       for (typename pdat::IndexData<DIM,appu::CutCell<DIM> >::Iterator 
               bc(*eboundary); bc; bc++) {
          
-         char *buffer3 = new char[16];
-         sprintf(buffer3, "cut_cell[%d]", cut_cell_ctr);
-         std::string name3(buffer3);
-         delete buffer3;
+         std::string name3 = "cut_cell[" + 
+	    tbox::Utilities::intToString(cut_cell_ctr) + "]";
+	 
          tbox::Pointer<tbox::Database> cut_cell_db = 
             patch_db->putDatabase(name3);
          
@@ -3558,7 +3548,7 @@ EmbeddedBoundaryGeometry<DIM>::writeLevelEmbeddedBoundaryDataToFile(
    /*
     * Close the file.
     */
-   db->unmount();
+   db->close();
 
 #endif
 }
@@ -3589,18 +3579,14 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
    tbox::pout << "\n  reading eb mesh from file = " << dirname 
         << "/ebmesh-l" << ln << "-p" << pid << "\n" << std::endl;
    
-   std::string fileprefix = "ebmesh";
-   const int size = fileprefix.length() + 16;
-   char *buffer1 = new char[size];
-   sprintf(buffer1, "%s-l%d-p%d", fileprefix.c_str(), ln, pid);
-   std::string filename(buffer1);
-   filename = dirname + "/" + filename + ".hdf";
+   std::string filename = dirname + "/" + "ebmesh-l" + tbox::Utilities::intToString(ln) + 
+      "-p" + tbox::Utilities::intToString(pid) + ".hdf";
    
    /*
     * Open the HDF5 database with the supplied filename.
     */
-   tbox::Pointer<tbox::HDFDatabase> db = new tbox::HDFDatabase(filename);
-   if (db->mount(filename,"R") < 0) {
+   tbox::Pointer<tbox::Database> db = new tbox::HDFDatabase(filename);
+   if (!db->open(filename)) {
      TBOX_ERROR(d_object_name << "::readLevelEmbeddedBoundaryDataFromFile():"
                 << "\n Error opening HDF database: " << filename << std::endl);
    }
@@ -3617,7 +3603,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
          same = false;
          break;
       }
-      hier::Box<DIM> rbox = patch_boxes(p);
+      hier::Box<DIM> rbox = patch_boxes[p];
       hier::Box<DIM> pbox = level->getPatch(p)->getBox();
       if (rbox != pbox) same = false;
    }
@@ -3677,11 +3663,9 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
       /*
        * Determine name of patch database that holds solid and cut cell data.
        */
-      char *buffer2 = new char[16];
       int patch_id = patch->getPatchNumber();
-      sprintf(buffer2, "patch_db[%d]", patch_id);
-      std::string name2(buffer2);
-      delete buffer2;
+      std::string name2 = "patch_db[" + tbox::Utilities::intToString(patch_id)  + "]";
+
       tbox::Pointer<tbox::Database> patch_db = db->getDatabase(name2);
 
       /*
@@ -3721,10 +3705,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
          /*
           * Form cut cell database that will hold info about each cut cell
           */
-         char *buffer3 = new char[16];
-         sprintf(buffer3, "cut_cell[%d]", i);
-         std::string name3(buffer3);
-         delete buffer3;
+         std::string name3 = "cut_cell[" + tbox::Utilities::intToString(i) + "]";
    
          /*
           * Access database and data in it.
@@ -3759,7 +3740,7 @@ EmbeddedBoundaryGeometry<DIM>::readLevelEmbeddedBoundaryDataFromFile(
    /*
     * Close the file.
     */
-   db->unmount();
+   db->close();
 
 #endif
 }

@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1887 $
-## Modified:    $LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2040 $
+## Modified:    $LastChangedDate: 2008-03-11 15:05:44 -0700 (Tue, 11 Mar 2008) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -78,6 +78,7 @@ ${MT} default.filenames ./tmp tbox tbox::Array hier::PatchConfigurationUtilities
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::Box NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::BoxArray NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::Index NDIM
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::IntVector NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::BoxList NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array hier::BoundaryBox NDIM
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Array tbox::Array hier::BoundaryBox NDIM

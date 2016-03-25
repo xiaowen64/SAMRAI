@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CartesianRobinBcHelper.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CartesianRobinBcHelper.h $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1818 $
- * Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -11,46 +11,28 @@
 #define included_solv_CartesianRobinBcHelper
 
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 
 /*
  * SAMRAI classes
  */
 
-#ifndef included_hier_BoundaryBox
 #include "BoundaryBox.h"
-#endif
 
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
 
-#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
-#endif
 
-#ifndef included_pdat_CellData
 #include "CellData.h"
-#endif
 
-#ifndef included_pdat_NodeData
 #include "NodeData.h"
-#endif
 
-#ifndef included_solv_RobinBcCoefStrategy
 #include "RobinBcCoefStrategy.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 #ifndef included_String
 #include <string>

@@ -1,41 +1,25 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/index/IndexData.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/IndexData.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: hier::Patch data structure for irregular grid data
 //
 
 #ifndef included_pdat_IndexData
 #define included_pdat_IndexData
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_PatchData
 #include "PatchData.h"
-#endif
-#ifndef included_hier_Index
 #include "Index.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
 #define ENABLE_CONST_ITERATOR 1
 
 namespace SAMRAI {
@@ -176,7 +160,7 @@ public:
     * Return the number of data items (i.e. the number of indices) in   
     * the index data list.
     */ 
-   int getNumberItems() const;
+   int getNumberOfItems() const;
 
    /**
     * Remove (deallocate) any items in the irregular index set located in

@@ -1,26 +1,23 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/Utilities.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/Utilities.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1768 $
-// Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Utility functions for error reporting, file manipulation, etc.
 //
 
 #ifndef included_tbox_Utilities
 #define included_tbox_Utilities
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_IOStream
+
 #include "tbox/IOStream.h"
-#endif
 
 #ifndef included_sys_types
 #include <sys/types.h>
@@ -31,6 +28,8 @@
 #include <sys/stat.h>
 #define included_sys_stat
 #endif
+
+#include "Logger.h"
 
 namespace SAMRAI {
    namespace tbox {
@@ -85,19 +84,25 @@ struct Utilities
    static std::string intToString(int num, int min_width = 1);
 
    /*!
+    * Convert common integer values to strings.
+    *
+    * These are simply wrappers around intToString that ensure the 
+    * same width is uniformally used when converting to string
+    * representations.
+    */
+   static std::string nodeToString(int num);
+   static std::string processorToString(int num);
+   static std::string patchToString(int num);
+   static std::string levelToString(int num);
+   static std::string blockToString(int num);
+
+   /*!
     * Aborts the run after printing an error message with file and
     * linenumber information.
     */
    static void abort(const std::string &message, 
 		     const std::string &filename,
 		     const int line);
-
-   /*!
-    * Logs warning message with file & location.
-    */
-   static void printWarning(const std::string &message, 
-		            const std::string &filename,
-		            const int line);
 
 };
 
@@ -129,7 +134,7 @@ struct Utilities
 #define TBOX_ERROR(X) do {					\
       std::ostringstream tboxos;					\
       tboxos << X << std::ends;					\
-      SAMRAI::tbox::Utilities::abort(tboxos.str().c_str(), __FILE__, __LINE__);\
+      SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);\
 } while (0)
 #else
 #define TBOX_ERROR(X) do {					\
@@ -146,13 +151,31 @@ struct Utilities
 #define TBOX_WARNING(X) do {					\
       std::ostringstream tboxos;					\
       tboxos << X << std::ends;					\
-      SAMRAI::tbox::Utilities::printWarning(tboxos.str(), __FILE__, __LINE__);\
+      SAMRAI::tbox::Logger::getInstance() -> logWarning(tboxos.str(), __FILE__, __LINE__);\
 } while (0)
 #else
 #define TBOX_WARNING(X) do {					\
       std::ostrstream tboxos;					\
       tboxos << X << std::ends;					\
-      SAMRAI::tbox::Utilities::printWarning(tboxos.str(), __FILE__, __LINE__);\
+      SAMRAI::tbox::Logger::getInstance() -> logWarning(tboxos.str(), __FILE__, __LINE__);\
+} while (0)
+#endif
+
+
+   /*!
+    * Print a debug without exit.  Print file and line number of the debug.
+    */
+#ifndef LACKS_SSTREAM
+#define TBOX_DEBUG(X) do {					\
+      std::ostringstream tboxos;					\
+      tboxos << X << std::ends;					\
+      SAMRAI::tbox::Logger::getInstance() -> logDebug(tboxos.str(), __FILE__, __LINE__);\
+} while (0)
+#else
+#define TBOX_DEBUG(X) do {					\
+      std::ostrstream tboxos;					\
+      tboxos << X << std::ends;					\
+      SAMRAI::tbox::Logger::getInstance() -> logDebug(tboxos.str(), __FILE__, __LINE__);\
 } while (0)
 #endif
 
@@ -168,7 +191,7 @@ struct Utilities
       if ( !(EXP) ) {                                           \
          std::ostringstream tboxos;                             \
          tboxos << "Failed assertion: " << #EXP << std::ends;        \
-         SAMRAI::tbox::Utilities::abort(tboxos.str().c_str(), __FILE__, __LINE__);\
+         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);\
       }                                                         \
 } while (0)
 #else
@@ -186,7 +209,7 @@ struct Utilities
       if ( !(EXP) ) {                                           \
          std::ostringstream tboxos;                             \
          tboxos << "Failed assertion: " << std::ends;                \
-         SAMRAI::tbox::Utilities::abort(tboxos.str().c_str(), __FILE__, __LINE__);\
+         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);\
       }                                                         \
 } while (0)
 #else
@@ -217,7 +240,7 @@ struct Utilities
 #define PETSC_SAMRAI_ERROR(ierr) do {						\
       if (ierr) {                                   				\
          std::ostringstream tboxos;							\
-         SAMRAI::tbox::Utilities::abort(tboxos.str().c_str(), __FILE__, __LINE__);	\
+         SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);	\
       } 									\
 } while (0)
 #else

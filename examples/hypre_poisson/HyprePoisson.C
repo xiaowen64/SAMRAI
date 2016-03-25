@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/hypre_poisson/HyprePoisson.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/hypre_poisson/HyprePoisson.C $
  * Package:     SAMRAI application
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2043 $
+ * Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
  * Description: Numerical routines for example Hypre Poisson solver
  */
 
@@ -285,7 +285,7 @@ bool HyprePoisson::solvePoisson()
    * Present data on the solve.
    */
   tbox::pout << "\t" << (solver_ret?"":"NOT ") << "converged " << "\n"
-       << "	iterations: " << d_poisson_hypre.getNumberIterations() << "\n"
+       << "	iterations: " << d_poisson_hypre.getNumberOfIterations() << "\n"
        << "	residual: " << d_poisson_hypre.getRelativeResidualNorm() << "\n"
        << flush;
 
@@ -327,7 +327,7 @@ int HyprePoisson::setupExternalPlotter(
                  << "this function.\n");
    }
    int ln;
-   for ( ln=1; ln<d_hierarchy->getNumberLevels(); ln++ ) {
+   for ( ln=1; ln<d_hierarchy->getNumberOfLevels(); ln++ ) {
 
      tbox::Pointer<hier::PatchLevel<NDIM> > level = 
 	d_hierarchy->getPatchLevel(ln);

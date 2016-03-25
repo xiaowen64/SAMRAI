@@ -1,46 +1,28 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/cell/PatchCellDataOpsReal.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/cell/PatchCellDataOpsReal.h $
 // Package:	SAMRAI mathops
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Templated operations for real cell-centered patch data.
 //
 
 #ifndef included_math_PatchCellDataOpsReal
 #define included_math_PatchCellDataOpsReal
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_math_PatchCellDataBasicOps
 #include "PatchCellDataBasicOps.h"
-#endif
-#ifndef included_math_PatchCellDataMiscellaneousOpsReal
 #include "PatchCellDataMiscellaneousOpsReal.h"
-#endif
-#ifndef included_math_PatchCellDataNormOpsReal
 #include "PatchCellDataNormOpsReal.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_pdat_CellData
 #include "CellData.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace math {

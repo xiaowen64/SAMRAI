@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommStage.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/AsyncCommStage.C $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2037 $
+ * Modified:    $LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
  * Description: Support for coordinating multiple asynchronous communications
  */
 
@@ -32,10 +32,10 @@ AsyncCommStage::AsyncCommStage()
    :
    d_n_group(0),
    d_n_req(0),
-   d_group(0, true),
-   d_req(0, true),
-   d_req_to_group(0, true),
-   d_group_to_req(0, true)
+   d_group(0),
+   d_req(0),
+   d_req_to_group(0),
+   d_group_to_req(0)
 {
    if ( t_wait_any.isNull() ) {
 #ifdef DEBUG_CHECK_ASSERTIONS

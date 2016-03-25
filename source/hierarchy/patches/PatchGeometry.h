@@ -1,39 +1,27 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchGeometry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchGeometry.h $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Base class for geometry management on patches
 //
 
 #ifndef included_hier_PatchGeometry
 #define included_hier_PatchGeometry
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_BoundaryBox
 #include "BoundaryBox.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
 
 
 namespace SAMRAI {
@@ -71,7 +59,7 @@ public:
    /**
     * Return const reference to patch boundary information.
     */ 
-   const tbox::Array< BoundaryBox<DIM> >* getPatchBoundary() const; 
+   const tbox::Array< BoundaryBox<DIM> >* getPatchBoundaries() const; 
 
    /*!
     * @brief Set the boundary box arrays for this patch geometry.
@@ -106,7 +94,7 @@ public:
     * intersects the patch at a single point (i.e., 0-dim intersection
     * between cells in patch and cells in boundary box).
     */
-   const tbox::Array< BoundaryBox<DIM> >& getNodeBoundary() const; 
+   const tbox::Array< BoundaryBox<DIM> >& getNodeBoundaries() const; 
 
    /**
     * Return array of boundary box components for patch each of which
@@ -116,7 +104,7 @@ public:
     * When assertion checking is active, this routine throws an assertion
     * when DIM < 2.
     */
-   const tbox::Array< BoundaryBox<DIM> >& getEdgeBoundary() const;
+   const tbox::Array< BoundaryBox<DIM> >& getEdgeBoundaries() const;
 
    /**
     * Return array of boundary box components for patch each of which
@@ -126,35 +114,52 @@ public:
     * When assertion checking is active, this routine throws an assertion
     * when DIM < 3.
     */
-   const tbox::Array< BoundaryBox<DIM> >& getFaceBoundary() const;
+   const tbox::Array< BoundaryBox<DIM> >& getFaceBoundaries() const;
 
    /**
     * Return array of boundary box components for patch each of which
     * intersects the patch as a (DIM - codim)-dimensional object.
     * That is,
     *
-    * if DIM == 1: (codim == 1) => same components as getNodeBoundary.
+    * if DIM == 1: (codim == 1) => same components as getNodeBoundaries.
     *  
-    * if DIM == 2, (codim == 1) => same components as getEdgeBoundary.  
-    *              (codim == 2) => same components as getNodeBoundary.  
+    * if DIM == 2, (codim == 1) => same components as getEdgeBoundaries.  
+    *              (codim == 2) => same components as getNodeBoundaries.  
     *  
-    * if DIM == 3, (codim == 1) => same components as getFaceBoundary.  
-    *              (codim == 2) => same components as getEdgeBoundary.  
-    *              (codim == 3) => same components as getNodeBoundary.  
+    * if DIM == 3, (codim == 1) => same components as getFaceBoundaries.  
+    *              (codim == 2) => same components as getEdgeBoundaries.  
+    *              (codim == 3) => same components as getNodeBoundaries.  
     *
     * When assertion checking is active, this routine throws an assertion
     * when codim < 0 or codim > DIM.
     */
-   const tbox::Array< BoundaryBox<DIM> >& getCodimensionBoundary(
+   const tbox::Array< BoundaryBox<DIM> >& getCodimensionBoundaries(
       const int codim) const;
 
    /**
     * Set the array of boundary box components of the given codimension
     * for a patch.
     */
+   void setCodimensionBoundaries(
+      const tbox::Array< BoundaryBox<DIM> >& bdry_boxes,
+      const int codim);
+
+#if (INCLUDE_DEPRECATED <= 2)
+   /*
+    * Deprecated methods.  These are identical to the previous calls
+    * and should not be used.
+    */
+   const tbox::Array< BoundaryBox<DIM> >* getPatchBoundary() const; 
+   const tbox::Array< BoundaryBox<DIM> >& getNodeBoundary() const; 
+   const tbox::Array< BoundaryBox<DIM> >& getEdgeBoundary() const;
+   const tbox::Array< BoundaryBox<DIM> >& getFaceBoundary() const;
+   const tbox::Array< BoundaryBox<DIM> >& getCodimensionBoundary(
+      const int codim) const;
    void setCodimensionBoundary(
       const tbox::Array< BoundaryBox<DIM> >& bdry_boxes,
       const int codim);
+#endif
+
 
 
    /*!

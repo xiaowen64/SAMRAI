@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxIOUtility.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxIOUtility.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2122 $
+// Modified:    $LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 // Description: Utility class to read and write boxes to an HDF database.
 //
 
@@ -12,11 +12,10 @@
 
 #include "BoxIOUtility.h"
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <fstream>
 
 #ifdef HAVE_HDF5
+#include "tbox/Database.h"
 #include "tbox/HDFDatabase.h"
 #endif 
 #include "tbox/List.h"
@@ -207,7 +206,7 @@ template<int DIM> void BoxIOUtility<DIM>::readLevelBoxesDatabase()
     * Open the HDF5 database.
     */
    tbox::Pointer<tbox::HDFDatabase> db = new tbox::HDFDatabase("root");
-   int stat = db->mount(d_hdf_dirname,"R");
+   int stat = db->open(d_hdf_dirname);
    if (stat < 0) {
      TBOX_ERROR("BoxIOUtility<DIM>::readLevelBoxesDatabase() error: "
                 "\n Error opening HDF database: " << d_hdf_dirname << std::endl);
@@ -235,10 +234,7 @@ template<int DIM> void BoxIOUtility<DIM>::readLevelBoxesDatabase()
       /*
        * Read number of boxes for each entry of the level.
        */
-      char *buffer1 = new char[16];
-      sprintf(buffer1, "nboxes[%d]", ln);
-      std::string s1(buffer1);
-      delete [] buffer1;
+     std::string s1 =  "nboxes[" + tbox::Utilities::intToString(ln) + "]";
       tbox::Array<int> number_of_boxes = db->getIntegerArray(s1);
 
       /*
@@ -247,15 +243,15 @@ template<int DIM> void BoxIOUtility<DIM>::readLevelBoxesDatabase()
       int nentries = number_of_boxes.getSize();
       d_level_boxes[ln].resizeArray(nentries);
       for (i = 0; i < nentries; i++) {
-         char *buffer2 = new char[16];
-         sprintf(buffer2, "BoxArray[%d][%d]", ln, i);
-         std::string s2(buffer2);
-         delete [] buffer2;
+         std::string s2 = "BoxArray[" + tbox::Utilities::intToString(ln) + "][" + 
+	    tbox::Utilities::intToString(i) +"]";
          if (number_of_boxes[i] > 0) {
             d_level_boxes[ln][i] = db->getDatabaseBoxArray(s2);
          }
       }
   }
+
+  db -> close();
 #endif
 }
 
@@ -272,8 +268,8 @@ template<int DIM> void BoxIOUtility<DIM>::writeLevelBoxesDatabase()
    /*
     * Open the HDF5 database.
     */
-   tbox::Pointer<tbox::HDFDatabase> db = new tbox::HDFDatabase("root");
-   int stat = db->mount(d_hdf_dirname,"W");
+   tbox::Pointer<tbox::Database> db = new tbox::HDFDatabase("root");
+   int stat = db->create(d_hdf_dirname);
    if (stat < 0) {
      TBOX_ERROR("BoxIOUtility<DIM>::writeLevelBoxesDatabase() error" 
                 << "\n Error opening HDF database: " << d_hdf_dirname << std::endl);
@@ -306,26 +302,21 @@ template<int DIM> void BoxIOUtility<DIM>::writeLevelBoxesDatabase()
       for (i = 0; i < nentries; i++) {
          number_of_boxes[i] = d_level_boxes[ln][i].getNumberOfBoxes();
       }
-      char *buffer1 = new char[16];
-      sprintf(buffer1, "nboxes[%d]", ln);
-      std::string s1(buffer1);
-      delete buffer1;
+      std::string s1 =  "nboxes[" + tbox::Utilities::intToString(ln) + "]";
       db->putIntegerArray(s1, number_of_boxes );
 
       /*
        * Write box array[i]
        */
       for (i = 0; i < nentries; i++) {
-         char *buffer2 = new char[16];
-         sprintf(buffer2, "BoxArray[%d][%d]", ln, i);
-         std::string s2(buffer2);
-         delete buffer2;
+         std::string s2 = "BoxArray[" + tbox::Utilities::intToString(ln) + 
+	    "][" + tbox::Utilities::intToString(i) +"]";
          if (number_of_boxes[i] > 0) {
             db->putDatabaseBoxArray(s2, d_level_boxes[ln][i]);
          }
       }
    }
-   db->unmount();
+   db->close();
 
    d_level_boxes.resizeArray(0);
 #endif

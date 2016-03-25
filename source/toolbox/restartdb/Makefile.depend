@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -38,8 +38,38 @@ endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
 
-FILE_1=NullDatabase.o
+FILE_1=HDFDatabaseFactory.o
 DEPENDS_1:=\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/HDFDatabase.h				\
+	$(INCLUDE_SAM)/tbox/HDFDatabaseFactory.h			\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/PIO.h		\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h HDFDatabaseFactory.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_1 +=\
+	
+endif
+
+${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+
+FILE_2=NullDatabase.o
+DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
@@ -60,14 +90,14 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h NullDatabase.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_1 +=\
+DEPENDS_2 +=\
 	
 endif
 
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
+${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 
-FILE_2=RestartManager.o
-DEPENDS_2:=\
+FILE_3=RestartManager.o
+DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
@@ -76,10 +106,11 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/HDFDatabase.h $(INCLUDE_SAM)/tbox/IOStream.h\
-	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
-	$(INCLUDE_SAM)/tbox/NullDatabase.I				\
+	$(INCLUDE_SAM)/tbox/HDFDatabaseFactory.h			\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/NullDatabase.I	\
 	$(INCLUDE_SAM)/tbox/NullDatabase.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Parser.I $(INCLUDE_SAM)/tbox/Parser.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -97,9 +128,68 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h RestartManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_2 +=\
+DEPENDS_3 +=\
 	
 endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+
+FILE_4=SiloDatabase.o
+DEPENDS_4:=\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
+	$(INCLUDE_SAM)/tbox/MathUtilities.h $(INCLUDE_SAM)/tbox/PIO.h	\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/SiloDatabase.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h SiloDatabase.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_4 +=\
+	
+endif
+
+${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+
+FILE_5=SiloDatabaseFactory.o
+DEPENDS_5:=\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
+	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
+	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/List.I	\
+	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/PIO.h		\
+	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
+	$(INCLUDE_SAM)/tbox/PointerBase.I				\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/SiloDatabase.h				\
+	$(INCLUDE_SAM)/tbox/SiloDatabaseFactory.h			\
+	$(INCLUDE_SAM)/tbox/Utilities.h SiloDatabaseFactory.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_5 +=\
+	
+endif
+
+${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
 

@@ -1,36 +1,22 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/multiblock/MultiblockCoarsenPatchStrategy.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockCoarsenPatchStrategy.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Strategy interface to user routines for coarsening AMR data.
 //
  
 #ifndef included_xfer_MultiblockCoarsenPatchStrategy
 #define included_xfer_MultiblockCoarsenPatchStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_xfer_CoarsenPatchStrategy
 #include "CoarsenPatchStrategy.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 #ifndef MULTIBLOCK_UNDEFINED_BLOCK_NUMBER
 #define MULTIBLOCK_UNDEFINED_BLOCK_NUMBER (-1)

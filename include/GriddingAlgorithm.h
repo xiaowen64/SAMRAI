@@ -1,83 +1,43 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/GriddingAlgorithm.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/GriddingAlgorithm.h $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2148 $
+// Modified:    $LastChangedDate: 2008-04-24 10:04:24 -0700 (Thu, 24 Apr 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
 #ifndef included_mesh_GriddingAlgorithm
 #define included_mesh_GriddingAlgorithm
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_mesh_BaseGriddingAlgorithm
 #include "BaseGriddingAlgorithm.h"
-#endif
-#ifndef included_mesh_TagAndInitializeStrategy
 #include "TagAndInitializeStrategy.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BoxIOUtility
 #include "BoxIOUtility.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_ProcessorMapping
 #include "ProcessorMapping.h"
-#endif
-#ifndef included_mesh_BoxGeneratorStrategy
 #include "BoxGeneratorStrategy.h"
-#endif
-#ifndef included_mesh_LoadBalanceStrategy
 #include "LoadBalanceStrategy.h"
-#endif
-#ifndef included_pdat_CellVariable
 #include "CellVariable.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
-#ifndef included_xfer_RefineAlgorithm
 #include "RefineAlgorithm.h"
-#endif
-#ifndef included_xfer_RefineSchedule
 #include "RefineSchedule.h"
-#endif
 
 
 
@@ -158,8 +118,10 @@ namespace SAMRAI {
  *       the ratio of the index space of a patch level to that of the next 
  *       coarser level.  The input for each level must correspond to the 
  *       format ``level_n = vector'', where n is the level number and each 
- *       vector must have length DIM.  See sample input below. 
- * 
+ *       vector must have length DIM.  If more values are given 
+ *       than max_levels - 1 , extra entries will be ignored.  If fewer 
+ *       values are given, then the last element in the array will be used 
+ *       for finer levels.
  *
  * Optional input keys, data types, and defaults:
  *
@@ -362,10 +324,28 @@ public:
     * Important note: If assertion checking is turned on, then an 
     * unrecoverable assertion will result if either the patch hierarchy 
     * or its grid geometry is NULL.
+    *
+    * The two optional arguments are only to be used for a special case where
+    * the user wishes to manually specify a box decomposition and load
+    * balance for the coarsest level of the hierarchy.  The BoxArray argument
+    * must be a decomposition of the the coarsest level, and must exactly
+    * fill the index space of the physical domain of the hierarchy.  The
+    * ProcessorMapping must be constructed to map each box in the BoxArray
+    * to a processor.  The size of the mapping must be equal to the length
+    * of the box array, or an assertion failure will result.
+    *
+    * @param hierarchy The hierarchy on which coarse level is constructed.
+    * @param level_time Simulation time when level is constructed
+    * @param override_boxes box array representing a decomposition of level
+    *                       zero of the hierarchy
+    * @param override_mapping processor mapping that maps each box in the
+    *                         above array to a processor.
     */
    virtual void makeCoarsestLevel(
       tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
-      const double level_time);
+      const double level_time,
+      const hier::BoxArray<DIM>& override_boxes = 0,
+      const hier::ProcessorMapping& override_mapping = 0);
 
    /*!
     * This routine attempts to create a new level in an AMR patch hierarchy 
@@ -903,7 +883,6 @@ private:
    tbox::Array<int> d_regrid_box_counter; 
 
    bool d_extend_tags_to_bdry;
-   bool d_use_new_alg;
 
    /*!
      @brief How to resolve user tags that violate nesting requirement.

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/geometry/skeleton/grid_geom/SkeletonGridGeometry.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/geometry/skeleton/grid_geom/SkeletonGridGeometry.C $
 // Package:	SAMRAI geometry package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Simple Skeleton grid geometry for an AMR hierarchy.
 //
 
@@ -217,12 +217,12 @@ SkeletonGridGeometry<DIM>::makeCoarsenedGridGeometry(
    const hier::BoxArray<DIM>& fine_domain = this -> getPhysicalDomain();
    const int nboxes = fine_domain.getNumberOfBoxes();
    for (int ib = 0; ib < nboxes; ib++) {
-      hier::Box<DIM> testbox = hier::Box<DIM>::refine(coarse_domain.getBox(ib), coarsen_ratio);
-      if (testbox != fine_domain.getBox(ib)) {
+      hier::Box<DIM> testbox = hier::Box<DIM>::refine(coarse_domain[ib], coarsen_ratio);
+      if (testbox != fine_domain[ib]) {
 #ifdef DEBUG_CHECK_ASSERTIONS
          tbox::plog << "SkeletonGridGeometry::makeCoarsenedGridGeometry : Box # " << ib << std::endl;
-         tbox::plog << "      fine box = " << fine_domain.getBox(ib) << std::endl;
-         tbox::plog << "      coarse box = " << coarse_domain.getBox(ib) << std::endl;
+         tbox::plog << "      fine box = " << fine_domain[ib] << std::endl;
+         tbox::plog << "      coarse box = " << coarse_domain[ib] << std::endl;
          tbox::plog << "      refined coarse box = " << testbox << std::endl;
 #endif
          TBOX_ERROR("geom::SkeletonGridGeometry::makeCoarsenedGridGeometry() error...\n"

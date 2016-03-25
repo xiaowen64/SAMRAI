@@ -1,10 +1,9 @@
 //
 // File:        Hierarchy Sum test
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Release:     $Name$
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: SAMRAI interface class for hierarchy node and edge sum test
 //
 
@@ -442,7 +441,7 @@ HierSumTest::setupOuternodeSum(
 
    d_node_sum_util->registerSum(d_unode_id);
 
-   int num_levels = hierarchy->getNumberLevels();
+   int num_levels = hierarchy->getNumberOfLevels();
    if (num_levels > 1) {
 
       int coarsest_level_number = 0;
@@ -824,12 +823,12 @@ HierSumTest::initializeLevelData(
       const Pointer<CartesianPatchGeometry<NDIM> > patch_geom = 
          patch->getPatchGeometry();
       const tbox::Array<BoundaryBox<NDIM> > node_bdry =
-         patch_geom->getCodimensionBoundary(NDIM);
+         patch_geom->getCodimensionBoundaries(NDIM);
       const tbox::Array<BoundaryBox<NDIM> > edge_bdry =
-         patch_geom->getCodimensionBoundary(NDIM-1);
+         patch_geom->getCodimensionBoundaries(NDIM-1);
 #if (NDIM == 3)
       const tbox::Array<BoundaryBox<NDIM> > face_bdry =
-         patch_geom->getCodimensionBoundary(1);
+         patch_geom->getCodimensionBoundaries(1);
 #else
       const tbox::Array<BoundaryBox<NDIM> > face_bdry;
 #endif
@@ -872,7 +871,7 @@ HierSumTest::initializeLevelData(
 
          Box<NDIM> cpbox = cpatch->getBox();
          for (int n = 0; n < fine_level_boxes.getNumberOfBoxes(); n++) {
-            Box<NDIM> setbox = cpbox * fine_level_boxes(n);
+            Box<NDIM> setbox = cpbox * fine_level_boxes[n];
             if (!setbox.empty()) {
                ucell_node->fillAll(0.0, setbox);
             }
@@ -1162,12 +1161,12 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
     */
 
    const tbox::Array<BoundaryBox<NDIM> > edge_bdry =
-      patch_geom->getCodimensionBoundary(NDIM-1);
+      patch_geom->getCodimensionBoundaries(NDIM-1);
    const int num_edge_bdry_boxes = edge_bdry.getSize();
 
 #if (NDIM == 3)
    const tbox::Array<BoundaryBox<NDIM> > face_bdry =
-      patch_geom->getCodimensionBoundary(1);
+      patch_geom->getCodimensionBoundaries(1);
    const int num_face_bdry_boxes = face_bdry.getSize();
 #endif
 

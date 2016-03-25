@@ -2,10 +2,10 @@
 #define included_solv_CellPoissonFACOps_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonFACOps.C $
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1863 $
- * Modified:    $LastChangedDate: 2008-01-15 16:53:13 -0800 (Tue, 15 Jan 2008) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonFACOps.C $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2141 $
+ * Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
  * Description: Operator class for cell-centered scalar Poisson using FAC
  */
 
@@ -625,8 +625,8 @@ template<int DIM>  CellPoissonFACOps<DIM>::CellPoissonFACOps(
    t_compute_residual_norm = tbox::TimerManager::getManager()->
       getTimer("solv::CellPoissonFACOps::computeResidualNorm()");
 
-   if (DIM == 1) {
-      TBOX_ERROR(d_object_name << ": 1D not implemented yet.\n");
+   if (DIM == 1 || DIM > 3) {
+      TBOX_ERROR("CellPoissonFACOps : DIM == 1 or > 3 not implemented yet.\n");
    }
 
    if ( s_cell_scratch_var.isNull() ) {
@@ -863,7 +863,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::initializeOperatorState (
     * Initialize the coarse-fine boundary description for the
     * hierarchy.
     */
-   d_cf_boundary.resizeArray( d_hierarchy->getNumberLevels() );
+   d_cf_boundary.resizeArray( d_hierarchy->getNumberOfLevels() );
 
    hier::IntVector<DIM> max_gcw(1);
    for ( ln=d_ln_min; ln<=d_ln_max; ++ln ) {
@@ -871,7 +871,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::initializeOperatorState (
                                               ln,
                                               max_gcw);
    }
-#if HAVE_HYPRE
+#ifdef HAVE_HYPRE
    if ( d_coarse_solver_choice == "hypre" ) {
       d_hypre_solver.initializeSolverState( d_hierarchy, d_ln_min );
       /*
@@ -1092,7 +1092,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::deallocateOperatorState()
             deallocatePatchData(d_oflux_scratch_id);
       }
       d_cf_boundary.resizeArray(0);
-#if HAVE_HYPRE
+#ifdef HAVE_HYPRE
       d_hypre_solver.deallocateSolverState();
 #endif
       d_hierarchy.setNull();
@@ -1583,7 +1583,10 @@ template<int DIM> void CellPoissonFACOps<DIM>::ewingFixFlux (
 	       ratio_to_coarser,
 	       blower, bupper,
 	       dx );
+	 } else {
+	    TBOX_ERROR("CellPoissonFACOps<DIM> : DIM > 3 not supported" << std::endl);
 	 }
+
       }
    }
    else {
@@ -1705,6 +1708,7 @@ template<int DIM> int CellPoissonFACOps<DIM>::solveCoarsestLevel(
 
 
 
+#ifdef HAVE_HYPRE
 /*
 ********************************************************************
 * Solve coarsest level using Hypre                                 *
@@ -1743,13 +1747,14 @@ template<int DIM> int CellPoissonFACOps<DIM>::solveCoarsestLevel_HYPRE(
    if( d_enable_logging ) tbox::plog
       << d_object_name << " Hypre solve " << (solver_ret?"":"NOT ")
       << "converged\n"
-      << "\titerations: " << d_hypre_solver.getNumberIterations() << "\n"
+      << "\titerations: " << d_hypre_solver.getNumberOfIterations() << "\n"
       << "\tresidual: " << d_hypre_solver.getRelativeResidualNorm() << "\n";
 
    return !solver_ret;
 #endif
 
 }
+#endif
 
 
 
@@ -2044,7 +2049,7 @@ template<int DIM> void CellPoissonFACOps<DIM>::computeVectorWeights(
             tbox::Pointer< hier::Patch<DIM> > patch = level->getPatch(p());
             for ( int i = 0; i < coarsened_boxes.getNumberOfBoxes(); i++ ) {
 
-               hier::Box<DIM> coarse_box = coarsened_boxes(i);
+               hier::Box<DIM> coarse_box = coarsened_boxes[i];
                hier::Box<DIM> intersection = coarse_box*(patch->getBox());
                if ( !intersection.empty() ) {
                   tbox::Pointer< pdat::CellData<DIM,double> > w =

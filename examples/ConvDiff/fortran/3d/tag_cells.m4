@@ -4,6 +4,7 @@ include(SAMRAI_FORTDIR/pdat_m4arrdim3d.i)dnl
 
       subroutine tagcells(
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
+     &  gcw0,gcw1,gcw2,
      &  tags,
      &  var, 
      &  refine_tag_val,
@@ -14,6 +15,7 @@ c***********************************************************************
       implicit none
 c input arrays:
       integer ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2
+      integer gcw0,gcw1,gcw2
       integer refine_tag_val
       integer nequ
       REAL    tolerance(0:nequ-1)
@@ -22,7 +24,7 @@ c variables in 3d cell indexed
       integer 
      &     tags(CELL3d(ifirst,ilast,0))
       REAL
-     &     var(CELL3d(ifirst,ilast,0),0:nequ-1)
+     &     var(CELL3dVECG(ifirst,ilast,gcw),0:nequ-1)
 c
       integer ic0,ic1,ic2,ineq
 c

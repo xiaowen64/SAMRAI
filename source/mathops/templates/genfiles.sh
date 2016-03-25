@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1704 $
-## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2157 $
+## Modified:    $LastChangedDate: 2008-04-28 13:55:06 -0700 (Mon, 28 Apr 2008) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -36,24 +36,44 @@ done
 # The templates for the NDIM classes in this package
 #
 
-for t in ArrayDataNormOpsComplex ArrayDataNormOpsInteger \
-HierarchyDataOpsComplex PatchSideDataOpsInteger \
-PatchSideDataOpsComplex PatchNodeDataNormOpsComplex \
-PatchSideDataNormOpsComplex HierarchySideDataOpsInteger \
-HierarchySideDataOpsComplex HierarchyNodeDataOpsInteger \
-HierarchyNodeDataOpsComplex HierarchyDataOpsManager \
-HierarchyDataOpsInteger HierarchyDataOpsComplex \
-PatchFaceDataOpsInteger PatchFaceDataOpsComplex \
-PatchFaceDataNormOpsComplex HierarchyFaceDataOpsInteger \
-PatchNodeDataOpsComplex HierarchyFaceDataOpsComplex \
-PatchEdgeDataOpsInteger PatchEdgeDataOpsComplex \
-PatchEdgeDataNormOpsComplex HierarchyEdgeDataOpsInteger \
-HierarchyEdgeDataOpsComplex PatchCellDataOpsInteger \
-PatchCellDataOpsComplex PatchCellDataNormOpsComplex \
-HierarchyCellDataOpsInteger HierarchyCellDataOpsComplex \
+for t in ArrayDataNormOpsComplex \
+HierarchyDataOpsComplex \
+PatchSideDataOpsComplex \
+PatchNodeDataNormOpsComplex \
+PatchSideDataNormOpsComplex \
+HierarchySideDataOpsComplex \
+HierarchyNodeDataOpsComplex \
+HierarchyDataOpsManager \
+HierarchyDataOpsComplex \
+PatchFaceDataOpsComplex \
+PatchFaceDataNormOpsComplex \
+PatchNodeDataOpsComplex \
+HierarchyFaceDataOpsComplex \
+PatchEdgeDataOpsComplex \
+PatchEdgeDataNormOpsComplex \
+HierarchyEdgeDataOpsComplex \
+PatchCellDataOpsComplex \
+PatchCellDataNormOpsComplex \
+HierarchyCellDataOpsComplex 
+do 
+${MT} dcomplex.filenames ./tmp math $t NDIM 
+done
+
+for t in ArrayDataNormOpsInteger \
+PatchSideDataOpsInteger \
+HierarchySideDataOpsInteger \
+HierarchyNodeDataOpsInteger \
+HierarchyDataOpsManager \
+HierarchyDataOpsInteger \
+PatchFaceDataOpsInteger \
+HierarchyFaceDataOpsInteger \
+PatchEdgeDataOpsInteger \
+HierarchyEdgeDataOpsInteger \
+PatchCellDataOpsInteger \
+HierarchyCellDataOpsInteger \
 PatchNodeDataOpsInteger 
 do 
-${MT} default.filenames ./tmp math $t NDIM 
+${MT} int.filenames ./tmp math $t NDIM 
 done
 
 for t in int float double dcomplex; do

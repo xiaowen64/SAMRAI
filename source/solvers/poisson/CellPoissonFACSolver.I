@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACSolver.I $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonFACSolver.I $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2043 $
+ * Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
  * Description: High-level solver (wrapper) for scalar poisson equation.
  */
 
@@ -133,9 +133,9 @@ void CellPoissonFACSolver<DIM>::setResidualTolerance( double residual_tol ) {
 
 
 template<int DIM> inline
-int CellPoissonFACSolver<DIM>::getNumberIterations() const
+int CellPoissonFACSolver<DIM>::getNumberOfIterations() const
 {
-   return d_fac_precond.getNumberIterations();
+   return d_fac_precond.getNumberOfIterations();
 }
 
 template<int DIM> inline

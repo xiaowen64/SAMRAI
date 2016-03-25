@@ -2,8 +2,8 @@
 // File:	$URL$
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2006 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1850 $
-// Modified:	$LastChangedDate: 2008-01-11 16:39:11 -0800 (Fri, 11 Jan 2008) $
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description:	Generic utilities for boundary box calculus.
 //
 
@@ -14,11 +14,6 @@
 #include "Box.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
-
-#ifdef DEBUG_NO_INLINE
-// #include "BoundaryBoxUtils.I"
-#endif
-
 
 namespace SAMRAI {
    namespace hier {
@@ -164,11 +159,11 @@ void BoundaryBoxUtils<DIM>::stretchBoxToGhostWidth(
        */
       if ( d_outward(d) == -1 ) {
          if ( gcw(d) > 1 ) box.growLower(d, gcw(d)-1);
-         else              box.lower()(d) = box.upper()(d) + 1;
+         else              box.lower()(d) = box.upper()(d) - (gcw(d)-1);
       }
       else if ( d_outward(d) ==  1 ) {
          if ( gcw(d) > 1 ) box.growUpper(d, gcw(d)-1);
-         else              box.upper()(d) = box.lower()(d) - 1;
+         else              box.upper()(d) = box.lower()(d) + (gcw(d)-1);
       }
    }
    return;

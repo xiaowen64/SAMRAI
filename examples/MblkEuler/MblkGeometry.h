@@ -9,9 +9,7 @@
 #ifndef included_MblkGeometryXD
 #define included_MblkGeometryXD
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #include "tbox/Array.h"
 #include "Box.h"

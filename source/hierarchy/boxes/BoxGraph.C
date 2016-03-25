@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/BoxGraph.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxGraph.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility class to determines topographical box relationships
 //
 
@@ -137,7 +137,7 @@ template<int DIM> void BoxGraph<DIM>::buildGraph()
     * grow all dst boxes by the specified value
     */
    for (int j=0; j<dst_len; ++j) {
-      d_dst_boxes(j).grow(d_grow_dst_boxes);
+      d_dst_boxes[j].grow(d_grow_dst_boxes);
    }
 
    /*
@@ -155,9 +155,9 @@ template<int DIM> void BoxGraph<DIM>::buildGraph()
    int i;
    int idx = 0;
    for (i=0; i<dst_len; ++i) {
-      sorted_nodes[idx].coord = d_dst_boxes(i).lower(d_sort_dimension);
+      sorted_nodes[idx].coord = d_dst_boxes[i].lower(d_sort_dimension);
       sorted_nodes[idx].idx = i;
-      sorted_nodes[idx].box = &(d_dst_boxes(i));
+      sorted_nodes[idx].box = &(d_dst_boxes[i]);
       sorted_nodes[idx].isSrcBox = false;
       ++idx;
    }
@@ -172,17 +172,17 @@ template<int DIM> void BoxGraph<DIM>::buildGraph()
     */
    if (d_src_idx.getSize() == 0) {
       for (i=0; i<src_len; ++i) {
-         sorted_nodes[idx].coord = d_src_boxes(i).lower(d_sort_dimension);
+         sorted_nodes[idx].coord = d_src_boxes[i].lower(d_sort_dimension);
          sorted_nodes[idx].idx = i;
-         sorted_nodes[idx].box = &(d_src_boxes(i));
+         sorted_nodes[idx].box = &(d_src_boxes[i]);
          sorted_nodes[idx].isSrcBox = true;
          ++idx;
       }
    } else {
       for (i=0; i<src_len; ++i) {
-         sorted_nodes[idx].coord = d_src_boxes(i).lower(d_sort_dimension);
+         sorted_nodes[idx].coord = d_src_boxes[i].lower(d_sort_dimension);
          sorted_nodes[idx].idx = d_src_idx[i];
-         sorted_nodes[idx].box = &(d_src_boxes(i));
+         sorted_nodes[idx].box = &(d_src_boxes[i]);
          sorted_nodes[idx].isSrcBox = true;
          ++idx;
       }
@@ -280,7 +280,7 @@ template<int DIM> void BoxGraph<DIM>::buildGraph()
     */
    d_grow_dst_boxes *= -1;
    for (int j=0; j<dst_len; ++j) {
-      d_dst_boxes(j).grow(d_grow_dst_boxes);
+      d_dst_boxes[j].grow(d_grow_dst_boxes);
    }
 
    /* 
@@ -290,7 +290,7 @@ template<int DIM> void BoxGraph<DIM>::buildGraph()
     */
    d_adj.resizeArray(dst_len);
    for (int x=0; x<dst_len; ++x) {
-      int len = tmp_graph[x].getNumberItems();
+      int len = tmp_graph[x].getNumberOfItems();
       d_adj[x].resizeArray(len);
 
       int count = 0;
@@ -347,7 +347,7 @@ template<int DIM> int BoxGraph<DIM>::qsortCompare(const void *v, const void *w)
 
 
 
-template<int DIM> void BoxGraph<DIM>::sortNodeList(tbox::Array<BoxGraph<DIM>::GraphNode> & list, int len)
+template<int DIM> void BoxGraph<DIM>::sortNodeList(tbox::Array<typename BoxGraph<DIM>::GraphNode> & list, int len)
 {
    typename BoxGraph<DIM>::GraphNode *tmp = new typename BoxGraph<DIM>::GraphNode[len];
    int h;
@@ -364,8 +364,8 @@ template<int DIM> void BoxGraph<DIM>::sortNodeList(tbox::Array<BoxGraph<DIM>::Gr
  */
 
 template<int DIM> void BoxGraph<DIM>::addEdges(
-   tbox::Array<BoxGraph<DIM>::GraphNode> & src, int src_ct,
-   tbox::Array<BoxGraph<DIM>::GraphNode> & dst, int dst_ct,
+   tbox::Array<typename BoxGraph<DIM>::GraphNode > & src, int src_ct,
+   tbox::Array<typename BoxGraph<DIM>::GraphNode > & dst, int dst_ct,
    tbox::Array<tbox::List<int> > &graph)
 {
    for (int i=0; i<dst_ct; ++i) {
@@ -440,7 +440,7 @@ template<int DIM> void BoxGraph<DIM>::buildLocalOverlapArrays()
  */
 
 template<int DIM> void BoxGraph<DIM>::findBinLimits(
-   int binNumberIN, int dim, tbox::Array<BoxGraph<DIM>::GraphNode> & nodesIN,
+   int binNumberIN, int dim, tbox::Array<typename BoxGraph<DIM>::GraphNode> & nodesIN,
    int & firstOUT, int & lastOUT, int & rightEdgeOfBinOUT)
 {
    int len = nodesIN.getSize();
@@ -476,10 +476,10 @@ template<int DIM> void BoxGraph<DIM>::findSortDimension()
    int i;
 
    for (i=0; i<size_src; ++i) {
-      bbox += d_src_boxes(i);
+      bbox += d_src_boxes[i];
    }
    for (i=0; i<size_dst; ++i) {
-      bbox += d_dst_boxes(i);
+      bbox += d_dst_boxes[i];
    }
 
    Index<DIM> lower = bbox.lower();
@@ -500,7 +500,7 @@ template<int DIM> void BoxGraph<DIM>::findSortDimension()
  * Print functions; these are only needed for development/testing.
  * ************************************************************************
  */
-template<int DIM> void BoxGraph<DIM>::print(tbox::Array<BoxGraph<DIM>::GraphNode> & list, int len)
+template<int DIM> void BoxGraph<DIM>::print(tbox::Array<typename BoxGraph<DIM>::GraphNode> & list, int len)
 {
     for (int i=0; i<len; ++i) {
       tbox::plog  << "   coord= " << list[i].coord
@@ -524,19 +524,19 @@ template<int DIM> void BoxGraph<DIM>::printGraph(std::ostream& os)
    os << "\n---------------------------------------------------\n";
    os << "dst boxes (after growing):\n";
    for (i=0; i<dst_len; ++i) {
-      os << "  dst box " << i << " = " << d_dst_boxes(i) << std::endl;
+      os << "  dst box " << i << " = " << d_dst_boxes[i] << std::endl;
    }
 
    os << "\n---------------------------------------------------\n";
    os << "src boxes\n";
    for (i=0; i<src_len; ++i) {
-      os << "  src box " << i << " = " << d_src_boxes(i) << std::endl;
+      os << "  src box " << i << " = " << d_src_boxes[i] << std::endl;
    }
 
    os << "\n---------------------------------------------------\n";
    os << "Nabors of dst boxes:\n";
    for (i=0; i<dst_len; ++i) {
-      os << "  dst box " << i << " = " << d_dst_boxes(i) << std::endl;
+      os << "  dst box " << i << " = " << d_dst_boxes[i] << std::endl;
       os << "     src box nabors:\n";
       int adj_len = d_adj[i].getSize();
       for (int j=0; j<adj_len; ++j) {
@@ -575,7 +575,7 @@ template<int DIM> void BoxGraph<DIM>::removeIntersections(BoxList<DIM> &fragment
    int dst_len = d_dst_boxes.getNumberOfBoxes();
 
    for (int box_idx=0; box_idx<dst_len; ++box_idx) {
-      Box<DIM> tryme = d_dst_boxes(box_idx);
+      Box<DIM> tryme = d_dst_boxes[box_idx];
 
       //Find a shorter list of boxes from "takeaway" that might intersect
       //with "tryme."  Recall that "takeaway" was the list with which
@@ -598,7 +598,7 @@ template<int DIM> void BoxGraph<DIM>::removeIntersections(BoxList<DIM> &fragment
 
          BoxList<DIM> nabors_list;
          for (int j=0; j<nabor_count; ++j) {
-            nabors_list.appendItem( d_src_boxes(nabors[j]) );
+            nabors_list.appendItem( d_src_boxes[nabors[j]] );
          }
 
          BoxList<DIM> tryme_burst(tryme);

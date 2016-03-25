@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/SNESAbstractFunctions.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/petsc/SNESAbstractFunctions.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1819 $
-// Modified:    $LastChangedDate: 2007-12-20 18:09:28 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Interface to user functions for SAMRAI-based PETSc SNES context
 //
 
 #ifndef included_solv_SNESAbstractFunctions
 #define included_solv_SNESAbstractFunctions
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifdef HAVE_PETSC
 #ifndef included_petsc_snes

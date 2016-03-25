@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/base/ParallelBuffer.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/ParallelBuffer.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1851 $
-// Modified:	$LastChangedDate: 2008-01-11 16:39:46 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 1954 $
+// Modified:	$LastChangedDate: 2008-02-05 08:17:43 -0800 (Tue, 05 Feb 2008) $
 // Description:	Parallel I/O class buffer to manage parallel ostreams output
 //
 
@@ -283,14 +283,13 @@ int ParallelBuffer::sync()
 * This routine is called from streambuf.  If this routine is not	*
 * provided, then overflow() is called instead for each character.	*
 *									*
-* We only define this for g++ and KCC since those libraries define the	*
-* streamsize type.  Note that this routine is not required; it only	*
+* Note that this routine is not required; it only	                *
 * offers some efficiency over overflow().				*
 *									*
 *************************************************************************
 */
 
-#if !defined(__INTEL_COMPILER) && (defined(__GNUG__) || defined(__KCC))
+#if !defined(__INTEL_COMPILER) && (defined(__GNUG__))
 std::streamsize ParallelBuffer::xsputn(const std::string &text, std::streamsize n)
 {
    sync();

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/multiblock/MultiblockGriddingTagger.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/multiblock/MultiblockGriddingTagger.C $
 // Package:	SAMRAI multiblock package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
 
@@ -81,7 +81,7 @@ void MultiblockGriddingTagger<DIM>::setPhysicalBoundaryConditions(
    for (int d = 0; d < DIM; d++) {
 
       tbox::Array< hier::BoundaryBox<DIM> > bbox =
-         pgeom->getCodimensionBoundary(d+1);
+         pgeom->getCodimensionBoundaries(d+1);
 
       for (int b = 0; b < bbox.size(); b++) {
          if (!bbox[b].getIsMultiblockSingularity()) {
@@ -110,7 +110,7 @@ void MultiblockGriddingTagger<DIM>::fillSingularityBoundaryConditions(
    const tbox::Pointer< pdat::CellData<DIM,int> > tag_data =
       patch.getPatchData(d_buf_tag_indx);
 
-   int num_sing_patches = singularity_patches.getNumberItems();
+   int num_sing_patches = singularity_patches.getNumberOfItems();
       tbox::Pointer< pdat::CellData<DIM,int> > *sing_tag_data;
    sing_tag_data =
       new tbox::Pointer< pdat::CellData<DIM,int> >[num_sing_patches];

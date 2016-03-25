@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dlbg/main.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/dlbg/main.C $
   Copyright:	(c) 1997-2003 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+  Revision:	$LastChangedRevision: 2043 $
+  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
   Description:	Test program for asynchronous BR implementation
 */
 
@@ -320,7 +320,7 @@ int main( int argc, char **argv )
 					     /* whether initial time */ true ,
 					     /* tag buffer size */ 0 );
 	 tbox::pout << "Just added finer level " << ln << " -> " << ln+1;
-	 if ( patch_hierarchy->getNumberLevels() < ln+2 ) {
+	 if ( patch_hierarchy->getNumberOfLevels() < ln+2 ) {
 	    tbox::pout << " (no new level!)" << endl;
 	 }
 	 else {
@@ -365,7 +365,7 @@ int main( int argc, char **argv )
 	      Tell the plotter about the refinement ratios.
 	      This must be done once (and again each time the data changes).
 	    */
-	    for ( int ln=1; ln<patch_hierarchy->getNumberLevels(); ln++ ) {
+	    for ( int ln=1; ln<patch_hierarchy->getNumberOfLevels(); ln++ ) {
 	       tbox::Pointer<hier::PatchLevel<NDIM> >
 		  level_ =patch_hierarchy->getPatchLevel(ln);
 	       const hier::IntVector<NDIM> &lratio =
@@ -438,7 +438,7 @@ int main( int argc, char **argv )
 		 Tell the plotter about the refinement ratios.
 		 This must be done once (and again each time the data changes).
 	       */
-	       for ( int ln=1; ln<patch_hierarchy->getNumberLevels(); ln++ ) {
+	       for ( int ln=1; ln<patch_hierarchy->getNumberOfLevels(); ln++ ) {
 		  tbox::Pointer<hier::PatchLevel<NDIM> >
 		     level_ =patch_hierarchy->getPatchLevel(ln);
 		  const hier::IntVector<NDIM> &lratio =
@@ -523,19 +523,19 @@ int createAndTestDLBG( tbox::Database &main_db,
 
    int ln;
 
-   node_sets = new LayerNodeSet<NDIM>[patch_hierarchy.getNumberLevels()];
+   node_sets = new LayerNodeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
    if ( build_peer_edge ) {
-      peer_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberLevels()];
+      peer_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
    }
    if ( build_cross_edge ) {
-      crse_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberLevels()];
-      fine_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberLevels()];
+      crse_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
+      fine_edge_sets = new LayerEdgeSet<NDIM>[patch_hierarchy.getNumberOfLevels()];
    }
 
    /*
      Set the layer nodes.
    */
-   for ( ln=0; ln<patch_hierarchy.getNumberLevels(); ++ln ) {
+   for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
       Pointer<PatchLevel<NDIM> > level_ptr = patch_hierarchy.getPatchLevel(ln);
       PatchLevel<NDIM> &level = *level_ptr;
       node_sets[ln].setTo(level);
@@ -554,10 +554,10 @@ int createAndTestDLBG( tbox::Database &main_db,
      Compute the cross edges by searching globalized node layers.
    */
    if ( build_cross_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberLevels(); ++ln ) {
+      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
 	 Pointer<PatchLevel<NDIM> > level_ptr = patch_hierarchy.getPatchLevel(ln);
 	 PatchLevel<NDIM> &level = *level_ptr;
-	 if ( ln < patch_hierarchy.getNumberLevels()-1 ) {
+	 if ( ln < patch_hierarchy.getNumberOfLevels()-1 ) {
 	    fine_edge_sets[ln].initialize(LayerEdgeSet<NDIM>::DISTRIBUTED,
 					  node_sets[ln],
 					  node_sets[ln+1].getRefinementRatio(),
@@ -590,7 +590,7 @@ int createAndTestDLBG( tbox::Database &main_db,
      if available, or by searching globalized node layers.
    */
    if ( build_peer_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberLevels(); ++ln ) {
+      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
 	 peer_edge_sets[ln].initialize(LayerEdgeSet<NDIM>::DISTRIBUTED,
 				       node_sets[ln],
 				       node_sets[ln].getRefinementRatio(),
@@ -619,7 +619,7 @@ int createAndTestDLBG( tbox::Database &main_db,
    */
 
    if ( build_cross_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberLevels()-1; ++ln ) {
+      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels()-1; ++ln ) {
 	 fine_edge_sets[ln].checkNodeConsistency();
 	 plog << "fine_edge_sets[" << ln   << "] passed checkNodeConsistency().\n";
 	 crse_edge_sets[ln+1].checkNodeConsistency();
@@ -632,7 +632,7 @@ int createAndTestDLBG( tbox::Database &main_db,
    }
 
    if ( build_peer_edge ) {
-      for ( ln=0; ln<patch_hierarchy.getNumberLevels(); ++ln ) {
+      for ( ln=0; ln<patch_hierarchy.getNumberOfLevels(); ++ln ) {
 	 peer_edge_sets[ln].checkNodeConsistency();
 	 plog << "peer_edge_sets[" << ln << "] passed checkNodeConsistency().\n";
 	 peer_edge_sets[ln].checkConnectivity(node_sets[ln]);

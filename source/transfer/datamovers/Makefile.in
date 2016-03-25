@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/Makefile.in $
 ## Package:	SAMRAI communication and data transfer package
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1704 $
-## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2026 $
+## Modified:	$LastChangedDate: 2008-02-28 16:23:19 -0800 (Thu, 28 Feb 2008) $
 ## Description:	primary makefile for the transfer package routines
 ##
 
@@ -19,14 +19,15 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = locally_active standard
 
 library:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib1d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib2d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib3d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 libXd:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
+

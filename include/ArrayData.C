@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/array/ArrayData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/array/ArrayData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2037 $
+// Modified:	$LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
 // Description:	Templated array data structure supporting patch data types
 //
 
@@ -40,7 +40,7 @@ namespace SAMRAI {
 */
 template<int DIM, class TYPE>
 ArrayData<DIM,TYPE>::ArrayData() :
-   d_array(0, isStandardType()),
+   d_array(0),
    d_box( hier::Index<DIM>(-1), hier::Index<DIM>(-2) ),
    d_depth(0),
    d_offset(0)
@@ -73,7 +73,7 @@ ArrayData<DIM,TYPE>::ArrayData(
    d_depth  = depth;
    d_offset = box.size();
    d_box    = box;
-   d_array  = tbox::Array<TYPE>(d_depth * d_offset, pool, isStandardType());
+   d_array  = tbox::Array<TYPE>(d_depth * d_offset, pool);
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
 #endif
@@ -130,7 +130,7 @@ void ArrayData<DIM,TYPE>::initializeArray(
    d_depth  = depth;
    d_offset = box.size();
    d_box    = box;
-   d_array  = tbox::Array<TYPE>(depth * d_offset, mem_pool, isStandardType());
+   d_array  = tbox::Array<TYPE>(depth * d_offset, mem_pool);
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
 #endif

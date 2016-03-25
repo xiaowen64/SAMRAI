@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxArray.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxArray.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	An array of boxes that complements BoxList
 //
 
@@ -12,12 +12,8 @@
 
 #include "BoxArray.h"
 #include "BoxList.h"
-#ifndef included_hier_Index
 #include "Index.h"
-#endif
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "BoxArray.I"
@@ -50,7 +46,7 @@ template<int DIM>  BoxArray<DIM>::BoxArray(const BoxArray<DIM>& array)
 }
 
 template<int DIM>  BoxArray<DIM>::BoxArray(const BoxList<DIM>& list)
-:  d_boxes(list.getNumberItems())
+:  d_boxes(list.getNumberOfItems())
 {
    int index = 0;
    for (typename tbox::List< Box<DIM> >::Iterator box(list); box; box++) {
@@ -101,7 +97,7 @@ template<int DIM> BoxArray<DIM>& BoxArray<DIM>::operator=(const BoxArray<DIM>& a
 
 template<int DIM> BoxArray<DIM>& BoxArray<DIM>::operator=(const BoxList<DIM>& list)
 {
-   const int n = list.getNumberItems();
+   const int n = list.getNumberOfItems();
    d_boxes = tbox::Array< Box<DIM> >(n);
    int index = 0;
    for (typename tbox::List< Box<DIM> >::Iterator box(list); box; box++) {

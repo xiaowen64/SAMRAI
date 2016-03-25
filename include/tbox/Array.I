@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/Array.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/memory/Array.I $
 // Package:	SAMRAI toolbox for memory management
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2037 $
+// Modified:	$LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
 // Description:	A simple array template class
 //
 
@@ -27,7 +27,6 @@ template <class TYPE>
 inline
 Array<TYPE>::Array()
 {
-   d_standard_type = false;
    d_objects  = (TYPE *) NULL;
    d_counter  = (ReferenceCounter *) NULL;
    d_elements = 0;
@@ -37,7 +36,6 @@ template <class TYPE>
 inline
 Array<TYPE>::Array(const Array<TYPE>& rhs)
 {
-   d_standard_type = rhs.d_standard_type;
    d_objects  = rhs.d_objects;
    d_counter  = rhs.d_counter;
    d_elements = rhs.d_elements;
@@ -121,6 +119,7 @@ int Array<TYPE>::size() const
 {
    return(d_elements);
 }
+
 
 #ifdef DEBUG_NO_INLINE
 #undef inline

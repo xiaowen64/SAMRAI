@@ -1,51 +1,30 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/array/ArrayData.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/array/ArrayData.h $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2172 $
+// Modified:	$LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description:	Templated array data structure supporting patch data types
 //
 
 #ifndef included_pdat_ArrayData
 #define included_pdat_ArrayData
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
+
+#include <typeinfo>
+
 #include "Box.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_Index
 #include "Index.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_pdat_ArrayDataIterator
 #include "ArrayDataIterator.h"
-#endif
-#ifndef included_tbox_AbstractStream
 #include "tbox/AbstractStream.h"
-#endif
-#ifndef included_tbox_Arena
 #include "tbox/Arena.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Complex
 #include "tbox/Complex.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 #ifndef NULL
 #define NULL (0)
@@ -164,12 +143,6 @@ public:
     * without being set to valid values.
     */
    void undefineData();
-
-   /*!
-    * Return true if the TYPE is a standard (C++ pre-defined) data type;
-    * otherwise return false.
-    */
-   bool isStandardType();
 
    /*!
     * Return the box over which the array is defined.

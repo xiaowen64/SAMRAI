@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/cvode/CVODESolver.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/cvode/CVODESolver.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1880 $
-// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Wrapper class for CVODE solver function calls and data
 //
 
 #ifndef included_solv_CVODESolver
 #define included_solv_CVODESolver
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifdef HAVE_SUNDIALS
 
@@ -21,15 +19,9 @@
 #define included_String
 #endif
 
-#ifndef included_tbox_IOStream
 #include "tbox/IOStream.h"
-#endif
-#ifndef included_solv_CVODEAbstractFunctions
 #include "CVODEAbstractFunctions.h"
-#endif
-#ifndef included_solv_SundialsAbstractVector
 #include "SundialsAbstractVector.h"
-#endif
 
 // CVODE includes
 #ifndef included_cvode_h
@@ -54,7 +46,6 @@ namespace SAMRAI {
 #define CVODE_SAMRAI_ERROR(ierr) do {						\
       if (ierr != CV_SUCCESS) {                                   				\
          std::ostrstream tboxos;							\
-         CHKERRCONTINUE(ierr); 							\
          SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);	        \
       } 									\
 } while (0)
@@ -244,7 +235,7 @@ public:
     * CVODE log file and frees the memory allocated for the 
     * CVODE memory record.
     */
-   ~CVODESolver();
+   virtual ~CVODESolver();
 
    /**
     * Initialize solver with solution vector.  The solution vector is

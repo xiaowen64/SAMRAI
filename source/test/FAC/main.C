@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/test/FAC/main.C $
-  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1878 $
-  Modified:	$LastChangedDate: 2008-01-22 08:25:20 -0800 (Tue, 22 Jan 2008) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/main.C $
+  Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 2043 $
+  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
   Description:	Program for poisson solver on adaptive grid using FAC
 */
 
@@ -232,8 +232,8 @@ int main( int argc, char *argv[] )
 					pre_sweeps ,
 					post_sweeps ,
 					adaption_number ? string() : initial_u );
-	 tbox::Array<double> l2norms(patch_hierarchy->getNumberLevels())
-	    , linorms(patch_hierarchy->getNumberLevels());
+	 tbox::Array<double> l2norms(patch_hierarchy->getNumberOfLevels())
+	    , linorms(patch_hierarchy->getNumberOfLevels());
 	 adaptive_poisson.computeError( *patch_hierarchy, &l2norm, &linorm
 					, l2norms, linorms );
 	 error_ok = l2norm <= target_l2norm;
@@ -243,7 +243,7 @@ int main( int argc, char *argv[] )
 		    << setw(15) << "l2: " << setw(10) << l2norm
 		    << setw(15) << "li: " << setw(10) << linorm
 		    << "\n";
-	 for ( ln=0; ln<patch_hierarchy->getNumberLevels(); ++ln ) {
+	 for ( ln=0; ln<patch_hierarchy->getNumberOfLevels(); ++ln ) {
 	    tbox::pout << setw(10) << "l2[" << setw(2) << ln << "]: "
 		       << setw(10) << l2norms[ln]
 		       << setw(10) << "li[" << setw(2) << ln << "]: "

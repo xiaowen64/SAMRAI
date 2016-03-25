@@ -1,34 +1,24 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/parallel/AsyncCommGroup.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/AsyncCommGroup.h $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1846 $
- * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description: All-to-one and one-to-all communication using a tree.
  */
 
 #ifndef included_tbox_AsyncCommGroup
 #define included_tbox_AsyncCommGroup
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
 
-#ifndef included_tbox_RelaunchableJob
 #include "tbox/RelaunchableJob.h"
-#endif
 
-#ifndef included_tbox_SAMRAI_MPI
 #include "tbox/SAMRAI_MPI.h"
-#endif
 
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
 namespace SAMRAI {
    namespace tbox {

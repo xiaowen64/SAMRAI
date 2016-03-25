@@ -1,43 +1,27 @@
 // 
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/operators/Geometry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/operators/Geometry.h $
 // Package:	SAMRAI transfer 
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Base class for interface between transfer ops and geometry.
 //
 
 #ifndef included_xfer_Geometry
 #define included_xfer_Geometry
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_GridGeometry
 #include "GridGeometry.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_xfer_CoarsenOperator
 #include "CoarsenOperator.h"
-#endif
-#ifndef included_xfer_RefineOperator
 #include "RefineOperator.h"
-#endif
-#ifndef included_xfer_TimeInterpolateOperator
 #include "TimeInterpolateOperator.h"
-#endif
 
 namespace SAMRAI { 
     namespace xfer {

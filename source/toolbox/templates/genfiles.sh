@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1704 $
-## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2126 $
+## Modified:    $LastChangedDate: 2008-04-09 09:44:50 -0700 (Wed, 09 Apr 2008) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -65,7 +65,9 @@ ${MT} default.filenames ./tmp tbox tbox::Array tbox::Statistic::ProcStat
 
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::List tbox::Pointer tbox::Transaction
 
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer tbox::Database
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer tbox::HDFDatabase
+${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer tbox::SiloDatabase
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer tbox::Timer
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::AsyncCommGroup*
 ${MT} default.filenames ./tmp tbox tbox::Array tbox::AsyncCommStage::StagedGroup*
@@ -89,6 +91,7 @@ done
 
 ${MT} default.filenames ./tmp tbox tbox::List tbox::HDFDatabase::KeyData
 ${MT} default.filenames ./tmp tbox tbox::List tbox::InputDatabase::KeyData
+${MT} default.filenames ./tmp tbox tbox::List tbox::MemoryDatabase::KeyData
 ${MT} default.filenames ./tmp tbox tbox::List tbox::Parser::ParseData
 ${MT} default.filenames ./tmp tbox tbox::List tbox::RestartManager::RestartItem
 ${MT} default.filenames ./tmp tbox tbox::List tbox::Statistic::PatchStatRecord
@@ -105,13 +108,19 @@ ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Arena
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Database
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::FixedArena
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::HDFDatabase
+${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Database
+${MT} default.filenames ./tmp tbox tbox::Pointer tbox::SiloDatabase
+${MT} default.filenames ./tmp tbox tbox::Pointer tbox::DatabaseFactory
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::InputDatabase
+${MT} default.filenames ./tmp tbox tbox::Pointer tbox::MemoryDatabase
+${MT} default.filenames ./tmp tbox tbox::Pointer tbox::MemoryDatabaseFactory
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::MessageStream
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::NullDatabase
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Schedule
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Statistic
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Timer
 ${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Transaction
+${MT} default.filenames ./tmp tbox tbox::Pointer tbox::Logger::Appender
 
 #
 # now copy the new template files into the repository

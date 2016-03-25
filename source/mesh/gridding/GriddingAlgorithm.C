@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/gridding/GriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/GriddingAlgorithm.C $
 // Package:     SAMRAI mesh
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2148 $
+// Modified:    $LastChangedDate: 2008-04-24 10:04:24 -0700 (Thu, 24 Apr 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -37,8 +37,6 @@
 #include "tbox/MathUtilities.h"
 #include "RefineAlgorithm.h"
 #include "RefineSchedule.h"
-
-#define PATCHLEVEL_DATANAME_BUFSIZE 32
 
 #define ALGS_GRIDDING_ALGORITHM_VERSION (2)
 
@@ -333,9 +331,16 @@ template<int DIM> GriddingAlgorithm<DIM>::~GriddingAlgorithm()
 
 template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
    tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
-   const double level_time) 
+   const double level_time,
+   const hier::BoxArray<DIM>& override_boxes,
+   const hier::ProcessorMapping& override_mapping) 
 {
    tbox::Pointer< hier::PatchHierarchy<DIM> > patch_hierarchy = hierarchy;
+
+   bool override_load_balance = false;
+   if (override_boxes.size() != 0) {
+      override_load_balance = true;
+   } 
 
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(patch_hierarchy.isNull()));
@@ -350,7 +355,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
    const int level_number = 0;
 
    bool level_zero_exists = false;
-   if ( (patch_hierarchy->getNumberLevels() > 0) ) {
+   if ( (patch_hierarchy->getNumberOfLevels() > 0) ) {
       if ( !(patch_hierarchy->getPatchLevel(level_number).isNull()) ) {
          level_zero_exists = true;
       }
@@ -359,6 +364,19 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
 
    hier::BoxArray<DIM> domain = patch_hierarchy->getGridGeometry()
                                           ->getPhysicalDomain();
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   if (override_load_balance) {
+      TBOX_ASSERT(override_boxes.size() == override_mapping.getProcessorMapping().size());
+
+      hier::BoxList<DIM> override_list(override_boxes);
+      override_list.removeIntersections(domain);
+      TBOX_ASSERT(override_list.size() == 0);
+      hier::BoxList<DIM> test_domain_list(domain);
+      test_domain_list.removeIntersections(override_boxes);
+      TBOX_ASSERT(test_domain_list.size() == 0);
+   }
+#endif
 
    /*
     * Read/write coarse level boxes from/to file.
@@ -457,16 +475,21 @@ template<int DIM> void GriddingAlgorithm<DIM>::makeCoarsestLevel(
    const hier::IntVector<DIM> ratio_to_level_zero(1);
    hier::BoxArray<DIM> level_boxes;
    hier::ProcessorMapping mapping;
-  
-   t_load_balance_boxes->start(); 
-   d_load_balancer->loadBalanceBoxes(level_boxes, mapping,
-                                     domain_list, 
-                                     patch_hierarchy, level_number, domain,
-                                     ratio_to_level_zero, 
-                                     smallest_patch, 
-                                     largest_patch,
-                                     patch_cut_factor, extend_ghosts);
-   t_load_balance_boxes->stop(); 
+ 
+   if (!override_load_balance) { 
+      t_load_balance_boxes->start(); 
+      d_load_balancer->loadBalanceBoxes(level_boxes, mapping,
+                                        domain_list, 
+                                        patch_hierarchy, level_number, domain,
+                                        ratio_to_level_zero, 
+                                        smallest_patch, 
+                                        largest_patch,
+                                        patch_cut_factor, extend_ghosts);
+      t_load_balance_boxes->stop(); 
+   } else {
+      level_boxes = override_boxes;
+      mapping.setProcessorMapping(override_mapping.getProcessorMapping());
+   }
 
    if ( !level_zero_exists ) {
 
@@ -1466,7 +1489,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::findProperNestingData(
 
    hier::Box<DIM> universe;
    for ( int i=0; i<base_domain.size(); ++i ) {
-      universe += base_domain(i);
+      universe += base_domain[i];
    }
    universe.grow(universe.numberCells());
 
@@ -1531,7 +1554,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::setTagsOnLevel(
                                           tag_data->getGhostBox()) );
 
       for (int ib = 0; ib < n_boxes; ib++) {
-         hier::Box<DIM> intersection = boxes.getBox(ib) * set_box;
+         hier::Box<DIM> intersection = boxes[ib] * set_box;
          if ( !(intersection.empty()) ) {
             tag_data->fill(tag_value, intersection);
          }
@@ -1836,7 +1859,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
    {
       const hier::BoxArray<DIM> &level_boxes = level->getBoxes();
       for ( int i=0; i<level_boxes.size(); ++i ) {
-         bounding_box += level_boxes(i);
+         bounding_box += level_boxes[i];
       }
    }
 
@@ -1863,7 +1886,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
           */
          t_find_refinement->stop();
          hier::BoxArray<DIM> box_array(box_list);
-         hier::Box<DIM> *box_ptr = &box_array.getBox(0);
+         hier::Box<DIM> *box_ptr = &box_array[0];
          qsort( (void*)box_ptr,
                 box_array.size(),
                 sizeof(hier::Box<DIM>),
@@ -2186,18 +2209,13 @@ template<int DIM> void GriddingAlgorithm<DIM>::putToDatabase(tbox::Pointer<tbox:
    db->putInteger("d_false_tag", d_false_tag);
    db->putInteger("d_max_levels", d_max_levels);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_DATANAME_BUFSIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_DATANAME_BUFSIZE];
-
    int ln;
 
    tbox::Pointer<tbox::Database> ratio_to_coarser_db = 
       db->putDatabase("d_ratio_to_coarser");
    for (ln = 1; ln < d_max_levels; ln++) {
       int* temp_ratio_to_coarser = d_ratio_to_coarser[ln];
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       ratio_to_coarser_db->putIntegerArray(level_name,
                                            temp_ratio_to_coarser, DIM);
    }
@@ -2209,15 +2227,16 @@ template<int DIM> void GriddingAlgorithm<DIM>::putToDatabase(tbox::Pointer<tbox:
       db->putDatabase("d_largest_patch_size");
    for (ln = 0; ln < d_largest_patch_size.getSize(); ln++) {
       int* tmp_array = d_largest_patch_size[ln];
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       largest_patch_db->putIntegerArray(level_name, tmp_array, DIM);
    }
+
 
    tbox::Pointer<tbox::Database> smallest_patch_db =  
       db->putDatabase("d_smallest_patch_size");
    for (ln = 0; ln < d_smallest_patch_size.getSize(); ln++) {
       int* tmp_array = d_smallest_patch_size[ln];
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       smallest_patch_db->putIntegerArray(level_name, tmp_array, DIM);
    }  
 
@@ -2263,11 +2282,6 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
                  << "Key data `max_levels' found in input is < 1.");
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_DATANAME_BUFSIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_DATANAME_BUFSIZE];
-
    int ln_lo = 1;
    int ln_hi = new_max_levels-1;
 
@@ -2299,11 +2313,23 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
       }
    }
 
-   for (ln = ln_lo; ln <= ln_hi; ln++) {
+   tbox::Array<std::string> ratio_to_coarser_patch_keys;
+   int num_ratio_to_coarser_keys = 0;
+
+   if(!ratio_to_coarser_db.isNull()) {
+      ratio_to_coarser_patch_keys = ratio_to_coarser_db -> getAllKeys();
+      num_ratio_to_coarser_keys = ratio_to_coarser_patch_keys.getSize();
+   }
+
+   d_ratio_to_coarser.resizeArray(new_max_levels);
+   d_ratio_to_coarser[0] = hier::IntVector<DIM>(1);
+
+   for (ln = ln_lo; ln <= tbox::MathUtilities<int>::Min(num_ratio_to_coarser_keys, ln_hi); ln++) {
+
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(!ratio_to_coarser_db.isNull());
 #endif
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
 
       if (!ratio_to_coarser_db->keyExists(level_name)) {
           TBOX_ERROR(d_object_name << ":  "
@@ -2322,7 +2348,14 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
                     <<"Key data `" << level_name
                      << "' in ratio_to_coarser input has entries less than 1.");
       }
+   }
 
+
+   /*
+    * If user did not supply explicit values for each level use the last one supplied for higher levels.
+    */
+   for(ln = tbox::MathUtilities<int>::Min(num_ratio_to_coarser_keys, ln_hi) + 1; ln <= ln_hi; ln++) {
+      d_ratio_to_coarser[ln] = d_ratio_to_coarser[num_ratio_to_coarser_keys];
    }
 
    /*
@@ -2347,6 +2380,15 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
       d_largest_patch_size.resizeArray(num_larg_patch_keys);
       for (ln = 0; ln < num_larg_patch_keys; ln++) {
          int* temp_array = d_largest_patch_size[ln];
+
+	 std::string level_name = "level_" + tbox::Utilities::intToString(ln);
+
+	 if (!largest_patch_db->keyExists(level_name)) {
+	    TBOX_ERROR(d_object_name << ":  "
+		       <<"Key data `" << level_name
+		       << "' not found in smallest_patch_size input.");
+	 }
+
          largest_patch_db->getIntegerArray(largest_patch_keys[ln],
                                            temp_array, DIM);
       }
@@ -2370,8 +2412,15 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
          d_smallest_patch_size.resizeArray(num_smal_patch_keys);
          for (ln = 0; ln < num_smal_patch_keys; ln++) {
             int* temp_array = d_smallest_patch_size[ln];
-            smallest_patch_db->getIntegerArray(smallest_patch_keys[ln],
-                                               temp_array, DIM);
+	    std::string level_name = "level_" + tbox::Utilities::intToString(ln);
+
+	    if (!smallest_patch_db->keyExists(level_name)) {
+	       TBOX_ERROR(d_object_name << ":  "
+			  <<"Key data `" << level_name
+			  << "' not found in smallest_patch_size input.");
+	    }
+	    
+            smallest_patch_db->getIntegerArray(level_name, temp_array, DIM);
          }
       }
    }
@@ -2504,18 +2553,6 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromInput(
    d_extend_tags_to_bdry = db->getBoolWithDefault("extend_tags_to_bdry",
                                                   d_extend_tags_to_bdry);
 
-   d_use_new_alg = db->getBoolWithDefault("use_new_alg",
-                                          d_use_new_alg);
-
-   if ( d_use_new_alg ) {
-     TBOX_WARNING("GriddingAlgorithm: new gridding algorithm option\n"
-                  <<"is not thoroughly tested and is meant for development\n");
-     /*
-       There is actually a bug that in some rare cases would result
-       in failure to enforce proper nesting.
-     */
-   }
-
 }
    
 /*
@@ -2558,13 +2595,8 @@ template<int DIM> void GriddingAlgorithm<DIM>::getFromRestart()
    tbox::Pointer<tbox::Database> ratio_to_coarser_db = 
       db->getDatabase("d_ratio_to_coarser");
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_DATANAME_BUFSIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_DATANAME_BUFSIZE];
-
    for (ln = 1; ln < d_max_levels; ln++) {
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
 
       int* temp_ratio_to_coarser = d_ratio_to_coarser[ln];
       ratio_to_coarser_db->getIntegerArray(level_name,

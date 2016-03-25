@@ -1,36 +1,22 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/multiblock/MBDataUtilities.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/multiblock/MBDataUtilities.h $
 // Package:	SAMRAI multiblock
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Templated operations copying patch data.
 //
 
 #ifndef included_pdat_MBDataUtilities
 #define included_pdat_MBDataUtilities
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_pdat_CellData
 #include "CellData.h"
-#endif
-#ifndef included_pdat_EdgeData
 #include "EdgeData.h"
-#endif
-#ifndef included_pdat_FaceData
 #include "FaceData.h"
-#endif
-#ifndef included_hier_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
-#endif
-#ifndef included_pdat_NodeData
 #include "NodeData.h"
-#endif
-#ifndef included_pdat_SideData
 #include "SideData.h"
-#endif
 
 namespace SAMRAI {
     namespace pdat {

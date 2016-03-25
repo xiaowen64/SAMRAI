@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/BergerRigoutsos.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/clustering/BergerRigoutsos.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Class for Burger/Rigoutsos tagged cell clustering algorithm.
 //
 
@@ -246,8 +246,8 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsOriginal(
              */
 
             t_compute->start();
-            if ( ((box_list_lft.getNumberItems() > 1) ||
-                  (box_list_rgt.getNumberItems() > 1)) ||
+            if ( ((box_list_lft.getNumberOfItems() > 1) ||
+                  (box_list_rgt.getNumberOfItems() > 1)) ||
                  ( (double) (box_list_lft.getFirstItem().size()
                            + box_list_rgt.getFirstItem().size())
                   < ((double) tag_bound_box.size())*combine_tol ) ) {
@@ -405,8 +405,8 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsBinaryTree(
 
             t_compute->start();
             if (tbox::SAMRAI_MPI::getRank() == 0) {
-               if ( ((box_list_lft.getNumberItems() > 1) ||
-                     (box_list_rgt.getNumberItems() > 1)) ||
+               if ( ((box_list_lft.getNumberOfItems() > 1) ||
+                     (box_list_rgt.getNumberOfItems() > 1)) ||
                     ( (double) (box_list_lft.getFirstItem().size()
                               + box_list_rgt.getFirstItem().size())
                      < ((double) tag_bound_box.size())*combine_tol ) ) {
@@ -606,8 +606,8 @@ template<int DIM> void BergerRigoutsos<DIM>::findBoxesContainingTagsCommunicator
              * P_0 adds the boxes to the list.
              */
             if (tbox::SAMRAI_MPI::getRank() == 0) {
-               if ( ((box_list_lft.getNumberItems() > 1) ||
-                     (box_list_rgt.getNumberItems() > 1)) ||
+               if ( ((box_list_lft.getNumberOfItems() > 1) ||
+                     (box_list_rgt.getNumberOfItems() > 1)) ||
                     ( (double) (box_list_lft.getFirstItem().size()
                               + box_list_rgt.getFirstItem().size())
                      < ((double) tag_bound_box.size())*combine_tol ) ) {

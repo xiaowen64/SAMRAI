@@ -1,18 +1,16 @@
 //
 // File:        MblkLinAdv.h
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Numerical routines for single patch in linear advection ex.
 //
  
 #ifndef included_MblkLinAdvXD
 #define included_MblkLinAdvXD
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #include "tbox/Array.h"
 #include "BoundaryUtilityStrategy.h"

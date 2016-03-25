@@ -1,17 +1,13 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/dlbg/LayerNode.I $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/dlbg/LayerNode.I $
  * Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1859 $
- * Modified:    $LastChangedDate: 2008-01-15 07:55:41 -0800 (Tue, 15 Jan 2008) $
+ * Revision:    $LastChangedRevision: 2139 $
+ * Modified:    $LastChangedDate: 2008-04-17 17:35:40 -0700 (Thu, 17 Apr 2008) $
  * Description: Node in the distribued box graph.
  */
 
 #include "LayerNode.h"
-
-
-#ifndef included_tbox_Utilities
-#include <tbox/Utilities.h>
-#endif
+#include "tbox/Utilities.h"
 
 #ifdef DEBUG_NO_INLINE
 #define inline

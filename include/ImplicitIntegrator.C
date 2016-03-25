@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/implicit/ImplicitIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/implicit/ImplicitIntegrator.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2122 $
+// Modified:    $LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 // Description: Implicit time integration manager class for nonlinear problems.
 //
 
@@ -265,7 +265,7 @@ template<int DIM> double ImplicitIntegrator<DIM>::updateSolution()
 */
 
 template<int DIM> void ImplicitIntegrator<DIM>::getFromInput(
-   tbox::Pointer<tbox::InputDatabase> db)
+   tbox::Pointer<tbox::Database> db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!db.isNull());

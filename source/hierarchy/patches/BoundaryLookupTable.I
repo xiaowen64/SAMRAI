@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryLookupTable.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/BoundaryLookupTable.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2040 $
+// Modified:	$LastChangedDate: 2008-03-11 15:05:44 -0700 (Tue, 11 Mar 2008) $
 // Description:	
 //
 
@@ -86,8 +86,8 @@ const tbox::Array<int>& BoundaryLookupTable<DIM>::getDirections(
 
 template<int DIM> inline
 bool BoundaryLookupTable<DIM>::isLower(const int loc,
-                                        const int codim,
-                                        const int index) const
+                                       const int codim,
+                                       const int index) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((codim > 0) && (codim <= DIM));
@@ -99,8 +99,8 @@ bool BoundaryLookupTable<DIM>::isLower(const int loc,
 
 template<int DIM> inline
 bool BoundaryLookupTable<DIM>::isUpper(const int loc,
-                                        const int codim,
-                                        const int index) const
+                                       const int codim,
+                                       const int index) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT((codim > 0) && (codim <= DIM));
@@ -148,6 +148,23 @@ int BoundaryLookupTable<DIM>::mapLocationIndex(const int loc) const
    }                                                                              
    return(retval);
 }
+
+/*
+*************************************************************************
+*                                                                       *
+* Get array of IntVectors indication location of a boundary relative    *
+* to a patch.                                                           *
+*                                                                       *
+*************************************************************************
+*/
+ 
+template<int DIM> inline
+const tbox::Array<IntVector<DIM> >&
+BoundaryLookupTable<DIM>::getBoundaryDirections(int codim) const
+{
+   return (d_bdry_dirs[codim-1]);
+}
+
 
 #ifdef DEBUG_NO_INLINE
 #undef inline

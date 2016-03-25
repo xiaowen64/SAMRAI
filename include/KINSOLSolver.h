@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/kinsol/KINSOLSolver.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/kinsol/KINSOLSolver.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1880 $
-// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Wrapper class for KINSOL solver function calls and data
 //
 
 #ifndef included_solv_KINSOLSolver
 #define included_solv_KINSOLSolver
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 /*
 ************************************************************************
@@ -25,15 +23,9 @@
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_IOStream
 #include "tbox/IOStream.h"
-#endif
-#ifndef included_solv_SundialsAbstractVector
 #include "SundialsAbstractVector.h"
-#endif
-#ifndef included_solv_KINSOLAbstractFunctions
 #include "KINSOLAbstractFunctions.h"
-#endif
 
 // KINSOL includes
 #ifndef included_kinsol_h
@@ -56,7 +48,6 @@
 #define KINSOL_SAMRAI_ERROR(ierr) do {						\
       if (ierr != KIN_SUCCESS) {                                   				\
          std::ostrstream tboxos;							\
-         CHKERRCONTINUE(ierr); 							\
          SAMRAI::tbox::Utilities::abort(tboxos.str(), __FILE__, __LINE__);	        \
       } 									\
 } while (0)
@@ -123,7 +114,7 @@ public:
    /**
     * Virtual destructor for KINSOLSolver.
     */
-   ~KINSOLSolver();
+   virtual ~KINSOLSolver();
 
    /**
     * Initialize solver with solution vector.  The solution vector is
@@ -131,10 +122,22 @@ public:
     * KINSOL.  This routine must be called before the solver can be used.
     * 
     * When assertion checking is active, an unrecoverable assertion will
-    * result if vector pointer is null or solution vector has already been
-    * set.
+    * result if vector pointer is null.
+    * 
+    * Optionally set the scaling vectors used by KINSOL to scale
+    * either nonlinear solution vector or nonlinear residual vector.
+    * The elements of the scaling vectors must be positive.  In either
+    * case, the scaling vector should be defined so that the vector
+    * formed by taking the element-wise product of the
+    * solution/residual vector and scaling vector has all elements
+    * roughly the same magnitude when the solution vector IS/IS NOT
+    * NEAR a root of the nonlinear function.
+    *
+    * See KINSOL documentation for more information.
     */
-   void initialize(SundialsAbstractVector* solution); 
+   void initialize(SundialsAbstractVector* solution, 
+		   SundialsAbstractVector* uscale = NULL, 
+		   SundialsAbstractVector* fscale = NULL); 
 
    /**
     * Solve nonlinear problem and return integer termination code defined
@@ -205,21 +208,6 @@ public:
     */
    KINSOLAbstractFunctions* getKINSOLFunctions() const;
 
-   /**
-    * Set vector used by KINSOL to scale either nonlinear solution vector
-    * or nonlinear residual vector.  The elements of the scaling vectors 
-    * must be positive.  In either case, the scaling vector should be 
-    * defined so that the vector formed by taking the element-wise product 
-    * of the solution/residual vector and scaling vector has all elements 
-    * roughly the same magnitude when the solution vector IS/IS NOT NEAR 
-    * a root of the nonlinear function.  
-    *
-    * See KINSOL documentation for more information.
-    */
-   void setSolutionScaleVector(SundialsAbstractVector* uscale);
-
-   ///
-   void setResidualScaleVector(SundialsAbstractVector* fscale);
 
    /**
     * Set constraints on nonlinear solution.  By default the constraint
@@ -283,7 +271,7 @@ public:
    void setGlobalStrategy(const int global);
 
    ///
-   void setMaxNewtonStep(const int maxstep);
+   void setMaxNewtonStep(const double maxstep);
 
    ///
    void setNonlinearStepTolerance(const double tol);
@@ -429,6 +417,12 @@ public:
 
 
 private:
+
+   /*
+    * Free internally allocated vectors.
+    */
+   void freeInternalVectors(void);
+
    /*
     * Static member functions for linkage with KINSOL routines.
     * See header file for KINSOLAbstractFunctions for more information.
@@ -521,13 +515,13 @@ private:
    /*
     * KINSOL nonlinear and linear solver parameters
     */
-   int d_krylov_dimension;  // maximum krylov dimension
-   int d_max_restarts;      // max. num. of linear solver restarts allowed
-   int d_max_solves_no_set; // max. num. of steps calling preconditioner
-                            // without resetting preconditioner
+   int d_krylov_dimension;       // maximum krylov dimension
+   int d_max_restarts;           // max. num. of linear solver restarts allowed
+   int d_max_solves_no_set;      // max. num. of steps calling preconditioner
+                                 // without resetting preconditioner
 
-   int d_max_iter;          // maximum number of nonlinear iterations
-   int d_max_newton_step;   // maximum scaled length of Newton step
+   int d_max_iter;               // maximum number of nonlinear iterations
+   double d_max_newton_step;     // maximum scaled length of Newton step
 
    int    d_global_strategy;     // globalization method for Newton steps.
    double d_residual_tol;        // stop tol. on scaled nonlinear residual

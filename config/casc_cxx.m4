@@ -295,7 +295,7 @@ AC_DEFUN([CASC_CXX_NEW_PLACEMENT_OPERATOR], [
       AC_LANG_SAVE
       AC_LANG_CPLUSPLUS
       AC_TRY_LINK([
-#include <new.h>
+#include <new>
 void trynew() {
    void *ptr = 0;
    double *data = new (ptr) double;

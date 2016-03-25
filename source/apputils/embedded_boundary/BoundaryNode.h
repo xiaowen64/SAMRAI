@@ -1,35 +1,23 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/BoundaryNode.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/BoundaryNode.h $
 // Package:     SAMRAI applications
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Boundary node class for embedded boundary implementations
 //
 
 #ifndef included_appu_BoundaryNode
 #define included_appu_BoundaryNode
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_pdat_NodeIndex
 #include "NodeIndex.h"
-#endif
-#ifndef included_pdat_NodeData
 #include "NodeData.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_IOStream
 #include "tbox/IOStream.h"
-#endif
 
 namespace SAMRAI {
    namespace appu {
@@ -98,12 +86,12 @@ public:
    /*!
     * Return the number of nearest neighbor nodes.
     */
-   int getNumberNearestNeighborNodes() const;
+   int getNumberOfNearestNeighborNodes() const;
 
    /*!
     * Return the number of outside neighbor nodes.
     */
-   int getNumberOutsideNeighborNodes() const;
+   int getNumberOfOutsideNeighborNodes() const;
 
    /*!
     * Returns the array of nearest neighbor nodes.

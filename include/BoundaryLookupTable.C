@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryLookupTable.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/BoundaryLookupTable.C $
 // Package:     SAMRAI hierarchy 
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2040 $
+// Modified:    $LastChangedDate: 2008-03-11 15:05:44 -0700 (Tue, 11 Mar 2008) $
 // Description:  Lookup table to aid in BoundaryBox construction
 //
 
@@ -83,6 +83,8 @@ template<int DIM>  BoundaryLookupTable<DIM>::BoundaryLookupTable()
          d_max_li[cdm1] = d_ncomb[cdm1]*(1<<codim);
       }
    }
+
+   buildBoundaryDirectionVectors();
 }
 
 template<int DIM>  BoundaryLookupTable<DIM>::~BoundaryLookupTable()
@@ -98,11 +100,14 @@ template<int DIM>  BoundaryLookupTable<DIM>::~BoundaryLookupTable()
 *************************************************************************
 */
 
-template<int DIM> void BoundaryLookupTable<DIM>::buildTable(int *table, int codim, int ibeg, int (&work)[DIM], int &lvl, int *&ptr)
+template<int DIM>
+void BoundaryLookupTable<DIM>::buildTable(int *table,
+                                          int codim,
+                                          int ibeg,
+                                          int (&work)[DIM],
+                                          int &lvl,
+                                          int *&ptr)
 {
-//   static int work[DIM];
-//   static int lvl = 0;
-//   static int *ptr;
    lvl++;                                  
    if (lvl == 1) ptr = table;              
    int iend = DIM - codim + lvl;          
@@ -125,7 +130,49 @@ template<int DIM> void BoundaryLookupTable<DIM>::setUsingOriginalLocations(
 {
    s_using_original_locations = use_original;
 }
+
+/*
+*************************************************************************
+*                                                                       *
+* Build table of IntVectors indication locations of boundaries relative *
+* to a patch.                                                           *
+*                                                                       *
+*************************************************************************
+*/
+
+template<int DIM>
+void BoundaryLookupTable<DIM>::buildBoundaryDirectionVectors()
+{
+
+   d_bdry_dirs.resizeArray(DIM);
+
+   for (int i = 0; i < DIM; i++) {
+      d_bdry_dirs[i].resizeArray(d_max_li[i]);
+      int codim = i+1;
+
+      for (int loc = 0; loc < d_max_li[i]; loc++) { 
+         d_bdry_dirs[i][loc] = IntVector<DIM>(0);
  
+         const tbox::Array<int>& dirs = getDirections(loc, codim);
+
+         for (int d = 0; d < dirs.size(); d++) {
+
+            if (isUpper(loc, codim, d)) {
+
+               d_bdry_dirs[i][loc](dirs[d]) = 1;
+
+            } else {
+
+               d_bdry_dirs[i][loc](dirs[d]) = -1;
+ 
+            }
+         }
+      }
+   }
+}
+
+
+
 }
 }
 

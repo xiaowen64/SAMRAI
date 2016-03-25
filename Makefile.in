@@ -1,9 +1,9 @@
 ##
 ## File:	Makefile.in
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1730 $
-## Modified:	$LastChangedDate: 2007-11-28 17:14:09 -0800 (Wed, 28 Nov 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2170 $
+## Modified:	$LastChangedDate: 2008-04-30 18:00:41 -0700 (Wed, 30 Apr 2008) $
 ## Description:	makefile for the entire SAMRAI distribution
 ##
 
@@ -77,7 +77,6 @@ library:
 	$(MAKE) NDIM=2 compile || exit 1
 	$(MAKE) NDIM=3 compile || exit 1
 	$(MAKE) archive_lib_$(SAMRAI_TARGET) || exit 1
-	$(MAKE) tools || exit 1
 	$(MAKE) NDIM=1 archive_libXd_$(SAMRAI_TARGET) || exit 1
 	$(MAKE) NDIM=2 archive_libXd_$(SAMRAI_TARGET) || exit 1
 	$(MAKE) NDIM=3 archive_libXd_$(SAMRAI_TARGET) || exit 1
@@ -85,29 +84,26 @@ library:
 lib1d:
 	$(MAKE) NDIM=1 compile || exit 1
 	$(MAKE) archive_lib_$(SAMRAI_TARGET) || exit 1
-	$(MAKE) tools || exit 1
 	$(MAKE) NDIM=1 archive_libXd_$(SAMRAI_TARGET) || exit 1
 
 lib2d:
 	$(MAKE) NDIM=2 compile || exit 1
 	$(MAKE) archive_lib_$(SAMRAI_TARGET) || exit 1
-	$(MAKE) tools || exit 1
 	$(MAKE) NDIM=2 archive_libXd_$(SAMRAI_TARGET) || exit 1
 
 lib3d:
 	$(MAKE) NDIM=3 compile || exit 1
 	$(MAKE) archive_lib_$(SAMRAI_TARGET) || exit 1
-	$(MAKE) tools || exit 1
 	$(MAKE) NDIM=3 archive_libXd_$(SAMRAI_TARGET) || exit 1
 
 
 libXd: Makefile
 	$(MAKE) compile || exit 1
 	$(MAKE) archive_lib_$(SAMRAI_TARGET) || exit 1
-	$(MAKE) tools || exit 1
 	$(MAKE) archive_libXd_$(SAMRAI_TARGET) || exit 1
 
 tools: forcetools
+	@if test ! -d bin; then mkdir bin; fi
 	(cd tools && $(MAKE) $@) || exit 1
 
 # Since directory tools exists create a target that is not directory
@@ -126,11 +122,7 @@ clean:
 # Compile the source for DIM=NDIM
 #
 compile:
-	@for i in tbox $(PACKAGES_R); \
-	do \
-	   eval dir=\$${dir_$$i}; \
-	   (cd source/$$dir && $(MAKE) libXd) || exit 1; \
-	done
+	(cd source && $(MAKE) libXd) || exit 1
 
 # Build temporary files containing list of object files for each
 # library.

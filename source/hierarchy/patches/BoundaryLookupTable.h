@@ -1,21 +1,18 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryLookupTable.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/BoundaryLookupTable.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1811 $
-// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	 Lookup table to aid in BoundaryBox construction
 //
 
 #ifndef included_hier_BoundaryLookupTable
 #define included_hier_BoundaryLookupTable
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Array
+#include "IntVector.h"
 #include "tbox/Array.h"
-#endif
 
 namespace SAMRAI {
    namespace hier {
@@ -153,6 +150,26 @@ public:
     */
    int mapLocationIndex(int loc) const;
 
+   /*!
+    * @brief Get array of boundary direction IntVectors.
+    *
+    * For any codimension, there is a particular number of valid boundary
+    * locations.  This function returns an array of IntVectors that provide
+    * information about where each boundary location lies in relation to
+    * a patch.  The array's length is the number of valid locations for
+    * the given codimension, and the array is indexed by the location id's
+    * that are set up by this BoundaryLookupTable class.
+    *
+    * For a particular location, each element of the IntVector tells whether
+    * the location is on the lower or upper side, or neither, of the patch in
+    * a specific coordinate direction.  -1 indicates lower, 0 indicates
+    * neither, and 1 indicates upper.
+    *
+    * @return       Array of IntVectors, one element for each valid location 
+    * @param codim  codimension
+    */ 
+   const tbox::Array< IntVector<DIM> >& getBoundaryDirections(int codim) const;
+
 protected:
    /**
     * The constructor for BoundaryLookupTable<DIM> is protected. 
@@ -178,6 +195,13 @@ private:
     * lookup table for a given codimension.
     */
    void buildTable(int *table, int codim, int ibeg, int (&work)[DIM], int &lvl, int *&ptr);
+
+   /*
+    * Private member function that builds table of intvectors that stores
+    * whether a boundary location is upper, lower, or neither in each
+    * coordinate direction
+    */
+   void buildBoundaryDirectionVectors();
 
    /*
     * Static data members used to control access to and destruction of
@@ -208,6 +232,8 @@ private:
     * Data member used to store the lookup table.
     */
    tbox::Array< tbox::Array<int> > d_table[DIM];
+
+   tbox::Array< tbox::Array< hier::IntVector<DIM> > > d_bdry_dirs; 
 };
 
 }

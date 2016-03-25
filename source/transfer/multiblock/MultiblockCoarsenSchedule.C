@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/multiblock/MultiblockCoarsenSchedule.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockCoarsenSchedule.C $
 // Package:	SAMRAI multiblock
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1776 $
-// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	Coarsening schedule for data transfer between AMR levels
 //
 
@@ -238,7 +238,7 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::setCoarsenItems(
       (const typename xfer::CoarsenClasses<DIM>::Data**)NULL;
 
    const int num_coarsen_classes =
-      d_coarsen_classes->getNumberEquivalenceClasses();
+      d_coarsen_classes->getNumberOfEquivalenceClasses();
 
    /*
     * Determine total number of coarsen items and set state of 
@@ -299,7 +299,7 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::initialCheckCoarsenClassI
    tbox::Pointer< hier::PatchDescriptor<DIM> > pd;
    pd.setNull();
 
-   for (int nb = 0; nb < d_mblk_crse_level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_mblk_crse_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer< hier::PatchLevel<DIM> > block_level =
          d_mblk_crse_level->getPatchLevelForBlock(nb);
       if (d_mblk_coarsen_patch_strategy) {
@@ -404,9 +404,9 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::generateTemporaryLevel()
 #endif
 
    tbox::Array< tbox::Pointer< hier::PatchLevel<DIM> > >
-      temp_crse_array(d_mblk_fine_level->getNumberBlocks());
+      temp_crse_array(d_mblk_fine_level->getNumberOfBlocks());
 
-   for (int nb = 0; nb < d_mblk_fine_level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_mblk_fine_level->getNumberOfBlocks(); nb++) {
       temp_crse_array[nb].setNull();
 
       tbox::Pointer< hier::PatchLevel<DIM> > fine_block_level =
@@ -499,7 +499,7 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::generateSchedule()
     * Define local constants for easier access to level information
     */
 
-   for (int nb = 0; nb < d_mblk_crse_level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_mblk_crse_level->getNumberOfBlocks(); nb++) {
 
       tbox::Pointer< hier::PatchLevel<DIM> > crse_block_level =
          d_mblk_crse_level->getPatchLevelForBlock(nb);
@@ -536,7 +536,7 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::generateSchedule()
             tbox::Pointer< hier::BoxOverlap<DIM> > overlap;
 
             const int num_equiv_classes =
-               d_coarsen_classes->getNumberEquivalenceClasses();
+               d_coarsen_classes->getNumberOfEquivalenceClasses();
 
             /*
              * Loop over all of the patches on the source and destination levels.
@@ -570,24 +570,24 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::generateSchedule()
                         src_pdf = pd->getPatchDataFactory(rep_item_src_id);
                         dst_pdf = pd->getPatchDataFactory(rep_item_dst_id);
 
-                        hier::Box<DIM> src_mask(src_boxes(sp));
+                        hier::Box<DIM> src_mask(src_boxes[sp]);
                         if (rep_item.d_gcw_to_coarsen != hier::IntVector<DIM>(0)) {
                            src_mask.grow(hier::IntVector<DIM>::min(
                                           rep_item.d_gcw_to_coarsen,
                                           src_pdf->getGhostCellWidth()));
                         }
 
-                        overlap = dst_pdf->getBoxGeometry(dst_boxes(dp))
+                        overlap = dst_pdf->getBoxGeometry(dst_boxes[dp])
                                          ->calculateOverlap(
-                                        *src_pdf->getBoxGeometry(src_boxes(sp)),
+                                        *src_pdf->getBoxGeometry(src_boxes[sp]),
                                         src_mask, true, no_shift);
 
 #ifdef DEBUG_CHECK_ASSERTIONS
 	                if (overlap.isNull()) {
 		           TBOX_ERROR("Internal xfer::CoarsenSchedule<DIM> error..."
                                       << "\n Overlap is NULL for "
-                                      << "\n src box = " << src_boxes(sp)
-                                      << "\n dst box = " << dst_boxes(dp)
+                                      << "\n src box = " << src_boxes[sp]
+                                      << "\n dst box = " << dst_boxes[dp]
                                       << "\n src mask = " << src_mask << std::endl);
                         }
 #endif
@@ -654,7 +654,7 @@ template<int DIM> void MultiblockCoarsenSchedule<DIM>::coarsenSourceData(
    MultiblockCoarsenPatchStrategy<DIM>* patch_strategy) const
 {
 
-   for (int nb = 0; nb < d_mblk_fine_level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_mblk_fine_level->getNumberOfBlocks(); nb++) {
 
       tbox::Pointer< hier::PatchLevel<DIM> > fine_block_level = 
          d_mblk_fine_level->getPatchLevelForBlock(nb);

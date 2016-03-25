@@ -1,9 +1,9 @@
 dnl
 dnl File:        configure.in
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-dnl Revision:    $LastChangedRevision: 1892 $
-dnl Modified:    $LastChangedDate: 2008-01-23 08:29:36 -0800 (Wed, 23 Jan 2008) $
+dnl Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+dnl Revision:    $LastChangedRevision: 2157 $
+dnl Modified:    $LastChangedDate: 2008-04-28 13:55:06 -0700 (Mon, 28 Apr 2008) $
 dnl Description: autoconfig configuration file
 dnl
 
@@ -70,8 +70,11 @@ AC_ARG_WITH(vampir,
    [  --with-vampir[=dir]     compile with VAMPIR performance tracing])
 AC_ARG_WITH(tau,
    [  --with-tau[=dir]        compile with TAU performance tracing])
-
-
+AC_ARG_ENABLE(deprecated,
+   [  --enable-deprecated     build with deprecated features (default is enabled)],
+   ,
+   enable_deprecated="yes"
+   )
 
 dnl
 dnl Since we removed the all-CAPS options and replaced them with
@@ -92,12 +95,12 @@ dnl
 dnl Initialize common macros to empty strings
 dnl
 
-C_FLAGS=
-CXX_FLAGS=
-F77_FLAGS=
-LD_FLAGS=
-CXXLD_FLAGS=
-
+C_FLAGS="$CFLAGS"
+CXX_FLAGS="$CXXFLAGS"
+F77_FLAGS="$FFLAGS"
+LD_FLAGS="$LDFLAGS"
+CXXLD_FLAGS="$LDFLAGS"
+CPP_FLAGS="$CPPFLAGS"
 
 INC_PATH=
 LIB_PATH=
@@ -105,7 +108,7 @@ LIB_NAME=-lm
 
 dnl LIBS is not used by SAMRAI's configure.in, but it is used by some
 dnl of the supporting macros.
-LIBS=-lm
+LIBS="$LIBS -lm"
 
 LIB_SUFFIX=.a
 
@@ -172,6 +175,24 @@ if test -z "$M4"; then
    AC_MSG_ERROR([m4 preprocessor not found - specify with --with-M4=ARG])
 fi
 
+
+dnl
+dnl Find install for installing 
+dnl
+
+AC_PROG_INSTALL
+if test -z "$INSTALL"; then
+   AC_MSG_ERROR([install not found])
+fi
+
+dnl
+dnl Find mkdir for creating directories
+dnl
+
+AC_PROG_MKDIR_P
+if test -z "$MKDIR_P"; then
+   AC_MSG_ERROR([mkdir not found])
+fi
 
 dnl
 dnl Determine what compilers are being used.
@@ -244,24 +265,25 @@ AC_ARG_ENABLE(implicit-template-instantiation,
 enable_implicit_template_instantiation=no
 )
 
+CXX_FLAGS_NO_TEMPLATE_INST=""
 if test "${enable_implicit_template_instantiation}" = 'no'; then
 case "$CXX_ID" in
    gnu)
-      CXX_FLAGS="-fno-implicit-templates $CXX_FLAGS"
+      CXX_FLAGS_NO_TEMPLATE_INST="-fno-implicit-templates"
       ;;
    ibm)
-      CXX_FLAGS="-qnotempinc $CXX_FLAGS"
+      CXX_FLAGS_NO_TEMPLATE_INST="-qnotempinc"
       ;;
    intel)
       :
       ;;
    sunpro)
-      CXX_FLAGS="-instances=explicit $CXX_FLAGS"
+      CXX_FLAGS_NO_TEMPLATE_INST="-instances=explicit"
       ;;
 esac
 fi
+AC_SUBST(CXX_FLAGS_NO_TEMPLATE_INST)
 
-DEPENDS_ON_TEMPLATE_IMPLEMENTATION="yes"
 # For insure add -Zsl option for linking
 case $CXX in 
    *insure*)
@@ -271,7 +293,6 @@ esac
 
 case $CXX_ID in
    gnu)
-      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
       CXX_FLAGS="-Wall $CXX_FLAGS"
       case $ARCH in
          IRIX64)
@@ -285,21 +306,18 @@ case $CXX_ID in
       esac
       ;;
    sunpro)
-      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
       CXX_FLAGS="-qrtti=all $CXX_FLAGS"
       case $ARCH in
          solaris | sun4)
-            CXX_FLAGS="-instances=explicit $CXX_FLAGS"
+            CXX_FLAGS="$CXX_FLAGS"
             CXX_FLAGS="+p $CXX_FLAGS"
             ;;
       esac
       ;;
    xlc)
-      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
       CXX_FLAGS="-qrtti=all $CXX_FLAGS"
       ;;
    intel)
-      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
       #  compiler requires template includes
       AC_DEFINE(INCLUDE_TEMPLATE_IMPLEMENTATION)
       case $ARCH in
@@ -320,6 +338,7 @@ case $CXX_ID in
       # By default include the template impls during compile
       AC_DEFINE(INCLUDE_TEMPLATE_IMPLEMENTATION)	
 esac
+
 
 
 dnl
@@ -355,11 +374,44 @@ if test "$enable_shared" = "yes"; then
    esac
 fi
 
+
+
 dnl
 dnl Determine if there should be dependencies between
 dnl object files and the template implementation files
 dnl (the .C files as well as .h and .I files).
-dnl 
+dnl
+dnl By default make the object files depend on the template implementation files
+dnl Turn this off for known cases that do not require it.
+dnl
+DEPENDS_ON_TEMPLATE_IMPLEMENTATION="yes"
+case $CXX_ID in
+   gnu)
+      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
+      ;;
+   ibm)
+      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
+      ;;
+   sunpro)
+      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
+      ;;
+   intel)
+      DEPENDS_ON_TEMPLATE_IMPLEMENTATION="no"
+      #  compiler requires template includes
+      AC_DEFINE([INCLUDE_TEMPLATE_IMPLEMENTATION],[1],[INCLUDE_TEMPLATE_IMPLEMENTATION])
+      ;;
+   *)
+      # By default include the template impls during compile
+      AC_DEFINE([INCLUDE_TEMPLATE_IMPLEMENTATION],[1],[INCLUDE_TEMPLATE_IMPLEMENTATION])
+esac
+
+dnl
+dnl If implicit instantiation turned on then the standard requires that 
+dnl implementation be present when compiling a template.
+dnl
+if test "${enable_implicit_template_instantiation}" = 'yes'; then
+   AC_DEFINE([INCLUDE_TEMPLATE_IMPLEMENTATION],[1],[INCLUDE_TEMPLATE_IMPLEMENTATION])
+fi
 AC_SUBST(DEPENDS_ON_TEMPLATE_IMPLEMENTATION)
 
 dnl
@@ -439,26 +491,32 @@ dnl Set the optional classes to build
 dnl
 
 SAMRAI_OPTIONAL_LIBS=""
+SAMRAI_ENABLE_SPECIAL="no"
 if test "$enable_char" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libchar"
+   SAMRAI_ENABLE_SPECIAL="yes"
    AC_DEFINE(HAVE_CHAR)	  
 fi
 
 if test "$enable_bool" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libbool $SAMRAI_OPTIONAL_LIBS" 
+   SAMRAI_ENABLE_SPECIAL="yes"
    AC_DEFINE(HAVE_BOOL)
 fi
 
 if test "$enable_float" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libfloat $SAMRAI_OPTIONAL_LIBS" 
+   SAMRAI_ENABLE_SPECIAL="yes"
    AC_DEFINE(HAVE_FLOAT)	  
 fi
 
 if test "$enable_dcomplex" = "yes"; then
    SAMRAI_OPTIONAL_LIBS="libdcomplex $SAMRAI_OPTIONAL_LIBS" 
+   SAMRAI_ENABLE_SPECIAL="yes"
    AC_DEFINE(HAVE_DCOMPLEX)	  
 fi
 AC_SUBST(SAMRAI_OPTIONAL_LIBS)
+AC_SUBST(SAMRAI_ENABLE_SPECIAL)
 
 
 dnl
@@ -911,6 +969,21 @@ BTNG_AC_LOG_VAR(
 [hdf5_INCLUDES INC_PATH hdf5_LIB_PATH hdf5_LIB_NAME LIB_PATH LIB_NAME])
 
 dnl
+dnl Silo support
+dnl
+CASC_SUPPORT_SILO
+if test "${silo_PREFIX+set}" = set; then
+  LIBS="$silo_LIBS $LIBS"
+  SAMRAI_SPLIT_LIBS_STRING(silo_LIBS,silo_LIB_PATH,silo_LIB_NAME)
+  LIB_PATH="$silo_LIB_PATH $LIB_PATH"
+  LIB_NAME="$silo_LIB_NAME $LIB_NAME"
+  INC_PATH="$silo_INCLUDES $INC_PATH"
+  AC_DEFINE(HAVE_SILO,1,SILO library is available so use it)
+fi
+BTNG_AC_LOG_VAR(
+[silo_INCLUDES INC_PATH silo_LIB_PATH silo_LIB_NAME LIB_PATH LIB_NAME])
+
+dnl
 dnl Set variables for hypre support.
 dnl
 BTNG_SUPPORT_HYPRE
@@ -1041,6 +1114,16 @@ if test "$enable_xdr" = "yes"; then
          ;;	
    esac
 fi
+
+dnl
+dnl Test if compiling with deprecated 
+dnl
+if test "$enable_deprecated" = "yes"; then
+   AC_DEFINE(INCLUDE_DEPRECATED,2,"Compiling with deprecated features")
+else
+   AC_DEFINE(INCLUDE_DEPRECATED,9999999,"Compiling without deprecated features")
+fi
+
 
 dnl
 dnl If Sundials is requested, then set up the Sundials libraries and include paths.
@@ -1315,23 +1398,15 @@ AC_SUBST(INC_PATH)
 AC_SUBST(LIB_PATH)
 AC_SUBST(LIB_NAME)
 
-
-
 dnl Define a macro that links files from the compile tree to the source tree.
-dnl The links have the same name as the the target.  If the compile and source
-dnl trees are the same, a prefix is added to avoid clobering the target file.
+dnl The links have the same name as the the target.  Nothing is done if 
+dnl compiling in the source directory.
+dnl 
+dnl Note: It would be "nicer" to have the some of the processing done below 
+dnl moved into this function but it didn't seem to work.
 AC_DEFUN([SAMRAI_LINK_FILES],[
-dnl This macro links files the way SAMRAI wants them linked.
-dnl arg1: list of file paths (relative to top) to be linked.
-test `pwd` = `cd "$srcdir" && pwd` && link_prefix='.unneeded_link.'
-AC_CONFIG_LINKS(
-esyscmd(echo "$1" | sed ['s|\([^ 	]\{1,\}/\)\([^/]\{1,\}\)\([ 	\n]\|$\)|\1\${link_prefix}\2:\1\2\3|g'])
-,,[
-# Commands before creating links.
-link_prefix="${link_prefix}"
-])dnl End call to AC_CONFIG_LINKS
-])dnl End definition of SAMRAI_LINK_FILES
-
+test `pwd` != `cd "$srcdir" && pwd` && AC_CONFIG_LINKS($1)
+]) dnl End definition of SAMRAI_LINK_FILES
 
 # Link files for examples directory.
 dnl Define standard exclude patterns so the find commands we use during
@@ -1348,36 +1423,36 @@ dnl And they don't have to all be in the same call to SAMRAI_LINK_FILES.
 define(samrai_typical_example_files,['(' \
 -name '*README*' -o -name '*.C' -o -name '*.h' -o -name '*.depend' -o -name '*.i' -o -name '*.m4' -o -name '*.input' \
 -o -name '*.tri' -o -name '*.gzxml' ')'])
-SAMRAI_LINK_FILES([ esyscmd(find examples/boundary      samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/communication samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/ConvDiff      samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/dataops       samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/Euler         samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/emb_bdry      samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/nonlinear     samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/hypre_poisson samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/FAC           samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/LinAdv        samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/mblkcomm      samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/MblkEuler     samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/MblkLinAdv    samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/memory        samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/sundials      samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/patchbdrysum  samrai_find_excludes samrai_typical_example_files | sort) ])
-SAMRAI_LINK_FILES([ esyscmd(find examples/timers        samrai_find_excludes samrai_typical_example_files | sort) ])
 
-SAMRAI_LINK_FILES([ source/test/async_comm/default.input ])
-SAMRAI_LINK_FILES([ source/test/clustering/async_br/front2d.input
-                    source/test/clustering/async_br/front3d.input ])
-SAMRAI_LINK_FILES([ source/test/dlbg/front2d.input
-                    source/test/dlbg/front3d.input ])
-SAMRAI_LINK_FILES([ esyscmd(echo source/test/hypre/*.input) ])
-SAMRAI_LINK_FILES([ source/test/FAC/inputs ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/boundary      samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/communication samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/ConvDiff      samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/dataops       samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/Euler         samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/emb_bdry      samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/nonlinear     samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/hypre_poisson samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/FAC           samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/LinAdv        samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/mblkcomm      samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/MblkEuler     samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/MblkLinAdv    samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/memory        samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/sundials      samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/patchbdrysum  samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ esyscmd(find examples/timers        samrai_find_excludes samrai_typical_example_files | sort | sed 's/.*/\0:\0/') ])
+
+SAMRAI_LINK_FILES([ source/test/async_comm/default.input:source/test/async_comm/default.input ])
+SAMRAI_LINK_FILES([ source/test/clustering/async_br/front2d.input:source/test/clustering/async_br/front2d.input
+                    source/test/clustering/async_br/front3d.input:source/test/clustering/async_br/front3d.input ])
+SAMRAI_LINK_FILES([ source/test/dlbg/front2d.input:source/test/dlbg/front2d.input
+                    source/test/dlbg/front3d.input:source/test/dlbg/front3d.input ])
+SAMRAI_LINK_FILES([ esyscmd(find source/test/hypre -name \*.input | sort | sed 's/.*/\0:\0/') ])
+SAMRAI_LINK_FILES([ source/test/FAC/inputs:source/test/FAC/inputs ])
 
 dnl Undefine the m4 symbols not needed anymore.
 dnl (Keep samrai_find_excludes in case it do more finds below.)
 undefine([samrai_typical_example_files])
-
 
 dnl
 dnl Generate the output files.
@@ -1389,7 +1464,7 @@ makefiles=
 for i in $subdirs; do makefiles="$makefiles $i/Makefile"; done
 BTNG_AC_LOG_VAR(makefiles)
 BTNG_AC_LOG_VAR(subdirs)
-mkdir -p $subdirs
+$MKDIR_P $subdirs
 
 AC_OUTPUT([
 Makefile
@@ -1402,43 +1477,43 @@ dnl They are run by the generated config.status script.
 
 rm -rf Templates.DB ti_files ii_files
 
-mkdir -p config include lib bin $subdirs
+$MKDIR_P config include lib bin $subdirs
 
-cp $srcdir/COPYRIGHT COPYRIGHT
-cp $srcdir/RELEASE-NOTES RELEASE-NOTES 
-cp $srcdir/INSTALL-NOTES INSTALL-NOTES 
-cp $srcdir/examples/nonlinear/*.input source/test/nonlinear
-cp $srcdir/examples/MblkEuler/*.f  examples/MblkEuler
-mkdir -p source/test/testtools
-cp $srcdir/source/test/testtools/* source/test/testtools
-cp $srcdir/source/test/applications/ConvDiff/*.input source/test/applications/ConvDiff
-cp $srcdir/source/test/applications/ConvDiff/*.boxes source/test/applications/ConvDiff
-cp $srcdir/source/test/applications/Euler/*.input source/test/applications/Euler
-cp $srcdir/source/test/applications/Euler/*.boxes source/test/applications/Euler
-cp $srcdir/source/test/applications/Euler/RP_test/*.input source/test/applications/Euler
-cp $srcdir/source/test/applications/Euler/RP_test/*.correct source/test/applications/Euler
-cp $srcdir/source/test/applications/LinAdv/*.input source/test/applications/LinAdv
-cp $srcdir/source/test/applications/LinAdv/*.boxes source/test/applications/LinAdv
-cp $srcdir/source/test/boundary/input_files/*.input source/test/boundary
-cp $srcdir/source/test/clustering/parallel_br/*.input  source/test/clustering/parallel_br
-cp $srcdir/source/test/clustering/parallel_br/*.boxes  source/test/clustering/parallel_br
-cp $srcdir/source/test/clustering/parallel_br/*.sh     source/test/clustering/parallel_br
-cp $srcdir/source/test/communication/*.input source/test/communication
-cp $srcdir/source/test/communication/*.input source/test/communication
-cp $srcdir/source/test/emb_bdry/*.input source/test/emb_bdry
-cp $srcdir/source/test/hierarchy/*.input source/test/hierarchy
-cp $srcdir/source/test/inputdb/*.input  source/test/inputdb
-cp $srcdir/source/test/locally_active/*.input  source/test/locally_active
-cp $srcdir/source/test/mblkcomm/*.input  source/test/mblkcomm
-cp $srcdir/source/test/MblkEuler/*.input  source/test/MblkEuler
-cp $srcdir/source/test/MblkLinAdv/*.input  source/test/MblkLinAdv
-cp $srcdir/source/test/patchbdrysum/*.input source/test/patchbdrysum
-cp $srcdir/source/test/patch_configuration/*.input source/test/patch_configuration
-cp $srcdir/source/test/sundials/*.input   source/test/sundials
-cp $srcdir/source/test/schedules/*.input  source/test/schedules
-cp $srcdir/source/test/schedules/*.boxes  source/test/schedules
-cp $srcdir/source/test/schedules/*.sh     source/test/schedules
-cp $srcdir/source/test/timers/input.file  source/test/timers
+$INSTALL  $srcdir/COPYRIGHT COPYRIGHT
+$INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES 
+$INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
+$INSTALL  $srcdir/examples/nonlinear/*.input source/test/nonlinear
+$INSTALL  $srcdir/examples/MblkEuler/*.f  examples/MblkEuler
+$MKDIR_P source/test/testtools
+$INSTALL  $srcdir/source/test/testtools/* source/test/testtools
+$INSTALL  $srcdir/source/test/applications/ConvDiff/*.input source/test/applications/ConvDiff
+$INSTALL  $srcdir/source/test/applications/ConvDiff/*.boxes source/test/applications/ConvDiff
+$INSTALL  $srcdir/source/test/applications/Euler/*.input source/test/applications/Euler
+$INSTALL  $srcdir/source/test/applications/Euler/*.boxes source/test/applications/Euler
+$INSTALL  $srcdir/source/test/applications/Euler/RP_test/*.input source/test/applications/Euler
+$INSTALL  $srcdir/source/test/applications/Euler/RP_test/*.correct source/test/applications/Euler
+$INSTALL  $srcdir/source/test/applications/LinAdv/*.input source/test/applications/LinAdv
+$INSTALL  $srcdir/source/test/applications/LinAdv/*.boxes source/test/applications/LinAdv
+$INSTALL  $srcdir/source/test/boundary/input_files/*.input source/test/boundary
+$INSTALL  $srcdir/source/test/clustering/parallel_br/*.input  source/test/clustering/parallel_br
+$INSTALL  $srcdir/source/test/clustering/parallel_br/*.boxes  source/test/clustering/parallel_br
+$INSTALL  $srcdir/source/test/clustering/parallel_br/*.sh     source/test/clustering/parallel_br
+$INSTALL  $srcdir/source/test/communication/*.input source/test/communication
+$INSTALL  $srcdir/source/test/communication/*.input source/test/communication
+$INSTALL  $srcdir/source/test/emb_bdry/*.input source/test/emb_bdry
+$INSTALL  $srcdir/source/test/hierarchy/*.input source/test/hierarchy
+$INSTALL  $srcdir/source/test/inputdb/*.input  source/test/inputdb
+$INSTALL  $srcdir/source/test/locally_active/*.input  source/test/locally_active
+$INSTALL  $srcdir/source/test/mblkcomm/*.input  source/test/mblkcomm
+$INSTALL  $srcdir/source/test/MblkEuler/*.input  source/test/MblkEuler
+$INSTALL  $srcdir/source/test/MblkLinAdv/*.input  source/test/MblkLinAdv
+$INSTALL  $srcdir/source/test/patchbdrysum/*.input source/test/patchbdrysum
+$INSTALL  $srcdir/source/test/patch_configuration/*.input source/test/patch_configuration
+$INSTALL  $srcdir/source/test/sundials/*.input   source/test/sundials
+$INSTALL  $srcdir/source/test/schedules/*.input  source/test/schedules
+$INSTALL  $srcdir/source/test/schedules/*.boxes  source/test/schedules
+$INSTALL  $srcdir/source/test/schedules/*.sh     source/test/schedules
+$INSTALL  $srcdir/source/test/timers/input.file  source/test/timers
 
 
 dnl
@@ -1446,7 +1521,7 @@ dnl Copy README files
 dnl
 readme=`cd $srcdir; find source -name "*README*" -print | grep -v svn`
 for i in $readme; do
-   cp $srcdir/$i $i
+   $INSTALL  $srcdir/$i $i
 done
 
 ],

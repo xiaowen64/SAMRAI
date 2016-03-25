@@ -1,7 +1,7 @@
 ##
 ## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/transfer/datamovers/Makefile.in $
 ## Package:	SAMRAI communication and data transfer package
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Revision:	$LastChangedRevision: 878 $
 ## Modified:	$LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $
 ## Description:	makefile for the multiblock transfer package routines
@@ -19,14 +19,15 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = locally_active standard
 
 library:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib1d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib2d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib3d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 libXd:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
+

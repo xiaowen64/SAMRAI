@@ -4,8 +4,8 @@
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
 // Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: set geometry for multiblock domain
 //              
 // 
@@ -13,9 +13,7 @@
 #ifndef included_MblkGeometryXD
 #define included_MblkGeometryXD
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #include "tbox/Array.h"
 #include "Box.h"

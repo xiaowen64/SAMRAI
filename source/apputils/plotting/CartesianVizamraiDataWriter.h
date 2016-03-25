@@ -1,54 +1,34 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/plotting/CartesianVizamraiDataWriter.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/CartesianVizamraiDataWriter.h $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1811 $
-// Modified:    $LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Simple tool to facilitate dumping data to file for Vizamrai
 //
 
 #ifndef included_appu_CartesianVizamraiDataWriter
 #define included_appu_CartesianVizamraiDataWriter
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_geom_CartesianPatchGeometry
 #include "CartesianPatchGeometry.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_PatchData
 #include "PatchData.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_appu_VisDerivedDataStrategy
 #include "VisDerivedDataStrategy.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_FileStream
 #include "tbox/FileStream.h"
-#endif
 
 #ifndef NULL
 #define NULL (0)

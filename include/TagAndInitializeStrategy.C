@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/TagAndInitializeStrategy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/TagAndInitializeStrategy.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2039 $
+// Modified:    $LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description: Strategy interface for params, tagging, init for gridding.
 //
 
@@ -268,9 +268,8 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
     */
    bool use_old_input = false;
    int ln, i;
-   char level_boxes_name[12];
    for (ln = 0; ln < nkeys; ln++) {
-      sprintf(level_boxes_name, "level_%d", ln);
+      std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
       if (refine_box_db->keyExists(level_boxes_name)) {
          use_old_input = true;
       }
@@ -290,7 +289,7 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
    
    if (use_old_input) {
       for (ln = 0; ln < nkeys; ln++) {
-         sprintf(level_boxes_name, "level_%d", ln);
+	 std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
          d_refine_boxes[ln].resizeArray(1);
          d_refine_boxes_cycles[ln].resizeArray(1);
          d_refine_boxes_times[ln].resizeArray(1);
@@ -311,7 +310,7 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
     */
    if (!use_old_input) {
       for (ln = 0; ln < nkeys; ln++) {
-         sprintf(level_boxes_name, "Level%d", ln);
+	 std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
          if (!refine_box_db->keyExists(level_boxes_name)) {
             TBOX_ERROR(d_object_name << "\n"
                        << ": Expected sub-database level entries in the\n"
@@ -375,9 +374,8 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
          /*
           * Read boxes.  
           */
-         char boxes_name[12];
          for (i = 0; i < max_seq; i++) {
-            sprintf(boxes_name, "boxes_%d", i);
+	    std::string boxes_name = "boxes_" + tbox::Utilities::intToString(i);
             if (level_refine_box_db->keyExists(boxes_name)) {
                d_refine_boxes[ln][i] = 
                   level_refine_box_db->getDatabaseBoxArray(boxes_name);

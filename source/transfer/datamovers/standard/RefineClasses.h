@@ -1,39 +1,27 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineClasses.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefineClasses.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Simple structure for managing refinement data in equivalence classes.
 //
  
 #ifndef included_xfer_RefineClasses
 #define included_xfer_RefineClasses
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_xfer_RefineOperator
 #include "RefineOperator.h"
-#endif
-#ifndef included_xfer_TimeInterpolateOperator
 #include "TimeInterpolateOperator.h"
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -82,7 +70,7 @@ public:
     * Return number of equivalence classes maintained by this object
     * (i.e., the number of lists of refinement data items).
     */
-   int getNumberEquivalenceClasses() const;
+   int getNumberOfEquivalenceClasses() const;
 
    /**
     * Return const reference to representative element of equivalence class 
@@ -96,15 +84,15 @@ public:
     * Return an iterator for the refine data list corresponding to the
     * equivalence class with the given integer identifier.  The number of
     * equivalence classes can be determined via the
-    * getNumberEquivalenceClasses() member function.  Valid integer
-    * arguments are 0,...,getNumberEquivalenceClasses()-1. When assertion
+    * getNumberOfEquivalenceClasses() member function.  Valid integer
+    * arguments are 0,...,getNumberOfEquivalenceClasses()-1. When assertion
     * checking is active, the id will be checked for validity.
     *
     * Note that the list should not be modified through this iterator.
     * When assertion checking is active, the id will be checked for validity.
     */
 #ifdef LACKS_NAMESPACE_IN_DECLARE
-   tbox::List<Data>::Iterator getIterator(int equiv_class_id);
+   typename tbox::List<Data>::Iterator getIterator(int equiv_class_id);
 #else
    typename tbox::List<typename RefineClasses<DIM>::Data>::Iterator
       getIterator(int equiv_class_id);

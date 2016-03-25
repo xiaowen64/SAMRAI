@@ -1,67 +1,37 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/OuterfaceDataTest.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/communication/OuterfaceDataTest.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: AMR communication tests for outerface-centered patch data
 //
 
 #ifndef included_OuterfaceDataTest
 #define included_OuterfaceDataTest
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_BoundaryBox
 #include "BoundaryBox.h"
-#endif
-#ifndef included_Box
 #include "Box.h"
-#endif
-#ifndef included_CartesianGridGeometry
 #include "CartesianGridGeometry.h"
-#endif
-#ifndef included_CartesianPatchGeometry
 #include "CartesianPatchGeometry.h"
-#endif
-#ifndef included_CellIndex
 #include "CellIndex.h"
-#endif
-#ifndef included_FaceData
 #include "FaceData.h"
-#endif
-#ifndef included_OuterfaceData
 #include "OuterfaceData.h"
-#endif
-#ifndef included_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_Patch
 #include "Patch.h"
-#endif
-#ifndef included_PatchDataTestStrategy
 #include "PatchDataTestStrategy.h"
-#endif
-#ifndef included_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 using namespace std;
 #define included_String
 #endif
-#ifndef included_Variable
 #include "Variable.h"
-#endif
 
 namespace SAMRAI {
 

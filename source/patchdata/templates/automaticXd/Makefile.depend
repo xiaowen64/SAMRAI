@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -104,6 +104,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -230,6 +231,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -355,6 +357,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -480,6 +483,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -605,6 +609,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -730,6 +735,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -914,6 +920,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1123,6 +1130,7 @@ DEPENDS_12:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1255,6 +1263,7 @@ DEPENDS_13:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1387,6 +1396,7 @@ DEPENDS_14:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1519,6 +1529,7 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1651,6 +1662,7 @@ DEPENDS_16:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1783,6 +1795,7 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1974,6 +1987,7 @@ DEPENDS_20:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2185,6 +2199,7 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2317,6 +2332,7 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2449,6 +2465,7 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2581,6 +2598,7 @@ DEPENDS_26:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2713,6 +2731,7 @@ DEPENDS_27:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2845,6 +2864,7 @@ DEPENDS_28:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3036,6 +3056,7 @@ DEPENDS_31:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3246,6 +3267,7 @@ DEPENDS_34:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3376,6 +3398,7 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3507,6 +3530,7 @@ DEPENDS_36:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3637,6 +3661,7 @@ DEPENDS_37:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3768,6 +3793,7 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3898,6 +3924,7 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4087,6 +4114,7 @@ DEPENDS_42:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4339,6 +4367,7 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4473,6 +4502,7 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4606,6 +4636,7 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4740,6 +4771,7 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4873,6 +4905,7 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5007,6 +5040,7 @@ DEPENDS_51:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5182,6 +5216,7 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5314,6 +5349,7 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5487,6 +5523,7 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5620,6 +5657,7 @@ DEPENDS_57:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5753,6 +5791,7 @@ DEPENDS_58:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5928,6 +5967,7 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6060,6 +6100,7 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6192,6 +6233,7 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6323,6 +6365,7 @@ DEPENDS_63:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6455,6 +6498,7 @@ DEPENDS_64:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6586,6 +6630,7 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6777,6 +6822,7 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8175,6 +8221,7 @@ DEPENDS_95:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8295,6 +8342,7 @@ DEPENDS_96:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8415,6 +8463,7 @@ DEPENDS_97:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8535,6 +8584,7 @@ DEPENDS_98:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8655,6 +8705,7 @@ DEPENDS_99:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8775,6 +8826,7 @@ DEPENDS_100:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -8895,6 +8947,7 @@ DEPENDS_101:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -9014,6 +9067,7 @@ DEPENDS_102:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -9133,6 +9187,7 @@ DEPENDS_103:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -9253,6 +9308,7 @@ DEPENDS_104:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -9373,6 +9429,7 @@ DEPENDS_105:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -9492,6 +9549,7 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -9964,6 +10022,7 @@ DEPENDS_113:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10091,6 +10150,7 @@ DEPENDS_114:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10218,6 +10278,7 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10345,6 +10406,7 @@ DEPENDS_116:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10472,6 +10534,7 @@ DEPENDS_117:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10599,6 +10662,7 @@ DEPENDS_118:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10726,6 +10790,7 @@ DEPENDS_119:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10853,6 +10918,7 @@ DEPENDS_120:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -10980,6 +11046,7 @@ DEPENDS_121:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -11108,6 +11175,7 @@ DEPENDS_122:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -11236,6 +11304,7 @@ DEPENDS_123:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -11363,6 +11432,7 @@ DEPENDS_124:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -11838,6 +11908,7 @@ DEPENDS_131:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -11965,6 +12036,7 @@ DEPENDS_132:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12092,6 +12164,7 @@ DEPENDS_133:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12219,6 +12292,7 @@ DEPENDS_134:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12346,6 +12420,7 @@ DEPENDS_135:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12473,6 +12548,7 @@ DEPENDS_136:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12600,6 +12676,7 @@ DEPENDS_137:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12727,6 +12804,7 @@ DEPENDS_138:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12854,6 +12932,7 @@ DEPENDS_139:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -12982,6 +13061,7 @@ DEPENDS_140:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13110,6 +13190,7 @@ DEPENDS_141:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13237,6 +13318,7 @@ DEPENDS_142:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13377,6 +13459,7 @@ DEPENDS_143:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13525,6 +13608,7 @@ DEPENDS_144:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13673,6 +13757,7 @@ DEPENDS_145:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13821,6 +13906,7 @@ DEPENDS_146:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -13969,6 +14055,7 @@ DEPENDS_147:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14098,6 +14185,7 @@ DEPENDS_148:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14216,6 +14304,7 @@ DEPENDS_149:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14334,6 +14423,7 @@ DEPENDS_150:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14452,6 +14542,7 @@ DEPENDS_151:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14570,6 +14661,7 @@ DEPENDS_152:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14687,6 +14779,7 @@ DEPENDS_153:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14803,6 +14896,7 @@ DEPENDS_154:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -14919,6 +15013,7 @@ DEPENDS_155:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15035,6 +15130,7 @@ DEPENDS_156:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15151,6 +15247,7 @@ DEPENDS_157:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15267,6 +15364,7 @@ DEPENDS_158:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15383,6 +15481,7 @@ DEPENDS_159:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15499,6 +15598,7 @@ DEPENDS_160:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15615,6 +15715,7 @@ DEPENDS_161:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15731,6 +15832,7 @@ DEPENDS_162:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15847,6 +15949,7 @@ DEPENDS_163:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -15964,6 +16067,7 @@ DEPENDS_164:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16081,6 +16185,7 @@ DEPENDS_165:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16198,6 +16303,7 @@ DEPENDS_166:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16315,6 +16421,7 @@ DEPENDS_167:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16433,6 +16540,7 @@ DEPENDS_168:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16551,6 +16659,7 @@ DEPENDS_169:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16669,6 +16778,7 @@ DEPENDS_170:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16787,6 +16897,7 @@ DEPENDS_171:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -16905,6 +17016,7 @@ DEPENDS_172:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -17376,6 +17488,7 @@ DEPENDS_179:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -17502,6 +17615,7 @@ DEPENDS_180:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -17628,6 +17742,7 @@ DEPENDS_181:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -17754,6 +17869,7 @@ DEPENDS_182:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -17880,6 +17996,7 @@ DEPENDS_183:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18006,6 +18123,7 @@ DEPENDS_184:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18132,6 +18250,7 @@ DEPENDS_185:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18257,6 +18376,7 @@ DEPENDS_186:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18382,6 +18502,7 @@ DEPENDS_187:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18508,6 +18629,7 @@ DEPENDS_188:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18634,6 +18756,7 @@ DEPENDS_189:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -18759,6 +18882,7 @@ DEPENDS_190:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -19260,6 +19384,7 @@ DEPENDS_197:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -19387,6 +19512,7 @@ DEPENDS_198:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -19514,6 +19640,7 @@ DEPENDS_199:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -19641,6 +19768,7 @@ DEPENDS_200:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -19768,6 +19896,7 @@ DEPENDS_201:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -19895,6 +20024,7 @@ DEPENDS_202:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -20023,6 +20153,7 @@ DEPENDS_203:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -20152,6 +20283,7 @@ DEPENDS_204:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -20281,6 +20413,7 @@ DEPENDS_205:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -20410,6 +20543,7 @@ DEPENDS_206:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -20539,6 +20673,7 @@ DEPENDS_207:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -20668,6 +20803,7 @@ DEPENDS_208:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21159,6 +21295,7 @@ DEPENDS_215:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21286,6 +21423,7 @@ DEPENDS_216:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21413,6 +21551,7 @@ DEPENDS_217:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21540,6 +21679,7 @@ DEPENDS_218:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21667,6 +21807,7 @@ DEPENDS_219:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21794,6 +21935,7 @@ DEPENDS_220:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -21922,6 +22064,7 @@ DEPENDS_221:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -22051,6 +22194,7 @@ DEPENDS_222:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -22180,6 +22324,7 @@ DEPENDS_223:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -22309,6 +22454,7 @@ DEPENDS_224:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -22438,6 +22584,7 @@ DEPENDS_225:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -22567,6 +22714,7 @@ DEPENDS_226:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23057,6 +23205,7 @@ DEPENDS_233:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23182,6 +23331,7 @@ DEPENDS_234:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23307,6 +23457,7 @@ DEPENDS_235:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23432,6 +23583,7 @@ DEPENDS_236:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23557,6 +23709,7 @@ DEPENDS_237:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23682,6 +23835,7 @@ DEPENDS_238:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23808,6 +23962,7 @@ DEPENDS_239:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -23935,6 +24090,7 @@ DEPENDS_240:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -24062,6 +24218,7 @@ DEPENDS_241:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -24189,6 +24346,7 @@ DEPENDS_242:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -24316,6 +24474,7 @@ DEPENDS_243:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -24443,6 +24602,7 @@ DEPENDS_244:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -24932,6 +25092,7 @@ DEPENDS_251:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25058,6 +25219,7 @@ DEPENDS_252:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25184,6 +25346,7 @@ DEPENDS_253:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25310,6 +25473,7 @@ DEPENDS_254:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25436,6 +25600,7 @@ DEPENDS_255:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25562,6 +25727,7 @@ DEPENDS_256:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25689,6 +25855,7 @@ DEPENDS_257:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25817,6 +25984,7 @@ DEPENDS_258:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -25945,6 +26113,7 @@ DEPENDS_259:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -26073,6 +26242,7 @@ DEPENDS_260:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -26201,6 +26371,7 @@ DEPENDS_261:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -26329,6 +26500,7 @@ DEPENDS_262:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -26804,6 +26976,7 @@ DEPENDS_269:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -26931,6 +27104,7 @@ DEPENDS_270:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27058,6 +27232,7 @@ DEPENDS_271:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27185,6 +27360,7 @@ DEPENDS_272:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27312,6 +27488,7 @@ DEPENDS_273:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27439,6 +27616,7 @@ DEPENDS_274:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27566,6 +27744,7 @@ DEPENDS_275:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27692,6 +27871,7 @@ DEPENDS_276:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27818,6 +27998,7 @@ DEPENDS_277:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -27945,6 +28126,7 @@ DEPENDS_278:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -28072,6 +28254,7 @@ DEPENDS_279:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -28198,6 +28381,7 @@ DEPENDS_280:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -28886,6 +29070,7 @@ DEPENDS_293:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -29362,6 +29547,7 @@ DEPENDS_300:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -29481,6 +29667,7 @@ DEPENDS_301:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -29600,6 +29787,7 @@ DEPENDS_302:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -29719,6 +29907,7 @@ DEPENDS_303:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -29838,6 +30027,7 @@ DEPENDS_304:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -29957,6 +30147,7 @@ DEPENDS_305:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30079,6 +30270,7 @@ DEPENDS_306:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30204,6 +30396,7 @@ DEPENDS_307:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30329,6 +30522,7 @@ DEPENDS_308:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30452,6 +30646,7 @@ DEPENDS_309:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30573,6 +30768,7 @@ DEPENDS_310:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30694,6 +30890,7 @@ DEPENDS_311:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30815,6 +31012,7 @@ DEPENDS_312:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -30936,6 +31134,7 @@ DEPENDS_313:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -31057,6 +31256,7 @@ DEPENDS_314:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -31184,6 +31384,7 @@ DEPENDS_315:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -31667,6 +31868,7 @@ DEPENDS_322:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -31794,6 +31996,7 @@ DEPENDS_323:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -31921,6 +32124,7 @@ DEPENDS_324:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32048,6 +32252,7 @@ DEPENDS_325:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32175,6 +32380,7 @@ DEPENDS_326:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32302,6 +32508,7 @@ DEPENDS_327:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32432,6 +32639,7 @@ DEPENDS_328:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32564,6 +32772,7 @@ DEPENDS_329:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32696,6 +32905,7 @@ DEPENDS_330:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32825,6 +33035,7 @@ DEPENDS_331:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -32952,6 +33163,7 @@ DEPENDS_332:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -33079,6 +33291,7 @@ DEPENDS_333:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -33206,6 +33419,7 @@ DEPENDS_334:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -33333,6 +33547,7 @@ DEPENDS_335:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -33460,6 +33675,7 @@ DEPENDS_336:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -33589,6 +33805,7 @@ DEPENDS_337:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34072,6 +34289,7 @@ DEPENDS_344:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34199,6 +34417,7 @@ DEPENDS_345:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34326,6 +34545,7 @@ DEPENDS_346:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34453,6 +34673,7 @@ DEPENDS_347:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34580,6 +34801,7 @@ DEPENDS_348:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34707,6 +34929,7 @@ DEPENDS_349:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34837,6 +35060,7 @@ DEPENDS_350:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -34969,6 +35193,7 @@ DEPENDS_351:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35101,6 +35326,7 @@ DEPENDS_352:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35230,6 +35456,7 @@ DEPENDS_353:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35357,6 +35584,7 @@ DEPENDS_354:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35484,6 +35712,7 @@ DEPENDS_355:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35611,6 +35840,7 @@ DEPENDS_356:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35738,6 +35968,7 @@ DEPENDS_357:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35865,6 +36096,7 @@ DEPENDS_358:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -35993,6 +36225,7 @@ DEPENDS_359:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -36474,6 +36707,7 @@ DEPENDS_366:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -36599,6 +36833,7 @@ DEPENDS_367:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -36724,6 +36959,7 @@ DEPENDS_368:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -36849,6 +37085,7 @@ DEPENDS_369:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -36974,6 +37211,7 @@ DEPENDS_370:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37099,6 +37337,7 @@ DEPENDS_371:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37227,6 +37466,7 @@ DEPENDS_372:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37357,6 +37597,7 @@ DEPENDS_373:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37486,6 +37727,7 @@ DEPENDS_374:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37612,6 +37854,7 @@ DEPENDS_375:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37738,6 +37981,7 @@ DEPENDS_376:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37864,6 +38108,7 @@ DEPENDS_377:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -37990,6 +38235,7 @@ DEPENDS_378:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -38116,6 +38362,7 @@ DEPENDS_379:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -38242,6 +38489,7 @@ DEPENDS_380:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -38747,6 +38995,7 @@ DEPENDS_387:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -38874,6 +39123,7 @@ DEPENDS_388:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39001,6 +39251,7 @@ DEPENDS_389:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39128,6 +39379,7 @@ DEPENDS_390:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39255,6 +39507,7 @@ DEPENDS_391:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39382,6 +39635,7 @@ DEPENDS_392:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39510,6 +39764,7 @@ DEPENDS_393:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39639,6 +39894,7 @@ DEPENDS_394:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39768,6 +40024,7 @@ DEPENDS_395:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -39897,6 +40154,7 @@ DEPENDS_396:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -40026,6 +40284,7 @@ DEPENDS_397:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -40155,6 +40414,7 @@ DEPENDS_398:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -40286,6 +40546,7 @@ DEPENDS_399:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -40776,6 +41037,7 @@ DEPENDS_406:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -40903,6 +41165,7 @@ DEPENDS_407:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41030,6 +41293,7 @@ DEPENDS_408:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41157,6 +41421,7 @@ DEPENDS_409:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41284,6 +41549,7 @@ DEPENDS_410:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41411,6 +41677,7 @@ DEPENDS_411:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41541,6 +41808,7 @@ DEPENDS_412:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41674,6 +41942,7 @@ DEPENDS_413:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41807,6 +42076,7 @@ DEPENDS_414:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -41938,6 +42208,7 @@ DEPENDS_415:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -42067,6 +42338,7 @@ DEPENDS_416:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -42196,6 +42468,7 @@ DEPENDS_417:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -42325,6 +42598,7 @@ DEPENDS_418:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -42454,6 +42728,7 @@ DEPENDS_419:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -42583,6 +42858,7 @@ DEPENDS_420:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43070,6 +43346,7 @@ DEPENDS_427:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43195,6 +43472,7 @@ DEPENDS_428:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43320,6 +43598,7 @@ DEPENDS_429:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43445,6 +43724,7 @@ DEPENDS_430:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43570,6 +43850,7 @@ DEPENDS_431:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43695,6 +43976,7 @@ DEPENDS_432:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -43888,6 +44170,7 @@ DEPENDS_434:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -44015,6 +44298,7 @@ DEPENDS_435:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -44142,6 +44426,7 @@ DEPENDS_436:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -44269,6 +44554,7 @@ DEPENDS_437:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -44396,6 +44682,7 @@ DEPENDS_438:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -44523,6 +44810,7 @@ DEPENDS_439:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45009,6 +45297,7 @@ DEPENDS_446:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45135,6 +45424,7 @@ DEPENDS_447:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45261,6 +45551,7 @@ DEPENDS_448:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45387,6 +45678,7 @@ DEPENDS_449:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45513,6 +45805,7 @@ DEPENDS_450:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45639,6 +45932,7 @@ DEPENDS_451:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45766,6 +46060,7 @@ DEPENDS_452:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -45894,6 +46189,7 @@ DEPENDS_453:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -46022,6 +46318,7 @@ DEPENDS_454:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -46150,6 +46447,7 @@ DEPENDS_455:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -46278,6 +46576,7 @@ DEPENDS_456:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -46406,6 +46705,7 @@ DEPENDS_457:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -46537,6 +46837,7 @@ DEPENDS_458:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47020,6 +47321,7 @@ DEPENDS_465:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47146,6 +47448,7 @@ DEPENDS_466:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47272,6 +47575,7 @@ DEPENDS_467:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47398,6 +47702,7 @@ DEPENDS_468:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47524,6 +47829,7 @@ DEPENDS_469:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47650,6 +47956,7 @@ DEPENDS_470:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47779,6 +48086,7 @@ DEPENDS_471:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -47911,6 +48219,7 @@ DEPENDS_472:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48043,6 +48352,7 @@ DEPENDS_473:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48173,6 +48483,7 @@ DEPENDS_474:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48301,6 +48612,7 @@ DEPENDS_475:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48429,6 +48741,7 @@ DEPENDS_476:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48557,6 +48870,7 @@ DEPENDS_477:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48685,6 +48999,7 @@ DEPENDS_478:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -48813,6 +49128,7 @@ DEPENDS_479:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/petsc/SNES_SAMRAIContext.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/petsc/SNES_SAMRAIContext.h $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1819 $
-// Modified:    $LastChangedDate: 2007-12-20 18:09:28 -0800 (Thu, 20 Dec 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
@@ -32,24 +32,14 @@ extern "C" {
 #endif
 #endif
 
-#ifndef included_SAMRAI_config	
 #include "SAMRAI_config.h"
-#endif
 
 #ifdef HAVE_PETSC
 
-#ifndef included_solv_NonlinearSolverStrategy
 #include "NonlinearSolverStrategy.h"
-#endif
-#ifndef included_solv_SNESAbstractFunctions
 #include "SNESAbstractFunctions.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 
 
 namespace SAMRAI {

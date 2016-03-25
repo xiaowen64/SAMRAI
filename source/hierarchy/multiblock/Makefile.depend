@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -57,6 +57,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -152,6 +153,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -331,6 +333,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\

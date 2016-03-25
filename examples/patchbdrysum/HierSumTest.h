@@ -1,10 +1,9 @@
 //
 // File:        Hierarchy Sum test
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Release:     $Name$
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1973 $
+// Modified:    $LastChangedDate: 2008-02-11 16:39:15 -0800 (Mon, 11 Feb 2008) $
 // Description: SAMRAI interface class for hierarchy node and edge sum test
 //
 

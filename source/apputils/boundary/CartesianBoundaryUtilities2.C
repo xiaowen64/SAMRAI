@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/boundary/CartesianBoundaryUtilities2.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/boundary/CartesianBoundaryUtilities2.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility routines for manipulating 2D Cartesian boundary data
 //
 
@@ -178,7 +178,7 @@ void CartesianBoundaryUtilities2::fillEdgeBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array< hier::BoundaryBox<2> >& edge_bdry =
-      pgeom->getCodimensionBoundary(EDGE2D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(EDGE2D_BDRY_TYPE);
    for (int i = 0; i < edge_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == EDGE2D_BDRY_TYPE);
@@ -257,7 +257,7 @@ void CartesianBoundaryUtilities2::fillNodeBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array< hier::BoundaryBox<2> >& node_bdry =
-      pgeom->getCodimensionBoundary(NODE2D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(NODE2D_BDRY_TYPE);
    for (int i = 0; i < node_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE2D_BDRY_TYPE);

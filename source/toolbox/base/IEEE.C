@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/base/IEEE.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/IEEE.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1840 $
-// Modified:	$LastChangedDate: 2008-01-09 13:03:07 -0800 (Wed, 09 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	IEEE routines to set up handlers and get signaling NaNs
 //
 
@@ -18,8 +18,6 @@
  * The following lines setup exception handling headers.
  */
 #if defined(HAVE_EXCEPTION_HANDLING)
-#include <stdlib.h>
-#include <stdio.h>
 #include <fpu_control.h>
 #include <signal.h>
 #endif
@@ -27,7 +25,7 @@
 /*
  * The following lines setup exception handling headers on the Sun.  If we
  * use Sun's native compiler, just pull in the <sunmath.h> include file.
- * If we are under solaris but use a different compiler (e.g. KCC, g++)
+ * If we are under solaris but use a different compiler (e.g. g++)
  * we have to explicitly define the functions that <sunmath.h> defines,
  * since we don't have access to this file.
  */
@@ -56,8 +54,7 @@ namespace SAMRAI {
 #if defined(HAVE_EXCEPTION_HANDLING)
 static void error_action(int error) 
 {
-   fprintf(stderr, "floating point exception -- program abort! %d\n", error);
-   SAMRAI_MPI::abort();
+   Utilities::abort("Floating point exception -- program abort! " + tbox::Utilities::intToString(error), __FILE__, __LINE__);
 }
 #endif
 

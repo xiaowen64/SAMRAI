@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/nonlinear/ModifiedBratuProblem.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/nonlinear/ModifiedBratuProblem.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1768 $
-// Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Class containing numerical routines for modified Bratu problem
 //
 
@@ -461,7 +461,7 @@ void ModifiedBratuProblem::setVectorWeights(
             tbox::Pointer<hier::Patch<NDIM> > patch = level->getPatch(p());
             for ( int i = 0; i < coarsened_boxes.getNumberOfBoxes(); i++ ) {
 
-               hier::Box<NDIM> coarse_box = coarsened_boxes(i);
+               hier::Box<NDIM> coarse_box = coarsened_boxes[i];
                hier::Box<NDIM> intersection = coarse_box*patch->getBox();
                if ( !intersection.empty() ) {
                   tbox::Pointer< pdat::CellData<NDIM,double> > w =
@@ -503,8 +503,8 @@ void ModifiedBratuProblem::setInitialGuess(
 
    if (first_step) {
 
-      if (d_FAC_solver) {
-         delete d_FAC_solver;
+      if ( !d_FAC_solver.isNull() ) {
+	 d_FAC_solver.setNull();
       }
 
       d_FAC_solver =
@@ -522,7 +522,7 @@ void ModifiedBratuProblem::setInitialGuess(
    if ( first_step ) {
 
       for (int amr_level = 0;
-           amr_level < hierarchy->getNumberLevels();
+           amr_level < hierarchy->getNumberOfLevels();
            amr_level++ ) {
 
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level = hierarchy->getPatchLevel(amr_level);
@@ -576,7 +576,7 @@ void ModifiedBratuProblem::setInitialGuess(
    } else {
 
       for (int amr_level = 0;
-           amr_level < hierarchy->getNumberLevels();
+           amr_level < hierarchy->getNumberOfLevels();
            amr_level++ ) {
 
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level = hierarchy->getPatchLevel(amr_level);
@@ -705,7 +705,7 @@ bool ModifiedBratuProblem::checkNewSolution(const int solver_retcode)
    double maxerror = 0.0;
    tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy = d_solution_vector->getPatchHierarchy();
    for (int amr_level = 0;
-        amr_level < hierarchy->getNumberLevels();
+        amr_level < hierarchy->getNumberOfLevels();
         amr_level++ ) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level = hierarchy->getPatchLevel(amr_level);
       double levelerror = 0.0;
@@ -782,7 +782,7 @@ void ModifiedBratuProblem::updateSolution(const double new_time)
    d_new_time = d_current_time = new_time;
 
    for (int amr_level = 0;
-        amr_level < hierarchy->getNumberLevels();
+        amr_level < hierarchy->getNumberOfLevels();
         amr_level++ ) {
 
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level = hierarchy->getPatchLevel(amr_level);
@@ -945,11 +945,11 @@ void ModifiedBratuProblem::resetHierarchyConfiguration(
    tbox::Pointer< hier::PatchHierarchy<NDIM> > patch_hierarchy = hierarchy;  
    (void) coarsest_level;  
    (void) finest_level;  
-   d_flux_coarsen_schedule.resizeArray(patch_hierarchy->getNumberLevels());
-   d_soln_fill_schedule.resizeArray(patch_hierarchy->getNumberLevels());
-   d_soln_coarsen_schedule.resizeArray(patch_hierarchy->getNumberLevels());
+   d_flux_coarsen_schedule.resizeArray(patch_hierarchy->getNumberOfLevels());
+   d_soln_fill_schedule.resizeArray(patch_hierarchy->getNumberOfLevels());
+   d_soln_coarsen_schedule.resizeArray(patch_hierarchy->getNumberOfLevels());
    d_scratch_soln_coarsen_schedule.resizeArray(
-      patch_hierarchy->getNumberLevels());
+      patch_hierarchy->getNumberOfLevels());
    int ln;
    /*
     * Rebuild schedules affected by the hierarchy change.
@@ -1330,15 +1330,15 @@ void ModifiedBratuProblem::evaluateBratuFunction(
 #endif
 #if (NDIM == 1) 
          const tbox::Array<hier::BoundaryBox<NDIM> > bdry_faces =
-            patch_geom->getNodeBoundary();
+            patch_geom->getNodeBoundaries();
 #endif
 #if (NDIM == 2) 
          const tbox::Array<hier::BoundaryBox<NDIM> > bdry_faces =
-            patch_geom->getEdgeBoundary();
+            patch_geom->getEdgeBoundaries();
 #endif
 #if (NDIM == 3)
          const tbox::Array<hier::BoundaryBox<NDIM> > bdry_faces =
-            patch_geom->getFaceBoundary();
+            patch_geom->getFaceBoundaries();
 #endif
          for (int i = 0; i < bdry_faces.getSize(); i++) {
 
@@ -1787,15 +1787,15 @@ ModifiedBratuProblem::jacobianTimesVector(
 
 #if (NDIM == 1)
          const tbox::Array<hier::BoundaryBox<NDIM> > bdry_faces =
-            patch_geom->getNodeBoundary();
+            patch_geom->getNodeBoundaries();
 #endif
 #if (NDIM == 2)
          const tbox::Array<hier::BoundaryBox<NDIM> > bdry_faces =
-            patch_geom->getEdgeBoundary();
+            patch_geom->getEdgeBoundaries();
 #endif
 #if (NDIM == 3)
          const tbox::Array<hier::BoundaryBox<NDIM> > bdry_faces =
-            patch_geom->getFaceBoundary();
+            patch_geom->getFaceBoundaries();
 #endif
          for (int i = 0; i < bdry_faces.getSize(); i++) {
 
@@ -2547,13 +2547,13 @@ void ModifiedBratuProblem::setPhysicalBoundaryConditions(
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > patch_geom = patch.getPatchGeometry();
 #if (NDIM == 1) 
-   const tbox::Array<hier::BoundaryBox<NDIM> > boundary = patch_geom->getNodeBoundary();
+   const tbox::Array<hier::BoundaryBox<NDIM> > boundary = patch_geom->getNodeBoundaries();
 #endif
 #if (NDIM == 2) 
-   const tbox::Array<hier::BoundaryBox<NDIM> > boundary = patch_geom->getEdgeBoundary();
+   const tbox::Array<hier::BoundaryBox<NDIM> > boundary = patch_geom->getEdgeBoundaries();
 #endif
 #if (NDIM == 3)
-   const tbox::Array<hier::BoundaryBox<NDIM> > boundary = patch_geom->getFaceBoundary();
+   const tbox::Array<hier::BoundaryBox<NDIM> > boundary = patch_geom->getFaceBoundaries();
 #endif
 
    /* 
@@ -2752,7 +2752,7 @@ void ModifiedBratuProblem::getLevelEdges(hier::BoxList<NDIM>& boxes,
     */
 
    tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > geometry = patch->getPatchGeometry();
-   tbox::Array<hier::BoundaryBox<NDIM> > boundary_boxes = geometry->getCodimensionBoundary(1);
+   tbox::Array<hier::BoundaryBox<NDIM> > boundary_boxes = geometry->getCodimensionBoundaries(1);
    for (int i=0; i < boundary_boxes.getSize(); i++) {
       boxes.removeIntersections(boundary_boxes[i].getBox());
    }

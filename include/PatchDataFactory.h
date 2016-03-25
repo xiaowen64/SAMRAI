@@ -1,39 +1,23 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/PatchDataFactory.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/variables/PatchDataFactory.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1776 $
-// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Factory abstract base class for creating patch data objects
 //
 
 #ifndef included_hier_PatchDataFactory
 #define included_hier_PatchDataFactory
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_BoxGeometry
 #include "BoxGeometry.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_PatchData
 #include "PatchData.h"
-#endif
-#ifndef included_tbox_Arena
 #include "tbox/Arena.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
 
 
 namespace SAMRAI {

@@ -1,8 +1,8 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/dlbg/LayerEdgeSet.C $
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1846 $
- * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/dlbg/LayerEdgeSet.C $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2141 $
+ * Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
  * Description: Set of edges in distributed box graph.
  */
 
@@ -447,14 +447,14 @@ void LayerEdgeSet<DIM>::findEdges_rbbt( const LayerNodeSet<DIM> &head,
             ++node_iterator ) {
          const Node &node = *node_iterator;
          index_to_node[i] = &node;
-         box_array(i) = node.getBox();
+         box_array[i] = node.getBox();
          if ( sthis_is_finer ) {
-            box_array(i).refine(sthis_other_ratio);
+            box_array[i].refine(sthis_other_ratio);
          }
          else {
             hier::IntVector<DIM> equiv_head_gcw =
                d_gcw*head.getRefinementRatio()/getBaseRefinementRatio();
-            box_array(i).grow(equiv_head_gcw);
+            box_array[i].grow(equiv_head_gcw);
          }
          ++i;
       }
@@ -593,8 +593,8 @@ void LayerEdgeSet<DIM>::findEdges_quadratic( const LayerEdgeSet &other )
       typename NodeContainer::iterator j;
       for ( seq_ndx=0, j=sthis_nodes.begin();
             j!=sthis_nodes.end(); ++j, ++seq_ndx ) {
-         sthis_boxes(seq_ndx) = (*j).getBox();
-         sthis_boxes(seq_ndx).refine(other_sthis_ratio);
+         sthis_boxes[seq_ndx] = (*j).getBox();
+         sthis_boxes[seq_ndx].refine(other_sthis_ratio);
          // (*j).getBox().refine(other_sthis_ratio);
       }
    }
@@ -602,8 +602,8 @@ void LayerEdgeSet<DIM>::findEdges_quadratic( const LayerEdgeSet &other )
       typename NabrContainer::iterator j;
       for ( seq_ndx=0, j=sthis_nodes.begin();
             j!=sthis_nodes.end(); ++j, ++seq_ndx ) {
-         sthis_boxes(seq_ndx) = (*j).getBox();
-         sthis_boxes(seq_ndx).grow(d_gcw);
+         sthis_boxes[seq_ndx] = (*j).getBox();
+         sthis_boxes[seq_ndx].grow(d_gcw);
          // (*j).getBox().grow(d_gcw);
       }
    }
@@ -632,7 +632,7 @@ void LayerEdgeSet<DIM>::findEdges_quadratic( const LayerEdgeSet &other )
 
             const Node &sthis_node = *i_sthis_node;
             // hier::Box<DIM> sthis_box = sthis_node.getBox();
-            const hier::Box<DIM> &sthis_box = sthis_boxes(seq_ndx);
+            const hier::Box<DIM> &sthis_box = sthis_boxes[seq_ndx];
 
             if ( other_box.intersects(sthis_box) ) {
                /*
@@ -1035,15 +1035,15 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
       if ( base_is_finer ) {
          for ( i=0,i_head=nabr_to_head.begin();
                i<nabr_to_head_boxes.size(); ++i,++i_head ) {
-           nabr_to_head_boxes(i) = (*i_head).getBox();
-           nabr_to_head_boxes(i).refine(base_head_ratio);
+           nabr_to_head_boxes[i] = (*i_head).getBox();
+           nabr_to_head_boxes[i].refine(base_head_ratio);
          }
       }
       else {
          for ( i=0,i_head=nabr_to_head.begin();
                i<nabr_to_head_boxes.size(); ++i,++i_head ) {
-           nabr_to_head_boxes(i) = (*i_head).getBox();
-           nabr_to_head_boxes(i).grow(d_partner->d_gcw);
+           nabr_to_head_boxes[i] = (*i_head).getBox();
+           nabr_to_head_boxes[i].grow(d_partner->d_gcw);
          }
       }
 
@@ -1086,7 +1086,7 @@ void LayerEdgeSet<DIM>::bridge_discoverEdges(
 
             if ( discard_self_overlap && head_node == base_node ) continue;
 
-            if ( base_box.intersects(nabr_to_head_boxes(i)) ) {
+            if ( base_box.intersects(nabr_to_head_boxes[i]) ) {
 
                if ( d_parallel_state == GLOBALIZED ) {
                   d_cnect[base_node.getOwnerRank()]

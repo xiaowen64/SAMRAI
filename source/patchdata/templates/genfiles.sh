@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/templates/genfiles.sh $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1863 $
-## Modified:    $LastChangedDate: 2008-01-15 16:53:13 -0800 (Tue, 15 Jan 2008) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2153 $
+## Modified:    $LastChangedDate: 2008-04-25 14:08:49 -0700 (Fri, 25 Apr 2008) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -54,39 +54,31 @@ OutersideGeometry \
 SideGeometry SideOverlap \
 EdgeIndex EdgeIterator \
 SideIndex SideIterator \
-NodeIndex NodeIterator  \
+NodeIndex NodeIterator \
 FaceIndex FaceIterator \
-CellComplexLinearTimeInterpolateOp \
-CellDoubleLinearTimeInterpolateOp CellFloatLinearTimeInterpolateOp \
-OutersideComplexLinearTimeInterpolateOp \
-OutersideDoubleLinearTimeInterpolateOp \
-OutersideFloatLinearTimeInterpolateOp \
-EdgeComplexLinearTimeInterpolateOp EdgeDoubleLinearTimeInterpolateOp \
-EdgeFloatLinearTimeInterpolateOp SideComplexLinearTimeInterpolateOp \
-SideDoubleLinearTimeInterpolateOp SideFloatLinearTimeInterpolateOp \
-NodeComplexLinearTimeInterpolateOp NodeDoubleLinearTimeInterpolateOp \
-NodeFloatLinearTimeInterpolateOp \
-OuterfaceComplexLinearTimeInterpolateOp \
-OuterfaceDoubleLinearTimeInterpolateOp \
-OuterfaceFloatLinearTimeInterpolateOp \
-FaceComplexLinearTimeInterpolateOp FaceDoubleLinearTimeInterpolateOp \
-FaceFloatLinearTimeInterpolateOp CellComplexConstantRefine \
-CellDoubleConstantRefine CellFloatConstantRefine \
-CellIntegerConstantRefine SideComplexConstantRefine \
-SideDoubleConstantRefine SideFloatConstantRefine \
-SideIntegerConstantRefine EdgeComplexConstantRefine \
-EdgeDoubleConstantRefine EdgeFloatConstantRefine \
-EdgeIntegerConstantRefine OuternodeDoubleConstantCoarsen \
-NodeComplexInjection \
-NodeDoubleInjection NodeFloatInjection \
-NodeIntegerInjection OuterfaceComplexConstantRefine \
-OuterfaceDoubleConstantRefine OuterfaceFloatConstantRefine \
-OuterfaceIntegerConstantRefine FaceComplexConstantRefine \
-FaceDoubleConstantRefine FaceFloatConstantRefine \
-FaceIntegerConstantRefine
+OuternodeDoubleConstantCoarsen;
 do
   ${MT} default.filenames ./tmpXd pdat $t NDIM
 done
+
+for g in Cell Side Outerside Edge Node Outerface Face; do
+    for t in Complex Double Float; do
+	${MT} ${t}.filenames ./tmpXd pdat ${g}${t}LinearTimeInterpolateOp NDIM
+    done
+done
+
+for g in Cell Side Edge Outerface Face; do 
+    for t in Complex Double Float Integer; do
+	${MT} ${t}.filenames ./tmpXd pdat ${g}${t}ConstantRefine NDIM
+    done
+done
+
+for g in Node; do 
+    for t in Complex Double Float Integer; do
+	${MT} ${t}.filenames ./tmpXd pdat ${g}${t}Injection NDIM
+    done
+done
+
 
 # NonDim
 for t in bool char dcomplex double int float; do

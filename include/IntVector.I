@@ -1,15 +1,13 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/IntVector.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/IntVector.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2143 $
+// Modified:	$LastChangedDate: 2008-04-23 09:37:15 -0700 (Wed, 23 Apr 2008) $
 // Description:	A n-dimensional integer vector
 //
 
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 
 #include <iostream>
@@ -34,10 +32,6 @@ IntVector<DIM>::IntVector(const int value)
 }
 
 
-#if INCLUDE_DEPRACATED < 2
-// SGS These are for backward compatiblity
-// Is there a way to signal this at compile time...seem to recall
-// seeing that done somewhere in STL code.
 template<int DIM> inline 
 IntVector<DIM>::IntVector(const int i, const int j)
 {
@@ -73,7 +67,6 @@ IntVector<DIM>::IntVector(const int i, const int j, const int k)
       d_vector[DIM > 2 ? 2 : 0] = k;
    }
 }
-#endif
 
 template<int DIM> inline
 IntVector<DIM>::IntVector(const tbox::Array<int>& a)

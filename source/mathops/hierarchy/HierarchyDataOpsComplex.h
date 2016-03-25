@@ -1,31 +1,23 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/hierarchy/HierarchyDataOpsComplex.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/hierarchy/HierarchyDataOpsComplex.h $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Interface to operations for complex data on hierarchy.
 //
 
 #ifndef included_math_HierarchyDataOpsComplex
 #define included_math_HierarchyDataOpsComplex
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_tbox_Complex
 #include "tbox/Complex.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
 
 namespace SAMRAI {
     namespace math {

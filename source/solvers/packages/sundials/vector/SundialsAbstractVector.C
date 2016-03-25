@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/vector/SundialsAbstractVector.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/vector/SundialsAbstractVector.C $
 // Package:     SAMRAI solvers package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1892 $
-// Modified:    $LastChangedDate: 2008-01-23 08:29:36 -0800 (Wed, 23 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2140 $
+// Modified:    $LastChangedDate: 2008-04-22 11:28:45 -0700 (Tue, 22 Apr 2008) $
 // Description: Interface to C++ vector implementation for Sundials package.
 //
 
@@ -11,7 +11,7 @@
 
 #include <cstdlib>
 
-#include <tbox/Utilities.h>
+#include "tbox/Utilities.h"
 
 #ifdef HAVE_SUNDIALS
 
@@ -33,13 +33,14 @@ SundialsAbstractVector::SundialsAbstractVector()
 
 SundialsAbstractVector::~SundialsAbstractVector()
 {
-#if 0
-   if(d_n_vector -> ops)
-      free(d_n_vector -> ops);
-
-   if(d_n_vector)
+   if(d_n_vector) {
+      if(d_n_vector -> ops) {
+	 free(d_n_vector -> ops);
+	 d_n_vector -> ops = NULL;
+      }
       free(d_n_vector);
-#endif
+      d_n_vector = NULL;
+   }
 }
 
 
@@ -101,9 +102,9 @@ N_Vector SundialsAbstractVector::N_VClone_SAMRAI(N_Vector w)
 /* Free vector structure and associated data. */ 
 void SundialsAbstractVector::N_VDestroy_SAMRAI(N_Vector v)
 {
-   SABSVEC_CAST(v)->freeVector();
-   free(v->ops); v->ops = NULL;
-   free(v); v = NULL;
+   if(v) {
+      SABSVEC_CAST(v)->freeVector();
+   }
 }
 
 /* Set z = a * x + b * y */ 

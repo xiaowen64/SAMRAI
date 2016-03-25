@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/nonlinear/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/nonlinear/main.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1806 $
-// Modified:    $LastChangedDate: 2007-12-18 22:50:36 -0800 (Tue, 18 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1981 $
+// Modified:    $LastChangedDate: 2008-02-13 11:09:35 -0800 (Wed, 13 Feb 2008) $
 // Description: Main program for modified-Bratu problem
 //
 
@@ -12,13 +12,13 @@
 #include <fstream>
 #include <string>
 #include <sys/stat.h>
+#include <string>
 using namespace std;
-
-#include "tbox/IOStream.h"
 
 /*
  * Headers for basic SAMRAI objects used in this sample code.
  */
+#include "tbox/IOStream.h"
 #include "BoxArray.h"
 #include "BoxList.h"
 #include "tbox/Database.h"
@@ -32,8 +32,6 @@ using namespace std;
 #include "tbox/SAMRAIManager.h"
 #include "tbox/Array.h"
 #include "tbox/SAMRAI_MPI.h"
-#include <string>
-using namespace std;
 #define included_String
 #include "tbox/Utilities.h"
 #include "tbox/Timer.h"
@@ -67,75 +65,77 @@ using namespace std;
 
 using namespace SAMRAI;
 
-/*
-************************************************************************
-*                                                                      *
-* This is the main program for a sample application that employs       *
-* implicit time integration on an AMR patch hierarchy and requires     *
-* a nonlinear solver to advance the solution at each time step.        *
-* The problem to be solved is:                                         *
-*                                                                      *
-*        du/dt = div(D(x)*grad(u)) + lambda*exp(u) + f(x,u)            *
-*                                                                      *
-* The application program is constructed by composing a variety of     *
-* algorithm objects found in SAMRAI plus numerical operations that     *
-* are specific to this application.  The following discussion          *
-* summarizes these objects.                                            *
-*                                                                      *
-*    hier::PatchHierarchy<NDIM> - A container for the AMR patch hierarchy and      *
-*       the data on the grid.                                          *
-*                                                                      *
-*    geom::CartesianGridGeometry<NDIM> - Defines and maintains the Cartesian       *
-*       coordinate system on the grid.  The hier::PatchHierarchy<NDIM>             *
-*       maintains a reference to this object.                          *
-*                                                                      *
-* The implicit integrator algorithm uses these two components to       *
-* integrate data one timestep.  Time-stepping is done in the main      *
-* routine. This integrator uses the same timestep across all patches,  *
-* regardless of the refinement.                                        *
-*                                                                      *
-*    algs::ImplicitIntegrator<NDIM> - advances solution on patches.                *
-*             Controls integration of quantities over entire patch     *
-*             hierarchy. Takes the user-defined class that defines     *
-*             patch operations (ModifiedBratuProblem in this case)     *
-*           as an argument.                                            *
-*                                                                      *
-* The user-supplied object defines characteristics and operations to   *
-* be carried out on each patch.  We pass this object to the integrator *
-* which will orchestrate the integration on all patches.               *
-*                                                                      *
-*    ModifiedBratuProblem - Defines variables and numerical routines   *
-*            on the hierarchy.  This includes routines needed by the   *
-*          implicit integrator as well as nonlinear solvers used       *
-*          by the integrator.                                          *
-*                                                                      *
-*    mesh::GriddingAlgorithm<NDIM> - Drives the AMR patch hierarchy generation     *
-*       and regridding procedures.  This object maintains              *
-*       references to three other algorithmic objects with             *
-*       which it is configured when they are passed into its           *
-*       constructor.   They are:                                       *
-*                                                                      *
-*       mesh::BergerRigoutsos<NDIM> - Clusters cells tagged for refinement on a    *
-*          patch level into a collection of logically-rectangular      *
-*          box domains.                                                *
-*                                                                      *
-*       mesh::LoadBalancer<NDIM> - Processes the boxes generated by the            *
-*          mesh::BergerRigoutsos<NDIM> algorithm into a configuration from         *
-*          which patches are contructed.  The routines in this         *
-*          class assume a spatially-uniform workload distribution;     *
-*          thus, they attempt to produce a collection of boxes         *
-*          each of which contains the same number of cells.  The       *
-*          load balancer also assigns patches to processors.           *
-*                                                                      *
-*       mesh::StandardTagAndInitialize<NDIM> - Couples the gridding algorithm to   *
-*          the ModifiedBratuProblem class which selects cells for      *
-*          refinement based on criteria defined specifically for       *
-*          the problem.  This object maintains a pointer to the        *
-*          ModifiedBratuProblem object, which is passed into its       *
-*          constructor, for this purpose.                              *
-*                                                                      *
-************************************************************************
-*/
+/*!
+ * @brief Main program for nonlinear example.
+ *                                                                      
+ * This is the main program for a sample application that employs       
+ * implicit time integration on an AMR patch hierarchy and requires     
+ * a nonlinear solver to advance the solution at each time step.        
+ * The problem to be solved is:                                         
+ *                                                                    
+ *        du/dt = div(D(x)*grad(u)) + lambda*exp(u) + f(x,u)           
+ *                                                                     
+ * The application program is constructed by composing a variety of    
+ * algorithm objects found in SAMRAI plus numerical operations that     
+ * are specific to this application.  The following discussion          
+ * summarizes these objects.                                            
+ *                                                                      
+ *    hier::PatchHierarchy<NDIM> - A container for the AMR patch        
+ *        hierarchy and the data on the grid.                           
+ *                                                                      
+ *    geom::CartesianGridGeometry<NDIM> - Defines and maintains the     
+ *       Cartesian coordinate system on the grid.  The                  
+ *       hier::PatchHierarchy<NDIM> maintains a reference to this       
+ *       object.                                                        
+ *                                                                      
+ * The implicit integrator algorithm uses these two components to       
+ * integrate data one timestep.  Time-stepping is done in the main      
+ * routine. This integrator uses the same timestep across all patches,  
+ * regardless of the refinement.                                        
+ *                                                                     
+ *    algs::ImplicitIntegrator<NDIM> - advances solution on patches.    
+ *             Controls integration of quantities over entire patch     
+ *             hierarchy. Takes the user-defined class that defines     
+ *             patch operations (ModifiedBratuProblem in this case)     
+ *           as an argument.                                            
+ *                                                                      
+ * The user-supplied object defines characteristics and operations to   
+ * be carried out on each patch.  We pass this object to the integrator 
+ * which will orchestrate the integration on all patches.               
+ *                                                                      
+ *    ModifiedBratuProblem - Defines variables and numerical routines   
+ *            on the hierarchy.  This includes routines needed by the   
+ *          implicit integrator as well as nonlinear solvers used       
+ *          by the integrator.                                          
+ *                                                                      
+ *    mesh::GriddingAlgorithm<NDIM> - Drives the AMR patch hierarchy    
+ *       generation and regridding procedures.  This object maintains   
+ *       references to three other algorithmic objects with             
+ *       which it is configured when they are passed into its           
+ *       constructor.   They are:                                       
+ *                                                                      
+ *       mesh::BergerRigoutsos<NDIM> - Clusters cells tagged for        
+ *          refinement on a patch level into a collection of            
+ *          logically-rectangular box domains.                          
+ *                                                                      
+ *       mesh::LoadBalancer<NDIM> - Processes the boxes generated by    
+ *          the mesh::BergerRigoutsos<NDIM> algorithm into a            
+ *          configuration from                                          
+ *          which patches are contructed.  The routines in this         
+ *          class assume a spatially-uniform workload distribution;     
+ *          thus, they attempt to produce a collection of boxes         
+ *          each of which contains the same number of cells.  The       
+ *          load balancer also assigns patches to processors.           
+ *                                                                      
+ *       mesh::StandardTagAndInitialize<NDIM> -                         
+ *          Couples the gridding algorithm to                           
+ *          the ModifiedBratuProblem class which selects cells for      
+ *          refinement based on criteria defined specifically for       
+ *          the problem.  This object maintains a pointer to the        
+ *          ModifiedBratuProblem object, which is passed into its       
+ *          constructor, for this purpose.                              
+ *                                                                      
+ */
 
 int main( int argc, char *argv[] )
 {

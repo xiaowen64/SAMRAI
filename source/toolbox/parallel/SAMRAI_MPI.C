@@ -1,14 +1,15 @@
 //
-// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/SAMRAI_MPI.C $
+// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/SAMRAI_MPI.C $
 // Package:  SAMRAI toolbox
-// Copyright:  (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:  $LastChangedRevision: 1704 $
-// Modified:  $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:  (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:  $LastChangedRevision: 2172 $
+// Modified:  $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description:  Simple utility class for interfacing with MPI
 //
 
 
 #include <stdlib.h>
+#include <string.h>
 
 #include <string>
 using namespace std;
@@ -44,7 +45,7 @@ int      SAMRAI_MPI::s_incoming_messages = 0;
 int      SAMRAI_MPI::s_incoming_bytes    = 0;
 int      SAMRAI_MPI::s_initialized       = 0; 
 
-#if HAVE_MPI
+#ifdef HAVE_MPI
 SAMRAI_MPI::comm SAMRAI_MPI::commWorld = MPI_COMM_WORLD;
 SAMRAI_MPI::comm SAMRAI_MPI::commNull = MPI_COMM_NULL;
 #else
@@ -52,7 +53,7 @@ SAMRAI_MPI::comm SAMRAI_MPI::commWorld = 0;
 SAMRAI_MPI::comm SAMRAI_MPI::commNull = -1;
 #endif
 
-bool SAMRAI_MPI::s_call_abort_in_serial_instead_of_exit = true;
+bool SAMRAI_MPI::s_call_abort_in_serial_instead_of_exit = false;
 
 /*
 **************************************************************************

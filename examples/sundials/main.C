@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/sundials/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/sundials/main.C $
 // Package:     SAMRAI application
 // Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1749 $
-// Modified:    $LastChangedDate: 2007-12-10 15:14:02 -0800 (Mon, 10 Dec 2007) $
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Main program for testing Sundials/SAMRAI interface.
 //
 
@@ -282,7 +282,7 @@ int main( int argc, char *argv[] )
 	 = hierarchy->getPatchLevel(0);
       hier::BoxArray<NDIM> level_0_boxes = level_zero->getBoxes();
       for (int i = 0; i < level_0_boxes.getNumberOfBoxes(); i++) {
-	 neq += level_0_boxes.getBox(i).size();
+	 neq += level_0_boxes[i].size();
       }
       cvode_solver->setIterationType(uses_newton ? CV_NEWTON : CV_FUNCTIONAL);
       //cvode_solver->setToleranceType(SV); // this is in craig's code, but
@@ -315,7 +315,7 @@ int main( int argc, char *argv[] )
 	 tbox::pout << "Initial solution vector y() at initial time: " << endl;
 	 int ln;
 	 tbox::pout << "y(" << init_time << "): "<< endl;
-	 for (ln = 0; ln < init_hierarchy->getNumberLevels(); ln++) {
+	 for (ln = 0; ln < init_hierarchy->getNumberOfLevels(); ln++) {
 	    tbox::Pointer<hier::PatchLevel<NDIM> > level;
          
 	    level = init_hierarchy->getPatchLevel(ln);
@@ -426,7 +426,7 @@ int main( int argc, char *argv[] )
 	 if ( solution_logging ) {
 	    tbox::plog << "y(" << final_time << "): "<< endl << endl;
 	    t_log_dump->start();
-	    for (int ln = 0; ln < result_hierarchy->getNumberLevels(); ln++)
+	    for (int ln = 0; ln < result_hierarchy->getNumberOfLevels(); ln++)
 	    {
 	       tbox::Pointer<hier::PatchLevel<NDIM> > level;
             

@@ -1,11 +1,11 @@
 #!/bin/sh
 
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/testtools/testcount.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/testtools/testcount.sh $
 ## Package:     SAMRAI test
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Revision:    $LastChangedVersion$
-## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 ## Description: script for testing the number of tests passed
 ##
 

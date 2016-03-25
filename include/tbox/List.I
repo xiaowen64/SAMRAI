@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/List.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/List.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description:	A simple doubly-linked list template class
 //
 
@@ -207,7 +207,7 @@ bool List<TYPE>::isEmpty() const
 
 template <class TYPE>
 inline
-int List<TYPE>::getNumberItems() const
+int List<TYPE>::getNumberOfItems() const
 {
    return(d_number_items);
 }

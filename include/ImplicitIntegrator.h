@@ -1,44 +1,26 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/implicit/ImplicitIntegrator.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/implicit/ImplicitIntegrator.h $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2122 $
+// Modified:    $LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 // Description: Implicit time integration manager class.
 //
 
 #ifndef included_algs_ImplicitIntegrator
 #define included_algs_ImplicitIntegrator
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_algs_ImplicitEquationStrategy
-#include "ImplicitEquationStrategy.h"
-#endif
-#ifndef included_solv_NonlinearSolverStrategy
-#include "NonlinearSolverStrategy.h"
-#endif
-#ifndef included_solv_SAMRAIVectorReal
-#include "SAMRAIVectorReal.h"
-#endif
-#ifndef included_hier_PatchHierarchy
-#include "PatchHierarchy.h"
-#endif
-#ifndef included_tbox_InputDatabase
-#include "tbox/InputDatabase.h"
-#endif
-#ifndef included_tbox_Pointer
-#include "tbox/Pointer.h"
-#endif
-#ifndef included_String
 #include <string>
-#define included_String
-#endif
-#ifndef included_tbox_Serializable
+
+#include "tbox/Database.h"
+#include "tbox/Pointer.h"
 #include "tbox/Serializable.h"
-#endif
+#include "ImplicitEquationStrategy.h"
+#include "NonlinearSolverStrategy.h"
+#include "SAMRAIVectorReal.h"
+#include "PatchHierarchy.h"
 
 namespace SAMRAI {
     namespace algs {
@@ -235,7 +217,7 @@ private:
     *
     * When assertion checking is active, the database pointer must be non-null.
     */
-   void getFromInput(tbox::Pointer<tbox::InputDatabase> db);
+   void getFromInput(tbox::Pointer<tbox::Database> db);
 
    /*
     * Read object state from restart database and initialize class members.

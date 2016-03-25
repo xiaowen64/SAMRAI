@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/CartesianVizamraiDataWriter.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/CartesianVizamraiDataWriter.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Simple tool to facilitate dumping data to file for Vizamrai
 //
 
@@ -811,7 +811,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::printClassData(std::ost
    os << "d_directory_name = " << d_directory_name << std::endl;
    os << "d_plot_items list..." << std::endl; 
    os << "Number of plot items = " 
-      << d_plot_items.getNumberItems() << std::endl; 
+      << d_plot_items.getNumberOfItems() << std::endl; 
    for (typename tbox::List<VizamraiItem<DIM> >::Iterator ipi(d_plot_items); 
         ipi; ipi++) {
       os << "   Name = " << ipi().d_variable_name << std::endl;
@@ -939,7 +939,7 @@ template<int DIM> void CartesianVizamraiDataWriter<DIM>::writeVizamraiHeaderInfo
       file << num_outboxes;
       file << d_plot_type;
 
-      file << d_plot_items.getNumberItems();
+      file << d_plot_items.getNumberOfItems();
 
       for (typename tbox::List<VizamraiItem<DIM> >::Iterator ipi(d_plot_items); 
            ipi; ipi++) {
@@ -1005,7 +1005,7 @@ template<int DIM> int CartesianVizamraiDataWriter<DIM>::computeOutputBoxes(
          hier::BoxList<DIM>& patch_outboxes = outboxes[ln][ilb];
 
          for (typename hier::BoxList<DIM>::Iterator iob(tmp_outboxes); iob; iob++) {
-            hier::Box<DIM> intersection = level_boxes(ilb) * iob(); 
+            hier::Box<DIM> intersection = level_boxes[ilb] * iob(); 
             if (!intersection.empty()) {
                patch_outboxes.appendItem(intersection);
                num_outboxes++;

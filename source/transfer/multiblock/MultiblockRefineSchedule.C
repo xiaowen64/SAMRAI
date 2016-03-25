@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/transfer/multiblock/MultiblockRefineSchedule.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefineSchedule.C $
 // Package:     SAMRAI multiblock package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -62,27 +62,27 @@ MultiblockRefineSchedule<DIM>::MultiblockRefineSchedule(
 
    d_multiblock_dst_level = dst_level;
 
-   d_single_block_fill_local.resizeArray(multiblock->getNumberBlocks());
-   d_local_fill_only.resizeArray(multiblock->getNumberBlocks());
-   d_unfilled_boxes.resizeArray(multiblock->getNumberBlocks());
-   d_multiblock_coarse_scratch_level.resizeArray(multiblock->getNumberBlocks());
-   d_multiblock_coarse_schedule.resizeArray(multiblock->getNumberBlocks());
-   d_coarse_selector.resizeArray(multiblock->getNumberBlocks());
+   d_single_block_fill_local.resizeArray(multiblock->getNumberOfBlocks());
+   d_local_fill_only.resizeArray(multiblock->getNumberOfBlocks());
+   d_unfilled_boxes.resizeArray(multiblock->getNumberOfBlocks());
+   d_multiblock_coarse_scratch_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_multiblock_coarse_schedule.resizeArray(multiblock->getNumberOfBlocks());
+   d_coarse_selector.resizeArray(multiblock->getNumberOfBlocks());
 
    d_multiblock_strategy = strategy;
 
-   d_neighbor_single_block_refine_schedule.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_ghost_level.resizeArray(multiblock->getNumberBlocks());
-   d_finalize_ghost_level.resizeArray(multiblock->getNumberBlocks());
-   d_finalize_ghost_patch_numbers.resizeArray(multiblock->getNumberBlocks());
-   d_finalize_ghost_num_src_patches.resizeArray(multiblock->getNumberBlocks());
+   d_neighbor_single_block_refine_schedule.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_ghost_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_finalize_ghost_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_finalize_ghost_patch_numbers.resizeArray(multiblock->getNumberOfBlocks());
+   d_finalize_ghost_num_src_patches.resizeArray(multiblock->getNumberOfBlocks());
 
-   d_neighbor_copy_only.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_unfilled_boxes.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_multiblock_coarse_level.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_multiblock_coarse_schedule.resizeArray(multiblock->getNumberBlocks());
+   d_neighbor_copy_only.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_unfilled_boxes.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_multiblock_coarse_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_multiblock_coarse_schedule.resizeArray(multiblock->getNumberOfBlocks());
 
-   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
       d_coarse_selector[nb] = new hier::ComponentSelector();
       d_coarse_selector[nb]->clrAllFlags();
 
@@ -184,25 +184,25 @@ MultiblockRefineSchedule<DIM>::MultiblockRefineSchedule(
 
    d_multiblock_strategy = strategy;
 
-   d_single_block_fill_local.resizeArray(multiblock->getNumberBlocks());
-   d_local_fill_only.resizeArray(multiblock->getNumberBlocks());
-   d_multiblock_coarse_schedule.resizeArray(multiblock->getNumberBlocks());
-   d_coarse_selector.resizeArray(multiblock->getNumberBlocks());
-   d_unfilled_boxes.resizeArray(multiblock->getNumberBlocks());
-   d_multiblock_coarse_scratch_level.resizeArray(multiblock->getNumberBlocks());
+   d_single_block_fill_local.resizeArray(multiblock->getNumberOfBlocks());
+   d_local_fill_only.resizeArray(multiblock->getNumberOfBlocks());
+   d_multiblock_coarse_schedule.resizeArray(multiblock->getNumberOfBlocks());
+   d_coarse_selector.resizeArray(multiblock->getNumberOfBlocks());
+   d_unfilled_boxes.resizeArray(multiblock->getNumberOfBlocks());
+   d_multiblock_coarse_scratch_level.resizeArray(multiblock->getNumberOfBlocks());
 
-   d_neighbor_single_block_refine_schedule.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_ghost_level.resizeArray(multiblock->getNumberBlocks());
-   d_finalize_ghost_level.resizeArray(multiblock->getNumberBlocks());
-   d_finalize_ghost_patch_numbers.resizeArray(multiblock->getNumberBlocks());
-   d_finalize_ghost_num_src_patches.resizeArray(multiblock->getNumberBlocks());
+   d_neighbor_single_block_refine_schedule.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_ghost_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_finalize_ghost_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_finalize_ghost_patch_numbers.resizeArray(multiblock->getNumberOfBlocks());
+   d_finalize_ghost_num_src_patches.resizeArray(multiblock->getNumberOfBlocks());
 
-   d_neighbor_copy_only.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_unfilled_boxes.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_multiblock_coarse_level.resizeArray(multiblock->getNumberBlocks());
-   d_neighbor_multiblock_coarse_schedule.resizeArray(multiblock->getNumberBlocks());
+   d_neighbor_copy_only.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_unfilled_boxes.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_multiblock_coarse_level.resizeArray(multiblock->getNumberOfBlocks());
+   d_neighbor_multiblock_coarse_schedule.resizeArray(multiblock->getNumberOfBlocks());
 
-   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       d_coarse_selector[nb] = new hier::ComponentSelector();
       d_coarse_selector[nb]->clrAllFlags();
@@ -277,7 +277,7 @@ MultiblockRefineSchedule<DIM>::MultiblockRefineSchedule(
             int num_tc_boxes = 0;
             for (int j = 0; j < dst_patch_level->getNumberOfPatches(); j++) {
                
-               hier::Box<DIM> dst_box(dst_patch_level->getBoxes()(j));
+               hier::Box<DIM> dst_box(dst_patch_level->getBoxes()[j]);
                dst_box.grow(gcw);
                hier::BoxList<DIM> dst_box_list;
                dst_box_list.unionBoxes(dst_box);
@@ -290,7 +290,7 @@ MultiblockRefineSchedule<DIM>::MultiblockRefineSchedule(
                      tc_boxes.resizeBoxArray(num_tc_boxes*2);
                      map_array.resizeArray(num_tc_boxes*2);
                   }
-                  tc_boxes(num_tc_boxes) = db();
+                  tc_boxes[num_tc_boxes] = db();
                   map_array[num_tc_boxes] =
                      dst_patch_level->getMappingForPatch(j); 
                      num_tc_boxes++;
@@ -406,7 +406,7 @@ void MultiblockRefineSchedule<DIM>::createInterblockSchedules(
    bool use_time_refinement)
 {
 
-   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       const int ln = level_number;
 
@@ -417,7 +417,7 @@ void MultiblockRefineSchedule<DIM>::createInterblockSchedules(
          dst_level->getPatchLevelForBlock(nb);
 
       if (!level.isNull()) {
-         int num_neighbors = d_multiblock_hierarchy->getNumberNeighbors(nb);
+         int num_neighbors = d_multiblock_hierarchy->getNumberOfNeighbors(nb);
 
          /*
           * resize arrays to proper size if needed
@@ -500,7 +500,7 @@ void MultiblockRefineSchedule<DIM>::createInterblockSchedules(
 
             for (int p = 0; p < level->getNumberOfPatches(); p++) {
                if (level->patchTouchesRegularBoundary(p)) {
-                  hier::Box<DIM> dst_grow_box(level->getBoxes()(p));
+                  hier::Box<DIM> dst_grow_box(level->getBoxes()[p]);
                   dst_grow_box.grow(ghost_width);
 
                   hier::BoxList<DIM> tmp_list(trans_neighbor_list);
@@ -556,7 +556,7 @@ void MultiblockRefineSchedule<DIM>::createInterblockSchedules(
                            finalize_map_array.resizeArray(
                               2*finalize_box_array.getNumberOfBoxes());
                         }
-                        finalize_box_array(num_finalize_boxes) = bli();
+                        finalize_box_array[num_finalize_boxes] = bli();
                         finalize_map_array[num_finalize_boxes] = map_num;
                         num_finalize_boxes++;
                      }
@@ -611,7 +611,7 @@ void MultiblockRefineSchedule<DIM>::createInterblockSchedules(
 
                   tbox::Pointer< hier::PatchLevel<DIM> > neighbor_level;
 
-                  if (neighbor_hierarchy->getNumberLevels() > ln) {
+                  if (neighbor_hierarchy->getNumberOfLevels() > ln) {
                      neighbor_level = neighbor_hierarchy->getPatchLevel(ln);
                   } else {
                      neighbor_level.setNull();
@@ -790,16 +790,16 @@ void MultiblockRefineSchedule<DIM>::fillData(double fill_time,
          d_multiblock_strategy->setFillingCoarseScratch(true);
          is_scr_recursive = true;
       }
-      fill_crse_scr_selector.resizeArray(d_multiblock_hierarchy->getNumberBlocks());
+      fill_crse_scr_selector.resizeArray(d_multiblock_hierarchy->getNumberOfBlocks());
    }
 
    tbox::Array<hier::ComponentSelector>
-      allocate_scr_vector(d_multiblock_hierarchy->getNumberBlocks());
+      allocate_scr_vector(d_multiblock_hierarchy->getNumberOfBlocks());
 
    int nb;
 
    if (!filling_coarse_scratch) {
-      for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+      for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
          tbox::Pointer< hier::PatchLevel<DIM> > dst_patch_level=
             d_multiblock_dst_level->getPatchLevelForBlock(nb);
 
@@ -812,7 +812,7 @@ void MultiblockRefineSchedule<DIM>::fillData(double fill_time,
       }
    }
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       if (d_local_fill_only[nb]) {
          if (!d_single_block_fill_local[nb].isNull()) {
@@ -886,7 +886,7 @@ void MultiblockRefineSchedule<DIM>::fillData(double fill_time,
    }
 
    if (d_multiblock_strategy != NULL) {
-      for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+      for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
          tbox::Pointer< hier::PatchLevel<DIM> > level =
             d_multiblock_dst_level->getPatchLevelForBlock(nb);
@@ -1014,7 +1014,7 @@ void MultiblockRefineSchedule<DIM>::fillData(double fill_time,
                   const tbox::Pointer< xfer::RefineClasses<DIM> >
                      equiv_classes = d_single_block_refine_alg->getEquivalenceClasses();
                   int num_classes =
-                     equiv_classes->getNumberEquivalenceClasses();
+                     equiv_classes->getNumberOfEquivalenceClasses();
 
                   if (d_using_standard_transaction) {
                      copyBetweenBlocks(d_finalize_ghost_level[nb][nc],
@@ -1140,7 +1140,7 @@ void MultiblockRefineSchedule<DIM>::fillData(double fill_time,
    }
 
    if (!filling_coarse_scratch) {
-      for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+      for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
          tbox::Pointer< hier::PatchLevel<DIM> > dst_patch_level=
             d_multiblock_dst_level->getPatchLevelForBlock(nb);
@@ -1197,7 +1197,7 @@ void MultiblockRefineSchedule<DIM>::fillSingularityBoundary(
                patch->getPatchGeometry();
 
             tbox::Array<hier::BoundaryBox<DIM> > nboxes =
-               pgeom->getNodeBoundary();
+               pgeom->getNodeBoundaries();
 
             if (nboxes.getSize()) {
                for (int bb = 0; bb < nboxes.getSize(); bb++) {
@@ -1217,7 +1217,7 @@ void MultiblockRefineSchedule<DIM>::fillSingularityBoundary(
 
             if (DIM == 3) {
                tbox::Array<hier::BoundaryBox<DIM> > eboxes =
-                  pgeom->getEdgeBoundary();
+                  pgeom->getEdgeBoundaries();
 
                if (eboxes.getSize()) {
                   for (int bb = 0; bb < eboxes.getSize(); bb++) {
@@ -1263,7 +1263,7 @@ void MultiblockRefineSchedule<DIM>::copyBetweenBlocks(
 #endif
 
    const int num_equiv_classes =
-      refine_classes->getNumberEquivalenceClasses();
+      refine_classes->getNumberOfEquivalenceClasses();
 
    for (typename hier::PatchLevel<DIM>::Iterator p(src_level); p; p++) {
       tbox::Pointer< hier::Patch<DIM> > src_patch = src_level->getPatch(p());
@@ -1310,7 +1310,7 @@ void MultiblockRefineSchedule<DIM>::fillBetweenBlocks(
 #endif
 
    const int num_equiv_classes =
-      refine_classes->getNumberEquivalenceClasses();
+      refine_classes->getNumberOfEquivalenceClasses();
 
    for (typename hier::PatchLevel<DIM>::Iterator p(src_level); p; p++) {
       tbox::Pointer< hier::Patch<DIM> > src_patch = src_level->getPatch(p());
@@ -1350,7 +1350,7 @@ void MultiblockRefineSchedule<DIM>::initializeSourceVector(
 {
    int nb;
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       if (!d_single_block_fill_local[nb].isNull()) {
          d_single_block_fill_local[nb]->initializeSourceVector(allocate_vector);
@@ -1358,7 +1358,7 @@ void MultiblockRefineSchedule<DIM>::initializeSourceVector(
       }
    }
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       if (!d_multiblock_coarse_schedule[nb].isNull()) {
          d_multiblock_coarse_schedule[nb]->initializeSourceVector(allocate_vector);
@@ -1521,9 +1521,9 @@ void MultiblockRefineSchedule<DIM>::createNeighborCoarseSchedule(
       coarse_level->getPatchDescriptor()->getMaxGhostWidth();
 
    tbox::Array< tbox::Pointer< hier::PatchLevel<DIM> > >
-      coarse_level_array(d_multiblock_hierarchy->getNumberBlocks());
+      coarse_level_array(d_multiblock_hierarchy->getNumberOfBlocks());
 
-   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
       coarse_level_array[nb].setNull();
    }
 
@@ -1612,9 +1612,9 @@ void MultiblockRefineSchedule<DIM>::createCoarseSchedule(
       coarse_level->getPatchDescriptor()->getMaxGhostWidth();
 
    tbox::Array< tbox::Pointer< hier::PatchLevel<DIM> > >
-      coarse_level_array(d_multiblock_hierarchy->getNumberBlocks());
+      coarse_level_array(d_multiblock_hierarchy->getNumberOfBlocks());
 
-   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
       coarse_level_array[nb].setNull();
    }
 
@@ -1687,7 +1687,7 @@ void MultiblockRefineSchedule<DIM>::findUnfilledBoxes(
    unfilled_boxes.grow(gcw);
    unfilled_boxes.intersectBoxes(pseudo_domain);
 
-   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       tbox::Pointer< hier::PatchLevel<DIM> > patch_level=
          coarse_hierarchy_level->getPatchLevelForBlock(nb);
@@ -1746,7 +1746,7 @@ void MultiblockRefineSchedule<DIM>::constructScratchRefineAlgorithm()
    tbox::Pointer< xfer::RefineClasses<DIM> > scratch_refine_classes =
       new xfer::RefineClasses<DIM>();
 
-   int num_classes = refine_classes->getNumberEquivalenceClasses();
+   int num_classes = refine_classes->getNumberOfEquivalenceClasses();
 
    for (int ne = 0; ne < num_classes; ne++) {
       for (typename tbox::List<typename
@@ -1783,7 +1783,7 @@ MultiblockRefineSchedule<DIM>::copyScratchToDestination(
    const hier::BoxList<DIM>& unfilled_boxes,
    tbox::Pointer< xfer::RefineClasses<DIM> > refine_classes) const
 {
-   const int num_classes = refine_classes->getNumberEquivalenceClasses();
+   const int num_classes = refine_classes->getNumberOfEquivalenceClasses();
 
    tbox::Pointer< hier::PatchDescriptor<DIM> > descriptor =
       level->getPatchDescriptor();
@@ -1985,7 +1985,7 @@ void MultiblockRefineSchedule<DIM>::allocateScratchSpace(
 
    int nb;
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       if (!d_single_block_fill_local[nb].isNull()) {
          d_single_block_fill_local[nb]->allocateScratchSpace(
@@ -1994,7 +1994,7 @@ void MultiblockRefineSchedule<DIM>::allocateScratchSpace(
       }
    }
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
 
       if (!d_multiblock_coarse_schedule[nb].isNull()) {
          d_multiblock_coarse_schedule[nb]->allocateScratchSpace(
@@ -2025,13 +2025,13 @@ MultiblockRefineSchedule<DIM>::getBoundaryFillGhostWidth() const
 
    int nb; 
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
       if (!d_single_block_fill_local[nb].isNull()) {
          return (d_single_block_fill_local[nb]->getBoundaryFillGhostWidth());
       }
    }
 
-   for (nb = 0; nb < d_multiblock_hierarchy->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < d_multiblock_hierarchy->getNumberOfBlocks(); nb++) {
       if (!d_multiblock_coarse_schedule[nb].isNull()) {
          return (d_multiblock_coarse_schedule[nb]->getBoundaryFillGhostWidth());
       }
@@ -2078,7 +2078,7 @@ void MultiblockRefineSchedule<DIM>::initializeDestinationVector(
    const tbox::Pointer< xfer::RefineClasses<DIM> > refine_classes =
       d_single_block_refine_alg->getEquivalenceClasses();
 
-   int num_classes = refine_classes->getNumberEquivalenceClasses();
+   int num_classes = refine_classes->getNumberOfEquivalenceClasses();
 
    for (int ne = 0; ne < num_classes; ne++) {
       for (typename

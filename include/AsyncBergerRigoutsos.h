@@ -1,41 +1,27 @@
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsos.h $
- * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1704 $
- * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/clustering/AsyncBergerRigoutsos.h $
+ * Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 2147 $
+ * Modified:     $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
  * Description:  Asynchronous Berger-Rigoutsos clustering algorithm.
  */
 
 #ifndef included_mesh_AsyncBergerRigoutsos
 #define included_mesh_AsyncBergerRigoutsos
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
-#ifndef included_mesh_BoxGeneratorStrategy
 #include "BoxGeneratorStrategy.h"
-#endif
 
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 namespace SAMRAI {
 namespace mesh {
@@ -194,10 +180,6 @@ private:
 
 }
 }
-
-#ifndef DEBUG_NO_INLINE
-// #include "AsyncBergerRigoutsos.I"
-#endif
 
 #endif  // included_mesh_AsyncBergerRigoutsos
 

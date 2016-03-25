@@ -1,21 +1,17 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/cvode/CVODEAbstractFunctions.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/cvode/CVODEAbstractFunctions.h $
 // Package:     SAMRAI solvers package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1750 $
-// Modified:    $LastChangedDate: 2007-12-10 15:19:17 -0800 (Mon, 10 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Interface to user-specified functions for CVODE package
 //
 
 #ifndef included_solv_CVODEAbstractFunctions
 #define included_solv_CVODEAbstractFunctions
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_solv_SundialsAbstractVector
 #include "SundialsAbstractVector.h"
-#endif
 
 #ifdef HAVE_SUNDIALS
 

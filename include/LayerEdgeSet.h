@@ -1,45 +1,29 @@
 /*
-  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerEdgeSet.h $
-  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:    $LastChangedRevision: 1808 $
-  Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/dlbg/LayerEdgeSet.h $
+  Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 2132 $
+  Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
   Description: Set of edges in distributed box graph.
 */
 
 #ifndef included_hier_LayerEdgeSet
 #define included_hier_LayerEdgeSet
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_LayerNode
 #include "LayerNode.h"
-#endif
 
-#ifndef included_hier_LayerNodeSet
 #include "LayerNodeSet.h"
-#endif
 
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
 
-#ifndef included_tbox_SAMRAI_MPI
 #include "tbox/SAMRAI_MPI.h"
-#endif
 
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 #include <iostream>
 #include <vector>

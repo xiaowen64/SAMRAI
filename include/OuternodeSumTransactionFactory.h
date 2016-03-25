@@ -1,42 +1,24 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/OuternodeSumTransactionFactory.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/femutils/standard/OuternodeSumTransactionFactory.h $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1811 $
-// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Factory for creating outernode sum transaction objects
 //
 
 #ifndef included_algs_OuternodeSumTransactionFactory
 #define included_algs_OuternodeSumTransactionFactory
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Arena
 #include "tbox/Arena.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_BoxOverlap
 #include "BoxOverlap.h"
-#endif
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_xfer_RefineClasses
 #include "RefineClasses.h"
-#endif
-#ifndef included_xfer_RefineTransactionFactory
 #include "RefineTransactionFactory.h"
-#endif
 
 #ifndef NULL
 #define NULL (0)

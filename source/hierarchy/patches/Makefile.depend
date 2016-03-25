@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -145,7 +145,8 @@ ${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 
 FILE_4=BoundaryLookupTable.o
 DEPENDS_4:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Array.I	\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/IntVector.I	\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
@@ -155,7 +156,7 @@ DEPENDS_4:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_4 +=\
-	
+	$(INCLUDE_SAM)/IntVector.C
 endif
 
 ${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
@@ -197,6 +198,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -417,6 +419,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -588,6 +591,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\

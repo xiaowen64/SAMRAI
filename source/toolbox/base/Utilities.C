@@ -1,15 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/Utilities.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/Utilities.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2039 $
+// Modified:    $LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description: Utility functions for error reporting, file manipulation, etc.
 //
 
 #include "tbox/Utilities.h"
 
 #include "tbox/SAMRAI_MPI.h"
+#include "tbox/Logger.h"
 #include "tbox/PIO.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -150,6 +151,30 @@ std::string Utilities::intToString(int num, int min_width)
    return(os.str()); //returns the string form of the stringstream object
 }
 
+std::string Utilities::nodeToString(int num) 
+{
+   return intToString(num, 5);
+}
+
+std::string Utilities::processorToString(int num) 
+{
+   return intToString(num, 5);
+}
+
+
+std::string Utilities::patchToString(int num) {
+   return intToString(num, 4);
+}
+
+
+std::string Utilities::levelToString(int num) {
+   return intToString(num, 4);
+}
+
+std::string Utilities::blockToString(int num) {
+   return intToString(num, 4);
+}
+
 /*
  * Routine that calls abort and prints calling location to error stream.
  */
@@ -157,27 +182,10 @@ void Utilities::abort(const std::string &message,
 	              const std::string &filename, 
 	              const int line) 
 {
-   perr << "Program abort called in file ``" << filename
-        << "'' at line " << line << std::endl;
-   perr << "ERROR MESSAGE: " << std::endl << message.c_str() << std::endl;
-   perr << std::flush;
+   tbox::Logger::getInstance() -> logAbort(message, filename, line);
 
    SAMRAI_MPI::abort();
 }
-
-/*
- * Routine that prints a warning message and calling location to log stream.
- */
-void Utilities::printWarning(const std::string &message, 
-        			  const std::string &filename, 
-        			  const int line) 
-{
-   plog << "Warning in file ``" << filename
-        << "'' at line " << line << std::endl;
-   plog << "WARNING MESSAGE: " << std::endl << message.c_str() << std::endl;
-   plog << std::flush;
-}
-
 
 }
 }

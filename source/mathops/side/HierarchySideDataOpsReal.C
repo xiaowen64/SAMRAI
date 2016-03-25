@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mathops/side/HierarchySideDataOpsReal.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/side/HierarchySideDataOpsReal.C $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Templated operations for real side data on multiple levels.
 //
 
@@ -36,7 +36,7 @@ HierarchySideDataOpsReal<DIM,TYPE>::HierarchySideDataOpsReal(
 #endif
    d_hierarchy = hierarchy;
    if ( (coarsest_level < 0) || (finest_level < 0) ) {
-      if ( d_hierarchy->getNumberLevels() == 0 ) {
+      if ( d_hierarchy->getNumberOfLevels() == 0 ) {
          d_coarsest_level = coarsest_level;
          d_finest_level = finest_level;
       } else {
@@ -98,8 +98,8 @@ void HierarchySideDataOpsReal<DIM,TYPE>::resetLevels(
       for (int nd = 0; nd < DIM; nd++) {
          side_boxes = level->getBoxes();
          for (i = 0; i < n; i++) {
-            side_boxes.getBox(i) =
-               pdat::SideGeometry<DIM>::toSideBox(side_boxes.getBox(i), nd);
+            side_boxes[i] =
+               pdat::SideGeometry<DIM>::toSideBox(side_boxes[i], nd);
          }
          hier::BoxUtilities<DIM>::makeNonOverlappingBoxLists(
                              d_nonoverlapping_side_boxes[nd][ln],

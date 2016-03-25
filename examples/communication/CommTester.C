@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/CommTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/communication/CommTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -253,7 +253,7 @@ void CommTester::createRefineSchedule(
 
    if (d_do_refine) {
 
-      d_refine_schedule.resizeArray(d_patch_hierarchy->getNumberLevels());
+      d_refine_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
       d_refine_schedule[level_number].setNull();
 
       if (   (level_number == 0)
@@ -303,7 +303,7 @@ void CommTester::createCoarsenSchedule(
 
    if (d_do_coarsen && (level_number > 0)) {
 
-      d_coarsen_schedule.resizeArray(d_patch_hierarchy->getNumberLevels());
+      d_coarsen_schedule.resizeArray(d_patch_hierarchy->getNumberOfLevels());
       d_coarsen_schedule[level_number].setNull();
 
       tbox::Pointer<hier::PatchLevel<NDIM> > level = 

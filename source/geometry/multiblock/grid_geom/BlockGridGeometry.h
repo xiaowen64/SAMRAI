@@ -1,7 +1,7 @@
 //
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/geometry/skeleton/grid_geom/BlockGridGeometry.h $
 // Package:	SAMRAI multiblock package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision: 878 $
 // Modified:	$LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $
 // Description: Block grid geometry for an AMR hierarchy.
@@ -10,15 +10,9 @@
 #ifndef included_geom_BlockGridGeometry
 #define included_geom_BlockGridGeometry
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
-#ifndef included_xfer_Geometry
 #include "Geometry.h"
-#endif
 
 namespace SAMRAI {
     namespace geom {

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxList.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxList.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	A list of boxes with basic domain calculus operations
 //
 
@@ -53,7 +53,7 @@ template<int DIM>  BoxList<DIM>::BoxList(const BoxArray<DIM>& array)
 {
    const int n = array.getNumberOfBoxes();
    for (int i = 0; i < n; i++) {
-      appendItem(array.getBox(i));
+      appendItem(array[i]);
    }
 }
 
@@ -374,7 +374,7 @@ template<int DIM> void BoxList<DIM>::heapify(Box<DIM>** heap, const int i, const
 template<int DIM> void BoxList<DIM>::sortDescendingBoxSizes()
 {
    if (!this ->isEmpty()) {
-      const int nboxes = this ->getNumberItems();
+      const int nboxes = this ->getNumberOfItems();
       Box<DIM>** heap = new Box<DIM>*[nboxes];
       int ib = 0;
       for (typename BoxList<DIM>::Iterator lb(*this); lb; lb++) {

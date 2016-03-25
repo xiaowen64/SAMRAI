@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/BoxTree.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxTree.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility class to reduce complexity of box calculus operations.
 //
 
@@ -29,7 +29,7 @@ static void buildTboxArrayFromList(
    tbox::Array<int> &array,
    const tbox::List<int> &list)
 {
-   int len = list.getNumberItems();
+   int len = list.getNumberOfItems();
    array.resizeArray(len);   
    int count = 0;
    for (tbox::List<int>::Iterator j(list); j; j++) {
@@ -62,7 +62,7 @@ template<int DIM>  BoxTree<DIM>::BoxTree(
    tbox::Array<typename BoxTreeNode<DIM>::Triple> box_triples(len);
    for (int i=0; i<len; ++i) {
       int idx = indices[i];
-      box_triples[i].box = boxes(i);
+      box_triples[i].box = boxes[i];
       box_triples[i].idx = idx;
       box_triples[i].owner = box_mapping.getProcessorAssignment(idx);
    }
@@ -86,7 +86,7 @@ template<int DIM>  BoxTree<DIM>::BoxTree(
    tbox::Array<typename BoxTreeNode<DIM>::Triple> box_triples(len);
    for (int i=0; i<len; ++i) {
       int idx = indices[i];
-      box_triples[i].box = boxes(i);
+      box_triples[i].box = boxes[i];
       box_triples[i].idx = idx;
       box_triples[i].owner = -1;
    }
@@ -103,7 +103,7 @@ template<int DIM>  BoxTree<DIM>::BoxTree(
    int len = d_boxes.getNumberOfBoxes();
    tbox::Array<typename BoxTreeNode<DIM>::Triple> box_triples(len);
    for (int i=0; i<len; ++i) {
-      box_triples[i].box = d_boxes(i);
+      box_triples[i].box = d_boxes[i];
       box_triples[i].idx = i;
       box_triples[i].owner = -1;
    }
@@ -210,7 +210,7 @@ template<int DIM> void BoxTree<DIM>::removeIntersections(BoxList<DIM>& fragments
     */
    int len = boxes_in.getNumberOfBoxes();
    for (int k=0; k<len; ++k) {
-      Box<DIM> tryme = boxes_in(k);
+      Box<DIM> tryme = boxes_in[k];
 
       /*
        * Find a shorter list of boxes from "takeaway" that might intersect

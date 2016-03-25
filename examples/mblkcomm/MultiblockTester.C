@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/MultiblockTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/MultiblockTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1746 $
-// Modified:    $LastChangedDate: 2007-12-07 11:05:07 -0800 (Fri, 07 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -415,7 +415,7 @@ bool MultiblockTester::verifyCommunicationResults() const
       tbox::Pointer< hier::MultiblockPatchLevel<NDIM> > level =
          d_patch_hierarchy->getPatchLevel(ln);
 
-      for (int nb = 0; nb < level->getNumberBlocks(); nb++) {
+      for (int nb = 0; nb < level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             level->getPatchLevelForBlock(nb);
 
@@ -473,7 +473,7 @@ void MultiblockTester::initializeLevelData(
 
    level->allocatePatchData(d_patch_data_components, time);
 
-   for (int nb = 0; nb < level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchHierarchy<NDIM> > patch_hierarchy =
          mblk_hierarchy->getHierarchy(nb);
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =

@@ -1,30 +1,20 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Timer.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Timer.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Timer class to track elapsed time in portions of a program.
 //
 
 #ifndef included_tbox_Timer
 #define included_tbox_Timer
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Clock
 #include "tbox/Clock.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String

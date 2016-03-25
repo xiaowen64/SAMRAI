@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxGraphUtilities.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxGraphUtilities.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility class for operations that reduce complexity of box calculus
 //
 
@@ -58,7 +58,7 @@ template<int DIM> void BoxGraphUtilities<DIM>::makeBoxesPlusPeriodicBoxes(
       /*
        * append the unshifted box
        */
-      out_boxes(idx) = in_boxes(i);
+      out_boxes[idx] = in_boxes[i];
       ++idx;
 
       /*
@@ -67,7 +67,7 @@ template<int DIM> void BoxGraphUtilities<DIM>::makeBoxesPlusPeriodicBoxes(
       if (b_num) {
          for (typename tbox::List< IntVector<DIM> >::Iterator
             sh(shifts[i]); sh; sh++) {
-            out_boxes(idx) = Box<DIM>::shift(in_boxes(i), sh());
+            out_boxes[idx] = Box<DIM>::shift(in_boxes[i], sh());
             ++idx;
          }
       }
@@ -118,7 +118,7 @@ template<int DIM> void BoxGraphUtilities<DIM>::makeBoxesPlusPeriodicBoxes(
       /*
        * append the unshifted box
        */
-      out_boxes(idx) = in_boxes(i);
+      out_boxes[idx] = in_boxes[i];
       out_indices[idx] = i;
       ++idx;
 
@@ -128,7 +128,7 @@ template<int DIM> void BoxGraphUtilities<DIM>::makeBoxesPlusPeriodicBoxes(
       if (b_num) {
          for (typename tbox::List< IntVector<DIM> >::Iterator
             sh(shifts[i]); sh; sh++) {
-            out_boxes(idx) = Box<DIM>::shift(in_boxes(i), sh());
+            out_boxes[idx] = Box<DIM>::shift(in_boxes[i], sh());
             out_indices[idx] = i;
             ++idx;
          }
@@ -139,7 +139,7 @@ template<int DIM> void BoxGraphUtilities<DIM>::makeBoxesPlusPeriodicBoxes(
 /*
  * ************************************************************************
  * 
- *  Returns the sum of shifts[j].getNumberItems()
+ *  Returns the sum of shifts[j].getNumberOfItems()
  * 
  * ************************************************************************
  */
@@ -149,7 +149,7 @@ template<int DIM> int BoxGraphUtilities<DIM>::countPeriodicBoxes(
    int count = 0;
    int n = shifts.getSize();
    for (int j=0; j<n; ++j) {
-      count += shifts[j].getNumberItems();
+      count += shifts[j].getNumberOfItems();
    }
   return count;
 }

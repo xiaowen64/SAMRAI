@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/array/ArrayData.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/array/ArrayData.I $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2037 $
+// Modified:	$LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
 // Description:	Templated array data structure supporting patch data types
 //
 
@@ -85,20 +85,6 @@ ArrayData<DIM,TYPE>::operator()(const hier::Index<DIM>& i,
    return(d_array[index]);
 }
 
-
-template<int DIM, class TYPE> inline
-bool ArrayData<DIM,TYPE>::isStandardType()
-{
-   if ( ( typeid(TYPE) == typeid(bool) ) | 
-	( typeid(TYPE) == typeid(char) ) | 
-	( typeid(TYPE) == typeid(double) ) | 
-	( typeid(TYPE) == typeid(float) ) | 
-	( typeid(TYPE) == typeid(int) ) ) {
-      return true;
-   } else {
-      return false;
-   }
-}
 
 template<int DIM, class TYPE>  inline
 size_t ArrayData<DIM,TYPE>::getSizeOfData(

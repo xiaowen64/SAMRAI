@@ -1,7 +1,7 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/Pointer-MultiblockTester.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/Pointer-MultiblockTester.C $
 // Package:	SAMRAI templates
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 //
 
 #include "tbox/Pointer.h"

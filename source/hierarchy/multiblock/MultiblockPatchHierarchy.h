@@ -1,43 +1,27 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/multiblock/MultiblockPatchHierarchy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/multiblock/MultiblockPatchHierarchy.h $
 // Package:     SAMRAI multiblock package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1887 $
-// Modified:    $LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: class to manage multiblocks
 //
 
 #ifndef included_hier_MultiblockPatchHierarchy
 #define included_hier_MultiblockPatchHierarchy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BasePatchHierarchy
 #include "BasePatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_MultiblockGridGeometry
 #include "MultiblockGridGeometry.h"
-#endif
-#ifndef included_hier_MultiblockPatchLevel
 #include "MultiblockPatchLevel.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
 
 
 namespace SAMRAI {
@@ -146,7 +130,7 @@ public:
    /*!
     * @brief Returns the number of blocks in the multiblock domain.
     */
-   int getNumberBlocks() const;
+   int getNumberOfBlocks() const;
 
    /*!
     * @brief Return the number of neighbors a specific block of the Multiblock
@@ -160,7 +144,7 @@ public:
     *
     * @param block_number The block of which the number of neighbors is sought
     */
-   int getNumberNeighbors(const int block_number);
+   int getNumberOfNeighbors(const int block_number);
 
    enum RotationIdentifier
    {
@@ -313,7 +297,7 @@ public:
    /*!
     * Return the number of levels that currently exist in the hierarchy.
     */
-   int getNumberLevels() const;
+   int getNumberOfLevels() const;
 
    /*!
     * @brief Returns true if the array of patch levels contains a patch level

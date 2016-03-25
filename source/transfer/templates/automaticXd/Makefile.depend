@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -77,13 +77,15 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -493,13 +495,15 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -841,6 +845,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1051,6 +1056,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1428,6 +1434,7 @@ DEPENDS_15:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1639,6 +1646,7 @@ DEPENDS_17:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1874,13 +1882,15 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2089,13 +2099,15 @@ DEPENDS_21:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2230,13 +2242,15 @@ DEPENDS_22:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2367,13 +2381,15 @@ DEPENDS_23:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2504,13 +2520,15 @@ DEPENDS_24:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -2632,13 +2650,15 @@ DEPENDS_25:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -3034,13 +3054,15 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -3776,13 +3798,15 @@ DEPENDS_38:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -3898,6 +3922,7 @@ DEPENDS_39:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4029,13 +4054,15 @@ DEPENDS_40:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -4154,13 +4181,15 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -4383,13 +4412,15 @@ DEPENDS_44:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -4586,13 +4617,15 @@ DEPENDS_46:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -4723,6 +4756,7 @@ DEPENDS_47:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4857,6 +4891,7 @@ DEPENDS_48:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4988,13 +5023,15 @@ DEPENDS_49:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -5113,13 +5150,15 @@ DEPENDS_50:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -5415,6 +5454,7 @@ DEPENDS_54:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/List.I		\
@@ -5598,14 +5638,16 @@ DEPENDS_56:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.C	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -5913,14 +5955,16 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.C	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
 	$(INCLUDE_SAM)/tbox/MathUtilities.I				\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -6119,13 +6163,15 @@ DEPENDS_62:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -6383,13 +6429,15 @@ DEPENDS_65:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -6705,6 +6753,7 @@ DEPENDS_68:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6848,6 +6897,7 @@ DEPENDS_69:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -7075,6 +7125,7 @@ DEPENDS_71:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -7205,6 +7256,7 @@ DEPENDS_72:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -7440,13 +7492,15 @@ DEPENDS_74:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -7586,13 +7640,15 @@ DEPENDS_75:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -7727,13 +7783,15 @@ DEPENDS_76:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -7864,13 +7922,15 @@ DEPENDS_77:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -7992,13 +8052,15 @@ DEPENDS_78:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\
@@ -8242,13 +8304,15 @@ DEPENDS_81:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.C $(INCLUDE_SAM)/tbox/Pointer.I	\

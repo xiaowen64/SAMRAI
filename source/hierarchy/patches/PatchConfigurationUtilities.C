@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/PatchConfigurationUtilities.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchConfigurationUtilities.C $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Utilities class with routines for understanding spatial
 //              relationships among patches
 //
@@ -153,7 +153,7 @@ void PatchConfigurationUtilities<DIM>::initialize(
        */
 
       if ( d_patch_level_info.size() == 0 ) {
-         allocatePatchLevelInfoArray( d_patch_hierarchy->getNumberLevels() );
+         allocatePatchLevelInfoArray( d_patch_hierarchy->getNumberOfLevels() );
       }
 
       if ( level.isNull() ) {
@@ -402,7 +402,7 @@ PatchConfigurationUtilities<DIM>::getCoarsenedFinerLevelPatchBox(
             d_patch_level_info[level_num.ln + 1].d_patch_level->getNumberOfPatches()) );
 #endif
       return( d_patch_level_info[level_num.ln].
-                 d_coarsened_fine_patch_boxes.getBox(finer_level_patch_num.pn) );
+                 d_coarsened_fine_patch_boxes[finer_level_patch_num.pn] );
    }
 }
 
@@ -453,7 +453,7 @@ PatchConfigurationUtilities<DIM>::getRefinedCoarserLevelPatchBox(
             d_patch_level_info[level_num.ln - 1].d_patch_level->getNumberOfPatches()) );
 #endif
       return( d_patch_level_info[level_num.ln].
-                 d_refined_coarse_patch_boxes.getBox(coarser_level_patch_num.pn) );
+                 d_refined_coarse_patch_boxes[coarser_level_patch_num.pn] );
    }
 }
 
@@ -482,7 +482,7 @@ void PatchConfigurationUtilities<DIM>::printPatchLevelData(
    int end_ln = -1;
    if ( !d_patch_hierarchy.isNull() ) {
       if ( (0 <= level_number_in) && 
-           (level_number_in < d_patch_hierarchy->getNumberLevels()) &&
+           (level_number_in < d_patch_hierarchy->getNumberOfLevels()) &&
            (level_number_in < d_patch_level_info.size()) ) {
          start_ln = level_number_in; 
          end_ln = level_number_in; 
@@ -501,7 +501,7 @@ void PatchConfigurationUtilities<DIM>::printPatchLevelData(
       << (PatchHierarchy<DIM>*)d_patch_hierarchy << std::endl;
    if ( !d_patch_hierarchy.isNull() ) {
       os << "Number of levels in patch hierarchy = "
-         << d_patch_hierarchy->getNumberLevels() << std::endl;
+         << d_patch_hierarchy->getNumberOfLevels() << std::endl;
    }
    os << "d_patch_level_info size = " << d_patch_level_info.size() << std::endl;
 
@@ -778,7 +778,7 @@ void PatchConfigurationUtilities<DIM>::setNeighborPatchInfo(
       level_info.d_patch_info.resizeArray(npatches);
 
       tbox::Pointer< BoxTree<DIM> > box_tree = level->getBoxTree();
-      const IntVector<NDIM> pboxgrow(1);
+      const IntVector<DIM> pboxgrow(1);
 
       const ProcessorMapping& mapping = level->getProcessorMapping();
       for (int ip = 0; ip < npatches; ++ip) {
@@ -883,7 +883,7 @@ void PatchConfigurationUtilities<DIM>::setFinerPatchLevelInfo(
                box_tree.findOverlapIndices(
                    level_info.d_patch_info[ip]->
                       d_finer_level_overlap_patch_indices,
-                   boxes.getBox(ip) );
+                   boxes[ip] );
 
             }
 
@@ -960,7 +960,7 @@ void PatchConfigurationUtilities<DIM>::setCoarserPatchLevelInfo(
                box_tree.findOverlapIndices(
                    level_info.d_patch_info[ip]->
                       d_coarser_level_overlap_patch_indices,
-                   boxes.getBox(ip) );
+                   boxes[ip] );
 
             }
 
@@ -1106,9 +1106,9 @@ void PatchConfigurationUtilities<DIM>::findPatchNeighbors(
                   if ( !zero_shift || (npnum != pnum) ) {
 
                      const Box<DIM> shifted_nbox( 
-                        Box<DIM>::shift(level_boxes.getBox(npnum), nshift) );
+                        Box<DIM>::shift(level_boxes[npnum], nshift) );
 
-                     const Box<NDIM> intersection = shifted_nbox * bregion;
+                     const Box<DIM> intersection = shifted_nbox * bregion;
 
                      if ( !intersection.empty() ) {
 
@@ -1222,7 +1222,7 @@ void PatchConfigurationUtilities<DIM>::allocatePatchLevelInfoArray(
    if ( d_patch_hierarchy.isNull() ) {
       TBOX_ASSERT( nlevels == 1 );
    } else {
-      TBOX_ASSERT( nlevels == d_patch_hierarchy->getNumberLevels() ); 
+      TBOX_ASSERT( nlevels == d_patch_hierarchy->getNumberOfLevels() ); 
    }    
 #endif
    d_patch_level_info.resizeArray(nlevels);

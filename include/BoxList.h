@@ -1,33 +1,21 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxList.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxList.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	A list of boxes with basic domain calculus operations
 //
 
 #ifndef included_hier_BoxList
 #define included_hier_BoxList
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
@@ -88,7 +76,7 @@ public:
 
    /**
     * Return integer number of boxes in the box list.  Note that this 
-    * function merely calls the getNumberItems() function in the tbox::List
+    * function merely calls the getNumberOfItems() function in the tbox::List
     * base class.  This function is provided for convenience and consistency
     * with the tbox::BoxArray class.
     */

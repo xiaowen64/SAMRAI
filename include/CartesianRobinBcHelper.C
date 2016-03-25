@@ -2,11 +2,11 @@
 #define included_solv_CartesianRobinBcHelper_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CartesianRobinBcHelper.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CartesianRobinBcHelper.C $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1846 $
- * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2147 $
+ * Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -141,7 +141,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
 #endif
 
    if (DIM == 1) {
-      TBOX_ERROR(d_object_name << ": Using incomplete implementation");
+      TBOX_ERROR(d_object_name << ": DIM = 1 not supported");
    }
    math::PatchCellDataOpsReal<DIM,double> cops;
 
@@ -211,7 +211,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
       patch.getPatchGeometry();
 
    const tbox::Array< hier::BoundaryBox<DIM> > &codim1_boxes =
-      pg->getCodimensionBoundary(1);
+      pg->getCodimensionBoundaries(1);
 
    const int n_codim1_boxes=codim1_boxes.getSize();
 
@@ -249,7 +249,8 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
                                    gcoef_data,
                                    variable_ptr,
                                    patch,
-                                   boundary_box );
+                                   boundary_box ,
+                                   fill_time );
       t_use_set_bc_coefs->stop();
 
       int igho, ifac, iint, ibeg, iend;
@@ -502,7 +503,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
        */
       
       const tbox::Array< hier::BoundaryBox<DIM> > &node_boxes =
-         pg->getNodeBoundary();
+         pg->getNodeBoundaries();
       const int n_node_boxes=node_boxes.getSize();
       for ( int n=0; n<n_node_boxes; ++n ) {
 	 const hier::BoundaryBox<DIM> &bb = node_boxes[n];
@@ -518,17 +519,14 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
                         ghost_box.lower()[1], ghost_box.upper()[1],
                         lower, upper, location_index );
       }
-   }
-
-
-   if (DIM == 3) {
+   } else if (DIM == 3) {
       /*
        * The edge boundary conditions are set from a linear interpolation
        * through the nearest interior cell and the two nearest side values.
        * This data may be used by refinement operators to do interpolation.
        */
       const tbox::Array< hier::BoundaryBox<DIM> > &edge_boxes =
-         pg->getEdgeBoundary();
+         pg->getEdgeBoundaries();
       const int n_edge_boxes=edge_boxes.getSize();
       for ( int n=0; n<n_edge_boxes; ++n ) {
 	 const int location_index = edge_boxes[n].getLocationIndex();
@@ -556,7 +554,7 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
        * through the nearest interior cell and the three nearest edge values.
        * This data may be used by refinement operators to do interpolation.
        */
-      const tbox::Array< hier::BoundaryBox<DIM> > &node_boxes = pg->getNodeBoundary();
+      const tbox::Array< hier::BoundaryBox<DIM> > &node_boxes = pg->getNodeBoundaries();
       const int n_node_boxes=node_boxes.getSize();
       for ( int n=0; n<n_node_boxes; ++n ) {
 	 const hier::BoundaryBox<DIM> &bb = node_boxes[n];
@@ -576,7 +574,11 @@ template<int DIM> void CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells (
                         ghost_box.lower()[2], ghost_box.upper()[2],
                         lower, upper, location_index );
       }
+   } else {
+      TBOX_ERROR("CartesianRobinBcHelper<DIM>::setBoundaryValuesInCells error ..."
+		 << "\n not implemented for DIM>3" << std::endl);
    }
+
    
    t_set_boundary_values_in_cells->stop();
 

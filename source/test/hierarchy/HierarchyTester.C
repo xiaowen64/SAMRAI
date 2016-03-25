@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/hierarchy/HierarchyTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/hierarchy/HierarchyTester.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Manager class for patch hierarchy refine/coarsen tests.
 //
 
@@ -204,8 +204,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
    // Test #0b:
    if (d_do_refine_test) {
       for (int ib = 0; ib < npdboxes; ib++) {
-         if ( Box<NDIM>::refine(init_phys_domain.getBox(ib), d_ratio) !=
-              test_phys_domain.getBox(ib) ) {
+         if ( Box<NDIM>::refine(init_phys_domain[ib], d_ratio) !=
+              test_phys_domain[ib] ) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                  << " box with array index " << ib
@@ -216,8 +216,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
    }
    if (d_do_coarsen_test) {
       for (int ib = 0; ib < npdboxes; ib++) {
-         if ( Box<NDIM>::coarsen(init_phys_domain.getBox(ib), d_ratio) !=
-              test_phys_domain.getBox(ib) ) {
+         if ( Box<NDIM>::coarsen(init_phys_domain[ib], d_ratio) !=
+              test_phys_domain[ib] ) {
             fail_count++;
             tbox::perr << "FAILED: - Test #0b: test hierarchy physical domain"
                  << " box with array index " << ib
@@ -241,15 +241,15 @@ int HierarchyTester::runHierarchyTestAndVerify()
     **************************************************************
     */
 
-   const int nlevels = d_initial_patch_hierarchy->getNumberLevels();
+   const int nlevels = d_initial_patch_hierarchy->getNumberOfLevels();
 
    // Test #1:
-   if (d_test_patch_hierarchy->getNumberLevels() != nlevels) {
+   if (d_test_patch_hierarchy->getNumberOfLevels() != nlevels) {
       fail_count++;
       tbox::perr << "FAILED: - Test #1: initial hierarchy has " 
            << nlevels << " levels and \n" 
            << "test hierarchy has " 
-           << d_test_patch_hierarchy->getNumberLevels() << "levels" << endl;
+           << d_test_patch_hierarchy->getNumberOfLevels() << "levels" << endl;
    }
 
    for (int ln = 0; ln < nlevels; ln++) {
@@ -332,8 +332,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
       // Test #8:
       if (d_do_refine_test) { 
          for (int ib = 0; ib < nboxes; ib++) {
-            if ( Box<NDIM>::refine(init_domain.getBox(ib), d_ratio) !=
-                 test_domain.getBox(ib) ) {
+            if ( Box<NDIM>::refine(init_domain[ib], d_ratio) !=
+                 test_domain[ib] ) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                     << " refined domain box with array index " << ib 
@@ -344,8 +344,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
       }
       if (d_do_coarsen_test) {
          for (int ib = 0; ib < nboxes; ib++) {
-            if ( Box<NDIM>::coarsen(init_domain.getBox(ib), d_ratio) !=
-                 test_domain.getBox(ib) ) {
+            if ( Box<NDIM>::coarsen(init_domain[ib], d_ratio) !=
+                 test_domain[ib] ) {
                fail_count++;
                tbox::perr << "FAILED: - Test #8: for level number " << ln
                     << " coarsened domain box with array index " << ib 
@@ -369,8 +369,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #9:
          if (d_do_refine_test) {
-            if ( Box<NDIM>::refine(init_boxes.getBox(ip), d_ratio) !=
-                 test_boxes.getBox(ip) ) {
+            if ( Box<NDIM>::refine(init_boxes[ip], d_ratio) !=
+                 test_boxes[ip] ) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                     << " refined patch box with array index " << ip
@@ -379,8 +379,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
             }
          }
          if (d_do_coarsen_test) {
-            if ( Box<NDIM>::coarsen(init_boxes.getBox(ip), d_ratio) !=
-                 test_boxes.getBox(ip) ) {
+            if ( Box<NDIM>::coarsen(init_boxes[ip], d_ratio) !=
+                 test_boxes[ip] ) {
                fail_count++;
                tbox::perr << "FAILED: - Test #9: for level number " << ln
                     << " coarsened patch box with array index " << ip
@@ -390,8 +390,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
          }
    
          // Test #10:
-         if ( (init_level->getShiftsForPatch(ip)).getNumberItems() !=
-              (test_level->getShiftsForPatch(ip)).getNumberItems() ) {
+         if ( (init_level->getShiftsForPatch(ip)).getNumberOfItems() !=
+              (test_level->getShiftsForPatch(ip)).getNumberOfItems() ) {
             fail_count++;
             tbox::perr << "FAILED: - Test #10: for level number " << ln
                  << " initial and test level have different number of "
@@ -539,8 +539,8 @@ int HierarchyTester::runHierarchyTestAndVerify()
 
          // Test #20c:
          for (int id = 1; id <= NDIM; id++) {
-            if ( (init_patch_geom->getCodimensionBoundary(id)).getSize() !=
-                 (test_patch_geom->getCodimensionBoundary(id)).getSize() ) {
+            if ( (init_patch_geom->getCodimensionBoundaries(id)).getSize() !=
+                 (test_patch_geom->getCodimensionBoundaries(id)).getSize() ) {
                fail_count++;
                tbox::perr << "FAILED: - Test #20c: for level number " << ln
                     << " number of codimension " << id 

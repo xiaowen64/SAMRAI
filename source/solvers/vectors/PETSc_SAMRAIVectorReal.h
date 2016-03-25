@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/vectors/PETSc_SAMRAIVectorReal.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/vectors/PETSc_SAMRAIVectorReal.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1819 $
-// Modified:    $LastChangedDate: 2007-12-20 18:09:28 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: "Glue code" between PETSc vector interface and SAMRAI vectors. 
 //
 
 #ifndef included_solv_PETSc_SAMRAIVectorReal
 #define included_solv_PETSc_SAMRAIVectorReal
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 /*
 ************************************************************************
@@ -34,18 +32,10 @@
 #endif
 
 
-#ifndef included_solv_PETScAbstractVectorReal
 #include "PETScAbstractVectorReal.h"
-#endif
-#ifndef included_solv_SAMRAIVectorReal
 #include "SAMRAIVectorReal.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_SAMRAI_MPI
 #include "tbox/SAMRAI_MPI.h"
-#endif
 
 
 namespace SAMRAI {

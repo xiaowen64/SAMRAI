@@ -1,7 +1,7 @@
 //
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/algorithm/femutils/standard/MblkPatchBoundaryNodeSum.h $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision: 878 $
 // Modified:	$LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $
 // Description:	Routines for summing node data at patch boundaries
@@ -10,53 +10,25 @@
 #ifndef included_algs_MblkPatchBoundaryNodeSum
 #define included_algs_MblkPatchBoundaryNodeSum
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_CoarseFineBoundary
 #include "CoarseFineBoundary.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
-#endif
-#ifndef included_hier_MultiblockPatchLevel
 #include "MultiblockPatchLevel.h"
-#endif
-#ifndef included_xfer_MultiblockRefineSchedule
 #include "MultiblockRefineSchedule.h"
-#endif
-#ifndef included_pdat_NodeVariable
 #include "NodeVariable.h"
-#endif
-#ifndef included_pdat_OuternodeVariable
 #include "OuternodeVariable.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_xfer_CoarsenSchedule
 #include "CoarsenSchedule.h"
-#endif
-#ifndef included_xfer_RefineSchedule
 #include "RefineSchedule.h"
-#endif
-#ifndef included_xfer_RefineTransactionFactory
 #include "RefineTransactionFactory.h"
-#endif
 
 namespace SAMRAI {
     namespace algs {

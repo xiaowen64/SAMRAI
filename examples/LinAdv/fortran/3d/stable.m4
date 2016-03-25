@@ -27,8 +27,26 @@ c
       maxspeed(0) = max(maxspeed(0), abs(advecspeed(0)))
       maxspeed(1) = max(maxspeed(1), abs(advecspeed(1)))
       maxspeed(2) = max(maxspeed(2), abs(advecspeed(2)))
-      stabdt = min((dx(1)/maxspeed(1)),(dx(0)/maxspeed(0)))
-      stabdt = min((dx(2)/maxspeed(2)),stabdt)
+
+c     Do the following with checks for zero
+c      stabdt = min((dx(1)/maxspeed(1)),(dx(0)/maxspeed(0)))
+c      stabdt = min((dx(2)/maxspeed(2)),stabdt)
+
+      if ( maxspeed(0) .EQ. 0.0 ) then
+         if( maxspeed(1) .EQ. 0.0 ) then
+            stabdt = 1.0E9
+         else 
+            stabdt = dx(1)/maxspeed(1)
+         endif
+      elseif ( maxspeed(1) .EQ. 0.0 ) then
+            stabdt = dx(0)/maxspeed(0) 
+      else
+         stabdt = min((dx(1)/maxspeed(1)),(dx(0)/maxspeed(0)))
+      endif
+
+      if (maxspeed(2) .NE. 0.0 ) then
+         stabdt = min((dx(2)/maxspeed(2)),stabdt)
+      endif
 
       return
       end

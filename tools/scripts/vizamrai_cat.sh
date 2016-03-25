@@ -1,6 +1,6 @@
 #!/bin/sh 
 #BHEADER***********************************************************************
-# (c) Lawrence Livermore National Security, LLC 1997-2007
+# (c) Lawrence Livermore National Security, LLC 1997-2008
 #EHEADER***********************************************************************
 
 if [ $1 = "-h" ]

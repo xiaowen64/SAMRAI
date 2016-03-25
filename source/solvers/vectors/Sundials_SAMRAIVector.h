@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/vectors/Sundials_SAMRAIVector.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/vectors/Sundials_SAMRAIVector.h $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1892 $
-// Modified:    $LastChangedDate: 2008-01-23 08:29:36 -0800 (Wed, 23 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: "Glue code" between Sundials vector interface and SAMRAI vectors.
 //
 
 #ifndef included_solv_Sundials_SAMRAIVector
 #define included_solv_Sundials_SAMRAIVector
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 /*
 ************************************************************************
@@ -22,15 +20,9 @@
 */
 #ifdef HAVE_SUNDIALS
 
-#ifndef included_solv_SundialsAbstractVector
 #include "SundialsAbstractVector.h"
-#endif
-#ifndef included_solv_SAMRAIVectorReal
 #include "SAMRAIVectorReal.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace solv {

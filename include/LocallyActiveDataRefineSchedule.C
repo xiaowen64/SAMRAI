@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.C $
 // Package:     SAMRAI data transfer
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	Refine schedule for locally-active data transfer between AMR levels
 //
 
@@ -717,7 +717,7 @@ void LocallyActiveDataRefineSchedule<DIM>::finishScheduleConstruction(
        * in doing so, use the coarse-to-fine mapping array.
        */
 
-      const int ncoarse = coarse_to_fine_mapping.getNumberItems();
+      const int ncoarse = coarse_to_fine_mapping.getNumberOfItems();
 
       d_coarse_to_fine_mapping.resizeArray(ncoarse);
       int coarse_index = 0;
@@ -760,7 +760,7 @@ void LocallyActiveDataRefineSchedule<DIM>::finishScheduleConstruction(
       for (int cp = 0; cp < ncoarse; cp++) {
          const int fp = d_coarse_to_fine_mapping[cp];
 
-         const hier::Box<DIM> coarse_box = coarse_box_array.getBox(cp);
+         const hier::Box<DIM> coarse_box = coarse_box_array[cp];
          const hier::Box<DIM> fine_box = hier::Box<DIM>::refine(coarse_box, ratio);
 
          d_la_fine_fill_boxes[cp].setTo(la_unfilled_boxes[fp]);
@@ -1113,7 +1113,7 @@ void LocallyActiveDataRefineSchedule<DIM>::copyScratchToDestination(
 #ifdef DEBUG_CHECK_ASSERTIONS
             const double dst_time = patch->getPatchData(dst_id)->getTime();
             const double src_time = patch->getPatchData(src_id)->getTime();
-            TBOX_ASSERT(dst_time == src_time);
+	    TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(dst_time, src_time));
 #endif
             patch->getPatchData(dst_id)->copy(*patch->getPatchData(src_id));
          }
@@ -1273,7 +1273,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
    t_gen_comm_sched_unfilled->start();
    for (int dst_patch_id = 0; dst_patch_id < dst_npatches; dst_patch_id++) {
 
-      hier::Box<DIM> dst_box_plus_ghosts = dst_boxes(dst_patch_id);
+      hier::Box<DIM> dst_box_plus_ghosts = dst_boxes[dst_patch_id];
       dst_box_plus_ghosts.grow(dst_growth);
  
       tbox::Array<int> src_nabor_indices;
@@ -1292,7 +1292,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
       for (int spp = 0; spp < src_len; spp++) {
          int src_patch_id = src_nabor_indices[spp];
 
-         const hier::Box<DIM>& src_box = src_boxes(src_patch_id);
+         const hier::Box<DIM>& src_box = src_boxes[src_patch_id];
 
          tbox::List<const typename xfer::RefineClasses<DIM>::Data*> missing_src_data;
          bool some_src_data_is_missing = false;
@@ -1364,13 +1364,13 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
    }
 
    const int num_equiv_classes =
-      d_refine_classes->getNumberEquivalenceClasses();
+      d_refine_classes->getNumberOfEquivalenceClasses();
 
    const bool same_level = (dst_level == src_level);
 
    for (int dst_patch_id = 0; dst_patch_id < dst_npatches; dst_patch_id++) {
 
-      const hier::Box<DIM>& dst_box = dst_boxes(dst_patch_id); 
+      const hier::Box<DIM>& dst_box = dst_boxes[dst_patch_id]; 
 
       hier::Box<DIM> dst_box_plus_ghosts = dst_box;
       dst_box_plus_ghosts.grow(dst_growth);
@@ -1427,7 +1427,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
 
          if (any_equivalence_classes_active) {
 
-            const hier::Box<DIM>& src_box = src_boxes(src_patch_id);
+            const hier::Box<DIM>& src_box = src_boxes[src_patch_id];
 
             const bool same_patch = ( same_level && (dst_patch_id == src_patch_id) );
 
@@ -1520,7 +1520,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
                         }
 #endif
 
-                        d_src_masks.getBox(box_num) = src_mask;
+                        d_src_masks[box_num] = src_mask;
                         d_overlaps[box_num] = overlap;
                         box_num++;
 
@@ -1562,7 +1562,7 @@ void LocallyActiveDataRefineSchedule<DIM>::generateCommunicationSchedule(
                                                                     dst_patch_id,
                                                                     src_patch_id,
                                                                     ritem_count,
-                                                                    d_src_masks.getBox(i),
+                                                                    d_src_masks[i],
                                                                     do_time_interpolation);
 
                                  if (l().d_fine_bdry_reps_var) {
@@ -1688,7 +1688,7 @@ void LocallyActiveDataRefineSchedule<DIM>::allocateDefaultFillBoxes(
          }
       }
 
-      la_fill_boxes[p].resetLocallyActiveFillBoxes(hier::Box<DIM>::grow(boxes(p), gcw),
+      la_fill_boxes[p].resetLocallyActiveFillBoxes(hier::Box<DIM>::grow(boxes[p], gcw),
                                                    var_data);
 
       d_max_fill_boxes =
@@ -1806,9 +1806,9 @@ LocallyActiveDataRefineSchedule<DIM>::initializeDomainAndGhostInformation(
    if (d_domain_is_one_box) {
       hier::BoxArray<DIM> domain;
       grid_geom->computePhysicalDomain(domain, ratio_to_level_zero);
-      d_domain_box = domain.getBox(0);
+      d_domain_box = domain[0];
       for (int i = 1; i < domain.getNumberOfBoxes(); i++) {
-         d_domain_box += domain.getBox(i);
+         d_domain_box += domain[i];
       }
    }
 
@@ -1841,7 +1841,7 @@ void LocallyActiveDataRefineSchedule<DIM>::setRefineItems(
    d_refine_classes = refine_classes;
 
    const int num_refine_classes =
-      d_refine_classes->getNumberEquivalenceClasses();
+      d_refine_classes->getNumberOfEquivalenceClasses();
 
    int nc;
    for (nc = 0; nc < num_refine_classes; nc++) {

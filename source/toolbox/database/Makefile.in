@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/database/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/database/Makefile.in $
 ## Package:	SAMRAI toolbox
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1704 $
-## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2122 $
+## Modified:	$LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 ## Description:	makefile for the database base classes
 ##
 
@@ -19,7 +19,7 @@ include $(OBJECT)/config/Makefile.config
 
 library:	lib1d lib2d lib3d
 
-OBJS	      = DatabaseBox.o Database.o Serializable.o
+OBJS	      = DatabaseBox.o Database.o Serializable.o MemoryDatabase.o MemoryDatabaseFactory.o
 
 lib1d:		$(OBJS)
 lib2d:		$(OBJS)

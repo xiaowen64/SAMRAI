@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisItDataWriter.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/VisItDataWriter.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
@@ -12,12 +12,14 @@
 #define included_appu_VisItDataWriter_C
 
 #include <ctime>
+#include <vector>
 
 #include "VisItDataWriter.h"
 
 #ifdef HAVE_HDF5
 
 #include "tbox/Array.h"
+#include "tbox/HDFDatabase.h"
 #include "CartesianGridGeometry.h"
 #include "CellData.h"
 #include "CellDataFactory.h"
@@ -28,13 +30,6 @@
 #include "tbox/TimerManager.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
-
-#ifndef included_Vector
-#include <vector>
-#define included_Vector
-#endif
-
-
 
 #define VISIT_NAME_BUFSIZE (128)
 #define VISIT_UNDEFINED_INDEX (-1)
@@ -1404,7 +1399,7 @@ template<int DIM> void VisItDataWriter<DIM>::writePlotData(
       for (int ln = 0; ln <= finest_level_num; ln++) {
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
             hierarchy->getPatchLevel(ln);
-         for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+         for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
             tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                mblk_level->getPatchLevelForBlock(b);
             if (!patch_level.isNull()) {
@@ -1414,7 +1409,7 @@ template<int DIM> void VisItDataWriter<DIM>::writePlotData(
       }
    } else {
 
-      d_number_levels = hierarchy->getNumberLevels();
+      d_number_levels = hierarchy->getNumberOfLevels();
 
    }
    if (d_number_levels > d_scaling_ratios.getSize()) {
@@ -1424,7 +1419,7 @@ template<int DIM> void VisItDataWriter<DIM>::writePlotData(
    if (d_is_multiblock) {
       tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > mblk_hierarchy =
          hierarchy;
-      int nblocks = mblk_hierarchy->getNumberBlocks();
+      int nblocks = mblk_hierarchy->getNumberOfBlocks();
       int level_counter = 0;
       for (int ln = 0; ln <= mblk_hierarchy->getFinestLevelNumber(); ln++) {
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > level =
@@ -1524,7 +1519,7 @@ template<int DIM> void VisItDataWriter<DIM>::initializePlotVariableMinMaxInfo(
       for (int ln = 0; ln <= hierarchy->getFinestLevelNumber(); ln++) {
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
             hierarchy->getPatchLevel(ln);
-         for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+         for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
             tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                mblk_level->getPatchLevelForBlock(b);
             if (!patch_level.isNull()) {
@@ -1653,7 +1648,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeHDFFiles(
 
    char temp_buf[VISIT_NAME_BUFSIZE];
    std::string dump_dirname;
-   tbox::HDFDatabase* visit_HDFFilePointer;
+   tbox::Database* visit_HDFFilePointer;
 
    int num_procs = tbox::SAMRAI_MPI::getNodes();
    int my_proc = tbox::SAMRAI_MPI::getRank();
@@ -1693,7 +1688,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeHDFFiles(
       d_processor_in_file_cluster_number[i] = i / d_file_cluster_size;
    }
 
-   tbox::Pointer<tbox::HDFDatabase> processor_HDFGroup;
+   tbox::Pointer<tbox::Database> processor_HDFGroup;
    sprintf(temp_buf, "%05d",d_time_step_number);
    d_current_dump_directory_name = "visit_dump.";
    d_current_dump_directory_name += temp_buf;
@@ -1717,12 +1712,15 @@ template<int DIM> void VisItDataWriter<DIM>::writeHDFFiles(
       std::string visit_HDFFilename = dump_dirname + database_name;
       visit_HDFFilePointer = new tbox::HDFDatabase(database_name);
       if (d_file_cluster_leader) {
-         visit_HDFFilePointer->mount(visit_HDFFilename, "W");
-         // "W" creates the HDF file:
+
+         // creates the HDF file:
          //      dirname/visit_dump.000n/processor_cluster.000m.samrai
          //      where n is timestep #, m is processor number
-      } else { // file already created other procs just need to open it
-         if (visit_HDFFilePointer->mount(visit_HDFFilename, "R") < 0){
+         visit_HDFFilePointer->create(visit_HDFFilename);
+
+      } else { 
+	 // file already created other procs just need to open it
+         if (!visit_HDFFilePointer->open(visit_HDFFilename)) {
             TBOX_ERROR("VisItDataWriter<DIM>::writeHDFFiles"
                << "\n    data writer with name " << d_object_name
                << "\n    Error attempting to open visit file "
@@ -1738,7 +1736,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeHDFFiles(
                                    hierarchy,
                                    0,
                                    hierarchy->getFinestLevelNumber());
-      visit_HDFFilePointer->unmount(); // invokes H5FClose
+      visit_HDFFilePointer->close(); // invokes H5FClose
       delete visit_HDFFilePointer; // deletes tbox::HDFDatabase object
    }
 
@@ -1785,7 +1783,7 @@ template<int DIM> int VisItDataWriter<DIM>::getGlobalPatchNumber(
       for (int i = 0; i < level_number; i++) {
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
             hierarchy->getPatchLevel(i);
-         int nblocks = mblk_level->getNumberBlocks();
+         int nblocks = mblk_level->getNumberOfBlocks();
          for (int b = 0; b < nblocks; b++) {
             tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                mblk_level->getPatchLevelForBlock(b);
@@ -1828,7 +1826,7 @@ template<int DIM> int VisItDataWriter<DIM>::getGlobalPatchNumber(
 */
 
 template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
-   tbox::Pointer<tbox::HDFDatabase> processor_HDFGroup,
+   tbox::Pointer<tbox::Database> processor_HDFGroup,
    const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
    int coarsest_level,
    int finest_level)
@@ -1848,7 +1846,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
    d_var_id_ctr = 0;
 
    char temp_buf[VISIT_NAME_BUFSIZE];
-   tbox::Pointer<tbox::HDFDatabase> level_HDFGroup, patch_HDFGroup;
+   tbox::Pointer<tbox::Database> level_HDFGroup, patch_HDFGroup;
 
    if (d_is_multiblock) {
 
@@ -1861,7 +1859,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
                                             hierarchy->getPatchLevel(ln);
 
-         int nblocks = mblk_level->getNumberBlocks();
+         int nblocks = mblk_level->getNumberOfBlocks();
 
          int patch_counter = 0;
          for (int b = 0; b < nblocks; b++) {
@@ -1986,7 +1984,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
 */
 
 template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
-   tbox::Pointer<tbox::HDFDatabase> patch_HDFGroup,
+   tbox::Pointer<tbox::Database> patch_HDFGroup,
    const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
    const int level_number,
    const int block_number,
@@ -2279,7 +2277,7 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
                       */
 
                      // Use an HDF Group for all material state data
-                     tbox::Pointer<tbox::HDFDatabase> mat_state_HDFGroup;
+                     tbox::Pointer<tbox::Database> mat_state_HDFGroup;
                      if (patch_HDFGroup->isDatabase("material_state"))
                      {
                         mat_state_HDFGroup
@@ -2355,7 +2353,7 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
 */
 
 template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
-   tbox::Pointer<tbox::HDFDatabase> patch_HDFGroup,
+   tbox::Pointer<tbox::Database> patch_HDFGroup,
    const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
    const int level_number,
    const int block_number,
@@ -2373,8 +2371,8 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
    /*
     * Loop over variables and pull out those that are material variables.
     */
-   tbox::Pointer<tbox::HDFDatabase> materials_HDFGroup;
-   tbox::Pointer<tbox::HDFDatabase> material_name_HDFGroup;
+   tbox::Pointer<tbox::Database> materials_HDFGroup;
+   tbox::Pointer<tbox::Database> material_name_HDFGroup;
    for (typename tbox::List<VisItItem>::Iterator
            ipi(d_plot_items); ipi; ipi++) {
 
@@ -2966,9 +2964,9 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       //sprintf(temp_buf, "/summary.samrai");
       //string summary_HDFFilename = dump_dirname + temp_buf;
       std::string summary_HDFFilename = dump_dirname + "/" + d_summary_filename;
-      tbox::Pointer<tbox::HDFDatabase> summary_HDFFilePointer =
+      tbox::Pointer<tbox::Database> summary_HDFFilePointer =
          new tbox::HDFDatabase("root");
-      summary_HDFFilePointer->mount(summary_HDFFilename, "W");
+      summary_HDFFilePointer->create(summary_HDFFilename);
 
       /*
        * Create BASIC information HDF Group and provide it the following
@@ -2987,9 +2985,11 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
        */
 
       sprintf(temp_buf, "BASIC_INFO");
-      tbox::Pointer<tbox::HDFDatabase> basic_HDFGroup
+      tbox::Pointer<tbox::Database> basic_HDFGroup
                   = summary_HDFFilePointer->putDatabase(std::string(temp_buf));
-      hid_t basic_group_id = basic_HDFGroup->getGroupId();
+
+      tbox::Pointer<tbox::HDFDatabase> hdf_database = basic_HDFGroup;
+      hid_t basic_group_id = hdf_database -> getGroupId();
 
       std::string key_string = "VDR_version_number";
       basic_HDFGroup->putFloat(key_string, VISIT_DATAWRITER_VERSION_NUMBER);
@@ -3030,8 +3030,8 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
 
          //key_string = "number_levels";
          num_levels =
-            (mblk_hierarchy->getNumberLevels()) *
-            (mblk_hierarchy->getNumberBlocks());
+            (mblk_hierarchy->getNumberOfLevels()) *
+            (mblk_hierarchy->getNumberOfBlocks());
 
          //key_string = "number_patches_at_level";
          tbox::Array<int> num_patches_per_level(num_levels);
@@ -3040,7 +3040,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
             num_patches_per_level[ln] = 0;
             tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
                hierarchy->getPatchLevel(ln);
-            for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+            for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
                tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                   mblk_level->getPatchLevelForBlock(b);
                if (!patch_level.isNull()) {
@@ -3068,7 +3068,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       } else {
 
          key_string = "number_levels";
-         num_levels = hierarchy->getNumberLevels();
+         num_levels = hierarchy->getNumberOfLevels();
          basic_HDFGroup->putInteger(key_string, num_levels);
 
          key_string = "number_patches_at_level";
@@ -3228,7 +3228,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       delete [] var_ghosts;
 
       // Embed VisIt expressions
-      tbox::Pointer<tbox::HDFDatabase> expression_HDFGroup;
+      tbox::Pointer<tbox::Database> expression_HDFGroup;
       if (d_visit_expressions.size()>0)
       {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -3256,7 +3256,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       const int MAXLEN = 256;
       char s[MAXLEN];
       time_t t = time(0);
-      strftime(s, MAXLEN, "%a %b %d %T %Z %Y", localtime(&t));
+      strftime(s, MAXLEN, "%a %b %d %H:%M:%S %Z %Y", localtime(&t));
       basic_HDFGroup->putString(key_string, std::string(s));
 
       /*
@@ -3266,8 +3266,8 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
        *  - material names
        *  - species names
        */
-      tbox::Pointer<tbox::HDFDatabase> materials_HDFGroup;
-      tbox::Pointer<tbox::HDFDatabase> species_HDFGroup;
+      tbox::Pointer<tbox::Database> materials_HDFGroup;
+      tbox::Pointer<tbox::Database> species_HDFGroup;
       if (d_materials_names.getSize() > 0) {
          sprintf(temp_buf, "materials");
          materials_HDFGroup =
@@ -3390,11 +3390,12 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
        * for each patch.
        */
 
-      tbox::Pointer<tbox::HDFDatabase> extents_HDFGroup;
+      tbox::Pointer<tbox::Database> extents_HDFGroup;
       sprintf(temp_buf, "extents");
       extents_HDFGroup =
          summary_HDFFilePointer->putDatabase(std::string(temp_buf));
-      hid_t extents_group_id = extents_HDFGroup->getGroupId();
+      hdf_database = extents_HDFGroup;
+      hid_t extents_group_id = hdf_database -> getGroupId();
 
       /*
        * Create "patch_map" sub-database of extents group.
@@ -3406,7 +3407,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
          for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
             tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
                                    hierarchy->getPatchLevel(ln);
-            for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+            for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
                tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                   mblk_level->getPatchLevelForBlock(b);
                if (!patch_level.isNull()) {
@@ -3500,7 +3501,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
          for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
             tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
                hierarchy->getPatchLevel(ln);
-            for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+            for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
                tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                   mblk_level->getPatchLevelForBlock(b);
                if (!patch_level.isNull()) {
@@ -3518,7 +3519,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
                   for (pn = 0; pn < boxes.getNumberOfBoxes(); pn++) {
                      int global_patch_id =
                         getGlobalPatchNumber(hierarchy,ln,b,pn);
-                     const hier::Box<DIM>& box = boxes.getBox(pn);
+                     const hier::Box<DIM>& box = boxes[pn];
                      const int* lower = box.lower();
                      const int* upper = box.upper();
 
@@ -3553,7 +3554,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
 
             for (pn = 0; pn < boxes.getNumberOfBoxes(); pn++) {
                int global_patch_id = getGlobalPatchNumber(hierarchy,ln,-1,pn);
-               const hier::Box<DIM>& box = boxes.getBox(pn);
+               const hier::Box<DIM>& box = boxes[pn];
                const int* lower = box.lower();
                const int* upper = box.upper();
 
@@ -3581,7 +3582,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
       /*
        * Write patch min/max for each variable.
        */
-      tbox::Pointer<tbox::HDFDatabase> extents_materials_HDFGroup;
+      tbox::Pointer<tbox::Database> extents_materials_HDFGroup;
       for (typename tbox::List<VisItItem>::Iterator
               ipi(d_plot_items); ipi; ipi++) {
          for (int comp = 0; comp < ipi().d_depth; comp++) {
@@ -3614,7 +3615,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
                }
 
                key_string = ipi().d_material_name;
-               tbox::Pointer<tbox::HDFDatabase>
+               tbox::Pointer<tbox::Database>
                   extents_material_name_HDFGroup;
                if (!(ipi().d_is_material_state_variable))
                {
@@ -3629,8 +3630,8 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
                   // Sparse Format does not need additional group
                   extents_material_name_HDFGroup=extents_materials_HDFGroup;
                }
-               hid_t extents_material_name_group_id =
-                  extents_material_name_HDFGroup->getGroupId();
+	       tbox::Pointer<tbox::HDFDatabase> extents_database = extents_material_name_HDFGroup;
+               hid_t extents_material_name_group_id = extents_database -> getGroupId();
 
                HDFputPatchMinMaxStructArray(
                       key_string,
@@ -3648,9 +3649,13 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
 
                // species
                key_string = ipi().d_species_name;
-               hid_t species_group_id =
-                  ipi().d_parent_material_pointer->
-                  d_extents_species_HDFGroup->getGroupId(); // species group
+	       tbox::Pointer<tbox::HDFDatabase> extents_database = 
+		  ipi().d_parent_material_pointer -> d_extents_species_HDFGroup;
+
+	       /* 
+		* species group
+		*/
+               hid_t species_group_id = extents_database ->getGroupId();
 
                HDFputPatchMinMaxStructArray(
                   key_string,
@@ -3672,7 +3677,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeSummaryToHDFFile(
 
       delete [] pes;
 
-      summary_HDFFilePointer->unmount();
+      summary_HDFFilePointer->close();
 
    } // if VISIT_MASTER
 
@@ -3740,7 +3745,7 @@ template<int DIM> void VisItDataWriter<DIM>::exchangeMinMaxPatchInformation(
       for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
             hierarchy->getPatchLevel(ln);
-         for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+         for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
             tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                mblk_level->getPatchLevelForBlock(b);
             if (!patch_level.isNull()) {
@@ -3822,7 +3827,7 @@ template<int DIM> void VisItDataWriter<DIM>::exchangeMinMaxPatchInformation(
             for (ln = coarsest_plot_level; ln <= finest_plot_level; ln++) {
                tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
                   hierarchy->getPatchLevel(ln);
-               for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+               for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
                   tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                      mblk_level->getPatchLevelForBlock(b);
                   if (!patch_level.isNull()) {
@@ -3903,7 +3908,7 @@ template<int DIM> void VisItDataWriter<DIM>::exchangeMinMaxPatchInformation(
 */
 template<int DIM> void VisItDataWriter<DIM>::writeParentChildInfoToSummaryHDFFile(
    const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
-   tbox::Pointer<tbox::HDFDatabase> basic_HDFGroup)
+   tbox::Pointer<tbox::Database> basic_HDFGroup)
 {
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -3929,7 +3934,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeParentChildInfoToSummaryHDFFil
       for (ln = 0; ln <= finest_level; ln++) {
          tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
             hierarchy->getPatchLevel(ln);
-         for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+         for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
             tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                mblk_level->getPatchLevelForBlock(b);
             if (!patch_level.isNull()) {
@@ -3956,7 +3961,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeParentChildInfoToSummaryHDFFil
    if (d_is_multiblock) {
       tbox::Pointer< hier::MultiblockPatchLevel<DIM> > mblk_level =
          hierarchy->getPatchLevel(ln);
-      for (int b = 0; b < mblk_level->getNumberBlocks(); b++) {
+      for (int b = 0; b < mblk_level->getNumberOfBlocks(); b++) {
          tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
             mblk_level->getPatchLevelForBlock(b);
          if (!patch_level.isNull()) {
@@ -3991,7 +3996,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeParentChildInfoToSummaryHDFFil
                   tbox::Array<int> child_patch_array;
                   child_box_tree->findOverlapIndices(
                      child_patch_array,
-                     coarser_boxes.getBox(icp));
+                     coarser_boxes[icp]);
                   int num_kids = child_patch_array.getSize();
                   child_ptrs[child_ptrs_idx].u.number_children = num_kids;
 
@@ -4051,7 +4056,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeParentChildInfoToSummaryHDFFil
             } else {
                tbox::Array<int> child_patch_array;
                child_box_tree->findOverlapIndices(child_patch_array,
-                                                  coarser_boxes.getBox(icp));
+                                                  coarser_boxes[icp]);
                int num_kids = child_patch_array.getSize();
                child_ptrs[child_ptrs_idx].u.number_children = num_kids;
 
@@ -4157,7 +4162,8 @@ template<int DIM> void VisItDataWriter<DIM>::writeParentChildInfoToSummaryHDFFil
    basic_HDFGroup->putInteger(key_string, child_array_length);
    key_string = "parent_array_length";
    basic_HDFGroup->putInteger(key_string, parent_array_length);
-   hid_t basic_group_id = basic_HDFGroup->getGroupId();
+   tbox::Pointer<tbox::HDFDatabase> hdf_database = basic_HDFGroup;
+   hid_t basic_group_id = hdf_database ->getGroupId();
    if (child_array_length > 0) {
       key_string = "child_array";
       basic_HDFGroup->putIntegerArray(key_string,

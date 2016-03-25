@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outerface/OuterfaceData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/outerface/OuterfaceData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1714 $
-// Modified:	$LastChangedDate: 2007-11-21 08:40:31 -0800 (Wed, 21 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	Templated outerface centered patch data type
 //
 
@@ -20,7 +20,6 @@
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
-#include <stdio.h>
 
 #define PDAT_OUTERFACEDATA_VERSION 1
 
@@ -541,16 +540,16 @@ void OuterfaceData<DIM,TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   char array_name[16];
+   
    tbox::Pointer<tbox::Database> array_database;
    for (int i = 0; i < DIM; i++) {
-     sprintf(array_name, "d_data%d_1", i);
-     array_database = database->getDatabase(array_name);
-     (d_data[i][0]).getFromDatabase(array_database);
+      std::string array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";
+      array_database = database->getDatabase(array_name);
+      (d_data[i][0]).getFromDatabase(array_database);
 
-     sprintf(array_name, "d_data%d_2", i);
-     array_database = database->getDatabase(array_name);
-     (d_data[i][1]).getFromDatabase(array_database);
+      array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
+      array_database = database->getDatabase(array_name);
+      (d_data[i][1]).getFromDatabase(array_database);
    }
 }
 
@@ -576,16 +575,15 @@ void OuterfaceData<DIM,TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   char array_name[16];
    tbox::Pointer<tbox::Database> array_database;
    for (int i = 0; i < DIM; i++) {
-     sprintf(array_name, "d_data%d_1", i);
-     array_database = database->putDatabase(array_name);
-     (d_data[i][0]).putToDatabase(array_database);
+      std::string array_name = "d_data" + tbox::Utilities::intToString(i) + "_1";
+      array_database = database->putDatabase(array_name);
+      (d_data[i][0]).putToDatabase(array_database);
 
-     sprintf(array_name, "d_data%d_2", i);
-     array_database = database->putDatabase(array_name);
-     (d_data[i][1]).putToDatabase(array_database);
+      array_name = "d_data" + tbox::Utilities::intToString(i) + "_2";
+      array_database = database->putDatabase(array_name);
+      (d_data[i][1]).putToDatabase(array_database);
    }
 }
 

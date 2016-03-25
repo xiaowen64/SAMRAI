@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/edge/EdgeData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/edge/EdgeData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description:	Templated edge centered patch data type
 //
 
@@ -19,7 +19,6 @@
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
-#include <stdio.h>
 
 #define PDAT_EDGEDATA_VERSION 1
 
@@ -261,7 +260,7 @@ void EdgeData<DIM,TYPE>::packStream(tbox::AbstractStream& stream,
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
       const hier::BoxList<DIM>& boxes = t_overlap->getDestinationBoxList(d);
-      if (boxes.getNumberItems() > 0) {
+      if (boxes.getNumberOfItems() > 0) {
          d_data[d].packStream(stream, boxes, offset);
       }
    }
@@ -280,7 +279,7 @@ void EdgeData<DIM,TYPE>::unpackStream(tbox::AbstractStream& stream,
    const hier::IntVector<DIM>& offset = t_overlap->getSourceOffset();
    for (int d = 0; d < DIM; d++) {
       const hier::BoxList<DIM>& boxes = t_overlap->getDestinationBoxList(d);
-      if (boxes.getNumberItems() > 0) {
+      if (boxes.getNumberOfItems() > 0) {
          d_data[d].unpackStream(stream, boxes, offset);
       }
    }
@@ -454,10 +453,9 @@ void EdgeData<DIM,TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   char array_name[8];
    tbox::Pointer<tbox::Database> array_database;
    for (int i = 0; i < DIM; i++) {
-      sprintf(array_name, "d_data%d", i);
+      std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = database->getDatabase(array_name);
       (d_data[i]).getFromDatabase(array_database);
    }
@@ -484,10 +482,9 @@ void EdgeData<DIM,TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   char array_name[8];
    tbox::Pointer<tbox::Database> array_database;
    for (int i = 0; i < DIM; i++) {
-      sprintf(array_name, "d_data%d", i);
+      std::string array_name = "d_data" + tbox::Utilities::intToString(i);
       array_database = database->putDatabase(array_name);
       (d_data[i]).putToDatabase(array_database);
    }

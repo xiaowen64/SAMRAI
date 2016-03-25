@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/AsyncCommGroup.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/AsyncCommGroup.C $
  * Package:     SAMRAI toolbox
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2037 $
+ * Modified:    $LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
  * Description: All-to-one and one-to-all communication using a tree.
  */
 
@@ -69,14 +69,14 @@ AsyncCommGroup::AsyncCommGroup( const int nchild )
    d_next_task_op(none),
    d_external_buf(NULL),
    d_external_size(0),
-   d_internal_buf(0, true),
+   d_internal_buf(0),
    d_internal_requests(NULL),
    d_mpi_tag(-1),
    d_mpi_communicator(MPI_COMM_WORLD),
    d_use_blocking_send_to_children(false),
    d_use_blocking_send_to_parent(true)
 #ifdef DEBUG_CHECK_ASSERTIONS
-   , d_group_ranks(0, true)
+   , d_group_ranks(0)
 #endif
 {
    if ( t_reduce_data.isNull() ) {

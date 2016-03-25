@@ -1,58 +1,36 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/VariableDatabase.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/variables/VariableDatabase.h $
 // Package:     SAMRAI hierarchy	
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1811 $
-// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Singleton database class for managing variables and contexts.
 //
 
 #ifndef included_hier_VariableDatabase
 #define included_hier_VariableDatabase
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_PatchDescriptor
 #include "PatchDescriptor.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <std::string>
 #define included_String
 #endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
 
 
 namespace SAMRAI {
@@ -182,13 +160,13 @@ public:
     * Return number of patch data indices registered with the database.
     */
    virtual
-   int getNumberRegisteredPatchDataIndices() const;
+   int getNumberOfRegisteredPatchDataIndices() const;
 
    /*!
     * Return number of variable contexts registered with the database.
     */
    virtual
-   int getNumberRegisteredVariableContexts() const;
+   int getNumberOfRegisteredVariableContexts() const;
 
    /*!
     * Return pointer to the patch descriptor managed by the database 

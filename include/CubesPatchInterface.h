@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CubesPatchInterface.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/CubesPatchInterface.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1808 $
-// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Cubes embedded boundary shape
 //              
 // 
@@ -13,25 +13,13 @@
 #ifndef included_CubesPatchInterface
 #define included_CubesPatchInterface
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_geom_CartesianGridGeometry
 #include "CartesianGridGeometry.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
 namespace SAMRAI {
    namespace appu {
@@ -109,7 +97,7 @@ public:
    /*!
     * The destructor does nothing.
     */
-   ~CubesPatchInterface();
+   virtual ~CubesPatchInterface();
 
    /*!
     * Compute set of cut cells on a patch.  This method makes calls to

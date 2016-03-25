@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/Array.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/memory/Array.C $
 // Package:	SAMRAI toolbox for memory management
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2037 $
+// Modified:	$LastChangedDate: 2008-03-05 15:54:45 -0800 (Wed, 05 Mar 2008) $
 // Description:	A simple array template class
 //
 
@@ -19,10 +19,14 @@ namespace SAMRAI {
    namespace tbox {
 
 
+/*
+ * Default assume Array is not a standard type
+ */
+template <class TYPE> const bool Array<TYPE>::s_standard_type = false;
+
 template <class TYPE>
-Array<TYPE>::Array(const int n, const bool standard_type)
+Array<TYPE>::Array(const int n)
 {
-   d_standard_type = standard_type;
    if (n > 0) {
       d_objects  = new TYPE[n];
       d_counter  = new ReferenceCounter;
@@ -35,10 +39,8 @@ Array<TYPE>::Array(const int n, const bool standard_type)
 }
 
 template <class TYPE>
-Array<TYPE>::Array(const int n, const Pointer<Arena>& pool,
-                             const bool standard_type)
+Array<TYPE>::Array(const int n, const Pointer<Arena>& pool)
 {
-   d_standard_type = standard_type;
    if (n > 0) {
       Arena *arena = pool.getPointer();
       if (!arena) {
@@ -66,7 +68,6 @@ Array<TYPE>& Array<TYPE>::operator=(const Array<TYPE>& rhs)
       d_objects  = rhs.d_objects;
       d_counter  = rhs.d_counter;
       d_elements = rhs.d_elements;
-      d_standard_type = rhs.d_standard_type;
       if (d_counter) d_counter->addReference();
    }
    return(*this);
@@ -76,7 +77,7 @@ template <class TYPE>
 TYPE *Array<TYPE>::allocateObjects(const int n, Arena *arena)
 {
    TYPE *ptr = (TYPE *) ::operator new(n*sizeof(TYPE), arena);
-   if (!d_standard_type) {
+   if (!s_standard_type) {
       for (int i = 0; i < n; i++) {
          (void) new (&ptr[i]) TYPE;
       }
@@ -88,7 +89,7 @@ template <class TYPE>
 void Array<TYPE>::deleteObjects()
 {
    if (d_counter->getArena()) {
-      if (!d_standard_type) {
+      if (!s_standard_type) {
          for (int i = 0; i < d_elements; i++) {
             d_objects[i].~TYPE();
          }
@@ -108,7 +109,7 @@ template <class TYPE>
 void Array<TYPE>::resizeArray(const int n)
 {
    if (n != d_elements) {
-      Array<TYPE> array(n, d_standard_type);
+      Array<TYPE> array(n);
       const int s = (d_elements < n ? d_elements : n);
       for (int i = 0; i < s; i++) {
          array.d_objects[i] = d_objects[i];
@@ -121,7 +122,7 @@ template <class TYPE>
 void Array<TYPE>::resizeArray(
    const int n, const Pointer<Arena>& pool)
 {
-   Array<TYPE> array(n, pool, d_standard_type);
+   Array<TYPE> array(n, pool);
    const int s = (d_elements < n ? d_elements : n);
    for (int i = 0; i < s; i++) {
       array.d_objects[i] = d_objects[i];

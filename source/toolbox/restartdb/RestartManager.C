@@ -1,34 +1,23 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/restartdb/RestartManager.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/RestartManager.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1840 $
-// Modified:	$LastChangedDate: 2008-01-09 13:03:07 -0800 (Wed, 09 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2129 $
+// Modified:	$LastChangedDate: 2008-04-11 16:59:14 -0700 (Fri, 11 Apr 2008) $
 // Description:	An restart manager singleton class 
 //
 
+#include <string>
+
 #include "tbox/RestartManager.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include "tbox/HDFDatabase.h"
+#include "tbox/HDFDatabaseFactory.h"
 #include "tbox/SAMRAI_MPI.h"
 #include "tbox/NullDatabase.h"
 #include "tbox/Parser.h"
 #include "tbox/PIO.h"
 #include "tbox/ShutdownRegistry.h"
-#include <string>
-using namespace std;
+
 #include "tbox/Utilities.h"
-
-#ifndef NULL
-#define NULL (0)
-#endif
-
-#ifndef NAME_BUFSIZE
-#define NAME_BUFSIZE (32)
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #include "tbox/RestartManager.I"
@@ -85,7 +74,7 @@ void RestartManager::registerSingletonSubclassInstance(
    } else {
       TBOX_ERROR("RestartManager internal error...\n"
                  << "Attemptng to set Singleton instance to subclass instance,"
-                 << "\n but Singleton instance already set." << endl);
+                 << "\n but Singleton instance already set." << std::endl);
    }
 }
 
@@ -101,6 +90,11 @@ void RestartManager::registerSingletonSubclassInstance(
 RestartManager::RestartManager()
 {
    d_database_root = new NullDatabase();
+#ifdef HAVE_HDF5
+   d_database_factory = new HDFDatabaseFactory();
+#else
+   d_database_factory = NULL;
+#endif
    d_is_from_restart = false;
    clearRestartItems();
 }
@@ -121,55 +115,41 @@ bool RestartManager::openRestartFile(
    const int restore_num,
    const int num_nodes)
 {
-   /* create the intermediate parts of the full path name of restart file */
-   char restore_buf[NAME_BUFSIZE];
-   char nodes_buf[NAME_BUFSIZE];
-   char proc_buf[NAME_BUFSIZE];
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE > (1 + 8 + 1 + 6 + 1) );
-#endif
-   sprintf(restore_buf,"/restore.%06d",restore_num);
-   
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
-#endif
-   sprintf(nodes_buf,"/nodes.%05d",num_nodes);
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE > (1 + 4 + 1 + 5 + 1) );
-#endif
    int proc_num = SAMRAI_MPI::getRank();
-   sprintf(proc_buf,"/proc.%05d",proc_num);
+
+   /* create the intermediate parts of the full path name of restart file */
+   std::string restore_buf  = "/restore." + tbox::Utilities::intToString(restore_num, 6);
+   std::string nodes_buf = "/nodes." + tbox::Utilities::nodeToString(num_nodes);
+   std::string proc_buf = "/proc." + tbox::Utilities::processorToString(proc_num);
 
    /* create full path name of restart file */
-   std::string restart_filename = root_dirname + restore_buf + nodes_buf + proc_buf; 
+   std::string restart_filename = root_dirname + restore_buf +
+      nodes_buf + proc_buf; 
 
    bool open_successful = true;
-#ifdef HAVE_HDF5
    /* try to mount restart file */
-   Pointer<HDFDatabase> temp_HDFDatabase = 
-      new HDFDatabase(restart_filename);
 
-   if (temp_HDFDatabase->mount(restart_filename, "R") < 0){
-      TBOX_ERROR("Error attempting to open restart file " << restart_filename  
-              << "\n   No restart file for processor: " << proc_num
-	      << "\n   restart directory name = " << root_dirname
-	      << "\n   number of processors   = " << num_nodes
-	      << "\n   restore number         = " << restore_num << endl);
-      open_successful = false;
+   if(d_database_factory) {
+   
+      Pointer<Database> database = d_database_factory -> allocate(restart_filename);
+
+      if (!database->open(restart_filename)){
+	 TBOX_ERROR("Error attempting to open restart file " << restart_filename  
+		    << "\n   No restart file for processor: " << proc_num
+		    << "\n   restart directory name = " << root_dirname
+		    << "\n   number of processors   = " << num_nodes
+		    << "\n   restore number         = " << restore_num << std::endl);
+	 open_successful = false;
+      } else {
+	 /* set d_database root and d_is_from_restart */
+	 d_database_root = database;
+	 d_is_from_restart = true;
+      }
    } else {
-      /* set d_database root and d_is_from_restart */
-      d_database_root = temp_HDFDatabase;
-      d_is_from_restart = true;
+      TBOX_ERROR("No DatabaseFactory supplied to RestartManager for opening " 
+		 << restart_filename  << std::endl);
    }
-
-#else
-   open_successful = false;
-   TBOX_ERROR("Cannot open restart file...library not compiled with HDF" 
-              << endl);
-#endif
-
+      
    return (open_successful);
 }
 
@@ -184,13 +164,11 @@ bool RestartManager::openRestartFile(
 
 void RestartManager::closeRestartFile()
 {
-#ifdef HAVE_HDF5
-   Pointer<HDFDatabase> temp_database = d_database_root;
+   Pointer<Database> temp_database = d_database_root;
 
    if (!temp_database.isNull()) {
-      temp_database->unmount();
+      temp_database->close();
    }
-#endif
 
    d_database_root = new NullDatabase();
 }
@@ -237,8 +215,8 @@ void RestartManager::registerRestartItem(
 
    } else {
       TBOX_ERROR("Register restart item error..."
-         << "\n   Multiple objects with name `" << name << "' registered "
-         << "with restart manager." << endl);
+		 << "\n   Multiple objects with name `" << name << "' registered "
+		 << "with restart manager." << std::endl);
    }
 }
 
@@ -292,8 +270,6 @@ void RestartManager::writeRestartFile(
    const std::string& root_dirname, 
    int restore_num)
 {
-#ifdef HAVE_HDF5
-
    /* Create necessary directories and cd proper directory for writing */
    std::string restart_dirname = createDirs(root_dirname,restore_num);
 
@@ -301,33 +277,65 @@ void RestartManager::writeRestartFile(
 
    int proc_rank = SAMRAI_MPI::getRank();
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE > (1 + 4 + 1 + 5 + 1) );
-#endif
-   char restart_filename_buf[NAME_BUFSIZE];
-   sprintf(restart_filename_buf, "/proc.%05d", proc_rank);
+   std::string restart_filename_buf = 
+      "/proc." + tbox::Utilities::processorToString(proc_rank);
 
    std::string restart_filename = restart_dirname + restart_filename_buf;
 
-   HDFDatabase* new_restartDB = new HDFDatabase(restart_filename);
+   if(d_database_factory) {
 
-   new_restartDB->mount(restart_filename, "W");
+      Pointer<Database> new_restartDB = d_database_factory -> allocate(restart_filename);
+
+      new_restartDB->create(restart_filename);
+
+      writeRestartFile(new_restartDB);
+ 
+      new_restartDB->close();
+
+      new_restartDB.setNull();
+   } else {
+      TBOX_ERROR("No DatabaseFactory supplied to RestartManager for writeRestartFile " 
+		 << restart_filename  << std::endl);
+   }
+}
+
+/*
+*************************************************************************
+*									*
+* Write simulation state to supplied database.                          *
+*									*
+*************************************************************************
+*/
+void RestartManager::writeRestartFile(
+   tbox::Pointer<tbox::Database> database)
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(database);
+#endif
 
    List<RestartManager::RestartItem>::Iterator i(d_restart_items_list);
    for ( ; i; i++) {
       Pointer<Database> obj_db = 
-         new_restartDB->putDatabase(i().name);
+         database->putDatabase(i().name);
       (i().obj)->putToDatabase(obj_db);
    }
- 
-   new_restartDB->unmount();
+}
 
-   delete new_restartDB;
-
-#else
-   TBOX_ERROR("Cannot write restart file...library not compiled with HDF" 
-              << endl);
-#endif
+/*
+*************************************************************************
+*									*
+* Write simulation state to root database                               *
+*									*
+*************************************************************************
+*/
+void RestartManager::writeRestartToDatabase() 
+{
+   if(d_database_root) {
+      writeRestartFile(d_database_root);
+   } else {
+      TBOX_ERROR("writeRestartToDatabase has no database to write to" 
+		 << std::endl);
+   }
 }
 
 /*
@@ -343,27 +351,17 @@ std::string RestartManager::createDirs(
    const std::string& root_dirname,
    int restore_num)
 {
-   char restore_buf[NAME_BUFSIZE];
-   char nodes_buf[NAME_BUFSIZE];
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE> (1 + 8 + 1 + 6 + 1) );
-#endif
-   sprintf(restore_buf, "/restore.%06d", restore_num);
-
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUFSIZE > (1 + 5 + 1 + 5 + 1) );
-#endif
    int num_procs = SAMRAI_MPI::getNodes();
-   sprintf(nodes_buf,"/nodes.%05d",num_procs);
+
+   std::string restore_buf = "/restore." + tbox::Utilities::intToString(restore_num, 6);
+   std::string nodes_buf ="/nodes." + tbox::Utilities::processorToString(num_procs);
 
    std::string full_dirname = root_dirname + restore_buf + nodes_buf;
 
-   Utilities::recursiveMkdir(full_dirname);
+   tbox::Utilities::recursiveMkdir(full_dirname);
   
    return full_dirname;
 }
-
 
 }
 }

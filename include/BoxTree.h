@@ -1,38 +1,25 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTree.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxTree.h $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1808 $
-// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2172 $
+// Modified:    $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description: Utility class to reduce complexity of box calculus operations.
 //
 
 #ifndef included_hier_BoxTree
 #define included_hier_BoxTree
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_Box
+#include <stdlib.h>
+
 #include "Box.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_BoxTreeNode
 #include "BoxTreeNode.h"
-#endif
-#ifndef included_hier_ProcessorMapping
 #include "ProcessorMapping.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-
 
 namespace SAMRAI {
    namespace hier {

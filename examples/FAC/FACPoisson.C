@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/FAC/FACPoisson.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/FAC/FACPoisson.C $
  * Package:     SAMRAI application
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1784 $
- * Modified:    $LastChangedDate: 2007-12-17 13:08:36 -0800 (Mon, 17 Dec 2007) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2043 $
+ * Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
  * Description: Numerical routines for example FAC Poisson solver
  */
 
@@ -294,7 +294,7 @@ int FACPoisson::solvePoisson()
   double avg_factor, final_factor;
   d_poisson_fac_solver.getConvergenceFactors(avg_factor, final_factor);
   tbox::pout << "\t" << (solver_ret?"":"NOT ") << "converged " << "\n"
-       << "	iterations: " << d_poisson_fac_solver.getNumberIterations() << "\n"
+       << "	iterations: " << d_poisson_fac_solver.getNumberOfIterations() << "\n"
        << "	residual: " << d_poisson_fac_solver.getResidualNorm() << "\n"
        << "	average convergence: " << avg_factor << "\n"
        << "	final convergence: " << final_factor << "\n"
@@ -332,7 +332,7 @@ int FACPoisson::setupPlotter(
     * This must be done once (and again each time the data changes).
     */
    int ln;
-   for ( ln=1; ln<d_hierarchy->getNumberLevels(); ln++ ) {
+   for ( ln=1; ln<d_hierarchy->getNumberOfLevels(); ln++ ) {
       tbox::Pointer<hier::PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
       const hier::IntVector<NDIM> &lratio = level->getRatioToCoarserLevel();
       plotter.setRatioToCoarserLevel(ln, lratio);

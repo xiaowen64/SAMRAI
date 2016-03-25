@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/SinusoidalFrontTagger.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/clustering/async_br/SinusoidalFrontTagger.C $
   Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1786 $
-  Modified:	$LastChangedDate: 2007-12-17 19:58:43 -0800 (Mon, 17 Dec 2007) $
+  Revision:	$LastChangedRevision: 2043 $
+  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
   Description:	SinusoidalFrontTagger class implementation
 */
 
@@ -275,7 +275,7 @@ void SinusoidalFrontTagger<DIM>::deallocatePatchData(
    hier::PatchHierarchy<DIM> &hierarchy )
 {
   int ln;
-  for ( ln=0; ln<hierarchy.getNumberLevels(); ++ln ) {
+  for ( ln=0; ln<hierarchy.getNumberOfLevels(); ++ln ) {
      tbox::Pointer<hier::PatchLevel<DIM> > level = hierarchy.getPatchLevel(ln);
     deallocatePatchData( *level );
   }
@@ -313,7 +313,7 @@ void SinusoidalFrontTagger<DIM>::computeHierarchyData(
 {
    d_time = time;
    if ( ! d_allocate_data ) return;
-   for ( int ln=0; ln<hierarchy.getNumberLevels(); ++ln ) {
+   for ( int ln=0; ln<hierarchy.getNumberOfLevels(); ++ln ) {
       computeLevelData( hierarchy, ln, time, d_dist_id, d_tag_id );
    }
   return;

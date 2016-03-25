@@ -2,11 +2,11 @@
 #define included_solv_GhostCellRobinBcCoefs_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/GhostCellRobinBcCoefs.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/GhostCellRobinBcCoefs.C $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1846 $
- * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 1988 $
+ * Modified:    $LastChangedDate: 2008-02-14 10:04:49 -0800 (Thu, 14 Feb 2008) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
@@ -118,9 +118,11 @@ template<int DIM> void GhostCellRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
-   const hier::BoundaryBox<DIM> &bdry_box ) const
+   const hier::BoundaryBox<DIM> &bdry_box ,
+   double fill_time ) const
 {
    NULL_USE(variable);
+   NULL_USE(fill_time);
 
    t_set_bc_coefs->start();
 

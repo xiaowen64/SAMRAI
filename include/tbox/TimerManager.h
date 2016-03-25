@@ -1,49 +1,33 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/TimerManager.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/TimerManager.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1818 $
-// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Singleton timer manager class.
 //
 
 #ifndef included_tbox_TimerManager
 #define included_tbox_TimerManager
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
 namespace SAMRAI {
    namespace tbox {
@@ -398,13 +382,34 @@ private:
    static double computePercentageDouble(const double frac, 
 					 const double tot);
 
+
+
+   /*
+    * Compute the overhead costs of the timing routines 
+    * for active and non-active timers.
+    *
+    * IMPORTANT:  This is destructive of timers so should only
+    * be called in the constructor.
+    */
+   void computeOverheadConstants(void);
+   double computeOverheadConstantActiveOrInactive(bool active);
+
+   /*
+    * Clear the registered timers.
+    */
+   void clearArrays(void);
+
    /*
     * Static constants used by timer manager.
     */
    static int s_main_timer_identifier;
    static int s_inactive_timer_identifier;
-   static double s_timer_reg_access_time;
-   static double s_timer_unreg_access_time;
+
+   /*
+    * Timer accesss overheads.
+    */
+   double d_timer_active_access_time;
+   double d_timer_inactive_access_time;
 
    /*
     * Main timer used to time overall run time (time between

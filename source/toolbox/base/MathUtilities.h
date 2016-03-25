@@ -1,25 +1,20 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/MathUtilities.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/MathUtilities.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1777 $
-// Modified:	$LastChangedDate: 2007-12-13 16:51:06 -0800 (Thu, 13 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Utilities class to access common POSIX constants and math ops
 //
 
 #ifndef included_tbox_MathUtilities
 #define included_tbox_MathUtilities
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Complex
+
 #include "tbox/Complex.h"
-#endif
 
 namespace SAMRAI {
    namespace tbox {
@@ -226,6 +221,18 @@ public:
     */
    static TYPE Abs(TYPE a);
 
+
+   /*!
+    * @brief Return nearest integral value.
+    *
+    * If the argument is halfway between two integral
+    * values then round away from zero for float and double types.
+    * For other types, will return the input value.
+    *
+    * @param a
+    */
+   static TYPE round(TYPE a);
+
    /*!
     * @brief Generate and return a random value from low to low+width.
     *
@@ -273,6 +280,10 @@ template<> dcomplex MathUtilities<dcomplex>::Max(dcomplex a, dcomplex b);
 template<> int      MathUtilities<int>::Abs(int a);
 template<> float    MathUtilities<float>::Abs(float a);
 template<> double   MathUtilities<double>::Abs(double a);
+
+
+template<> float    MathUtilities<float>::round(float a);
+template<> double   MathUtilities<double>::round(double a);
 
 }
 }

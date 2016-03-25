@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/petsc/SNES_SAMRAIContext.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2002 $
+// Modified:    $LastChangedDate: 2008-02-21 13:54:25 -0800 (Thu, 21 Feb 2008) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
@@ -176,7 +176,7 @@ template<int DIM>  SNES_SAMRAIContext<DIM>::SNES_SAMRAIContext(
     */
 
    d_function_evaluation_error = PETSC_DEFAULT;
-   d_differencing_parameter_strategy = "default";
+   d_differencing_parameter_strategy = MATMFFD_WP;
 
    /*
     * Default output parameters.

@@ -1,48 +1,26 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/LocallyActiveVariableDatabase.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/variables/LocallyActiveVariableDatabase.h $
 // Package:     SAMRAI hierarchy	
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1811 $
-// Modified:	$LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Singleton database for variables defined on subset of hierarchy patches.
 //
 
 #ifndef included_hier_LocallyActiveVariableDatabase
 #define included_hier_LocallyActiveVariableDatabase
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_PatchDescriptor
 #include "PatchDescriptor.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_ProcessorMapping
 #include "ProcessorMapping.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
-#ifndef included_hier_VariableDatabase
 #include "VariableDatabase.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
@@ -125,7 +103,7 @@ public:
     * locally-active variable database.
     */
    virtual
-   int getNumberRegisteredVariables() const;
+   int getNumberOfRegisteredVariables() const;
 
    /*!
     * Return pointer to the patch descriptor managed by the database

@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -188,7 +188,8 @@ DEPENDS_5:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C				\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
-	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/tbox/Array.I\
+	$(INCLUDE_SAM)/BoundaryLookupTable.h $(INCLUDE_SAM)/IntVector.I	\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
 	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
@@ -197,7 +198,7 @@ DEPENDS_5:=\
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
 DEPENDS_5 +=\
-	
+	$(INCLUDE_SAM)/IntVector.C
 endif
 
 ${FILE_5:X.o=${NDIM}.o}: ${DEPENDS_5}
@@ -672,6 +673,7 @@ DEPENDS_19:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1363,6 +1365,7 @@ DEPENDS_29:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1463,6 +1466,7 @@ DEPENDS_30:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1646,6 +1650,7 @@ DEPENDS_32:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1890,6 +1895,7 @@ DEPENDS_35:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2209,6 +2215,7 @@ DEPENDS_41:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2840,6 +2847,7 @@ DEPENDS_53:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3197,6 +3205,7 @@ DEPENDS_59:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3294,6 +3303,7 @@ DEPENDS_60:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3391,6 +3401,7 @@ DEPENDS_61:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3632,6 +3643,7 @@ DEPENDS_66:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -3705,8 +3717,32 @@ endif
 
 ${FILE_67:X.o=${NDIM}.o}: ${DEPENDS_67}
 
-FILE_68=tbox__Array-tbox__Array-tbox__Array-hier__BoundaryBox-NDIMX.o
+FILE_68=tbox__Array-tbox__Array-hier__IntVector-NDIMX.o
 DEPENDS_68:=\
+	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/IntVector.I	\
+	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
+	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.C		\
+	$(INCLUDE_SAM)/tbox/Array.I $(INCLUDE_SAM)/tbox/Array.h		\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
+	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
+	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
+	$(INCLUDE_SAM)/tbox/IOStream.h $(INCLUDE_SAM)/tbox/Pointer.I	\
+	$(INCLUDE_SAM)/tbox/Pointer.h $(INCLUDE_SAM)/tbox/PointerBase.I	\
+	$(INCLUDE_SAM)/tbox/PointerBase.h				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
+	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
+	$(INCLUDE_SAM)/tbox/Utilities.h					\
+	tbox__Array-tbox__Array-hier__IntVector-NDIMX.C
+
+ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
+DEPENDS_68 +=\
+	$(INCLUDE_SAM)/IntVector.C
+endif
+
+${FILE_68:X.o=${NDIM}.o}: ${DEPENDS_68}
+
+FILE_69=tbox__Array-tbox__Array-tbox__Array-hier__BoundaryBox-NDIMX.o
+DEPENDS_69:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
@@ -3735,16 +3771,16 @@ DEPENDS_68:=\
 	tbox__Array-tbox__Array-tbox__Array-hier__BoundaryBox-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_68 +=\
+DEPENDS_69 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_68:X.o=${NDIM}.o}: ${DEPENDS_68}
+${FILE_69:X.o=${NDIM}.o}: ${DEPENDS_69}
 
-FILE_69=tbox__Array-tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.o
-DEPENDS_69:=\
+FILE_70=tbox__Array-tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.o
+DEPENDS_70:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -3810,7 +3846,7 @@ DEPENDS_69:=\
 	tbox__Array-tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_69 +=\
+DEPENDS_70 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3826,10 +3862,10 @@ DEPENDS_69 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_69:X.o=${NDIM}.o}: ${DEPENDS_69}
+${FILE_70:X.o=${NDIM}.o}: ${DEPENDS_70}
 
-FILE_70=tbox__Array-tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.o
-DEPENDS_70:=\
+FILE_71=tbox__Array-tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.o
+DEPENDS_71:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -3896,7 +3932,7 @@ DEPENDS_70:=\
 	tbox__Array-tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_70 +=\
+DEPENDS_71 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3913,10 +3949,10 @@ DEPENDS_70 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_70:X.o=${NDIM}.o}: ${DEPENDS_70}
+${FILE_71:X.o=${NDIM}.o}: ${DEPENDS_71}
 
-FILE_71=tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.o
-DEPENDS_71:=\
+FILE_72=tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.o
+DEPENDS_72:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -3982,7 +4018,7 @@ DEPENDS_71:=\
 	tbox__Array-tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_71 +=\
+DEPENDS_72 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -3998,10 +4034,10 @@ DEPENDS_71 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_71:X.o=${NDIM}.o}: ${DEPENDS_71}
+${FILE_72:X.o=${NDIM}.o}: ${DEPENDS_72}
 
-FILE_72=tbox__Array-tbox__List-hier__IntVector-NDIMX.o
-DEPENDS_72:=\
+FILE_73=tbox__Array-tbox__List-hier__IntVector-NDIMX.o
+DEPENDS_73:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/IntVector.I	\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.C		\
@@ -4019,14 +4055,14 @@ DEPENDS_72:=\
 	tbox__Array-tbox__List-hier__IntVector-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_72 +=\
+DEPENDS_73 +=\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_72:X.o=${NDIM}.o}: ${DEPENDS_72}
+${FILE_73:X.o=${NDIM}.o}: ${DEPENDS_73}
 
-FILE_73=tbox__Array-tbox__List-hier__MultiblockPatchHierarchy_NDIM___NeighborX.o
-DEPENDS_73:=\
+FILE_74=tbox__Array-tbox__List-hier__MultiblockPatchHierarchy_NDIM___NeighborX.o
+DEPENDS_74:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -4077,6 +4113,7 @@ DEPENDS_73:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4101,7 +4138,7 @@ DEPENDS_73:=\
 	tbox__Array-tbox__List-hier__MultiblockPatchHierarchy_NDIM___NeighborX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_73 +=\
+DEPENDS_74 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -4122,10 +4159,10 @@ DEPENDS_73 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_73:X.o=${NDIM}.o}: ${DEPENDS_73}
+${FILE_74:X.o=${NDIM}.o}: ${DEPENDS_74}
 
-FILE_74=tbox__Array-tbox__Pointer-hier__BoxOverlap-NDIMX.o
-DEPENDS_74:=\
+FILE_75=tbox__Array-tbox__Pointer-hier__BoxOverlap-NDIMX.o
+DEPENDS_75:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
@@ -4153,16 +4190,16 @@ DEPENDS_74:=\
 	tbox__Array-tbox__Pointer-hier__BoxOverlap-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_74 +=\
+DEPENDS_75 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_74:X.o=${NDIM}.o}: ${DEPENDS_74}
+${FILE_75:X.o=${NDIM}.o}: ${DEPENDS_75}
 
-FILE_75=tbox__Array-tbox__Pointer-hier__BoxTree-NDIMX.o
-DEPENDS_75:=\
+FILE_76=tbox__Array-tbox__Pointer-hier__BoxTree-NDIMX.o
+DEPENDS_76:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGraphUtilities.h	\
@@ -4193,17 +4230,17 @@ DEPENDS_75:=\
 	tbox__Array-tbox__Pointer-hier__BoxTree-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_75 +=\
+DEPENDS_76 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_75:X.o=${NDIM}.o}: ${DEPENDS_75}
+${FILE_76:X.o=${NDIM}.o}: ${DEPENDS_76}
 
-FILE_76=tbox__Array-tbox__Pointer-hier__ComponentSelector.o
-DEPENDS_76:=\
+FILE_77=tbox__Array-tbox__Pointer-hier__ComponentSelector.o
+DEPENDS_77:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/tbox/Arena.I	\
@@ -4227,14 +4264,14 @@ DEPENDS_76:=\
 	tbox__Array-tbox__Pointer-hier__ComponentSelector.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_76 +=\
+DEPENDS_77 +=\
 	
 endif
 
-${FILE_76:X.o=${NDIM}.o}: ${DEPENDS_76}
+${FILE_77:X.o=${NDIM}.o}: ${DEPENDS_77}
 
-FILE_77=tbox__Array-tbox__Pointer-hier__GridGeometry-NDIMX.o
-DEPENDS_77:=\
+FILE_78=tbox__Array-tbox__Pointer-hier__GridGeometry-NDIMX.o
+DEPENDS_78:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -4300,7 +4337,7 @@ DEPENDS_77:=\
 	tbox__Array-tbox__Pointer-hier__GridGeometry-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_77 +=\
+DEPENDS_78 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4316,10 +4353,10 @@ DEPENDS_77 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_77:X.o=${NDIM}.o}: ${DEPENDS_77}
+${FILE_78:X.o=${NDIM}.o}: ${DEPENDS_78}
 
-FILE_78=tbox__Array-tbox__Pointer-hier__Index-NDIMX.o
-DEPENDS_78:=\
+FILE_79=tbox__Array-tbox__Pointer-hier__Index-NDIMX.o
+DEPENDS_79:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
@@ -4337,14 +4374,14 @@ DEPENDS_78:=\
 	tbox__Array-tbox__Pointer-hier__Index-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_78 +=\
+DEPENDS_79 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_78:X.o=${NDIM}.o}: ${DEPENDS_78}
+${FILE_79:X.o=${NDIM}.o}: ${DEPENDS_79}
 
-FILE_79=tbox__Array-tbox__Pointer-hier__LocallyActiveDataPatchLevelManager-NDIMX.o
-DEPENDS_79:=\
+FILE_80=tbox__Array-tbox__Pointer-hier__LocallyActiveDataPatchLevelManager-NDIMX.o
+DEPENDS_80:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -4415,7 +4452,7 @@ DEPENDS_79:=\
 	tbox__Array-tbox__Pointer-hier__LocallyActiveDataPatchLevelManager-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_79 +=\
+DEPENDS_80 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4434,10 +4471,10 @@ DEPENDS_79 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_79:X.o=${NDIM}.o}: ${DEPENDS_79}
+${FILE_80:X.o=${NDIM}.o}: ${DEPENDS_80}
 
-FILE_80=tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.o
-DEPENDS_80:=\
+FILE_81=tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.o
+DEPENDS_81:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -4504,7 +4541,7 @@ DEPENDS_80:=\
 	tbox__Array-tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_80 +=\
+DEPENDS_81 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4521,10 +4558,10 @@ DEPENDS_80 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_80:X.o=${NDIM}.o}: ${DEPENDS_80}
+${FILE_81:X.o=${NDIM}.o}: ${DEPENDS_81}
 
-FILE_81=tbox__Array-tbox__Pointer-hier__Patch-NDIMX.o
-DEPENDS_81:=\
+FILE_82=tbox__Array-tbox__Pointer-hier__Patch-NDIMX.o
+DEPENDS_82:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
@@ -4573,7 +4610,7 @@ DEPENDS_81:=\
 	tbox__Array-tbox__Pointer-hier__Patch-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_81 +=\
+DEPENDS_82 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
@@ -4585,10 +4622,10 @@ DEPENDS_81 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_81:X.o=${NDIM}.o}: ${DEPENDS_81}
+${FILE_82:X.o=${NDIM}.o}: ${DEPENDS_82}
 
-FILE_82=tbox__Array-tbox__Pointer-hier__PatchConfigurationUtilities-NDIMX.o
-DEPENDS_82:=\
+FILE_83=tbox__Array-tbox__Pointer-hier__PatchConfigurationUtilities-NDIMX.o
+DEPENDS_83:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -4639,6 +4676,7 @@ DEPENDS_82:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4663,7 +4701,7 @@ DEPENDS_82:=\
 	tbox__Array-tbox__Pointer-hier__PatchConfigurationUtilities-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_82 +=\
+DEPENDS_83 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -4682,10 +4720,10 @@ DEPENDS_82 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_82:X.o=${NDIM}.o}: ${DEPENDS_82}
+${FILE_83:X.o=${NDIM}.o}: ${DEPENDS_83}
 
-FILE_83=tbox__Array-tbox__Pointer-hier__PatchData-NDIMX.o
-DEPENDS_83:=\
+FILE_84=tbox__Array-tbox__Pointer-hier__PatchData-NDIMX.o
+DEPENDS_84:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
@@ -4716,17 +4754,17 @@ DEPENDS_83:=\
 	tbox__Array-tbox__Pointer-hier__PatchData-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_83 +=\
+DEPENDS_84 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C
 endif
 
-${FILE_83:X.o=${NDIM}.o}: ${DEPENDS_83}
+${FILE_84:X.o=${NDIM}.o}: ${DEPENDS_84}
 
-FILE_84=tbox__Array-tbox__Pointer-hier__PatchDataFactory-NDIMX.o
-DEPENDS_84:=\
+FILE_85=tbox__Array-tbox__Pointer-hier__PatchDataFactory-NDIMX.o
+DEPENDS_85:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -4760,7 +4798,7 @@ DEPENDS_84:=\
 	tbox__Array-tbox__Pointer-hier__PatchDataFactory-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_84 +=\
+DEPENDS_85 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -4768,10 +4806,10 @@ DEPENDS_84 +=\
 	$(INCLUDE_SAM)/PatchDataFactory.C
 endif
 
-${FILE_84:X.o=${NDIM}.o}: ${DEPENDS_84}
+${FILE_85:X.o=${NDIM}.o}: ${DEPENDS_85}
 
-FILE_85=tbox__Array-tbox__Pointer-hier__PatchHierarchy-NDIMX.o
-DEPENDS_85:=\
+FILE_86=tbox__Array-tbox__Pointer-hier__PatchHierarchy-NDIMX.o
+DEPENDS_86:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -4819,6 +4857,7 @@ DEPENDS_85:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -4843,7 +4882,7 @@ DEPENDS_85:=\
 	tbox__Array-tbox__Pointer-hier__PatchHierarchy-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_85 +=\
+DEPENDS_86 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -4861,10 +4900,10 @@ DEPENDS_85 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_85:X.o=${NDIM}.o}: ${DEPENDS_85}
+${FILE_86:X.o=${NDIM}.o}: ${DEPENDS_86}
 
-FILE_86=tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.o
-DEPENDS_86:=\
+FILE_87=tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.o
+DEPENDS_87:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -4930,7 +4969,7 @@ DEPENDS_86:=\
 	tbox__Array-tbox__Pointer-hier__PatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_86 +=\
+DEPENDS_87 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -4946,10 +4985,10 @@ DEPENDS_86 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_86:X.o=${NDIM}.o}: ${DEPENDS_86}
+${FILE_87:X.o=${NDIM}.o}: ${DEPENDS_87}
 
-FILE_87=tbox__Array-tbox__Pointer-hier__Variable-NDIMX.o
-DEPENDS_87:=\
+FILE_88=tbox__Array-tbox__Pointer-hier__Variable-NDIMX.o
+DEPENDS_88:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -4983,7 +5022,7 @@ DEPENDS_87:=\
 	tbox__Array-tbox__Pointer-hier__Variable-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_87 +=\
+DEPENDS_88 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -4991,10 +5030,10 @@ DEPENDS_87 +=\
 	$(INCLUDE_SAM)/PatchDataFactory.C $(INCLUDE_SAM)/Variable.C
 endif
 
-${FILE_87:X.o=${NDIM}.o}: ${DEPENDS_87}
+${FILE_88:X.o=${NDIM}.o}: ${DEPENDS_88}
 
-FILE_88=tbox__Array-tbox__Pointer-hier__VariableContext.o
-DEPENDS_88:=\
+FILE_89=tbox__Array-tbox__Pointer-hier__VariableContext.o
+DEPENDS_89:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/VariableContext.I				\
 	$(INCLUDE_SAM)/VariableContext.h $(INCLUDE_SAM)/tbox/Arena.I	\
@@ -5012,14 +5051,14 @@ DEPENDS_88:=\
 	tbox__Array-tbox__Pointer-hier__VariableContext.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_88 +=\
+DEPENDS_89 +=\
 	
 endif
 
-${FILE_88:X.o=${NDIM}.o}: ${DEPENDS_88}
+${FILE_89:X.o=${NDIM}.o}: ${DEPENDS_89}
 
-FILE_89=tbox__List-hier__BoundaryBox-NDIMX.o
-DEPENDS_89:=\
+FILE_90=tbox__List-hier__BoundaryBox-NDIMX.o
+DEPENDS_90:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
@@ -5040,16 +5079,16 @@ DEPENDS_89:=\
 	tbox__List-hier__BoundaryBox-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_89 +=\
+DEPENDS_90 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_89:X.o=${NDIM}.o}: ${DEPENDS_89}
+${FILE_90:X.o=${NDIM}.o}: ${DEPENDS_90}
 
-FILE_90=tbox__List-hier__Box-NDIMX.o
-DEPENDS_90:=\
+FILE_91=tbox__List-hier__Box-NDIMX.o
+DEPENDS_91:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/Index.I			\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
@@ -5066,15 +5105,15 @@ DEPENDS_90:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h tbox__List-hier__Box-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_90 +=\
+DEPENDS_91 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_90:X.o=${NDIM}.o}: ${DEPENDS_90}
+${FILE_91:X.o=${NDIM}.o}: ${DEPENDS_91}
 
-FILE_91=tbox__List-hier__BoxTreeNode_NDIM___TripleX.o
-DEPENDS_91:=\
+FILE_92=tbox__List-hier__BoxTreeNode_NDIM___TripleX.o
+DEPENDS_92:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGraphUtilities.h	\
@@ -5105,17 +5144,17 @@ DEPENDS_91:=\
 	tbox__List-hier__BoxTreeNode_NDIM___TripleX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_91 +=\
+DEPENDS_92 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/Index.C		\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_91:X.o=${NDIM}.o}: ${DEPENDS_91}
+${FILE_92:X.o=${NDIM}.o}: ${DEPENDS_92}
 
-FILE_92=tbox__List-hier__Index-NDIMX.o
-DEPENDS_92:=\
+FILE_93=tbox__List-hier__Index-NDIMX.o
+DEPENDS_93:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
@@ -5128,14 +5167,14 @@ DEPENDS_92:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h tbox__List-hier__Index-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_92 +=\
+DEPENDS_93 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_92:X.o=${NDIM}.o}: ${DEPENDS_92}
+${FILE_93:X.o=${NDIM}.o}: ${DEPENDS_93}
 
-FILE_93=tbox__List-hier__IntVector-NDIMX.o
-DEPENDS_93:=\
+FILE_94=tbox__List-hier__IntVector-NDIMX.o
+DEPENDS_94:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/IntVector.I	\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/IOStream.h	\
@@ -5148,14 +5187,14 @@ DEPENDS_93:=\
 	tbox__List-hier__IntVector-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_93 +=\
+DEPENDS_94 +=\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_93:X.o=${NDIM}.o}: ${DEPENDS_93}
+${FILE_94:X.o=${NDIM}.o}: ${DEPENDS_94}
 
-FILE_94=tbox__List-hier__MultiblockPatchHierarchy_NDIM___NeighborX.o
-DEPENDS_94:=\
+FILE_95=tbox__List-hier__MultiblockPatchHierarchy_NDIM___NeighborX.o
+DEPENDS_95:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -5205,6 +5244,7 @@ DEPENDS_94:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/List.I		\
@@ -5229,7 +5269,7 @@ DEPENDS_94:=\
 	tbox__List-hier__MultiblockPatchHierarchy_NDIM___NeighborX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_94 +=\
+DEPENDS_95 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -5250,10 +5290,10 @@ DEPENDS_94 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_94:X.o=${NDIM}.o}: ${DEPENDS_94}
+${FILE_95:X.o=${NDIM}.o}: ${DEPENDS_95}
 
-FILE_95=tbox__List-tbox__Pointer-hier__Variable-NDIMX.o
-DEPENDS_95:=\
+FILE_96=tbox__List-tbox__Pointer-hier__Variable-NDIMX.o
+DEPENDS_96:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -5288,7 +5328,7 @@ DEPENDS_95:=\
 	tbox__List-tbox__Pointer-hier__Variable-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_95 +=\
+DEPENDS_96 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -5296,10 +5336,10 @@ DEPENDS_95 +=\
 	$(INCLUDE_SAM)/PatchDataFactory.C $(INCLUDE_SAM)/Variable.C
 endif
 
-${FILE_95:X.o=${NDIM}.o}: ${DEPENDS_95}
+${FILE_96:X.o=${NDIM}.o}: ${DEPENDS_96}
 
-FILE_96=tbox__Pointer-hier__BasePatchHierarchy-NDIMX.o
-DEPENDS_96:=\
+FILE_97=tbox__Pointer-hier__BasePatchHierarchy-NDIMX.o
+DEPENDS_97:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/Box.I		\
@@ -5342,7 +5382,7 @@ DEPENDS_96:=\
 	tbox__Pointer-hier__BasePatchHierarchy-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_96 +=\
+DEPENDS_97 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
@@ -5351,10 +5391,10 @@ DEPENDS_96 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C
 endif
 
-${FILE_96:X.o=${NDIM}.o}: ${DEPENDS_96}
+${FILE_97:X.o=${NDIM}.o}: ${DEPENDS_97}
 
-FILE_97=tbox__Pointer-hier__BasePatchLevel-NDIMX.o
-DEPENDS_97:=\
+FILE_98=tbox__Pointer-hier__BasePatchLevel-NDIMX.o
+DEPENDS_98:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h					\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
@@ -5379,14 +5419,14 @@ DEPENDS_97:=\
 	tbox__Pointer-hier__BasePatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_97 +=\
+DEPENDS_98 +=\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_97:X.o=${NDIM}.o}: ${DEPENDS_97}
+${FILE_98:X.o=${NDIM}.o}: ${DEPENDS_98}
 
-FILE_98=tbox__Pointer-hier__BinaryTree-NDIMX.o
-DEPENDS_98:=\
+FILE_99=tbox__Pointer-hier__BinaryTree-NDIMX.o
+DEPENDS_99:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
@@ -5416,17 +5456,17 @@ DEPENDS_98:=\
 	tbox__Pointer-hier__BinaryTree-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_98 +=\
+DEPENDS_99 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/Box.C		\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_98:X.o=${NDIM}.o}: ${DEPENDS_98}
+${FILE_99:X.o=${NDIM}.o}: ${DEPENDS_99}
 
-FILE_99=tbox__Pointer-hier__BoxGeometry-NDIMX.o
-DEPENDS_99:=\
+FILE_100=tbox__Pointer-hier__BoxGeometry-NDIMX.o
+DEPENDS_100:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -5454,17 +5494,17 @@ DEPENDS_99:=\
 	tbox__Pointer-hier__BoxGeometry-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_99 +=\
+DEPENDS_100 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_99:X.o=${NDIM}.o}: ${DEPENDS_99}
+${FILE_100:X.o=${NDIM}.o}: ${DEPENDS_100}
 
-FILE_100=tbox__Pointer-hier__BoxGraph-NDIMX.o
-DEPENDS_100:=\
+FILE_101=tbox__Pointer-hier__BoxGraph-NDIMX.o
+DEPENDS_101:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGraph.I		\
@@ -5500,17 +5540,17 @@ DEPENDS_100:=\
 	tbox__Pointer-hier__BoxGraph-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_100 +=\
+DEPENDS_101 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_100:X.o=${NDIM}.o}: ${DEPENDS_100}
+${FILE_101:X.o=${NDIM}.o}: ${DEPENDS_101}
 
-FILE_101=tbox__Pointer-hier__BoxList-NDIMX.o
-DEPENDS_101:=\
+FILE_102=tbox__Pointer-hier__BoxList-NDIMX.o
+DEPENDS_102:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
@@ -5536,16 +5576,16 @@ DEPENDS_101:=\
 	tbox__Pointer-hier__BoxList-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_101 +=\
+DEPENDS_102 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_101:X.o=${NDIM}.o}: ${DEPENDS_101}
+${FILE_102:X.o=${NDIM}.o}: ${DEPENDS_102}
 
-FILE_102=tbox__Pointer-hier__BoxOverlap-NDIMX.o
-DEPENDS_102:=\
+FILE_103=tbox__Pointer-hier__BoxOverlap-NDIMX.o
+DEPENDS_103:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
@@ -5572,16 +5612,16 @@ DEPENDS_102:=\
 	tbox__Pointer-hier__BoxOverlap-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_102 +=\
+DEPENDS_103 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_102:X.o=${NDIM}.o}: ${DEPENDS_102}
+${FILE_103:X.o=${NDIM}.o}: ${DEPENDS_103}
 
-FILE_103=tbox__Pointer-hier__BoxTop-NDIMX.o
-DEPENDS_103:=\
+FILE_104=tbox__Pointer-hier__BoxTop-NDIMX.o
+DEPENDS_104:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGraphUtilities.h	\
@@ -5609,17 +5649,17 @@ DEPENDS_103:=\
 	tbox__Pointer-hier__BoxTop-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_103 +=\
+DEPENDS_104 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/Index.C			\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_103:X.o=${NDIM}.o}: ${DEPENDS_103}
+${FILE_104:X.o=${NDIM}.o}: ${DEPENDS_104}
 
-FILE_104=tbox__Pointer-hier__BoxTree-NDIMX.o
-DEPENDS_104:=\
+FILE_105=tbox__Pointer-hier__BoxTree-NDIMX.o
+DEPENDS_105:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGraphUtilities.h	\
@@ -5649,17 +5689,17 @@ DEPENDS_104:=\
 	tbox__Pointer-hier__BoxTree-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_104 +=\
+DEPENDS_105 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_104:X.o=${NDIM}.o}: ${DEPENDS_104}
+${FILE_105:X.o=${NDIM}.o}: ${DEPENDS_105}
 
-FILE_105=tbox__Pointer-hier__BoxTreeNode-NDIMX.o
-DEPENDS_105:=\
+FILE_106=tbox__Pointer-hier__BoxTreeNode-NDIMX.o
+DEPENDS_106:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGraphUtilities.h	\
@@ -5687,17 +5727,17 @@ DEPENDS_105:=\
 	tbox__Pointer-hier__BoxTreeNode-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_105 +=\
+DEPENDS_106 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
 	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/Index.C		\
 	$(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_105:X.o=${NDIM}.o}: ${DEPENDS_105}
+${FILE_106:X.o=${NDIM}.o}: ${DEPENDS_106}
 
-FILE_106=tbox__Pointer-hier__CoarseFineBoundary-NDIMX.o
-DEPENDS_106:=\
+FILE_107=tbox__Pointer-hier__CoarseFineBoundary-NDIMX.o
+DEPENDS_107:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -5748,6 +5788,7 @@ DEPENDS_106:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -5772,7 +5813,7 @@ DEPENDS_106:=\
 	tbox__Pointer-hier__CoarseFineBoundary-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_106 +=\
+DEPENDS_107 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -5794,10 +5835,10 @@ DEPENDS_106 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_106:X.o=${NDIM}.o}: ${DEPENDS_106}
+${FILE_107:X.o=${NDIM}.o}: ${DEPENDS_107}
 
-FILE_107=tbox__Pointer-hier__ComponentSelector.o
-DEPENDS_107:=\
+FILE_108=tbox__Pointer-hier__ComponentSelector.o
+DEPENDS_108:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/ComponentSelector.I				\
 	$(INCLUDE_SAM)/ComponentSelector.h $(INCLUDE_SAM)/tbox/Arena.I	\
@@ -5820,14 +5861,14 @@ DEPENDS_107:=\
 	tbox__Pointer-hier__ComponentSelector.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_107 +=\
+DEPENDS_108 +=\
 	
 endif
 
-${FILE_107:X.o=${NDIM}.o}: ${DEPENDS_107}
+${FILE_108:X.o=${NDIM}.o}: ${DEPENDS_108}
 
-FILE_108=tbox__Pointer-hier__GridGeometry-NDIMX.o
-DEPENDS_108:=\
+FILE_109=tbox__Pointer-hier__GridGeometry-NDIMX.o
+DEPENDS_109:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -5892,7 +5933,7 @@ DEPENDS_108:=\
 	tbox__Pointer-hier__GridGeometry-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_108 +=\
+DEPENDS_109 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -5908,10 +5949,10 @@ DEPENDS_108 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_108:X.o=${NDIM}.o}: ${DEPENDS_108}
+${FILE_109:X.o=${NDIM}.o}: ${DEPENDS_109}
 
-FILE_109=tbox__Pointer-hier__Index-NDIMX.o
-DEPENDS_109:=\
+FILE_110=tbox__Pointer-hier__Index-NDIMX.o
+DEPENDS_110:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Index.I	\
 	$(INCLUDE_SAM)/Index.h $(INCLUDE_SAM)/IntVector.I		\
 	$(INCLUDE_SAM)/IntVector.h $(INCLUDE_SAM)/tbox/Arena.I		\
@@ -5930,14 +5971,14 @@ DEPENDS_109:=\
 	tbox__Pointer-hier__Index-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_109 +=\
+DEPENDS_110 +=\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C
 endif
 
-${FILE_109:X.o=${NDIM}.o}: ${DEPENDS_109}
+${FILE_110:X.o=${NDIM}.o}: ${DEPENDS_110}
 
-FILE_110=tbox__Pointer-hier__LocallyActiveDataPatchLevelManager-NDIMX.o
-DEPENDS_110:=\
+FILE_111=tbox__Pointer-hier__LocallyActiveDataPatchLevelManager-NDIMX.o
+DEPENDS_111:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -6007,7 +6048,7 @@ DEPENDS_110:=\
 	tbox__Pointer-hier__LocallyActiveDataPatchLevelManager-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_110 +=\
+DEPENDS_111 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -6026,10 +6067,10 @@ DEPENDS_110 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_110:X.o=${NDIM}.o}: ${DEPENDS_110}
+${FILE_111:X.o=${NDIM}.o}: ${DEPENDS_111}
 
-FILE_111=tbox__Pointer-hier__MultiblockGridGeometry-NDIMX.o
-DEPENDS_111:=\
+FILE_112=tbox__Pointer-hier__MultiblockGridGeometry-NDIMX.o
+DEPENDS_112:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -6095,7 +6136,7 @@ DEPENDS_111:=\
 	tbox__Pointer-hier__MultiblockGridGeometry-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_111 +=\
+DEPENDS_112 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -6112,10 +6153,10 @@ DEPENDS_111 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_111:X.o=${NDIM}.o}: ${DEPENDS_111}
+${FILE_112:X.o=${NDIM}.o}: ${DEPENDS_112}
 
-FILE_112=tbox__Pointer-hier__MultiblockPatchHierarchy-NDIMX.o
-DEPENDS_112:=\
+FILE_113=tbox__Pointer-hier__MultiblockPatchHierarchy-NDIMX.o
+DEPENDS_113:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -6165,6 +6206,7 @@ DEPENDS_112:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6189,7 +6231,7 @@ DEPENDS_112:=\
 	tbox__Pointer-hier__MultiblockPatchHierarchy-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_112 +=\
+DEPENDS_113 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -6210,10 +6252,10 @@ DEPENDS_112 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_112:X.o=${NDIM}.o}: ${DEPENDS_112}
+${FILE_113:X.o=${NDIM}.o}: ${DEPENDS_113}
 
-FILE_113=tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.o
-DEPENDS_113:=\
+FILE_114=tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.o
+DEPENDS_114:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -6279,7 +6321,7 @@ DEPENDS_113:=\
 	tbox__Pointer-hier__MultiblockPatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_113 +=\
+DEPENDS_114 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -6296,10 +6338,10 @@ DEPENDS_113 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_113:X.o=${NDIM}.o}: ${DEPENDS_113}
+${FILE_114:X.o=${NDIM}.o}: ${DEPENDS_114}
 
-FILE_114=tbox__Pointer-hier__Patch-NDIMX.o
-DEPENDS_114:=\
+FILE_115=tbox__Pointer-hier__Patch-NDIMX.o
+DEPENDS_115:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
@@ -6348,7 +6390,7 @@ DEPENDS_114:=\
 	tbox__Pointer-hier__Patch-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_114 +=\
+DEPENDS_115 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
@@ -6360,10 +6402,10 @@ DEPENDS_114 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_114:X.o=${NDIM}.o}: ${DEPENDS_114}
+${FILE_115:X.o=${NDIM}.o}: ${DEPENDS_115}
 
-FILE_115=tbox__Pointer-hier__PatchConfigurationUtilities-NDIMX.o
-DEPENDS_115:=\
+FILE_116=tbox__Pointer-hier__PatchConfigurationUtilities-NDIMX.o
+DEPENDS_116:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -6413,6 +6455,7 @@ DEPENDS_115:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6437,7 +6480,7 @@ DEPENDS_115:=\
 	tbox__Pointer-hier__PatchConfigurationUtilities-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_115 +=\
+DEPENDS_116 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -6456,10 +6499,10 @@ DEPENDS_115 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_115:X.o=${NDIM}.o}: ${DEPENDS_115}
+${FILE_116:X.o=${NDIM}.o}: ${DEPENDS_116}
 
-FILE_116=tbox__Pointer-hier__PatchData-NDIMX.o
-DEPENDS_116:=\
+FILE_117=tbox__Pointer-hier__PatchData-NDIMX.o
+DEPENDS_117:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxList.I		\
@@ -6489,17 +6532,17 @@ DEPENDS_116:=\
 	tbox__Pointer-hier__PatchData-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_116 +=\
+DEPENDS_117 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchData.C
 endif
 
-${FILE_116:X.o=${NDIM}.o}: ${DEPENDS_116}
+${FILE_117:X.o=${NDIM}.o}: ${DEPENDS_117}
 
-FILE_117=tbox__Pointer-hier__PatchDataFactory-NDIMX.o
-DEPENDS_117:=\
+FILE_118=tbox__Pointer-hier__PatchDataFactory-NDIMX.o
+DEPENDS_118:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -6532,7 +6575,7 @@ DEPENDS_117:=\
 	tbox__Pointer-hier__PatchDataFactory-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_117 +=\
+DEPENDS_118 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -6540,10 +6583,10 @@ DEPENDS_117 +=\
 	$(INCLUDE_SAM)/PatchDataFactory.C
 endif
 
-${FILE_117:X.o=${NDIM}.o}: ${DEPENDS_117}
+${FILE_118:X.o=${NDIM}.o}: ${DEPENDS_118}
 
-FILE_118=tbox__Pointer-hier__PatchDescriptor-NDIMX.o
-DEPENDS_118:=\
+FILE_119=tbox__Pointer-hier__PatchDescriptor-NDIMX.o
+DEPENDS_119:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -6579,7 +6622,7 @@ DEPENDS_118:=\
 	tbox__Pointer-hier__PatchDescriptor-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_118 +=\
+DEPENDS_119 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -6588,10 +6631,10 @@ DEPENDS_118 +=\
 	$(INCLUDE_SAM)/PatchDescriptor.C
 endif
 
-${FILE_118:X.o=${NDIM}.o}: ${DEPENDS_118}
+${FILE_119:X.o=${NDIM}.o}: ${DEPENDS_119}
 
-FILE_119=tbox__Pointer-hier__PatchFactory-NDIMX.o
-DEPENDS_119:=\
+FILE_120=tbox__Pointer-hier__PatchFactory-NDIMX.o
+DEPENDS_120:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
@@ -6641,7 +6684,7 @@ DEPENDS_119:=\
 	tbox__Pointer-hier__PatchFactory-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_119 +=\
+DEPENDS_120 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxGeometry.C		\
@@ -6654,10 +6697,10 @@ DEPENDS_119 +=\
 	$(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_119:X.o=${NDIM}.o}: ${DEPENDS_119}
+${FILE_120:X.o=${NDIM}.o}: ${DEPENDS_120}
 
-FILE_120=tbox__Pointer-hier__PatchGeometry-NDIMX.o
-DEPENDS_120:=\
+FILE_121=tbox__Pointer-hier__PatchGeometry-NDIMX.o
+DEPENDS_121:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/BoundaryBox.I	\
 	$(INCLUDE_SAM)/BoundaryBox.h					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.I				\
@@ -6686,17 +6729,17 @@ DEPENDS_120:=\
 	tbox__Pointer-hier__PatchGeometry-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_120 +=\
+DEPENDS_121 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/PatchGeometry.C
 endif
 
-${FILE_120:X.o=${NDIM}.o}: ${DEPENDS_120}
+${FILE_121:X.o=${NDIM}.o}: ${DEPENDS_121}
 
-FILE_121=tbox__Pointer-hier__PatchHierarchy-NDIMX.o
-DEPENDS_121:=\
+FILE_122=tbox__Pointer-hier__PatchHierarchy-NDIMX.o
+DEPENDS_122:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchHierarchy.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
@@ -6743,6 +6786,7 @@ DEPENDS_121:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -6767,7 +6811,7 @@ DEPENDS_121:=\
 	tbox__Pointer-hier__PatchHierarchy-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_121 +=\
+DEPENDS_122 +=\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
@@ -6785,10 +6829,10 @@ DEPENDS_121 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_121:X.o=${NDIM}.o}: ${DEPENDS_121}
+${FILE_122:X.o=${NDIM}.o}: ${DEPENDS_122}
 
-FILE_122=tbox__Pointer-hier__PatchLevel-NDIMX.o
-DEPENDS_122:=\
+FILE_123=tbox__Pointer-hier__PatchLevel-NDIMX.o
+DEPENDS_123:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -6853,7 +6897,7 @@ DEPENDS_122:=\
 	tbox__Pointer-hier__PatchLevel-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_122 +=\
+DEPENDS_123 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -6869,10 +6913,10 @@ DEPENDS_122 +=\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_122:X.o=${NDIM}.o}: ${DEPENDS_122}
+${FILE_123:X.o=${NDIM}.o}: ${DEPENDS_123}
 
-FILE_123=tbox__Pointer-hier__PatchLevelFactory-NDIMX.o
-DEPENDS_123:=\
+FILE_124=tbox__Pointer-hier__PatchLevelFactory-NDIMX.o
+DEPENDS_124:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/BasePatchLevel.h $(INCLUDE_SAM)/BinaryTree.I	\
 	$(INCLUDE_SAM)/BinaryTree.h $(INCLUDE_SAM)/BoundaryBox.I	\
@@ -6939,7 +6983,7 @@ DEPENDS_123:=\
 	tbox__Pointer-hier__PatchLevelFactory-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_123 +=\
+DEPENDS_124 +=\
 	$(INCLUDE_SAM)/BinaryTree.C $(INCLUDE_SAM)/BoundaryBox.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
@@ -6956,10 +7000,10 @@ DEPENDS_123 +=\
 	$(INCLUDE_SAM)/VariableDatabase.C
 endif
 
-${FILE_123:X.o=${NDIM}.o}: ${DEPENDS_123}
+${FILE_124:X.o=${NDIM}.o}: ${DEPENDS_124}
 
-FILE_124=tbox__Pointer-hier__Variable-NDIMX.o
-DEPENDS_124:=\
+FILE_125=tbox__Pointer-hier__Variable-NDIMX.o
+DEPENDS_125:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/Box.I		\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxGeometry.I		\
@@ -6992,7 +7036,7 @@ DEPENDS_124:=\
 	tbox__Pointer-hier__Variable-NDIMX.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_124 +=\
+DEPENDS_125 +=\
 	$(INCLUDE_SAM)/Box.C $(INCLUDE_SAM)/BoxArray.C			\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxList.C		\
 	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/Index.C		\
@@ -7000,10 +7044,10 @@ DEPENDS_124 +=\
 	$(INCLUDE_SAM)/PatchDataFactory.C $(INCLUDE_SAM)/Variable.C
 endif
 
-${FILE_124:X.o=${NDIM}.o}: ${DEPENDS_124}
+${FILE_125:X.o=${NDIM}.o}: ${DEPENDS_125}
 
-FILE_125=tbox__Pointer-hier__VariableContext.o
-DEPENDS_125:=\
+FILE_126=tbox__Pointer-hier__VariableContext.o
+DEPENDS_126:=\
 	$(OBJECT)/include/SAMRAI_config.h				\
 	$(INCLUDE_SAM)/VariableContext.I				\
 	$(INCLUDE_SAM)/VariableContext.h $(INCLUDE_SAM)/tbox/Arena.I	\
@@ -7019,9 +7063,9 @@ DEPENDS_125:=\
 	tbox__Pointer-hier__VariableContext.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_125 +=\
+DEPENDS_126 +=\
 	
 endif
 
-${FILE_125:X.o=${NDIM}.o}: ${DEPENDS_125}
+${FILE_126:X.o=${NDIM}.o}: ${DEPENDS_126}
 

@@ -1,7 +1,7 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistician.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Statistician.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:    \f$ \f$
 // Modified:    \f$ \f$
 // Description: Singleton manager class for statistic objects.
@@ -1627,9 +1627,13 @@ void Statistician::finalize()
     * all processors to avoid compiler warnings.
     */
    Array< Pointer<Statistic> >* global_proc_stats =
-      new Array< Pointer<Statistic> >[d_num_proc_stats];
+      d_num_proc_stats > 0
+      ? new Array< Pointer<Statistic> >[d_num_proc_stats]
+      : (Array< Pointer<Statistic> >*)NULL;
    Array< Pointer<Statistic> >* global_patch_stats =
-      new Array< Pointer<Statistic> >[d_num_patch_stats];
+      d_num_patch_stats > 0
+      ? new Array< Pointer<Statistic> >[d_num_patch_stats]
+      : (Array< Pointer<Statistic> >*)NULL;
 
    if (my_rank == 0) {
 
@@ -1964,7 +1968,7 @@ void Statistician::checkStatsForConsistency(
          for (ip = 0; ip < d_patch_statistics[is]->getStatSequenceLength(); 
               ip++) {
             total_patches[ipsl] = d_patch_statistics[is]->
-                  getPatchStatSeqArray()[ip].patch_records.getNumberItems();
+                  getPatchStatSeqArray()[ip].patch_records.getNumberOfItems();
             ipsl++;
          }
       }
@@ -2234,11 +2238,7 @@ void Statistician::printSpreadSheetOutputForProcessor(
       for (is = 0; is < d_num_proc_stats; is++) {
          std::string name = d_proc_statistics[is]->getName();
          name = name + "-proc-";
-         const int size = name.length() + 16;
-         char *buffer = new char[size];
-         sprintf(buffer, "%s%d", name.c_str(),proc_id);
-         std::string filename(buffer);
-         filename = filename + ".txt";
+         std::string filename = name + tbox::Utilities::processorToString(proc_id) + ".txt";
          if (write_to_dir) filename = dirname + "/" + filename;
          std::ofstream file(filename.c_str());
          printGlobalProcStatDataFormatted(is, proc_id, file, precision);

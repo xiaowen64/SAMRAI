@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/PatchMultiblockTestStrategy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/PatchMultiblockTestStrategy.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Base class for patch data test operations.
 //
 
@@ -172,7 +172,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
       hier::BoxArray<NDIM> boxes = d_refine_level_boxes[level_number];
       int nboxes = boxes.getNumberOfBoxes();
       for (int k = 0; k < nboxes; k++) {
-         tags->fill(1, boxes.getBox(k)*pbox, 0);
+         tags->fill(1, boxes[k]*pbox, 0);
       }
 
    }

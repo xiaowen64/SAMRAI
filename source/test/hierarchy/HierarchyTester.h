@@ -1,40 +1,24 @@
 // 
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/hierarchy/HierarchyTester.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/hierarchy/HierarchyTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Manager class for patch hierarchy refine/coarsen tests.
 //
 
 #ifndef included_HierarchyTester
 #define included_HierarchyTester
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_noprefix_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_noprefix_GriddingAlgorithm
 #include "GriddingAlgorithm.h"
-#endif
-#ifndef included_noprefix_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_noprefix_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_noprefix_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_noprefix_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_noprefix_StandardTagAndInitStrategy
 #include "StandardTagAndInitStrategy.h"
-#endif
 #ifndef included_tbox_String
 #include <string>
 using namespace std;

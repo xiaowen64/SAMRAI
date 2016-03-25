@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -13,38 +13,20 @@
 libdefault:	ArrayDataBasicOps-NDIM_double${NDIM}.o				\
 	ArrayDataBasicOps-NDIM_int${NDIM}.o				\
 	ArrayDataMiscellaneousOpsReal-NDIM_double${NDIM}.o		\
-	ArrayDataNormOpsComplex-NDIM${NDIM}.o				\
 	ArrayDataNormOpsInteger-NDIM${NDIM}.o				\
 	ArrayDataNormOpsReal-NDIM_double${NDIM}.o			\
-	HierarchyCellDataOpsComplex-NDIM${NDIM}.o			\
 	HierarchyCellDataOpsInteger-NDIM${NDIM}.o			\
-	HierarchyDataOpsComplex-NDIM${NDIM}.o				\
-	HierarchyDataOpsComplex-NDIM${NDIM}.o				\
 	HierarchyDataOpsInteger-NDIM${NDIM}.o				\
 	HierarchyDataOpsManager-NDIM${NDIM}.o				\
 	HierarchyDataOpsReal-NDIM_double${NDIM}.o			\
-	HierarchyEdgeDataOpsComplex-NDIM${NDIM}.o			\
 	HierarchyEdgeDataOpsInteger-NDIM${NDIM}.o			\
-	HierarchyFaceDataOpsComplex-NDIM${NDIM}.o			\
 	HierarchyFaceDataOpsInteger-NDIM${NDIM}.o			\
-	HierarchyNodeDataOpsComplex-NDIM${NDIM}.o			\
 	HierarchyNodeDataOpsInteger-NDIM${NDIM}.o			\
-	HierarchySideDataOpsComplex-NDIM${NDIM}.o			\
 	HierarchySideDataOpsInteger-NDIM${NDIM}.o			\
-	PatchCellDataNormOpsComplex-NDIM${NDIM}.o			\
-	PatchCellDataOpsComplex-NDIM${NDIM}.o				\
 	PatchCellDataOpsInteger-NDIM${NDIM}.o				\
-	PatchEdgeDataNormOpsComplex-NDIM${NDIM}.o			\
-	PatchEdgeDataOpsComplex-NDIM${NDIM}.o				\
 	PatchEdgeDataOpsInteger-NDIM${NDIM}.o				\
-	PatchFaceDataNormOpsComplex-NDIM${NDIM}.o			\
-	PatchFaceDataOpsComplex-NDIM${NDIM}.o				\
 	PatchFaceDataOpsInteger-NDIM${NDIM}.o				\
-	PatchNodeDataNormOpsComplex-NDIM${NDIM}.o			\
-	PatchNodeDataOpsComplex-NDIM${NDIM}.o				\
 	PatchNodeDataOpsInteger-NDIM${NDIM}.o				\
-	PatchSideDataNormOpsComplex-NDIM${NDIM}.o			\
-	PatchSideDataOpsComplex-NDIM${NDIM}.o				\
 	PatchSideDataOpsInteger-NDIM${NDIM}.o				\
 	math__HierarchyCellDataOpsReal-NDIM_double${NDIM}.o		\
 	math__HierarchyEdgeDataOpsReal-NDIM_double${NDIM}.o		\
@@ -152,6 +134,25 @@ libfloat:	ArrayDataBasicOps-NDIM_float${NDIM}.o				\
 
 
 libdcomplex:	ArrayDataBasicOps-NDIM_dcomplex${NDIM}.o			\
+	ArrayDataNormOpsComplex-NDIM${NDIM}.o				\
+	HierarchyCellDataOpsComplex-NDIM${NDIM}.o			\
+	HierarchyDataOpsComplex-NDIM${NDIM}.o				\
+	HierarchyDataOpsComplex-NDIM${NDIM}.o				\
+	HierarchyDataOpsManager-NDIM${NDIM}.o				\
+	HierarchyEdgeDataOpsComplex-NDIM${NDIM}.o			\
+	HierarchyFaceDataOpsComplex-NDIM${NDIM}.o			\
+	HierarchyNodeDataOpsComplex-NDIM${NDIM}.o			\
+	HierarchySideDataOpsComplex-NDIM${NDIM}.o			\
+	PatchCellDataNormOpsComplex-NDIM${NDIM}.o			\
+	PatchCellDataOpsComplex-NDIM${NDIM}.o				\
+	PatchEdgeDataNormOpsComplex-NDIM${NDIM}.o			\
+	PatchEdgeDataOpsComplex-NDIM${NDIM}.o				\
+	PatchFaceDataNormOpsComplex-NDIM${NDIM}.o			\
+	PatchFaceDataOpsComplex-NDIM${NDIM}.o				\
+	PatchNodeDataNormOpsComplex-NDIM${NDIM}.o			\
+	PatchNodeDataOpsComplex-NDIM${NDIM}.o				\
+	PatchSideDataNormOpsComplex-NDIM${NDIM}.o			\
+	PatchSideDataOpsComplex-NDIM${NDIM}.o				\
 	math__PatchCellDataBasicOps-NDIM_dcomplex${NDIM}.o		\
 	math__PatchEdgeDataBasicOps-NDIM_dcomplex${NDIM}.o		\
 	math__PatchFaceDataBasicOps-NDIM_dcomplex${NDIM}.o		\

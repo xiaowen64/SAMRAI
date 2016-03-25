@@ -1,14 +1,15 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/base/PIO.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/PIO.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	Parallel I/O classes pout, perr, and plog and control class
 //
 
+#include <string>
+
 #include "tbox/PIO.h"
-#include <stdio.h>
 #include "tbox/SAMRAI_MPI.h"
 #include "tbox/ParallelBuffer.h"
 
@@ -66,8 +67,7 @@ void PIO::initialize()
     * Initialize the error parallel output stream
     */
 
-   char buffer[16];
-   sprintf(buffer, "P=%05d:", s_rank);
+   std::string buffer = "P=" + tbox::Utilities::processorToString(s_rank) + ":";
 
    perr_buffer.setActive(true);
    perr_buffer.setPrefixString(buffer);
@@ -184,22 +184,20 @@ void PIO::logAllNodes(const std::string &filename)
     * Open the log stream and redirect output
     */
 
-   char *buffer = new char[filename.length() + 16];
-   sprintf(buffer, "%s.%05d", filename.c_str(), s_rank);
-   s_filestream = new std::ofstream(buffer);
+   std::string full_filename = filename + "." + 
+      tbox::Utilities::processorToString(s_rank);
+   s_filestream = new std::ofstream(full_filename.c_str());
 
    if (!(*s_filestream)) {
       delete s_filestream;
       s_filestream = NULL;
-      perr << "PIO: Could not open log file ``" << buffer << "''\n";
+      perr << "PIO: Could not open log file ``" << full_filename << "''\n";
    } else {
       pout_buffer.setOutputStream2(s_filestream);
       perr_buffer.setOutputStream2(s_filestream);
       plog_buffer.setOutputStream1(s_filestream);
       plog_buffer.setActive(true);
    }
-
-   delete [] buffer;
 }
 
 /*

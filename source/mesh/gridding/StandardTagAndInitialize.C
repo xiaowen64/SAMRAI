@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/StandardTagAndInitialize.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/StandardTagAndInitialize.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Routines for performing cell-tagging and initializing 
 //              a new level.
 //
@@ -303,7 +303,7 @@ template<int DIM> void StandardTagAndInitialize<DIM>::tagCellsForRefinement(
 
          for (int ib = 0; ib < refine_boxes.getNumberOfBoxes(); ib++) {
             hier::Box<DIM> intersection = 
-               refine_boxes.getBox(ib) * tag_data->getBox();
+               refine_boxes[ib] * tag_data->getBox();
             if ( !(intersection.empty()) ) {
                tag_data->fill(1, intersection); 
             }
@@ -813,11 +813,11 @@ template<int DIM> bool StandardTagAndInitialize<DIM>::coarsestLevelBoxesOK(
 
       const int n_boxes = boxes.getNumberOfBoxes();
       for (int ib = 0; ib < n_boxes; ib++) {
-         hier::IntVector<DIM> n_cells = boxes.getBox(ib).numberCells();
+         hier::IntVector<DIM> n_cells = boxes[ib].numberCells();
          for (int i = 0; i < DIM; i++) {
             int error_coarsen_ratio = getErrorCoarsenRatio();
             if ( !((n_cells(i) % error_coarsen_ratio) == 0) ) {
-               tbox::perr << "Bad domain box: " << boxes.getBox(ib) << std::endl;
+               tbox::perr << "Bad domain box: " << boxes[ib] << std::endl;
                TBOX_WARNING(d_object_name << "At least one box on the \n"
                   << "coarsest level could not be coarsened by the ratio: "
                   << error_coarsen_ratio);

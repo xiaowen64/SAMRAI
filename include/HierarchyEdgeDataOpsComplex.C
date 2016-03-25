@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/edge/HierarchyEdgeDataOpsComplex.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/edge/HierarchyEdgeDataOpsComplex.C $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1776 $
-// Modified:    $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Operations for complex edge data on multiple levels.
 //
 
@@ -35,7 +35,7 @@ template<int DIM>  HierarchyEdgeDataOpsComplex<DIM>::HierarchyEdgeDataOpsComplex
 #endif
    d_hierarchy = hierarchy;
    if ( (coarsest_level < 0) || (finest_level < 0) ) {
-      if ( d_hierarchy->getNumberLevels() == 0 ) {
+      if ( d_hierarchy->getNumberOfLevels() == 0 ) {
          d_coarsest_level = coarsest_level;
          d_finest_level = finest_level;
       } else {
@@ -94,8 +94,8 @@ template<int DIM> void HierarchyEdgeDataOpsComplex<DIM>::resetLevels(
          edge_boxes = level->getBoxes();
          const int n = edge_boxes.getNumberOfBoxes();
          for (i = 0; i < n; i++) {
-            edge_boxes.getBox(i) =
-               pdat::EdgeGeometry<DIM>::toEdgeBox(edge_boxes.getBox(i), nd);
+            edge_boxes[i] =
+               pdat::EdgeGeometry<DIM>::toEdgeBox(edge_boxes[i], nd);
          }
          hier::BoxUtilities<DIM>::makeNonOverlappingBoxLists(
                              d_nonoverlapping_edge_boxes[nd][ln],

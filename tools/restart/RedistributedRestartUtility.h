@@ -56,8 +56,8 @@ private:
  * all other cases.
  */
 static void readAndWriteRestartData(
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& output_dbs,
-   const tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& input_dbs,
+   tbox::Array< tbox::Pointer<tbox::Database> >& output_dbs,
+   const tbox::Array< tbox::Pointer<tbox::Database> >& input_dbs,
    const string& key,
    const tbox::Array< tbox::Array<int> >* file_mapping = NULL,
    int num_files_written = -1,
@@ -72,7 +72,7 @@ static void readAndWriteRestartData(
  */
 static void createNewProcessorMapping(
    tbox::Array<int>& proc_map,
-   const tbox::Pointer<tbox::HDFDatabase>& level_db,
+   const tbox::Pointer<tbox::Database>& level_db,
    const tbox::Array< tbox::Array<int> >& file_mapping,
    const int total_input_files,
    const int total_output_files);
@@ -84,8 +84,8 @@ static void createNewProcessorMapping(
  * proc_mapping.
  */
 static void readAndWritePatchLevelRestartData(
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& output_dbs,
-   const tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& level_in_dbs,
+   tbox::Array< tbox::Pointer<tbox::Database> >& output_dbs,
+   const tbox::Array< tbox::Pointer<tbox::Database> >& level_in_dbs,
    const string& key,
    const tbox::Array<int>& proc_mapping,
    const int num_files_written,
@@ -96,8 +96,8 @@ static void readAndWritePatchLevelRestartData(
  * database.
  */
 static void readAndWritePatchRestartData(
-   tbox::Pointer<tbox::HDFDatabase>& patch_out_db,
-   const tbox::Pointer<tbox::HDFDatabase>& patch_in_db);
+   tbox::Pointer<tbox::Database>& patch_out_db,
+   const tbox::Pointer<tbox::Database>& patch_in_db);
 
 };
 

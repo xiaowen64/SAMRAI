@@ -1,14 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/HistogramBox.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/clustering/HistogramBox.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2172 $
+// Modified:    $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description: Histogram class for computing tagged cell signatures.
 //
 
 #ifndef included_mesh_HistogramBox_C
 #define included_mesh_HistogramBox_C
+
+#include <string.h>
 
 #include "HistogramBox.h"
 

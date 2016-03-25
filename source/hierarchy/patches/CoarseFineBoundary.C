@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/CoarseFineBoundary.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/CoarseFineBoundary.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1888 $
-// Modified:	$LastChangedDate: 2008-01-22 16:24:44 -0800 (Tue, 22 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	For describing coarse-fine boundary interfaces
 //
 
@@ -50,7 +50,7 @@ template<int DIM>  CoarseFineBoundary<DIM>::CoarseFineBoundary(
    TBOX_ASSERT(max_ghost_width > IntVector<DIM>(-1));
 #endif
 
-   d_nblocks = hierarchy->getNumberBlocks();
+   d_nblocks = hierarchy->getNumberOfBlocks();
    d_npatches.resizeArray(d_nblocks);
 
    for (int i = 0; i < d_nblocks; i++) {
@@ -408,7 +408,7 @@ template<int DIM> void CoarseFineBoundary<DIM>::addPeriodicImageBoxes(
     */
    int new_size = current_size;
    for ( ip=0; ip<current_size; ++ip ) {
-      new_size += shifts[ip].getNumberItems();
+      new_size += shifts[ip].getNumberOfItems();
    }
    boxes.resizeBoxArray( new_size );
 
@@ -420,14 +420,14 @@ template<int DIM> void CoarseFineBoundary<DIM>::addPeriodicImageBoxes(
    const int old_size = current_size;
 
    for ( ip=0; ip<old_size; ++ip ) {
-      const Box<DIM>& unshifted_box = boxes.getBox(ip);
+      const Box<DIM>& unshifted_box = boxes[ip];
       const tbox::List< IntVector<DIM> >& shifts_list = shifts[ip];
       if ( ! shifts_list.isEmpty() ) {
          typename tbox::List< IntVector<DIM> >::Iterator sh;
          for ( sh = shifts_list.listStart(); sh; sh++ ) {
             Box<DIM> shifted_box(unshifted_box);
             shifted_box.shift( (*sh) );
-            boxes(current_size++) = shifted_box;
+            boxes[current_size++] = shifted_box;
          }
       }
    }

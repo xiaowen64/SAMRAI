@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/patch_configuration/PatchConfigurationTester.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/patch_configuration/PatchConfigurationTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2122 $
+// Modified:    $LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 // Description: Class to test patch configuration utility
 //
  
@@ -14,7 +14,7 @@
  */
 #include "Box.h"
 #include "BoxList.h"
-#include "tbox/InputDatabase.h"
+#include "tbox/Database.h"
 #include "IntVector.h"
 #include "Patch.h"
 #include "PatchHierarchy.h"
@@ -69,7 +69,7 @@ public:
     * Constructor for PatchConfigurationTester.
     */     
    PatchConfigurationTester(const string& object_name,
-                            tbox::Pointer<tbox::InputDatabase> input_db,
+                            tbox::Pointer<tbox::Database> input_db,
                             tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy);
 
    /**
@@ -103,7 +103,7 @@ private:
     * Read input parameters for patch hierarchy construction.
     */
    void getGriddingParametersFromInput(
-      tbox::Pointer<tbox::InputDatabase> gridding_db);
+      tbox::Pointer<tbox::Database> gridding_db);
 
    /*
     * Private member functions to check patch configuration data.

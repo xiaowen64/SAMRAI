@@ -1,9 +1,9 @@
 //
 // File:        MblkLinAdv.C
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Numerical routines for single patch in linear advection ex.
 //
 #include "MblkLinAdv.h"
@@ -2345,7 +2345,7 @@ void MblkLinAdv::tagGradientDetectorCells( hier::Patch<NDIM>& patch,
                                              block_number,
                                              level_number) ) {
             for (int b = 0; b < refine_boxes.getNumberOfBoxes(); b++) {
-               hier::Box<NDIM> intersect = pbox * refine_boxes(b);
+               hier::Box<NDIM> intersect = pbox * refine_boxes[b];
                if (!intersect.empty()) {
                   temp_tags->fill(TRUE,intersect);
                }
@@ -2477,7 +2477,7 @@ void MblkLinAdv::setMappedGridOnPatch(const hier::Patch<NDIM>& patch,
       mapVariableAndContextToIndex(d_xyz, getDataContext());
 
    d_mblk_geometry->buildGridOnPatch(patch,
-                                     domain_boxes(0),
+                                     domain_boxes[0],
                                      xyz_id,
                                      level_number,
                                      block_number);
@@ -3397,7 +3397,7 @@ void MblkLinAdv::checkBoundaryData(int btype,
 
    const tbox::Pointer<geom::BlockPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
    const tbox::Array<hier::BoundaryBox<NDIM> > bdry_boxes =
-      pgeom->getCodimensionBoundary(btype);
+      pgeom->getCodimensionBoundaries(btype);
 
    hier::VariableDatabase<NDIM>* vdb = hier::VariableDatabase<NDIM>::getDatabase();
 

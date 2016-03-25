@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/LocallyActiveDataTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/locally_active/LocallyActiveDataTester.C $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Class to test locally-active data communication
 //
 
@@ -38,6 +38,7 @@
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
 #include "tbox/TimerManager.h"
+#include "tbox/InputDatabase.h"
 
 /*
  * Declarations for fortran functions that operate on patch data.
@@ -105,7 +106,7 @@ template class tbox::Array< LocallyActiveDataTester::Function >;
  ************************************************************************/
 
 LocallyActiveDataTester::LocallyActiveDataTester(const string& object_name,
-                                 tbox::Pointer<tbox::InputDatabase> input_db,
+                                 tbox::Pointer<tbox::Database> input_db,
                                  tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
                                  tbox::Pointer<appu::VisItDataWriter<NDIM> > visit_writer)
 {
@@ -177,10 +178,8 @@ LocallyActiveDataTester::LocallyActiveDataTester(const string& object_name,
 
    }
 
-   char lnbuffer[2];
    for (int ln = 0; ln < d_num_levels; ln++) {
-      sprintf(lnbuffer, "%d%s", ln, "\0"); 
-      string lev_string = string(lnbuffer);
+      string lev_string = tbox::Utilities::intToString(ln) + "\0";
 
       if (d_refine_comm_setup_timers.size() > ln) {
          d_refine_comm_setup_timers[ln] = 
@@ -276,13 +275,13 @@ void LocallyActiveDataTester::registerVariables(
 
 void LocallyActiveDataTester::setActivePatchesOnHierarchy()
 {
-   d_total_work_units.resizeArray(d_hierarchy->getNumberLevels());
-   for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+   d_total_work_units.resizeArray(d_hierarchy->getNumberOfLevels());
+   for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
       d_total_work_units[ln] = 0;
    }
 
    for (int fn = 0; fn < d_functions.getSize(); fn++) {
-      for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+      for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
 
          tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<NDIM> > level_mgr =
@@ -462,7 +461,7 @@ void LocallyActiveDataTester::initializeFunctionData()
    if (d_check_function_definitions) {
       initializeFunctionDataForVisitCheck(); 
    } else {
-      for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+      for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
 
          tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<NDIM> > level_mgr =
@@ -572,7 +571,7 @@ void LocallyActiveDataTester::setCoarsenTestDataOnPatch(
 
 void LocallyActiveDataTester::initializeFunctionDataForVisitCheck()
 {
-   for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+   for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
       tbox::Pointer< hier::PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
 
       tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<NDIM> > level_mgr =
@@ -685,8 +684,8 @@ void LocallyActiveDataTester::setupCommunication()
       }
    }
 
-   d_bdry_fill_sched.resizeArray(d_hierarchy->getNumberLevels());
-   d_coarsen_sched.resizeArray(d_hierarchy->getNumberLevels());
+   d_bdry_fill_sched.resizeArray(d_hierarchy->getNumberOfLevels());
+   d_coarsen_sched.resizeArray(d_hierarchy->getNumberOfLevels());
 
    int finest_ln   = d_hierarchy->getFinestLevelNumber();
    int coarsest_ln = 0;
@@ -740,7 +739,7 @@ void LocallyActiveDataTester::performTest()
       if (d_test_to_run == "REFINE_TEST") {
 
          d_sum_refine_comm_execute_timer->start();
-         for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+         for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
             d_refine_comm_execute_timers[ln]->start();
             d_bdry_fill_sched[ln]->fillData(0.0);
             d_refine_comm_execute_timers[ln]->stop();
@@ -869,16 +868,16 @@ void LocallyActiveDataTester::setPhysicalBoundaryConditions(
 
 #if (NDIM == 3)
    const tbox::Array< hier::BoundaryBox<NDIM> > face_bdry =
-      patch_geom->getCodimensionBoundary(1);
+      patch_geom->getCodimensionBoundaries(1);
    const int num_face_bdry_boxes = face_bdry.getSize();
 #endif
 
    const tbox::Array< hier::BoundaryBox<NDIM> > edge_bdry =
-      patch_geom->getCodimensionBoundary(NDIM-1);
+      patch_geom->getCodimensionBoundaries(NDIM-1);
    const int num_edge_bdry_boxes = edge_bdry.getSize();
 
    const tbox::Array< hier::BoundaryBox<NDIM> > node_bdry =
-      patch_geom->getCodimensionBoundary(NDIM);
+      patch_geom->getCodimensionBoundaries(NDIM);
    const int num_node_bdry_boxes = node_bdry.getSize();
 
    const hier::Box<NDIM> interior(patch.getBox());
@@ -1057,7 +1056,7 @@ int LocallyActiveDataTester::checkCoarsenTestResult(ostream& os) const
    tbox::Array< tbox::Array<int> > fine_intersect_boxes(refined_clev_boxes.getNumberOfBoxes());
 
    for (int rcbi = 0; rcbi < refined_clev_boxes.getNumberOfBoxes(); rcbi++) {
-      const hier::Box<NDIM>& rc_box = refined_clev_boxes.getBox(rcbi);
+      const hier::Box<NDIM>& rc_box = refined_clev_boxes[rcbi];
       flev_boxtree->findOverlapIndices(fine_intersect_boxes[rcbi], rc_box);
    }
 
@@ -1205,7 +1204,7 @@ int LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
 {
    int fail_count = 0;
 
-   for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+   for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
       bool all_correct_on_physical_boundary = true;
       tbox::Array<bool> all_correct_from_level(ln+1);
       for (int j = 0; j < ln+1; j++) {
@@ -1405,7 +1404,7 @@ int LocallyActiveDataTester::checkRefineTestResult(ostream& os) const
          for (int ipatch = 0; ipatch < nboxes; ipatch++) {
             if (!patch_is_done[ipatch]) {
                tbox::plog << "\n Unchecked boxes for patch " << ipatch 
-                    << " : " << level_boxes.getBox(ipatch) << endl;
+                    << " : " << level_boxes[ipatch] << endl;
                for (int fn = 0; fn < d_functions.getSize(); fn++) {
                   if ( !(unchecked_boxes[ipatch][fn].isEmpty()) ) {
                      tbox::plog << "   Function " << fn << ":" << endl;
@@ -1487,7 +1486,7 @@ bool LocallyActiveDataTester::checkRefineTestOnLevelInterior(
          for (int spp = 0; spp < num_nabors; spp++) {
             int sp = nabor_patches[spp];
 
-            const hier::Box<NDIM>& nabor_box = refined_src_boxes(sp); 
+            const hier::Box<NDIM>& nabor_box = refined_src_boxes[sp]; 
          
             tbox::List< hier::IntVector<NDIM> >::Iterator sh(src_level->getShiftsForPatch(sp));
 
@@ -1578,7 +1577,7 @@ bool LocallyActiveDataTester::checkRefineTestPhysicalBoundaries(
 
 #if (NDIM == 3)
    const tbox::Array<hier::BoundaryBox<NDIM> > face_bdry =
-      patch_geom->getCodimensionBoundary(1);
+      patch_geom->getCodimensionBoundaries(1);
    const int num_face_bdry_boxes = face_bdry.getSize();
    for (int ifbox = 0; ifbox < num_face_bdry_boxes; ifbox++ ) {
       hier::Box<NDIM> fill_box = patch_geom->getBoundaryFillBox(face_bdry[ifbox],
@@ -1592,7 +1591,7 @@ bool LocallyActiveDataTester::checkRefineTestPhysicalBoundaries(
 #endif
 
    const tbox::Array<hier::BoundaryBox<NDIM> > edge_bdry =
-      patch_geom->getCodimensionBoundary(NDIM-1);
+      patch_geom->getCodimensionBoundaries(NDIM-1);
    const int num_edge_bdry_boxes = edge_bdry.getSize();
    for (int iebox = 0; iebox < num_edge_bdry_boxes; iebox++ ) {
       hier::Box<NDIM> fill_box = patch_geom->getBoundaryFillBox(edge_bdry[iebox],
@@ -1605,7 +1604,7 @@ bool LocallyActiveDataTester::checkRefineTestPhysicalBoundaries(
    }
 
    const tbox::Array<hier::BoundaryBox<NDIM> > node_bdry =
-      patch_geom->getCodimensionBoundary(NDIM);
+      patch_geom->getCodimensionBoundaries(NDIM);
    const int num_node_bdry_boxes = node_bdry.getSize();
    for (int inbox = 0; inbox < num_node_bdry_boxes; inbox++ ) {
       hier::Box<NDIM> fill_box = patch_geom->getBoundaryFillBox(node_bdry[inbox],
@@ -1723,7 +1722,7 @@ void LocallyActiveDataTester::buildPatchHierarchy()
    tbox::Pointer<hier::GridGeometry<NDIM> > grid_geom = d_hierarchy->getGridGeometry();
    const hier::BoxArray<NDIM> domain_boxes = grid_geom->getPhysicalDomain();
 
-   tbox::Pointer<tbox::InputDatabase> lb_input_db = new tbox::InputDatabase("LoadBalancer");
+   tbox::Pointer<tbox::Database> lb_input_db = new tbox::InputDatabase("LoadBalancer");
    tbox::Array<int> num_proc(NDIM);
    for (int idim = 0; idim < NDIM; idim++) {
       num_proc[idim] = d_npatches_on_coarsest(idim);
@@ -1767,7 +1766,7 @@ void LocallyActiveDataTester::buildPatchHierarchy()
    tbox::plog << "\n\nPatch-Processor Mapping - Level 0" << endl;
    tbox::Array<int> mapping = level0_mapping.getProcessorMapping();
    for (int i = 0; i < mapping.getSize(); i++) {
-      tbox::plog << "  Patch<NDIM>: " << i << " : " << level0_boxes.getBox(i) 
+      tbox::plog << "  Patch<NDIM>: " << i << " : " << level0_boxes[i] 
            << " : " << mapping[i] << endl;
    }
 
@@ -1805,7 +1804,7 @@ void LocallyActiveDataTester::buildPatchHierarchy()
       tbox::plog << "\n\nPatch-Processor Mapping - Level " << ln << endl;
       tbox::Array<int> mapping = new_level_mapping.getProcessorMapping();
       for (int i = 0; i < mapping.getSize(); i++) {
-         tbox::plog << "  Patch<NDIM>: " << i << " : " << new_level_boxes.getBox(i) 
+         tbox::plog << "  Patch<NDIM>: " << i << " : " << new_level_boxes[i] 
               << " : " << mapping[i] << endl;
       }
  
@@ -1967,7 +1966,7 @@ void LocallyActiveDataTester::getFromInput()
  ************************************************************************/
 
 void LocallyActiveDataTester::getGriddingParametersFromInput(
-   tbox::Pointer<tbox::InputDatabase> gridding_db)
+   tbox::Pointer<tbox::Database> gridding_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!gridding_db.isNull());
@@ -1999,8 +1998,8 @@ void LocallyActiveDataTester::getGriddingParametersFromInput(
       } else {
          ratio_to_coarser_db = gridding_db->getDatabase("ratio_to_coarser");
          for (ln = 1; ln < d_num_levels; ln++) {
-            char level_name[32];
-            sprintf(level_name, "level_%d", ln);
+
+	    std::string level_name = "level_" + tbox::Utilities::intToString(ln);
  
             if (!ratio_to_coarser_db->keyExists(level_name)) {
                 TBOX_ERROR("Input error for " << d_object_name << ":  "
@@ -2039,7 +2038,7 @@ void LocallyActiveDataTester::getGriddingParametersFromInput(
  ************************************************************************/
 
 void LocallyActiveDataTester::getFunctionSpecification(
-   tbox::Pointer<tbox::InputDatabase> function_db)
+   tbox::Pointer<tbox::Database> function_db)
 {
    if (function_db->keyExists("function_spec")) {
       string fcn_spec_string = function_db->getString("function_spec");
@@ -2062,7 +2061,7 @@ void LocallyActiveDataTester::getFunctionSpecification(
 }
 
 void LocallyActiveDataTester::getRandomFunctionDataFromInput(
-   tbox::Pointer<tbox::InputDatabase> random_db)
+   tbox::Pointer<tbox::Database> random_db)
 {
    getFunctionSpecification(random_db);
 
@@ -2083,10 +2082,8 @@ void LocallyActiveDataTester::getRandomFunctionDataFromInput(
 
    d_functions.resizeArray(d_num_test_functions);
 
-   char fnbuffer[6];  // can do up to 99999 functions
    for (int fn = 0; fn < d_num_test_functions; fn++) {
-      sprintf(fnbuffer, "%d%s", fn, "\0"); 
-      string fn_string = string(fnbuffer);
+      string fn_string = tbox::Utilities::intToString(fn) + "\0";
 
       d_functions[fn].d_name = "Function:" + fn_string;
 
@@ -2111,7 +2108,7 @@ void LocallyActiveDataTester::getRandomFunctionDataFromInput(
 }
 
 void LocallyActiveDataTester::getExplicitFunctionDataFromInput(
-   tbox::Pointer<tbox::InputDatabase> explicit_data_db) 
+   tbox::Pointer<tbox::Database> explicit_data_db) 
 {
    getFunctionSpecification(explicit_data_db);
 
@@ -2131,7 +2128,7 @@ void LocallyActiveDataTester::getExplicitFunctionDataFromInput(
          fn_id++;
          d_functions[fn_id].d_name = db_names[name_count];            
 
-         tbox::Pointer<tbox::InputDatabase> single_function_db = 
+         tbox::Pointer<tbox::Database> single_function_db = 
             explicit_data_db->getDatabase(d_functions[fn_id].d_name);
 
          double* tmp_centroid = d_functions[fn_id].d_centroid;
@@ -2147,7 +2144,7 @@ void LocallyActiveDataTester::getExplicitFunctionDataFromInput(
 }
 
 void LocallyActiveDataTester::getUniformFunctionDataFromInput(
-   tbox::Pointer<tbox::InputDatabase> uniform_db) 
+   tbox::Pointer<tbox::Database> uniform_db) 
 {
    getFunctionSpecification(uniform_db);
 
@@ -2198,7 +2195,6 @@ void LocallyActiveDataTester::getUniformFunctionDataFromInput(
    int n[3] = {0,0,0};
    int fn_id = -1;
       
-   char fnbuffer[4];  // can do up to 999 functions
 #if (NDIM == 3)
    for (int nz = 0; nz < nfunctions[2]; nz++) {
       n[2] = nz;
@@ -2210,8 +2206,7 @@ void LocallyActiveDataTester::getUniformFunctionDataFromInput(
 
             fn_id++; 
  
-            sprintf(fnbuffer, "%d%s", fn_id, "\0"); 
-            string fn_string(fnbuffer);
+	    std::string fn_string = tbox::Utilities::intToString(fn_id) + "\0";
             d_functions[fn_id].d_name = "Function:" + fn_string;
             
             for (id = 0; id < NDIM; id++) {
@@ -2236,7 +2231,7 @@ void LocallyActiveDataTester::getUniformFunctionDataFromInput(
 }
 
 void LocallyActiveDataTester::getFinePatchFunctionDataFromInput(
-   tbox::Pointer<tbox::InputDatabase> fine_patch_data_db) 
+   tbox::Pointer<tbox::Database> fine_patch_data_db) 
 {
    getFunctionSpecification(fine_patch_data_db);
 
@@ -2267,7 +2262,6 @@ void LocallyActiveDataTester::getFinePatchFunctionDataFromInput(
 
    int n[3] = {0,0,0};
    int fn_id = -1;
-   char fnbuffer[6];  // can do up to 999 functions
    
    int loop_count = 0; 
 #if (NDIM == 3)
@@ -2329,8 +2323,7 @@ void LocallyActiveDataTester::getFinePatchFunctionDataFromInput(
 
                fn_id++;
 
-               sprintf(fnbuffer, "%d%s", loop_count, "\0"); 
-               string fn_string(fnbuffer);
+	       std::string fn_string = tbox::Utilities::intToString(loop_count) + "\0";
                tmp_functions[fn_id].d_name = "Function:" + fn_string;
             
                for (idim = 0; idim < NDIM; idim++) {
@@ -2374,7 +2367,7 @@ void LocallyActiveDataTester::printHierarchyData(
    hier::LocallyActiveVariableDatabase<NDIM>* var_db =
       hier::LocallyActiveVariableDatabase<NDIM>::getDatabase();
 
-   for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+   for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
       tbox::Pointer< hier::PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
       tbox::Pointer< hier::LocallyActiveDataPatchLevelManager<NDIM> > level_mgr =
           var_db->getLocallyActiveDataPatchLevelManager(level);
@@ -2384,7 +2377,7 @@ void LocallyActiveDataTester::printHierarchyData(
       const hier::BoxArray<NDIM>& level_boxes = level->getBoxes();
       for (int ib = 0; ib < level_boxes.getNumberOfBoxes(); ib++) {
          os << "   Active functions on Patch<NDIM> " << ib << " : " 
-            << level_boxes.getBox(ib) << endl << "      ";
+            << level_boxes[ib] << endl << "      ";
          for (int fn = 0; fn < d_functions.getSize(); fn++) {
             int data_id = d_functions[fn].d_func_data_index;
             if (d_test_to_run == "COARSEN_TEST") {
@@ -2400,7 +2393,7 @@ void LocallyActiveDataTester::printHierarchyData(
    }
 
    if (dump_function_data) {      
-      for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+      for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
          tbox::Pointer< hier::PatchLevel<NDIM> > level = d_hierarchy->getPatchLevel(ln);
 
          os << "\n\nDumping function data on level: " << endl;  

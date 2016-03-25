@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/sundials/CVODEModel.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/sundials/CVODEModel.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1765 $
-// Modified:    $LastChangedDate: 2007-12-11 15:15:21 -0800 (Tue, 11 Dec 2007) $
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: 
 //
 
@@ -1206,7 +1206,7 @@ CVODEModel::setupSolutionVector(
     * Allocate memory for preconditioner variables. 
     */
 
-   const int nlevels = hierarchy->getNumberLevels();
+   const int nlevels = hierarchy->getNumberOfLevels();
 
    for (int ln = 0; ln < nlevels; ln++) {
       Pointer<PatchLevel<NDIM> > level = hierarchy->getPatchLevel(ln);
@@ -1245,7 +1245,7 @@ CVODEModel::setInitialConditions(SundialsAbstractVector* soln_init)
 
    Pointer<PatchHierarchy<NDIM> > hierarchy = soln_init_samvect->getPatchHierarchy();
 
-   for (int ln = 0; ln < hierarchy->getNumberLevels(); ln++) {
+   for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ln++) {
       Pointer<PatchLevel<NDIM> > level = hierarchy->getPatchLevel(ln);
 
       for (int cn = 0; cn < soln_init_samvect->getNumberOfComponents(); cn++) {

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/locally_active/main.C $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2122 $
+// Modified:    $LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 // Description: Tests multi-function operations
 //
 
@@ -182,12 +182,9 @@ int main( int argc, char *argv[] ) {
       // the Singleton object that is created.
       (void) hier::LocallyActiveVariableDatabase<NDIM>::getDatabase();
 
-      char test_nproc_buffer[5];
-      sprintf(test_nproc_buffer, "%d%s", tbox::SAMRAI_MPI::getNodes(), "\0");
-
-      string nproc_string(test_nproc_buffer);
-
+      string nproc_string = tbox::Utilities::intToString(tbox::SAMRAI_MPI::getNodes()) + "\0";
       string grid_geometry_input_string = string("CartesianGeometry_" + nproc_string);
+
       if (!input_db->isDatabase(grid_geometry_input_string)) {
 	 grid_geometry_input_string = "CartesianGeometry";
       }
@@ -213,9 +210,17 @@ int main( int argc, char *argv[] ) {
       if (!input_db->isDatabase(tester_string)) {
 	 tester_string = "LocallyActiveDataTester";
       }
+
+      if (!input_db->isDatabase(tester_string)) {
+	 tbox::plog << "LocallyActiveDataTester not found" << endl;
+      }
+
+      tbox::Pointer<tbox::MemoryDatabase> foo;
+      foo = input_db->getDatabase(tester_string);
+
       LocallyActiveDataTester function_manager(
 	 "LocallyActiveDataTester",
-	 input_db->getDatabase(tester_string),
+	 foo,
 	 hierarchy,
 	 visit_writer);
 
@@ -253,7 +258,7 @@ int main( int argc, char *argv[] ) {
       function_manager.setActivePatchesOnHierarchy();
       if (get_total_work_units) {
 	 int total_work_units_on_hierarchy = 0;
-	 for (int ln = 0; ln < hierarchy->getNumberLevels(); ln++) { 
+	 for (int ln = 0; ln < hierarchy->getNumberOfLevels(); ln++) { 
 	    int level_work_units = function_manager.getLevelWorkUnits(ln);
 	    tbox::pout << "   work units on level " << ln << "= " << level_work_units << endl;
 	    total_work_units_on_hierarchy += level_work_units;

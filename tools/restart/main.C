@@ -1,8 +1,8 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/tools/restart/main.C $
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1845 $
-// Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/tools/restart/main.C $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1965 $
+// Modified:    $LastChangedDate: 2008-02-07 12:41:09 -0800 (Thu, 07 Feb 2008) $
 // Description: Main program restart-redistribute tool.
 //
 
@@ -14,7 +14,9 @@
 #include "tbox/HDFDatabase.h"
 #include "tbox/RestartManager.h"
 
+#ifndef _MSC_VER
 #include <dirent.h>
+#endif
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
@@ -43,6 +45,80 @@ using namespace SAMRAI;
 #include <cstring>
 using namespace std;
 
+#ifdef _MSC_VER
+//#include <config.h>
+#include <string.h>
+#include <windows.h>
+#include <stdlib.h>
+
+struct dirent { char d_name[1]; };
+
+int scandir(const char *dirname, struct dirent ***namelist,
+    int (*select)(struct dirent *),
+    int (*compar)(struct dirent **, struct dirent **)) {
+  int len;
+  char *findIn, *d;
+  WIN32_FIND_DATA find;
+  HANDLE h;
+  int nDir = 0, NDir = 0;
+  struct dirent **dir = 0, *selectDir;
+  unsigned long ret;
+
+  len    = strlen(dirname);
+  findIn = (char*)malloc(len+5);
+  strcpy(findIn, dirname);
+  for (d = findIn; *d; d++) if (*d=='/') *d='\\';
+  if ((len==0)) { strcpy(findIn, ".\\*"); }
+  if ((len==1)&& (d[-1]=='.')) { strcpy(findIn, ".\\*"); }
+  if ((len>0) && (d[-1]=='\\')) { *d++ = '*'; *d = 0; }
+  if ((len>1) && (d[-1]=='.') && (d[-2]=='\\')) { d[-1] = '*'; }
+
+  if ((h=FindFirstFile(findIn, &find))==INVALID_HANDLE_VALUE) {
+    ret = GetLastError();
+    if (ret != ERROR_NO_MORE_FILES) {
+      // TODO: return some error code
+    }
+    *namelist = dir;
+    return nDir;
+  }
+  do {
+    selectDir=(struct dirent*)malloc(sizeof(struct dirent)+strlen(find.cFileName));
+    strcpy(selectDir->d_name, find.cFileName);
+    if (!select || (*select)(selectDir)) {
+      if (nDir==NDir) {
+	struct dirent **tempDir = (struct dirent **)calloc(sizeof(struct dirent*), NDir+33);
+	if (NDir) memcpy(tempDir, dir, sizeof(struct dirent*)*NDir);
+	if (dir) free(dir);
+	dir = tempDir;
+	NDir += 32;
+      }
+      dir[nDir] = selectDir;
+      nDir++;
+      dir[nDir] = 0;
+    } else {
+      free(selectDir);
+    }
+  } while (FindNextFile(h, &find));
+  ret = GetLastError();
+  if (ret != ERROR_NO_MORE_FILES) {
+    // TODO: return some error code
+  }
+  FindClose(h);
+
+  free (findIn);
+
+  if (compar) qsort (dir, nDir, sizeof(*dir),
+		     (int(*)(const void*, const void*))compar);
+
+  *namelist = dir;
+  return nDir;
+}
+
+int alphasort (struct dirent **a, struct dirent **b) {
+  return strcmp ((*a)->d_name, (*b)->d_name);
+}
+
+#endif
 
 int main( int argc, char *argv[])
 {

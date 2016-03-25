@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.depend
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Description:	makefile dependencies
 ##
 
@@ -90,6 +90,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -446,13 +447,15 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -489,7 +492,7 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
-	$(INCLUDE_SAM)/BoundaryBox.C					\
+	$(INCLUDE_SAM)/BoundaryBox.C $(INCLUDE_SAM)/BoundaryBoxUtils.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
@@ -997,13 +1000,15 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
-	$(INCLUDE_SAM)/tbox/InputDatabase.I				\
 	$(INCLUDE_SAM)/tbox/InputDatabase.h				\
 	$(INCLUDE_SAM)/tbox/InputManager.h $(INCLUDE_SAM)/tbox/List.I	\
 	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MathUtilities.I	\
 	$(INCLUDE_SAM)/tbox/MathUtilities.h				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.I				\
+	$(INCLUDE_SAM)/tbox/MemoryDatabase.h				\
 	$(INCLUDE_SAM)/tbox/MessageStream.I				\
 	$(INCLUDE_SAM)/tbox/MessageStream.h $(INCLUDE_SAM)/tbox/PIO.h	\
 	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
@@ -1041,7 +1046,7 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/ArrayDataNormOpsReal.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
-	$(INCLUDE_SAM)/BoundaryBox.C					\
+	$(INCLUDE_SAM)/BoundaryBox.C $(INCLUDE_SAM)/BoundaryBoxUtils.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
@@ -1472,6 +1477,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -1504,7 +1510,7 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/ArrayDataIterator.C				\
 	$(INCLUDE_SAM)/ArrayDataOperationUtilities.C			\
 	$(INCLUDE_SAM)/BasePatchHierarchy.C $(INCLUDE_SAM)/BinaryTree.C	\
-	$(INCLUDE_SAM)/BoundaryBox.C					\
+	$(INCLUDE_SAM)/BoundaryBox.C $(INCLUDE_SAM)/BoundaryBoxUtils.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
@@ -1718,6 +1724,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\
@@ -2019,6 +2026,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
 	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
+	$(INCLUDE_SAM)/tbox/DatabaseFactory.h				\
 	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
 	$(INCLUDE_SAM)/tbox/FixedArena.h $(INCLUDE_SAM)/tbox/IOStream.h	\
 	$(INCLUDE_SAM)/tbox/List.I $(INCLUDE_SAM)/tbox/List.h		\

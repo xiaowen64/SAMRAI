@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/nonlinear/3d.kinsol.input $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/nonlinear/3d.kinsol.input $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1981 $
+// Modified:    $LastChangedDate: 2008-02-13 11:09:35 -0800 (Wed, 13 Feb 2008) $
 // Description: Input file for 3D nonlinear solver example using KINSOL.
 //
 // This is the input file for the 3D nonlinear solver example using KINSOL.
@@ -20,7 +20,7 @@ Main{
    visit_number_procs_per_file = 1    // not used by Vizamrai
 
 // regrid parameters
-   regrid_interval       = 0         // zero to turn off
+   regrid_interval       = 1         // zero to turn off
 
 // Options for nonlinear solver package are:
 //     "KINSOL" (default), or "PETSc-SNES"

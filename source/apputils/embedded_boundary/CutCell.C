@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/embedded_boundary/CutCell.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/CutCell.C $
 // Package:     SAMRAI application
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Cut cell struct for embedded boundary implementations.
 //
 
@@ -313,7 +313,7 @@ CutCell<DIM>::getNewBase(const int i, const int j) const
 *************************************************************************
 */
 template<int DIM> int
-CutCell<DIM>::getNumberBoundaryNodes() const 
+CutCell<DIM>::getNumberOfBoundaryNodes() const 
 {
    return(d_num_boundary_nodes);
 }
@@ -749,7 +749,7 @@ CutCell<DIM>::printBoundaryNodes(std::ostream &os) const
          bool on_boundary = bn.getNodeOnBoundary();
          os << "      on boundary?: " << "\t" << on_boundary << std::endl;
          
-         int nn = bn.getNumberNearestNeighborNodes();
+         int nn = bn.getNumberOfNearestNeighborNodes();
          os << "      number nearest neighbors: " << nn << std::endl;
          for (j = 0; j < nn; j++) {
             pdat::NodeIndex<DIM> bnode_nbr = bn.getNearestNeighborNode(j);
@@ -1429,6 +1429,11 @@ CutCell<DIM>::getFromDatabase(
 template<int DIM> void
 CutCell<DIM>::initializeCutCellData()
 {
+   if (DIM == 1 || DIM > 3) 
+   {
+      TBOX_ERROR("CutCell<DIM> : DIM == 1 or > 3 not implemented");
+   }
+
    d_vol_fraction = tbox::MathUtilities<double>::getSignalingNaN();
    d_surr_vol = tbox::MathUtilities<double>::getSignalingNaN();
    d_front_area = tbox::MathUtilities<double>::getSignalingNaN();

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/ConvDiff/MainRestartData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/ConvDiff/MainRestartData.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2172 $
+// Modified:	$LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description:	Concrete subclass of tbox::Serializable for storing data in main.
 //
 
@@ -141,8 +141,7 @@ void MainRestartData::getFromInput(
       d_max_timesteps = input_db->getInteger("max_timesteps");
    } else {
       if (!is_from_restart) {	
-          tbox::pout << "max_timesteps not entered in input file" << endl;
-          abort();
+	 TBOX_ERROR("max_timesteps not entered in input file" << endl);
       }
    }
    

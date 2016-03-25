@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataFillBoxSet.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/locally_active/LocallyActiveDataFillBoxSet.C $
 // Package:	SAMRAI transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description:	Routines for "smart" boxlist ops in locally-active comm schedules
 //
 
@@ -76,7 +76,7 @@ LocallyActiveDataFillBoxSet<DIM>::~LocallyActiveDataFillBoxSet()
 template<int DIM>
 int LocallyActiveDataFillBoxSet<DIM>::getNumberOfBoxes() const
 {
-   return(d_locally_active_boxes.getNumberItems());
+   return(d_locally_active_boxes.getNumberOfItems());
 }
 
 template<int DIM>
@@ -160,7 +160,7 @@ void LocallyActiveDataFillBoxSet<DIM>::resetLocallyActiveFillBoxes(
    const hier::Box<DIM>& box,
    const tbox::List<const typename xfer::RefineClasses<DIM>::Data*>& var_data)
 {
-   if (d_refine_data || d_locally_active_boxes.getNumberItems() == 0) {
+   if (d_refine_data || d_locally_active_boxes.getNumberOfItems() == 0) {
 
       d_refine_data = true;
 
@@ -190,7 +190,7 @@ void LocallyActiveDataFillBoxSet<DIM>::resetLocallyActiveFillBoxes(
    const hier::Box<DIM>& box,
    const tbox::List<const typename xfer::CoarsenClasses<DIM>::Data*>& var_data)
 {
-   if (!d_refine_data || d_locally_active_boxes.getNumberItems() == 0) {
+   if (!d_refine_data || d_locally_active_boxes.getNumberOfItems() == 0) {
 
       d_refine_data = false;
 
@@ -220,7 +220,7 @@ void LocallyActiveDataFillBoxSet<DIM>::addLocallyActiveFillBox(
    const hier::Box<DIM>& box,
    const tbox::List<const typename xfer::RefineClasses<DIM>::Data*>& var_data)
 {
-   if (d_refine_data || d_locally_active_boxes.getNumberItems() == 0) {
+   if (d_refine_data || d_locally_active_boxes.getNumberOfItems() == 0) {
  
       d_refine_data = true;
 
@@ -251,7 +251,7 @@ void LocallyActiveDataFillBoxSet<DIM>::addLocallyActiveFillBox(
    const hier::Box<DIM>& box,
    const tbox::List<const typename xfer::CoarsenClasses<DIM>::Data*>& var_data)
 {
-   if (!d_refine_data || d_locally_active_boxes.getNumberItems() == 0) {
+   if (!d_refine_data || d_locally_active_boxes.getNumberOfItems() == 0) {
 
       d_refine_data = false;
 
@@ -422,7 +422,7 @@ void LocallyActiveDataFillBoxSet<DIM>::printClassData(std::ostream& os) const
       printRefineVarListItems(d_union_refine_var_data, os);
    } else {
       os << "\nd_union_coarsen_var_data = ..." << std::endl;
-      if (d_union_coarsen_var_data.getNumberItems() == 0) {
+      if (d_union_coarsen_var_data.getNumberOfItems() == 0) {
          os << "  no coarsen var ids in set ";
       } else {
          os << "  coarsen var ids = ...";

@@ -1,25 +1,19 @@
 //
 // File:	$URL$
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Templated array data looping operations supporting patch data types
 //
 
 #ifndef included_pdat_ArrayDataOperationUtilities
 #define included_pdat_ArrayDataOperationUtilities
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_tbox_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
 
 namespace SAMRAI {
     namespace pdat {

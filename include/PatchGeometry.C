@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/PatchGeometry.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchGeometry.C $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1857 $
-// Modified:	$LastChangedDate: 2008-01-14 11:35:15 -0800 (Mon, 14 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -140,7 +140,7 @@ PatchGeometry<DIM>::getBoundaryFillBox(const BoundaryBox<DIM>& bbox,
 
 
 template<int DIM> void
-PatchGeometry<DIM>::setCodimensionBoundary(
+PatchGeometry<DIM>::setCodimensionBoundaries(
    const tbox::Array< BoundaryBox<DIM> >& bdry_boxes,
    int codim)
 {
@@ -159,12 +159,22 @@ PatchGeometry<DIM>::setCodimensionBoundary(
    }
 }
 
+#if (INCLUDE_DEPRECATED <= 2) 
+template<int DIM> void
+PatchGeometry<DIM>::setCodimensionBoundary(
+   const tbox::Array< BoundaryBox<DIM> >& bdry_boxes,
+   int codim)
+{
+   setCodimensionBoundaries(bdry_boxes, codim);
+}
+#endif // DEPRECATED
+
 template<int DIM> void
 PatchGeometry<DIM>::setBoundaryBoxesOnPatch(
    const tbox::Array< BoundaryBox<DIM> > bdry[DIM])
 {
    for (int i = 0; i < DIM; i++) {
-      setCodimensionBoundary(bdry[i], i+1);
+      setCodimensionBoundaries(bdry[i], i+1);
    }
 }
 

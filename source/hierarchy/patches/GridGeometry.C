@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/GridGeometry.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/GridGeometry.C $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Base class for geometry management in AMR hierarchy
 //
 
@@ -178,7 +178,7 @@ template<int DIM> void GridGeometry<DIM>::findPatchesTouchingBoundaries(
       bdry_list.removeIntersections(domain_interior);
 
       bool touches_any_boundary = false;
-      if (bdry_list.getNumberItems() > 0) {
+      if (bdry_list.getNumberOfItems() > 0) {
          touches_any_boundary = true;
       }
 
@@ -785,7 +785,7 @@ void GridGeometry<DIM>::setPhysicalDomain(const BoxArray<DIM>& domain)
    BoxList<DIM> bounding_box(domain_boxes.getBoundingBox());
 
    bounding_box.removeIntersections(domain_boxes);
-   if (bounding_box.getNumberItems() == 0) {
+   if (bounding_box.getNumberOfItems() == 0) {
       d_domain_is_single_box = true;
       d_physical_domain = BoxArray<DIM>(domain_boxes.getBoundingBox()); 
    } else {
@@ -1048,7 +1048,7 @@ template<int DIM> bool GridGeometry<DIM>::checkBoundaryBox(
 
    domain_list.intersectBoxes(bbox_list);
    
-   if (domain_list.getNumberItems()) {
+   if (domain_list.getNumberOfItems()) {
       return_val = false;
    }
 

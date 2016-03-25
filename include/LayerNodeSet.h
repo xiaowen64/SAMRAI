@@ -1,45 +1,29 @@
 /*
-  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerNodeSet.h $
-  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:    $LastChangedRevision: 1769 $
-  Modified:    $LastChangedDate: 2007-12-11 17:36:06 -0800 (Tue, 11 Dec 2007) $
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/dlbg/LayerNodeSet.h $
+  Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+  Revision:    $LastChangedRevision: 2132 $
+  Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
   Description: Set of layer nodes in a distributed box graph.
 */
 
 #ifndef included_hier_LayerNodeSet
 #define included_hier_LayerNodeSet
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_LayerNode
 #include "LayerNode.h"
-#endif
 
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
 
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
-#ifndef included_tbox_TimerManger
 #include "tbox/TimerManager.h"
-#endif
 
 #include <iostream>
 #include <map>

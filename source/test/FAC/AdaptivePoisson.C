@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/AdaptivePoisson.C $
-  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/AdaptivePoisson.C $
+  Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 2043 $
+  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
   Description:	AdaptivePoisson class implementation
 */
 
@@ -581,7 +581,7 @@ int AdaptivePoisson::registerVariablesWithPlotter(
                  << "The hierarchy must be built before calling this function.\n");
    }
    int ln;
-   for ( ln=1; ln<d_hierarchy->getNumberLevels(); ln++ ) {
+   for ( ln=1; ln<d_hierarchy->getNumberOfLevels(); ln++ ) {
      tbox::Pointer<hier::PatchLevel<NDIM> > level 
 	= d_hierarchy->getPatchLevel(ln);
      const hier::IntVector<NDIM> &lratio = level->getRatioToCoarserLevel();
@@ -649,7 +649,7 @@ int AdaptivePoisson::registerVariablesWithPlotter(
                  << "The hierarchy must be built before calling this function.\n");
    }
    int ln;
-   for ( ln=1; ln<d_hierarchy->getNumberLevels(); ln++ ) {
+   for ( ln=1; ln<d_hierarchy->getNumberOfLevels(); ln++ ) {
      tbox::Pointer<hier::PatchLevel<NDIM> > level 
 	= d_hierarchy->getPatchLevel(ln);
      const hier::IntVector<NDIM> &lratio = level->getRatioToCoarserLevel();
@@ -835,7 +835,7 @@ int AdaptivePoisson::computeError(
     the l2norms during the sumReduction, saving a little
     parallel overhead.
   */
-  const int nlevels = hierarchy.getNumberLevels();
+  const int nlevels = hierarchy.getNumberOfLevels();
   tbox::Array<double> wtsums(2*nlevels);
   for ( ln = nlevels-1; ln >= 0; --ln ) {
     tbox::Pointer< hier::PatchLevel<NDIM> > level = hierarchy.getPatchLevel(ln);
@@ -1058,7 +1058,7 @@ int AdaptivePoisson::solvePoisson(
   d_fac_preconditioner.solveSystem ( x , b );
   if ( d_lstream ) *d_lstream
     << "FAC solve completed with\n"
-    << setw(30) << "number of iterations: " << d_fac_preconditioner.getNumberIterations() << "\n"
+    << setw(30) << "number of iterations: " << d_fac_preconditioner.getNumberOfIterations() << "\n"
     << setw(30) << "residual norm: " << d_fac_preconditioner.getResidualNorm() << "\n"
     ;
   d_fac_preconditioner.deallocateSolverState();

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchHierarchy.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchHierarchy.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	An AMR hierarchy of patch levels
 //
 
@@ -19,8 +19,6 @@
 #include "tbox/MathUtilities.h"
 
 #define HIER_PATCH_HIERARCHY_VERSION (2)
-
-#define PATCHLEVEL_NAME_BUF_SIZE (16)
 
 #ifdef DEBUG_NO_INLINE
 #include "PatchHierarchy.I"
@@ -297,13 +295,9 @@ template<int DIM> void PatchHierarchy<DIM>::putToDatabase(
                          HIER_PATCH_HIERARCHY_VERSION);
    database->putInteger("d_number_levels", d_number_levels);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_NAME_BUF_SIZE];
 
    for (int i = 0; i < d_number_levels; i++) {
-      sprintf(level_name,"level_%04d",i);
+      std::string level_name = "level_" + tbox::Utilities::levelToString(i);
 
       tbox::Pointer<tbox::Database> level_database = 
          database->putDatabase(level_name);
@@ -381,13 +375,8 @@ template<int DIM> void PatchHierarchy<DIM>::getFromDatabase(
 
    d_patch_levels.resizeArray(d_number_levels);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_NAME_BUF_SIZE];
-
    for (int i = 0; i< d_number_levels; i++) {
-      sprintf(level_name,"level_%04d",i);
+      std::string level_name = "level_" + tbox::Utilities::levelToString(i);
 
       tbox::Pointer<tbox::Database> level_database =
          database->getDatabase(level_name);
@@ -408,7 +397,7 @@ template<int DIM> int PatchHierarchy<DIM>::recursivePrint( std::ostream &os ,
 {
   int totl_npatches = 0;
   int totl_ncells = 0;
-  int nlevels = getNumberLevels();
+  int nlevels = getNumberOfLevels();
   os << border << "Number of levels = " << nlevels << "\n";
   if ( depth > 0 ) {
     int ln;
@@ -419,7 +408,7 @@ template<int DIM> int PatchHierarchy<DIM>::recursivePrint( std::ostream &os ,
       totl_npatches += level->getNumberOfPatches();
       const BoxArray<DIM> &level_boxes = level->getBoxes();
       for ( int pn=0; pn<level_boxes.size(); ++pn ) {
-         totl_ncells += level_boxes(pn).size();
+         totl_ncells += level_boxes[pn].size();
       } 
     }
   }

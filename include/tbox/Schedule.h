@@ -1,42 +1,28 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/parallel/Schedule.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/Schedule.h $
 // Package:	SAMRAI communication and data transfer package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Schedule of communication transactions between processors
 //
 
 #ifndef included_tbox_Schedule
 #define included_tbox_Schedule
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_SAMRAI_MPI
 #include "tbox/SAMRAI_MPI.h"
-#endif
-#ifndef included_tbox_MessageStream
 #include "tbox/MessageStream.h"
-#endif
-#ifndef included_tbox_Transaction
 #include "tbox/Transaction.h"
-#endif
 
 namespace SAMRAI {
    namespace tbox {

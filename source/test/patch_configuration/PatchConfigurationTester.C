@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/patch_configuration/PatchConfigurationTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/patch_configuration/PatchConfigurationTester.C $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Class to test patch configuration utility
 //
 
@@ -22,6 +22,7 @@
 #include "LoadBalancer.h"
 #include "ProcessorMapping.h"
 #include "tbox/Utilities.h"
+#include "tbox/InputDatabase.h"
 
 /*************************************************************************
  *
@@ -31,7 +32,7 @@
 
 PatchConfigurationTester::PatchConfigurationTester(
    const string& object_name,
-   tbox::Pointer<tbox::InputDatabase> input_db,
+   tbox::Pointer<tbox::Database> input_db,
    tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -79,7 +80,7 @@ PatchConfigurationTester::~PatchConfigurationTester()
    }
 
    if (d_test_to_run == "LEVELS_COARSE_TO_FINE") {
-      for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+      for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
          tbox::Pointer< hier::PatchLevel<NDIM> > level =
             d_hierarchy->getPatchLevel(ln);
          d_patch_config_util->clear(level);
@@ -108,7 +109,7 @@ void PatchConfigurationTester::buildPatchHierarchy()
    const hier::BoxArray<NDIM> domain_boxes = 
       grid_geom->getPhysicalDomain();
 
-   tbox::Pointer<tbox::InputDatabase> lb_input_db = 
+   tbox::Pointer<tbox::Database> lb_input_db = 
       new tbox::InputDatabase("LoadBalancer");
 
    tbox::Array<int> num_proc(NDIM);
@@ -230,7 +231,7 @@ void PatchConfigurationTester::setupPatchConfiguration()
    } 
 
    if (d_test_to_run == "LEVELS_COARSE_TO_FINE") {
-      for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+      for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
          tbox::Pointer< hier::PatchLevel<NDIM> > level = 
             d_hierarchy->getPatchLevel(ln);
          d_patch_config_util->initialize(level);
@@ -259,7 +260,7 @@ int PatchConfigurationTester::checkPatchConfiguration(ostream& os) const
 
    bool all_levels_correct = true;
 
-   for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ++ln) {
+   for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ++ln) {
 
       tbox::pout << "\n\n***************************************************"
                  << "\nChecking patch configuration data for level: ln = " << ln << endl;
@@ -430,7 +431,7 @@ bool PatchConfigurationTester::checkPatchNeighbors(
                if ( !zero_shift || (ni != ip) ) {
 
                   const hier::Box<NDIM> shifted_nbox(
-                     hier::Box<NDIM>::shift(level_boxes.getBox(ni), nshift) );
+                     hier::Box<NDIM>::shift(level_boxes[ni], nshift) );
 
                   const hier::Box<NDIM> intersection = shifted_nbox * bregion;                       
 
@@ -488,7 +489,7 @@ bool PatchConfigurationTester::checkFinerLevelPatchOverlap(
 
       int pcount = 0; 
       for (int ifp = 0; ifp < cf_boxes.size(); ++ifp) {
-         if ( pbox.intersects(cf_boxes.getBox(ifp)) ) {
+         if ( pbox.intersects(cf_boxes[ifp]) ) {
             fpatch_ids[pcount] = ifp;
             pcount++;
          }
@@ -568,7 +569,7 @@ bool PatchConfigurationTester::checkCoarserLevelPatchOverlap(
 
       int pcount = 0; 
       for (int icp = 0; icp < fc_boxes.size(); ++icp) {
-         if ( pbox.intersects(fc_boxes.getBox(icp)) ) {
+         if ( pbox.intersects(fc_boxes[icp]) ) {
             cpatch_ids[pcount] = icp;
             pcount++;
          }
@@ -710,7 +711,7 @@ bool PatchConfigurationTester::comparePatchNeighbors(
 void PatchConfigurationTester::printHierarchyData(
    ostream& os) const
 {
-   for (int ln = 0; ln < d_hierarchy->getNumberLevels(); ln++) {
+   for (int ln = 0; ln < d_hierarchy->getNumberOfLevels(); ln++) {
       tbox::Pointer< hier::PatchLevel<NDIM> > level = 
          d_hierarchy->getPatchLevel(ln);
 
@@ -719,7 +720,7 @@ void PatchConfigurationTester::printHierarchyData(
       const hier::BoxArray<NDIM>& level_boxes = level->getBoxes();
       for (int ib = 0; ib < level_boxes.getNumberOfBoxes(); ib++) {
          os << "   Patch[" << ib << "] = " 
-            << level_boxes.getBox(ib) << endl;
+            << level_boxes[ib] << endl;
       }
    }
 }
@@ -731,7 +732,7 @@ void PatchConfigurationTester::printHierarchyData(
  ************************************************************************/
 
 void PatchConfigurationTester::getGriddingParametersFromInput(
-   tbox::Pointer<tbox::InputDatabase> gridding_db)
+   tbox::Pointer<tbox::Database> gridding_db)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!gridding_db.isNull());
@@ -763,8 +764,7 @@ void PatchConfigurationTester::getGriddingParametersFromInput(
       } else {
          ratio_to_coarser_db = gridding_db->getDatabase("ratio_to_coarser");
          for (ln = 1; ln < d_num_levels; ln++) {
-            char level_name[32];
-            sprintf(level_name, "level_%d", ln);
+	    std::string level_name = "level_" + tbox::Utilities::intToString(ln);
  
             if (!ratio_to_coarser_db->keyExists(level_name)) {
                 TBOX_ERROR("Input error for " << d_object_name << ":  "

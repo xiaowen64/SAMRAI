@@ -78,7 +78,10 @@ insure++.suppress USER_ERROR { qsort H5AC_flush * }
 insure++.leaksummaryfilter -! * H5O_mtime_decode *
 # SGS 11/20/07
 # this is a little broad but HDF is leaking in fopen
-insure++.leaksummaryfilter -! * SAMRAI::tbox::HDFDatabase::mount *
+insure++.leaksummaryfilter -! * SAMRAI::tbox::HDFDatabase::open *
+insure++.leaksummaryfilter -! * SAMRAI::tbox::HDFDatabase::create *
+insure++.leaksummaryfilter -! * H5FCreate *
+insure++.leaksummaryfilter -! * H5FL_reg_malloc *
 
 # SGS 6/22/04
 # This does not appear in gcc 3.3.2 but is present in 3.2.2
@@ -109,6 +112,11 @@ insure++.leaksummaryfilter -! * PetscViewerASCIIGetStdout *
 insure++.leaksummaryfilter -! * VecInitializePackage *
 insure++.leaksummaryfilter -! * PETSC_VIEWER_STDOUT_ *
 
+# SILO
+insure++.leaksummaryfilter -! * _lite_PD_init_chrt *
+insure++.leaksummaryfilter -! * lite_SC_date *
+insure++.suppress RETURN_FAILURE { * _PD_get_tok * }
+insure++.suppress RETURN_FAILURE { * _lite_PD_rd_symt * }
 
 ##############################################################################
 # Suppress warnings in SAMRAI
@@ -117,8 +125,10 @@ insure++.leaksummaryfilter -! * PETSC_VIEWER_STDOUT_ *
 ##############################################################################
 
 # 
-# This is not really a bug.  This error is signaling the end of file.
+# This error is signaling the end of file.
 # Reads that are smaller than maxsize are handled correctly by the parser code.
+# Insure incorrectly reports that anything smaller than the read size is 
+# is an error.  This is not true.
 #
 # SGS 5/20/04
 suppress RETURN_FAILURE at Parser.C:313

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTop.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxTop.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	Utility class to reduce complexity of box calculus operations.
 //
 
@@ -115,7 +115,7 @@ template<int DIM> void BoxTop<DIM>::removeIntersections(BoxList<DIM>& fragments)
    //Note: this is opposite the approach of the current implementation
    int len = boxes_in.getNumberOfBoxes();
    for (int k=0; k<len; ++k) {
-      Box<DIM> tryme = boxes_in(k);
+      Box<DIM> tryme = boxes_in[k];
 
       //Find a shorter list of boxes from "takeaway" that might intersect
       //with "tryme."  Recall that "takeaway" was the list with which
@@ -124,14 +124,14 @@ template<int DIM> void BoxTop<DIM>::removeIntersections(BoxList<DIM>& fragments)
       //the "tryme" box.
       //
       //Cost of this operation is 
-      //O( max{ lg(n)), nabors.getNumberItems() } ).
+      //O( max{ lg(n)), nabors.getNumberOfItems() } ).
       BoxArray<DIM> nabors_array;
       findOverlappingBoxes(nabors_array, tryme);
       BoxList<DIM> nabors(nabors_array);
 
       //if "tryme" doesn't intersect any boxes on takeaway
       //(i.e., if "nabors" is empty" then keep "tryme."
-      if (nabors.getNumberItems() == 0) {
+      if (nabors.getNumberOfItems() == 0) {
         fragments.appendItem(tryme);
       } 
 
@@ -247,8 +247,8 @@ template<int DIM> void BoxTop<DIM>::setup()
       boxElt *tmp = d_sorted_lists[offset];
       int i;
       for (i=0; i<length; ++i) {
-         tmp[i].coord = d_boxes.getBox(i).lower(k);
-         tmp[i].box = &(d_boxes.getBox(i));
+         tmp[i].coord = d_boxes[i].lower(k);
+         tmp[i].box = &(d_boxes[i]);
          tmp[i].idx = i;
       }
       //sort the arrays
@@ -260,8 +260,8 @@ template<int DIM> void BoxTop<DIM>::setup()
       d_sorted_lists[offset] = new boxElt[length];
       tmp = d_sorted_lists[offset];
       for (i=0; i<length; ++i) {
-         tmp[i].coord = d_boxes.getBox(i).upper(k);
-         tmp[i].box = &(d_boxes.getBox(i));
+         tmp[i].coord = d_boxes[i].upper(k);
+         tmp[i].box = &(d_boxes[i]);
          tmp[i].idx = i;
       }
 
@@ -444,7 +444,7 @@ template<int DIM> void BoxTop<DIM>::buildShortestList(
             indices[count]  = d_shortest_list[i].idx;
          }
          if (build_overlaps) {
-            overlaps.getBox(count) = ( *(d_shortest_list[i].box) );
+            overlaps[count] = ( *(d_shortest_list[i].box) );
          }
          count++;
       }

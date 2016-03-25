@@ -1,53 +1,33 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/time_refinement/TimeRefinementIntegrator.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/time_refinement/TimeRefinementIntegrator.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Time integration manager for AMR with local time stepping.
 //
 
 #ifndef included_algs_TimeRefinementIntegrator
 #define included_algs_TimeRefinementIntegrator
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_BasePatchHierarchy
 #include "BasePatchHierarchy.h"
-#endif
-#ifndef included_mesh_BaseGriddingAlgorithm
 #include "BaseGriddingAlgorithm.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
-#ifndef included_algs_TimeRefinementLevelStrategy
 #include "TimeRefinementLevelStrategy.h"
-#endif
 
 namespace SAMRAI {
     namespace algs {
@@ -205,7 +185,7 @@ public:
     */
    ~TimeRefinementIntegrator<DIM>();
 
-   /**
+   /*!
     * Set AMR patch hierarchy configuration and data at start of simulation.
     * If the run is begun from a restart file, the hierarchy and data 
     * are read from the hierarchy database.  Otherwise, the hierarchy 
@@ -226,8 +206,24 @@ public:
     * 
     * When assertion checking is active, the hierachy database pointer
     * must be non-null.
+    *
+    * The two optional arguments are only to be used for a special case where
+    * the user wishes to manually specify a box decomposition and load
+    * balance for the coarsest level of the hierarchy.  The BoxArray argument
+    * must be a decomposition of the the coarsest level, and must exactly
+    * fill the index space of the physical domain of the hierarchy.  The
+    * ProcessorMapping must be constructed to map each box in the BoxArray
+    * to a processor.  The size of the mapping must be equal to the length
+    * of the box array, or an assertion failure will result.
+    *
+    * @param override_boxes box array representing a decomposition of level
+    *                       zero of the hierarchy
+    * @param override_mapping processor mapping that maps each box in the
+    *                         above array to a processor.
     */
-   double initializeHierarchy();
+   double initializeHierarchy(
+      const hier::BoxArray<DIM>& override_boxes = 0,
+      const hier::ProcessorMapping& override_mapping = 0);
  
    /**
     * Advance each level in the hierarchy through the given time increment 

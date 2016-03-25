@@ -1,10 +1,10 @@
 #!/bin/sh
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/config.suggest $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/config.suggest $
 ## Package:     SAMRAI
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1883 $
-## Modified:    $LastChangedDate: 2008-01-22 12:56:02 -0800 (Tue, 22 Jan 2008) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2176 $
+## Modified:    $LastChangedDate: 2008-05-05 15:25:08 -0700 (Mon, 05 May 2008) $
 ## Description: script to suggest ways to configure SAMRAI
 ##
 
@@ -128,32 +128,13 @@ cat <<-EOF
 ;;
 
 
-casc_insure4)
-# CASC Redhat 3, Insure++ with GNU 4.2.1 compilers
-cat <<-EOF
-	--with-CXX="/usr/apps/ParaSoft/insure++7.1.0/bin/insure /usr/casc/samrai/local.Linux/gcc/4.2.1/bin/g++"
-	--with-CC="/usr/apps/ParaSoft/insure++7.1.0/bin/insure /usr/casc/samrai/local.Linux/gcc/4.2.1/bin/gcc"
-	--with-F77=/usr/casc/samrai/local.Linux/gcc/4.2.1/bin/gfortran
-	--with-hdf5=/usr/apps/hdf5/serial-1.4.4
-	--with-mpi-include=/usr/apps/mpich/1.2.5/include
-	--with-mpi-lib-dirs=/usr/apps/mpich/1.2.5/lib
-	--with-mpi-libs="mpich pmpich"
-	--with-parallel-run-bin=/usr/apps/mpich/1.2.5/bin/mpirun
-        --with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.13.0b
-        --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh3
-        --without-petsc
-        --without-blaslapack
-	--with-x
-	EOF
-# Maintained by 
-;;
-
 casc_rh4_gnu) # CASC RedHat 4, GNU-4.x.x compilers
 cat <<-EOF 
       --with-CXX=/usr/apps/gcc/4.2.2/bin/g++
       --with-CC=/usr/apps/gcc/4.2.2/bin/gcc
       --with-F77=/usr/apps/gcc/4.2.2/bin/gfortran
       --with-hdf5=/usr/apps/hdf5/1.6.5/gcc4.1.2-serial
+      --with-silo=/usr/casc/samrai/silo/silo-4.6.1_rh4
       --with-mpi-include=/usr/apps/mpich/1.2.7p1/include
       --with-mpi-lib-dirs=/usr/apps/mpich/1.2.7p1/lib
       --with-mpi-libs="mpich pmpich"
@@ -171,12 +152,12 @@ EOF
 
 casc_rh4_icc) # CASC RedHat 4, Intel v9.1 compilers
 cat <<-EOF 
-      --with-CXX="/usr/apps/intel/cc/9.1.045/bin/icc -Kc++"
-      --with-CC=/usr/apps/intel/cc/9.1.045/bin/icc
+      --with-CXX="/usr/apps/intel/cc/9.1.045/bin/icc -Kc++ -gcc-name=/usr/bin/gcc"
+      --with-CC="/usr/apps/intel/cc/9.1.045/bin/icc -gcc-name=/usr/bin/gcc"
       --with-F77=/usr/apps/intel/fc/9.1.040/bin/ifort
-      --enable-rpath="-Wl,-R"
       --disable-template-depend
-      --with-hdf5=/usr/apps/hdf5/1.6.5/gcc4.1.2-serial
+      --with-hdf5=/usr/apps/hdf5/1.6.5/gcc3.4.6-serial
+      --with-silo=/usr/casc/samrai/silo/silo-4.6.1_rh4_gcc3
       --with-mpi-include=/usr/apps/mpich/1.2.7p1/include
       --with-mpi-lib-dirs=/usr/apps/mpich/1.2.7p1/lib
       --with-mpi-libs="mpich pmpich"
@@ -194,60 +175,34 @@ EOF
 
 casc_rh4_insure) # CASC Redhat 4, Insure with GNU-4.x.x compilers
 cat <<-EOF 
-      --with-CXX="/usr/apps/insure++/7.1.0/bin/insure /usr/apps/gcc/4.2.2/bin/g++"
-      --with-CC="/usr/apps/insure++/7.1.0/bin/insure /usr/apps/gcc/4.2.2/bin/gcc"
-      --with-F77=/usr/apps/gcc/4.2.2/bin/gfortran
-      --with-hdf5=/usr/apps/hdf5/1.6.5/gcc4.1.2-serial
+      --with-CXX="/usr/apps/insure++/7.1.0/bin/insure /usr/apps/intel/cc/9.1.045/bin/icc -Kc++ -gcc-name=/usr/bin/gcc"
+      --with-CC="/usr/apps/insure++/7.1.0/bin/insure /usr/apps/intel/cc/9.1.045/bin/icc -gcc-name=/usr/bin/gcc"
+      --with-F77=/usr/apps/intel/fc/9.1.040/bin/ifort
+      --enable-rpath=-Wl,-R
+      --disable-template-depend
+      --with-hdf5=/usr/apps/hdf5/1.6.5/gcc3.4.6-serial
+      --with-silo=/usr/casc/samrai/silo/silo-4.6.1_rh4_gcc3
       --with-mpi-include=/usr/apps/mpich/1.2.7p1/include
       --with-mpi-lib-dirs=/usr/apps/mpich/1.2.7p1/lib
       --with-mpi-libs="mpich pmpich"
       --with-parallel-run-bin=/usr/apps/mpich/1.2.7p1/bin/mpirun
       --with-hypre=/usr/casc/samrai/local.tux_rh4/hypre/hypre-2.2.0b-gcc-4.2.2.opt
-      --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh3
+      --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh4
       --with-petsc=/usr/casc/samrai/petsc/petsc-2.3.3-p8
       --with-petsc-arch=linux_gnu
       --with-blaslapack=/usr/lib
       --with-blaslapack-libs="-llapack -lblas"
-      --with-x
+      --without-x
 EOF
 # Maintained by Steven Smith
 ;;
 
-
-
-thunder_icc8)
-# Thunder, Intel v8.1 compilers
-cat <<-EOF
-	--with-CXX='/usr/local/intel/compiler81/bin/icc -lstdc++'
-	--with-CC=/usr/local/intel/compiler81/bin/icc
-	--with-F77=/usr/local/intel/compiler81/bin/ifort
-	--with-fortran-libs=-L/usr/local/intel/compiler81/lib
-	--with-hdf5=/usr/local/hdf5/hdf5-1.6.4/serial
-	--with-mpi-include=/usr/lib/mpi/include
-	--with-mpi-lib-dirs=/usr/lib/mpi/lib
-	--with-mpi-libs="mpi elan elan3 rmscall"
-	--with-hypre=/usr/gapps/hypre/chaos_3_ia64_elan4/hypre-1.13.0b
-	--without-sundials
-	--without-petsc
-	--without-blaslapack
-	--without-x
-	--enable-rpath=-Wl,-R
-	--disable-template-depend
-	EOF
-# Maintained by 
-;;
-
-
 thunder_icc9) # Thunder, Intel v9.0 compilers
 cat <<-EOF
-	--with-CXX=/usr/local/intel/compiler90_new/bin/icpc
-	--with-CC=/usr/local/intel/compiler90_new/bin/icc
-	--with-F77=/usr/local/intel/compiler90_new/bin/ifort
-	--with-fortran-libs=-L/usr/local/intel/compiler90_new/lib
-	--with-hdf5=/usr/local/hdf5/hdf5-1.6.4/serial
-	--with-mpi-include=/usr/lib/mpi/include
-	--with-mpi-lib-dirs=/usr/lib/mpi/lib
-	--with-mpi-libs="mpi elan elan3 rmscall"
+	--with-CXX=/usr/local/bin/mpiicpc
+	--with-CC=/usr/local/bin/mpiicc
+	--with-F77=/usr/local/bin/mpiifort
+	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.6.5/serial
 	--with-hypre=/usr/gapps/hypre/chaos_3_ia64_elan4/hypre-1.13.0b
 	--without-sundials
 	--without-petsc
@@ -255,6 +210,7 @@ cat <<-EOF
 	--without-x
 	--enable-rpath=-Wl,-R
 	--disable-template-depend
+	--enable-test-nprocs="1,2"
 	EOF
 # Maintained by Rich Hornung
 ;;
@@ -262,14 +218,10 @@ cat <<-EOF
 
 zeus_icc9) # Zeus, Intel v9.1 compilers
 cat <<-EOF
-	--with-CXX=/usr/local/intel/compiler91_64/bin/icpc
-	--with-CC=/usr/local/intel/compiler91_64/bin/icc
-	--with-F77=/usr/local/intel/compiler91_64/bin/ifort
-	--with-fortran-libs=-L/usr/local/intel/compiler91_64/lib
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.6.5/serial
-	--with-mpi-include=/usr/lib/mpi/gcc/mvapich-gen2/include
-	--with-mpi-lib-dirs=/usr/lib/mpi/gcc/mvapich-gen2/lib
-	--with-mpi-libs="mpich ibverbs"
+	--with-CXX=/usr/local/bin/mpiicpc-9.1.052
+	--with-CC=/usr/local/bin/mpiicc-9.1.052
+	--with-F77=/usr/local/bin/mpiifort-9.1.052
+	--with-hdf5=/usr/local/tools/hdf5-intel-serial-1.6.5
         --with-hypre=/usr/gapps/hypre/chaos_3_x86_64_ib/hypre-1.13.0b
 	--without-sundials
 	--without-petsc
@@ -277,6 +229,7 @@ cat <<-EOF
 	--without-x
 	--enable-rpath=-Wl,-R
 	--disable-template-depend
+	--enable-test-nprocs="1,2"
 	EOF
 # Maintained by Brian Gunney
 ;;
@@ -319,13 +272,37 @@ cat <<-EOF
 # Maintained by Steven Smith
 ;;
 
+pks_gnu)
+# PKS machine
+cat <<-EOF 
+      --with-CXX="ccache g++"
+      --with-CC="ccache gcc"
+      --with-F77=gfortran
+      --with-hdf5=/usr/apps/hdf5/hdf5-1.6.7
+      --with-mpi-include=/usr/apps/openmpi/openmpi-1.2.1/include
+      --with-mpi-lib-dirs=/usr/apps/openmpi/openmpi-1.2.1/lib
+      --with-mpi-libs="mpi"
+      --with-parallel-run-bin=mpirun
+      --without-hypre
+      --without-sundials
+      --without-petsc
+      --without-blaslapack
+      --without-x
+EOF
+# Maintained by Steven Smith
+;;
+
 
 macosx_gnu) # Apple Mac OS/X, gnu 4.2 compilers from DawrwinPorts
 cat <<-EOF
-      --with-CXX=g++-mp-4.2
-      --with-CC=gcc-mp-4.2
-      --with-F77=gfortran-mp-4.2
-      --with-hdf5=/opt/local
+      --with-CXX=g++-mp-4.3
+      --with-CC=gcc-mp-4.3
+      --with-F77=gfortran-mp-4.3
+      --with-hdf5=/opt/local 
+      --with-mpi-include=/usr/include 
+      --with-mpi-lib-dirs=/usr/lib 
+      --with-mpi-libs="mpi" 
+      --with-parallel-run-bin=/usr/bin/mpirun
 	EOF
 # Maintained by Steven Smith
 ;;

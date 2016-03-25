@@ -1,10 +1,10 @@
 
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/method_of_lines/MethodOfLinesIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/method_of_lines/MethodOfLinesIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Basic method-of-lines time integration algorithm
 //
 
@@ -177,7 +177,7 @@ template<int DIM> double MethodOfLinesIntegrator<DIM>::getTimestep(
 #endif
 
    double dt = tbox::MathUtilities<double>::getMax();
-   const int nlevels = hierarchy->getNumberLevels();
+   const int nlevels = hierarchy->getNumberOfLevels();
 
    for (int l = 0; l < nlevels; l++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->
@@ -235,7 +235,7 @@ template<int DIM> void MethodOfLinesIntegrator<DIM>::advanceHierarchy(
    /*
     * Stamp data on all levels to current simulation time.
     */
-   const int nlevels = hierarchy->getNumberLevels();
+   const int nlevels = hierarchy->getNumberOfLevels();
 
    for (int ln = 0; ln < nlevels; ln++) {
       tbox::Pointer< hier::PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);

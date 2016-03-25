@@ -1,36 +1,22 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/TagAndInitializeStrategy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/TagAndInitializeStrategy.h $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Strategy interface for params, tagging, init for gridding.
 //
 
 #ifndef included_mesh_TagAndInitializeStrategy
 #define included_mesh_TagAndInitializeStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_BasePatchHierarchy
 #include "BasePatchHierarchy.h"
-#endif
-#ifndef included_hier_BasePatchLevel
 #include "BasePatchLevel.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace mesh {

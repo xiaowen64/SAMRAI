@@ -1,9 +1,9 @@
 c
-c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/fortran/pdat_dbugfort3d.m4 $
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/fortran/pdat_dbugfort3d.m4 $
 c  Package:     SAMRAI patchdata
-c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-c  Revision:    $LastChangedRevision: 1704 $
-c  Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+c  Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+c  Revision:    $LastChangedRevision: 1917 $
+c  Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 c  Description: F77 routines for debugging 3d patch data types.
 c
 include(pdat_dbugstuff3d.i)dnl

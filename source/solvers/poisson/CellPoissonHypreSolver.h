@@ -1,70 +1,38 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonHypreSolver.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonHypreSolver.h $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1845 $
- * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description:	Hypre solver interface for diffusion-like elliptic problems.
  */
 
 #ifndef included_solv_CellPoissonHypreSolver
 #define included_solv_CellPoissonHypreSolver
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifdef HAVE_HYPRE
 
 #ifndef included_HYPRE_struct_ls
 #define included_HYPRE_struct_ls
-extern "C" {
 #include "HYPRE_struct_ls.h"
-}
 #endif
 
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_CoarseFineBoundary
 #include "CoarseFineBoundary.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
-#ifndef included_pdat_CellData
 #include "CellData.h"
-#endif
-#ifndef included_pdat_SideData
 #include "SideData.h"
-#endif
-#ifndef included_pdat_OutersideVariable
 #include "OutersideVariable.h"
-#endif
-#ifndef included_solv_GhostCellRobinBcCoefs
 #include "GhostCellRobinBcCoefs.h"
-#endif
-#ifndef included_solv_RobinBcCoefStrategy
 #include "RobinBcCoefStrategy.h"
-#endif
-#ifndef included_solv_PoissonSpecifications
 #include "PoissonSpecifications.h"
-#endif
-#ifndef included_solv_SimpleCellRobinBcCoefs
 #include "SimpleCellRobinBcCoefs.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
@@ -212,7 +180,7 @@ public:
     * The solution u and the right hand side f are
     * specified via patch indices on the patch hierarchy.
     *
-    * Member functions getNumberIterations() return the iterations
+    * Member functions getNumberOfIterations() return the iterations
     * from the solver.
     * Note that the matrix coefficients and boundary condition object
     * must have been set up before this function is called.
@@ -249,7 +217,7 @@ public:
     *
     * @return number of iterations taken by the solver to converge
     */
-   int getNumberIterations() const;
+   int getNumberOfIterations() const;
 
    /*!
     * @brief Set the number of pre-relax steps used by the Hypre solve.

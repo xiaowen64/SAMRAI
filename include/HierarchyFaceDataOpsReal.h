@@ -1,37 +1,25 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/face/HierarchyFaceDataOpsReal.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/face/HierarchyFaceDataOpsReal.h $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1811 $
-// Modified:    $LastChangedDate: 2007-12-20 01:19:26 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Templated operations for real face data on multiple levels.
 //
 
 #ifndef included_math_HierarchyFaceDataOpsReal
 #define included_math_HierarchyFaceDataOpsReal
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
-#ifndef included_math_HierarchyDataOpsReal
 #include "HierarchyDataOpsReal.h"
-#endif
-#ifndef included_math_PatchFaceDataOpsReal
 #include "PatchFaceDataOpsReal.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace math {

@@ -1,7 +1,7 @@
 //
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/multiblock/MultiblockNodeDataTranslator.C $
 // Package:	SAMRAI multiblock
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision: 1168 $
 // Modified:	$LastChangedDate: 2006-07-11 16:29:55 -0700 (Tue, 11 Jul 2006) $
 // Description:	Templated operations for copying patch data.
@@ -241,6 +241,8 @@ void MultiblockNodeDataTranslator<DIM,TYPE>::translateAndCopyData(
             (*dst)(dst_index, d) = (*src)(src_index, d);
          }
       }
+   } else {
+      TBOX_ERROR("MultiblockNodeDataTranslator<DIM,TYPE>::translateAndCopyData : DIM = 1 or > 3 not implemented");
    }
 }
 

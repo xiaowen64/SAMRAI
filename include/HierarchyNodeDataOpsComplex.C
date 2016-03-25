@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mathops/node/HierarchyNodeDataOpsComplex.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mathops/node/HierarchyNodeDataOpsComplex.C $
 // Package:     SAMRAI mathops
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1776 $
-// Modified:    $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Operations for complex node data on multiple levels.
 //
 
@@ -35,7 +35,7 @@ template<int DIM>  HierarchyNodeDataOpsComplex<DIM>::HierarchyNodeDataOpsComplex
 #endif
    d_hierarchy = hierarchy;
    if ( (coarsest_level < 0) || (finest_level < 0) ) {
-      if ( d_hierarchy->getNumberLevels() == 0 ) {
+      if ( d_hierarchy->getNumberOfLevels() == 0 ) {
          d_coarsest_level = coarsest_level;
          d_finest_level = finest_level;
       } else {
@@ -89,8 +89,8 @@ template<int DIM> void HierarchyNodeDataOpsComplex<DIM>::resetLevels(
 
       const int n = node_boxes.getNumberOfBoxes();
       for (int i = 0; i < n; i++) {
-         node_boxes.getBox(i) =
-            pdat::NodeGeometry<DIM>::toNodeBox(node_boxes.getBox(i));
+         node_boxes[i] =
+            pdat::NodeGeometry<DIM>::toNodeBox(node_boxes[i]);
       }
       hier::BoxUtilities<DIM>::makeNonOverlappingBoxLists(
                           d_nonoverlapping_node_boxes[ln],

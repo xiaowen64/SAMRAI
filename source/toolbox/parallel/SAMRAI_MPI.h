@@ -1,18 +1,16 @@
 //
-// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/parallel/SAMRAI_MPI.h $
+// File:  $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/SAMRAI_MPI.h $
 // Package:  SAMRAI toolbox
-// Copyright:  (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:  $LastChangedRevision: 1856 $
-// Modified:  $LastChangedDate: 2008-01-14 10:28:56 -0800 (Mon, 14 Jan 2008) $
+// Copyright:  (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:  $LastChangedRevision: 2132 $
+// Modified:  $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:  Simple utility class for interfacing with MPI
 //
 
 #ifndef included_tbox_SAMRAI_MPI
 #define included_tbox_SAMRAI_MPI
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 #ifdef HAVE_MPI
 #ifndef included_mpi
 #define included_mpi
@@ -36,13 +34,9 @@
 
 #endif
 #endif
-#ifndef included_tbox_Complex
 #include "tbox/Complex.h"
-#endif
 
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 
 namespace SAMRAI {

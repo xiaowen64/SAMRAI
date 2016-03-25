@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/BinaryTree.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BinaryTree.C $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility class that provides standard binary tree functions.
 //
 
@@ -77,7 +77,7 @@ template<int DIM>  BinaryTree<DIM>::BinaryTree(const ProcessorMapping &mapping,
    //put the boxes where they belong
    for (k=0; k<number_of_boxes; ++k) {
       int owner = mapping.getProcessorAssignment(k);
-      d_boxes[ d_first[owner]  ] = boxes(k);
+      d_boxes[ d_first[owner]  ] = boxes[k];
       d_first[owner] += 1;
    }
 

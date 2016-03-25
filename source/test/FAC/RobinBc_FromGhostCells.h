@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/FAC/RobinBc_FromGhostCells.h $
-  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/RobinBc_FromGhostCells.h $
+  Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 2132 $
+  Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
   Description:	RobinBc_FromGhostCells class declaration
 */
 
@@ -10,17 +10,11 @@
 #define included_RobinBc_FromGhostCells
 
 
-#ifndef included_pdat_ArrayData
 #include "ArrayData.h"
-#endif
 
-#ifndef included_solv_CartesianRobinBc
 #include "CartesianRobinBc.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 #ifndef included_String
 #include <string>

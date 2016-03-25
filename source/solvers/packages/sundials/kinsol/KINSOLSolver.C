@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/kinsol/KINSOLSolver.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/kinsol/KINSOLSolver.C $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1996 $
+// Modified:    $LastChangedDate: 2008-02-20 08:46:33 -0800 (Wed, 20 Feb 2008) $
 // Description: C++ Wrapper class for KINSOL solver package 
 //
 
@@ -179,7 +179,7 @@ KINSOLSolver::KINSOLSolver(
    d_omega                 = 0.0;
 
    d_max_iter              = MXITER_DEFAULT;
-   d_max_newton_step       = -1;
+   d_max_newton_step       = -1.0;
 
    d_maxsub                = MSBSET_SUB_DEFAULT;
 
@@ -189,21 +189,33 @@ KINSOLSolver::KINSOLSolver(
 
 }
 
-KINSOLSolver::~KINSOLSolver()
-{
+void KINSOLSolver::freeInternalVectors(void ) {
+
    if (d_my_soln_scale_vector && d_my_fval_scale_vector && d_soln_scale) {
       d_soln_scale->freeVector();
+      d_soln_scale = NULL;
+      d_fval_scale = NULL;
       d_my_soln_scale_vector = false;
       d_my_fval_scale_vector = false;
    }
 
    if (d_my_soln_scale_vector && d_soln_scale) {
       d_soln_scale->freeVector(); 
+      d_soln_scale = NULL;
+      d_my_soln_scale_vector = false;
    }
 
    if (d_my_fval_scale_vector && d_fval_scale) {
       d_fval_scale->freeVector();
+      d_fval_scale = NULL;
+      d_my_fval_scale_vector = false;
    }
+}
+
+KINSOLSolver::~KINSOLSolver()
+{
+
+   freeInternalVectors();
 
    if ( d_kinsol_log_file ) {
      fclose(d_kinsol_log_file);
@@ -222,14 +234,41 @@ KINSOLSolver::~KINSOLSolver()
 *************************************************************************
 */
 
-void KINSOLSolver::initialize(SundialsAbstractVector* solution)
+void KINSOLSolver::initialize(SundialsAbstractVector* solution,
+			      SundialsAbstractVector* uscale, 
+			      SundialsAbstractVector* fscale)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!(solution == (SundialsAbstractVector*)NULL));
-   TBOX_ASSERT(d_solution_vector == (SundialsAbstractVector*)NULL);
 #endif
+   
    d_solution_vector = solution;
+
+   // Free previously allocated scaling vectors if
+   // KINSOLSolver allocated them.
+   freeInternalVectors();
+
+   // If user is providing scaling vectors use them 
+   // otherwise allocate them.
+   if(uscale) {
+      if (d_my_soln_scale_vector && d_soln_scale) {
+	 d_soln_scale->freeVector();
+      }
+      d_soln_scale = uscale;
+      d_my_soln_scale_vector = false;
+   }
+
+   if(fscale) {
+      if (d_my_fval_scale_vector && d_fval_scale) {
+	 d_fval_scale->freeVector();
+      }
+      d_fval_scale = fscale;
+      d_my_fval_scale_vector = false;
+   }
+
+   // Initialize KINSOL.
    d_KINSOL_needs_initialization = true;
+
    initializeKINSOL();
 }
 
@@ -505,36 +544,6 @@ KINSOLAbstractFunctions* KINSOLSolver::getKINSOLFunctions() const
 /*
 *************************************************************************
 *                                                                       *
-* Accessory functions for setting scale vectors.                        *
-*                                                                       *
-*************************************************************************
-*/
-
-void KINSOLSolver::setSolutionScaleVector(
-   SundialsAbstractVector* uscale)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(uscale == (SundialsAbstractVector*)NULL));
-#endif
-   if (d_my_soln_scale_vector && d_soln_scale) d_soln_scale->freeVector();
-   d_soln_scale = uscale;
-   d_my_soln_scale_vector = false;
-}
-
-void KINSOLSolver::setResidualScaleVector(
-   SundialsAbstractVector* fscale)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!(fscale == (SundialsAbstractVector*)NULL));
-#endif
-   if (d_my_fval_scale_vector && d_fval_scale) d_fval_scale->freeVector();
-   d_fval_scale = fscale;
-   d_my_fval_scale_vector = false;
-}
-
-/*
-*************************************************************************
-*                                                                       *
 * Accessory function for setting constraints for nonlinear system.      *
 *                                                                       *
 *************************************************************************
@@ -590,7 +599,7 @@ void KINSOLSolver::setGlobalStrategy(const int global)
    d_KINSOL_needs_initialization = true;
 }
 
-void KINSOLSolver::setMaxNewtonStep(const int maxstep)
+void KINSOLSolver::setMaxNewtonStep(const double maxstep)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(maxstep > 0.0);

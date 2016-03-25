@@ -2,14 +2,15 @@
 #define included_solv_LocationIndexRobinBcCoefs_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/LocationIndexRobinBcCoefs.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/LocationIndexRobinBcCoefs.C $
  * Package:     SAMRAI application utilities
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1846 $
- * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2172 $
+ * Modified:    $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
  * Description: Robin boundary condition support on cartesian grids.
  */
 
+#include <stdlib.h>
 
 #include "LocationIndexRobinBcCoefs.h"
 
@@ -19,9 +20,6 @@
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
 #include IOMANIP_HEADER_FILE
-#include <stdio.h>
-
-
 
 namespace SAMRAI {
     namespace solv {
@@ -97,10 +95,8 @@ template<int DIM> void LocationIndexRobinBcCoefs<DIM>::getFromInput(
 {
    if ( database ) {
       int i;
-      char buf[20];
       for ( i=0; i<2*DIM; ++i ) {
-	 sprintf( buf, "boundary_%d", i );
-	 std::string name(buf);
+	 std::string name = "boundary_" + tbox::Utilities::intToString(i);
 	 if ( database->isString(name) ) {
 	    d_a_map[i] = 1.0;
 	    d_g_map[i] = 0.0;
@@ -221,10 +217,12 @@ template<int DIM> void LocationIndexRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
-   const hier::BoundaryBox<DIM> &bdry_box ) const
+   const hier::BoundaryBox<DIM> &bdry_box ,
+   double fill_time ) const
 {
    NULL_USE(variable);
    NULL_USE(patch);
+   NULL_USE(fill_time);
 
    int location = bdry_box.getLocationIndex();
 #ifdef DEBUG_CHECK_ASSERTIONS

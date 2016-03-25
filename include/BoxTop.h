@@ -1,43 +1,28 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxTop.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxTop.h $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2172 $
+// Modified:    $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
 // Description: Utility class to reduce complexity of box calculus operations.
 //
 
 #ifndef included_hier_BoxTop
 #define included_hier_BoxTop
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_Box
-#include "Box.h"
-#endif
-#ifndef included_hier_BoxArray
-#include "BoxArray.h"
-#endif
-#ifndef included_hier_IntVector
-#include "IntVector.h"
-#endif
-#ifndef included_tbox_Array
-#include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
-#include "tbox/List.h"
-#endif
-
-#ifndef included_tbox_PIO
-#include "tbox/PIO.h"
-#endif
-
-#ifndef included_iostream
-#define included_iostream
 #include <iostream>
-#endif
+#include <stdlib.h>
+
+#include "Box.h"
+#include "BoxArray.h"
+#include "IntVector.h"
+#include "tbox/Array.h"
+#include "tbox/List.h"
+
+#include "tbox/PIO.h"
+
 
 
 namespace SAMRAI {

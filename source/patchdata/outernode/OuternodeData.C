@@ -1,10 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/outernode/OuternodeData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/outernode/OuternodeData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Release:	$Name$
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	Templated outernode centered patch data type
 //
 
@@ -21,7 +20,6 @@
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
-#include <stdio.h>
 
 #define PDAT_OUTERNODEDATA_VERSION 1
 
@@ -901,25 +899,24 @@ void OuternodeData<DIM,TYPE>::getSpecializedFromDatabase(
    int ver = database->getInteger("PDAT_OUTERNODEDATA_VERSION");
    if (ver != PDAT_OUTERNODEDATA_VERSION) {
       TBOX_ERROR("OuternodeData<DIM>::getSpecializedFromDatabase error...\n"
-          << " : Restart file version different than class version" << std::endl);
+		 << " : Restart file version different than class version" << std::endl);
    }
-
+   
    d_depth = database->getInteger("d_depth");
-
-   char array_name[16];
+   
    tbox::Pointer<tbox::Database> array_database;
    for (int i = 0; i < DIM; i++) {
-     sprintf(array_name, "d_data%d_1", i);
-     if (database->keyExists(array_name)) {
-        array_database = database->getDatabase(array_name);
-        (d_data[i][0]).getFromDatabase(array_database);
-     }
-
-     sprintf(array_name, "d_data%d_2", i);
-     if (database->keyExists(array_name)) {
-        array_database = database->getDatabase(array_name);
+      std::string array_name = "d_data" + tbox::Utilities::intToString(i) +"_1";
+      if (database->keyExists(array_name)) {
+	 array_database = database->getDatabase(array_name);
+	 (d_data[i][0]).getFromDatabase(array_database);
+      }
+      
+      array_name = "d_data" + tbox::Utilities::intToString(i) +"_2";
+      if (database->keyExists(array_name)) {
+	 array_database = database->getDatabase(array_name);
         (d_data[i][1]).getFromDatabase(array_database);
-     }
+      }
    }
 }
 
@@ -945,16 +942,16 @@ void OuternodeData<DIM,TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   char array_name[16];
+   std::string array_name;
    tbox::Pointer<tbox::Database> array_database;
    for (int i = 0; i < DIM; i++) {
       if (d_data[i][0].isInitialized()) {
-         sprintf(array_name, "d_data%d_1", i);
+	 array_name = "d_data" + tbox::Utilities::intToString(i) +"_1";
          array_database = database->putDatabase(array_name);
          (d_data[i][0]).putToDatabase(array_database);
       }
       if (d_data[i][1].isInitialized()) {
-         sprintf(array_name, "d_data%d_2", i);
+	 array_name = "d_data" + tbox::Utilities::intToString(i) +"_2";
          array_database = database->putDatabase(array_name);
          (d_data[i][1]).putToDatabase(array_database);
       }

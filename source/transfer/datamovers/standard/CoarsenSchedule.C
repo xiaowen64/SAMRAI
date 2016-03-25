@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenSchedule.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/CoarsenSchedule.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1776 $
-// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	Coarsening schedule for data transfer between AMR levels
 //
  
@@ -545,7 +545,7 @@ template<int DIM> void CoarsenSchedule<DIM>::generateScheduleBoxTree()
 
    for (int dp = 0; dp < dst_npatches; dp++) {
 
-      const hier::Box<DIM>& dst_box = dst_boxes(dp);
+      const hier::Box<DIM>& dst_box = dst_boxes[dp];
       hier::Box<DIM> dst_box_plus_ghosts = dst_box;
       dst_box_plus_ghosts.grow(dst_growth);
 
@@ -624,11 +624,11 @@ template<int DIM> void CoarsenSchedule<DIM>::constructScheduleTransactions(
    tbox::Pointer< hier::PatchDescriptor<DIM> > src_patch_descriptor =
       src_level->getPatchDescriptor();
 
-   const hier::Box<DIM>& dst_box = dst_level->getBoxes().getBox(dst_patch_id);
-   const hier::Box<DIM>& src_box = src_level->getBoxes().getBox(src_patch_id);
+   const hier::Box<DIM>& dst_box = dst_level->getBoxes()[dst_patch_id];
+   const hier::Box<DIM>& src_box = src_level->getBoxes()[src_patch_id];
 
    const int num_equiv_classes =
-      d_coarsen_classes->getNumberEquivalenceClasses();
+      d_coarsen_classes->getNumberOfEquivalenceClasses();
 
    /*
     * Test all potential intersections between source box and fill
@@ -804,7 +804,7 @@ template<int DIM> void CoarsenSchedule<DIM>::setCoarsenItems(
    d_coarsen_classes        = coarsen_classes;
 
    const int num_coarsen_classes =
-      d_coarsen_classes->getNumberEquivalenceClasses();
+      d_coarsen_classes->getNumberOfEquivalenceClasses();
 
    d_number_coarsen_items = 0;
 

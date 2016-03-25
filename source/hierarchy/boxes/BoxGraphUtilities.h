@@ -1,31 +1,21 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxGraphUtilities.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxGraphUtilities.h $
 // Package:     SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Utility class for operations that reduce complexity of box calculus
 //
 
 #ifndef included_hier_BoxGraphUtilities
 #define included_hier_BoxGraphUtilities
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
@@ -113,7 +103,7 @@ template<int DIM> struct BoxGraphUtilities
       const tbox::Array< tbox::List< IntVector<DIM> > >& shifts);
 
    /*!
-    * @brief Returns the sum of shifts[j].getNumberItems().
+    * @brief Returns the sum of shifts[j].getNumberOfItems().
     * 
     * This function is called by makeBoxesPlusPeriodicBoxes().
     * 

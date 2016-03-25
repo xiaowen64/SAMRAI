@@ -2,8 +2,8 @@ define(trace_init,`dnl
       do  ic$3=ifirst$3-FACEG,ilast$3+FACEG
          do  ic$2=ifirst$2-FACEG,ilast$2+FACEG
            ie$1=ifirst$1-FACEG
-             tracergt$1(ie$1,ic$2,ic$3)=uval($5)
-             tracelft$1(ie$1,ic$2,ic$3)=0.0
+           tracergt$1(ie$1,ic$2,ic$3)=uval($5)
+           tracelft$1(ie$1,ic$2,ic$3)=uval($5)
 
            do  ie$1=ifirst$1+1-FACEG,ilast$1+FACEG
              tracelft$1(ie$1,ic$2,ic$3)=uval($4)
@@ -11,8 +11,8 @@ define(trace_init,`dnl
            enddo
 
            ie$1=ilast$1+FACEG+1
-             tracelft$1(ie$1,ic$2,ic$3)=uval($4)
-             tracergt$1(ie$1,ic$2,ic$3)=0.0
+           tracelft$1(ie$1,ic$2,ic$3)=uval($4)
+           tracergt$1(ie$1,ic$2,ic$3)=uval($4)
          enddo
       enddo
 

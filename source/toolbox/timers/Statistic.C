@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistic.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Statistic.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Class to record statistics during program execution.
 //
 
@@ -262,7 +262,7 @@ void Statistic::packStream(AbstractStream& stream)
       for (is = 0; is < d_seq_counter; is++) {
          List<Statistic::PatchStatRecord>& lrec = 
             d_patch_array[is].patch_records;
-         idata[4+is] = lrec.getNumberItems();
+         idata[4+is] = lrec.getNumberOfItems();
 
          List<Statistic::PatchStatRecord>::Iterator ilr(lrec);
          for ( ; ilr; ilr++) { 
@@ -460,7 +460,7 @@ void Statistic::putToDatabase(
       for (i = 0; i < d_seq_counter; i++) {
          List<Statistic::PatchStatRecord>& records = 
             d_patch_array[i].patch_records;
-         idata[i] = records.getNumberItems();  // # patches at seq num
+         idata[i] = records.getNumberOfItems();  // # patches at seq num
          List<Statistic::PatchStatRecord>::Iterator ir(records);
          for ( ; ir; ir++ ) {
             idata[mark + il] = ir().patch_id;

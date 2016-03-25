@@ -1,7 +1,7 @@
 //
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/patchdata/boxgeometry/MultiblockNodeDataTranslator.h $
 // Package:	SAMRAI patch data geometry
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision: 1318 $
 // Modified:	$LastChangedDate: 2006-12-04 12:10:56 -0800 (Mon, 04 Dec 2006) $
 // Description:	hier::Box geometry information for cell centered objects
@@ -10,12 +10,8 @@
 #ifndef included_pdat_MultiblockNodeDataTranslator
 #define included_pdat_MultiblockNodeDataTranslator
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_MultiblockDataTranslator
 #include "MultiblockDataTranslator.h"
-#endif
 
 
 namespace SAMRAI {

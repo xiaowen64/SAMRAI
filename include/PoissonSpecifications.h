@@ -1,18 +1,16 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/PoissonSpecifications.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/PoissonSpecifications.h $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1845 $
- * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description: Specifications for the scalar Poisson equation
  */
 
 #ifndef included_solv_PoissonSpecifications
 #define included_solv_PoissonSpecifications
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_SAMRAI_String
 #include <string>
@@ -65,7 +63,7 @@ public:
    /*!
     * @brief Destructor (does nothing).
     */
-   ~PoissonSpecifications();
+   virtual ~PoissonSpecifications();
 
    /*!
     * @brief Assignment operator

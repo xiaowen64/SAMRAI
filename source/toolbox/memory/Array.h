@@ -1,21 +1,17 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/memory/Array.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/memory/Array.h $
 // Package:	SAMRAI toolbox for memory management
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	A simple array template class
 //
 
 #ifndef included_tbox_Array
 #define included_tbox_Array
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_ReferenceCounter
 #include "tbox/ReferenceCounter.h"
-#endif
 
 
 namespace SAMRAI {
@@ -55,33 +51,20 @@ public:
 
    /**
     * Create an array of ``n'' elements.  The storage for the objects
-    * is allocated via the standard ``new'' operator.   The
-    * ``standard_type'' argument should only be true when TYPE is
-    * fundamental data type such as int, double, etc.  In those cases
-    * it is not necessary for the argument to be true but if so it will
-    * improve efficiency.
+    * is allocated via the standard ``new'' operator.
     */
-   Array(const int n, const bool standard_type = false);
+   Array(const int n);
 
    /**
     * Allocate an array of ``n'' elements using the memory arena.  The
     * storage for the objects is allocated from the specified arena; on
-    * deallocation, the storage will be returned to the arena.  The
-    * ``standard_type'' argument should only be true when TYPE is 
-    * fundamental data type such as int, double, etc.  In those cases
-    * it is not necessary for the argument to be true but if so it will
-    * improve efficiency. 
+    * deallocation, the storage will be returned to the arena.
     */
-   Array(const int n, const Pointer<Arena>& pool,
-              const bool standard_type = false);
+   Array(const int n, const Pointer<Arena>& pool);
 
    /**
     * Const constructor for the array.  This creates an alias to the
-    * right hand side and increments the reference count.  The
-    * ``standard_type'' argument should only be true when TYPE is
-    * fundamental data type such as int, double, etc.  In those cases
-    * it is not necessary for the argument to be true but if so it will
-    * improve efficiency.
+    * right hand side and increments the reference count.
     *
     * CAUTION: invoking resizeArray() forces a deep copy.
     * Upon return, two objects that formerly were aliases to the
@@ -172,6 +155,7 @@ public:
    void resizeArray(const int n, const Pointer<Arena>& pool);
 
 private:
+
    TYPE *allocateObjects(const int n, Arena *arena);
    void deleteObjects();
 
@@ -179,7 +163,7 @@ private:
    ReferenceCounter *d_counter;
    int d_elements;
 
-   bool d_standard_type;
+   static const bool s_standard_type;
 };
 
 

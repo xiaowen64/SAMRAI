@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/LoadBalancer.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/load_balance/LoadBalancer.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1891 $
-// Modified:    $LastChangedDate: 2008-01-22 20:13:13 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
 
@@ -397,7 +397,7 @@ template<int DIM> void LoadBalancer<DIM>::loadBalanceBoxes(
 
    tbox::Array<double> workloads;
 
-   if ( (wrk_indx < 0) || (hierarchy->getNumberLevels() == 0) ) {
+   if ( (wrk_indx < 0) || (hierarchy->getNumberOfLevels() == 0) ) {
 
       if ( !d_ignore_level_box_union_is_single_box ) {
          hier::Box<DIM> bbox = in_boxes.getBoundingBox();
@@ -577,7 +577,7 @@ template<int DIM> void LoadBalancer<DIM>::chopUniformSingleBox(
    const int nboxes = out_boxes.getNumberOfBoxes();
    out_workloads.resizeArray(nboxes);
    for (int ib = 0; ib < nboxes; ib++) {
-      out_workloads[ib] = (double)(out_boxes.getBox(ib).size());
+      out_workloads[ib] = (double)(out_boxes[ib].size());
    }
 
 }
@@ -645,7 +645,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithUniformWorkload(
                                                      bad_interval,
                                                      physical_domain);
 
-   if (tmp_box_list.getNumberItems() != tmp_work_list.getNumberItems()) {
+   if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
       TBOX_ERROR(d_object_name << ": "
         << "Number of boxes generated != number of workload values generated."
         << std::endl);
@@ -717,7 +717,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithNonuniformWorkload(
    const int num_tmp_patches = tmp_level_boxes.getNumberOfBoxes();
    tbox::Array<double> tmp_level_workloads(num_tmp_patches);
    for (int i = 0; i < num_tmp_patches; i++) {
-      tmp_level_workloads[i] = tmp_level_boxes.getBox(i).size();
+      tmp_level_workloads[i] = tmp_level_boxes[i].size();
    }
 
    hier::ProcessorMapping tmp_level_mapping;
@@ -790,7 +790,7 @@ template<int DIM> void LoadBalancer<DIM>::chopBoxesWithNonuniformWorkload(
    tmp_level->deallocatePatchData(wrk_indx);
    tmp_level.setNull();
 
-   if (tmp_box_list.getNumberItems() != tmp_work_list.getNumberItems()) {
+   if (tmp_box_list.getNumberOfItems() != tmp_work_list.getNumberOfItems()) {
       TBOX_ERROR(d_object_name << ": "
         << "Number of boxes generated != number of workload values generated."
         << std::endl);

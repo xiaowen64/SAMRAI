@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/Makefile.in $
 ## Package:	SAMRAI toolbox
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1704 $
-## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2086 $
+## Modified:	$LastChangedDate: 2008-03-28 15:10:07 -0700 (Fri, 28 Mar 2008) $
 ## Description:	makefile for the input database routines
 ##
 
@@ -19,7 +19,9 @@ include $(OBJECT)/config/Makefile.config
 
 library:	lib1d lib2d lib3d
 
-OBJS	      = HDFDatabase.o RestartManager.o NullDatabase.o
+OBJS	      = HDFDatabase.o HDFDatabaseFactory.o \
+		SiloDatabase.o SiloDatabaseFactory.o \
+		RestartManager.o NullDatabase.o
 
 lib1d:		$(OBJS)
 lib2d:		$(OBJS)

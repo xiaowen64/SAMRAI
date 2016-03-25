@@ -1,37 +1,23 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/CoarseFineBoundary.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/CoarseFineBoundary.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1887 $
-// Modified:	$LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	For describing coarse-fine boundary interfaces
 //
 
 #ifndef included_hier_CoarseFineBoundary
 #define included_hier_CoarseFineBoundary
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_BoundaryBox
 #include "BoundaryBox.h"
-#endif
-#ifndef included_hier_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
 namespace SAMRAI {
     namespace hier {

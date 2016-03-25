@@ -1,9 +1,9 @@
 //
 // File:        MblkHyperbolicLevelIntegrator.h
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -11,83 +11,39 @@
 #ifndef included_MblkHyperbolicLevelIntegratorXD
 #define included_MblkHyperbolicLevelIntegratorXD
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 using namespace std;
 #endif
-#ifndef included_MblkHyperbolicPatchStrategyXD
 #include "MblkHyperbolicPatchStrategy.h"
-#endif
-#ifndef included_algs_TimeRefinementLevelStrategy
 #include "TimeRefinementLevelStrategy.h"
-#endif
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
-#ifndef included_mesh_BaseGriddingAlgorithm
 #include "BaseGriddingAlgorithm.h"
-#endif
-#ifndef included_xfer_CoarsenOperator
 #include "CoarsenOperator.h"
-#endif
-#ifndef included_xfer_RefineOperator
 #include "RefineOperator.h"
-#endif
-#ifndef included_xfer_TimeInterpolateOperator
 #include "TimeInterpolateOperator.h"
-#endif
-#ifndef included_mblk_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
-#endif
-#ifndef included_mesh_StandardTagAndInitStrategy
 #include "StandardTagAndInitStrategy.h"
-#endif
-#ifndef included_tbox_Database
-#include "tbox/Database.h"
-#endif 
-#ifndef included_tbox_List
-#include "tbox/List.h"
-#endif 
-#ifndef included_tbox_Pointer
-#include "tbox/Pointer.h"
-#endif 
-#ifndef included_tbox_Serializable
-#include "tbox/Serializable.h"
-#endif 
+#include "tbox/Database.h" 
+#include "tbox/List.h" 
+#include "tbox/Pointer.h" 
+#include "tbox/Serializable.h" 
 #ifndef included_String
 #include <string>
 using namespace std;
 #define included_String
 #endif 
-#ifndef included_xfer_CoarsenAlgorithm
 #include "CoarsenAlgorithm.h"
-#endif
-#ifndef included_mblk_MultiblockCoarsenAlgorithm
 #include "MultiblockCoarsenAlgorithm.h"
-#endif
-#ifndef included_xfer_RefineAlgorithm
 #include "RefineAlgorithm.h"
-#endif
-#ifndef included_mblk_MultiblockRefineAlgorithm
 #include "MultiblockRefineAlgorithm.h"
-#endif
-#ifndef included_mblk_MultiblockRefineSchedule
 #include "MultiblockRefineSchedule.h"
-#endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
 #ifndef NULL
 #define NULL (0)

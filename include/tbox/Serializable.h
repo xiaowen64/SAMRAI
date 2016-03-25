@@ -1,27 +1,19 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/database/Serializable.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/database/Serializable.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	An abstract base class for objects than can be serialized
 //
 
 #ifndef included_tbox_Serializable
 #define included_tbox_Serializable
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 
 namespace SAMRAI {
@@ -60,6 +52,12 @@ public:
    /**
     * This method serializes the object by writing data to the
     * specified database.  
+    *
+    * NOTE: The asymetry (not having a "getFromDatabase") is from the
+    * historical method for doing SAMRAI restart.  The constructor
+    * for a Serializable class should get the database to restore
+    * state from by making a getRootDatabase call to the
+    * RestartManager.
     */
    virtual void putToDatabase(Pointer<Database> db) = 0;
 

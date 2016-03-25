@@ -1,10 +1,10 @@
 #! /bin/sh
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/scripts/run-after-update $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/scripts/run-after-update $
 ## Package:     SAMRAI templates
-## Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1704 $
-## Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:    $LastChangedRevision: 2059 $
+## Modified:    $LastChangedDate: 2008-03-21 09:43:20 -0700 (Fri, 21 Mar 2008) $
 ## Description: shell script for misc tasks after updating from repository.
 ##
 
@@ -17,14 +17,6 @@
 cd `dirname $0`/../.. || exit 1;
 test -d "source/hierarchy/patches" || exit 1
 pwd
-
-# Make sure we have acmacros, which is needed for regenerating
-# config/aclocal.m4, which is needed for regenerating configure.
-#if test ! -d acmacros ; then
-#  test "$CVSROOT_BTNG" || CVSROOT_BTNG=/usr/casc/samrai/gunney/cvsrepository
-#  echo "No acmacros directory.  Using current version in $CVSROOT_BTNG"
-#  cvs -d $CVSROOT_BTNG export -D now acmacros
-#fi
 
 # Update the includes directory.
 echo "Running the includes script"

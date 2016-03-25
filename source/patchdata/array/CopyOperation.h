@@ -1,18 +1,16 @@
 //
 // File:	$URL$
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Copy operation on single array data elements templated on data type
 //
 
 #ifndef included_pdat_CopyOperation
 #define included_pdat_CopyOperation
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 namespace SAMRAI {
     namespace pdat {

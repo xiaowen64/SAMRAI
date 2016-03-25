@@ -1,5 +1,10 @@
 # Commands to create the autoconf configure script
 
+if [ ! -d acmacros ] 
+then
+	svn checkout file:///usr/casc/samrai/gunney/svnrepo/acmacros/branches/0.3 acmacros
+fi
+
 rm -fr autom4te.cache
-aclocal -I config -I acmacros --output=config/aclocal.m4
+aclocal -I `pwd`/config -I `pwd`/acmacros --output=config/aclocal.m4
 autoconf -I config

@@ -1,50 +1,30 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryNodeSum.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryNodeSum.h $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Routines for summing locally-active node data at patch boundaries
 //
  
 #ifndef included_algs_LocallyActiveDataPatchBoundaryNodeSum
 #define included_algs_LocallyActiveDataPatchBoundaryNodeSum
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_pdat_NodeVariable
 #include "NodeVariable.h"
-#endif
-#ifndef included_pdat_OuternodeVariable
 #include "OuternodeVariable.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_xfer_LocallyActiveDataCoarsenSchedule
 #include "LocallyActiveDataCoarsenSchedule.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefineSchedule
 #include "LocallyActiveDataRefineSchedule.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefineTransactionFactory
 #include "LocallyActiveDataRefineTransactionFactory.h"
-#endif
 
 namespace SAMRAI {
     namespace algs {

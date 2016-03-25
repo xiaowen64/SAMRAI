@@ -1,14 +1,15 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/templates/special/stl-FundamentalTypes.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/templates/special/stl-FundamentalTypes.C $
 // Package:	SAMRAI templates
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1851 $
-// Modified:	$LastChangedDate: 2008-01-11 16:39:46 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2150 $
+// Modified:	$LastChangedDate: 2008-04-24 13:44:21 -0700 (Thu, 24 Apr 2008) $
 // Description:	Template instantiation for STL containers of int.
 //
 
 #include <vector>
 #include <set>
+#include <map>
 
 /*
  * This file instantiates STL classes and functions
@@ -65,45 +66,40 @@
  * functions and member functions must be instantiated individually.
  */
 
-template class std::vector<int>;
 
 template class std::set<int>;
 
-#if defined(__INTEL_COMPILER)
 
-#elif defined(__GNUC__)
+template class std::map<int,int>;
 
-template void std::fill<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&);
 
-template int* std::fill_n<int*, unsigned, int>(int*, unsigned, int const&);
+template class std::map<int,std::vector<int> >;
 
-template class __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > > std::fill_n<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, unsigned, int>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, unsigned, int const&);
-
-template class std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >;
-
-template class std::_Rb_tree<int, std::pair<int const, std::vector<int, std::allocator<int> > >, std::_Select1st<std::pair<int const, std::vector<int, std::allocator<int> > > >, std::less<int>, std::allocator<std::pair<int const, std::vector<int, std::allocator<int> > > > >;
-
-// Symbol depends on version of GNU compiler that is being used
-#if __GNUC__ > 3 
-#ifndef __APPLE__
-   template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::_M_insert_unique<int*>(int*, int*);
-   template void std::fill<int*, int>(int*, int*, int const&);
-#endif
-#else
-   template void std::_Rb_tree<int, int, std::_Identity<int>, std::less<int>, std::allocator<int> >::insert_unique<int*>(int*, int*);
+/*
+ * IBM XLC fails on this.
+ */
+#if !defined(__xlC__)
+template void std::set<int>::insert<int*>(int *, int *);
+template void std::set<int>::insert<const int *>(const int *, const int *);
 #endif
 
 
-// The following are required by the gps-gcc test case.
+template class std::vector<char>;
+template void std::vector<char>::insert<char*>(std::vector<char>::iterator, char *, char *);
+template void std::vector<char>::insert<const char *>(std::vector<char>::iterator, const char *, const char *);
 
-template
-__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > > std::fill_n<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, unsigned long, int>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, unsigned long, int const&);
+template class std::vector<int>;
+template void std::vector<int>::insert<int*>(std::vector<int>::iterator, int *, int *);
+template void std::vector<int>::insert<const int *>(std::vector<int>::iterator, const int *, const int *);
 
-template
-int* std::fill_n<int*, unsigned long, int>(int*, unsigned long, int const&);
+template class std::vector<float>;
+template void std::vector<float>::insert<float*>(std::vector<float>::iterator, float *, float *);
+template void std::vector<float>::insert<const float *>(std::vector<float>::iterator, const float *, const float *);
 
-// The following is required when configuring for shared SAMRAI libraries.
+template class std::vector<double>;
+template void std::vector<double>::insert<double*>(std::vector<double>::iterator, double *, double *);
+template void std::vector<double>::insert<const double *>(std::vector<double>::iterator, const double *, const double *);
 
-template void std::vector<int, std::allocator<int> >::_M_range_insert<int*>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int*, int*, std::forward_iterator_tag);
 
-#endif
+
+

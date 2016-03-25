@@ -1,5 +1,5 @@
 ****************************************************************************
-*  Copyright 1997-2007                                                     *
+*  Copyright 1997-2008                                                     *
 *  Lawrence Livermore National Security, LLC.                            *
 *  All rights reserved.                                                    *
 ****************************************************************************
@@ -138,10 +138,6 @@ INPUT FILES:
       log_all_nodes    = TRUE
 
       // Visualization dump parameters.
-      // viz_writer        -- (char string [, char string]) which visualization
-      //                      data writer to use.  Use "VisIt" for the VisIt Data
-      //                      Writer, or "Vizamrai" for the Vizamrai Data Writer,
-      /                       or "VisIt", "Vizamrai" for both.
       // viz_dump_interval -- (int) the interval in timesteps over coarsest 
       //                      level between writing of consecutive 
       //                      visualization dumps.  Setting it to zero turns off 
@@ -162,7 +158,6 @@ INPUT FILES:
       //                      single dump file.  Not used by Vizamrai.
       //
       //                      For example, the following inputs:
-      viz_writer            = "Vizamrai", "VisIt"
       viz_dump_interval     = 1
       viz_dump_dirname      = "viz_sphere-2d"
       viz_dump_filename     = "sphere-2d"

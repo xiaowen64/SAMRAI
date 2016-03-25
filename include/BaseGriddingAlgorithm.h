@@ -1,27 +1,19 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/gridding/BaseGriddingAlgorithm.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/BaseGriddingAlgorithm.h $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1818 $
-// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
 #ifndef included_mesh_BaseGriddingAlgorithm
 #define included_mesh_BaseGriddingAlgorithm
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_BasePatchHierarchy
 #include "BasePatchHierarchy.h"
-#endif
-#ifndef included_mesh_TagAndInitializeStrategy
 #include "TagAndInitializeStrategy.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 
 namespace SAMRAI {
    namespace mesh {
@@ -78,12 +70,27 @@ public:
     * unrecoverable assertion will result if either the patch hierarchy 
     * or its grid geometry is NULL.
     *
+    * The two optional arguments are only to be used for a special case where
+    * the user wishes to manually specify a box decomposition and load
+    * balance for the coarsest level of the hierarchy.  The BoxArray argument
+    * must be a decomposition of the the coarsest level, and must exactly
+    * fill the index space of the physical domain of the hierarchy.  The
+    * ProcessorMapping must be constructed to map each box in the BoxArray
+    * to a processor.  The size of the mapping must be equal to the length
+    * of the box array, or an assertion failure will result.
+    *
     * @param hierarchy The hierarchy on which coarse level is constructed.
     * @param level_time Simulation time when level is constructed
+    * @param override_boxes box array representing a decomposition of level
+    *                       zero of the hierarchy
+    * @param override_mapping processor mapping that maps each box in the
+    *                         above array to a processor.
     */
    virtual void makeCoarsestLevel(
       tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
-      const double level_time) = 0;
+      const double level_time,
+      const hier::BoxArray<DIM>& override_boxes = 0,
+      const hier::ProcessorMapping& override_mapping = 0) = 0;
 
    /*!
     * @brief This routine attempts to create a new level in a hierarchy 

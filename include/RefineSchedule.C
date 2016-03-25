@@ -1,9 +1,9 @@
 //
-// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefineSchedule.C $
+// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefineSchedule.C $
 // Package:      SAMRAI data transfer
-// Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:     $LastChangedRevision: 1776 $
-// Modified:     $LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:     $LastChangedRevision: 2141 $
+// Modified:     $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:  Refine schedule for data transfer between AMR levels
 //
 
@@ -720,7 +720,7 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
        * in doing so, use the coarse-to-fine mapping array.
        */
 
-      const int ncoarse = coarse_to_fine_mapping.getNumberItems();
+      const int ncoarse = coarse_to_fine_mapping.getNumberOfItems();
 
       d_coarse_to_fine_mapping.resizeArray(ncoarse);
       int coarse_index = 0;
@@ -760,7 +760,7 @@ template<int DIM> void RefineSchedule<DIM>::finishScheduleConstruction(
       for (int cp = 0; cp < ncoarse; cp++) {
 	 const int fp = d_coarse_to_fine_mapping[cp];
 
-	 const hier::Box<DIM> coarse_box = coarse_box_array.getBox(cp);
+	 const hier::Box<DIM> coarse_box = coarse_box_array[cp];
 	 const hier::Box<DIM> fine_box = hier::Box<DIM>::refine(coarse_box, ratio);
 
 	 d_fine_fill_boxes[cp] = unfilled_boxes[fp];
@@ -1116,7 +1116,7 @@ template<int DIM> void RefineSchedule<DIM>::copyScratchToDestination(
 #ifdef DEBUG_CHECK_ASSERTIONS
 	    const double dst_time = patch->getPatchData(dst_id)->getTime();
 	    const double src_time = patch->getPatchData(src_id)->getTime();
-	    TBOX_ASSERT(dst_time == src_time);
+	    TBOX_ASSERT(tbox::MathUtilities<double>::equalEps(dst_time, src_time));
 #endif
 	    patch->getPatchData(dst_id)->copy(*patch->getPatchData(src_id));
 	 }
@@ -1476,7 +1476,7 @@ template<int DIM> void RefineSchedule<DIM>::generateCommunicationScheduleBoxTree
 
    for (int dp = 0; dp < dst_npatches; dp++) {
 
-      const hier::Box<DIM>& dst_box = dst_boxes(dp);
+      const hier::Box<DIM>& dst_box = dst_boxes[dp];
       hier::Box<DIM> dst_box_plus_ghosts = dst_box;
       dst_box_plus_ghosts.grow(dst_growth);
 
@@ -1565,7 +1565,7 @@ template<int DIM> void RefineSchedule<DIM>::allocateFillBoxes(
        * The default option fills the patch boxes grown by gcw.
        */
       for (int p = 0; p < nboxes; p++) {
-         fill_boxes[p].resetFillBoxes(hier::Box<DIM>::grow(boxes(p), gcw));
+         fill_boxes[p].resetFillBoxes(hier::Box<DIM>::grow(boxes[p], gcw));
          d_max_fill_boxes =
             tbox::MathUtilities<int>::Max( d_max_fill_boxes,
                                            fill_boxes[p].getNumberOfBoxes() );
@@ -1577,7 +1577,7 @@ template<int DIM> void RefineSchedule<DIM>::allocateFillBoxes(
        * Fill just the interior.  Disregard gcw.
        */
       for (int p = 0; p < nboxes; p++) {
-         fill_boxes[p].resetFillBoxes(boxes(p));
+         fill_boxes[p].resetFillBoxes(boxes[p]);
          d_max_fill_boxes =
             tbox::MathUtilities<int>::Max( d_max_fill_boxes,
                                            fill_boxes[p].getNumberOfBoxes() );
@@ -1591,7 +1591,7 @@ template<int DIM> void RefineSchedule<DIM>::allocateFillBoxes(
        */
       const hier::BoxTree<DIM> &boxtree = *level->getBoxTree();
       for (int p = 0; p < nboxes; p++) {
-         hier::BoxList<DIM> levelborder( hier::Box<DIM>::grow(boxes(p), gcw) );
+         hier::BoxList<DIM> levelborder( hier::Box<DIM>::grow(boxes[p], gcw) );
          boxtree.removeIntersections( levelborder );
          if ( ! levelborder.isEmpty() ) {
             fill_boxes[p].resetFillBoxes( levelborder );
@@ -1609,11 +1609,11 @@ template<int DIM> void RefineSchedule<DIM>::allocateFillBoxes(
        */
       const hier::BoxTree<DIM> &boxtree = *level->getBoxTree();
       for (int p = 0; p < nboxes; p++) {
-         hier::Box<DIM> ghostbox = hier::Box<DIM>::grow(boxes(p), gcw);
+         hier::Box<DIM> ghostbox = hier::Box<DIM>::grow(boxes[p], gcw);
          hier::BoxList<DIM> nofill;
          boxtree.findOverlapBoxes( nofill, ghostbox );
          for ( typename hier::BoxList<DIM>::Iterator li(nofill); li; li++ ) {
-            if ( *li == boxes(p) ) {
+            if ( *li == boxes[p] ) {
                // Exclude the patch box itself.
                nofill.removeItem(li);
                break;
@@ -1746,7 +1746,7 @@ template<int DIM> void RefineSchedule<DIM>::makeUnfilledBoxesNSquared(
 
       for (int sp = 0; sp < src_npatches; sp++) {
 
-	 const hier::Box<DIM>& src_box = src_boxes(sp);
+	 const hier::Box<DIM>& src_box = src_boxes[sp];
 
 	 typename tbox::List< hier::IntVector<DIM> >::Iterator
 	    sh(src_level->getShiftsForPatch(sp));
@@ -1818,15 +1818,15 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
    tbox::Pointer< hier::PatchDescriptor<DIM> > src_patch_descriptor =
       src_level->getPatchDescriptor();
 
-   const hier::Box<DIM>& dst_box = dst_level->getBoxes().getBox(dst_patch_id);
-   const hier::Box<DIM>& src_box = src_level->getBoxes().getBox(src_patch_id);
+   const hier::Box<DIM>& dst_box = dst_level->getBoxes()[dst_patch_id];
+   const hier::Box<DIM>& src_box = src_level->getBoxes()[src_patch_id];
 
    const bool same_patch = ( (dst_level == src_level) &&
 			     (dst_patch_id == src_patch_id) );
 
    const int num_fill_boxes = fill_boxes.getNumberOfBoxes();
    const int num_equiv_classes =
-      d_refine_classes->getNumberEquivalenceClasses();
+      d_refine_classes->getNumberOfEquivalenceClasses();
 
    /*
     * Test all potential intersections between source box and fill
@@ -1920,7 +1920,7 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
 	    }
 #endif
 
-	    d_src_masks.getBox(box_num) = src_mask;
+	    d_src_masks[box_num] = src_mask;
 	    d_overlaps[box_num] = overlap;
 	    box_num++;
 
@@ -1973,7 +1973,7 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
                                                         dst_patch_id,
                                                         src_patch_id,
                                                         ritem_count,
-                                                        d_src_masks.getBox(i),
+                                                        d_src_masks[i],
                                                         do_time_interpolation);
 
 		     if (l().d_fine_bdry_reps_var) {
@@ -2043,9 +2043,9 @@ RefineSchedule<DIM>::initializeDomainAndGhostInformation(
    if (d_domain_is_one_box) {
       hier::BoxArray<DIM> domain;
       grid_geom->computePhysicalDomain(domain, ratio_to_level_zero);
-      d_domain_box = domain.getBox(0);
+      d_domain_box = domain[0];
       for (int i = 1; i < domain.getNumberOfBoxes(); i++) {
-	 d_domain_box += domain.getBox(i);
+	 d_domain_box += domain[i];
       }
    }
 
@@ -2077,7 +2077,7 @@ template<int DIM> void RefineSchedule<DIM>::setRefineItems(
    d_refine_classes            = refine_classes;
 
    const int num_refine_classes =
-      d_refine_classes->getNumberEquivalenceClasses();
+      d_refine_classes->getNumberOfEquivalenceClasses();
 
    int nc;
    for (nc = 0; nc < num_refine_classes; nc++) {

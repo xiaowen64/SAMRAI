@@ -1,30 +1,24 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/Index.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/Index.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description:	Interface for the AMR Index object
 //
 
 #ifndef included_hier_Index
 #define included_hier_Index
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
 
 
 namespace SAMRAI {
@@ -36,9 +30,6 @@ namespace SAMRAI {
  * creating a box and also when iterating over the cells in a box.  An index
  * is essentially an integer vector but it carries along the notion of indexing
  * into AMR's abstract index space.
- *
- * Class Index<DIM> is translated into classes Index1, Index2,
- * and Index3 after being passed through a preprocessor.
  *
  * @see hier::Box
  * @see hier::BoxIterator
@@ -58,7 +49,6 @@ public:
     */
    Index(const int i);
 
-#if INCLUDE_DEPRACATED < 2
    /**
     * Construct a two-dimensional index with the value (i,j).
     */
@@ -68,7 +58,6 @@ public:
     * Construct a three-dimensional index with the value (i,j,k).
     */
    Index(const int i, const int j, const int k);
-#endif
 
    /**
     * Construct an n-dimensional index with the values copied 

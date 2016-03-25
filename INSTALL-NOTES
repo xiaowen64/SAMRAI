@@ -1,5 +1,5 @@
 ****************************************************************************
-*  Copyright 1997-2007                                                     *
+*  Copyright 1997-2008                                                     *
 *  Lawrence Livermore National Security, LLC.                            *
 *  All rights reserved.                                                    *
 ****************************************************************************
@@ -170,7 +170,19 @@ SAMRAI distribution will take from twenty minutes to well over an hour.
 You may also re-make the archive via ``gmake archive'' or remove all object
 and library files via ``gmake clean''.
 
-(5) Installing the Libraries
+(4) Making the tools
+------------------------
+
+The optional tools may be built using:
+
+    gmake tools
+
+This includes the restart-redistribute utility to convert a SAMRAI
+restart file to run on N processors to one compatible with running on
+M processors.
+
+
+(6) Installing the Libraries
 ----------------------------
 
 After the libraries have been created, install the libraries and configuration
@@ -319,6 +331,7 @@ xlc		????
 pathscale	Does not currently work.  Appears to be a compiler bug.
 
 HDF5		1.4.4, 1.4.5, 1.6.5
+		HDF 1.8.X is NOT supported; the HDF API has changed.
 
 MPICH 		1.2.5.2, 1.2.7
 
@@ -328,7 +341,7 @@ Sundials        2.3.0
 
 hypre 		1.13.0b, 2.2.0b
 
-Visit		1.4.0
+Visit		1.8.0
 
 doxygen		1.5.1
 graphviz	2.6
@@ -343,9 +356,6 @@ documentation are available at http://www.llnl.gov/visit.  You must
 compile with HDF in order to create VisIt output files.  See the
 SAMRAI/examples/Euler application for example of how to use the
 VisItDataWriter.
-
-SAMRAI has worked with  VisIt v1.2.7, we currently use v1.4.0 in our
-environment.
 
 Location users can find VisIt in /usr/apps/visit on CASC systems and
 /usr/gapps/ on LC systems.
@@ -437,12 +447,58 @@ features being used.
 Apple Mac OS X
 --------------
 
-Note that this port has limited support by the LLNL SAMRAI team.
+Note that this port has very little support by the LLNL SAMRAI team; we
+don't use Mac's.
 
-SAMRAI was compiled successfully on Leopard.  The GNU 4.2 compilers
+SAMRAI was compiled successfully on Leopard.  The GNU 4.3 compilers
 and HDF that are configured using the DarwinPorts port were used and
 Xcode 3.0 installed for MPI.  Note that the X code toolkit from Appple
-does not include fortran which is why an alternative was used.
+does not include fortran which is why an alternative compiler chain
+is used.
+
+For reference the following is the output of the "port installed" command 
+to show what development environemnt was used for the Mac.
+
+   > port installed
+     The following ports are currently installed:
+       emacs @22.2_0 (active)
+       expat @2.0.1_0 (active)
+       gawk @3.1.6_0 (active)
+       gcc43 @4.3.0_1 (active)
+       gettext @0.17_2
+       gettext @0.17_3 (active)
+       gmp @4.2.2_1 (active)
+       hdf5 @1.6.7_3 (active)
+       libiconv @1.12_0 (active)
+       mpfr @2.3.0_4+darwin_i386
+       mpfr @2.3.1_0+darwin_i386 (active)
+       ncurses @5.6_0 (active)
+       ncursesw @5.6_0+darwin_9
+       ncursesw @5.6_1 (active)
+       zlib @1.2.3_1 (active)
+  
+XCode version is:
+
+      > xcodebuild -version
+      Component versions: DevToolsCore-921.0; DevToolsSupport-893.0
+
+Configure was run using:
+
+          > eval ../SAMRAI/configure `../SAMRAI/config.suggest macosx_gnu`
+
+We also tested using the MPI compiler frontend wrapper with (note that
+the default XCode compilers must be overridden):
+
+   export CXX=g++-mp-4.3
+   export CC=gcc-mp-4.3
+   export F77=gfortran-mp-4.3
+   eval ../SAMRAI/configure \
+         --with-CXX=mpicxx \
+         --with-CC=mpicc \
+	 --with-F77=mpif77 \
+	 --with-hdf5=/opt/local \
+	 --with-parallel-run-bin=/usr/bin/mpirun
+
 
 ****************************************************************************
 ****************************************************************************

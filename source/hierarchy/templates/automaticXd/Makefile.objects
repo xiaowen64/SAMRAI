@@ -1,7 +1,7 @@
 ##
 ## File:	Makefile.objects
 ## Package:	SAMRAI
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 ## Release:	$Name:  $
 ## Revision:	$Revision: $
 ## Modified:	$Date: $
@@ -96,6 +96,7 @@ libdefault:	BasePatchHierarchy-NDIM${NDIM}.o BasePatchLevel-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Array-hier__BoxList-NDIM${NDIM}.o		\
 	tbox__Array-tbox__Array-hier__CoarseFineBoundary-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Array-hier__Index-NDIM${NDIM}.o		\
+	tbox__Array-tbox__Array-hier__IntVector-NDIM${NDIM}.o		\
 	tbox__Array-tbox__List-hier__IntVector-NDIM${NDIM}.o		\
 	tbox__Array-tbox__Pointer-hier__BoxOverlap-NDIM${NDIM}.o	\
 	tbox__Array-tbox__Pointer-hier__BoxTree-NDIM${NDIM}.o		\

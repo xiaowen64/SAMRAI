@@ -2,11 +2,11 @@
 #define included_solv_SimpleCellRobinBcCoefs_C
 
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/SimpleCellRobinBcCoefs.C $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/SimpleCellRobinBcCoefs.C $
  * Package:      SAMRAI solvers
- * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1846 $
- * Modified:     $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 2147 $
+ * Modified:     $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
  * Description:  Level solver for diffusion-like elliptic problems.
  */
 
@@ -190,9 +190,11 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
    tbox::Pointer<pdat::ArrayData<DIM,double> > &gcoef_data ,
    const tbox::Pointer< hier::Variable<DIM> > &variable ,
    const hier::Patch<DIM> &patch ,
-   const hier::BoundaryBox<DIM> &bdry_box ) const
+   const hier::BoundaryBox<DIM> &bdry_box ,
+   double fill_time ) const
 {
    NULL_USE(variable);
+   NULL_USE(fill_time);
 
    t_set_bc_coefs->start();
 
@@ -295,7 +297,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
          tbox::Pointer< geom::CartesianPatchGeometry<DIM> > pg =
             patch.getPatchGeometry();
          const tbox::Array< hier::BoundaryBox<DIM> > &codim1_boxes =
-            pg->getCodimensionBoundary(1);
+            pg->getCodimensionBoundaries(1);
          /*
 	   Search for cached boundary box containing current boundary box.
           */
@@ -402,7 +404,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::setBcCoefs (
          tbox::Pointer< geom::CartesianPatchGeometry<DIM> > pg =
             patch.getPatchGeometry();
          const tbox::Array< hier::BoundaryBox<DIM> > &codim1_boxes =
-            pg->getCodimensionBoundary(1);
+            pg->getCodimensionBoundaries(1);
          /*
 	   Search for cached boundary box containing current boundary box.
           */
@@ -520,7 +522,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::cacheDirichletData( int diri
          tbox::Pointer< geom::CartesianPatchGeometry<DIM> > pg =
             patch.getPatchGeometry();
          const tbox::Array< hier::BoundaryBox<DIM> > &codim1_boxes =
-            pg->getCodimensionBoundary(1);
+            pg->getCodimensionBoundaries(1);
          d_dirichlet_data_pos[ln][pn] = n_reqd_boxes;
          n_reqd_boxes += codim1_boxes.getSize();
       }
@@ -538,7 +540,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::cacheDirichletData( int diri
          tbox::Pointer< geom::CartesianPatchGeometry<DIM> > pg =
             patch.getPatchGeometry();
          const tbox::Array< hier::BoundaryBox<DIM> > &codim1_boxes =
-            pg->getCodimensionBoundary(1);
+            pg->getCodimensionBoundaries(1);
          for ( bn=0; bn<codim1_boxes.getSize(); ++bn ) {
             const hier::BoundaryBox<DIM> &bdry_box = codim1_boxes[bn];
             position = d_dirichlet_data_pos[ln][pn] + bn;
@@ -591,7 +593,7 @@ template<int DIM> void SimpleCellRobinBcCoefs<DIM>::restoreDirichletData( int di
          tbox::Pointer< geom::CartesianPatchGeometry<DIM> > pg =
             patch.getPatchGeometry();
          const tbox::Array< hier::BoundaryBox<DIM> > &codim1_boxes =
-            pg->getCodimensionBoundary(1);
+            pg->getCodimensionBoundaries(1);
          for ( bn=0; bn<codim1_boxes.getSize(); ++bn ) {
             const hier::BoundaryBox<DIM> &bdry_box = codim1_boxes[bn];
             position = d_dirichlet_data_pos[ln][pn] + bn;

@@ -1,37 +1,23 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/FAC/FACPreconditioner.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/FAC/FACPreconditioner.h $
 // Package:	SAMRAI solvers
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	FAC algorithm for solving linear equations on a hierarchy
 //
 
 #ifndef included_solv_FACPreconditioner
 #define included_solv_FACPreconditioner
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_math_HierarchyDataOpsReal
 #include "HierarchyDataOpsReal.h"
-#endif
-#ifndef included_solv_FACOperatorStrategy
 #include "FACOperatorStrategy.h"
-#endif
-#ifndef included_solv_SAMRAIVectorReal
 #include "SAMRAIVectorReal.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace solv {
@@ -64,7 +50,7 @@ namespace SAMRAI {
  *    providing the vectors u and f, defined on a patch hierarchy
  *    containing the desired range of levels.
  * -# After solving, get solver statistics by viewing the log information
- *    and calling getNumberIterations(), getResidualNorm() functions
+ *    and calling getNumberOfIterations(), getResidualNorm() functions
  *    if desired.
  */
 
@@ -96,7 +82,7 @@ public:
     * including the definitions of A are provided by the 
     * FACOperatorStrategy<DIM> object passed to the constructor.  More
     * information about the iteration can be found by calling the functions
-    * getNumberIterations() and getResidualNorm() and by looking at the 
+    * getNumberOfIterations() and getResidualNorm() and by looking at the 
     * log information.  
     *
     * Before calling this function, the form of the solution and
@@ -311,7 +297,7 @@ public:
     * @brief Return FAC iteration count from last (or current
     * if there is one) FAC iteration process.
     */
-   int getNumberIterations() const;
+   int getNumberOfIterations() const;
 
    /*!
     * @brief Get convergance rates of

@@ -1,56 +1,30 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/PatchMultiblockTestStrategy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/PatchMultiblockTestStrategy.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Base class for patch data test operations.
 //
 
 #ifndef included_hier_PatchMultiblockTestStrategy
 #define included_hier_PatchMultiblockTestStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_Box
+#include "tbox/Database.h"
+#include "tbox/Pointer.h"
 #include "Box.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_MultiblockTester
 #include "MultiblockTester.h"
-#endif
-#ifndef included_tbox_Database
-#include "Database.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_xfer_MultiblockRefinePatchStrategy
 #include "MultiblockRefinePatchStrategy.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_tbox_Pointer
-#include "Pointer.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
 
 using namespace SAMRAI;
 

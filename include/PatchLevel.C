@@ -1,9 +1,9 @@
 //
-// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/patches/PatchLevel.C $
+// File:   $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchLevel.C $
 // Package:   SAMRAI hierarchy
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:   $LastChangedRevision: 1889 $
-// Modified:   $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:   $LastChangedRevision: 2141 $
+// Modified:   $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:   A collection of patches at one level of the AMR hierarchy
 //
 
@@ -12,14 +12,11 @@
 
 #include "PatchLevel.h"
 
-#include <stdio.h>
 #include "tbox/SAMRAI_MPI.h"
 #include "tbox/Utilities.h"
 #include "tbox/MathUtilities.h"
 
 #define HIER_PATCH_LEVEL_VERSION (3)
-
-#define NAME_BUF_SIZE (32)
 
 #ifdef DEBUG_NO_INLINE
 #include "PatchLevel.I"
@@ -133,7 +130,7 @@ template<int DIM>  PatchLevel<DIM>::PatchLevel(
 
    for (int ip = 0; ip < d_number_patches; ip++) {
       if (d_mapping.isMappingLocal(ip)) {
-         d_patches[ip] = d_factory->allocate(d_boxes.getBox(ip), d_descriptor);
+         d_patches[ip] = d_factory->allocate(d_boxes[ip], d_descriptor);
          d_patches[ip]->setPatchNumber(ip);
          d_patches[ip]->setPatchLevelNumber(d_level_number);
          d_patches[ip]->setPatchInHierarchy(d_in_hierarchy);
@@ -468,7 +465,7 @@ template<int DIM> void hier::PatchLevel<DIM>::setRefinedPatchLevel(
 
    for (int p = 0; p < d_number_patches; p++) {
       if (d_mapping.isMappingLocal(p)) {
-         d_patches[p] = d_factory->allocate(d_boxes.getBox(p), d_descriptor);
+         d_patches[p] = d_factory->allocate(d_boxes[p], d_descriptor);
          d_patches[p]->setPatchNumber(p);
          d_patches[p]->setPatchLevelNumber(d_level_number);
          d_patches[p]->setPatchInHierarchy(d_in_hierarchy);
@@ -611,7 +608,7 @@ template<int DIM> void PatchLevel<DIM>::setCoarsenedPatchLevel(
 
    for (int p = 0; p < d_number_patches; p++) {
       if (d_mapping.isMappingLocal(p)) {
-         d_patches[p] = d_factory->allocate(d_boxes.getBox(p), d_descriptor);
+         d_patches[p] = d_factory->allocate(d_boxes[p], d_descriptor);
          d_patches[p]->setPatchNumber(p);
          d_patches[p]->setPatchLevelNumber(d_level_number);
          d_patches[p]->setPatchInHierarchy(d_in_hierarchy);
@@ -742,16 +739,13 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
     */
 
    d_patches.resizeArray(d_number_patches);
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUF_SIZE > (5 + 1 + 4 + 1 + 5 + 1 + 4 + 1) );
-#endif
-   char patch_name[NAME_BUF_SIZE];
    tbox::Pointer<tbox::Database> patch_database;
 
    for (int i = 0; i < d_number_patches; i++) {
       if (d_mapping.isMappingLocal(i)) {
 
-         sprintf(patch_name, "level_%04d-patch_%04d", d_level_number, i);
+	 std::string patch_name = "level_" + tbox::Utilities::levelToString(d_level_number) + 
+	    "-patch_" + tbox::Utilities::patchToString(i);
 
          if (!(database->isDatabase(patch_name))) {
             TBOX_ERROR("PatchLevel<DIM>::getFromDatabase() error...\n"
@@ -760,7 +754,7 @@ template<int DIM> void PatchLevel<DIM>::getFromDatabase(
          }
          patch_database = database->getDatabase(patch_name);
 
-         d_patches[i] = d_factory->allocate(d_boxes(i), d_descriptor);
+         d_patches[i] = d_factory->allocate(d_boxes[i], d_descriptor);
          d_patches[i]->setPatchNumber(i);
          d_patches[i]->setPatchLevelNumber(d_level_number);
          d_patches[i]->setPatchInHierarchy(d_in_hierarchy);
@@ -825,14 +819,11 @@ template<int DIM> void PatchLevel<DIM>::putToDatabase(
  * Put local patches in database.
  */
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( NAME_BUF_SIZE > (5 + 1 + 4 + 1 + 5 + 1 + 4 + 1) );
-#endif
-   char patch_name[NAME_BUF_SIZE];
    tbox::Pointer<tbox::Database> patch_database;
    for (typename PatchLevel<DIM>::Iterator ip(this); ip; ip++) {
 
-      sprintf(patch_name, "level_%04d-patch_%04d", d_level_number, ip());
+      std::string patch_name = "level_" + tbox::Utilities::levelToString(d_level_number) + 
+	 "-patch_" + tbox::Utilities::patchToString(ip());
 
       patch_database = database->putDatabase(patch_name);
 

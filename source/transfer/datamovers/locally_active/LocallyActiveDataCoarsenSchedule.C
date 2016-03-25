@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/transfer/datamovers/locally_active/LocallyActiveDataCoarsenSchedule.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/locally_active/LocallyActiveDataCoarsenSchedule.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	Coarsening schedule for locally-active data transfer between AMR levels
 //
 
@@ -560,7 +560,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::generateScheduleBoxTree()
 
    for (int dp = 0; dp < dst_npatches; dp++) {
 
-      const hier::Box<DIM>& dst_box = dst_boxes(dp);
+      const hier::Box<DIM>& dst_box = dst_boxes[dp];
       hier::Box<DIM> dst_box_plus_ghosts = dst_box;
       dst_box_plus_ghosts.grow(dst_growth);
 
@@ -641,7 +641,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
 #endif
 
    const int num_equiv_classes =
-      d_coarsen_classes->getNumberEquivalenceClasses();
+      d_coarsen_classes->getNumberOfEquivalenceClasses();
 
    int nc;
 
@@ -677,8 +677,8 @@ void LocallyActiveDataCoarsenSchedule<DIM>::constructScheduleTransactions(
       tbox::Pointer< hier::PatchDescriptor<DIM> > src_patch_descriptor =
          src_level->getPatchDescriptor();
 
-      const hier::Box<DIM>& dst_box = dst_level->getBoxes().getBox(dst_patch_id);
-      const hier::Box<DIM>& src_box = src_level->getBoxes().getBox(src_patch_id);
+      const hier::Box<DIM>& dst_box = dst_level->getBoxes()[dst_patch_id];
+      const hier::Box<DIM>& src_box = src_level->getBoxes()[src_patch_id];
 
       /*
        * Test all potential intersections between source box and fill
@@ -900,7 +900,7 @@ void LocallyActiveDataCoarsenSchedule<DIM>::setCoarsenItems(
    d_coarsen_classes        = coarsen_classes;
 
    const int num_coarsen_classes =
-      d_coarsen_classes->getNumberEquivalenceClasses();
+      d_coarsen_classes->getNumberOfEquivalenceClasses();
 
    d_number_coarsen_items = 0;
 

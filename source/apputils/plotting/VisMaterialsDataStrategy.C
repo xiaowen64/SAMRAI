@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisMaterialsDataStrategy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/VisMaterialsDataStrategy.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1848 $
-// Modified:    $LastChangedDate: 2008-01-11 16:26:13 -0800 (Fri, 11 Jan 2008) $
+// Revision:    $LastChangedRevision: 2008 $
+// Modified:    $LastChangedDate: 2008-02-26 13:46:30 -0800 (Tue, 26 Feb 2008) $
 // Description: Interface for writing material related data to VisIt 
 //              dump file
 //
@@ -53,8 +53,8 @@ int VisMaterialsDataStrategy<DIM>::packMaterialFractionsIntoSparseBuffers(
        std::vector<int>& mix_mat,
        std::vector<double>& vol_fracs,
        std::vector<int>& next_mat,
-       const hier::Patch<NDIM>& patch,
-       const hier::Box<NDIM>& region) const
+       const hier::Patch<DIM>& patch,
+       const hier::Box<DIM>& region) const
 {
    NULL_USE(mat_list);
    NULL_USE(mix_zones);

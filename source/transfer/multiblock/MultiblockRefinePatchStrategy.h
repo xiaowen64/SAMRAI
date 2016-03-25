@@ -1,33 +1,21 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/multiblock/MultiblockRefinePatchStrategy.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefinePatchStrategy.h $
 // Package:	SAMRAI multiblock
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
  
 #ifndef included_xfer_MultiblockRefinePatchStrategy
 #define included_xfer_MultiblockRefinePatchStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_xfer_MultiblockRefineSchedule
 #include "MultiblockRefineSchedule.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_xfer_CoarsenPatchStrategy
 #include "CoarsenPatchStrategy.h"
-#endif
-#ifndef included_xfer_RefinePatchStrategy
 #include "RefinePatchStrategy.h"
-#endif
 
 #ifndef MULTIBLOCK_UNDEFINED_BLOCK_NUMBER
 #define MULTIBLOCK_UNDEFINED_BLOCK_NUMBER (-1)

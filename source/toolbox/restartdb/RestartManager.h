@@ -1,34 +1,24 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/RestartManager.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/RestartManager.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2086 $
+// Modified:	$LastChangedDate: 2008-03-28 15:10:07 -0700 (Fri, 28 Mar 2008) $
 // Description:	An restart manager singleton class 
 //
 
 #ifndef included_tbox_RestartManager
 #define included_tbox_RestartManager
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Database
-#include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
-#include "tbox/Pointer.h"
-#endif
-#ifndef included_String
+
 #include <string>
-#define included_String
-#endif
-#ifndef included_tbox_Serializable
+
 #include "tbox/Serializable.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
+#include "tbox/Pointer.h"
+#include "tbox/Database.h"
+#include "tbox/DatabaseFactory.h"
 
 namespace SAMRAI {
    namespace tbox {
@@ -133,6 +123,20 @@ public:
     */
    virtual Pointer<Database> getRootDatabase();
 
+
+   /**
+    * Sets the database for restore or dumps.
+    *
+    */
+   virtual void setRootDatabase(Pointer<Database> database);
+
+   /**
+    * Sets the database for restore or dumps.
+    *
+    */
+   virtual void setDatabaseFactory(
+      Pointer<DatabaseFactory> database_factory);
+
    /**
     * Registers an object for restart with the given name.
     *
@@ -176,6 +180,12 @@ public:
    virtual void writeRestartFile(const std::string& root_dirname, 
                                  const int restore_num);
 
+   /**
+    * Write all objects registered to as restart objects to the 
+    * restart database.
+    */
+   virtual void writeRestartToDatabase();
+
 protected:
    /**
     * The constructor for RestartManager is protected.
@@ -202,6 +212,13 @@ protected:
       RestartManager* subclass_instance);
 
 private:
+
+   /**
+    * Write all objects registered to as restart objects to the 
+    * restart database. 
+    */
+   virtual void writeRestartFile(Pointer<Database> database);
+
    /* 
     * Create the directory structure for the data files.  
     * The directory structure created is       
@@ -230,7 +247,14 @@ private:
    List< RestartManager::RestartItem > d_restart_items_list;
 #endif
 
-   Pointer<Database> d_database_root;
+   Pointer<Database>        d_database_root;
+
+   /*
+    * Database factory use to create new databases.
+    * Defaults so HDFDatabaseFactory.
+    */
+   Pointer<DatabaseFactory> d_database_factory;
+
    bool d_is_from_restart;
 };
 

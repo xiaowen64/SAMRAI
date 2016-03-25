@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/Makefile.in $
 ## Package:	SAMRAI test
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1768 $
-## Modified:	$LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2122 $
+## Modified:	$LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
 ## Description:	makefile for testing parts of SAMRAI library
 ##
 
@@ -12,9 +12,10 @@ SRCDIR        = @srcdir@
 OBJECT        = ../..
 SUBDIR        = source/test
 
-SUBDIRS = async_comm \
+SUBDIRS = logger async_comm \
 	applications boundary communication clustering dataops dataaccess \
-	dlbg emb_bdry FAC hierarchy hypre ieee inputdb HDF5 locally_active \
+	dlbg emb_bdry FAC hierarchy hypre ieee inputdb restartdb  \
+	locally_active \
 	mblkcomm MblkLinAdv nonlinear patchbdrysum patch_configuration pointer \
         sundials schedules timers variables vector
 

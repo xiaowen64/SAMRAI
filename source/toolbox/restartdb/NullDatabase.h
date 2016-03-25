@@ -1,27 +1,19 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/restartdb/NullDatabase.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/NullDatabase.h $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	A null database that does nothing for all database methods.
 //
 
 #ifndef included_tbox_NullDatabase
 #define included_tbox_NullDatabase
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 
 namespace SAMRAI {
@@ -53,6 +45,36 @@ public:
     */
    virtual ~NullDatabase();
 
+      /**
+    * Create a new database file.
+    *
+    * Returns true if successful.
+    *
+    * @param name name of database. Normally a filename.
+    */
+   virtual bool create(const std::string& name);
+
+
+   /**
+    * Open an existing database file.
+    *
+    * Returns true if successful.
+    *
+    * @param name name of database. Normally a filename.
+    */
+   virtual bool open(const std::string& name);
+
+
+   /**
+    * Close the database.
+    *
+    * Returns true if successful.
+    *
+    * If the database is currently open then close it.  This should
+    * flush all data to the file (if the database is on disk).
+    */
+   virtual bool close();
+
    /**
     * Always returns true.
     */
@@ -62,6 +84,11 @@ public:
     * Return an empty Array<string>.
     */
    virtual Array<std::string> getAllKeys();
+
+   /**
+    * Return INVALID.
+    */
+   virtual enum DataType getArrayType(const std::string& key);
 
    /**
     * Always returns 0.
@@ -91,40 +118,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putBool(const std::string& key, const bool& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putBoolArray(const std::string& key, const Array<bool>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putBoolArray(
       const std::string& key, const bool* const data, const int nelements);
-
-   /**
-    * Always returns true.
-    */
-   virtual bool getBool(const std::string& key);
-
-   /**
-    * Always returns true.
-    */
-   virtual bool getBoolWithDefault(
-      const std::string& key, const bool& defaultvalue); 
 
    /**
     * Returns an empty Array<bool>.
     */
    virtual Array<bool> getBoolArray(const std::string& key);
-
-   /**
-    * Does nothing.  
-    */
-   virtual void getBoolArray(
-      const std::string& key, bool* data, const int nelements);
 
    /**
     * Always returns true.
@@ -134,41 +134,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putDatabaseBox(const std::string& key, const DatabaseBox& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putDatabaseBoxArray(
-      const std::string& key, const Array<DatabaseBox>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putDatabaseBoxArray(
       const std::string& key, const DatabaseBox* const data, const int nelements);
-
-   /**
-    * Returns a zero dimension empty box.
-    */
-   virtual DatabaseBox getDatabaseBox(const std::string& key);
-
-   /**
-    * Returns a zero dimension empty box.
-    */
-   virtual DatabaseBox getDatabaseBoxWithDefault(
-      const std::string& key, const DatabaseBox& defaultvalue);
 
    /**
     * Returns an empty Array<box>.
     */
    virtual Array<DatabaseBox> getDatabaseBoxArray(const std::string& key);
-
-   /**
-    * Does nothing.
-    */
-   virtual void getDatabaseBoxArray(
-      const std::string& key, DatabaseBox* data, const int nelements);
 
    /**
     * Always returns true.
@@ -178,40 +150,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putChar(const std::string& key, const char& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putCharArray(
-      const std::string& key, const Array<char>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putCharArray(
       const std::string& key, const char* const data, const int nelements);
-
-   /**
-    * Always returns 0.
-    */
-   virtual char getChar(const std::string& key);
-
-   /**
-    * Always returns 0.
-    */
-   virtual char getCharWithDefault(const std::string& key, const char& defaultvalue);
 
    /**
     * Returns an empty Array<char>.
     */
    virtual Array<char> getCharArray(const std::string& key);
-
-   /**
-    * Does nothing.
-    */
-   virtual void getCharArray(
-      const std::string& key, char* data, const int nelements);
 
    /**
     * Always returns true.
@@ -221,42 +166,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putComplex(const std::string& key, const dcomplex& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putComplexArray(
-      const std::string& key, const Array<dcomplex>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putComplexArray(
       const std::string& key, const dcomplex* const data, const int nelements);
-
-   /**
-    * Returns a 0.0 + 0.0i
-    */
-   virtual dcomplex getComplex(const std::string& key);
-
-   /**
-    * Returns a 0.0 + 0.0i
-    */
-   virtual dcomplex getComplexWithDefault(
-      const std::string& key, const dcomplex& defaultvalue);
-
 
    /**
     * Returns an empty Array<dcomplex>.
     */
    virtual Array<dcomplex> getComplexArray(const std::string& key);
-
-   /** 
-    * Does nothing.
-    */
-   virtual void getComplexArray(
-      const std::string& key, dcomplex* data, const int nelements);
 
    /**
     * Always returns true.
@@ -266,41 +182,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putDouble(const std::string& key, const double& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putDoubleArray(
-      const std::string& key, const Array<double>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putDoubleArray(
       const std::string& key, const double* const data, const int nelements);
-
-   /**
-    * Returns 0.0
-    */
-   virtual double getDouble(const std::string& key);
-
-   /**
-    * Returns 0.0
-    */
-   virtual double getDoubleWithDefault(
-      const std::string& key, const double& defaultvalue);
 
    /**
     * Returns an empty Array<double>.
     */
    virtual Array<double> getDoubleArray(const std::string& key);
-
-   /**
-    * Does nothing.
-    */
-   virtual void getDoubleArray(
-      const std::string& key, double* data, const int nelements);
 
    /**
     * Always return true.
@@ -310,41 +198,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putFloat(const std::string& key, const float& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putFloatArray(
-      const std::string& key, const Array<float>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putFloatArray(
       const std::string& key, const float* const data, const int nelements);
-
-   /**
-    * Returns 0.0
-    */
-   virtual float getFloat(const std::string& key);
-
-   /**
-    * Returns 0.0
-    */
-   virtual float getFloatWithDefault(
-      const std::string& key, const float& defaultvalue);
 
    /**
     * Returns an empty Array<float>.
     */
    virtual Array<float> getFloatArray(const std::string& key);
-
-   /**
-    * Does nothing.
-    */
-   virtual void getFloatArray(
-      const std::string& key, float* data, const int nelements);
 
    /**
     * Always returns true. 
@@ -354,41 +214,13 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putInteger(const std::string& key, const int& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putIntegerArray(
-      const std::string& key, const Array<int>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putIntegerArray(
       const std::string& key, const int* const data, const int nelements);
-
-   /**
-    * Returns 0.
-    */
-   virtual int getInteger(const std::string& key);
-
-   /**
-    * Returns 0.
-    */
-   virtual int getIntegerWithDefault(
-      const std::string& key, const int& defaultvalue);
 
    /**
     * Returns an empty Array<int>.
     */
    virtual Array<int> getIntegerArray(const std::string& key);
-
-   /**
-    * Does nothing.
-    */
-   virtual void getIntegerArray(
-      const std::string& key, int* data, const int nelements);
 
    /**
     * Always returns true.
@@ -398,30 +230,8 @@ public:
    /**
     * Does nothing.
     */
-   virtual void putString(const std::string& key, const std::string& data);
-
-   /**
-    * Does nothing.
-    */
-   virtual void putStringArray(
-      const std::string& key, const Array<std::string>& data);
-
-   /**
-    * Does nothing.
-    */
    virtual void putStringArray(
       const std::string& key, const std::string* const data, const int nelements);
-
-   /**
-    * Returns and empty string.
-    */
-   virtual std::string getString(const std::string& key);
-
-   /**
-    * Returns and empty string.
-    */
-   virtual std::string getStringWithDefault(
-      const std::string& key, const std::string& defaultvalue);
 
    /**
     * Returns an empty Array<std::string>.
@@ -431,13 +241,29 @@ public:
    /**
     * Does nothing.
     */
-   virtual void getStringArray(
-      const std::string& key, std::string* data, const int nelements);
+   virtual std::string getName();
 
    /**
     * Does nothing.
     */
    virtual void printClassData(std::ostream& os = pout);
+
+   using Database::putBoolArray;
+   using Database::getBoolArray;
+   using Database::putDatabaseBoxArray;
+   using Database::getDatabaseBoxArray;
+   using Database::putCharArray;
+   using Database::getCharArray;
+   using Database::putComplexArray;
+   using Database::getComplexArray;
+   using Database::putFloatArray;
+   using Database::getFloatArray;
+   using Database::putDoubleArray;
+   using Database::getDoubleArray;
+   using Database::putIntegerArray;
+   using Database::getIntegerArray;
+   using Database::putStringArray;
+   using Database::getStringArray;
 
 private:
    NullDatabase(const NullDatabase&);	// not implemented

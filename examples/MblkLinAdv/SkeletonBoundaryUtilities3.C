@@ -1,9 +1,9 @@
 //
 // File:        SkeletonBoundaryUtilities3.C
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility routines for manipulating 3D Skeleton boundary data
 //
 
@@ -207,7 +207,7 @@ void SkeletonBoundaryUtilities3::fillFaceBoundaryData(
    hier::IntVector<3> gcw_to_fill = hier::IntVector<3>::min(ghost_cells,
                                                       ghost_fill_width);
    const tbox::Array<hier::BoundaryBox<3> >& face_bdry =
-      pgeom->getCodimensionBoundary(FACE3D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(FACE3D_BDRY_TYPE);
    for (int i = 0; i < face_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(face_bdry[i].getBoundaryType() == FACE3D_BDRY_TYPE);
@@ -287,7 +287,7 @@ void SkeletonBoundaryUtilities3::fillEdgeBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array<hier::BoundaryBox<3> >& edge_bdry =
-      pgeom->getCodimensionBoundary(EDGE3D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(EDGE3D_BDRY_TYPE);
    for (int i = 0; i < edge_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == EDGE3D_BDRY_TYPE);
@@ -367,7 +367,7 @@ void SkeletonBoundaryUtilities3::fillNodeBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array<hier::BoundaryBox<3> >& node_bdry =
-      pgeom->getCodimensionBoundary(NODE3D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(NODE3D_BDRY_TYPE);
    for (int i = 0; i < node_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE3D_BDRY_TYPE);

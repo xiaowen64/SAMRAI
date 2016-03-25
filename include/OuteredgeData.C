@@ -1,16 +1,17 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/patchdata/outeredge/OuteredgeData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/outeredge/OuteredgeData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Release:	$Name$
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	Templated outeredge centered patch data type
 //
 
 #ifndef included_pdat_OuteredgeData_C
 #define included_pdat_OuteredgeData_C
 
+
+#include <string>
 
 #include "OuteredgeData.h"
 
@@ -23,7 +24,7 @@
 #include "tbox/Arena.h"
 #include "tbox/ArenaManager.h"
 #include "tbox/Utilities.h"
-#include <stdio.h>
+
 
 #define PDAT_OUTEREDGEDATA_VERSION 1
 
@@ -1233,7 +1234,6 @@ void OuteredgeData<DIM,TYPE>::getSpecializedFromDatabase(
 
    d_depth = database->getInteger("d_depth");
 
-   char array_name[16];
    tbox::Pointer<tbox::Database> array_database;
 
    for (int axis = 0; axis < DIM; ++axis) {
@@ -1243,9 +1243,10 @@ void OuteredgeData<DIM,TYPE>::getSpecializedFromDatabase(
          if ( face_normal != axis ) {
 
             for (int side = 0; side < 2; ++side) {
-
-               sprintf(array_name, "d_data%d_%d_%d", axis, face_normal, side);
-               array_database = database->getDatabase(array_name);
+	       std::string array_name = "d_data" + tbox::Utilities::intToString(axis) + 
+		  "_" + tbox::Utilities::intToString(face_normal) + "_" + 
+		  tbox::Utilities::intToString(side);
+	       array_database = database->getDatabase(array_name);
                (d_data[axis][face_normal][side]).getFromDatabase(array_database);
 
             }  // iterate over lower/upper sides
@@ -1280,7 +1281,6 @@ void OuteredgeData<DIM,TYPE>::putSpecializedToDatabase(
 
    database->putInteger("d_depth", d_depth);
 
-   char array_name[16];
    tbox::Pointer<tbox::Database> array_database;
 
    for (int axis = 0; axis < DIM; ++axis) {
@@ -1291,7 +1291,9 @@ void OuteredgeData<DIM,TYPE>::putSpecializedToDatabase(
 
             for (int side = 0; side < 2; ++side) {
 
-               sprintf(array_name, "d_data%d_%d_%d", axis, face_normal, side);
+	       std::string array_name = "d_data" + tbox::Utilities::intToString(axis) + 
+		  "_" + tbox::Utilities::intToString(face_normal) + "_" + 
+		  tbox::Utilities::intToString(side);
                array_database = database->putDatabase(array_name);
                (d_data[axis][face_normal][side]).putToDatabase(array_database);
 

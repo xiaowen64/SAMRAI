@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisItDataWriter.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/VisItDataWriter.h $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1848 $
-// Modified:    $LastChangedDate: 2008-01-11 16:26:13 -0800 (Fri, 11 Jan 2008) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
 #ifndef included_appu_VisItDataWriter
 #define included_appu_VisItDataWriter
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 /*
 ************************************************************************
@@ -21,41 +19,22 @@
 */
 #ifdef HAVE_HDF5
 
-#ifndef included_tbox_IOStream
-#include "tbox/IOStream.h"
-#endif
-#ifndef included_hier_PatchData
-#include "PatchData.h"
-#endif
-#ifndef included_hier_PatchHierarchy
-#include "PatchHierarchy.h"
-#endif
-#ifndef included_tbox_Array
-#include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Pointer
-#include "tbox/Pointer.h"
-#endif
-#ifndef included_String
 #include <string>
-<<<<<<< .mine
-=======
 
->>>>>>> .r1702
-#define included_String
-#endif
-#ifndef included_tbox_Timer
-#include "tbox/Timer.h"
-#endif
-#ifndef included_tbox_HDFDatabase
+#include "tbox/IOStream.h"
+#include "tbox/Database.h"
 #include "tbox/HDFDatabase.h"
-#endif
-#ifndef included_appu_VisDerivedDataStrategy
+
+#include "PatchData.h"
+#include "PatchHierarchy.h"
+#include "tbox/Array.h"
+#include "tbox/Pointer.h"
+#include "tbox/Timer.h"
+#include "tbox/Database.h"
 #include "VisDerivedDataStrategy.h"
-#endif
-#ifndef included_appu_VisMaterialsDataStrategy
 #include "VisMaterialsDataStrategy.h"
-#endif
+
+
 
 #ifndef NULL
 #define NULL (0)
@@ -831,16 +810,14 @@ private:
       std::string d_material_name;
       tbox::Array<std::string> d_species_names;
       VisMaterialsDataStrategy<DIM>* d_materials_writer;
-//      tbox::Pointer<tbox::HDFDatabase> d_material_name_HDFGroup;
-
       /*
        * Species information
        */
       bool d_isa_species;
       std::string d_species_name;
       VisItItem* d_parent_material_pointer;
-      tbox::Pointer<tbox::HDFDatabase> d_species_HDFGroup;
-      tbox::Pointer<tbox::HDFDatabase> d_extents_species_HDFGroup;
+      tbox::Pointer<tbox::Database> d_species_HDFGroup;
+      tbox::Pointer<tbox::Database> d_extents_species_HDFGroup;
    };
 
    /*
@@ -888,7 +865,7 @@ private:
     * Write variable data to HDF file.
     */
    void writeVisItVariablesToHDFFile(
-      tbox::Pointer<tbox::HDFDatabase> processor_HDFGroup,
+      tbox::Pointer<tbox::Database> processor_HDFGroup,
       const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
       int coarsest_level,
       int finest_level);
@@ -898,7 +875,7 @@ private:
     * the supplied HDF database for output.
     */
    void packRegularAndDerivedData(
-      tbox::Pointer<tbox::HDFDatabase> patch_HDFGroup,
+      tbox::Pointer<tbox::Database> patch_HDFGroup,
       const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
       const int level_number,
       const int block_number,
@@ -908,7 +885,7 @@ private:
     * Pack the materials data into the supplied database for output.
     */
    void packMaterialsData(
-      tbox::Pointer<tbox::HDFDatabase> patch_HDFGroup,
+      tbox::Pointer<tbox::Database> patch_HDFGroup,
       const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
       const int level_number,
       const int block_number,
@@ -952,7 +929,7 @@ private:
     */
    void writeParentChildInfoToSummaryHDFFile(
       const tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
-      tbox::Pointer<tbox::HDFDatabase> basic_HDFGroup);
+      tbox::Pointer<tbox::Database> basic_HDFGroup);
 
    /*
     *    Sort function for use by qsort to sort child_parent array

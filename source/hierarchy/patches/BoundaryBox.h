@@ -1,21 +1,17 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryBox.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/BoundaryBox.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Box representing a portion of the AMR index space
 //
 
 #ifndef included_hier_BoundaryBox
 #define included_hier_BoundaryBox
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
 
 
 namespace SAMRAI {
@@ -181,6 +177,34 @@ public:
     * The assignment operator copies all data components.
     */
    BoundaryBox<DIM>& operator=(const BoundaryBox<DIM>& boundary_box);
+
+   /**
+    * Enumerated type BoundaryDirection is used to indicate where a boundary
+    * box is located relative to a patch in a particular coordinate direction.
+    */
+   enum BoundaryDirection {
+      LOWER = -1,
+      MIDDLE = 0,
+      UPPER = 1
+   };
+
+   /**
+    * Get the
+    * Enumerated type BoundaryDirection is used to indicate where a boundary
+    * box is located relative to a patch in a particular coordinate direction.
+    */
+
+   /*!
+    * @brief get which side of a patch the boundary box is on.
+    *
+    * Returns BoundaryDirection value indicating whether the boundary
+    * box is on the upper or lower side of the patch in the given coordinate
+    * direction, or in the middle (neither upper nor lower).
+    *
+    * @return Boundary direction value LOWER, MIDDLE, or UPPER
+    * @param dir Coordinate direction on which to query
+    */
+   BoundaryDirection getBoundaryDirection(const int dir) const;
 
 private:
 

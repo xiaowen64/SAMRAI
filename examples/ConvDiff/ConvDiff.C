@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/ConvDiff/ConvDiff.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/ConvDiff/ConvDiff.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Numerical routines for single patch in convection
 //              diffusion example.
 //
@@ -603,25 +603,26 @@ void ConvDiff::tagGradientDetectorCells(
 
    tbox::Pointer< pdat::CellData<NDIM,int> > tags = patch.getPatchData(tag_index);
    tbox::Pointer< pdat::CellData<NDIM,double> > primitive_vars   = 
-      patch.getPatchData(d_primitive_vars, getInteriorContext());
+     patch.getPatchData(d_primitive_vars, getInteriorWithGhostsContext());
 
    const hier::Index<NDIM> ifirst = patch.getBox().lower();
    const hier::Index<NDIM> ilast  = patch.getBox().upper();
+
+   const hier::IntVector<NDIM> var_ghosts =  primitive_vars -> getGhostCellWidth();
    
    FORT_TAG_CELLS(ifirst(0),ilast(0),ifirst(1),ilast(1),           
 #if (NDIM==3)
                   ifirst(2),ilast(2),
+#endif
+		  var_ghosts(0), var_ghosts(1),
+#if (NDIM==3)
+                  var_ghosts(2),
 #endif
                   tags->getPointer(),
                   primitive_vars->getPointer(),
                   true,
                   d_tolerance,
                   NEQU );
-
-//      tbox::plog << "/n----Tagged Error Cells" << endl;
-//      tags->print(tags->getBox(),tbox::plog);
-//
-
 }
 
 
@@ -1214,7 +1215,7 @@ void ConvDiff::checkBoundaryData(int btype,
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
    const tbox::Array<hier::BoundaryBox<NDIM> > bdry_boxes =
-      pgeom->getCodimensionBoundary(btype);
+      pgeom->getCodimensionBoundaries(btype);
 
    hier::VariableDatabase<NDIM>* vdb = hier::VariableDatabase<NDIM>::getDatabase();
 

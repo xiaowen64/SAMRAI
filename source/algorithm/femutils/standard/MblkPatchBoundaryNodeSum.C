@@ -1,7 +1,7 @@
 //
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/algorithm/femutils/standard/MblkPatchBoundaryNodeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision: 878 $
 // Modified:	$LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $
 // Description:	Routines for summing node data at patch boundaries
@@ -290,10 +290,11 @@ template<int DIM> void MblkPatchBoundaryNodeSum<DIM>::registerSum(
          }
       }
 
-      char var_suffix[17];
-      sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
+      std::string var_suffix = 	 tbox::Utilities::intToString(data_depth_id, 4) + 
+	 "__depth=" + tbox::Utilities::intToString(data_depth);
 
       std::string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
+
       d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(tonode_src_var_name);
       if (d_tmp_onode_src_variable[reg_sum_id].isNull()) {
          d_tmp_onode_src_variable[reg_sum_id] =
@@ -494,7 +495,7 @@ template<int DIM> void MblkPatchBoundaryNodeSum<DIM>::copyNodeToOuternodeOnLevel
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
-   for (int bn = 0; bn < level->getNumberBlocks(); bn++) {
+   for (int bn = 0; bn < level->getNumberOfBlocks(); bn++) {
       tbox::Pointer<hier::PatchLevel<DIM> > patch_level =
          level->getPatchLevelForBlock(bn);
 
@@ -528,7 +529,7 @@ template<int DIM> void MblkPatchBoundaryNodeSum<DIM>::copyOuternodeToNodeOnLevel
    TBOX_ASSERT(node_data_id.size() == onode_data_id.size());
 #endif
 
-   for (int bn = 0; bn < level->getNumberBlocks(); bn++) {
+   for (int bn = 0; bn < level->getNumberOfBlocks(); bn++) {
       tbox::Pointer<hier::PatchLevel<DIM> > patch_level =
          level->getPatchLevelForBlock(bn);
 

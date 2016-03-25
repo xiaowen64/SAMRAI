@@ -1,8 +1,8 @@
-File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/README $
+File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/README $
 Package:     SAMRAI tests
-Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-Revision:    $LastChangedRevision: 1768 $
-Modified:    $LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+Revision:    $LastChangedRevision: 1917 $
+Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
 Description: README SAMRAI test package.
 
 The SAMRAI/source/test directory contains test codes that

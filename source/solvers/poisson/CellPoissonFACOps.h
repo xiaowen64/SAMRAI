@@ -1,150 +1,84 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonFACOps.h $
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1845 $
- * Modified:    $LastChangedDate: 2008-01-10 14:47:51 -0800 (Thu, 10 Jan 2008) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonFACOps.h $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description: Operator class for cell-centered scalar Poisson using FAC
  */
 
 #ifndef included_solv_CellPoissonFACOps
 #define included_solv_CellPoissonFACOps
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_CoarseFineBoundary
 #include "CoarseFineBoundary.h"
-#endif
 
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
 
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
 
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
 
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
 
-#ifndef included_math_HierarchyCellDataOpsReal
 #include "HierarchyCellDataOpsReal.h"
-#endif
 
-#ifndef included_math_HierarchySideDataOpsReal
 #include "HierarchySideDataOpsReal.h"
-#endif
 
-#ifndef included_pdat_CellData
 #include "CellData.h"
-#endif
 
-#ifndef included_pdat_CellVariable
 #include "CellVariable.h"
-#endif
 
-#ifndef included_pdat_CellDoubleConstantRefine
 #include "CellDoubleConstantRefine.h"
-#endif
 
-#ifndef included_pdat_OutersideData
 #include "OutersideData.h"
-#endif
 
-#ifndef include_pdat_OutersideVariable
 #include "OutersideVariable.h"
-#endif
 
-#ifndef included_pdat_SideData
 #include "SideData.h"
-#endif
 
-#ifndef included_pdat_SideVariable
 #include "SideVariable.h"
-#endif
 
-#ifndef included_solv_CartesianRobinBcHelper
 #include "CartesianRobinBcHelper.h"
-#endif
 
-#ifndef included_solv_FACPreconditioner
 #include "FACPreconditioner.h"
-#endif
 
-#ifndef included_solv_FACOperatorStrategy
 #include "FACOperatorStrategy.h"
-#endif
 
-#ifndef included_solv_RobinBcCoefStrategy
 #include "RobinBcCoefStrategy.h"
-#endif
 
-#ifndef included_solv_CellPoissonHypreSolver
 #include "CellPoissonHypreSolver.h"
-#endif
 
-#ifndef included_solv_PoissonSpecifications
 #include "PoissonSpecifications.h"
-#endif
 
-#ifndef included_xfer_CoarsenAlgorithm
 #include "CoarsenAlgorithm.h"
-#endif
 
-#ifndef included_xfer_CoarsenOperator
 #include "CoarsenOperator.h"
-#endif
 
-#ifndef included_xfer_RefineAlgorithm
 #include "RefineAlgorithm.h"
-#endif
 
-#ifndef included_xfer_RefineOperator
 #include "RefineOperator.h"
-#endif
 
-#ifndef included_solv_SAMRAIVectorReal
 #include "SAMRAIVectorReal.h"
-#endif
 
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
 
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
 
-#ifndef included_xfer_CoarsenSchedule
 #include "CoarsenSchedule.h"
-#endif
 
-#ifndef included_xfer_RefineSchedule
 #include "RefineSchedule.h"
-#endif
 
 namespace SAMRAI {
     namespace solv {

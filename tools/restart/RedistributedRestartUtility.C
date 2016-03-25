@@ -49,7 +49,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the output files on an array of output databases
-      tbox::Array< tbox::Pointer<tbox::HDFDatabase> >
+      tbox::Array< tbox::Pointer<tbox::Database> >
          output_dbs(num_files_to_write);
 
       char proc_buf[NAME_BUF_SIZE];
@@ -61,7 +61,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
          output_dbs[j] = new tbox::HDFDatabase(output_filename);
 
-         int open_success = output_dbs[j]->mount(output_filename, "W");
+         int open_success = output_dbs[j]->create(output_filename);
 
          if (open_success < 0) {
             TBOX_ERROR("Failed to open output file " << output_filename <<
@@ -71,7 +71,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       }
 
       //Mount the input files on an array of input databases.
-      tbox::Array< tbox::Pointer<tbox::HDFDatabase> >
+      tbox::Array< tbox::Pointer<tbox::Database> >
          input_dbs(num_files_to_read);
 
       sprintf(nodes_buf, "/nodes.%05d", total_input_files);
@@ -96,7 +96,7 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 
          input_dbs[i] = new tbox::HDFDatabase(restart_filename);
 
-         int open_success = input_dbs[i]->mount(restart_filename, "R");
+         int open_success = input_dbs[i]->open(restart_filename);
 
          if (open_success < 0) {
             TBOX_ERROR("Failed to open input file " << restart_filename <<
@@ -131,10 +131,10 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
       //Unmount the databases.  This closes the files.
       int k;
       for (k = 0; k < num_files_to_read; k++) {
-         input_dbs[k]->unmount();
+         input_dbs[k]->close();
       }
       for (k = 0; k < num_files_to_write; k++) {
-         output_dbs[k]->unmount();
+         output_dbs[k]->close();
       }
 
       num_files_written += num_files_to_write;
@@ -148,8 +148,8 @@ void RedistributedRestartUtility::writeRedistributedRestartFiles(
 */
 
 void RedistributedRestartUtility::readAndWriteRestartData(
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& output_dbs,
-   const tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& input_dbs,
+   tbox::Array< tbox::Pointer<tbox::Database> >& output_dbs,
+   const tbox::Array< tbox::Pointer<tbox::Database> >& input_dbs,
    const string& key,
    const tbox::Array< tbox::Array<int> >* file_mapping, // = NULL
    const int num_files_written, // = -1,
@@ -174,7 +174,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
    //The Database case is handled separately.
 
    if (input_dbs[0]->isDatabase(key)) {
-      tbox::Pointer<tbox::HDFDatabase> db = input_dbs[0]->getDatabase(key);
+      tbox::Pointer<tbox::Database> db = input_dbs[0]->getDatabase(key);
 
       if (db->keyExists("d_is_patch_level") &&
           db->getBool("d_is_patch_level")) {
@@ -191,7 +191,7 @@ void RedistributedRestartUtility::readAndWriteRestartData(
                                    total_output_files);
 
          //Create array of level input databases.
-         tbox::Array< tbox::Pointer<tbox::HDFDatabase> > level_in_dbs;
+         tbox::Array< tbox::Pointer<tbox::Database> > level_in_dbs;
          level_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
@@ -222,14 +222,14 @@ void RedistributedRestartUtility::readAndWriteRestartData(
          //for input_dbs and output_dbs, and then call readAndWriteRestartData
          //recursively.
 
-         tbox::Array< tbox::Pointer<tbox::HDFDatabase> > child_in_dbs;
+         tbox::Array< tbox::Pointer<tbox::Database> > child_in_dbs;
          child_in_dbs.resizeArray(input_dbs.size());
 
          for (int i = 0; i < input_dbs.size(); i++) {
             child_in_dbs[i] = input_dbs[i]->getDatabase(key);
          }
 
-         tbox::Array< tbox::Pointer<tbox::HDFDatabase> > child_out_dbs;
+         tbox::Array< tbox::Pointer<tbox::Database> > child_out_dbs;
          child_out_dbs.resizeArray(output_dbs.size());
 
          for (int i = 0; i < output_dbs.size(); i++) {
@@ -343,8 +343,8 @@ void RedistributedRestartUtility::readAndWriteRestartData(
 */
 
 void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& output_dbs,
-   const tbox::Array< tbox::Pointer<tbox::HDFDatabase> >& level_in_dbs,
+   tbox::Array< tbox::Pointer<tbox::Database> >& output_dbs,
+   const tbox::Array< tbox::Pointer<tbox::Database> >& level_in_dbs,
    const string& key,
    const tbox::Array<int>& proc_mapping,
    const int num_files_written,
@@ -357,7 +357,7 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 #endif
 
    //Create an array of level output databases
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> > level_out_dbs;
+   tbox::Array< tbox::Pointer<tbox::Database> > level_out_dbs;
    level_out_dbs.resizeArray(output_dbs.size());
 
    for (int i = 0; i < output_dbs.size(); i++) {
@@ -427,10 +427,10 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
          char patch_name[NAME_BUF_SIZE];
          sprintf(patch_name, "level_%04d-patch_%04d", level_number, it());
 
-         tbox::Pointer<tbox::HDFDatabase> patch_in_db =
+         tbox::Pointer<tbox::Database> patch_in_db =
             level_in_dbs[i]->getDatabase(patch_name);
 
-         tbox::Pointer<tbox::HDFDatabase> patch_out_db =
+         tbox::Pointer<tbox::Database> patch_out_db =
             level_out_dbs[output_id]->putDatabase(patch_name);
 
          readAndWritePatchRestartData(patch_out_db, patch_in_db);
@@ -447,15 +447,15 @@ void RedistributedRestartUtility::readAndWritePatchLevelRestartData(
 */
 
 void RedistributedRestartUtility::readAndWritePatchRestartData(
-   tbox::Pointer<tbox::HDFDatabase>& patch_out_db,
-   const tbox::Pointer<tbox::HDFDatabase>& patch_in_db)
+   tbox::Pointer<tbox::Database>& patch_out_db,
+   const tbox::Pointer<tbox::Database>& patch_in_db)
 {
    //Get the keys in the patch input database.
    tbox::Array<string> keys = patch_in_db->getAllKeys();
 
    //Place the database on arrays of length 1.
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> > in_db_array(1);
-   tbox::Array< tbox::Pointer<tbox::HDFDatabase> > out_db_array(1);
+   tbox::Array< tbox::Pointer<tbox::Database> > in_db_array(1);
+   tbox::Array< tbox::Pointer<tbox::Database> > out_db_array(1);
 
    in_db_array[0] = patch_in_db;
    out_db_array[0] = patch_out_db;
@@ -475,7 +475,7 @@ void RedistributedRestartUtility::readAndWritePatchRestartData(
 
 void RedistributedRestartUtility::createNewProcessorMapping(
    tbox::Array<int>& proc_map,
-   const tbox::Pointer<tbox::HDFDatabase>& level_db,
+   const tbox::Pointer<tbox::Database>& level_db,
    const tbox::Array< tbox::Array<int> >& file_mapping,
    const int total_input_files,
    const int total_output_files)

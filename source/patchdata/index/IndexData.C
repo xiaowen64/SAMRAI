@@ -1,10 +1,10 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/index/IndexData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/index/IndexData.C $
 // Package:	SAMRAI patch data
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:	0.1
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: hier::Patch data structure for irregular grid data
 //
 
@@ -20,8 +20,6 @@
 
 
 #define PDAT_INDEXDATA_VERSION 1
-
-#define INDEX_NAME_BUF_SIZE 32
 
 #ifdef DEBUG_NO_INLINE
 #include "IndexData.I"
@@ -118,13 +116,13 @@ void IndexData<DIM,TYPE>::copy2(hier::PatchData<DIM>& dst) const
 *									*
 * Copy data from the source into the destination according to the	*
 * overlap descriptor.							*
-*									*
+*                                                                       *
 *************************************************************************
 */
-
+ 	
 template<int DIM, class TYPE>
 void IndexData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
-                                 const hier::BoxOverlap<DIM>& overlap)
+                               const hier::BoxOverlap<DIM>& overlap)
 {
    const IndexData<DIM,TYPE> *t_src =
       dynamic_cast<const IndexData<DIM,TYPE> *>(&src);
@@ -140,8 +138,9 @@ void IndexData<DIM,TYPE>::copy(const hier::PatchData<DIM>& src,
    const hier::Box<DIM>& src_ghost_box = t_src->getGhostBox();
 
    for (typename hier::BoxList<DIM>::Iterator b(box_list); b; b++) {
+      const hier::Box<DIM>& dst_box = b();
       const hier::Box<DIM> src_box(hier::Box<DIM>::shift(b(), -src_offset));
-      removeInsideBox(src_box);
+      removeInsideBox(dst_box);
       for (typename tbox::List< hier::Index<DIM> >::Iterator
            s(t_src->d_list.listStart());
            s; s++) {
@@ -362,9 +361,9 @@ void IndexData<DIM,TYPE>::removeItem(const hier::Index<DIM>& index)
 }
 
 template <int DIM, class TYPE>
-int IndexData<DIM,TYPE>::getNumberItems() const
+int IndexData<DIM,TYPE>::getNumberOfItems() const
 {
-   return(d_list.getNumberItems());
+   return(d_list.getNumberOfItems());
 }
 
 
@@ -444,17 +443,12 @@ void IndexData<DIM,TYPE>::getSpecializedFromDatabase(
           << " : Restart file version different than class version" << std::endl); 
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( INDEX_NAME_BUF_SIZE > (5 + 1 + 6 + 1) );
-#endif
-
-   char index_keyword[INDEX_NAME_BUF_SIZE];
 
    int item_count = 0;
    bool item_found = true;
 
    do {
-      sprintf(index_keyword,"index_data_%06d",item_count);
+      std::string index_keyword = "index_data_" + tbox::Utilities::intToString(item_count, 6);
 
       if (database->isDatabase(index_keyword)) {
 
@@ -500,14 +494,10 @@ void IndexData<DIM,TYPE>::putSpecializedToDatabase(
 
    database->putInteger("PDAT_INDEXDATA_VERSION",PDAT_INDEXDATA_VERSION);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( INDEX_NAME_BUF_SIZE > (5 + 1 + 6 + 1) );
-#endif
-
-   char index_keyword[INDEX_NAME_BUF_SIZE]; 
    int item_count = 0;
    for (typename tbox::List< hier::Index<DIM> >::Iterator s(d_list.listStart()); s; s++) {
-      sprintf(index_keyword,"index_data_%06d",item_count);
+      
+      std::string index_keyword = "index_data_" + tbox::Utilities::intToString(item_count, 6);
       hier::Index<DIM> index = s();
       tbox::Array<int> index_array(DIM);
       for (int i = 0; i < DIM; i++) {

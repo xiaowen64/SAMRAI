@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/BalanceUtilities.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/load_balance/BalanceUtilities.C $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: utility routines useful for load balancing operations
 //
 
@@ -295,7 +295,7 @@ template<int DIM> bool BalanceUtilities<DIM>::privateBadCutPointsExist(
    hier::BoxList<DIM> bounding_box(tmp_domain.getBoundingBox());
    bounding_box.removeIntersections(tmp_domain);
 
-   return( (bounding_box.getNumberItems() > 0) );
+   return( (bounding_box.getNumberOfItems() > 0) );
 }
 
 /*
@@ -329,7 +329,7 @@ template<int DIM> void BalanceUtilities<DIM>::privateInitializeBadCutPointsForBo
       hier::BoxList<DIM> tmp_domain(physical_domain);
       hier::BoxList<DIM> bdry_list(hier::Box<DIM>::grow(box, tmp_max_gcw));
       bdry_list.removeIntersections(tmp_domain);
-      if (bdry_list.getNumberItems() > 0) {
+      if (bdry_list.getNumberOfItems() > 0) {
          set_dummy_cut_points = false;
       }
 
@@ -1010,9 +1010,9 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
     * is positive.  
     */
    int i;
-   hier::IntVector<DIM> offset(boxes(0).lower());
+   hier::IntVector<DIM> offset(boxes[0].lower());
    for (i = 1; i < nboxes; i++) {
-      offset.min(boxes(i).lower());
+      offset.min(boxes[i].lower());
    }
 
    /* construct array of spatialKeys */
@@ -1020,7 +1020,7 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
    for (i = 0; i < nboxes; i++) {
 
       /* compute center of box */
-      hier::IntVector<DIM> center = (boxes(i).upper() + boxes(i).lower())/2;
+      hier::IntVector<DIM> center = (boxes[i].upper() + boxes[i].lower())/2;
 
       if (DIM == 1) {
 	 spatial_keys[i].setKey(center(0) - offset(0));
@@ -1029,6 +1029,9 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
       } else if (DIM == 3) {
 	 spatial_keys[i].setKey(center(0) - offset(0), center(1) - offset(1),
 				center(2) - offset(2));
+      } else {
+	 TBOX_ERROR("BalanceUtilities<DIM>::spatialBinPack error ..."
+		 << "\n not implemented for DIM>3" << std::endl);
       }
 
    } 
@@ -1061,12 +1064,12 @@ template<int DIM> double BalanceUtilities<DIM>::spatialBinPack(
    tbox::Array<double> unsorted_weights(nboxes);
 
    for (i = 0; i < nboxes; i++) {
-      unsorted_boxes(i) = boxes(i);
+      unsorted_boxes[i] = boxes[i];
       unsorted_weights[i] = weights[i];
    }
 
    for (i = 0; i < nboxes; i++) {
-      boxes(i) = unsorted_boxes(permutation[i]);
+      boxes[i] = unsorted_boxes[permutation[i]];
       weights[i] = unsorted_weights[permutation[i]];
    }
 
@@ -1562,12 +1565,12 @@ template<int DIM> void BalanceUtilities<DIM>::sortDescendingBoxWorkloads(
    tbox::Array<double> unsorted_workload(nboxes);
 
    for (int l = 0; l < nboxes; l++) {
-      unsorted_boxes(l) = boxes(l);
+      unsorted_boxes[l] = boxes[l];
       unsorted_workload[l] = workload[l];
    }
 
    for (int m = 0; m < nboxes; m++) {
-      boxes(m) = unsorted_boxes(permutation[m]);
+      boxes[m] = unsorted_boxes[permutation[m]];
       workload[m] = unsorted_workload[permutation[m]];
    }
 

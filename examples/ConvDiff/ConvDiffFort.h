@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/ConvDiff/ConvDiffFort.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/ConvDiff/ConvDiffFort.h $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 1967 $
+// Modified:    $LastChangedDate: 2008-02-08 16:44:07 -0800 (Fri, 08 Feb 2008) $
 // Description: F77 external declarations for SAMRAI Heat Equation example.
 //
 
@@ -79,7 +79,11 @@ extern "C" {
   void FORT_TAG_CELLS( 
   const int& , const int& , const int& , const int& , 
 #if (NDIM==3)
-  const int& , const int& , 
+  const int&, const int& , 
+#endif
+  const int&, const int &,
+#if (NDIM==3)
+  const int&, 
 #endif
   int*, 
   const double*,

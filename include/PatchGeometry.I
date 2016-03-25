@@ -1,17 +1,15 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchGeometry.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchGeometry.I $
 // Package:	SAMRAI hierarchy package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Base class for geometry management on patches
 //
 
 
 
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 #ifdef DEBUG_NO_INLINE
 #define inline
@@ -20,11 +18,12 @@ namespace SAMRAI {
     namespace hier {
 
 template<int DIM> inline
-const tbox::Array< BoundaryBox<DIM> >* PatchGeometry<DIM>::getPatchBoundary()
+const tbox::Array< BoundaryBox<DIM> >* PatchGeometry<DIM>::getPatchBoundaries()
    const
 {
    return(d_patch_boundaries);
 }
+
 
 template<int DIM> inline
 const IntVector<DIM>& PatchGeometry<DIM>::getRatio() const
@@ -76,14 +75,14 @@ PatchGeometry<DIM>::getTouchesPeriodicBoundary(int axis, int upperlower) const
 
 template<int DIM> inline
 const tbox::Array< BoundaryBox<DIM> >&
-PatchGeometry<DIM>::getNodeBoundary() const
+PatchGeometry<DIM>::getNodeBoundaries() const
 {
    return(d_patch_boundaries[DIM-1]);
 }
 
 template<int DIM> inline
 const tbox::Array< BoundaryBox<DIM> >&
-PatchGeometry<DIM>::getEdgeBoundary() const
+PatchGeometry<DIM>::getEdgeBoundaries() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(DIM >= 2);
@@ -97,7 +96,7 @@ PatchGeometry<DIM>::getEdgeBoundary() const
 
 template<int DIM> inline
 const tbox::Array< BoundaryBox<DIM> >&
-PatchGeometry<DIM>::getFaceBoundary() const
+PatchGeometry<DIM>::getFaceBoundaries() const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(DIM >= 3);
@@ -111,6 +110,47 @@ PatchGeometry<DIM>::getFaceBoundary() const
 
 template<int DIM> inline
 const tbox::Array< BoundaryBox<DIM> >&
+PatchGeometry<DIM>::getCodimensionBoundaries(const int codim) const
+{
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT((codim > 0) && (codim <= DIM));
+#endif
+   return(d_patch_boundaries[codim-1]);
+}
+
+// Deprecated methods
+#if (INCLUDE_DEPRECATED <= 2)
+template<int DIM> inline
+const tbox::Array< BoundaryBox<DIM> >* PatchGeometry<DIM>::getPatchBoundary()
+   const
+{
+   return getPatchBoundaries();
+}
+
+template<int DIM> inline
+const tbox::Array< BoundaryBox<DIM> >&
+PatchGeometry<DIM>::getNodeBoundary() const
+{
+   return(getNodeBoundaries());
+}
+
+template<int DIM> inline
+const tbox::Array< BoundaryBox<DIM> >&
+PatchGeometry<DIM>::getEdgeBoundary() const
+{
+   return(getEdgeBoundaries());
+}
+
+template<int DIM> inline
+const tbox::Array< BoundaryBox<DIM> >&
+PatchGeometry<DIM>::getFaceBoundary() const
+{
+   return(getFaceBoundaries());
+}
+
+
+template<int DIM> inline
+const tbox::Array< BoundaryBox<DIM> >&
 PatchGeometry<DIM>::getCodimensionBoundary(const int codim) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -118,6 +158,8 @@ PatchGeometry<DIM>::getCodimensionBoundary(const int codim) const
 #endif
    return(d_patch_boundaries[codim-1]);
 }
+
+#endif // Deprecated
 
 #ifdef DEBUG_NO_INLINE
 #undef inline

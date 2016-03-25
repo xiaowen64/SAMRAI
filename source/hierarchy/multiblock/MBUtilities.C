@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/multiblock/MBUtilities.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/multiblock/MBUtilities.C $
 // Package:	SAMRAI multiblock
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2009 $
+// Modified:	$LastChangedDate: 2008-02-26 15:38:52 -0800 (Tue, 26 Feb 2008) $
 // Description:	utility functions for multiblock
 //
 
@@ -122,9 +122,7 @@ void MBUtilities<DIM>::rotateIndex(
          index[0] = tmp_in[1];
          index[1] = -tmp_in[0]-1;
       }
-   }
-
-   if (DIM == 3) {
+   } else if (DIM == 3) {
       if (rotation == MultiblockPatchHierarchy<DIM>::IUP_JUP_KUP) {
          return;
       } else if (rotation == MultiblockPatchHierarchy<DIM>::KUP_IUP_JUP) {
@@ -189,7 +187,10 @@ void MBUtilities<DIM>::rotateIndex(
          rotateAboutAxis(index,1,2);
          rotateAboutAxis(index,0,1);
       }
+   } else {
+      TBOX_ERROR("MBUtilities<DIM>::rotateIndex : DIM = 1 or > 3 not implemented");
    }
+
 }
 
 /*

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/vector/pvtest.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/vector/pvtest.C $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1732 $
-// Modified:    $LastChangedDate: 2007-12-04 09:01:48 -0800 (Tue, 04 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Main program to test SAMRAI-PETSc vector interface.
 //
 
@@ -78,7 +78,7 @@ int main( int argc, char *argv[] ) {
 
 
 
-#if HAVE_PETSC
+#ifdef HAVE_PETSC
 //   This causes some error related to PetscTrFreeDefault when a vector
 //   is deleted.  So I commented it out for now.  RDH 2/17/2000.
 //   This problem fixed, DAH 9/19/2001.  Problem arose from the PETSc
@@ -112,22 +112,22 @@ int main( int argc, char *argv[] ) {
 
       hier::BoxArray<3> coarse_domain(8);
       hier::BoxArray<3> fine_boxes(8);
-      coarse_domain(0) = coarse0;
-      coarse_domain(1) = coarse1;
-      coarse_domain(2) = coarse2;
-      coarse_domain(3) = coarse3;
-      coarse_domain(4) = coarse4;
-      coarse_domain(5) = coarse5;
-      coarse_domain(6) = coarse6;
-      coarse_domain(7) = coarse7;
-      fine_boxes(0) = fine0;
-      fine_boxes(1) = fine1;
-      fine_boxes(2) = fine2;
-      fine_boxes(3) = fine3;
-      fine_boxes(4) = fine4;
-      fine_boxes(5) = fine5;
-      fine_boxes(6) = fine6;
-      fine_boxes(7) = fine7;
+      coarse_domain[0] = coarse0;
+      coarse_domain[1] = coarse1;
+      coarse_domain[2] = coarse2;
+      coarse_domain[3] = coarse3;
+      coarse_domain[4] = coarse4;
+      coarse_domain[5] = coarse5;
+      coarse_domain[6] = coarse6;
+      coarse_domain[7] = coarse7;
+      fine_boxes[0] = fine0;
+      fine_boxes[1] = fine1;
+      fine_boxes[2] = fine2;
+      fine_boxes[3] = fine3;
+      fine_boxes[4] = fine4;
+      fine_boxes[5] = fine5;
+      fine_boxes[6] = fine6;
+      fine_boxes[7] = fine7;
 
       hier::BoxList<3> coarse_domain_list(coarse_domain);
       hier::BoxList<3> fine_level_list(fine_boxes);
@@ -135,8 +135,8 @@ int main( int argc, char *argv[] ) {
       fine_level_list.coalesceBoxes();
 
 #ifdef DEBUG_CHECK_ASSERTIONS
-      TBOX_ASSERT(coarse_domain_list.getNumberItems() == 1);
-      TBOX_ASSERT(fine_level_list.getNumberItems() == 1);
+      TBOX_ASSERT(coarse_domain_list.getNumberOfItems() == 1);
+      TBOX_ASSERT(fine_level_list.getNumberOfItems() == 1);
 #endif
 
       hier::Box<3> coarse_domain_box = coarse_domain_list.getFirstItem();

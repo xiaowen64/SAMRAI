@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/LinAdv/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/LinAdv/main.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2031 $
+// Modified:    $LastChangedDate: 2008-03-04 07:49:47 -0800 (Tue, 04 Mar 2008) $
 // Description: Main program for SAMRAI Linear Advection example problem.
 //
 
@@ -264,60 +264,12 @@ int main( int argc, char *argv[])
       }
 
       tbox::Array<string> viz_writer(1);
-      viz_writer[0] = "Vizamrai";
-      string viz_dump_filename;
-      string vizamrai_dump_dirname;
-      string visit_dump_dirname;
-      bool uses_vizamrai = false;
-      bool uses_visit    = false;
+      string viz_dump_dirname;
       int visit_number_procs_per_file = 1;
       if ( viz_dump_interval > 0 ) {
-	 if (main_db->keyExists("viz_writer")) {
-	    viz_writer = main_db->getStringArray("viz_writer");
-	 }
-	 if (main_db->keyExists("viz_dump_filename")) {
-	    viz_dump_filename = main_db->getString("viz_dump_filename");
-	 }
-	 string viz_dump_dirname;
 	 if (main_db->keyExists("viz_dump_dirname")) {
-	    viz_dump_dirname = main_db->getString("viz_dump_dirname");
-	 }
-	 for (int i = 0; i < viz_writer.getSize(); i++) {
-	    if (viz_writer[i] == "Vizamrai") uses_vizamrai = true;
-	    if (viz_writer[i] == "VisIt") uses_visit = true;
-	 }
-	 if (uses_vizamrai && !uses_visit) {
-	    vizamrai_dump_dirname = viz_dump_dirname;
-	 } else if (!uses_vizamrai && uses_visit) {
-	    visit_dump_dirname = viz_dump_dirname;         
-	 } else if (uses_vizamrai && uses_visit) {
-	    vizamrai_dump_dirname = viz_dump_dirname + "_Vizamrai";
-	    visit_dump_dirname = viz_dump_dirname + "_VisIt";
-	 } else {
-	    TBOX_ERROR("main(): "
-		       << "\nUnrecognized 'viz_writer' entry..."
-		       << "\nOptions are 'Vizamrai' and/or 'VisIt'" 
-		       << endl);
-	 }
-	 if (uses_visit) {
-	    if (viz_dump_dirname.empty()) {
-	       TBOX_ERROR("main(): "
-			  << "\nviz_dump_dirname is null ... "
-			  << "\nThis must be specified for use with VisIt"
-			  << endl);
-	    }
-	    if (main_db->keyExists("visit_number_procs_per_file")) {
-	       visit_number_procs_per_file = 
-		  main_db->getInteger("visit_number_procs_per_file");
-	    }
-	 }
-	 if (uses_vizamrai) {
-	    if (viz_dump_filename.empty()) {
-	       TBOX_ERROR("main(): "
-			  << "\nviz_dump_filename is null ... "
-			  << "\nThis must be specified for use with Vizamrai"
-			  << endl);
-	    }
+	    viz_dump_dirname = main_db->getStringWithDefault(
+	       "viz_dump_dirname", "./visit");
 	 }
       }
 
@@ -433,32 +385,11 @@ int main( int argc, char *argv[])
 #ifdef HAVE_HDF5
       tbox::Pointer<appu::VisItDataWriter<NDIM> > visit_data_writer = 
 	 new appu::VisItDataWriter<NDIM>("LinAdv VisIt Writer",
-			     visit_dump_dirname,
+			     viz_dump_dirname,
 			     visit_number_procs_per_file);
-      if (uses_visit) {
-	 linear_advection_model->
-	    registerVisItDataWriter(visit_data_writer);
-      }
+      linear_advection_model->
+	 registerVisItDataWriter(visit_data_writer);
 #endif
-
-      if (uses_vizamrai) {
-	 linear_advection_model->
-	    registerVizamraiDataWriter(vizamrai_data_writer);
-      }
-   
-      if (viz_dump_data) {
-	 if (uses_vizamrai) {
-	    vizamrai_data_writer->setDirectoryName(vizamrai_dump_dirname);
-	    vizamrai_data_writer->setPlotDataToFloat();
-	    vizamrai_data_writer->setFinestLevelToPlot(
-	       gridding_algorithm->getMaxLevels()-1);
-	    for (int ln = 1; ln < gridding_algorithm->getMaxLevels(); ln++) {
-	       const hier::IntVector<NDIM>& lratio =
-		  gridding_algorithm->getRatioToCoarserLevel(ln);
-	       vizamrai_data_writer->setRatioToCoarserLevel(ln, lratio);
-	    }
-	 }
-      }
 
       /*
        * Initialize hierarchy configuration and data on all patches.
@@ -494,20 +425,11 @@ int main( int argc, char *argv[])
       linear_advection_model->printClassData(tbox::plog);
 
       if ( viz_dump_data ) {
-	 if (uses_vizamrai) {
-	    vizamrai_data_writer->writePlotData(
-	       patch_hierarchy,
-	       viz_dump_filename,
-	       time_integrator->getIntegratorStep(),
-	       time_integrator->getIntegratorTime()); 
-	 }
 #ifdef HAVE_HDF5
-	 if (uses_visit) {
-	    visit_data_writer->writePlotData(
-	       patch_hierarchy,
-	       time_integrator->getIntegratorStep(),
-	       time_integrator->getIntegratorTime()); 
-	 }
+	 visit_data_writer->writePlotData(
+	    patch_hierarchy,
+	    time_integrator->getIntegratorStep(),
+	    time_integrator->getIntegratorTime()); 
 #endif
       }
 
@@ -570,18 +492,10 @@ int main( int argc, char *argv[])
 
 	 if ( viz_dump_data ) {
 	    if ( (iteration_num % viz_dump_interval) == 0 ) {
-	       if (uses_vizamrai) {
-		  vizamrai_data_writer->writePlotData(patch_hierarchy,
-						      viz_dump_filename,
-						      iteration_num,
-						      loop_time);
-	       }
 #ifdef HAVE_HDF5
-	       if (uses_visit) {
-		  visit_data_writer->writePlotData(patch_hierarchy,
-						   iteration_num,
-						   loop_time);
-	       }
+	       visit_data_writer->writePlotData(patch_hierarchy,
+						iteration_num,
+						loop_time);
 #endif
 	    }
 	 }

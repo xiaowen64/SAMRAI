@@ -1,11 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/EmbeddedBoundaryGeometry.h $
 // Package:     SAMRAI 
 //              Structured Adaptive Mesh Refinement Applications Infrastructure
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Construction and management of embedded boundary data 
 //              on an AMR hierarchy.
 // 
@@ -13,79 +13,31 @@
 #ifndef included_appu_EmbeddedBoundaryGeometry
 #define included_appu_EmbeddedBoundaryGeometry
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_appu_CutCell
 #include "CutCell.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_geom_CartesianGridGeometry
 #include "CartesianGridGeometry.h"
-#endif
-#ifndef included_pdat_CellVariable
 #include "CellVariable.h"
-#endif
-#ifndef included_appu_CubesPatchInterface
 #include "CubesPatchInterface.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_appu_EmbeddedBoundaryDefines
 #include "EmbeddedBoundaryDefines.h"
-#endif
-#ifndef included_appu_EmbeddedBoundaryShape
 #include "EmbeddedBoundaryShape.h"
-#endif
-#ifndef included_appu_ElevenPatchInterface
 #include "ElevenPatchInterface.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_pdat_IndexVariable
 #include "IndexVariable.h"
-#endif
-#ifndef included_pdat_NodeData
 #include "NodeData.h"
-#endif
-#ifndef included_pdat_NodeVariable
 #include "NodeVariable.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_xfer_RefineAlgorithm
 #include "RefineAlgorithm.h"
-#endif
-#ifndef included_xfer_RefinePatchStrategy
 #include "RefinePatchStrategy.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
-#ifndef included_appu_VisItDataWriter
 #include "VisItDataWriter.h"
-#endif
-#ifndef included_appu_VisMaterialsDataStrategy
 #include "VisMaterialsDataStrategy.h"
-#endif
 
 #ifndef NULL
 #define NULL (0)
@@ -123,7 +75,7 @@ namespace SAMRAI {
  * 2. Build the embedded boundary on the levels of the hierarchy:
  *
  *    \verbatim
- *    Pointer<PatchLevel<NDIM> > level = hierarchy->getPatchLevel(ln);
+ *    Pointer<PatchLevel<DIM> > level = hierarchy->getPatchLevel(ln);
  *    eb_geom->buildEmbeddedBoundaryOnLevel(level);
  *    \endverbatim
  *
@@ -148,13 +100,13 @@ namespace SAMRAI {
  *    int vol_frac_index = eb_geom->getCellVolumeDataId();  
  *    int cut_cell_index = eb_geom->getIndexCutCellDataId();
  *
- *    tbox::Pointer<CellData<NDIM,int> > cell_flag_data = 
+ *    tbox::Pointer<CellData<DIM,int> > cell_flag_data = 
  *        patch->getPatchData(cell_flag_index); 
- *    tbox::Pointer<NodeData<NDIM,int> > node_flag_data = 
+ *    tbox::Pointer<NodeData<DIM,int> > node_flag_data = 
  *        patch->getPatchData(node_flag_index); 
- *    tbox::Pointer<CellData<NDIM,double> > vol_frac_data = 
+ *    tbox::Pointer<CellData<DIM,double> > vol_frac_data = 
  *        patch->getPatchData(vol_frac_index); 
- *    tbox::Pointer<IndexData<NDIM,CutCell> > cut_cell_data = 
+ *    tbox::Pointer<IndexData<DIM,CutCell> > cut_cell_data = 
  *        patch->getPatchData(cut_cell_index); 
  *    \endverbatim
  *

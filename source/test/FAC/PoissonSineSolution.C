@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/test/FAC/PoissonSineSolution.C $
-  Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1846 $
-  Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/FAC/PoissonSineSolution.C $
+  Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+  Revision:	$LastChangedRevision: 1993 $
+  Modified:	$LastChangedDate: 2008-02-19 08:24:52 -0800 (Tue, 19 Feb 2008) $
   Description:	PoissonSineSolution class implementation
 */
 
@@ -147,7 +147,8 @@ void PoissonSineSolution::setBcCoefs (
   tbox::Pointer<pdat::ArrayData<NDIM,double> > &gcoef_data ,
   const tbox::Pointer< hier::Variable<NDIM> > &variable ,
   const hier::Patch<NDIM> &patch ,
-  const hier::BoundaryBox<NDIM> &bdry_box) const
+  const hier::BoundaryBox<NDIM> &bdry_box,
+  const double fill_time) const
 {
   if ( bdry_box.getBoundaryType() != 1 ) {
     // Must be a face boundary.

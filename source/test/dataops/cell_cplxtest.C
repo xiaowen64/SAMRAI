@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dataops/cell_cplxtest.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/dataops/cell_cplxtest.C $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Main program to test cell-centered complex patch data ops
 //
 
@@ -119,10 +119,10 @@ int main( int argc, char *argv[] ) {
 
       hier::BoxArray<NDIM> coarse_domain(2);
       hier::BoxArray<NDIM> fine_domain(2);
-      coarse_domain(0) = coarse0;
-      coarse_domain(1) = coarse1;
-      fine_domain(0) = fine0;
-      fine_domain(1) = fine1;
+      coarse_domain[0] = coarse0;
+      coarse_domain[1] = coarse1;
+      fine_domain[0] = fine0;
+      fine_domain[1] = fine1;
 
       tbox::Pointer<geom::CartesianGridGeometry<NDIM> > geometry =
 	 new geom::CartesianGridGeometry<NDIM>("CartesianGeometry", lo, hi, coarse_domain);

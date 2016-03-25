@@ -1,9 +1,11 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/timers/main_timer.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/timers/main_timer.C $
 // Description: Test program to demonstrate/test timers.
 //
 
 #include "SAMRAI_config.h"
+
+#include <stdlib.h>
 
 // Headers for basic SAMRAI objects used in this code.
 #include "tbox/SAMRAIManager.h"

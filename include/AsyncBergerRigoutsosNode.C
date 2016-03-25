@@ -1,13 +1,15 @@
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/clustering/AsyncBergerRigoutsosNode.C $
- * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1889 $
- * Modified:     $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/clustering/AsyncBergerRigoutsosNode.C $
+ * Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 2172 $
+ * Modified:     $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
  * Description:  Node in asynchronous Berger-Rigoutsos dendogram
  */
 
 #ifndef included_mesh_AsyncBergerRigoutsosNode_C
 #define included_mesh_AsyncBergerRigoutsosNode_C
+
+#include <string.h>
 
 #include "AsyncBergerRigoutsosNode.h"
 #include "CellData.h"
@@ -2205,7 +2207,7 @@ void AsyncBergerRigoutsosNode<DIM>::formChildGroupsUsingLevelBoxes()
    d_lft_child->d_overlap = 0;
    for ( i=0; i<overlap_box_indices.size(); ++i ) {
       int process = proc_map.getProcessorAssignment( overlap_box_indices[i] );
-      const hier::Box<DIM> box = level_boxes( overlap_box_indices[i] );
+      const hier::Box<DIM> box = level_boxes[ overlap_box_indices[i] ];
       const hier::Box<DIM> intersection = box * grown_box;
       overlap_counts[process] += intersection.size();
    }
@@ -2255,7 +2257,7 @@ void AsyncBergerRigoutsosNode<DIM>::formChildGroupsUsingLevelBoxes()
    d_rht_child->d_overlap = 0;
    for ( i=0; i<overlap_box_indices.size(); ++i ) {
       int process = proc_map.getProcessorAssignment( overlap_box_indices[i] );
-      const hier::Box<DIM> box = level_boxes( overlap_box_indices[i] );
+      const hier::Box<DIM> box = level_boxes[ overlap_box_indices[i] ];
       const hier::Box<DIM> intersection = box * grown_box;
       overlap_counts[process] += intersection.size();
    }

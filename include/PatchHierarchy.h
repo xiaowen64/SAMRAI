@@ -1,61 +1,33 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchHierarchy.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchHierarchy.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	An AMR hierarchy of patch levels
 //
 
 #ifndef included_hier_PatchHierarchy
 #define included_hier_PatchHierarchy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_hier_BasePatchHierarchy
 #include "BasePatchHierarchy.h"
-#endif
-#ifndef included_hier_ComponentSelector
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_GridGeometry
 #include "GridGeometry.h"
-#endif
-#ifndef included_hier_PatchDescriptor
 #include "PatchDescriptor.h"
-#endif
-#ifndef included_hier_PatchFactory
 #include "PatchFactory.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_PatchLevelFactory
 #include "PatchLevelFactory.h"
-#endif
-#ifndef included_hier_VariableDatabase
 #include "VariableDatabase.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
 
 
 namespace SAMRAI {
@@ -182,7 +154,7 @@ public:
    /**
     * Return the number of levels that currently exist in the hierarchy.
     */ 
-   int getNumberLevels() const;
+   int getNumberOfLevels() const;
 
    /**
     * Return the level number of the finest resolution patch level residing

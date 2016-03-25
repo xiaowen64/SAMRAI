@@ -1,20 +1,18 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/vector/SundialsAbstractVector.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/vector/SundialsAbstractVector.h $
 // Package:     SAMRAI solvers package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1818 $
-// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Interface to C++ vector kernel operations for Sundials package.
 //
 
 #ifndef included_solv_SundialsAbstractVector
 #define included_solv_SundialsAbstractVector
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#if HAVE_SUNDIALS
+#ifdef HAVE_SUNDIALS
 
 #ifndef included_sundials_nvector
 #include "sundials/sundials_nvector.h"

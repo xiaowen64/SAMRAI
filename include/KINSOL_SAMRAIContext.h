@@ -1,18 +1,16 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/kinsol/KINSOL_SAMRAIContext.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/kinsol/KINSOL_SAMRAIContext.h $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1765 $
-// Modified:    $LastChangedDate: 2007-12-11 15:15:21 -0800 (Tue, 11 Dec 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: KINSOL solver for use within a SAMRAI-based application.
 //
 
 #ifndef included_solv_KINSOL_SAMRAIContext
 #define included_solv_KINSOL_SAMRAIContext
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 /*
 ************************************************************************
@@ -21,21 +19,11 @@
 */
 #ifdef HAVE_SUNDIALS
 
-#ifndef included_solv_NonlinearSolverStrategy
 #include "NonlinearSolverStrategy.h"
-#endif
-#ifndef included_solv_KINSOLSolver
 #include "KINSOLSolver.h"
-#endif
-#ifndef included_solv_KINSOLAbstractFunctions
 #include "KINSOLAbstractFunctions.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 
 namespace SAMRAI {
     namespace solv {

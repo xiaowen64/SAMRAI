@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/patchdata/multiblock/MBDataUtilities.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/multiblock/MBDataUtilities.C $
 // Package:	SAMRAI multiblock
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2009 $
+// Modified:	$LastChangedDate: 2008-02-26 15:38:52 -0800 (Tue, 26 Feb 2008) $
 // Description:	Templated operations for copying patch data.
 //
 
@@ -52,11 +52,14 @@ void MBDataUtilities<DIM,TYPE>::translateAndCopyCellData(
    const hier::IntVector<DIM>& shift,
    const typename hier::MultiblockPatchHierarchy<DIM>::RotationIdentifier rotate)
 {
-   if (DIM == 2) {
-   translateAndCopyArrayData(dst.getArrayData(),
-                             src.getArrayData(),
-                             shift,
-                             rotate);
+
+   if(DIM == 1 || DIM > 3) {
+      TBOX_ERROR("MBDataUtilities<DIM,TYPE>::translateAndCopyCellData : DIM = 1 or > 3 not implemented");
+   } else if (DIM == 2) {
+      translateAndCopyArrayData(dst.getArrayData(),
+				src.getArrayData(),
+				shift,
+				rotate);
    } else if (DIM == 3) {
       if (rotate == 0) {
          translateAndCopyArrayData(dst.getArrayData(),
@@ -355,6 +358,8 @@ void MBDataUtilities<DIM,TYPE>::translateAndCopyNodeData(
             dst(dst_index, d) = src(src_index, d);
          }
       }
+   } else {
+      TBOX_ERROR("MBDataUtilities<DIM,TYPE>::translateAndCopyNodeData : DIM = 1 or > 3 not implemented");
    }
 }
 
@@ -708,7 +713,10 @@ void MBDataUtilities<DIM,TYPE>::translateAndCopyFaceData(
             }
          }
       }
+   } else {
+      TBOX_ERROR("MBDataUtilities<DIM,TYPE>::translateAndCopyFaceData : DIM = 1 or > 3 not implemented");
    }
+
 }
 
 /*
@@ -1046,6 +1054,8 @@ void MBDataUtilities<DIM,TYPE>::translateAndCopySideData(
             }
          }
       }
+   } else {
+      TBOX_ERROR("MBDataUtilities<DIM,TYPE>::translateAndCopySideData : DIM = 1 or > 3 not implemented");
    }
 }
 
@@ -1444,6 +1454,8 @@ void MBDataUtilities<DIM,TYPE>::translateAndCopyEdgeData(
             }
          }
       }
+   } else {
+      TBOX_ERROR("MBDataUtilities<DIM,TYPE>::translateAndCopyEdgeData : DIM = 1 or > 3 not implemented");
    }
 }
 
@@ -1544,6 +1556,8 @@ void MBDataUtilities<DIM,TYPE>::translateAndCopyArrayData(
             src_bd_orig += src_offset;
          }
       }
+   } else {
+      TBOX_ERROR("MBDataUtilities<DIM,TYPE>::translateAndCopyEdgeData : DIM = 1 or > 3 not implemented");
    }
 }
 

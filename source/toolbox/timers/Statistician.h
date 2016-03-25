@@ -1,7 +1,7 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/toolbox/timers/Statistician.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/Statistician.h $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:    \f$       \f$
 // Modified:    \f$ \f$
 // Description: Singleton manager class for statistic objects.
@@ -10,24 +10,12 @@
 #ifndef included_tbox_Statistician
 #define included_tbox_Statistician
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
-#ifndef included_tbox_Statistic
 #include "tbox/Statistic.h"
-#endif
 #ifndef included_String
 #include <std::string>
 #define included_String

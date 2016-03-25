@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/Makefile.in $
 ## Package:	SAMRAI solvers
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1768 $
-## Modified:	$LastChangedDate: 2007-12-11 16:02:04 -0800 (Tue, 11 Dec 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2026 $
+## Modified:	$LastChangedDate: 2008-02-28 16:23:19 -0800 (Thu, 28 Feb 2008) $
 ## Description:	makefile for the solver interface classes
 ##
 
@@ -19,14 +19,15 @@ include $(OBJECT)/config/Makefile.config
 SUBDIRS = sundials petsc
 
 library:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib1d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib2d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 lib3d:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 libXd:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
 clean:
-	for DIR in $(SUBDIRS); do (cd $$DIR && $(MAKE) $@) || exit 1; done
+	for DIR in $(SUBDIRS); do if test -d $$DIR; then (cd $$DIR && $(MAKE) $@) ; fi || exit 1; done
+

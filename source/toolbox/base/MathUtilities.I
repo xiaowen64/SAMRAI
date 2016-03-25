@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/base/MathUtilities.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/MathUtilities.I $
 // Package:	SAMRAI toolbox
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2041 $
+// Modified:	$LastChangedDate: 2008-03-11 15:10:41 -0700 (Tue, 11 Mar 2008) $
 // Description:	Utilities class to access common POSIX constants and math ops
 //
 
@@ -79,6 +79,12 @@ template<class TYPE> inline
 TYPE MathUtilities<TYPE>::Abs(TYPE value)
 {
    return(value);
+}
+
+template<class TYPE> inline 
+TYPE MathUtilities<TYPE>::round(TYPE x)
+{
+   return x;
 }
 
 #ifdef DEBUG_NO_INLINE

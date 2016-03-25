@@ -1,66 +1,32 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/PatchLevel.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/PatchLevel.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	A collection of patches at one level of the AMR hierarchy
 //
 
 #ifndef included_hier_PatchLevel
 #define included_hier_PatchLevel
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Arena
 #include "tbox/Arena.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_BasePatchLevel
 #include "BasePatchLevel.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BinaryTree
 #include "BinaryTree.h"
-#endif
-#ifndef included_tbox_Database
-#include "tbox/Database.h"
-#endif 
-#ifndef included_hier_ComponentSelector
+#include "tbox/Database.h" 
 #include "ComponentSelector.h"
-#endif
-#ifndef included_hier_GridGeometry
 #include "GridGeometry.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_hier_PatchFactory
 #include "PatchFactory.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_hier_ProcessorMapping
 #include "ProcessorMapping.h"
-#endif
-#ifndef included_hier_BoxGraph
 #include "BoxGraph.h"
-#endif
-#ifndef included_hier_BoxTop
 #include "BoxTop.h"
-#endif
-#ifndef included_hier_BoxTree
 #include "BoxTree.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
 
 
 #ifndef NULL

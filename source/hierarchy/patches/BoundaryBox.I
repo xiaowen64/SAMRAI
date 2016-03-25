@@ -1,15 +1,17 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BoundaryBox.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/BoundaryBox.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2050 $
+// Modified:	$LastChangedDate: 2008-03-12 13:47:16 -0700 (Wed, 12 Mar 2008) $
 // Description:	BoundaryBox representing a portion of the physical boundary 
 //
 
 #ifdef DEBUG_NO_INLINE
 #define inline
 #endif
+
+#include "BoundaryLookupTable.h"
 
 namespace SAMRAI {
    namespace hier {
@@ -58,6 +60,33 @@ bool BoundaryBox<DIM>::getIsMultiblockSingularity() const
 {
    return (d_is_mblk_singularity);
 }
+
+template<int DIM> inline
+typename BoundaryBox<DIM>::BoundaryDirection
+BoundaryBox<DIM>::getBoundaryDirection(const int dir) const
+{
+   BoundaryLookupTable<DIM>* blut =
+      BoundaryLookupTable<DIM>::getLookupTable();
+
+   int bdry_dir = blut->getBoundaryDirections(d_bdry_type)[d_location_index](dir);
+
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(bdry_dir == -1 || bdry_dir == 0 || bdry_dir == 1);  
+#endif
+
+   BoundaryDirection retval;
+
+   if (bdry_dir == -1) {
+      retval = LOWER;
+   } else if (bdry_dir == 0) {
+      retval = MIDDLE;
+   } else {
+      retval = UPPER;
+   }
+
+   return (retval);
+}
+
 
 template<int DIM> inline
 BoundaryBox<DIM>& BoundaryBox<DIM>::operator=(

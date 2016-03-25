@@ -1,37 +1,23 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/multiblock/MultiblockRefineAlgorithm.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefineAlgorithm.h $
 // Package:     SAMRAI multiblock package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1818 $
-// Modified:    $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: class to manage multiblocks
 //
 
 #ifndef included_xfer_MultiblockRefineAlgorithm
 #define included_xfer_MultiblockRefineAlgorithm
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_MultiblockPatchHierarchy
 #include "MultiblockPatchHierarchy.h"
-#endif
-#ifndef included_hier_MultiblockPatchLevel
 #include "MultiblockPatchLevel.h"
-#endif
-#ifndef included_xfer_MultiblockRefineSchedule
 #include "MultiblockRefineSchedule.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_xfer_RefineAlgorithm
 #include "RefineAlgorithm.h"
-#endif
-#ifndef included_xfer_RefinePatchStrategy
 #include "RefinePatchStrategy.h"
-#endif
 
 namespace SAMRAI {
     namespace xfer {

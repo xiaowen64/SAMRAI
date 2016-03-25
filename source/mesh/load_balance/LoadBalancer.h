@@ -1,30 +1,20 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/load_balance/LoadBalancer.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/load_balance/LoadBalancer.h $
 // Package:     SAMRAI mesh generation
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1860 $
-// Modified:    $LastChangedDate: 2008-01-15 11:19:26 -0800 (Tue, 15 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
  
 #ifndef included_mesh_LoadBalancer
 #define included_mesh_LoadBalancer
  
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_mesh_LoadBalanceStrategy
 #include "LoadBalanceStrategy.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
 
 namespace SAMRAI {
     namespace mesh {

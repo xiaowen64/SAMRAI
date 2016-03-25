@@ -1,36 +1,22 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/patches/BasePatchHierarchy.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/BasePatchHierarchy.h $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	An abstract base class of hierarchies
 //
 
 #ifndef included_hier_BasePatchHierarchy
 #define included_hier_BasePatchHierarchy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_BasePatchLevel
 #include "BasePatchLevel.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_PatchDescriptor
 #include "PatchDescriptor.h"
-#endif
-#ifndef included_hier_ProcessorMapping
 #include "ProcessorMapping.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Serializable
 #include "tbox/Serializable.h"
-#endif
 
 namespace SAMRAI {
    namespace hier {
@@ -84,7 +70,7 @@ public:
    /*!
     * Return the number of levels that currently exist in the hierarchy.
     */
-   virtual int getNumberLevels() const = 0;
+   virtual int getNumberOfLevels() const = 0;
 
    /**
     * Read in the entire hierarchy from the restart file.

@@ -1,39 +1,27 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/locally_active/LocallyActiveDataTester.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/locally_active/LocallyActiveDataTester.h $
 // Package:     SAMRAI test
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Class to test locally-active data communication 
 //
  
 #include "SAMRAI_config.h"
 
-#ifndef included_xfer_LocallyActiveDataCoarsenAlgorithm
 #include "LocallyActiveDataCoarsenAlgorithm.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataCoarsenPatchStrategy
 #include "LocallyActiveDataCoarsenPatchStrategy.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataCoarsenSchedule
 #include "LocallyActiveDataCoarsenSchedule.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefineAlgorithm
 #include "LocallyActiveDataRefineAlgorithm.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefinePatchStrategy
 #include "LocallyActiveDataRefinePatchStrategy.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefineSchedule
 #include "LocallyActiveDataRefineSchedule.h"
-#endif
 
 /*
  * Header files for SAMRAI classes referenced in this class.
  */
 #include "Box.h"
 #include "BoxList.h"
-#include "tbox/InputDatabase.h"
+#include "tbox/Database.h"
 #include "IntVector.h"
 #include "Patch.h"
 #include "PatchHierarchy.h"
@@ -212,7 +200,7 @@ public:
     * Constructor for LocallyActiveDataTester.
     */     
    LocallyActiveDataTester(const string& object_name,
-                           tbox::Pointer<tbox::InputDatabase> input_db,
+                           tbox::Pointer<tbox::Database> input_db,
                            tbox::Pointer<hier::PatchHierarchy<NDIM> > hierarchy,
                            tbox::Pointer<appu::VisItDataWriter<NDIM> > visit_writer);
 
@@ -345,12 +333,12 @@ private:
     * Read input parameters for patch hierarchy and locally-active data.
     */
    void getFromInput();
-   void getGriddingParametersFromInput(tbox::Pointer<tbox::InputDatabase> gridding_db);
-   void getExplicitFunctionDataFromInput(tbox::Pointer<tbox::InputDatabase> explicit_data_db);
-   void getUniformFunctionDataFromInput(tbox::Pointer<tbox::InputDatabase> uniform_data_db);
-   void getRandomFunctionDataFromInput(tbox::Pointer<tbox::InputDatabase> random_data_db);
-   void getFinePatchFunctionDataFromInput(tbox::Pointer<tbox::InputDatabase> fine_patch_data_db);
-   void getFunctionSpecification(tbox::Pointer<tbox::InputDatabase> function_db);
+   void getGriddingParametersFromInput(tbox::Pointer<tbox::Database> gridding_db);
+   void getExplicitFunctionDataFromInput(tbox::Pointer<tbox::Database> explicit_data_db);
+   void getUniformFunctionDataFromInput(tbox::Pointer<tbox::Database> uniform_data_db);
+   void getRandomFunctionDataFromInput(tbox::Pointer<tbox::Database> random_data_db);
+   void getFinePatchFunctionDataFromInput(tbox::Pointer<tbox::Database> fine_patch_data_db);
+   void getFunctionSpecification(tbox::Pointer<tbox::Database> function_db);
 
    /*
     * Create variables and register them with variable database. 
@@ -435,7 +423,7 @@ private:
     * Cached pointer to input database for LocallyActiveDataTester and input
     * data members for controlling test functions.
     */
-   tbox::Pointer<tbox::InputDatabase> d_input_db;
+   tbox::Pointer<tbox::Database> d_input_db;
    string d_test_to_run;
    int d_num_test_functions; 
    int d_laplacian_iterations; 

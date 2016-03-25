@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/variables/LocallyActiveVariableDatabase.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/variables/LocallyActiveVariableDatabase.C $
 // Package:     SAMRAI hierarchy 
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1837 $
-// Modified:    $LastChangedDate: 2008-01-08 16:28:10 -0800 (Tue, 08 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Singleton database for variables defined on subset of hierarchy patches.
 //
 
@@ -115,7 +115,7 @@ LocallyActiveVariableDatabase<DIM>::getPatchDescriptor() const
 
 template<int DIM> 
 int 
-LocallyActiveVariableDatabase<DIM>::getNumberRegisteredVariables() const
+LocallyActiveVariableDatabase<DIM>::getNumberOfRegisteredVariables() const
 {
    return(d_num_registered_variables);
 }

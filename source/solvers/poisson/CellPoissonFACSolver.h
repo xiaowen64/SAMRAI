@@ -1,41 +1,27 @@
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACSolver.h $
- * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1818 $
- * Modified:     $LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonFACSolver.h $
+ * Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 2132 $
+ * Modified:     $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description:  High-level solver (wrapper) for scalar poisson equation.
  */
 
 #ifndef included_solv_CellPoissonFACSolver
 #define included_solv_CellPoissonFACSolver
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_solv_FACPreconditioner
 #include "FACPreconditioner.h"
-#endif
 
-#ifndef included_solv_CellPoissonFACOps
 #include "CellPoissonFACOps.h"
-#endif
 
-#ifndef included_solv_PoissonSpecifications
 #include "PoissonSpecifications.h"
-#endif
 
-#ifndef included_solv_SimpleCellRobinBcCoefs
 #include "SimpleCellRobinBcCoefs.h"
-#endif
 
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
     namespace solv {
@@ -103,7 +89,7 @@ namespace SAMRAI {
  *
  * After the solve, information on the solve can be obtained
  * by calling one of these functions:
- * - getNumberIterations() gives the number of FAC cycles used.
+ * - getNumberOfIterations() gives the number of FAC cycles used.
  * - getConvergenceFactors() gives the average and final convergence
  *   factors for the solve.
  * - getResidualNorm() gives the final residual
@@ -521,7 +507,7 @@ public:
     * @brief Return FAC iteration count from last (or current
     * if there is one) FAC iteration process.
     */
-   int getNumberIterations() const;
+   int getNumberOfIterations() const;
 
    /*!
     * @brief Get average convergance rate and convergence rate of
@@ -623,10 +609,12 @@ private:
     */
    tbox::Pointer<SAMRAIVectorReal<DIM,double> > d_fv;
 
-   int d_weight_id;
-   bool d_solver_is_initialized;
 
+   bool d_solver_is_initialized;
    bool d_enable_logging;
+
+   static int s_weight_id;
+   static int s_instance_counter;
 
 };
 

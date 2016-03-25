@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/clustering/async_br/main.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/clustering/async_br/main.C $
   Copyright:	(c) 1997-2003 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 1704 $
-  Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+  Revision:	$LastChangedRevision: 2043 $
+  Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
   Description:	Test program for asynchronous BR implementation
 */
 
@@ -321,7 +321,7 @@ int main( int argc, char **argv )
 	 tbox::pout << "Just added finer level " << ln << " -> " << ln+1;
 	 tbox::Pointer<hier::PatchLevel<NDIM> > new_level =
 	    patch_hierarchy->getPatchLevel(ln+1);
-	 if ( patch_hierarchy->getNumberLevels() < ln+2 ) {
+	 if ( patch_hierarchy->getNumberOfLevels() < ln+2 ) {
 	    tbox::pout << " (no new level!)" << endl;
 	 }
 	 else {
@@ -369,7 +369,7 @@ int main( int argc, char **argv )
 	      Tell the plotter about the refinement ratios.
 	      This must be done once (and again each time the data changes).
 	    */
-	    for ( int ln=1; ln<patch_hierarchy->getNumberLevels(); ln++ ) {
+	    for ( int ln=1; ln<patch_hierarchy->getNumberOfLevels(); ln++ ) {
 	       tbox::Pointer<hier::PatchLevel<NDIM> >
 		  level_ =patch_hierarchy->getPatchLevel(ln);
 	       const hier::IntVector<NDIM> &lratio =
@@ -443,7 +443,7 @@ int main( int argc, char **argv )
 		 Tell the plotter about the refinement ratios.
 		 This must be done once (and again each time the data changes).
 	       */
-	       for ( int ln=1; ln<patch_hierarchy->getNumberLevels(); ln++ ) {
+	       for ( int ln=1; ln<patch_hierarchy->getNumberOfLevels(); ln++ ) {
 		  tbox::Pointer<hier::PatchLevel<NDIM> >
 		     level_ =patch_hierarchy->getPatchLevel(ln);
 		  const hier::IntVector<NDIM> &lratio =

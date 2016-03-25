@@ -1,7 +1,7 @@
 //
 // File:	Pointer-SkeletonCellDoubleConservativeLinearRefine.C
 // Package:	SAMRAI templates
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 //
 
 #include "tbox/Pointer.h"

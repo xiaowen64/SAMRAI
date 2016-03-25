@@ -2,11 +2,11 @@
 #define included_solv_CellPoissonHypreSolver_C
 
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/poisson/CellPoissonHypreSolver.C $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonHypreSolver.C $
  * Package:     SAMRAI solvers
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1846 $
- * Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2147 $
+ * Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
  * Description: Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -302,10 +302,9 @@ template<int DIM>  CellPoissonHypreSolver<DIM>::CellPoissonHypreSolver(
   d_print_solver_info(false)
 {
 
-   if (DIM == 1) 
+   if (DIM == 1 || DIM > 3) 
    {
-      // We do not support 1D solves yet.
-      TBOX_ERROR(d_object_name << ": Using incomplete implementation");
+      TBOX_ERROR(" CellPoissonHypreSolver : DIM == 1 or > 3 not implemented");
    }
    
    t_solve_system = tbox::TimerManager::getManager()->
@@ -475,10 +474,10 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::allocateHypreData()
 #ifdef DEBUG_CHECK_ASSERTIONS
    if ( is_periodic ) {
       const hier::BoxArray<DIM> &level_domain = level->getPhysicalDomain();
-      hier::Box<DIM> domain_bound(level_domain(0));
+      hier::Box<DIM> domain_bound(level_domain[0]);
       for ( int i=1; i<level_domain.size(); ++i ) {
-         domain_bound.lower().min( level_domain(i).lower() );
-         domain_bound.upper().max( level_domain(i).upper() );
+         domain_bound.lower().min( level_domain[i].lower() );
+         domain_bound.upper().max( level_domain[i].upper() );
       }
       for ( d=0; d<DIM; ++d ) {
          if ( periodic_flag[d] == true ) {
@@ -877,7 +876,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
        */
       {
          const tbox::Array< hier::BoundaryBox<DIM> > &surface_boxes =
-            pg->getCodimensionBoundary(1);
+            pg->getCodimensionBoundaries(1);
          const int n_bdry_boxes = surface_boxes.getSize();
          for ( int n=0; n<n_bdry_boxes; ++n ) {
 
@@ -898,12 +897,14 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                bcoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                gcoef_data = NULL;
+            static const double fill_time = 0.0;
             d_physical_bc_coef_strategy->setBcCoefs( acoef_data,
                                                      bcoef_data,
                                                      gcoef_data,
                                                      d_physical_bc_variable,
                                                      patch,
-                                                     boundary_box);
+                                                     boundary_box,
+                                                     fill_time );
             pdat::ArrayData<DIM,double> &Ak0_data =
                Ak0->getArrayData(location_index/2,
                                  location_index%2);
@@ -956,6 +957,7 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                bcoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
             tbox::Pointer<pdat::ArrayData<DIM,double> >
                gcoef_data = NULL;
+            static const double fill_time = 0.0;
             /*
 	     * Reset invalid ghost data id to help detect use in setBcCoefs.
              */
@@ -965,7 +967,8 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::setMatrixCoefficients(
                                      gcoef_data,
                                      d_coarsefine_bc_variable,
                                      patch,
-                                     boundary_box );
+                                     boundary_box,
+                                     fill_time );
             pdat::ArrayData<DIM,double> &Ak0_data =
                Ak0->getArrayData(location_index/2,
                                  location_index%2);
@@ -1106,12 +1109,14 @@ template<int DIM> void CellPoissonHypreSolver<DIM>::add_gAk0_toRhs(
          bcoef_data = NULL;
       tbox::Pointer<pdat::ArrayData<DIM,double> >
          gcoef_data = new pdat::ArrayData<DIM,double>( bccoef_box, 1 );
+      static const double fill_time = 0.0;
       robin_bc_coef->setBcCoefs( acoef_data,
                                  bcoef_data,
                                  gcoef_data,
                                  d_physical_bc_variable,
                                  patch,
-                                 boundary_box );
+                                 boundary_box,
+                                 fill_time );
       /*
        * Nomenclature for indices: cel=first-cell, gho=ghost,
        * beg=beginning, end=ending.
@@ -1323,7 +1328,7 @@ template<int DIM> int CellPoissonHypreSolver<DIM>::solveSystem( const int u ,
 	   Add g*A*k0(a) from physical and coarse-fine boundaries to rhs.
           */
          add_gAk0_toRhs(*patch,
-                        patch->getPatchGeometry()->getCodimensionBoundary(1),
+                        patch->getPatchGeometry()->getCodimensionBoundaries(1),
                         d_physical_bc_coef_strategy,
                         rhs_data);
          add_gAk0_toRhs(*patch,

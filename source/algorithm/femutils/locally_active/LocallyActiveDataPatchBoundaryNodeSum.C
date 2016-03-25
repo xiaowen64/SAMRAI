@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryNodeSum.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/femutils/locally_active/LocallyActiveDataPatchBoundaryNodeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	Routines for summing locally-active node data at patch boundaries
 //
 
@@ -331,8 +331,8 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::registerSum(
          }
       }
 
-      char var_suffix[17];
-      sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
+      std::string var_suffix = tbox::Utilities::intToString(data_depth_id, 4) + 
+	 "__depth=" + tbox::Utilities::intToString(data_depth);
 
       std::string tonode_src_var_name = tmp_onode_src_variable_name + var_suffix;
       d_tmp_onode_src_variable[reg_sum_id] = var_db->getVariable(tonode_src_var_name);
@@ -1003,9 +1003,7 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
                      tmp_onode_data.getPointer(1,1)); // y upper src
                }
 
-            } // DIM == 2
-         
-            if (DIM == 3) {
+            } else if (DIM == 3) {
             
                if (tmp_onode_data.getArrayData(0,0).isInitialized() &&
                    tmp_onode_data.getArrayData(0,1).isInitialized() &&
@@ -1030,8 +1028,11 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
                      tmp_onode_data.getPointer(2,0), // z lower src
                      tmp_onode_data.getPointer(2,1)); // z upper src
                }
+	       
+            } else if ( DIM > 3) {
+	       	 TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum not implemented for DIM>3" << std::endl);
 
-            } // DIM == 3
+	    }
             
             // If desired, fill "hanging" nodes on fine patch by 
             // linear interpolation between "coarse" nodes on 
@@ -1059,9 +1060,7 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
                         node_data->getDepth(),
                         node_gcw(0),node_gcw(1),
                         node_data->getPointer());
-                  }               
- 
-                  if (DIM == 3) {
+                  } else if (DIM == 3) {
                      nodehangnodeinterp3d_(
                         filo(0),filo(1),filo(2),
                         fihi(0),fihi(1),fihi(2),
@@ -1074,7 +1073,10 @@ void LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum(
                         node_data->getDepth(),
                         node_gcw(0),node_gcw(1),node_gcw(2),
                         node_data->getPointer());
-                  }
+		  } else if ( DIM > 3) {
+		     TBOX_ERROR("LocallyActiveDataPatchBoundaryNodeSum<DIM>::doLocalCoarseFineBoundarySum not implemented for DIM>3" << std::endl);
+		     
+		  }
                   
                } // iterate over coarse-fine boundary box regions
 

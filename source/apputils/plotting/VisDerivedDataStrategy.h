@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/plotting/VisDerivedDataStrategy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/VisDerivedDataStrategy.h $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1848 $
-// Modified:    $LastChangedDate: 2008-01-11 16:26:13 -0800 (Fri, 11 Jan 2008) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Interface for writing user-defined data to either
 //              VisIt or Vizamrai file
 //
@@ -11,22 +11,14 @@
 #ifndef included_appu_VisDerivedDataStrategy
 #define included_appu_VisDerivedDataStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
 #ifndef included_String
 #include <string>
 #define included_String
 #endif
-#ifndef included_tbox_Utilities
 #include "tbox/Utilities.h"
-#endif
 
 #ifndef included_Vector
 #include <vector>

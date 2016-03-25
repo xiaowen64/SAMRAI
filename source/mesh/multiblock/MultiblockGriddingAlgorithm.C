@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/mesh/multiblock/MultiblockGriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/multiblock/MultiblockGriddingAlgorithm.C $
 // Package:     SAMRAI multiblock package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1847 $
-// Modified:    $LastChangedDate: 2008-01-11 16:19:57 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -22,9 +22,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <fstream>
-
-
-#define PATCHLEVEL_DATANAME_BUFSIZE 32
 
 #define ALGS_GRIDDING_ALGORITHM_VERSION (2)
 
@@ -258,8 +255,8 @@ MultiblockGriddingAlgorithm<DIM>::MultiblockGriddingAlgorithm(
 
    d_bdry_sched_tags.resizeArray(d_max_levels);
 
-   d_proper_nesting_boxes.resizeArray(multiblock->getNumberBlocks());
-   for (int nb = 0; nb < multiblock->getNumberBlocks(); nb++) {
+   d_proper_nesting_boxes.resizeArray(multiblock->getNumberOfBlocks());
+   for (int nb = 0; nb < multiblock->getNumberOfBlocks(); nb++) {
       d_proper_nesting_boxes[nb].resizeArray(d_max_levels);
    }
 
@@ -332,8 +329,13 @@ MultiblockGriddingAlgorithm<DIM>::~MultiblockGriddingAlgorithm()
 template<int DIM>
 void MultiblockGriddingAlgorithm<DIM>::makeCoarsestLevel(
    tbox::Pointer< hier::BasePatchHierarchy<DIM> > hierarchy,
-   const double level_time)
+   const double level_time,
+   const hier::BoxArray<DIM>& override_boxes,
+   const hier::ProcessorMapping& override_mapping)
 {
+   NULL_USE(override_boxes);
+   NULL_USE(override_mapping);
+
    tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock = hierarchy;
 
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -347,13 +349,13 @@ void MultiblockGriddingAlgorithm<DIM>::makeCoarsestLevel(
    t_make_coarsest->start();
 
    const int level_number = 0;
-   const int nblocks = multiblock->getNumberBlocks();
+   const int nblocks = multiblock->getNumberOfBlocks();
 
    bool level_zero_exists = false;
    for (int b = 0; b < nblocks; b++) {
       tbox::Pointer< hier::PatchHierarchy<DIM> > block_hierarchy =
          multiblock->getHierarchy(b);
-      if ( (block_hierarchy->getNumberLevels() > 0) ) {
+      if ( (block_hierarchy->getNumberOfLevels() > 0) ) {
          if ( !(block_hierarchy->getPatchLevel(level_number).isNull()) ) {
             level_zero_exists = true;
          }
@@ -535,18 +537,13 @@ void MultiblockGriddingAlgorithm<DIM>::putToDatabase(
    db->putInteger("d_false_tag", d_false_tag);
    db->putInteger("d_max_levels", d_max_levels);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_DATANAME_BUFSIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_DATANAME_BUFSIZE];
-
    int ln;
 
    tbox::Pointer<tbox::Database> ratio_to_coarser_db =
       db->putDatabase("d_ratio_to_coarser");
    for (ln = 1; ln < d_max_levels; ln++) {
       int* temp_ratio_to_coarser = d_ratio_to_coarser[ln];
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       ratio_to_coarser_db->putIntegerArray(level_name,
                                            temp_ratio_to_coarser, DIM);
    }
@@ -558,7 +555,7 @@ void MultiblockGriddingAlgorithm<DIM>::putToDatabase(
       db->putDatabase("d_largest_patch_size");
    for (ln = 0; ln < d_largest_patch_size.getSize(); ln++) {
       int* tmp_array = d_largest_patch_size[ln];
-      sprintf(level_name, "level_%d", ln);
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       largest_patch_db->putIntegerArray(level_name, tmp_array, DIM);
    }
 
@@ -566,7 +563,8 @@ void MultiblockGriddingAlgorithm<DIM>::putToDatabase(
       db->putDatabase("d_smallest_patch_size");
    for (ln = 0; ln < d_smallest_patch_size.getSize(); ln++) {
       int* tmp_array = d_smallest_patch_size[ln];
-      sprintf(level_name, "level_%d", ln);
+
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       smallest_patch_db->putIntegerArray(level_name, tmp_array, DIM);
    }
 
@@ -734,11 +732,6 @@ void MultiblockGriddingAlgorithm<DIM>::getFromInput(
                  << "Key data `max_levels' found in input is < 1.");
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_DATANAME_BUFSIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_DATANAME_BUFSIZE];
-
    int ln_lo = 1;
    int ln_hi = new_max_levels-1;
 
@@ -774,8 +767,7 @@ void MultiblockGriddingAlgorithm<DIM>::getFromInput(
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(!ratio_to_coarser_db.isNull());
 #endif
-      sprintf(level_name, "level_%d", ln);
-
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       if (!ratio_to_coarser_db->keyExists(level_name)) {
           TBOX_ERROR(d_object_name << ":  "
                      <<"Key data `" << level_name
@@ -997,7 +989,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridAllFinerLevels(
 
    if ( levelCanBeRefined(level_number) ) { 
 
-      int nblocks = multiblock->getNumberBlocks();
+      int nblocks = multiblock->getNumberOfBlocks();
       for (int n = 0; n < nblocks; n++) {
          tbox::Pointer< hier::PatchHierarchy<DIM> > this_hierarchy =
             multiblock->getHierarchy(n);
@@ -1128,7 +1120,7 @@ void MultiblockGriddingAlgorithm<DIM>::makeFinerLevel(
 
    const int level_number = multiblock->getFinestLevelNumber();
    const int fine_level_number = level_number + 1;
-   const int nblocks = multiblock->getNumberBlocks();
+   const int nblocks = multiblock->getNumberOfBlocks();
 
    if ( levelCanBeRefined(level_number) ) {
 
@@ -1453,7 +1445,7 @@ void MultiblockGriddingAlgorithm<DIM>::setTagsOnLevel(
                                           tag_data->getGhostBox()) );
  
       for (int ib = 0; ib < n_boxes; ib++) {
-         hier::Box<DIM> intersection = boxes.getBox(ib) * set_box;
+         hier::Box<DIM> intersection = boxes[ib] * set_box;
          if ( !(intersection.empty()) ) {
             tag_data->fill(tag_value, intersection);
          }
@@ -1507,7 +1499,7 @@ void MultiblockGriddingAlgorithm<DIM>::bufferTagsOnLevel(
     * distance from actual tags.
     */
    const int not_tag = ((tag_value == d_true_tag) ? d_false_tag : d_true_tag);
-   for (int nb = 0; nb < level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < level->getNumberOfBlocks(); nb++) {
       tbox::Pointer< hier::PatchLevel<DIM> > block_level =
          level->getPatchLevelForBlock(nb);
 
@@ -1556,7 +1548,7 @@ void MultiblockGriddingAlgorithm<DIM>::bufferTagsOnLevel(
    /*
     * Buffer tags on patch interior according to buffered tag data.
     */
-   for (int bc = 0; bc < level->getNumberBlocks(); bc++) {
+   for (int bc = 0; bc < level->getNumberOfBlocks(); bc++) {
       tbox::Pointer< hier::PatchLevel<DIM> > block_level =
          level->getPatchLevelForBlock(bc);
       if (!block_level.isNull()) {
@@ -1970,9 +1962,9 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
       tbox::Pointer< hier::MultiblockPatchLevel<DIM> >
          mb_level = multiblock->getPatchLevel(level_number);
 
-      tbox::Array<hier::BoxArray<DIM> > fine_boxes(multiblock->getNumberBlocks());
+      tbox::Array<hier::BoxArray<DIM> > fine_boxes(multiblock->getNumberOfBlocks());
       hier::ProcessorMapping* mapping;
-      mapping = new hier::ProcessorMapping[multiblock->getNumberBlocks()];
+      mapping = new hier::ProcessorMapping[multiblock->getNumberOfBlocks()];
 
       /*
        * The boolean "do_tagging" specifies whether or not tagging will
@@ -2011,7 +2003,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
 
          mb_level->allocatePatchData(d_tag_indx);
 
-         for (int st = 0; st < mb_level->getNumberBlocks(); st++) {
+         for (int st = 0; st < mb_level->getNumberOfBlocks(); st++) {
             tbox::Pointer< hier::PatchLevel<DIM> > patch_level =
                mb_level->getPatchLevelForBlock(st);
             if (!patch_level.isNull()) {
@@ -2036,7 +2028,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
          if ( multiblock->finerLevelExists(level_number) ) {
             tbox::Pointer< hier::MultiblockPatchLevel<DIM> > fine_level =
                multiblock->getPatchLevel(fine_level_number);
-            for (int fb = 0; fb < mb_level->getNumberBlocks(); fb++) {
+            for (int fb = 0; fb < mb_level->getNumberOfBlocks(); fb++) {
                tbox::Pointer< hier::PatchLevel<DIM> > fine_block_level =
                   fine_level->getPatchLevelForBlock(fb);
                if (!fine_block_level.isNull()) {
@@ -2112,7 +2104,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
           * value.  The box array must be contained in array of proper
           * nesting boxes.
           */
-         for (int fr = 0; fr < multiblock->getNumberBlocks(); fr++) {
+         for (int fr = 0; fr < multiblock->getNumberOfBlocks(); fr++) {
             if (multiblock->getHierarchy(fr)->getFinestLevelNumber() >=
                 level_number) {
                findRefinementBoxes(fine_boxes[fr],
@@ -2137,7 +2129,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
           */
 
          if (d_write_dumped_level_boxes) {
-            for (int pl = 0; pl < multiblock->getNumberBlocks(); pl++) {
+            for (int pl = 0; pl < multiblock->getNumberOfBlocks(); pl++) {
                d_regrid_box_utility->putLevelBoxes(
                   fine_boxes[pl],
                   fine_level_number, 
@@ -2166,7 +2158,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
           * constructing the finer level.
           */
 
-         for (int br = 0; br < multiblock->getNumberBlocks(); br++) {
+         for (int br = 0; br < multiblock->getNumberOfBlocks(); br++) {
 
             tbox::Pointer< hier::PatchHierarchy<DIM> > block_hierarchy =
                multiblock->getHierarchy(br);
@@ -2279,7 +2271,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
        */
 
       bool fine_boxes_exist = false;
-      for (int fb = 0; fb < multiblock->getNumberBlocks(); fb++) {
+      for (int fb = 0; fb < multiblock->getNumberOfBlocks(); fb++) {
          if ( (fine_boxes[fb].getNumberOfBoxes() != 0) ) {
             fine_boxes_exist = true;
             break;
@@ -2299,7 +2291,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
 
          if ( multiblock->finerLevelExists(level_number) ) {
             old_fine_level = multiblock->getPatchLevel(fine_level_number);
-            for (int rp = 0; rp < multiblock->getNumberBlocks(); rp++) {
+            for (int rp = 0; rp < multiblock->getNumberOfBlocks(); rp++) {
                tbox::Pointer< hier::PatchHierarchy<DIM> > hierarchy =
                   multiblock->getHierarchy(rp);
                if (hierarchy->finerLevelExists(level_number)) {
@@ -2309,7 +2301,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
             ratio = old_fine_level->getRatio();
          }
 
-         for (int nb = 0; nb < multiblock->getNumberBlocks(); nb++) {
+         for (int nb = 0; nb < multiblock->getNumberOfBlocks(); nb++) {
             if (fine_boxes[nb].getNumberOfBoxes() != 0) {
                multiblock->getHierarchy(nb)->
                   makeNewPatchLevel(fine_level_number, ratio,
@@ -2345,7 +2337,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
              */
 
             if (level_number > finest_level_not_regridded) {
-               for (int bc = 0; bc < multiblock->getNumberBlocks(); bc++) {
+               for (int bc = 0; bc < multiblock->getNumberOfBlocks(); bc++) {
                   fine_boxes[bc].coarsen(d_ratio_to_coarser[fine_level_number]
                                          * d_ratio_to_coarser[level_number]);
 
@@ -2381,7 +2373,7 @@ void MultiblockGriddingAlgorithm<DIM>::regridFinerLevel(
 
          if ( multiblock->finerLevelExists(level_number)
               && remove_old_fine_level) {
-            for (int rl = 0; rl < multiblock->getNumberBlocks(); rl++) {
+            for (int rl = 0; rl < multiblock->getNumberOfBlocks(); rl++) {
                if (multiblock->getHierarchy(rl)->
                    finerLevelExists(level_number)) {
                   multiblock->getHierarchy(rl)->
@@ -2439,14 +2431,8 @@ void MultiblockGriddingAlgorithm<DIM>::getFromRestart()
    tbox::Pointer<tbox::Database> ratio_to_coarser_db =
       db->getDatabase("d_ratio_to_coarser");
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( PATCHLEVEL_DATANAME_BUFSIZE > (5 + 1 + 4 + 1) );
-#endif
-   char level_name[PATCHLEVEL_DATANAME_BUFSIZE];
-
    for (ln = 1; ln < d_max_levels; ln++) {
-      sprintf(level_name, "level_%d", ln);
-
+      std::string level_name = "level_" + tbox::Utilities::intToString(ln);
       int* temp_ratio_to_coarser = d_ratio_to_coarser[ln];
       ratio_to_coarser_db->getIntegerArray(level_name,
                                            temp_ratio_to_coarser, DIM);

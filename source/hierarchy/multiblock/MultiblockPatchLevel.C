@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/multiblock/MultiblockPatchLevel.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/multiblock/MultiblockPatchLevel.C $
 // Package:     SAMRAI multiblock package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -59,7 +59,7 @@ MultiblockPatchLevel<DIM>::getPatchLevelForBlock(const int id) const
 *************************************************************************
 */
 
-template<int DIM> int MultiblockPatchLevel<DIM>::getNumberBlocks() const
+template<int DIM> int MultiblockPatchLevel<DIM>::getNumberOfBlocks() const
 {
    return (d_number_blocks);
 }

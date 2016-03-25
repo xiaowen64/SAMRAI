@@ -1,36 +1,22 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/RefinePatchStrategy.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefinePatchStrategy.h $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Strategy interface to user routines for refining AMR data.
 //
  
 #ifndef included_xfer_RefinePatchStrategy
 #define included_xfer_RefinePatchStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_BoxArray
 #include "BoxArray.h"
-#endif
-#ifndef included_hier_BoxList
 #include "BoxList.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
 
 namespace SAMRAI {
     namespace xfer {
@@ -123,7 +109,7 @@ public:
       const hier::IntVector<DIM>& ratio) = 0;
 
    /*!
-    * Pure virtual function to perform user-defined preprocess data refine
+    * Pure virtual function to perform user-defined postprocess data refine
     * operations.  This member function is called after standard refine
     * operations (expressed using concrete subclasses of the RefineOperator<DIM>
     * base class). The postprocess function must refine data from the scratch 

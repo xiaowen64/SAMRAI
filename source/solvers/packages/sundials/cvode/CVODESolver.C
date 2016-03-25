@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/solvers/packages/sundials/cvode/CVODESolver.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/cvode/CVODESolver.C $
 // Package:     SAMRAI solvers
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1889 $
-// Modified:    $LastChangedDate: 2008-01-22 16:46:52 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2039 $
+// Modified:    $LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description: C++ Wrapper class for CVODE solver package 
 //
 
@@ -863,22 +863,24 @@ double CVODESolver::getCVODESuggestedToleranceScalingFactor() const
 void CVODESolver::printCVSpgmrStatistics(std::ostream& os) const
 {
    if (d_iteration_type == CV_NEWTON) {
-      char buf[STAT_OUTPUT_BUFFER_SIZE];
       
       os << "CVODESolver: CVSpgmr statistics... " << std::endl;
       
-      sprintf(buf, "spgmr_lrw       = %5d     spgmr_liw        = %5d\n", 
-	      getCVSpgmrMemoryUsageForDoubles(),
-	      getCVSpgmrMemoryUsageForIntegers());
-      os << buf;
-      sprintf(buf, "nli             = %5d     ncfl             = %5d\n", 
-	      getNumberOfLinearIterations(),
-	      getNumberOfLinearConvergenceFailures());
-      os << buf;
-      sprintf(buf, "npe             = %5d     nps              = %5d\n", 
-	      getNumberOfPreconditionerEvaluations(),
-	      getNumberOfPrecondSolveCalls());
-      os << buf;
+      
+      os << "spgmr_lrw       = " <<
+	 tbox::Utilities::intToString(getCVSpgmrMemoryUsageForDoubles(), 5) <<
+	 "     spgmr_liw        = " <<
+	 tbox::Utilities::intToString(getCVSpgmrMemoryUsageForIntegers(), 5) << std::endl;
+
+      os << "nli             = " <<
+	 tbox::Utilities::intToString(getNumberOfLinearIterations(), 5) <<
+	 "     ncfl             = " <<
+	 tbox::Utilities::intToString(getNumberOfLinearConvergenceFailures(), 5) << std::endl;
+      
+      os << "npe             = " <<
+	 tbox::Utilities::intToString(getNumberOfPreconditionerEvaluations(), 5) <<
+	 "     nps              = " <<
+	 tbox::Utilities::intToString(getNumberOfPrecondSolveCalls(), 5) << std::endl;
    } else {
       
       os << "\nCVODESolver not set to use NEWTON iteration . . . \n"

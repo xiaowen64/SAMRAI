@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/standard/CoarsenClasses.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/CoarsenClasses.C $
 // Package:	SAMRAI data transfer
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1776 $
-// Modified:	$LastChangedDate: 2007-12-13 16:40:01 -0800 (Thu, 13 Dec 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description:	Simple structure for managing coarsening data in equivalence classes.
 //
 
@@ -61,7 +61,7 @@ template<int DIM>  CoarsenClasses<DIM>::~CoarsenClasses()
 *************************************************************************
 */
 
-template<int DIM> int CoarsenClasses<DIM>::getNumberEquivalenceClasses() const
+template<int DIM> int CoarsenClasses<DIM>::getNumberOfEquivalenceClasses() const
 {
    return(d_coarsen_equivalence_classes.getSize());
 }
@@ -264,9 +264,9 @@ template<int DIM> bool CoarsenClasses<DIM>::checkConsistency(
       int eq_index = 0;
       while (items_match && eq_index < num_equiv_classes) {
 
-         if ( d_coarsen_equivalence_classes[eq_index].getNumberItems() !=
+         if ( d_coarsen_equivalence_classes[eq_index].getNumberOfItems() !=
               test_classes->
-                 d_coarsen_equivalence_classes[eq_index].getNumberItems() ) {
+                 d_coarsen_equivalence_classes[eq_index].getNumberOfItems() ) {
 
             items_match = false;
 
@@ -461,7 +461,7 @@ template<int DIM> int CoarsenClasses<DIM>::getEquivalenceClassIndex(
 *************************************************************************
 */
 
-template<int DIM> int CoarsenClasses<DIM>::getNumberItemsInEquivalenceClass(
+template<int DIM> int CoarsenClasses<DIM>::getNumberOfItemsInEquivalenceClass(
    int equiv_class_id) const
 {
    return (d_coarsen_equivalence_classes[equiv_class_id].size());

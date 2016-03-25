@@ -2,11 +2,11 @@
 #define included_solv_CellPoissonFACSolver_C
 
 /*
- * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/poisson/CellPoissonFACSolver.C $
+ * File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/poisson/CellPoissonFACSolver.C $
  * Package:      SAMRAI solvers
- * Copyright:    (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:     $LastChangedRevision: 1704 $
- * Modified:     $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:     $LastChangedRevision: 1980 $
+ * Modified:     $LastChangedDate: 2008-02-13 11:03:04 -0800 (Wed, 13 Feb 2008) $
  * Description: High-level solver (wrapper) for scalar poisson equation.
  */
 
@@ -24,6 +24,16 @@
 
 namespace SAMRAI {
     namespace solv {
+
+/*
+*************************************************************************
+*                                                                       *
+* Initialize the static data members.                                   *
+*                                                                       *
+*************************************************************************
+*/
+template<int DIM> int CellPoissonFACSolver<DIM>::s_instance_counter = 0;
+template<int DIM> int CellPoissonFACSolver<DIM>::s_weight_id = -1;
 
 /*
 *************************************************************************
@@ -57,10 +67,6 @@ template<int DIM>  CellPoissonFACSolver<DIM>::CellPoissonFACSolver (
              ->getContext(object_name+"::CONTEXT")) ,
    d_uv(NULL),
    d_fv(NULL),
-   d_weight_id(hier::VariableDatabase<DIM>::getDatabase()->
-      registerVariableAndContext(
-         new pdat::CellVariable<DIM,double>(object_name+"::weight"),
-         d_context )),
    d_solver_is_initialized(false),
    d_enable_logging(false)
 {
@@ -81,6 +87,28 @@ template<int DIM>  CellPoissonFACSolver<DIM>::CellPoissonFACSolver (
    setCoarsestLevelSolverMaxIterations(500);
 #endif
 
+   /* 
+    * Construct integer tag variables and add to variable database.  Note that 
+    * variables and patch data indices are shared among all instances.
+    * The VariableDatabase holds the variables, once contructed and 
+    * registered via the VariableDatabase::registerInternalSAMRAIVariable() 
+    * function call.  Note that variables are registered and patch data indices
+    * are made only for the first time through the constructor. 
+    */
+   hier::VariableDatabase<DIM>* var_db = hier::VariableDatabase<DIM>::getDatabase();
+
+   static std::string weight_variable_name("CellPoissonFACSolver_weight");
+
+   tbox::Pointer< pdat::CellVariable<DIM,double> > weight = var_db->getVariable(weight_variable_name);
+   if (weight.isNull()) {
+      weight = new pdat::CellVariable<DIM,double>(weight_variable_name, 1);
+   }
+
+   if (s_weight_id < 0) {
+      s_weight_id = var_db->registerInternalSAMRAIVariable(weight,
+							   hier::IntVector<DIM>(0)); 
+   }
+
    /*
     * The default RobinBcCoefStrategy<DIM> used,
     * SimpleCellRobinBcCoefs<DIM> only works with constant refine
@@ -100,6 +128,9 @@ template<int DIM>  CellPoissonFACSolver<DIM>::CellPoissonFACSolver (
       getFromInput(database);
    }
 
+
+  s_instance_counter++;
+
    return;
 }
 
@@ -114,7 +145,16 @@ template<int DIM>  CellPoissonFACSolver<DIM>::CellPoissonFACSolver (
 
 template<int DIM>  CellPoissonFACSolver<DIM>::~CellPoissonFACSolver()
 {
+   s_instance_counter--;
+
    deallocateSolverState();
+
+   if (s_instance_counter == 0) {
+      hier::VariableDatabase<DIM>::getDatabase()->
+         removeInternalSAMRAIVariablePatchDataIndex(s_weight_id);
+      s_weight_id = -1;
+   }
+
    return;
 }
 
@@ -249,11 +289,11 @@ template<int DIM> void CellPoissonFACSolver<DIM>::initializeSolverState(
 
    int ln;
    for ( ln=d_ln_min; ln<=d_ln_max; ++ln ) {
-      d_hierarchy->getPatchLevel(ln)->allocatePatchData(d_weight_id);
+      d_hierarchy->getPatchLevel(ln)->allocatePatchData(s_weight_id);
    }
 
    d_fac_ops.computeVectorWeights( d_hierarchy,
-                                   d_weight_id,
+                                   s_weight_id,
                                    d_ln_min,
                                    d_ln_max );
 
@@ -294,7 +334,7 @@ template<int DIM> void CellPoissonFACSolver<DIM>::deallocateSolverState()
        */
       int ln;
       for ( ln=d_ln_min; ln<=d_ln_max; ++ln ) {
-         d_hierarchy->getPatchLevel(ln)->deallocatePatchData(d_weight_id);
+         d_hierarchy->getPatchLevel(ln)->deallocatePatchData(s_weight_id);
       }
 
       d_hierarchy.setNull();
@@ -500,7 +540,7 @@ template<int DIM> void CellPoissonFACSolver<DIM>::createVectorWrappers( int u, i
                     << " is not a cell-double variable.\n");
       }
 #endif
-      d_uv->addComponent( variable, u, d_weight_id );
+      d_uv->addComponent( variable, u, s_weight_id );
    }
 
    if ( !d_fv || d_fv->getComponentDescriptorIndex(0) != f ) {
@@ -521,7 +561,7 @@ template<int DIM> void CellPoissonFACSolver<DIM>::createVectorWrappers( int u, i
                     << " is not a cell-double variable.\n");
       }
 #endif
-      d_fv->addComponent( variable, f, d_weight_id );
+      d_fv->addComponent( variable, f, s_weight_id );
    }
 
    return;

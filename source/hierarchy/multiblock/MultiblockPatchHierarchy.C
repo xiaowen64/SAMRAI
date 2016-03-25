@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/multiblock/MultiblockPatchHierarchy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/multiblock/MultiblockPatchHierarchy.C $
 // Package:     SAMRAI multiblock package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1887 $
-// Modified:    $LastChangedDate: 2008-01-22 15:58:40 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -17,8 +17,6 @@
 #include "tbox/MathUtilities.h"
 
 #define MBLK_PATCH_HIERARCHY_VERSION (2)
-
-#define BLOCK_NAME_BUF_SIZE (16)
 
 namespace SAMRAI {
     namespace hier {
@@ -50,9 +48,7 @@ MultiblockPatchHierarchy<DIM>::MultiblockPatchHierarchy(
 
    for (int g = 0; g < d_number_blocks; g++) {
 
-      char hier_name[32];
-      sprintf(hier_name, "PatchHierarchy%d", g);
-
+      std::string hier_name = "PatchHierarchy" + tbox::Utilities::intToString(g);
       d_hierarchies[g] = new hier::PatchHierarchy<DIM>(
                                 hier_name,
                                 geometry->getBlockGeometry(g)); 
@@ -62,8 +58,8 @@ MultiblockPatchHierarchy<DIM>::MultiblockPatchHierarchy(
    d_singularity.resizeArray(d_number_blocks);
    d_reduced_connect.resizeArray(d_number_blocks);
 
-   char sing_name[32];
-   char neighbor_name[32];
+   std::string sing_name;
+   std::string  neighbor_name;
 
    for (int i = 0; i < d_number_blocks; i++) {
 
@@ -73,7 +69,8 @@ MultiblockPatchHierarchy<DIM>::MultiblockPatchHierarchy(
 
    for (int sn = 0; true; sn++) {
 
-      sprintf(sing_name, "Singularity%d", sn);
+      
+      sing_name = "Singularity" + tbox::Utilities::intToString(sn);
 
       if (!input_db->keyExists(sing_name)) {
          break;
@@ -84,10 +81,10 @@ MultiblockPatchHierarchy<DIM>::MultiblockPatchHierarchy(
 
       tbox::Array<int> blocks = sing_db->getIntegerArray("blocks");
 
-      char block_box_name[32];
+
 
       for (int nb = 0; nb < blocks.size(); nb++) {
-         sprintf(block_box_name, "sing_box_%d", blocks[nb]);
+	 std::string block_box_name = "sing_box_" + tbox::Utilities::intToString(blocks[nb]);
 
          hier::Box<DIM> sing_box = sing_db->getDatabaseBox(block_box_name);
 
@@ -96,7 +93,7 @@ MultiblockPatchHierarchy<DIM>::MultiblockPatchHierarchy(
    }
  
    for (int bn = 0; true; bn++) {
-      sprintf(neighbor_name, "BlockNeighbors%d", bn);
+      neighbor_name = "BlockNeighbors%d" + tbox::Utilities::intToString(bn);
 
       if (!input_db->keyExists(neighbor_name)) {
          break;
@@ -659,6 +656,8 @@ MultiblockPatchHierarchy<DIM>::getRotationIdentifier(
                     rotation_string[1] << " " << rotation_string[2] <<
                     " is invalid.\n");
       }
+   } else {
+      TBOX_ERROR(" MultiblockPatchHierarchy<DIM>::RotationIdentifier : DIM = 1 or > 3 not implemented");
    }
 
    return (id);
@@ -823,7 +822,7 @@ MultiblockPatchHierarchy<DIM>::getMultiblockPatchLevel(
       level_array(d_number_blocks);
 
    for (int b = 0; b < d_number_blocks; b++) {
-      if (d_hierarchies[b]->getNumberLevels() > level_num) {
+      if (d_hierarchies[b]->getNumberOfLevels() > level_num) {
          level_array[b] = d_hierarchies[b]->getPatchLevel(level_num);
       } else {
          level_array[b].setNull();
@@ -873,7 +872,7 @@ bool MultiblockPatchHierarchy<DIM>::areNeighbors(const int a, const int b)
  */
 
 template<int DIM>
-int MultiblockPatchHierarchy<DIM>::getNumberBlocks() const
+int MultiblockPatchHierarchy<DIM>::getNumberOfBlocks() const
 {
    return (d_number_blocks);
 }
@@ -884,7 +883,7 @@ void MultiblockPatchHierarchy<DIM>::adjustMultiblockPatchLevelBoundaries(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!mb_level.isNull());
-   TBOX_ASSERT(mb_level->getNumberBlocks() == d_number_blocks);
+   TBOX_ASSERT(mb_level->getNumberOfBlocks() == d_number_blocks);
 #endif
 
    for (int mb = 0; mb < d_number_blocks; mb++) {
@@ -960,7 +959,7 @@ void MultiblockPatchHierarchy<DIM>::adjustBoundaryBoxesOnPatch(
       for (int codim = 2; codim <= DIM; codim++) {
 
          codim_boundaries[codim-1] =
-            patch.getPatchGeometry()->getCodimensionBoundary(codim);
+            patch.getPatchGeometry()->getCodimensionBoundaries(codim);
 
          int num_boxes = codim_boundaries[codim-1].size();
 
@@ -985,7 +984,7 @@ void MultiblockPatchHierarchy<DIM>::adjustBoundaryBoxesOnPatch(
                nb++;
             }
          }
-         patch.getPatchGeometry()->setCodimensionBoundary(boundaries[i],i+1);
+         patch.getPatchGeometry()->setCodimensionBoundaries(boundaries[i],i+1);
       }
 
    }
@@ -1002,9 +1001,9 @@ void MultiblockPatchHierarchy<DIM>::adjustBoundaryBoxesOnPatch(
  */
 
 template<int DIM>
-int MultiblockPatchHierarchy<DIM>::getNumberNeighbors(const int block_number)
+int MultiblockPatchHierarchy<DIM>::getNumberOfNeighbors(const int block_number)
 {
-   return (d_block_neighbors[block_number].getNumberItems());
+   return (d_block_neighbors[block_number].getNumberOfItems());
 }
 
 /*
@@ -1054,7 +1053,7 @@ int MultiblockPatchHierarchy<DIM>::getFinestLevelNumber() const
 }
 
 template<int DIM>
-int MultiblockPatchHierarchy<DIM>::getNumberLevels() const
+int MultiblockPatchHierarchy<DIM>::getNumberOfLevels() const
 {
    return (getFinestLevelNumber() + 1);
 }
@@ -1127,13 +1126,8 @@ template<int DIM> void MultiblockPatchHierarchy<DIM>::putToDatabase(
    database->putInteger("MBLK_PATCH_HIERARCHY_VERSION",
                          MBLK_PATCH_HIERARCHY_VERSION);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( BLOCK_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
-#endif
-   char block_name[BLOCK_NAME_BUF_SIZE];
-
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      sprintf(block_name,"block_%04d",nb);
+      std::string block_name = "block_" + tbox::Utilities::blockToString(nb);
 
       tbox::Pointer<tbox::Database> block_database =
          database->putDatabase(block_name);
@@ -1169,13 +1163,8 @@ template<int DIM> void MultiblockPatchHierarchy<DIM>::putToDatabase(
    database->putInteger("MBLK_PATCH_HIERARCHY_VERSION",
                          MBLK_PATCH_HIERARCHY_VERSION);
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( BLOCK_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
-#endif
-   char block_name[BLOCK_NAME_BUF_SIZE];
-
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      sprintf(block_name,"block_%04d",nb);
+      std::string block_name = "block_" + tbox::Utilities::blockToString(nb);
 
       tbox::Pointer<tbox::Database> block_database =
          database->putDatabase(block_name);
@@ -1223,14 +1212,8 @@ template<int DIM> void MultiblockPatchHierarchy<DIM>::getFromRestart(
           << " : Restart file version different than class version" << std::endl);
    }
 
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT( BLOCK_NAME_BUF_SIZE > (5 + 1 + 4 + 1) );
-#endif
-
-   char block_name[BLOCK_NAME_BUF_SIZE];
-
    for (int nb = 0; nb < d_number_blocks; nb++) {
-      sprintf(block_name,"block_%04d",nb);
+      std::string block_name = "block_" + tbox::Utilities::blockToString(nb);
 
       tbox::Pointer<tbox::Database> block_database = 
          database->getDatabase(block_name);

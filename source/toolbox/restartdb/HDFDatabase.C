@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/restartdb/HDFDatabase.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/restartdb/HDFDatabase.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2130 $
+// Modified:    $LastChangedDate: 2008-04-11 17:55:01 -0700 (Fri, 11 Apr 2008) $
 // Description: A database structure that stores HDF5 format data.
 //
 
@@ -101,11 +101,6 @@
 namespace SAMRAI {
    namespace tbox {
 
-std::string HDFDatabase::s_top_level_search_group = std::string();
-std::string HDFDatabase::s_group_to_search = std::string();
-int HDFDatabase::s_still_searching = 0;
-int HDFDatabase::s_found_group = 0;
-
 /*
 *************************************************************************
 *                                                                       *
@@ -118,13 +113,15 @@ int HDFDatabase::s_found_group = 0;
 herr_t HDFDatabase::iterateKeys(
    hid_t loc_id,
    const char *name,
-   void *opdata)
+   void *void_database)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(name != (char*)NULL);
 #endif
 
-   if (s_still_searching) {
+   HDFDatabase *database = (HDFDatabase *)(void_database);
+
+   if (database -> d_still_searching) {
 
      H5G_stat_t statbuf;
      int type_key;
@@ -137,33 +134,33 @@ herr_t HDFDatabase::iterateKeys(
 
      switch (statbuf.type) {
      case H5G_GROUP: {
-       if (s_top_level_search_group == "/") {
-         addKeyToList(name, KEY_DATABASE, opdata);
-       } else if ( !strcmp(name, s_group_to_search.c_str()) ) {
+       if (database -> d_top_level_search_group == "/") {
+         addKeyToList(name, KEY_DATABASE, void_database);
+       } else if ( !strcmp(name, database -> d_group_to_search.c_str()) ) {
          hid_t grp;
          grp = H5Gopen(loc_id, name);
 #ifdef ASSERT_HDF5_RETURN_VALUES
          TBOX_ASSERT( grp >= 0 );
 #endif
-         s_found_group = true;
-         s_still_searching =
+         database -> d_found_group = true;
+         database -> d_still_searching =
            H5Giterate(grp, ".", NULL,
-                      HDFDatabase::iterateKeys, opdata);
+                      HDFDatabase::iterateKeys, void_database);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         TBOX_ASSERT( s_still_searching >= 0 );
+         TBOX_ASSERT( database -> d_still_searching >= 0 );
 #endif
-         s_found_group = false;
+         database -> d_found_group = false;
        } else {
          hid_t grp;
          grp = H5Gopen(loc_id, name);
 #ifdef ASSERT_HDF5_RETURN_VALUES
          TBOX_ASSERT( grp >= 0 );
 #endif
-         if (s_found_group) {
-           addKeyToList(name, KEY_DATABASE, opdata);
+         if (database -> d_found_group) {
+           addKeyToList(name, KEY_DATABASE, void_database);
          } else {
            errf = H5Giterate(grp, ".", NULL,
-                             HDFDatabase::iterateKeys, opdata);
+                             HDFDatabase::iterateKeys, void_database);
 #ifdef ASSERT_HDF5_RETURN_VALUES
            TBOX_ASSERT( errf >= 0 );
 #endif
@@ -173,7 +170,7 @@ herr_t HDFDatabase::iterateKeys(
      }
 
      case H5G_DATASET: {
-       if (s_still_searching && s_found_group) {
+       if (database -> d_still_searching && database -> d_found_group) {
          hid_t this_set;
          BEGIN_SUPPRESS_HDF5_WARNINGS
          this_set = H5Dopen(loc_id, name);
@@ -195,7 +192,7 @@ herr_t HDFDatabase::iterateKeys(
             int array_size = int(nsel); 
             addKeyToList(name,
                          (array_size == 1 ? -type_key : type_key),
-                         opdata);
+                         void_database);
             errf = H5Sclose(this_space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
             TBOX_ASSERT( errf >= 0 );
@@ -261,6 +258,8 @@ void HDFDatabase::addKeyToList(
 */
 
 HDFDatabase::HDFDatabase(const std::string& name) :
+   d_still_searching(0),
+   d_found_group(0),
    d_is_file(false),
    d_file_id(-1),
    d_group_id(-1),
@@ -311,7 +310,7 @@ HDFDatabase::~HDFDatabase()
    NULL_USE(errf);
 
    if (d_is_file) {
-      unmount();
+      close();
    } 
 
    if ( d_group_id != -1 ) {
@@ -380,7 +379,7 @@ Array<std::string> HDFDatabase::getAllKeys()
 {
    performKeySearch();
 
-   Array<std::string> tmp_keys(d_keydata.getNumberItems());
+   Array<std::string> tmp_keys(d_keydata.getNumberOfItems());
 
    int k = 0;
    for (List<KeyData>::Iterator i(d_keydata); i; i++) {
@@ -391,6 +390,97 @@ Array<std::string> HDFDatabase::getAllKeys()
    cleanupKeySearch();
 
    return(tmp_keys);
+}
+
+/*
+*************************************************************************
+*									*
+* Get the type of the array entry associated with the specified key	*
+*									*
+*************************************************************************
+*/
+enum Database::DataType HDFDatabase::getArrayType(const std::string& key)
+{
+
+   enum Database::DataType type = Database::INVALID;
+
+   herr_t errf;
+
+   if (!key.empty()) {
+
+      if(isDatabase(key)) {
+	 type = Database::DATABASE;
+      } else {
+
+	 hid_t this_set;
+	 BEGIN_SUPPRESS_HDF5_WARNINGS
+	    this_set = H5Dopen(d_group_id, key.c_str());
+	 END_SUPPRESS_HDF5_WARNINGS
+	    if (this_set > 0) {
+	       int type_key = readAttribute(this_set);
+	       
+	       switch (type_key) {
+		  case KEY_DATABASE:
+		     type = Database::DATABASE;
+		     break;
+		  case KEY_BOOL_ARRAY:
+		     type = Database::BOOL;
+		     break;
+		  case KEY_BOX_ARRAY:
+		     type = Database::BOX;
+		     break;
+		  case KEY_CHAR_ARRAY:
+		     type = Database::CHAR;
+		     break;
+		  case KEY_COMPLEX_ARRAY:
+		     type = Database::COMPLEX;
+		     break;
+		  case KEY_DOUBLE_ARRAY:
+		     type = Database::DOUBLE;
+		     break;
+		  case KEY_FLOAT_ARRAY:
+		     type = Database::FLOAT;
+		     break;
+		  case KEY_INT_ARRAY:
+		     type = Database::INT;
+		     break;
+		  case KEY_STRING_ARRAY:
+		     type = Database::STRING;
+		     break;
+		  case KEY_BOOL_SCALAR:
+		     type = Database::BOOL;
+		     break;
+		  case KEY_BOX_SCALAR:
+		     type = Database::BOX;
+		     break;
+		  case KEY_CHAR_SCALAR:
+		     type = Database::CHAR;
+		     break;
+		  case KEY_COMPLEX_SCALAR:
+		     type = Database::COMPLEX;
+		     break;
+		  case KEY_DOUBLE_SCALAR:
+		     type = Database::DOUBLE;
+		     break;
+		  case KEY_FLOAT_SCALAR:
+		     type = Database::FLOAT;
+		     break;
+		  case KEY_INT_SCALAR:
+		     type = Database::INT;
+		     break;
+		  case KEY_STRING_SCALAR:
+		     type = Database::STRING;
+		     break;
+	       }
+
+	       errf = H5Dclose(this_set);
+#ifdef ASSERT_HDF5_RETURN_VALUES
+	       TBOX_ASSERT( errf >= 0 );
+#endif
+	    }
+      }
+   }
+   return type;
 }
 
 /*
@@ -421,7 +511,17 @@ int HDFDatabase::getArraySize(const std::string& key)
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( this_space >= 0 );
 #endif
-      hsize_t nsel = H5Sget_select_npoints(this_space);
+
+      hsize_t nsel;
+      if(readAttribute(this_set) == KEY_CHAR_ARRAY) {
+	 hid_t dtype  = H5Dget_type(this_set);
+#ifdef ASSERT_HDF5_RETURN_VALUES
+	 TBOX_ASSERT( dtype >= 0 );
+#endif
+	 nsel   = H5Tget_size(dtype);
+      } else {
+	 nsel = H5Sget_select_npoints(this_space);
+      }
       array_size = int(nsel);
       errf = H5Sclose(this_space);
 #ifdef ASSERT_HDF5_RETURN_VALUES
@@ -449,21 +549,23 @@ int HDFDatabase::getArraySize(const std::string& key)
 
 bool HDFDatabase::isDatabase(const std::string& key)
 {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!key.empty());
+#endif
+
    bool is_database = false;
    herr_t errf;
 
-   if (!key.empty()) {
-      hid_t this_group;
-      BEGIN_SUPPRESS_HDF5_WARNINGS
-      this_group = H5Gopen(d_group_id, key.c_str());
-      END_SUPPRESS_HDF5_WARNINGS
-      if (this_group > 0) {
-         is_database = true;
-         errf = H5Gclose(this_group);
+   hid_t this_group;
+   BEGIN_SUPPRESS_HDF5_WARNINGS
+   this_group = H5Gopen(d_group_id, key.c_str());
+   END_SUPPRESS_HDF5_WARNINGS
+   if (this_group > 0) {
+      is_database = true;
+      errf = H5Gclose(this_group);
 #ifdef ASSERT_HDF5_RETURN_VALUES
-         TBOX_ASSERT( errf >= 0 );
+      TBOX_ASSERT( errf >= 0 );
 #endif
-      }
    }
 
    return is_database;
@@ -484,16 +586,12 @@ HDFDatabase::putDatabase(const std::string& key)
    TBOX_ASSERT(!key.empty());
 #endif
 
-   std::string parent_name = d_database_name;
-   hid_t  parent_id   = d_group_id;
-
-   hid_t this_group = H5Gcreate(parent_id, key.c_str(), 0);
+   hid_t this_group = H5Gcreate(d_group_id, key.c_str(), 0);
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( this_group >= 0 );
-
 #endif
-   Pointer<Database> new_database = 
-      new HDFDatabase(key, this_group);
+
+   Pointer<Database> new_database = new HDFDatabase(key, this_group);
 
    return(new_database);
 }
@@ -521,8 +619,8 @@ HDFDatabase::getDatabase(const std::string& key)
    hid_t this_group = H5Gopen(d_group_id, key.c_str());
 #ifdef ASSERT_HDF5_RETURN_VALUES
    TBOX_ASSERT( this_group >= 0 );
-
 #endif
+
    Pointer<Database> database = 
       new HDFDatabase(key, this_group);
 
@@ -562,51 +660,6 @@ bool HDFDatabase::isBool(const std::string& key)
    }
 
    return is_boolean;
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a boolean scalar entry in the database with the specified      *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putBool(
-   const std::string& key, 
-   const bool& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putBoolArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a boolean array entry in the database with the specified       *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putBoolArray(
-   const std::string& key, 
-   const Array<bool>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putBoolArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putBoolArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
 }
 
 /*
@@ -683,51 +736,6 @@ void HDFDatabase::putBoolArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get boolean scalar entry from the database with the specified key    *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a boolean type.                                                 *
-*                                                                      *
-************************************************************************
-*/
-
-bool HDFDatabase::getBool(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   bool ret_val;
-   getBoolArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get boolean scalar entry from the database with the specified key    *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a boolean type.                                                 *
-*                                                                      *
-************************************************************************
-*/
-
-bool HDFDatabase::getBoolWithDefault(
-   const std::string& key, 
-   const bool& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<bool> local_bool = getBoolArray(key);
-   bool *locptr = local_bool.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get boolean arrays from the database with the        *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -793,30 +801,6 @@ Array<bool> HDFDatabase::getBoolArray(const std::string& key)
    return bool_array;
 }
 
-void HDFDatabase::getBoolArray(
-   const std::string& key,
-   bool* data, 
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<bool> tmp = getBoolArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getBoolArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-
-}
 
 /*
 *************************************************************************
@@ -851,50 +835,6 @@ bool HDFDatabase::isDatabaseBox(const std::string& key)
    }
 
    return is_box;
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a box entry in the database with the specified                 *
-* key name.  A box entry is an array of one.                            *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putDatabaseBox(
-   const std::string& key, 
-   const DatabaseBox& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putDatabaseBoxArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a box array entry in the database with the specified key name. *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putDatabaseBoxArray(
-   const std::string& key, 
-   const Array<DatabaseBox>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putDatabaseBoxArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putDatabaseBoxArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
 }
 
 /*
@@ -967,51 +907,6 @@ void HDFDatabase::putDatabaseBoxArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get box scalar entry from the database with the specified key        *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a box type.                                                     *
-*                                                                      *
-************************************************************************
-*/
-
-DatabaseBox HDFDatabase::getDatabaseBox(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   DatabaseBox ret_val;
-   getDatabaseBoxArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get box scalar entry from the database with the specified key        *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a box type.                                                     *
-*                                                                      *
-************************************************************************
-*/
-
-DatabaseBox HDFDatabase::getDatabaseBoxWithDefault(
-   const std::string& key,
-   const DatabaseBox& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<DatabaseBox> local_box = getDatabaseBoxArray(key);
-   DatabaseBox *locptr = local_box.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get box arrays from the database with the            *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -1072,30 +967,6 @@ Array<DatabaseBox> HDFDatabase::getDatabaseBoxArray(const std::string& key)
 
 #endif
    return boxArray;
-}
-
-void HDFDatabase::getDatabaseBoxArray(
-   const std::string& key,
-   DatabaseBox* data,
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<DatabaseBox> tmp = getDatabaseBoxArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getDatabaseBoxArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
 }
 
 hid_t HDFDatabase::createCompoundDatabaseBox( char type_spec ) const {
@@ -1165,52 +1036,6 @@ bool HDFDatabase::isChar(const std::string& key)
    }
 
    return is_char;
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a char scalar entry in the database with the specified         *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putChar(
-   const std::string& key, 
-   const char& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putCharArray(key, &data, 1);
-
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a char array entry in the database with the specified          *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putCharArray(
-   const std::string& key, 
-   const Array<char>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putCharArray(key, data.getPointer(), data.getSize());
-   } else { 
-      TBOX_ERROR("HDFDatabase::putCharArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
 }
 
 /*
@@ -1299,51 +1124,6 @@ void HDFDatabase::putCharArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get char scalar entry from the database with the specified key       *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a char type.                                                    *
-*                                                                      *
-************************************************************************
-*/
-
-char HDFDatabase::getChar(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   char ret_val;
-   getCharArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get char scalar entry from the database with the specified key       *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a char type.                                                    *
-*                                                                      *
-************************************************************************
-*/
-
-char HDFDatabase::getCharWithDefault(
-   const std::string& key,
-   const char& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<char> local_char = getCharArray(key);
-   char *locptr = local_char.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get char arrays from the database with the           *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -1407,30 +1187,6 @@ Array<char> HDFDatabase::getCharArray(const std::string& key)
    return charArray;
 }
 
-void HDFDatabase::getCharArray(
-   const std::string& key,
-   char* data,
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<char> tmp = getCharArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getCharArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-}
-
 /*
 *************************************************************************
 *                                                                       *
@@ -1447,7 +1203,10 @@ bool HDFDatabase::isComplex(const std::string& key)
    herr_t errf;
 
    if (!key.empty()) {
-      hid_t this_set = H5Dopen(d_group_id, key.c_str());
+      hid_t this_set;
+      BEGIN_SUPPRESS_HDF5_WARNINGS
+      this_set = H5Dopen(d_group_id, key.c_str());
+      END_SUPPRESS_HDF5_WARNINGS
       if (this_set > 0) {
          int type_key = readAttribute(this_set);
          if (type_key == KEY_COMPLEX_ARRAY) {
@@ -1463,50 +1222,6 @@ bool HDFDatabase::isComplex(const std::string& key)
    return is_complex;
 }
 
-/*
-*************************************************************************
-*                                                                       *
-* Create a complex scalar entry in the database with the specified      *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putComplex(
-   const std::string& key,
-   const dcomplex& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putComplexArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a complex array entry in the database with the specified       *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putComplexArray(
-   const std::string& key,
-   const Array<dcomplex>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putComplexArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putComplexArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
-}
 
 /*
 *************************************************************************
@@ -1584,51 +1299,6 @@ void HDFDatabase::putComplexArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get complex scalar entry from the database with the specified key    *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a complex type.                                                 *
-*                                                                      *
-************************************************************************
-*/
-
-dcomplex HDFDatabase::getComplex(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   dcomplex ret_val;
-   getComplexArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get complex scalar entry from the database with the specified key    *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a complex type.                                                 *
-*                                                                      *
-************************************************************************
-*/
-
-dcomplex HDFDatabase::getComplexWithDefault(
-   const std::string& key,
-   const dcomplex& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<dcomplex> local_dcomplex = getComplexArray(key);
-   dcomplex *locptr = local_dcomplex.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get complex arrays from the database with the        *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -1690,31 +1360,6 @@ Array<dcomplex> HDFDatabase::getComplexArray(const std::string& key)
 #endif
    return complexArray;
 }
-
-void HDFDatabase::getComplexArray(
-   const std::string& key,
-   dcomplex* data,
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<dcomplex> tmp = getComplexArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getComplexArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-}
-
 
 hid_t HDFDatabase::createCompoundComplex( char type_spec ) const {
    herr_t errf;
@@ -1786,51 +1431,6 @@ bool HDFDatabase::isDouble(const std::string& key)
 /*
 *************************************************************************
 *                                                                       *
-* Create a double scalar entry in the database with the specified       *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putDouble(
-   const std::string& key, 
-   const double& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putDoubleArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a double array entry in the database with the specified        *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putDoubleArray(
-   const std::string& key,
-   const Array<double>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putDoubleArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putDoubleArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
-}
-
-/*
-*************************************************************************
-*                                                                       *
 * Create a double array entry in the database with the specified        *
 * key name.  The array type is based on the hdf type H5T_NATIVE_HDOUBLE.*
 *                                                                       *
@@ -1884,51 +1484,6 @@ void HDFDatabase::putDoubleArray(
          << "\n    Attempt to put zero-length array with key = "
          << key << std::endl);
    } 
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get double scalar entry from the database with the specified key     *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a double type.                                                  *
-*                                                                      *
-************************************************************************
-*/
-
-double HDFDatabase::getDouble(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   double ret_val;
-   getDoubleArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get double scalar entry from the database with the specified key     *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a double type.                                                  *
-*                                                                      *
-************************************************************************
-*/
-
-double HDFDatabase::getDoubleWithDefault(
-   const std::string& key, 
-   const double& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<double> local_double = getDoubleArray(key);
-   double *locptr = local_double.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
 }
 
 /*
@@ -1990,30 +1545,6 @@ Array<double> HDFDatabase::getDoubleArray(const std::string& key)
    return doubleArray;
 }
 
-void HDFDatabase::getDoubleArray(
-   const std::string& key, 
-   double* data, 
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<double> tmp = getDoubleArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getDoubleArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-}
-
 /*
 *************************************************************************
 *                                                                       *
@@ -2047,52 +1578,6 @@ bool HDFDatabase::isFloat(const std::string& key)
    }
 
    return is_float;
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a float scalar entry in the database with the specified        *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putFloat(
-   const std::string& key, 
-   const float& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putFloatArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a float array entry in the database with the specified         *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putFloatArray(
-   const std::string& key,
-   const Array<float>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putFloatArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putFloatArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
-  
 }
 
 /*
@@ -2156,51 +1641,6 @@ void HDFDatabase::putFloatArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get float scalar entry from the database with the specified key      *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a float type.                                                   *
-*                                                                      *
-************************************************************************
-*/
-
-float HDFDatabase::getFloat(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   float ret_val;
-   getFloatArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get float scalar entry from the database with the specified key      *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a float type.                                                   *
-*                                                                      *
-************************************************************************
-*/
-
-float HDFDatabase::getFloatWithDefault(
-   const std::string& key, 
-   const float& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<float> local_float = getFloatArray(key);
-   float *locptr = local_float.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get float arrays from the database with the          *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -2258,30 +1698,6 @@ Array<float> HDFDatabase::getFloatArray(const std::string& key)
 
 }
 
-void HDFDatabase::getFloatArray(
-   const std::string& key,
-   float* data,
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<float> tmp = getFloatArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getFloatArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-}
-
 /*
 *************************************************************************
 *                                                                       *
@@ -2315,51 +1731,6 @@ bool HDFDatabase::isInteger(const std::string& key)
    }
 
    return is_int;
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a integer scalar entry in the database with the specified      *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putInteger(
-   const std::string& key,
-   const int& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putIntegerArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create an integer array entry in the database with the specified      *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putIntegerArray(
-   const std::string& key, 
-   const Array<int>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putIntegerArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putIntegerArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
 }
 
 /*
@@ -2423,51 +1794,6 @@ void HDFDatabase::putIntegerArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get integer scalar entry from the database with the specified key    *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a integer type.                                                 *
-*                                                                      *
-************************************************************************
-*/
-
-int HDFDatabase::getInteger(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   int ret_val;
-   getIntegerArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get integer scalar entry from the database with the specified key    *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a integer type.                                                 *
-*                                                                      *
-************************************************************************
-*/
-
-int HDFDatabase::getIntegerWithDefault(
-   const std::string& key, 
-   const int& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<int> local_int = getIntegerArray(key);
-   int *locptr = local_int.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get integer arrays from the database with the        *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -2524,30 +1850,6 @@ Array<int> HDFDatabase::getIntegerArray(const std::string& key)
    return intArray;
 }
 
-void HDFDatabase::getIntegerArray(
-   const std::string& key, 
-   int* data, 
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<int> tmp = getIntegerArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getIntegerArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-}
-
 /*
 *************************************************************************
 *                                                                       *
@@ -2581,51 +1883,6 @@ bool HDFDatabase::isString(const std::string& key)
    }
 
    return is_string;
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a string scalar entry in the database with the specified       *
-* key name.  A scalar entry is an array of one.                         *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putString(
-   const std::string& key, 
-   const std::string& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   putStringArray(key, &data, 1);
-}
-
-/*
-*************************************************************************
-*                                                                       *
-* Create a string array entry in the database with the specified        *
-* key name.                                                             *
-*                                                                       *
-*************************************************************************
-*/
-
-void HDFDatabase::putStringArray(
-   const std::string& key, 
-   const Array<std::string>& data)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   if ( data.getSize() > 0 ) {
-      putStringArray(key, data.getPointer(), data.getSize());
-   } else {
-      TBOX_ERROR("HDFDatabase::putStringArray() error in database "
-         << d_database_name
-         << "\n    Attempt to put zero-length array with key = "
-         << key << std::endl);
-   }
 }
 
 /*
@@ -2725,51 +1982,6 @@ void HDFDatabase::putStringArray(
 /*
 ************************************************************************
 *                                                                      *
-* Get string scalar entry from the database with the specified key     *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a string type.                                                  *
-*                                                                      *
-************************************************************************
-*/
-
-std::string HDFDatabase::getString(const std::string& key)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   std::string ret_val;
-   getStringArray(key, &ret_val, 1);
-
-   return(ret_val);
-}
-
-/*
-************************************************************************
-*                                                                      *
-* Get string scalar entry from the database with the specified key     *
-* name. An error message is printed and the program exits if the       *
-* specified key does not exist in the database or is not associated    *
-* with a string type.                                                  *
-*                                                                      *
-************************************************************************
-*/
-
-std::string HDFDatabase::getStringWithDefault(
-   const std::string& key, 
-   const std::string& defaultvalue)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<std::string> local_string = getStringArray(key);
-   std::string *locptr = local_string.getPointer();
-   return ( locptr == NULL ? defaultvalue : *locptr);
-}
-
-/*
-************************************************************************
-*                                                                      *
 * Two routines to get string arrays from the database with the         *
 * specified key name. In any case, an error message is printed and     *
 * the program exits if the specified key does not exist in the         *
@@ -2841,32 +2053,6 @@ Array<std::string> HDFDatabase::getStringArray(const std::string& key)
    return stringArray;
 }
 
-void HDFDatabase::getStringArray(
-   const std::string& key, 
-   std::string* data, 
-   const int nelements)
-{
-#ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!key.empty());
-#endif
-   Array<std::string> tmp = getStringArray(key);
-   const int tsize = tmp.getSize();
-
-   if (nelements != tsize) {
-      TBOX_ERROR("HDFDatabase::getStringArray() error in database "
-         << d_database_name
-         << "\n    Incorrect array size = " << nelements
-         << " given for key = " << key
-         << "\n    Actual array size = " << tsize << std::endl);
-   }
-
-   for (int i = 0; i < tsize; i++) {
-      data[i] = tmp[i];
-   }
-
-}
-
-
 void HDFDatabase::writeAttribute( int type_key,
                                        hid_t dataset_id
                                        )
@@ -2931,7 +2117,7 @@ void HDFDatabase::printClassData(std::ostream& os)
 
    performKeySearch();
 
-   if (d_keydata.getNumberItems() == 0) {
+   if (d_keydata.getNumberOfItems() == 0) {
       os << "Database named `"<< d_database_name 
          << "' has zero keys..." << std::endl;
    } else {
@@ -3002,50 +2188,59 @@ void HDFDatabase::printClassData(std::ostream& os)
 /*
 *************************************************************************
 *                                                                       *
-* Open a HDF5 data-base file.  Flags can be "R" for read only or "W"    *
-* for write.  If the file does not exist when read only is specified,   *
-* an error status is returned (<0).  If the file exists when opened     *
-* for write, an error status is returned (<0).                          * 
+* Create HDF data file specified by name.                               *
 *                                                                       *
 *************************************************************************
-*/ 
+*/
 
-int HDFDatabase::mount(
-   const std::string& file_name, 
-   const std::string& flags)
-{
+bool HDFDatabase::create(const std::string& name) {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   TBOX_ASSERT(!file_name.empty());
-   TBOX_ASSERT(!flags.empty());
+   TBOX_ASSERT(!name.empty());
 #endif
-
-   int status = 1;
+   bool status = false;
 
    hid_t file_id = 0;
 
-   if (flags == "R") {
-     file_id = H5Fopen(file_name.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
-     if( file_id < 0 ) {
-        TBOX_ERROR("Unable to open HDF5 file " << file_name << "\n");
-     }
-   } else if (flags == "W") {
-     file_id = H5Fcreate(file_name.c_str(), H5F_ACC_TRUNC, 
-                         H5P_DEFAULT, H5P_DEFAULT);
-     if( file_id < 0 ) {
-        TBOX_ERROR("Unable to open HDF5 file " << file_name << "\n");
-     }
+   file_id = H5Fcreate(name.c_str(), H5F_ACC_TRUNC, 
+		       H5P_DEFAULT, H5P_DEFAULT);
+   if( file_id < 0 ) {
+      TBOX_ERROR("Unable to open HDF5 file " << name << "\n");
+      status = false;
    } else {
-     TBOX_ERROR("HDFDatabase::mount error...\n"
-                << "   database name is " << d_database_name
-                << "\n    unrecognized flag = " << flags << std::endl);  
+      status = true;
+      d_is_file  = true;
+      d_group_id = file_id;
+      d_file_id  = file_id;
    }
 
+   return status;
+}
+
+/*
+*************************************************************************
+*                                                                       *
+* Open HDF data file specified by name                                  *
+*                                                                       *
+*************************************************************************
+*/
+
+bool HDFDatabase::open(const std::string& name) {
+#ifdef DEBUG_CHECK_ASSERTIONS
+   TBOX_ASSERT(!name.empty());
+#endif
+   bool status = false;
+
+   hid_t file_id = 0;
+
+   file_id = H5Fopen(name.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
    if (file_id < 0) {
-     status = (int)file_id;
+      TBOX_ERROR("Unable to open HDF5 file " << name << "\n");
+      status = false;
    } else {
-     d_is_file  = true;
-     d_group_id = file_id;
-     d_file_id  = file_id;
+      status = true;
+      d_is_file  = true;
+      d_group_id = file_id;
+      d_file_id  = file_id;
    }
 
    return status;
@@ -3060,17 +2255,26 @@ int HDFDatabase::mount(
 *************************************************************************
 */
 
-void HDFDatabase::unmount()
+bool HDFDatabase::close()
 {
-   herr_t errf;
+   herr_t errf =0;
    if (d_is_file) {
       errf = H5Fclose(d_file_id);
 #ifdef ASSERT_HDF5_RETURN_VALUES
       TBOX_ASSERT( errf >= 0 );
 #endif
-      if ( d_group_id == d_file_id ) d_group_id = -1;
+      if ( d_group_id == d_file_id ) {
+	 d_group_id = -1;
+      }
       d_file_id = -1;
       d_is_file = false;
+   }
+
+   if(errf >= 0) {
+      return true;
+   }
+   else {
+      return false;
    }
 }
 
@@ -3133,16 +2337,16 @@ void HDFDatabase::performKeySearch()
 {
    herr_t errf;
    if (d_is_file) {
-      s_group_to_search = "/";
-      s_top_level_search_group = "/";
-      s_found_group = 1;
+      d_group_to_search = "/";
+      d_top_level_search_group = "/";
+      d_found_group = 1;
    } else {
-      s_group_to_search = d_database_name;
-      s_top_level_search_group = std::string();
-      s_found_group = 0;
+      d_group_to_search = d_database_name;
+      d_top_level_search_group = std::string();
+      d_found_group = 0;
    }
 
-   s_still_searching = 1;
+   d_still_searching = 1;
 
    errf = H5Giterate(d_group_id, "/", NULL,
                      HDFDatabase::iterateKeys, (void*)this);
@@ -3153,12 +2357,35 @@ void HDFDatabase::performKeySearch()
 
 void HDFDatabase::cleanupKeySearch()
 {
-   s_top_level_search_group = std::string();
-   s_group_to_search = std::string();
-   s_still_searching = 0;
-   s_found_group = 0;
+   d_top_level_search_group = std::string();
+   d_group_to_search = std::string();
+   d_still_searching = 0;
+   d_found_group = 0;
 
    d_keydata.clearItems();
+}
+
+/*
+*************************************************************************
+* Attach to an already created HDF file.
+*************************************************************************
+*/
+bool HDFDatabase::attachToFile(hid_t group_id)
+{
+   bool status = false;
+
+   if(group_id > 0) {
+      status = true;
+      d_is_file=false;
+      d_file_id = -1;
+      d_group_id = group_id; 
+   } else {      
+      TBOX_ERROR("HDFDatabase: Invalid fileid supplied to attachToFile" 
+		 << std::endl);
+      status = false;
+   }
+
+   return status;
 }
 
 /*
@@ -3172,6 +2399,11 @@ void HDFDatabase::cleanupKeySearch()
 hid_t HDFDatabase::getGroupId()
 {
   return (d_group_id);
+}
+
+std::string HDFDatabase::getName(void)
+{
+   return d_database_name;
 }
 
 }

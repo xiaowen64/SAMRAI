@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/applications/AutoTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/applications/AutoTester.C $
 // Package:     SAMRAI applications
 // Copyright:   (c) 1997-2002 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Class used for auto testing applications 
 //
 
@@ -95,7 +95,7 @@ int AutoTester::evalTestData(
       /*
        * determine level.
        */
-      int nlevels = hierarchy->getNumberLevels() - 1;
+      int nlevels = hierarchy->getNumberOfLevels() - 1;
       tbox::Pointer<hier::PatchLevel<NDIM> > level = 
 	 hierarchy->getPatchLevel(nlevels);
 
@@ -189,7 +189,7 @@ int AutoTester::evalTestData(
    if ( (d_test_patch_boxes_at_steps.getSize() > d_test_patch_boxes_step_count)     && (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] == iter) ) 
    {
 
-      int num_levels = hierarchy->getNumberLevels();
+      int num_levels = hierarchy->getNumberOfLevels();
 
       if (d_read_patch_boxes) {
 
@@ -267,7 +267,7 @@ int AutoTester::evalTestData(
       /*
        * determine level.
        */
-      int nlevels = hierarchy->getNumberLevels() - 1;
+      int nlevels = hierarchy->getNumberOfLevels() - 1;
       tbox::Pointer<hier::PatchLevel<NDIM> > level =
          hierarchy->getPatchLevel(nlevels);
 
@@ -333,7 +333,7 @@ int AutoTester::evalTestData(
         (d_test_patch_boxes_at_steps[d_test_patch_boxes_step_count] ==
          iter) ) {
 
-      int num_levels = hierarchy->getNumberLevels();
+      int num_levels = hierarchy->getNumberOfLevels();
 
       if (d_read_patch_boxes) {
 
@@ -475,7 +475,7 @@ static void getBoxListsSortedBySize(tbox::Array<hier::BoxList<NDIM> >& sorted_bo
    
    tbox::List<int> num_box_sizes;
    int check_size = 0;
-   if (in_boxlist.getNumberItems() > 0) {
+   if (in_boxlist.getNumberOfItems() > 0) {
       check_size = in_boxlist.getFirstItem().size();
    }
    num_box_sizes.appendItem(0);
@@ -488,7 +488,7 @@ static void getBoxListsSortedBySize(tbox::Array<hier::BoxList<NDIM> >& sorted_bo
       }
    }
 
-   sorted_boxarrays.resizeArray(num_box_sizes.getNumberItems());
+   sorted_boxarrays.resizeArray(num_box_sizes.getNumberOfItems());
 
    hier::BoxList<NDIM>::Iterator lin2s(in_boxlist);
    int isort = 0;
@@ -535,7 +535,7 @@ int AutoTester::checkHierarchyBoxes(
     */
 
    bool total_match = 
-      (hier_boxes.getNumberItems() == master_boxes.getNumberItems());
+      (hier_boxes.getNumberOfItems() == master_boxes.getNumberOfItems());
 
    bool bin_match = 
       (sorted_boxes.getSize() == sorted_master_boxes.getSize());
@@ -544,8 +544,8 @@ int AutoTester::checkHierarchyBoxes(
    if (total_match && bin_match) {
       for (i = 0; i < sorted_boxes.getSize(); i++) {
          bin_count_match = bin_count_match &&
-            (sorted_boxes[i].getNumberItems() ==
-             sorted_master_boxes[i].getNumberItems());
+            (sorted_boxes[i].getNumberOfItems() ==
+             sorted_master_boxes[i].getNumberOfItems());
       }
    } 
 
@@ -572,8 +572,8 @@ int AutoTester::checkHierarchyBoxes(
               << "ON LEVEL: " << level_number << endl;
       }
       tbox::pout << "Total number of boxes: " << endl;
-      tbox::pout << "   hier::PatchLevel boxes -- " << hier_boxes.getNumberItems()
-           << "   Test boxes -- " << master_boxes.getNumberItems() 
+      tbox::pout << "   hier::PatchLevel boxes -- " << hier_boxes.getNumberOfItems()
+           << "   Test boxes -- " << master_boxes.getNumberOfItems() 
            << endl;
 
       if (!bin_match) {
@@ -590,9 +590,9 @@ int AutoTester::checkHierarchyBoxes(
       }
       for (i = 0; i < sorted_boxes.getSize(); i++) {
          tbox::pout << "PatchLevel has " 
-              << sorted_boxes[i].getNumberItems()
+              << sorted_boxes[i].getNumberOfItems()
               << " boxes";
-         if (sorted_boxes[i].getNumberItems() > 0) {
+         if (sorted_boxes[i].getNumberOfItems() > 0) {
             tbox::pout << " of size = " 
                  << sorted_boxes[i].getFirstItem().size();
          }
@@ -600,9 +600,9 @@ int AutoTester::checkHierarchyBoxes(
       }
       for (i = 0; i < sorted_master_boxes.getSize(); i++) {
          tbox::pout << "Test boxes have "
-              << sorted_master_boxes[i].getNumberItems()
+              << sorted_master_boxes[i].getNumberOfItems()
              << " boxes";
-         if (sorted_master_boxes[i].getNumberItems() > 0) {
+         if (sorted_master_boxes[i].getNumberOfItems() > 0) {
             tbox::pout << " of size = " 
                  << sorted_master_boxes[i].getFirstItem().size();
          }

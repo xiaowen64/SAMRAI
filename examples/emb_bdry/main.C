@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/emb_bdry/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/emb_bdry/main.C $
 // Package:     SAMRAI test
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Main program to test index data operations
 //
 
@@ -363,7 +363,7 @@ int main( int argc, char *argv[] ) {
 
 
       pout.precision(12);
-      for (ln = 0; ln < patch_hierarchy->getNumberLevels(); ln++) {
+      for (ln = 0; ln < patch_hierarchy->getNumberOfLevels(); ln++) {
 	 Pointer<PatchLevel<NDIM> > level = patch_hierarchy->getPatchLevel(ln);
 	 double total_vol = eb_geom->computeTotalVolumeOnLevel(level);
 
@@ -393,7 +393,7 @@ int main( int argc, char *argv[] ) {
        * Re-generate grids (if desired)
        *
        ****************************************************************/
-      int nlevels = patch_hierarchy->getNumberLevels();
+      int nlevels = patch_hierarchy->getNumberOfLevels();
       Array<int> regrid_tag_buffer(nlevels);
       for (ln = 0; ln < nlevels; ln++) {
 	 regrid_tag_buffer[ln] = tag_buffer;
@@ -452,7 +452,7 @@ int main( int argc, char *argv[] ) {
 	 }
 
 	 pout.precision(12);
-	 for (ln = 0; ln < patch_hierarchy->getNumberLevels(); ln++) {
+	 for (ln = 0; ln < patch_hierarchy->getNumberOfLevels(); ln++) {
 	    Pointer<PatchLevel<NDIM> > level = patch_hierarchy->getPatchLevel(ln);
 	    double total_vol = eb_geom->computeTotalVolumeOnLevel(level);
 	    pout << "Level: " << ln << "\tTotal Volume: " << total_vol << endl;

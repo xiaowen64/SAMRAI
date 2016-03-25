@@ -1,46 +1,26 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/hyperbolic/HyperbolicPatchStrategy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/hyperbolic/HyperbolicPatchStrategy.h $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Interface to patch routines for hyperbolic integration scheme.  
 //
 
 #ifndef included_algs_HyperbolicPatchStrategy
 #define included_algs_HyperbolicPatchStrategy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_PatchData
 #include "PatchData.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
-#ifndef included_hier_VariableContext
 #include "VariableContext.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_xfer_RefinePatchStrategy
 #include "RefinePatchStrategy.h"
-#endif
-#ifndef included_xfer_CoarsenPatchStrategy
 #include "CoarsenPatchStrategy.h"
-#endif
 
-#ifndef included_mesh_GriddingAlgorithm
 #include "GriddingAlgorithm.h"
-#endif
 
 namespace SAMRAI {
     namespace algs {

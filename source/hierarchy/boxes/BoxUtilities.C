@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxUtilities.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxUtilities.C $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2141 $
+// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description:	Routines for processing boxes within a domain of index space.
 //
 
@@ -270,7 +270,7 @@ template<int DIM> void BoxUtilities<DIM>::checkBoxConstraints(
          tbox::perr << "Physical domain boxes ... " << std::endl;
          for (int ib = 0; ib < physical_boxes.getNumberOfBoxes(); ib++) {
             tbox::perr << "Box # " << ib << " -- " 
-                             << physical_boxes.getBox(ib) << std::endl;
+                             << physical_boxes[ib] << std::endl;
          }
          TBOX_ERROR("BoxUtilities<DIM>::checkBoxConstraints() error:\n"
                     << "  Box violates bad cut restriction" << std::endl);
@@ -345,7 +345,7 @@ template<int DIM> void BoxUtilities<DIM>::chopBoxes(
 
          for (int id = 0; id < DIM; id++) {
             
-            if (cut_points[id].getNumberItems() > 0) {
+            if (cut_points[id].getNumberOfItems() > 0) {
 
                tbox::Array<bool> bad_cut_points;
 
@@ -415,7 +415,7 @@ template<int DIM> void BoxUtilities<DIM>::chopBox(
             Box<DIM> chop_box = boxes.getFirstItem();
             boxes.removeFirstItem();
 
-            if (cut_points[id].getNumberItems() > 0) {
+            if (cut_points[id].getNumberOfItems() > 0) {
    
                Index<DIM> ilo = chop_box.lower();
                Index<DIM> ihi = chop_box.upper();
@@ -1605,7 +1605,7 @@ template<int DIM> void BoxUtilities<DIM>::makeNonOverlappingBoxLists(
    // Remove portion of index space represented by array box from list.
    // Keep unique pieces on box list.
    for (int ib = 0; ib < nb; ib++) {
-      Box<DIM> remove = boxes.getBox(ib);
+      Box<DIM> remove = boxes[ib];
 
       for (typename tbox::List<Box<DIM> >::Iterator l(box_list); l; l++) {
          Box<DIM> intersection = remove * l();

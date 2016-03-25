@@ -1,49 +1,27 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/NodeMultiblockTest.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/NodeMultiblockTest.h $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: AMR communication tests for node-centered patch data
 //
 
 #ifndef included_NodeMultiblockTest
 #define included_NodeMultiblockTest
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_Box
+#include "tbox/Pointer.h"
 #include "Box.h"
-#endif
-#ifndef included_pdat_NodeData
 #include "NodeData.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_Patch
 #include "Patch.h"
-#endif
-#ifndef included_hier_PatchMultiblockTestStrategy
 #include "PatchMultiblockTestStrategy.h"
-#endif
-#ifndef included_tbox_Pointer
-#include "Pointer.h"
-#endif
-#ifndef included_geom_BlockGridGeometry
 #include "BlockGridGeometry.h"
-#endif
-#ifndef included_hier_Variable
 #include "Variable.h"
-#endif
 
 using namespace SAMRAI;
 

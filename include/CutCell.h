@@ -1,47 +1,27 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/apputils/embedded_boundary/CutCell.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/embedded_boundary/CutCell.h $
 // Package:     SAMRAI applications
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1808 $
-// Modified:    $LastChangedDate: 2007-12-19 16:38:32 -0800 (Wed, 19 Dec 2007) $
+// Revision:    $LastChangedRevision: 2132 $
+// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description: Cut cell class for embedded boundary implementations
 //
 
 #ifndef included_appu_CutCell
 #define included_appu_CutCell
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_tbox_AbstractStream
 #include "tbox/AbstractStream.h"
-#endif
-#ifndef included_appu_BoundaryNode
 #include "BoundaryNode.h"
-#endif
-#ifndef included_pdat_CellIndex
 #include "CellIndex.h"
-#endif
-#ifndef included_tbox_Database
 #include "tbox/Database.h"
-#endif
-#ifndef included_hier_Index
 #include "Index.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_tbox_IOStream
 #include "tbox/IOStream.h"
-#endif
-#ifndef included_tbox_List
 #include "tbox/List.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 
 namespace SAMRAI {
@@ -177,7 +157,7 @@ public:
    /*!
     * Return number of boundary nodes.
     */
-   int getNumberBoundaryNodes() const;
+   int getNumberOfBoundaryNodes() const;
 
    /*!
     * Return boundary node class for location i.

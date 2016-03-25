@@ -1,7 +1,7 @@
 c
-c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/algorithm/femutils/standard/algs_nodeouternodeops2d.m4 $
+c  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/femutils/standard/algs_nodeouternodeops2d.m4 $
 c  Package:     SAMRAI algs
-c  Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+c  Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 c  Revision:    
 c  Modified:    
 c  Description:    F77 routines for summing outernode data with

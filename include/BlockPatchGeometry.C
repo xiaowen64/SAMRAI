@@ -1,7 +1,7 @@
 //
 // File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/geometry/skeleton/patch_geom/BlockPatchGeometry.C $
 // Package:     SAMRAI geometry package
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
 // Revision:    $LastChangedRevision: 878 $
 // Modified:    $LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $

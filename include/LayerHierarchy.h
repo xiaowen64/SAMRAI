@@ -1,41 +1,27 @@
 /*
-  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/dlbg/LayerHierarchy.h $
+  File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/dlbg/LayerHierarchy.h $
   Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-  Revision:    $LastChangedRevision: 1704 $
-  Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+  Revision:    $LastChangedRevision: 2132 $
+  Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
   Description: Box graph representing hierarchy.
 */
 
 #ifndef included_hier_LayerHierarchy
 #define included_hier_LayerHierarchy
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_LayerEdgeSet
 #include "LayerEdgeSet.h"
-#endif
 
-#ifndef included_hier_LayerNodeSet
 #include "LayerNodeSet.h"
-#endif
 
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
 
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
 
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
 
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
 
 namespace SAMRAI {
 namespace hier {

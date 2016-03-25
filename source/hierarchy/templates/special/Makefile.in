@@ -1,9 +1,9 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/templates/special/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/templates/special/Makefile.in $
 ## Package:	SAMRAI hierarchy
-## Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 1704 $
-## Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+## Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+## Revision:	$LastChangedRevision: 2155 $
+## Modified:	$LastChangedDate: 2008-04-28 09:43:00 -0700 (Mon, 28 Apr 2008) $
 ## Description:	makefile for the special templates for hierarchy
 ##
 
@@ -13,13 +13,19 @@ SUBDIR        = source/hierarchy/templates/special
 VPATH	      =	@srcdir@
 OBJECT        = ../../../..
 
+#
+# For these classes don't turn off implicit template instantiation.
+#
+ALLOW_IMPLICIT_TEMPLATES = yes
+
 default: library
 
 include $(OBJECT)/config/Makefile.config
 
 library:	lib1d lib2d lib3d
 
-OBJS	      = stl-LayerNode-NDIM$(NDIM).o stl-LayerNodeSet-NDIM$(NDIM).o
+OBJS	      = stl-LayerNode-NDIM$(NDIM).o \
+	        stl-LayerEdgeSet-NDIM$(NDIM).o
 lib1d:
 	$(MAKE) NDIM=1 libXd
 lib2d:

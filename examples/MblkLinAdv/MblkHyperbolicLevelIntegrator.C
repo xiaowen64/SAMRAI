@@ -1,9 +1,9 @@
 //
 // File:        MblkHyperbolicLevelIntegratorX.C.sed
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -402,7 +402,7 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
         hier::VariableDatabase<NDIM>::getDatabase();
 
 
-      for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+      for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             mblk_level->getPatchLevelForBlock(nb);
 
@@ -441,7 +441,7 @@ void MblkHyperbolicLevelIntegrator::initializeLevelData(
     */
    d_patch_strategy->setDataContext(d_current);
 
-   for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_level->getPatchLevelForBlock(nb);
 
@@ -574,7 +574,7 @@ void MblkHyperbolicLevelIntegrator::applyGradientDetector(
    d_mblk_bdry_sched_advance[level_number]->fillData(error_data_time);
    t_error_bdry_fill_comm->stop();
 
-   for (int nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_level->getPatchLevelForBlock(nb);
 
@@ -825,7 +825,7 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
 
       d_patch_strategy->setDataContext(d_current);
 
-      for (int nb = 0; nb < mblk_patch_level->getNumberBlocks(); nb++) {
+      for (int nb = 0; nb < mblk_patch_level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             mblk_patch_level->getPatchLevelForBlock(nb);
 
@@ -869,7 +869,7 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
          fillData(dt_time);
       t_advance_bdry_fill_comm->stop();
          
-      for (int nb = 0; nb < mblk_patch_level->getNumberBlocks(); nb++) {
+      for (int nb = 0; nb < mblk_patch_level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             mblk_patch_level->getPatchLevelForBlock(nb);
 
@@ -910,7 +910,7 @@ MblkHyperbolicLevelIntegrator::getLevelDt(
        * in most cases.
        */
       
-      for (int nb = 0; nb < mblk_patch_level->getNumberBlocks(); nb++) {
+      for (int nb = 0; nb < mblk_patch_level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             mblk_patch_level->getPatchLevelForBlock(nb);
 
@@ -1131,7 +1131,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    //}
    // to count gridcells on this processor
 
-   for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_level->getPatchLevelForBlock(nb);
 
@@ -1187,7 +1187,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
    tbox::Pointer< xfer::MultiblockRefineSchedule<NDIM> > mblk_fill_schedule;
 
    bool in_hierarchy = false;
-   for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_level->getPatchLevelForBlock(nb);
       if (!patch_level.isNull()) {
@@ -1238,7 +1238,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
                       first_step,
                       last_step);
 
-   for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_level->getPatchLevelForBlock(nb);
 
@@ -1330,7 +1330,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
          if (d_use_ghosts_for_dt) {
             d_patch_strategy->setDataContext(d_scratch);
-            for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+            for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
                tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
                   mblk_level->getPatchLevelForBlock(nb);
 
@@ -1364,7 +1364,7 @@ MblkHyperbolicLevelIntegrator::advanceLevel(
 
        } 
 
-      for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+      for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             mblk_level->getPatchLevelForBlock(nb);
 
@@ -1586,7 +1586,7 @@ void MblkHyperbolicLevelIntegrator::synchronizeNewLevels(
          t_sync_initial_comm->stop();
 
 
-         for (int nb = 0; nb < coarse_level->getNumberBlocks(); nb++) {
+         for (int nb = 0; nb < coarse_level->getNumberOfBlocks(); nb++) {
             tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
                coarse_level->getPatchLevelForBlock(nb);
 
@@ -1700,7 +1700,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
    int nb;
    
-   for ( nb = 0; nb < mblk_coarse_level->getNumberBlocks(); nb++) {
+   for ( nb = 0; nb < mblk_coarse_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > coarse_level =
          mblk_coarse_level->getPatchLevelForBlock(nb);
 
@@ -1727,7 +1727,7 @@ MblkHyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
 
    d_patch_strategy->clearDataContext(); 
 
-   for (nb = 0; nb < mblk_coarse_level->getNumberBlocks(); nb++) {
+   for (nb = 0; nb < mblk_coarse_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_coarse_level->getPatchLevelForBlock(nb);
 
@@ -1784,7 +1784,7 @@ void MblkHyperbolicLevelIntegrator::resetTimeDependentData(
 
    double cur_time = 0.;
 
-   for (int nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+   for (int nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
       tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
          mblk_level->getPatchLevelForBlock(nb);
 
@@ -2311,7 +2311,7 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
          
          mblk_level->allocatePatchData(d_fluxsum_data, new_time);
 
-         for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+         for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
             tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
                mblk_level->getPatchLevelForBlock(nb);
             
@@ -2404,7 +2404,7 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
    if ( !regrid_advance && (mblk_level->getLevelNumber() > 0) ) {
 
       int nb;
-      for (nb = 0; nb < mblk_level->getNumberBlocks(); nb++) {
+      for (nb = 0; nb < mblk_level->getNumberOfBlocks(); nb++) {
          tbox::Pointer<hier::PatchLevel<NDIM> > patch_level =
             mblk_level->getPatchLevelForBlock(nb);
 

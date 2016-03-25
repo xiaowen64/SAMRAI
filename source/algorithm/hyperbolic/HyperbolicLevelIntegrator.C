@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/hyperbolic/HyperbolicLevelIntegrator.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1880 $
-// Modified:    $LastChangedDate: 2008-01-22 10:58:19 -0800 (Tue, 22 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2009 $
+// Modified:    $LastChangedDate: 2008-02-26 15:38:52 -0800 (Tue, 26 Feb 2008) $
 // Description: Integration routines for single level in AMR hierarchy
 //              (basic hyperbolic systems)
 //
@@ -730,7 +730,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
 
    if (!d_use_ghosts_for_dt) {
 
-      tbox::plog << "!use ghosts for dt" << std::endl;
+      //tbox::plog << "!use ghosts for dt" << std::endl;
 
       d_patch_strategy->setDataContext(d_current);
       for (typename hier::PatchLevel<DIM>::Iterator p(patch_level); p; p++) {
@@ -745,13 +745,13 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
                                               dt_time);
 
          dt = tbox::MathUtilities<double>::Min( dt, patch_dt);
-         tbox::plog.precision(12);
-         tbox::plog << "Level " << patch_level->getLevelNumber()
-                    << " Patch " << p()
-                    << " box " << patch->getBox()
-                    << " has patch_dt " << patch_dt
-                    << " dt " << dt
-                    << std::endl;
+         //tbox::plog.precision(12);
+         //tbox::plog << "Level " << patch_level->getLevelNumber()
+         //           << " Patch " << p()
+         //           << " box " << patch->getBox()
+         //           << " has patch_dt " << patch_dt
+         //           << " dt " << dt
+         //           << std::endl;
 
          patch->deallocatePatchData(d_temp_var_scratch_data);
       }
@@ -760,7 +760,7 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
 
    } else {
 
-      tbox::plog << "use ghosts for dt" << std::endl;
+      //tbox::plog << "use ghosts for dt" << std::endl;
 
       patch_level->allocatePatchData(d_saved_var_scratch_data, dt_time);
 
@@ -782,13 +782,13 @@ template<int DIM> double HyperbolicLevelIntegrator<DIM>::getLevelDt(
                                               dt_time);
 
          dt = tbox::MathUtilities<double>::Min( dt, patch_dt);
-         tbox::plog.precision(12);
-         tbox::plog << "Level " << patch_level->getLevelNumber()
-                    << " Patch " << ip()
-                    << " box " << patch->getBox()
-                    << " has patch_dt " << patch_dt
-                    << " dt " << dt
-                    << std::endl;
+         //tbox::plog.precision(12);
+         //tbox::plog << "Level " << patch_level->getLevelNumber()
+         //           << " Patch " << ip()
+         //           << " box " << patch->getBox()
+         //           << " has patch_dt " << patch_dt
+         //           << " dt " << dt
+         //           << std::endl;
 
          patch->deallocatePatchData(d_temp_var_scratch_data);
       }
@@ -2146,6 +2146,11 @@ template<int DIM> void HyperbolicLevelIntegrator<DIM>::postprocessFluxData(
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!level.isNull());
 #endif
+
+   if(DIM > 3) {
+      TBOX_ERROR("HyperbolicLevelIntegrator<DIM>::postprocessFluxData : DIM > 3 not implemented");
+   }
+
 
    if (regrid_advance && first_step) {
       level->deallocatePatchData(d_flux_var_data);

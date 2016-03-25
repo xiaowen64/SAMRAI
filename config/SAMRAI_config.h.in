@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/config/SAMRAI_config.h.in $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/config/SAMRAI_config.h.in $
  * Package:     SAMRAI autoconf
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1871 $
- * Modified:    $LastChangedDate: 2008-01-17 18:06:43 -0800 (Thu, 17 Jan 2008) $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2144 $
+ * Modified:    $LastChangedDate: 2008-04-23 10:40:03 -0700 (Wed, 23 Apr 2008) $
  * Description: SAMRAI configuration file
  */  
 
@@ -20,6 +20,9 @@
 #ifndef included_SAMRAI_config
 #define included_SAMRAI_config
 
+#define SAMRAI_VERSION_MAJOR 2
+#define SAMRAI_VERSION_MINOR 3
+#define SAMRAI_VERSION_PATCHLEVEL 0
 
 /*
  * Flags to signal building optional types.
@@ -69,12 +72,8 @@
  * Sun and MSVC++ compiler do can not resolve bool and void*
  * methods.
  */
-#if defined(__SUNPRO_CC) || defined(_MSC_VER)
+#if defined(__SUNPRO_CC)
 #define LACKS_BOOL_VOID_RESOLUTION
-#endif
-
-#if defined(_MSC_VER)
-#define LACKS_PROPER_MEMORY_HANDLER 1
 #endif
 
 /*
@@ -289,6 +288,15 @@
 #undef HAVE_HDF5
 #endif
 
+
+/*
+ * Silo 
+ */
+
+#ifndef HAVE_SILO
+#undef HAVE_SILO
+#endif
+
 /*
  * Building with XDR
  */
@@ -390,12 +398,6 @@
 #ifdef _MSC_VER	
 
 /*
- * These need a test developed for autoconfig.  This is a bug
- * in the MSVC++ compiler
- */
-#define LACKS_NAMESPACE_IN_DECLARE
-
-/*
  * Move this bad stuff to the utility class, not POSIX
  */
 #define drand48() ((double)rand()/(double)RAND_MAX)
@@ -414,10 +416,12 @@
 #endif
 
 /*
- * Set the depracated level, depracated features from
+ * Set the depracated level, deprecated features from
  * release greater than this number will be included.
  * 
  */
-#define INCLUDE_DEPRACATED 1
+#ifndef INCLUDE_DEPRECATED
+#undef INCLUDE_DEPRECATED
+#endif
 
 #endif

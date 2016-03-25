@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/solvers/packages/sundials/kinsol/KINSOL_SAMRAIContext.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/sundials/kinsol/KINSOL_SAMRAIContext.C $
 // Package:     SAMRAI algorithms
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1765 $
-// Modified:    $LastChangedDate: 2007-12-11 15:15:21 -0800 (Tue, 11 Dec 2007) $
+// Revision:    $LastChangedRevision: 1941 $
+// Modified:    $LastChangedDate: 2008-01-31 08:25:47 -0800 (Thu, 31 Jan 2008) $
 // Description: KINSOL solver for use within a SAMRAI-based application.
 //
  
@@ -161,7 +161,7 @@ template<int DIM> void KINSOL_SAMRAIContext<DIM>::getFromInput(tbox::Pointer<tbo
 
    if (db->keyExists("max_krylov_dimension")) {
       d_max_krylov_dimension = db->getInteger("max_krylov_dimension");
-      d_KINSOL_solver->setMaxIterations(d_max_krylov_dimension);
+      d_KINSOL_solver->setMaxKrylovDimension(d_max_krylov_dimension);
    }
 
    if (db->keyExists("global_newton_strategy")) {

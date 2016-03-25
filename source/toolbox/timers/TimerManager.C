@@ -1,12 +1,14 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/toolbox/timers/TimerManager.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/timers/TimerManager.C $
 // Package:     SAMRAI toolbox
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1846 $
-// Modified:    $LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Class to manage different timer objects used throughout the 
 //              library.
 //
+
+#include <string>
 
 #include "tbox/TimerManager.h"
 
@@ -33,8 +35,6 @@ bool TimerManager::s_registered_callback = false;
 
 int TimerManager::s_main_timer_identifier = -1;
 int TimerManager::s_inactive_timer_identifier = -9999;
-double TimerManager::s_timer_reg_access_time = 1.0e-5;
-double TimerManager::s_timer_unreg_access_time = 3.8e-7;
 
 /*
 *************************************************************************
@@ -56,6 +56,11 @@ void TimerManager::createManager(
 
       s_registered_callback = true;
    }
+
+   /*
+    * Compute the overheads
+    */
+   s_timer_manager_instance -> computeOverheadConstants();
 
    s_timer_manager_instance->d_main_timer->start();
    
@@ -137,6 +142,19 @@ TimerManager::TimerManager(Pointer<Database> input_db)
 
    d_exclusive_timer_stack.clearItems();
 
+   d_timers.resizeArray( max_timers );
+   d_num_timers = 0;
+
+   d_inactive_timers.resizeArray( max_timers );
+   d_num_inactive_timers = 0;
+
+   d_running_timers.resizeArray( max_timers );
+   for (int i = 0; i < max_timers; i++) {
+      d_running_timers[i] = false;
+   }
+
+   d_exclusive_timer_stack.clearItems();
+
    d_length_package_names = 0;
    d_length_class_names = 0;
    d_length_class_method_names = 0;
@@ -157,7 +175,8 @@ TimerManager::TimerManager(Pointer<Database> input_db)
 
    getFromInput(input_db);
 
-
+   d_timer_active_access_time = -9999.0;
+   d_timer_inactive_access_time = -9999.0;;
 }
 
 
@@ -1097,7 +1116,7 @@ void TimerManager::print(std::ostream& os)
    /*
     * Print overhead stats - number of accesses and estimated cost 
     * (estimated cost computed based on the number of accesses and
-    * a fixed s_timer_reg_access_time value).
+    * a fixed d_timer_active_access_time value).
     * Store the number of accesses in max_processor_id[0] and the estimated
     * cost in timer_values[0] and use the printTable method.
     */   
@@ -1423,6 +1442,9 @@ void TimerManager::printOverhead(
 		   const double timer_values[][18],
 		   std::ostream& os)
 {
+
+
+
    std::string ascii_line1 =  "++++++++++++++++++++++++++++++++++++++++"; 
    std::string ascii_line2 =  "++++++++++++++++++++++++++++++++++++++++\n"; 
    std::string ascii_line  = ascii_line1;
@@ -1464,14 +1486,16 @@ void TimerManager::printOverhead(
    for (i = 0; i < d_num_inactive_timers; i++) {
       total_inactive_accesses += d_inactive_timers[i]->getNumberAccesses();
    }
-   double est_cost = s_timer_unreg_access_time * total_inactive_accesses;
+
+
+   double est_cost = d_timer_inactive_access_time * total_inactive_accesses;
    double total_est_cost = est_cost;
 
    int total_accesses = 0;
    for (n = 0; n < d_num_timers; n++) {
       total_accesses += d_timers[n]->getNumberAccesses(); 
    }
-   est_cost = s_timer_reg_access_time * total_accesses;
+   est_cost = d_timer_active_access_time * total_accesses;
   
    /*
     * If we are keeping exclusive or concurrent times, each access costs
@@ -1486,7 +1510,7 @@ void TimerManager::printOverhead(
     * Output the rows of the table.  Start first with the inactive timers...
     */ 
    int num_accesses = total_inactive_accesses;
-   est_cost = s_timer_unreg_access_time * num_accesses;
+   est_cost = d_timer_inactive_access_time * num_accesses;
    int perc = computePercentageInt(est_cost, total_est_cost);
 
    os << std::setw(maxlen+3) << "inactive timers"
@@ -1508,7 +1532,7 @@ void TimerManager::printOverhead(
    for (n = 0; n < d_num_timers; n++) {
 
       num_accesses = d_timers[n]->getNumberAccesses();
-      est_cost = s_timer_reg_access_time * num_accesses;
+      est_cost = d_timer_active_access_time * num_accesses;
 
       /*
        * If we are keeping exclusive or concurrent times, each access costs
@@ -2179,9 +2203,9 @@ void TimerManager::getFromInput(
 	std::string entry = timer_list[i];
 	addTimerToNameLists(entry);
       }
-      d_length_package_names      = d_package_names.getNumberItems();
-      d_length_class_names        = d_class_names.getNumberItems();
-      d_length_class_method_names = d_class_method_names.getNumberItems();
+      d_length_package_names      = d_package_names.getNumberOfItems();
+      d_length_class_names        = d_class_names.getNumberOfItems();
+      d_length_class_method_names = d_class_method_names.getNumberOfItems();
 
    }
 
@@ -2379,6 +2403,71 @@ void TimerManager::addTimerToNameLists(
    } // Nested if #1
 }
 
+double TimerManager::computeOverheadConstantActiveOrInactive(bool active) {
+   tbox::Pointer<tbox::Timer> outer_timer;
+   tbox::Pointer<tbox::Timer> inner_timer;
+
+   std::string outer_name( "TimerManger::Outer");
+   outer_timer = tbox::TimerManager::getManager()->getTimer(outer_name, true);
+
+   std::string inner_name( "TimerMangerInner" );
+   inner_timer = tbox::TimerManager::getManager()->getTimer(inner_name, active);
+
+   const int ntest = 1000;
+   for (int i = 0; i < ntest; i++) {
+      outer_timer->start();
+      inner_timer->start();
+      inner_timer->stop();
+      outer_timer->stop();
+   }
+
+   return ( outer_timer -> getTotalWallclockTime() - inner_timer -> getTotalWallclockTime() ) / (static_cast<double>(ntest));
+}
+
+void TimerManager::computeOverheadConstants(void) {
+
+   if( d_timer_active_access_time < 0.0 ) {
+
+      clearArrays();
+      d_timer_active_access_time   = computeOverheadConstantActiveOrInactive(false);
+
+      clearArrays();
+      d_timer_inactive_access_time = computeOverheadConstantActiveOrInactive(true);
+
+      clearArrays(); 
+   }
+}
+
+void TimerManager::clearArrays(void) {
+   /*
+    * Create a timer that measures overall solution time.  If the 
+    * application uses Tau, this timer will effectively measure 
+    * uninstrumented parts of the library.  Hence, use a different name 
+    * for the different cases to avoid confusion in the Tau analysis tool.
+    */
+#ifdef HAVE_TAU
+   d_main_timer = new Timer("UNINSTRUMENTED PARTS", 
+                            s_main_timer_identifier);
+#else 
+   d_main_timer = new Timer("TOTAL RUN TIME", 
+                            s_main_timer_identifier);
+#endif
+
+   const int max_timers = tbox::SAMRAIManager::getMaxNumberTimers();
+
+   d_timers.resizeArray( max_timers );
+   d_num_timers = 0;
+
+   d_inactive_timers.resizeArray( max_timers );
+   d_num_inactive_timers = 0;
+
+   d_running_timers.resizeArray( max_timers );
+   for (int i = 0; i < max_timers; i++) {
+      d_running_timers[i] = false;
+   }
+
+   d_exclusive_timer_stack.clearItems();
+}
 
 }
 }

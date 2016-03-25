@@ -1,69 +1,37 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/locally_active/LocallyActiveDataRefineSchedule.h $
 // Package:     SAMRAI data transfer
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1818 $
-// Modified:	$LastChangedDate: 2007-12-20 15:50:44 -0800 (Thu, 20 Dec 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2132 $
+// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
 // Description:	Refine schedule for locally-active data transfer between AMR levels
 //
  
 #ifndef included_xfer_LocallyActiveDataRefineSchedule
 #define included_xfer_LocallyActiveDataRefineSchedule
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
 #endif
 
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_hier_IntVector
 #include "IntVector.h"
-#endif
-#ifndef included_hier_LocallyActiveDataPatchLevelManager
 #include "LocallyActiveDataPatchLevelManager.h"
-#endif
-#ifndef included_hier_PatchHierarchy
 #include "PatchHierarchy.h"
-#endif
-#ifndef included_hier_PatchLevel
 #include "PatchLevel.h"
-#endif
-#ifndef included_hier_GridGeometry
 #include "GridGeometry.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_tbox_DescribedClass
 #include "tbox/DescribedClass.h"
-#endif
-#ifndef included_tbox_Pointer
 #include "tbox/Pointer.h"
-#endif
-#ifndef included_tbox_Schedule
 #include "tbox/Schedule.h"
-#endif
-#ifndef included_tbox_Timer
 #include "tbox/Timer.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataFillBoxSet
 #include "LocallyActiveDataFillBoxSet.h"
-#endif
-#ifndef included_xfer_RefineClasses
 #include "RefineClasses.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefinePatchStrategy
 #include "LocallyActiveDataRefinePatchStrategy.h"
-#endif
-#ifndef included_xfer_LocallyActiveDataRefineTransactionFactory
 #include "LocallyActiveDataRefineTransactionFactory.h"
-#endif
 
 namespace SAMRAI {
    namespace xfer {

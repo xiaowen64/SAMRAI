@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/variables/VariableDatabase.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/variables/VariableDatabase.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2043 $
+// Modified:	$LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description:	Singleton database class for managing variables and contexts.
 //
 
@@ -35,13 +35,13 @@ VariableDatabase<DIM>::getPatchDescriptor() const
 }
 
 template<int DIM> inline
-int VariableDatabase<DIM>::getNumberRegisteredPatchDataIndices() const
+int VariableDatabase<DIM>::getNumberOfRegisteredPatchDataIndices() const
 {
    return(d_num_registered_patch_data_ids);
 }
 
 template<int DIM> inline
-int VariableDatabase<DIM>::getNumberRegisteredVariableContexts() const
+int VariableDatabase<DIM>::getNumberOfRegisteredVariableContexts() const
 {
    // currently, we do not allow removal of variable contexts
    // so this suffices

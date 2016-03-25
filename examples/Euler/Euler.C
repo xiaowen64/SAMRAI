@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/Euler/Euler.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/Euler/Euler.C $
 // Package:     SAMRAI application
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Numerical routines for Euler equations SAMRAI example
 //
 
@@ -1699,11 +1699,11 @@ void Euler::boundaryReset(hier::Patch<NDIM>& patch,
    for (idir=0;idir<NDIM; idir++) {
       ibfirst(idir) = ifirst(idir) -1;
       iblast(idir)  = ifirst(idir) -1;
-      bdrybox.getBox(2*idir) = hier::Box<NDIM>(ibfirst,iblast);
+      bdrybox[2*idir] = hier::Box<NDIM>(ibfirst,iblast);
 
       ibfirst(idir) = ilast(idir) +1;
       iblast(idir)  = ilast(idir) +1;
-      bdrybox.getBox(2*idir+1) = hier::Box<NDIM>(ibfirst,iblast);
+      bdrybox[2*idir+1] = hier::Box<NDIM>(ibfirst,iblast);
    }
 
    for (idir=0;idir<NDIM; idir++) {
@@ -1715,9 +1715,9 @@ void Euler::boundaryReset(hier::Patch<NDIM>& patch,
       bdry_case = d_master_bdry_face_conds[bside];
 #endif
       if (bdry_case == REFLECT_BC) {
-         for (pdat::CellIterator<NDIM> ic(bdrybox.getBox(bside)); ic; ic++) {
+         for (pdat::CellIterator<NDIM> ic(bdrybox[bside]); ic; ic++) {
             for ( i = 0; i < num_domain_boxes; i++ ) {
-               if (domain_boxes.getBox(i).contains(ic()))
+               if (domain_boxes[i].contains(ic()))
                   bdry_cell = false;
             }
             if (bdry_cell) {
@@ -1742,9 +1742,9 @@ void Euler::boundaryReset(hier::Patch<NDIM>& patch,
       }
 // END SIMPLE-MINDED FIX FOR STEP PROBLEM
       if (bdry_case == REFLECT_BC) {
-         for (pdat::CellIterator<NDIM> ic(bdrybox.getBox(bnode)); ic; ic++) {
+         for (pdat::CellIterator<NDIM> ic(bdrybox[bnode]); ic; ic++) {
             for ( i = 0; i < num_domain_boxes; i++ ) {
-               if (domain_boxes.getBox(i).contains(ic()))
+               if (domain_boxes[i].contains(ic()))
                   bdry_cell = false;
             }
             if (bdry_cell) {
@@ -2271,6 +2271,8 @@ void Euler::tagGradientDetectorCells(hier::Patch<NDIM>& patch,
    const int tag_indx,
    const bool uses_richardson_extrapolation_too)
 {
+   (void) initial_error;
+
    t_taggradient->start();
 
    const int error_level_number = patch.getPatchLevelNumber();
@@ -2289,7 +2291,7 @@ void Euler::tagGradientDetectorCells(hier::Patch<NDIM>& patch,
     */
    hier::Box<NDIM> domain;
    for( int i=0; i < domain_boxes.getNumberOfBoxes(); i++ ) {
-     domain += domain_boxes(i);
+     domain += domain_boxes[i];
    }
 
    const hier::Index<NDIM> domfirst=domain.lower();
@@ -4374,7 +4376,7 @@ void Euler::checkBoundaryData(int btype,
 
    const tbox::Pointer<geom::CartesianPatchGeometry<NDIM> > pgeom = patch.getPatchGeometry();
    const tbox::Array<hier::BoundaryBox<NDIM> > bdry_boxes =
-      pgeom->getCodimensionBoundary(btype);
+      pgeom->getCodimensionBoundaries(btype);
 
    hier::VariableDatabase<NDIM>* vdb = hier::VariableDatabase<NDIM>::getDatabase();
 

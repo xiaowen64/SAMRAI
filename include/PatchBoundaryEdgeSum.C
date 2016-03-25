@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/algorithm/femutils/standard/PatchBoundaryEdgeSum.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/algorithm/femutils/standard/PatchBoundaryEdgeSum.C $
 // Package:	SAMRAI algorithms
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2039 $
+// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
 // Description:	Routines for summing edge data at patch boundaries
 //
 
@@ -244,8 +244,8 @@ template<int DIM> void PatchBoundaryEdgeSum<DIM>::registerSum(
          }
       }
 
-      char var_suffix[17];
-      sprintf(var_suffix, "%04d__depth=%04d", data_depth_id, data_depth);
+      std::string var_suffix = 	 tbox::Utilities::intToString(data_depth_id, 4) + 
+	 "__depth=" + tbox::Utilities::intToString(data_depth);
 
       std::string toedge_src_var_name = tmp_oedge_src_variable_name + var_suffix;
       d_tmp_oedge_src_variable[reg_sum_id] = var_db->getVariable(toedge_src_var_name);

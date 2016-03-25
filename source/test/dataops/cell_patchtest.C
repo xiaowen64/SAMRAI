@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/test/dataops/cell_patchtest.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/dataops/cell_patchtest.C $
 // Package:     SAMRAI algorithms
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2141 $
+// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
 // Description: Main program to test cell patch data operations.
 //
 
@@ -86,7 +86,7 @@ int main( int argc, char *argv[] ) {
       indxhi(1) = 4;
       hier::Box<NDIM> patch_box(indxlo, indxhi); 
       hier::BoxArray<NDIM> grid_domain(1);
-      grid_domain(0) = patch_box;
+      grid_domain[0] = patch_box;
       hier::IntVector<NDIM> ratio(1);
 
       geom::CartesianGridGeometry<NDIM> geometry("CartesianGeometry",

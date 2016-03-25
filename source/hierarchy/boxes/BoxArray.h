@@ -1,30 +1,20 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/hierarchy/boxes/BoxArray.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/BoxArray.h $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1704 $
-// Modified:	$LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2142 $
+// Modified:	$LastChangedDate: 2008-04-23 08:45:19 -0700 (Wed, 23 Apr 2008) $
 // Description:	An array of boxes that complements BoxList
 //
 
 #ifndef included_hier_BoxArray
 #define included_hier_BoxArray
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
-#ifndef included_tbox_Array
 #include "tbox/Array.h"
-#endif
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
-#ifndef included_tbox_DatabaseBox
 #include "tbox/DatabaseBox.h"
-#endif
-#ifndef included_tbox_PIO
 #include "tbox/PIO.h"
-#endif
 #ifndef included_iostream
 #define included_iostream
 #include <iostream>
@@ -111,6 +101,7 @@ public:
     */
    int size() const;
 
+#if (INCLUDE_DEPRECATED <= 2)
    /**
     * Return a reference to the i-th box.  No bounds checking.
     */
@@ -121,15 +112,47 @@ public:
     */
    const Box<DIM>& getBox(const int i) const;
 
+
    /**
-    * Return a reference to the i-th box.  No bounds checking.
+    * Return a reference to the i-th box.
+    *
+    * When assertion checking is active non-recoverable exception
+    * results when array bounds are violated.
+    *
+    * DEPRECATED:  The operator[] method should be used instead of this one.
     */
    Box<DIM>& operator()(const int i);
 
    /**
-    * Return a const reference to the i-th box.  No bounds checking.
+    * Return a const reference to the i-th box.
+    *
+    * When assertion checking is active non-recoverable exception
+    * results when array bounds are violated.
+    *
+    * DEPRECATED:  The operator[] method should be used instead of this one.
     */
    const Box<DIM>& operator()(const int i) const;
+#endif
+
+   /**
+    * Non-const array subscripting.  Return a reference the box at array
+    * index ``i'' (between 0 and N-1, where N is the number of elements in
+    * the array.
+    *
+    * When assertion checking is active non-recoverable exception
+    * results when array bounds are violated.
+    */
+   Box<DIM>& operator[](const int i);
+
+   /**
+    * Const array subscripting.  Return a const reference to the box
+    * at array index ``i'' (between 0 and N-1, where N is the number of
+    * elements in the array.
+    *
+    * When assertion checking is active non-recoverable exception
+    * results when array bounds are violated.
+    */
+   const Box<DIM>& operator[](const int i) const;
 
    /**
     * Create a BoxArray<DIM> from a tbox::Array<tbox::DatabaseBox>.

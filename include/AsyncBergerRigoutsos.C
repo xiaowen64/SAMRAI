@@ -1,13 +1,15 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/source/mesh/clustering/AsyncBergerRigoutsos.C $
- * Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1704 $
- * Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/clustering/AsyncBergerRigoutsos.C $
+ * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+ * Revision:    $LastChangedRevision: 2172 $
+ * Modified:    $LastChangedDate: 2008-05-02 11:02:08 -0700 (Fri, 02 May 2008) $
  * Description: Asynchronous Berger-Rigoutsos algorithm wrapper
  */
 
 #ifndef included_mesh_AsyncBergerRigoutsos_C
 #define included_mesh_AsyncBergerRigoutsos_C
+
+#include <stdlib.h>
 
 #include "AsyncBergerRigoutsos.h"
 
@@ -251,7 +253,7 @@ void AsyncBergerRigoutsos<DIM>::findBoxesContainingTags(
          typename hier::LayerNodeSet<DIM>::NodeContainer::const_iterator ni;
          for ( ni=new_nodes.begin(); ni!=new_nodes.end(); ++ni ) {
             const typename hier::LayerNodeSet<DIM>::Node &node = *ni;
-            new_box_array(box_id++) = node.getBox();
+            new_box_array[box_id++] = node.getBox();
          }
       }
       boxes = hier::BoxList<DIM>(new_box_array);

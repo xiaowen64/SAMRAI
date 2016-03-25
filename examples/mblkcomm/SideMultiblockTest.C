@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/mblkcomm/SideMultiblockTest.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/SideMultiblockTest.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: AMR communication tests for side-centered patch data
 //
 
@@ -173,18 +173,18 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
       pgeom = patch.getPatchGeometry();
 
    const tbox::Array<hier::BoundaryBox<NDIM> > node_bdry = 
-      pgeom->getCodimensionBoundary(NDIM);
+      pgeom->getCodimensionBoundaries(NDIM);
    const int num_node_bdry_boxes = node_bdry.getSize();
 
 #if (NDIM > 1)
    const tbox::Array<hier::BoundaryBox<NDIM> > edge_bdry = 
-      pgeom->getCodimensionBoundary(NDIM - 1);
+      pgeom->getCodimensionBoundaries(NDIM - 1);
    const int num_edge_bdry_boxes = edge_bdry.getSize();
 #endif
 
 #if (NDIM == 3)
    const tbox::Array<hier::BoundaryBox<NDIM> > face_bdry = 
-      pgeom->getCodimensionBoundary(NDIM - 2);
+      pgeom->getCodimensionBoundaries(NDIM - 2);
    const int num_face_bdry_boxes = face_bdry.getSize();
 #endif
 
@@ -571,7 +571,7 @@ bool SideMultiblockTest::verifyResults(
 
       for (int b = 0; b < NDIM; b++) {
          tbox::Array<hier::BoundaryBox<NDIM> > bdry =
-            pgeom->getCodimensionBoundary(b+1);
+            pgeom->getCodimensionBoundaries(b+1);
 
          for (int k = 0; k < bdry.size(); k++) {
             hier::Box<NDIM> fill_box = pgeom->getBoundaryFillBox(bdry[k],

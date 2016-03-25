@@ -1,8 +1,8 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/dlbg/LayerNode.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/dlbg/LayerNode.h $
  * Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 1859 $
- * Modified:    $LastChangedDate: 2008-01-15 07:55:41 -0800 (Tue, 15 Jan 2008) $
+ * Revision:    $LastChangedRevision: 2132 $
+ * Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
  * Description: Node in the distribued box graph.
  */
 
@@ -11,13 +11,9 @@
 
 #include <iostream>
 
-#ifndef included_SAMRAI_config
 #include "SAMRAI_config.h"
-#endif
 
-#ifndef included_hier_Box
 #include "Box.h"
-#endif
 
 namespace SAMRAI {
    namespace hier {

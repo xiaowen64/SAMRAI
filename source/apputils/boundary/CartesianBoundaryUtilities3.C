@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/apputils/boundary/CartesianBoundaryUtilities3.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/boundary/CartesianBoundaryUtilities3.C $
 // Package:     SAMRAI application utilities
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1892 $
-// Modified:    $LastChangedDate: 2008-01-23 08:29:36 -0800 (Wed, 23 Jan 2008) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2147 $
+// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description: Utility routines for manipulating 3D Cartesian boundary data
 //
 
@@ -15,6 +15,7 @@
 #include "BoundaryBox.h"
 #include "CellIndex.h"
 #include "tbox/Utilities.h"
+#include "tbox/MathUtilities.h"
 
 /*
 *************************************************************************
@@ -215,7 +216,7 @@ void CartesianBoundaryUtilities3::fillFaceBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array<hier::BoundaryBox<3> >& face_bdry =
-      pgeom->getCodimensionBoundary(FACE3D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(FACE3D_BDRY_TYPE);
    for (int i = 0; i < face_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(face_bdry[i].getBoundaryType() == FACE3D_BDRY_TYPE);
@@ -296,7 +297,7 @@ void CartesianBoundaryUtilities3::fillEdgeBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array<hier::BoundaryBox<3> >& edge_bdry =
-      pgeom->getCodimensionBoundary(EDGE3D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(EDGE3D_BDRY_TYPE);
    for (int i = 0; i < edge_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(edge_bdry[i].getBoundaryType() == EDGE3D_BDRY_TYPE);
@@ -377,7 +378,7 @@ void CartesianBoundaryUtilities3::fillNodeBoundaryData(
                                                       ghost_fill_width);
 
    const tbox::Array<hier::BoundaryBox<3> >& node_bdry =
-      pgeom->getCodimensionBoundary(NODE3D_BDRY_TYPE);
+      pgeom->getCodimensionBoundaries(NODE3D_BDRY_TYPE);
    for (int i = 0; i < node_bdry.getSize(); i++) {
 #ifdef DEBUG_CHECK_ASSERTIONS
       TBOX_ASSERT(node_bdry[i].getBoundaryType() == NODE3D_BDRY_TYPE);
@@ -742,7 +743,7 @@ int CartesianBoundaryUtilities3::checkBdryData(
       pdat::CellIndex<3> check = ic();
       for (int p = 0; p < gbox_to_check.numberCells(idir); p++) {
          double offcheckval = checkval + dxfact * (p + 1);
-         if ((*vardata)(check, depth) != offcheckval) {
+         if (!tbox::MathUtilities<double>::equalEps( (*vardata)(check, depth) ,offcheckval)) {
             num_bad_values++;
             TBOX_WARNING("Bad " << bdry_type_str
                          << " boundary value for " << varname

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-0/examples/communication/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/communication/main.C $
 // Package:     SAMRAI tests
-// Copyright:   (c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1704 $
-// Modified:    $LastChangedDate: 2007-11-13 16:32:40 -0800 (Tue, 13 Nov 2007) $
+// Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:    $LastChangedRevision: 2043 $
+// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
 // Description: Main program for patch data communication tests.
 //
 
@@ -386,7 +386,7 @@ int main( int argc, char *argv[] )
        */ 
 
       tbox::Pointer<hier::PatchHierarchy<NDIM> > patch_hierarchy = comm_tester->getPatchHierarchy();
-      const int nlevels = patch_hierarchy->getNumberLevels();
+      const int nlevels = patch_hierarchy->getNumberOfLevels();
 
       if (do_refine) {
 

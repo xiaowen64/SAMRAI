@@ -1,7 +1,7 @@
 //
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/geometry/skeleton/grid_geom/BlockGridGeometry.C $
 // Package:	SAMRAI geometry package
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
 // Revision:	$LastChangedRevision: 878 $
 // Modified:	$LastChangedDate: 2006-01-09 16:55:30 -0800 (Mon, 09 Jan 2006) $
 // Description: Simple Block grid geometry for an AMR hierarchy.
@@ -216,12 +216,12 @@ BlockGridGeometry<DIM>::makeCoarsenedGridGeometry(
    const hier::BoxArray<DIM>& fine_domain = this -> getPhysicalDomain();
    const int nboxes = fine_domain.getNumberOfBoxes();
    for (int ib = 0; ib < nboxes; ib++) {
-      hier::Box<DIM> testbox = hier::Box<DIM>::refine(coarse_domain.getBox(ib), coarsen_ratio);
-      if (testbox != fine_domain.getBox(ib)) {
+      hier::Box<DIM> testbox = hier::Box<DIM>::refine(coarse_domain[ib], coarsen_ratio);
+      if (testbox != fine_domain[ib]) {
 #ifdef DEBUG_CHECK_ASSERTIONS
          tbox::plog << "BlockGridGeometry::makeCoarsenedGridGeometry : Box # " << ib << std::endl;
-         tbox::plog << "      fine box = " << fine_domain.getBox(ib) << std::endl;
-         tbox::plog << "      coarse box = " << coarse_domain.getBox(ib) << std::endl;
+         tbox::plog << "      fine box = " << fine_domain[ib] << std::endl;
+         tbox::plog << "f      coarse box = " << coarse_domain[ib] << std::endl;
          tbox::plog << "      refined coarse box = " << testbox << std::endl;
 #endif
          TBOX_ERROR("geom::BlockGridGeometry::makeCoarsenedGridGeometry() error...\n"

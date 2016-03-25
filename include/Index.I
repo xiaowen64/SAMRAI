@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-2-1/source/hierarchy/boxes/Index.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/Index.I $
 // Package:	SAMRAI hierarchy
-// Copyright:	(c) 1997-2007 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1846 $
-// Modified:	$LastChangedDate: 2008-01-11 09:51:05 -0800 (Fri, 11 Jan 2008) $
+// Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
+// Revision:	$LastChangedRevision: 2147 $
+// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
 // Description:	Interface for the AMR Index object
 //
 
@@ -24,7 +24,6 @@ Index<DIM>::Index(const int i) : IntVector<DIM>(i)
 {
 }
 
-#if INCLUDE_DEPRACATED < 2
 template<int DIM> inline
 Index<DIM>::Index(const int i, const int j) : IntVector<DIM>(i,j)
 {
@@ -35,7 +34,6 @@ Index<DIM>::Index(const int i, const int j, const int k)
 :  IntVector<DIM>(i,j,k)
 {
 }
-#endif
 
 template<int DIM> inline
 Index<DIM>::Index(const tbox::Array<int> i)
