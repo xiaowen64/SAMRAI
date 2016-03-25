@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/communication/main.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/examples/communication/main.C $
 // Package:     SAMRAI tests
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+// Revision:    $LastChangedRevision: 2407 $
+// Modified:    $LastChangedDate: 2008-10-08 14:23:05 -0700 (Wed, 08 Oct 2008) $
 // Description: Main program for patch data communication tests.
 //
 
@@ -205,6 +205,12 @@ int main( int argc, char *argv[] )
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
+       * Create timers from input data to check performance of comm. operations.
+       */
+   
+      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
+
+      /*
        * Retrieve "GlobalInputs" section of the input database and set
        * values accordingly.
        */
@@ -352,20 +358,9 @@ int main( int argc, char *argv[] )
 	    input_db->getDatabase("StandardTaggingAndInitializer"));
 
       comm_tester->setupHierarchy(input_db, cell_tagger);
-
-      tbox::plog << "Specified input file is: " << input_filename << endl;
-
-      tbox::plog << "\nInput file data is ...." << endl;
-      input_db->printClassData(tbox::plog); 
    
       tbox::plog << "\nCheck hier::Variable<NDIM> database..." << endl;
       hier::VariableDatabase<NDIM>::getDatabase()->printClassData(tbox::plog);
-
-      /*
-       * Create timers from input data to check performance of comm. operations.
-       */
-   
-      tbox::TimerManager::createManager(input_db->getDatabase("TimerManager"));
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
@@ -380,12 +375,18 @@ int main( int argc, char *argv[] )
 	 time_man->getTimer("test::main::performCoarsenOperations"); 
 
       tbox::TimerManager::getManager()->resetAllTimers();
+
+      tbox::plog << "Specified input file is: " << input_filename << endl;
+
+      tbox::plog << "\nInput file data is ...." << endl;
+      input_db->printClassData(tbox::plog); 
    
       /*
        * Create communication schedules and perform communication operations.
        */ 
 
       tbox::Pointer<hier::PatchHierarchy<NDIM> > patch_hierarchy = comm_tester->getPatchHierarchy();
+      patch_hierarchy->recursivePrint( tbox::plog, "H-> ", 3 );
       const int nlevels = patch_hierarchy->getNumberOfLevels();
 
       if (do_refine) {

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/side/SideVariable.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/side/SideVariable.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2856 $
+// Modified:	$LastChangedDate: 2009-01-30 13:58:39 -0800 (Fri, 30 Jan 2009) $
 // Description:	hier::Variable class for defining side centered variables
 //
 
@@ -54,10 +54,11 @@ SideVariable<DIM,TYPE>::SideVariable(
       for (int id = 0; id < DIM; id++) {
          d_directions(id) = ( (direction == id) ? 1 : 0 );  
       }  
-      setPatchDataFactory(new SideDataFactory<DIM,TYPE>(depth,
-                                                          hier::IntVector<DIM>(0),
-                                                          d_directions,
-                                                          fine_boundary_represents_var));
+      setPatchDataFactory(new SideDataFactory<DIM,TYPE>(
+                             depth,
+                             hier::IntVector<DIM>(0),
+                             fine_boundary_represents_var,
+                             d_directions));
    }
 }
 

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/packages/petsc/SNES_SAMRAIContext.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/solvers/packages/petsc/SNES_SAMRAIContext.h $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 3281 $
+// Modified:    $LastChangedDate: 2009-06-17 19:10:03 -0700 (Wed, 17 Jun 2009) $
 // Description: Wrapper for SNES solver for use in a SAMRAI-based application.
 //
 
@@ -16,12 +16,14 @@
 ************************************************************************
 */
 
+#include "tbox/SAMRAI_MPI.h"
+
 #ifdef HAVE_PETSC
-#ifndef included_petsc_snes
-#define included_petsc_snes
+
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
+
 extern "C" {
 #ifdef PETSC2028
 #include "snes.h"
@@ -29,7 +31,11 @@ extern "C" {
 #include "petscsnes.h"
 #endif
 }
+
+#ifndef MPICH_SKIP_MPICXX
+#define MPICH_SKIP_MPICXX
 #endif
+
 #endif
 
 #include "SAMRAI_config.h"

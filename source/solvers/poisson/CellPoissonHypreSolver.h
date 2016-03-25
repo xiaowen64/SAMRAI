@@ -1,9 +1,9 @@
 /*
- * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/poisson/CellPoissonHypreSolver.h $
+ * File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/solvers/poisson/CellPoissonHypreSolver.h $
  * Package:     SAMRAI solvers
  * Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
- * Revision:    $LastChangedRevision: 2270 $
- * Modified:    $LastChangedDate: 2008-07-07 09:47:47 -0700 (Mon, 07 Jul 2008) $
+ * Revision:    $LastChangedRevision: 3276 $
+ * Modified:    $LastChangedDate: 2009-06-17 10:19:07 -0700 (Wed, 17 Jun 2009) $
  * Description:	Hypre solver interface for diffusion-like elliptic problems.
  */
 
@@ -11,6 +11,8 @@
 #define included_solv_CellPoissonHypreSolver
 
 #include "SAMRAI_config.h"
+
+#include "tbox/SAMRAI_MPI.h"
 
 #ifdef HAVE_HYPRE
 

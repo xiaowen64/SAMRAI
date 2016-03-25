@@ -61,6 +61,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -139,8 +140,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C					\
 	LocallyActiveDataCoarsenPatchStrategy.C				\
 	LocallyActiveDataCoarsenSchedule.C				\
@@ -275,6 +276,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -350,8 +352,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C					\
 	LocallyActiveDataCoarsenPatchStrategy.C				\
 	LocallyActiveDataCoarsenTransactionFactory.C			\
@@ -486,6 +488,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -525,8 +528,8 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
@@ -562,6 +565,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -601,8 +605,8 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C LocallyActiveDataFillBox.C
 endif
 
@@ -659,6 +663,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -730,8 +735,8 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C LocallyActiveDataFillBox.C	\
 	LocallyActiveDataFillBoxSet.C					\
 	LocallyActiveDataRefinePatchStrategy.C				\
@@ -772,6 +777,7 @@ DEPENDS_7:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -813,8 +819,8 @@ DEPENDS_7 +=\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C LocallyActiveDataFillBox.C	\
 	LocallyActiveDataFillBoxSet.C
 endif
@@ -871,6 +877,7 @@ DEPENDS_8:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -940,8 +947,8 @@ DEPENDS_8 +=\
 	$(INCLUDE_SAM)/RefineOperator.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C LocallyActiveDataFillBox.C	\
 	LocallyActiveDataFillBoxSet.C					\
 	LocallyActiveDataRefinePatchStrategy.C				\
@@ -992,6 +999,7 @@ DEPENDS_9:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -1046,8 +1054,8 @@ DEPENDS_9 +=\
 	$(INCLUDE_SAM)/RefineClasses.C $(INCLUDE_SAM)/RefineOperator.C	\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
@@ -1195,6 +1203,7 @@ DEPENDS_11:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -1253,8 +1262,8 @@ DEPENDS_11 +=\
 	$(INCLUDE_SAM)/RefineTimeTransaction.C				\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C					\
 	LocallyActiveDataRefineTransactionFactory.C
 endif

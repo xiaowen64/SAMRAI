@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/base/ShutdownRegistry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/base/ShutdownRegistry.h $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2410 $
+// Modified:	$LastChangedDate: 2008-10-08 14:30:40 -0700 (Wed, 08 Oct 2008) $
 // Description:	Registry of shutdown routines to be called at program exit
 //
 
@@ -76,7 +76,8 @@ struct ShutdownRegistry
    static const unsigned char priorityStatistician            = 70;
    static const unsigned char priorityBoundaryLookupTable     = 80;
    static const unsigned char priorityHierarchyDataOpsManager = 90;
-   static const unsigned char priorityTimerManger             = 100;
+   static const unsigned char priorityTimers                  = 95;
+   static const unsigned char priorityTimerManger             = 98;
 
 private:
 

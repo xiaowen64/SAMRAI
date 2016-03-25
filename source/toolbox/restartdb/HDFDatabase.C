@@ -1,11 +1,13 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/restartdb/HDFDatabase.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/restartdb/HDFDatabase.C $
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2220 $
-// Modified:    $LastChangedDate: 2008-06-17 18:19:28 -0700 (Tue, 17 Jun 2008) $
+// Revision:    $LastChangedRevision: 2620 $
+// Modified:    $LastChangedDate: 2008-11-19 14:24:28 -0800 (Wed, 19 Nov 2008) $
 // Description: A database structure that stores HDF5 format data.
 //
+
+#include <cstring>
 
 #include "tbox/HDFDatabase.h"
 
@@ -443,14 +445,14 @@ Array<std::string> HDFDatabase::getAllKeys()
 enum Database::DataType HDFDatabase::getArrayType(const std::string& key)
 {
 
-   enum Database::DataType type = Database::INVALID;
+   enum Database::DataType type = Database::SAMRAI_INVALID;
 
    herr_t errf;
 
    if (!key.empty()) {
 
       if(isDatabase(key)) {
-	 type = Database::DATABASE;
+	 type = Database::SAMRAI_DATABASE;
       } else {
 
 	 hid_t this_set;
@@ -466,55 +468,55 @@ enum Database::DataType HDFDatabase::getArrayType(const std::string& key)
 	       
 	       switch (type_key) {
 		  case KEY_DATABASE:
-		     type = Database::DATABASE;
+		     type = Database::SAMRAI_DATABASE;
 		     break;
 		  case KEY_BOOL_ARRAY:
-		     type = Database::BOOL;
+		     type = Database::SAMRAI_BOOL;
 		     break;
 		  case KEY_BOX_ARRAY:
-		     type = Database::BOX;
+		     type = Database::SAMRAI_BOX;
 		     break;
 		  case KEY_CHAR_ARRAY:
-		     type = Database::CHAR;
+		     type = Database::SAMRAI_CHAR;
 		     break;
 		  case KEY_COMPLEX_ARRAY:
-		     type = Database::COMPLEX;
+		     type = Database::SAMRAI_COMPLEX;
 		     break;
 		  case KEY_DOUBLE_ARRAY:
-		     type = Database::DOUBLE;
+		     type = Database::SAMRAI_DOUBLE;
 		     break;
 		  case KEY_FLOAT_ARRAY:
-		     type = Database::FLOAT;
+		     type = Database::SAMRAI_FLOAT;
 		     break;
 		  case KEY_INT_ARRAY:
-		     type = Database::INT;
+		     type = Database::SAMRAI_INT;
 		     break;
 		  case KEY_STRING_ARRAY:
-		     type = Database::STRING;
+		     type = Database::SAMRAI_STRING;
 		     break;
 		  case KEY_BOOL_SCALAR:
-		     type = Database::BOOL;
+		     type = Database::SAMRAI_BOOL;
 		     break;
 		  case KEY_BOX_SCALAR:
-		     type = Database::BOX;
+		     type = Database::SAMRAI_BOX;
 		     break;
 		  case KEY_CHAR_SCALAR:
-		     type = Database::CHAR;
+		     type = Database::SAMRAI_CHAR;
 		     break;
 		  case KEY_COMPLEX_SCALAR:
-		     type = Database::COMPLEX;
+		     type = Database::SAMRAI_COMPLEX;
 		     break;
 		  case KEY_DOUBLE_SCALAR:
-		     type = Database::DOUBLE;
+		     type = Database::SAMRAI_DOUBLE;
 		     break;
 		  case KEY_FLOAT_SCALAR:
-		     type = Database::FLOAT;
+		     type = Database::SAMRAI_FLOAT;
 		     break;
 		  case KEY_INT_SCALAR:
-		     type = Database::INT;
+		     type = Database::SAMRAI_INT;
 		     break;
 		  case KEY_STRING_SCALAR:
-		     type = Database::STRING;
+		     type = Database::SAMRAI_STRING;
 		     break;
 	       }
 

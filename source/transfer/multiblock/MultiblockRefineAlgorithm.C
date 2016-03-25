@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefineAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/multiblock/MultiblockRefineAlgorithm.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 3153 $
+// Modified:    $LastChangedDate: 2009-04-21 17:12:47 -0700 (Tue, 21 Apr 2009) $
 // Description: Base class for geometry management on patches
 //
 
@@ -121,8 +121,28 @@ MultiblockRefineAlgorithm<DIM>::createSchedule(
 */
 
 template<int DIM>
+tbox::Pointer< MultiblockRefineSchedule<DIM> >
+MultiblockRefineAlgorithm<DIM>::createSchedule(
+   tbox::Pointer< hier::MultiblockPatchLevel<DIM> > level,
+   const int next_coarser_level,
+   tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock,
+   MultiblockRefinePatchStrategy<DIM>* refine_strategy,
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
+   const
+{
+   return (createSchedule("DEFAULT_FILL",
+                          level,
+                          next_coarser_level,
+                          multiblock,
+                          refine_strategy,
+                          transaction_factory));
+
+}
+
+template<int DIM>
 tbox::Pointer< MultiblockRefineSchedule<DIM> > 
 MultiblockRefineAlgorithm<DIM>::createSchedule(
+   const std::string& fill_pattern,
    tbox::Pointer< hier::MultiblockPatchLevel<DIM> > level,
    const int next_coarser_level,
    tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock,
@@ -138,7 +158,7 @@ MultiblockRefineAlgorithm<DIM>::createSchedule(
       trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
    }
 
-   return(new MultiblockRefineSchedule<DIM>("DEFAULT_FILL",
+   return(new MultiblockRefineSchedule<DIM>(fill_pattern,
                                             level,
                                             level,
                                             next_coarser_level,
@@ -165,6 +185,28 @@ MultiblockRefineAlgorithm<DIM>::createSchedule(
    tbox::Pointer< hier::MultiblockPatchLevel<DIM> > src_level,
    const int next_coarser_level,
    tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock,
+   MultiblockRefinePatchStrategy<DIM>* refine_strategy,
+   tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
+   const
+{
+   return (createSchedule("DEFAULT_FILL",
+                          dst_level,
+                          src_level,
+                          next_coarser_level,
+                          multiblock,
+                          refine_strategy,
+                          transaction_factory));
+
+}
+
+template<int DIM>
+tbox::Pointer< MultiblockRefineSchedule<DIM> >
+MultiblockRefineAlgorithm<DIM>::createSchedule(
+   const std::string& fill_pattern,
+   tbox::Pointer< hier::MultiblockPatchLevel<DIM> > dst_level,
+   tbox::Pointer< hier::MultiblockPatchLevel<DIM> > src_level,
+   const int next_coarser_level,
+   tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock,
    MultiblockRefinePatchStrategy<DIM>* refine_strategy,                         
    tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory)
    const
@@ -177,7 +219,7 @@ MultiblockRefineAlgorithm<DIM>::createSchedule(
       trans_factory = new xfer::StandardRefineTransactionFactory<DIM>;
    }
 
-   return(new MultiblockRefineSchedule<DIM>("DEFAULT_FILL",
+   return(new MultiblockRefineSchedule<DIM>(fill_pattern,
                                             dst_level,
                                             src_level,
                                             next_coarser_level,

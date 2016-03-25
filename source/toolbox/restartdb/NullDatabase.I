@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/toolbox/restartdb/NullDatabase.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/restartdb/NullDatabase.I $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2205 $
-// Modified:	$LastChangedDate: 2008-06-04 16:28:56 -0700 (Wed, 04 Jun 2008) $
+// Revision:	$LastChangedRevision: 2620 $
+// Modified:	$LastChangedDate: 2008-11-19 14:24:28 -0800 (Wed, 19 Nov 2008) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -122,7 +122,7 @@ inline
 Database::DataType NullDatabase::getArrayType(const std::string& key)
 {
    NULL_USE(key);
-   return Database::INVALID;
+   return Database::SAMRAI_INVALID;
 }
 
 /*

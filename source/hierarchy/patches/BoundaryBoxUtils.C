@@ -2,8 +2,8 @@
 // File:	$URL$
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2006 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2147 $
-// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:	$LastChangedRevision: 2350 $
+// Modified:	$LastChangedDate: 2008-09-10 11:21:21 -0700 (Wed, 10 Sep 2008) $
 // Description:	Generic utilities for boundary box calculus.
 //
 
@@ -179,20 +179,6 @@ void BoundaryBoxUtils<DIM>::extendBoxOutward(
    for ( int d=0; d<DIM; ++d ) {
       if      ( d_outward(d) == -1 ) box.growLower(d, extension(d));
       else if ( d_outward(d) ==  1 ) box.growUpper(d, extension(d));
-   }
-   return;
-}
-
-
-template<int DIM>
-void BoundaryBoxUtils<DIM>::shiftBoxInward(
-   Box<DIM>& box,
-   const hier::IntVector<DIM> &distance ) const
-{
-   box = d_bbox.getBox();
-   for ( int d=0; d<DIM; ++d ) {
-      if      ( d_outward(d) == -1 ) box.shift(d,  distance(d));
-      else if ( d_outward(d) ==  1 ) box.shift(d, -distance(d));
    }
    return;
 }

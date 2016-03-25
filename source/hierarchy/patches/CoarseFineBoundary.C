@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/patches/CoarseFineBoundary.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/hierarchy/patches/CoarseFineBoundary.C $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2141 $
-// Modified:	$LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
+// Revision:	$LastChangedRevision: 3153 $
+// Modified:	$LastChangedDate: 2009-04-21 17:12:47 -0700 (Tue, 21 Apr 2009) $
 // Description:	For describing coarse-fine boundary interfaces
 //
 
@@ -256,137 +256,145 @@ template<int DIM> void CoarseFineBoundary<DIM>::computeFromLevel(
 
       clear(i);
 
-      d_npatches[i] = block_level->getNumberOfPatches();
+      if (block_level.isNull()) {
+         d_npatches[i] = 0;
+      } else {
+         d_npatches[i] = block_level->getNumberOfPatches();
 
-      const hier::IntVector<DIM>& ratio = block_level->getRatio();
+         const hier::IntVector<DIM>& ratio = block_level->getRatio();
 
-      tbox::Pointer< hier::GridGeometry<DIM> > grid_geometry =
-         block_level->getGridGeometry();
+         tbox::Pointer< hier::GridGeometry<DIM> > grid_geometry =
+            block_level->getGridGeometry();
 
-      BoxArray<DIM> phys_domain(block_level0->getBoxes());
-      BoxArray<DIM> level_domain(block_level->getBoxes());
+         BoxArray<DIM> phys_domain(block_level0->getBoxes());
+         BoxArray<DIM> level_domain(block_level->getBoxes());
 
-      phys_domain.refine(ratio);
+         phys_domain.refine(ratio);
 
-      /*
-       * Create a pseudo-domain -- the union of the current level's boxes
-       * on all blocks in terms of the current block's index space.
-       */
+         /*
+          * Create a pseudo-domain -- the union of the current level's boxes
+          * on all blocks in terms of the current block's index space.
+          */
 
-      BoxList<DIM> pseudo_domain(phys_domain);
+         BoxList<DIM> pseudo_domain(phys_domain);
 
-      for (typename tbox::List< typename MultiblockPatchHierarchy<DIM>::Neighbor>::Iterator
-           ni(d_mblk_hierarchy->getNeighbors(i)); ni; ni++) {
+         for (typename tbox::List< typename MultiblockPatchHierarchy<DIM>::Neighbor>::Iterator
+              ni(d_mblk_hierarchy->getNeighbors(i)); ni; ni++) {
 
-         BoxList<DIM> neighbor_domain(ni().d_translated_domain);
-         neighbor_domain.refine(ratio);
+            BoxList<DIM> neighbor_domain(ni().d_translated_domain);
+            neighbor_domain.refine(ratio);
 
-         pseudo_domain.unionBoxes(neighbor_domain);
+            pseudo_domain.unionBoxes(neighbor_domain);
 
-      } 
+         } 
 
-      /*
-       * In reduced connectivity case, add a box at the singularity point
-       * to the pseudo-domain.
-       */
+         /*
+          * In reduced connectivity case, add a box at the singularity point
+          * to the pseudo-domain.
+          */
 
-      if (d_mblk_hierarchy->reducedConnectivityExists(i)) {
-         BoxList<DIM> sing_boxes(d_mblk_hierarchy->getSingularityBoxList(i));
-         sing_boxes.refine(ratio);
+         if (d_mblk_hierarchy->reducedConnectivityExists(i)) {
+            BoxList<DIM> sing_boxes(d_mblk_hierarchy->getSingularityBoxList(i));
+            sing_boxes.refine(ratio);
+   
+            sing_boxes.grow(max_ghost_width);
 
-         sing_boxes.grow(max_ghost_width);
-
-         sing_boxes.removeIntersections(pseudo_domain);
-         pseudo_domain.unionBoxes(sing_boxes);
-      }
-
-      /*
-       * Make a list containing the level boxes for the current block,
-       * then add more boxes as a buffer around physical domain boundaries.
-       * This prevents physical boundaries from being identified as coarse-fine
-       * boundaries.
-       */ 
-
-      BoxList<DIM> adjusted_level_domain_list(level_domain);
-
-      int num_patches = block_level->getNumberOfPatches();
-      for (int p = 0; p < num_patches; p++) {
-         if (block_level->patchTouchesRegularBoundary(p)) {
-            const Box<DIM>& patch_box = block_level->getBoxForPatch(p);
-
-            BoxList<DIM> no_shift_boxes(patch_box);
-            no_shift_boxes.grow(max_ghost_width);
-            no_shift_boxes.removeIntersections(pseudo_domain);
-            adjusted_level_domain_list.unionBoxes(no_shift_boxes);
-
+            sing_boxes.removeIntersections(pseudo_domain);
+            pseudo_domain.unionBoxes(sing_boxes);
          }
-      }
 
-      /*
-       * Add buffer of boxes that exist on the current level across
-       * block boundaries from the current block.  This prevents block
-       * boundaries from being identified as coarse-fine boundaries when they
-       * are not.
-       */
-      for (typename tbox::List<typename MultiblockPatchHierarchy<DIM>::Neighbor>::Iterator
-           ni(d_mblk_hierarchy->getNeighbors(i)); ni; ni++) {
+         /*
+          * Make a list containing the level boxes for the current block,
+          * then add more boxes as a buffer around physical domain boundaries.
+          * This prevents physical boundaries from being identified as coarse-fine
+          * boundaries.
+          */ 
 
-         tbox::Pointer< hier::PatchLevel<DIM> > neighbor_level =
-            level.getPatchLevelForBlock(ni().d_id);
+         BoxList<DIM> adjusted_level_domain_list(level_domain);
 
-         hier::BoxArray<DIM> neighbor_boxes(neighbor_level->getBoxes());
+         int num_patches = block_level->getNumberOfPatches();
+         for (int p = 0; p < num_patches; p++) {
+            if (block_level->patchTouchesRegularBoundary(p)) {
+               const Box<DIM>& patch_box = block_level->getBoxForPatch(p);
 
-         if (neighbor_boxes.size()) {
-            d_mblk_hierarchy->translateBoxArray(neighbor_boxes,
-                                                ratio,
-                                                i,
-                                                ni().d_id);
+               BoxList<DIM> no_shift_boxes(patch_box);
+               no_shift_boxes.grow(max_ghost_width);
+               no_shift_boxes.removeIntersections(pseudo_domain);
+               adjusted_level_domain_list.unionBoxes(no_shift_boxes);
 
-            BoxList<DIM> neighbor_boxes_to_add(phys_domain);
-            neighbor_boxes_to_add.grow(max_ghost_width);
-
-            neighbor_boxes_to_add.intersectBoxes(neighbor_boxes);
-
-            adjusted_level_domain_list.unionBoxes(neighbor_boxes_to_add); 
+            }
          }
+
+         /*
+          * Add buffer of boxes that exist on the current level across
+          * block boundaries from the current block.  This prevents block
+          * boundaries from being identified as coarse-fine boundaries when they
+          * are not.
+          */
+         for (typename tbox::List<typename MultiblockPatchHierarchy<DIM>::Neighbor>::Iterator
+              ni(d_mblk_hierarchy->getNeighbors(i)); ni; ni++) {
+
+            tbox::Pointer< hier::PatchLevel<DIM> > neighbor_level =
+               level.getPatchLevelForBlock(ni().d_id);
+
+            hier::BoxArray<DIM> neighbor_boxes(0);
+
+            if (!neighbor_level.isNull()) {
+               neighbor_boxes = neighbor_level->getBoxes();
+            }
+
+            if (neighbor_boxes.size()) {
+               d_mblk_hierarchy->translateBoxArray(neighbor_boxes,
+                                                   ratio,
+                                                   i,
+                                                   ni().d_id);
+   
+               BoxList<DIM> neighbor_boxes_to_add(phys_domain);
+               neighbor_boxes_to_add.grow(max_ghost_width);
+   
+               neighbor_boxes_to_add.intersectBoxes(neighbor_boxes);
+
+               adjusted_level_domain_list.unionBoxes(neighbor_boxes_to_add); 
+            }
+         }
+
+         BoxArray<DIM> adjusted_level_domain(adjusted_level_domain_list);
+     
+         d_boundary_boxes[i].resizeArray(d_npatches[i]*DIM);
+
+         /*
+          * Call GridGeometry::computeBoundaryGeometry with arguments contrived
+          * such that they give the coarse-fine boundaries instead of the domain
+          * boundaries.  The basic algorithm used by
+          * GridGeometry::computeBoundaryGeometry is
+          * 1. grow boxes by ghost width
+          * 2. remove intersection with domain
+          * 3. reorganize and classify resulting boxes
+          *
+          * This is how we get GridGeometry::computeBoundaryGeometry to
+          * compute the coarse-fine boundary instead of the physical boundary.
+          *
+          * Send the adjusted level boxes as the domain for the
+          * remove-intersection-with-domain operation.  This causes that
+          * operation to remove non-coarse-fine (that is, fine-fine) boxes
+          * along the periodic boundaries, leaving the coarse-fine boundary
+          * boxes.
+          *
+          * Send the adjusted domain for the limit-domain intersect
+          * operation.  This removes the boundaries that are on the physical
+          * boundaries, which is what we want because there is no possibility
+          * of a coarse-fine boundary there.
+          */
+         bool do_all_patches = true;
+         IntVector<DIM> use_periodic_shift(0);
+         grid_geometry->computeBoundaryBoxesOnLevel(
+            d_boundary_boxes[i].getPointer(),
+            *block_level,
+            use_periodic_shift,
+            max_ghost_width,
+            adjusted_level_domain,
+            do_all_patches);
       }
-
-      BoxArray<DIM> adjusted_level_domain(adjusted_level_domain_list);
-
-      d_boundary_boxes[i].resizeArray(d_npatches[i]*DIM);
-
-      /*
-       * Call GridGeometry::computeBoundaryGeometry with arguments contrived
-       * such that they give the coarse-fine boundaries instead of the domain
-       * boundaries.  The basic algorithm used by
-       * GridGeometry::computeBoundaryGeometry is
-       * 1. grow boxes by ghost width
-       * 2. remove intersection with domain
-       * 3. reorganize and classify resulting boxes
-       *
-       * This is how we get GridGeometry::computeBoundaryGeometry to
-       * compute the coarse-fine boundary instead of the physical boundary.
-       *
-       * Send the adjusted level boxes as the domain for the
-       * remove-intersection-with-domain operation.  This causes that
-       * operation to remove non-coarse-fine (that is, fine-fine) boxes
-       * along the periodic boundaries, leaving the coarse-fine boundary
-       * boxes.
-       *
-       * Send the adjusted domain for the limit-domain intersect
-       * operation.  This removes the boundaries that are on the physical
-       * boundaries, which is what we want because there is no possibility
-       * of a coarse-fine boundary there.
-       */
-      bool do_all_patches = true;
-      IntVector<DIM> use_periodic_shift(0);
-      grid_geometry->computeBoundaryBoxesOnLevel(
-         d_boundary_boxes[i].getPointer(),
-         *block_level,
-         use_periodic_shift,
-         max_ghost_width,
-         adjusted_level_domain,
-         do_all_patches);
    }
 
 }

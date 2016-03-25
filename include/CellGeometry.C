@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/CellGeometry.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/boxgeometry/CellGeometry.C $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 3061 $
+// Modified:	$LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:	hier::Box geometry information for cell centered objects
 //
 
@@ -133,6 +133,41 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > CellGeometry<DIM>::doOv
    hier::BoxOverlap<DIM> *overlap = new CellOverlap<DIM>(dst_boxes, src_offset);
    return(tbox::Pointer< hier::BoxOverlap<DIM> >(overlap));
 }
+
+template<int DIM>
+void CellGeometry<DIM>::computeDestinationBoxes(
+   hier::BoxList<DIM>& dst_boxes,
+   const CellGeometry<DIM>& src_geometry,
+   const hier::Box<DIM>& src_mask,
+   const bool overwrite_interior,
+   const hier::IntVector<DIM>& src_offset) const
+{
+
+   // Translate the source box and grow the destination box by the ghost cells
+
+   const hier::Box<DIM> src_box =
+      hier::Box<DIM>::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask;
+   const hier::Box<DIM> src_shift =
+      hier::Box<DIM>::shift(src_box, src_offset);
+   const hier::Box<DIM> dst_ghost =
+      hier::Box<DIM>::grow(d_box, d_ghosts);
+
+   // Convert the boxes into cell space and compute the intersection
+
+   const hier::Box<DIM> dst_cell = CellGeometry<DIM>::toCellBox(dst_ghost);
+   const hier::Box<DIM> src_cell = CellGeometry<DIM>::toCellBox(src_shift);
+   const hier::Box<DIM> together = dst_cell * src_cell;
+
+   if (!together.empty()) {
+      if (!overwrite_interior) {
+         const hier::Box<DIM> int_cell = toCellBox(d_box);
+         dst_boxes.removeIntersections(together,int_cell);
+      } else {
+         dst_boxes.appendItem(together);
+      }
+   }
+}
+
 
 }
 }

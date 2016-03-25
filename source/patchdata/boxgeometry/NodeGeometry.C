@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/NodeGeometry.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/boxgeometry/NodeGeometry.C $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 3061 $
+// Modified:	$LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:	hier::Box geometry information for node centered objects
 //
 
@@ -77,7 +77,7 @@ tbox::Pointer< hier::BoxOverlap<DIM> > NodeGeometry<DIM>::calculateOverlap(
       dynamic_cast<const NodeGeometry<DIM> *>(&src_geometry);
 
    tbox::Pointer< hier::BoxOverlap<DIM> > over= NULL;
-   if ( (t_src != NULL) && (t_src != NULL)) {
+   if ( (t_src != NULL) && (t_dst != NULL)) {
       over = doOverlap(*t_dst, *t_src, src_mask, overwrite_interior, 
 		       src_offset);
    } else if (retry) {
@@ -139,6 +139,41 @@ tbox::Pointer< hier::BoxOverlap<DIM> > NodeGeometry<DIM>::doOverlap(
    hier::BoxOverlap<DIM> *overlap = new NodeOverlap<DIM>(dst_boxes, src_offset);
    return(tbox::Pointer< hier::BoxOverlap<DIM> >(overlap));
 }
+
+
+template<int DIM>
+void NodeGeometry<DIM>::computeDestinationBoxes(
+   hier::BoxList<DIM>& dst_boxes,
+   const NodeGeometry<DIM>& src_geometry,
+   const hier::Box<DIM>& src_mask,
+   const bool overwrite_interior,
+   const hier::IntVector<DIM>& src_offset) const
+{
+   // Translate the source box and grow the destination box by the ghost cells
+
+   const hier::Box<DIM> src_box =
+      hier::Box<DIM>::grow(src_geometry.d_box, src_geometry.d_ghosts) * src_mask;
+   const hier::Box<DIM> src_shift =
+      hier::Box<DIM>::shift(src_box, src_offset);
+   const hier::Box<DIM> dst_ghost =
+      hier::Box<DIM>::grow(d_box, d_ghosts);
+
+   // Convert the boxes into node space and compute the intersection
+
+   const hier::Box<DIM> dst_node = NodeGeometry<DIM>::toNodeBox(dst_ghost);
+   const hier::Box<DIM> src_node = NodeGeometry<DIM>::toNodeBox(src_shift);
+   const hier::Box<DIM> together = dst_node * src_node;
+
+   if (!together.empty()) {
+      if (!overwrite_interior) {
+         const hier::Box<DIM> int_node = toNodeBox(d_box);
+         dst_boxes.removeIntersections(together,int_node);
+      } else {
+         dst_boxes.appendItem(together);
+      }
+   }
+}
+
 
 }
 }

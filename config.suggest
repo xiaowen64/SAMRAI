@@ -1,10 +1,10 @@
 #!/bin/sh
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/config.suggest $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/config.suggest $
 ## Package:     SAMRAI
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 2303 $
-## Modified:    $LastChangedDate: 2008-07-21 09:55:39 -0700 (Mon, 21 Jul 2008) $
+## Revision:    $LastChangedRevision: 3273 $
+## Modified:    $LastChangedDate: 2009-06-16 13:42:46 -0700 (Tue, 16 Jun 2009) $
 ## Description: script to suggest ways to configure SAMRAI
 ##
 
@@ -44,73 +44,6 @@ case $1 in
 # CASC machines
 #-----------------------------------------------------------------------------
 
-casc_gnu4) # CASC RedHat 3, GNU-4.x.x compilers
-cat <<-EOF 
-      --with-CXX=/usr/casc/samrai/local.Linux/gcc/4.2.1/bin/g++
-      --with-CC=/usr/casc/samrai/local.Linux/gcc/4.2.1/bin/gcc
-      --with-F77=/usr/casc/samrai/local.Linux/gcc/4.2.1/bin/gfortran
-      --with-hdf5=/usr/apps/hdf5/serial-1.4.4
-      --with-mpi-include=/usr/apps/mpich/1.2.5/include
-      --with-mpi-lib-dirs=/usr/apps/mpich/1.2.5/lib
-      --with-mpi-libs="mpich pmpich"
-      --with-parallel-run-bin=/usr/apps/mpich/1.2.5/bin/mpirun
-      --with-hypre=/usr/casc/samrai/local.tux_rh4/hypre/hypre-2.2.0b-gcc-4.2.1.opt
-      --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh3
-      --without-petsc
-      --without-blaslapack
-      --with-x
-EOF
-# Maintained by Steven Smith
-;;
-
-casc_icc8)
-# CASC Redhat 3, Intel compilers
-cat <<-EOF
-	--with-CXX=/usr/apps/intel/cc_8.0.058/bin/icc
-	--with-CC=/usr/apps/intel/cc_8.0.058/bin/icc
-	--with-F77=/usr/apps/intel/fc_8.0.034/bin/ifort
-	--enable-rpath="-Wl,-rpath "
-	--with-hdf5=/usr/apps/hdf5/serial-1.4.4
-	--with-mpi-include=/usr/apps/mpich/1.2.5/include
-	--with-mpi-lib-dirs=/usr/apps/mpich/1.2.5/lib
-	--with-mpi-libs="mpich pmpich"
-	--with-parallel-run-bin=/usr/apps/mpich/1.2.5/bin/mpirun
-	--with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.13.0b
-        --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh3
-        --without-petsc
-        --without-blaslapack
-	--with-x
-	--enable-bool
-	--enable-char
-	--enable-dcomplex
-	--enable-float
-	EOF
-# Maintained by 
-;;
-
-casc_icc9) # CASC Redhat 3, Intel compilers
-cat <<-EOF
-	--with-CXX=/usr/apps/intel/cc_9.0.21/bin/icpc
-	--with-CC=/usr/apps/intel/cc_9.0.21/bin/icc
-	--with-F77=/usr/apps/intel/fc_8.1.021/bin/ifort
-	--enable-rpath="-Wl,-rpath "
-	--with-hdf5=/usr/apps/hdf5/serial-1.4.4
-	--with-mpi-include=/usr/apps/mpich/1.2.5/include
-	--with-mpi-lib-dirs=/usr/apps/mpich/1.2.5/lib
-	--with-mpi-libs="mpich pmpich"
-	--with-parallel-run-bin=/usr/apps/mpich/1.2.5/bin/mpirun
-	--with-hypre=/usr/casc/hypre/i686-pc-linux-gnu/hypre-1.13.0b
-        --with-sundials=/usr/casc/samrai/sundials/sundials-2.3.0.tux_rh3
-        --without-petsc
-        --without-blaslapack
-	--with-x
-	--enable-bool
-	--enable-char
-	--enable-dcomplex
-	--enable-float
-	EOF
-# Maintained by 
-;;
 
 casc_rh4_gnu3) # CASC RedHat 4, GNU-3.x.x compilers
 cat <<-EOF 
@@ -140,7 +73,7 @@ cat <<-EOF
       --with-CXX=/usr/apps/gcc/4.2.2/bin/g++
       --with-CC=/usr/apps/gcc/4.2.2/bin/gcc
       --with-F77=/usr/apps/gcc/4.2.2/bin/gfortran
-      --with-hdf5=/usr/apps/hdf5/1.6.5/gcc4.1.2-serial
+      --with-hdf5=/usr/casc/samrai/hdf5/1.8.1-serial-tux
       --with-silo=/usr/casc/samrai/silo/silo-4.6.1_rh4
       --with-mpi-include=/usr/apps/mpich/1.2.7p1/include
       --with-mpi-lib-dirs=/usr/apps/mpich/1.2.7p1/lib
@@ -208,26 +141,6 @@ EOF
 #-----------------------------------------------------------------------------
 # LC machines
 #-----------------------------------------------------------------------------
-
-thunder_icc9) # Thunder, Intel v9.0 compilers
-cat <<-EOF
-	--with-CXX=/usr/local/intel/compiler91/bin/icpc
-	--with-CC=/usr/local/intel/compiler91/bin/icc 
-	--with-F77=/usr/local/intel/compiler91/bin/ifort
-	--with-hdf5=/usr/local/tools/hdf5/hdf5-1.6.5/serial
-	--with-hypre=/usr/gapps/hypre/chaos_3_ia64_elan4/hypre-1.13.0b
-	--without-sundials
-	--without-petsc
-	--without-blaslapack
-	--without-x
-	--enable-rpath=-Wl,-R
-	--disable-template-depend
-	--enable-test-nprocs="1,2"
-	EOF
-# Maintained by Rich Hornung
-;;
-
-
 zeus_mpiicpc) # Zeus, Intel compilers with LLNL mpiicpc front ends
 cat <<-EOF
 	--with-CXX=/usr/local/bin/mpiicpc

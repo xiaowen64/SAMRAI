@@ -1,13 +1,16 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/Schedule.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/parallel/Schedule.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2410 $
+// Modified:	$LastChangedDate: 2008-10-08 14:30:40 -0700 (Wed, 08 Oct 2008) $
 // Description:	Schedule of communication transactions between processors
 //
 
 #include "tbox/Schedule.h"
+#include "tbox/ShutdownRegistry.h"
+#include "tbox/TimerManager.h"
+#include "tbox/Timer.h"
 
 namespace SAMRAI {
    namespace tbox {
@@ -16,6 +19,8 @@ namespace SAMRAI {
 #define SCHEDULE_DATA_TAG (2)
 
 typedef List< Pointer< Transaction > >::Iterator ITERATOR;
+
+static tbox::Pointer<tbox::Timer> t_communicate;
 
 /*
 *************************************************************************
@@ -34,6 +39,10 @@ Schedule::Schedule()
 
    d_send_set.resizeArray(d_nnodes);
    d_recv_set.resizeArray(d_nnodes);
+
+   if ( t_communicate.isNull() ) {
+      firstConstructorTasks();
+   }
 }
 
 /*
@@ -116,8 +125,10 @@ void Schedule::appendTransaction(
 
 void Schedule::communicate()
 {
+   t_communicate->start();
    beginCommunication();
    finalizeCommunication();
+   t_communicate->stop();
 }
 
 /*
@@ -468,6 +479,42 @@ void Schedule::printClassData(std::ostream& stream) const
    for (ITERATOR local(d_local_set); local; local++) {
       local()->printClassData(stream);
    }
+}
+
+
+/*
+***********************************************************************
+***********************************************************************
+*/
+void Schedule::firstConstructorTasks()
+{
+   /*
+     The first constructor gets timers from the TimerManager.
+     and sets up their deallocation.
+   */
+   if ( t_communicate.isNull() ) {
+      t_communicate= tbox::TimerManager::getManager()->
+         getTimer("tbox::Schedule::communicate()");
+      tbox::ShutdownRegistry::registerShutdownRoutine(freeTimers,
+			      tbox::ShutdownRegistry::priorityTimers);
+   }
+   return;
+}
+
+
+
+
+/*
+***************************************************************************
+*                                                                         *
+* Release static timers.  To be called by shutdown registry to make sure  *
+* memory for timers does not leak.                                        *
+*                                                                         *
+***************************************************************************
+*/
+void Schedule::freeTimers()
+{
+   t_communicate.setNull();
 }
 
 }

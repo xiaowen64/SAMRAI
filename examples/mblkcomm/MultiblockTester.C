@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/mblkcomm/MultiblockTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/examples/mblkcomm/MultiblockTester.C $
 // Package:     SAMRAI tests
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+// Revision:    $LastChangedRevision: 2446 $
+// Modified:    $LastChangedDate: 2008-10-14 13:13:29 -0700 (Tue, 14 Oct 2008) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -631,7 +631,7 @@ void MultiblockTester::fillSingularityBoundaryConditions(
 
 hier::IntVector<NDIM> MultiblockTester::getRefineOpStencilWidth() const
 {
-   return (hier::IntVector<NDIM>(1));
+   return (hier::IntVector<NDIM>(0));
 }
 
 void MultiblockTester::preprocessRefine(

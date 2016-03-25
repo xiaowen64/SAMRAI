@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/communication/CommTester.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/examples/communication/CommTester.C $
 // Package:     SAMRAI tests
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2043 $
-// Modified:    $LastChangedDate: 2008-03-12 09:14:32 -0700 (Wed, 12 Mar 2008) $
+// Revision:    $LastChangedRevision: 2903 $
+// Modified:    $LastChangedDate: 2009-02-13 10:43:29 -0800 (Fri, 13 Feb 2009) $
 // Description: Manager class for patch data communication tests.
 //
 
@@ -398,7 +398,7 @@ bool CommTester::verifyCommunicationResults() const
       for (hier::PatchLevel<NDIM>::Iterator p(level); p; p++) {
          tbox::Pointer<hier::Patch<NDIM> > patch = level->getPatch(p());
 
-         tests_pass =
+         tests_pass &=
             d_data_test_strategy->verifyResults(*patch, d_patch_hierarchy, ln);
       }
    }
@@ -458,6 +458,8 @@ void CommTester::initializeLevelData(
 						  's');
       d_data_test_strategy->clearDataContext();
 
+      /* Why are we initializing destination?  Shouldn't we leave this to the coarsen operation?  Maybe it is to fill in unrefined coarse cells (cells that are not changed during coarsening).
+      */
       if (d_do_coarsen) {
 
          d_data_test_strategy->setDataContext(d_destination);

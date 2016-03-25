@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/transfer/datamovers/standard/RefineAlgorithm.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/datamovers/standard/RefineAlgorithm.C $
 // Package:	SAMRAI data transfer
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2195 $
-// Modified:	$LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
+// Revision:	$LastChangedRevision: 3061 $
+// Modified:	$LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:	Refine algorithm for data transfer between AMR levels
 //
 
@@ -62,7 +62,8 @@ template<int DIM> void RefineAlgorithm<DIM>::registerRefine(
    const int dst,
    const int src,
    const int scratch,
-   tbox::Pointer< xfer::RefineOperator<DIM> > oprefine)
+   tbox::Pointer< xfer::RefineOperator<DIM> > oprefine,
+   tbox::Pointer<VariableFillPattern<DIM> > var_fill_pattern)
 {
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm<DIM>::registerRefine error..."
@@ -85,6 +86,11 @@ template<int DIM> void RefineAlgorithm<DIM>::registerRefine(
    data.d_oprefine          = oprefine;
    data.d_optime            = NULL;
    data.d_tag               = -1;
+   if (!(var_fill_pattern.isNull())) {
+      data.d_var_fill_pattern = var_fill_pattern;
+   } else {
+      data.d_var_fill_pattern = new BoxGeometryFillPattern<DIM>();
+   }
 
    d_refine_classes->insertEquivalenceClassItem(data); 
 }
@@ -104,7 +110,8 @@ template<int DIM> void RefineAlgorithm<DIM>::registerRefine(
    const int src_tnew,
    const int scratch,
    tbox::Pointer< xfer::RefineOperator<DIM> > oprefine,
-   tbox::Pointer< xfer::TimeInterpolateOperator<DIM> > optime)
+   tbox::Pointer< xfer::TimeInterpolateOperator<DIM> > optime,
+   tbox::Pointer<VariableFillPattern<DIM> > var_fill_pattern)
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(!optime.isNull());
@@ -131,6 +138,11 @@ template<int DIM> void RefineAlgorithm<DIM>::registerRefine(
    data.d_oprefine           = oprefine;
    data.d_optime             = optime;
    data.d_tag                = optime;
+   if (!(var_fill_pattern.isNull())) {
+      data.d_var_fill_pattern = var_fill_pattern;
+   } else {
+      data.d_var_fill_pattern = new BoxGeometryFillPattern<DIM>();
+   }
 
    d_refine_classes->insertEquivalenceClassItem(data);
 }

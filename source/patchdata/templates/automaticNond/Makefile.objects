@@ -14,10 +14,10 @@ libdefault:	pdat__CopyOperation-double.o pdat__CopyOperation-int.o		\
 	pdat__SumOperation-double.o pdat__SumOperation-int.o
 
 
-libchar:	pdat__CopyOperation-char.o
+libchar:	pdat__CopyOperation-char.o pdat__SumOperation-char.o
 
 
-libbool:	pdat__CopyOperation-bool.o
+libbool:	pdat__CopyOperation-bool.o pdat__SumOperation-bool.o
 
 
 libfloat:	pdat__CopyOperation-float.o pdat__SumOperation-float.o

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/vectors/PETSc_SAMRAIVectorReal.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/solvers/vectors/PETSc_SAMRAIVectorReal.h $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 3281 $
+// Modified:    $LastChangedDate: 2009-06-17 19:10:03 -0700 (Wed, 17 Jun 2009) $
 // Description: "Glue code" between PETSc vector interface and SAMRAI vectors. 
 //
 
@@ -19,23 +19,27 @@
 */
 #ifdef HAVE_PETSC
 
-#ifdef REQUIRES_CMATH
-#include <cmath>
-#endif 
+#include "tbox/SAMRAI_MPI.h"
 
-#ifndef included_petsc_vec
-#define included_petsc_vec
+
+/* petsc defines skip so avoid redefining */
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
-#include "petscvec.h"
-#endif
 
+#include "petscvec.h"
+
+#ifndef MPICH_SKIP_MPICXX
+#define MPICH_SKIP_MPICXX
+#endif
 
 #include "PETScAbstractVectorReal.h"
 #include "SAMRAIVectorReal.h"
 #include "tbox/Pointer.h"
-#include "tbox/SAMRAI_MPI.h"
+
+#ifdef REQUIRES_CMATH
+#include <cmath>
+#endif 
 
 
 namespace SAMRAI {

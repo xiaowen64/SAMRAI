@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/load_balance/LoadBalancer.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/mesh/load_balance/LoadBalancer.C $
 // Package:     SAMRAI mesh generation
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2141 $
-// Modified:    $LastChangedDate: 2008-04-23 08:36:33 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2871 $
+// Modified:    $LastChangedDate: 2009-02-04 12:47:13 -0800 (Wed, 04 Feb 2009) $
 // Description: Load balance routines for uniform and non-uniform workloads.
 //
 
@@ -12,8 +12,6 @@
 
 #include "LoadBalancer.h"
 
-#include <stdlib.h>
-#include <fstream>
 #include "BoxUtilities.h"
 #include "BoxComm.h"
 #include "PatchDescriptor.h"
@@ -30,6 +28,11 @@
 #include "tbox/Utilities.h"
 #include "RefineAlgorithm.h"
 #include "RefineSchedule.h"
+
+#include <cmath>
+#include <stdlib.h>
+#include <fstream>
+
 
 namespace SAMRAI {
     namespace mesh {
@@ -547,7 +550,7 @@ template<int DIM> void LoadBalancer<DIM>::chopUniformSingleBox(
 
    hier::IntVector<DIM> ideal_box_size;
    for (int i = 0; i < DIM; i++) {
-      ideal_box_size(i) = (in_box.numberCells(i)/processor_distribution(i));
+      ideal_box_size(i) = ceil( (double)in_box.numberCells(i)/(double)processor_distribution(i) );
       ideal_box_size(i) = (ideal_box_size(i) > max_size(i) ?
                            max_size(i) : ideal_box_size(i));
       ideal_box_size(i) = (ideal_box_size(i) < min_size(i) ?

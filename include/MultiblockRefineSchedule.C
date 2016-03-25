@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefineSchedule.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/multiblock/MultiblockRefineSchedule.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2147 $
-// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 3153 $
+// Modified:    $LastChangedDate: 2009-04-21 17:12:47 -0700 (Tue, 21 Apr 2009) $
 // Description: Base class for geometry management on patches
 //
 
@@ -1552,7 +1552,8 @@ void MultiblockRefineSchedule<DIM>::createNeighborCoarseSchedule(
    if (unfilled_boxes.size() == 0) {
       d_neighbor_multiblock_coarse_schedule[dst_block_number][neighbor_counter] =
          new MultiblockRefineSchedule<DIM>(
-            d_fill_pattern,
+//            d_fill_pattern,
+            "DEFAULT_FILL",
             d_neighbor_multiblock_coarse_level[dst_block_number][neighbor_counter],
             coarse_hierarchy_level,
             d_multiblock_hierarchy,
@@ -1563,7 +1564,8 @@ void MultiblockRefineSchedule<DIM>::createNeighborCoarseSchedule(
    } else {
       d_neighbor_multiblock_coarse_schedule[dst_block_number][neighbor_counter] =
          new MultiblockRefineSchedule<DIM>(
-            d_fill_pattern,
+//            d_fill_pattern,
+            "DEFAULT_FILL",
             d_neighbor_multiblock_coarse_level[dst_block_number][neighbor_counter],
             coarse_hierarchy_level,
             next_coarser_level-1,

@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefineAlgorithm.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/datamovers/standard/RefineAlgorithm.h $
 // Package:	SAMRAI data transfer
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 3061 $
+// Modified:	$LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:	Refine algorithm for data transfer between AMR levels
 //
  
@@ -20,6 +20,8 @@
 #include "RefinePatchStrategy.h"
 #include "RefineSchedule.h"
 #include "RefineTransactionFactory.h"
+#include "BoxGeometryFillPattern.h"
+#include "VariableFillPattern.h"
 
 namespace SAMRAI {
     namespace xfer {
@@ -143,7 +145,9 @@ public:
       const int dst,
       const int src,
       const int scratch,
-      tbox::Pointer< RefineOperator<DIM> > oprefine);
+      tbox::Pointer< RefineOperator<DIM> > oprefine,
+      tbox::Pointer<VariableFillPattern<DIM> > var_fill_pattern =
+         tbox::Pointer< BoxGeometryFillPattern<DIM> >());
 
    /*!
     * Register a refine operation with the refine algorithm object.  This
@@ -179,7 +183,9 @@ public:
       const int src_tnew,
       const int scratch,
       tbox::Pointer< RefineOperator<DIM> > oprefine,
-      tbox::Pointer< TimeInterpolateOperator<DIM> > optime);
+      tbox::Pointer< TimeInterpolateOperator<DIM> > optime,
+      tbox::Pointer<VariableFillPattern<DIM> > var_fill_pattern =
+         tbox::Pointer< BoxGeometryFillPattern<DIM> >());
 
    /*!
     * @brief Create a communication schedule that moves data from the interiors

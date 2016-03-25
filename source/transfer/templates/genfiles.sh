@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/templates/genfiles.sh $
 ## Package:     SAMRAI templates
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 1917 $
-## Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+## Revision:    $LastChangedRevision: 3061 $
+## Modified:    $LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -50,7 +50,8 @@ for t in CoarsenAlgorithm CoarsenClasses CoarsenCopyTransaction \
     StandardCoarsenTransactionFactory \
     StandardLocallyActiveDataCoarsenTransactionFactory \
     StandardLocallyActiveDataRefineTransactionFactory \
-    StandardRefineTransactionFactory TimeInterpolateOperator
+    StandardRefineTransactionFactory TimeInterpolateOperator \
+    BoxGeometryFillPattern VariableFillPattern
 do
   ${MT} default.filenames ./tmp xfer $t NDIM
 done
@@ -116,6 +117,8 @@ ${MT} default.filenames ./tmp tbox tbox::Array tbox::Pointer xfer::MultiblockRef
 ${MT} default.filenames ./tmp tbox tbox::List xfer::MultiblockRefineSchedule\<NDIM\>::SingularityPatch
 ${MT} default.filenames ./tmp tbox tbox::Pointer xfer::MultiblockRefineAlgorithm NDIM
 ${MT} default.filenames ./tmp tbox tbox::Pointer xfer::MultiblockRefineSchedule NDIM
+${MT} default.filenames ./tmp tbox tbox::Pointer xfer::VariableFillPattern NDIM
+${MT} default.filenames ./tmp tbox tbox::Pointer xfer::BoxGeometryFillPattern NDIM
 
 
 #

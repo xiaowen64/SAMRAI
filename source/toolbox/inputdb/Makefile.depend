@@ -39,39 +39,8 @@ endif
 
 ${FILE_0:X.o=${NDIM}.o}: ${DEPENDS_0}
 
-FILE_1=InputDatabase.o
+FILE_1=InputManager.o
 DEPENDS_1:=\
-	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
-	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
-	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
-	$(INCLUDE_SAM)/tbox/ConstPointerBase.I				\
-	$(INCLUDE_SAM)/tbox/ConstPointerBase.h				\
-	$(INCLUDE_SAM)/tbox/Database.I $(INCLUDE_SAM)/tbox/Database.h	\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.I				\
-	$(INCLUDE_SAM)/tbox/DatabaseBox.h				\
-	$(INCLUDE_SAM)/tbox/DescribedClass.h				\
-	$(INCLUDE_SAM)/tbox/IOStream.h					\
-	$(INCLUDE_SAM)/tbox/InputDatabase.h $(INCLUDE_SAM)/tbox/List.I	\
-	$(INCLUDE_SAM)/tbox/List.h $(INCLUDE_SAM)/tbox/MemoryDatabase.I	\
-	$(INCLUDE_SAM)/tbox/MemoryDatabase.h $(INCLUDE_SAM)/tbox/PIO.h	\
-	$(INCLUDE_SAM)/tbox/Pointer.I $(INCLUDE_SAM)/tbox/Pointer.h	\
-	$(INCLUDE_SAM)/tbox/PointerBase.I				\
-	$(INCLUDE_SAM)/tbox/PointerBase.h				\
-	$(INCLUDE_SAM)/tbox/ReferenceCounter.I				\
-	$(INCLUDE_SAM)/tbox/ReferenceCounter.h				\
-	$(INCLUDE_SAM)/tbox/ShutdownRegistry.h				\
-	$(INCLUDE_SAM)/tbox/Utilities.h InputDatabase.C
-
-ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_1 +=\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/Pointer.C
-endif
-
-${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
-
-FILE_2=InputManager.o
-DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
@@ -99,15 +68,15 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h InputManager.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_2 +=\
+DEPENDS_1 +=\
 	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
-${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
+${FILE_1:X.o=${NDIM}.o}: ${DEPENDS_1}
 
-FILE_3=Parser.o
-DEPENDS_3:=\
+FILE_2=Parser.o
+DEPENDS_2:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
@@ -131,15 +100,15 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h Parser.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_3 +=\
+DEPENDS_2 +=\
 	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
-${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
+${FILE_2:X.o=${NDIM}.o}: ${DEPENDS_2}
 
-FILE_4=Scanner.o
-DEPENDS_4:=\
+FILE_3=Scanner.o
+DEPENDS_3:=\
 	$(OBJECT)/include/SAMRAI_config.h $(INCLUDE_SAM)/tbox/Arena.I	\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/Array.I		\
 	$(INCLUDE_SAM)/tbox/Array.h $(INCLUDE_SAM)/tbox/Complex.h	\
@@ -161,10 +130,10 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/tbox/Utilities.h Grammar.h Scanner.C
 
 ifeq (${DEPENDS_ON_TEMPLATE_IMPLEMENTATION},yes)
-DEPENDS_4 +=\
+DEPENDS_3 +=\
 	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
-${FILE_4:X.o=${NDIM}.o}: ${DEPENDS_4}
+${FILE_3:X.o=${NDIM}.o}: ${DEPENDS_3}
 

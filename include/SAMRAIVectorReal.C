@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/solvers/vectors/SAMRAIVectorReal.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/solvers/vectors/SAMRAIVectorReal.C $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2343 $
+// Modified:    $LastChangedDate: 2008-09-05 09:28:55 -0700 (Fri, 05 Sep 2008) $
 // Description: Vector class for data on SAMRAI hierarchy.
 //
 
@@ -759,14 +759,13 @@ void SAMRAIVectorReal<DIM,TYPE>::setRandomValues(const TYPE& width,
 template<int DIM, class TYPE>
 double SAMRAIVectorReal<DIM,TYPE>::L1Norm(bool local_only) const
 {
-   NULL_USE(local_only);
-
    double norm = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
       norm += d_component_operations[i]->L1Norm(d_component_data_id[i],
-                                                d_control_volume_data_id[i]);
+                                                d_control_volume_data_id[i],
+                                                local_only);
    }
 
    return( norm );
@@ -775,15 +774,14 @@ double SAMRAIVectorReal<DIM,TYPE>::L1Norm(bool local_only) const
 template<int DIM, class TYPE>
 double SAMRAIVectorReal<DIM,TYPE>::L2Norm(bool local_only) const
 {
-   NULL_USE(local_only);
-
    double norm_squared = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
       double comp_norm = 
          d_component_operations[i]->L2Norm(d_component_data_id[i],
-                                           d_control_volume_data_id[i]);
+                                           d_control_volume_data_id[i],
+                                           local_only);
       norm_squared += comp_norm * comp_norm;
    }
 
@@ -858,8 +856,6 @@ double SAMRAIVectorReal<DIM,TYPE>::weightedRMSNorm(
 template<int DIM, class TYPE>
 double SAMRAIVectorReal<DIM,TYPE>::maxNorm(bool local_only) const
 {
-   NULL_USE(local_only);
-
    double norm = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
@@ -867,7 +863,8 @@ double SAMRAIVectorReal<DIM,TYPE>::maxNorm(bool local_only) const
       norm = tbox::MathUtilities<double>::Max( norm, 
                    d_component_operations[i]->maxNorm(
                                               d_component_data_id[i], 
-                                              d_control_volume_data_id[i]) );
+                                              d_control_volume_data_id[i],
+                                              local_only) );
    }
 
    return( norm );
@@ -878,15 +875,14 @@ TYPE SAMRAIVectorReal<DIM,TYPE>::dot(
    const tbox::Pointer< SAMRAIVectorReal<DIM,TYPE> > x,
    bool local_only) const 
 {
-   NULL_USE(local_only);
-
    TYPE dprod = 0.0;
 
    for (int i = 0; i < d_number_components; i++) {
       d_component_operations[i]->resetLevels(d_coarsest_level, d_finest_level);
       dprod += d_component_operations[i]->dot(d_component_data_id[i],
                                               x->getComponentDescriptorIndex(i),
-                                              d_control_volume_data_id[i]);
+                                              d_control_volume_data_id[i],
+                                              local_only);
    }
 
    return( dprod );

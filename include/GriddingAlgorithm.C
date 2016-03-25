@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/mesh/gridding/GriddingAlgorithm.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/mesh/gridding/GriddingAlgorithm.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2297 $
-// Modified:    $LastChangedDate: 2008-07-14 17:06:37 -0700 (Mon, 14 Jul 2008) $
+// Revision:    $LastChangedRevision: 3080 $
+// Modified:    $LastChangedDate: 2009-03-24 12:10:26 -0700 (Tue, 24 Mar 2009) $
 // Description: AMR hierarchy generation and regridding routines.
 //
 
@@ -1976,6 +1976,18 @@ template<int DIM> void GriddingAlgorithm<DIM>::findRefinementBoxes(
       t_enforce_nesting->start();
 
       /*
+       * Do not allow new level to overflow current level, i.e., no new
+       * level n+1 where there is no current level n on which tags
+       * could have been set.  This guarantees that when we tag level
+       * n-1 cells underlying level n+1 (to ensure we generate level n
+       * properly nesting n+1), none of the tags are lost because
+       * level n-1 does not have a cell there.
+       */
+      hier::BoxList<DIM> overflow_box_list( box_list );
+      level->getBoxTree()->removeIntersections( overflow_box_list );
+      box_list.removeIntersections( overflow_box_list );
+
+      /*
        * If overlaps are to be avoided, at the possible expense of constructing
        * boxes smaller than the minimum patch size, set the
        * "grow_after_nesting" argument to false in input.  By default, this
@@ -2190,8 +2202,7 @@ template<int DIM> void GriddingAlgorithm<DIM>::getGriddingParameters(
     * Determine number of cells box may be extended to physical
     * domain boundary to accomodate ghost cells.
     */
-   extend_ghosts = max_ghosts
-                   * d_tag_init_strategy->getErrorCoarsenRatio();
+   extend_ghosts = max_ghosts;
 
 }
 

@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/TagAndInitializeStrategy.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/mesh/gridding/TagAndInitializeStrategy.h $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2869 $
+// Modified:    $LastChangedDate: 2009-02-03 20:39:48 -0800 (Tue, 03 Feb 2009) $
 // Description: Strategy interface for params, tagging, init for gridding.
 //
 
@@ -40,7 +40,7 @@ namespace SAMRAI {
  *
  *    - \b    RefineBoxes
  *      input section describing the refine boxes for each level.
- *          - \b  Level0  
+ *          - \b  level_0
  *             input section providing the sequence of hier::Box arrays describing
  *             where user-specified refinement is to occur on Level 0. 
  *                - \b times = double array specifying times at which a
@@ -50,10 +50,10 @@ namespace SAMRAI {
  *                - \b boxes_0 = box array specifying refine boxes for seq 0.
  *                - \b boxes_1 = box array specifying refine boxes for seq 1.
  *                - \b boxes_n = box array specifying refine boxes for seq n.
- *          - \b  Level1 
+ *          - \b  level_1
  *             input section providing the sequence of hier::Box arrays describing
  *             where user-specified refinement is to occur on Level 1. 
- *          - \b  LevelN 
+ *          - \b  level_n
  *             input section providing the sequence of hier::Box arrays describing
  *             where user-specified refinement is to occur on Level N. 
  *
@@ -83,19 +83,19 @@ namespace SAMRAI {
  *
  * \verbatim
  *
- *    RefineBoxes{
- *       Level0{
+ *    RefineBoxes {
+ *       level_0 {
  *          cycles = 0, 10
  *          boxes_0 = [(5,5),(9,9)],[(12,15),(18,19)]
  *          boxes_1 = [(7,7),(11,11)],[(14,17),(20,21)]
  *       }
- *       Level1{
+ *       level_1 {
  *          times  = 0., 0.05, 0.10
  *          boxes_0 = [(25,30),(29,35)]    
  *          boxes_1 = [(30,35),(34,40)]    
  *          boxes_2 = [(35,40),(39,45)]    
  *       }
- *       Level2{
+ *       level_2 {
  *          boxes_0 = [(60,70),(70,80)]    
  *       }
  *    }

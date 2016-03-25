@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/database/Database.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/database/Database.h $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2620 $
+// Modified:	$LastChangedDate: 2008-11-19 14:24:28 -0800 (Wed, 19 Nov 2008) $
 // Description:	An abstract base class for the SAMRAI database objects
 //
 
@@ -62,17 +62,20 @@ public:
    /**
     * Enumerated type indicating what type of values is stored in
     * a database entry.  Returned from getType() method.
+    * 
+    * Note: The SAMRAI_ prefix is needed since some poorly written
+    *       packages do "#define CHAR" etc.
     */
-   enum DataType { INVALID, 
-		       DATABASE,
-		       BOOL,
-		       CHAR,
-		       INT,
-		       COMPLEX,
-		       DOUBLE,
-		       FLOAT,
-		       STRING,
-		       BOX};
+   enum DataType { SAMRAI_INVALID, 
+		   SAMRAI_DATABASE,
+		   SAMRAI_BOOL,
+		   SAMRAI_CHAR,
+		   SAMRAI_INT,
+		   SAMRAI_COMPLEX,
+		   SAMRAI_DOUBLE,
+		   SAMRAI_FLOAT,
+		   SAMRAI_STRING,
+		   SAMRAI_BOX};
 
    /**
     * The constructor for the database base class does nothing interesting.

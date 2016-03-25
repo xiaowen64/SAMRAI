@@ -1,9 +1,9 @@
 //
-// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/transfer/datamovers/standard/RefineSchedule.C $
+// File:         $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/datamovers/standard/RefineSchedule.C $
 // Package:      SAMRAI data transfer
 // Copyright:    (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:     $LastChangedRevision: 2196 $
-// Modified:     $LastChangedDate: 2008-05-14 14:25:02 -0700 (Wed, 14 May 2008) $
+// Revision:     $LastChangedRevision: 3061 $
+// Modified:     $LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:  Refine schedule for data transfer between AMR levels
 //
 
@@ -45,6 +45,8 @@ namespace SAMRAI {
  * Timer objects for performance measurement.
  */
 static tbox::Pointer<tbox::Timer> t_fill_data;
+static tbox::Pointer<tbox::Timer> t_recursive_fill;
+static tbox::Pointer<tbox::Timer> t_refine_scratch_data;
 static tbox::Pointer<tbox::Timer> t_gen_sched_n_squared;
 static tbox::Pointer<tbox::Timer> t_gen_sched_box_graph;
 static tbox::Pointer<tbox::Timer> t_gen_sched_box_tree; 
@@ -821,7 +823,9 @@ template<int DIM> void RefineSchedule<DIM>::fillData(
     * same, and then fills physical boundaries.
     */
 
+   t_recursive_fill->start();
    recursiveFill(fill_time, do_physical_boundary_fill);
+   t_recursive_fill->stop();
 
    /*
     * Copy the scratch space of the destination level to the destination
@@ -1115,6 +1119,7 @@ template<int DIM> void RefineSchedule<DIM>::copyScratchToDestination(
 
 template<int DIM> void RefineSchedule<DIM>::refineScratchData() const
 {
+   t_refine_scratch_data->start();
 
    const hier::IntVector<DIM> ratio =
       d_dst_level->getRatio() / d_coarse_level->getRatio();
@@ -1170,6 +1175,7 @@ template<int DIM> void RefineSchedule<DIM>::refineScratchData() const
       }
    }
 
+   t_refine_scratch_data->stop();
 }
 
 /*
@@ -1880,13 +1886,20 @@ template<int DIM> void RefineSchedule<DIM>::constructScheduleTransactions(
             }
             hier::Box<DIM> src_mask( hier::Box<DIM>::shift( test_mask,-shift) );
 
-	    tbox::Pointer< hier::BoxOverlap<DIM> > overlap =
+            tbox::Pointer< hier::BoxOverlap<DIM> > overlap =
+               rep_item.d_var_fill_pattern->calculateOverlap(
+                  *dst_pdf->getBoxGeometry(dst_box),
+                  *src_pdf->getBoxGeometry(src_box),
+                  dst_box,
+                  src_mask,
+                  true, shift);
+/*	    tbox::Pointer< hier::BoxOverlap<DIM> > overlap =
 	       dst_pdf->getBoxGeometry(dst_box)
 		      ->calculateOverlap(
 			 *src_pdf->getBoxGeometry(src_box),
 			 src_mask,
 			 true, shift);
-
+*/
 #ifdef DEBUG_CHECK_ASSERTIONS
 	    if (overlap.isNull()) {
 	       TBOX_ERROR("Internal RefineSchedule<DIM> error..."
@@ -2229,6 +2242,10 @@ void RefineSchedule<DIM>::initializeTimers()
    if ( t_fill_data.isNull() ) {
       t_fill_data =tbox::TimerManager::getManager() ->
          getTimer("xfer::RefineSchedule::fillData()");
+      t_recursive_fill = tbox::TimerManager::getManager() ->
+         getTimer("xfer::RefineSchedule::recursive_fill");
+      t_refine_scratch_data = tbox::TimerManager::getManager() ->
+         getTimer("xfer::RefineSchedule::refineScratchData()");
       t_gen_sched_n_squared = tbox::TimerManager::getManager()->
          getTimer("xfer::RefineSchedule::generateCommunicationScheduleNSquared()");
       t_gen_sched_box_graph = tbox::TimerManager::getManager()->
@@ -2257,6 +2274,8 @@ template<int DIM>
 void RefineSchedule<DIM>::freeTimers()
 {
    t_fill_data.setNull();
+   t_recursive_fill.setNull();
+   t_refine_scratch_data.setNull();
    t_gen_sched_n_squared.setNull();
    t_gen_sched_box_graph.setNull();
    t_gen_sched_box_tree.setNull();

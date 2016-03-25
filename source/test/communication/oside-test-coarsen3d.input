@@ -1,10 +1,10 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/communication/oside-test-coarsen3d.input $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/test/communication/oside-test-coarsen3d.input $
 // Package:     SAMRAI tests
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
 // Release:     $Name:  $
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2856 $
+// Modified:    $LastChangedDate: 2009-01-30 13:58:39 -0800 (Fri, 30 Jan 2009) $
 // Description: input file for testing communication of SAMRAI OutersideData.
 //
 
@@ -104,7 +104,7 @@ OutersidePatchDataTest {
          dst_ghosts = 1,1,1
          coarsen_operator = "CONSERVATIVE_COARSEN"
          refine_operator = "CONSERVATIVE_LINEAR_REFINE"
-         test_direction = -1
+         // test_direction = -1
          use_fine_value_at_interface = TRUE
       }
 
@@ -116,7 +116,7 @@ OutersidePatchDataTest {
          dst_ghosts = 0,0,0
          coarsen_operator = "CONSERVATIVE_COARSEN"
          refine_operator = "CONSERVATIVE_LINEAR_REFINE"
-         test_direction = 1
+         // test_direction = 1
          use_fine_value_at_interface = TRUE
       }
 

@@ -41,18 +41,18 @@ c  Compute error in solution at time t.
       double precision zero,       half,       one
       parameter      ( zero=0.0d0, half=0.5d0, one=1.0d0 )
 
-      intrinsic ABS, MAX
-      double precision ABS, MAX
+      intrinsic DABS, DMAX1
+      double precision DABS, DMAX1
 
       localerror = zero
       l2error = zero
       xi = xlo(0) + dx(0)*half
       do i = lo0, hi0
          xterm = xi*(one - xi)
-         error_i = ABS(u(i) - t*xterm)
+         error_i = DABS(u(i) - t*xterm)
          l2error = l2error + w(i)*error_i**2
          diff = w(i)*error_i
-         localerror = MAX(localerror, diff)
+         localerror = DMAX1(localerror, diff)
          xi = xi + dx(0)
       end do
 
@@ -62,7 +62,7 @@ c  the error in those that aren't covered are scaled by the cell volume.
       localerror = localerror/dx(0)
       l2error = sqrt(l2error)
 
-      maxerror = MAX(localerror, maxerror)
+      maxerror = DMAX1(localerror, maxerror)
 
       return
       end

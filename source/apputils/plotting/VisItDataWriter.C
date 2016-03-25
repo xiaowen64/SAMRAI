@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/apputils/plotting/VisItDataWriter.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/apputils/plotting/VisItDataWriter.C $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 The Regents of the University of California
-// Revision:    $LastChangedRevision: 2220 $
-// Modified:    $LastChangedDate: 2008-06-17 18:19:28 -0700 (Tue, 17 Jun 2008) $
+// Revision:    $LastChangedRevision: 2312 $
+// Modified:    $LastChangedDate: 2008-07-30 13:41:05 -0700 (Wed, 30 Jul 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
@@ -11,6 +11,7 @@
 #ifndef included_appu_VisItDataWriter_C
 #define included_appu_VisItDataWriter_C
 
+#include <cstring>
 #include <ctime>
 #include <vector>
 
@@ -1889,6 +1890,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
                   patch_HDFGroup =
                      level_HDFGroup->putDatabase(std::string(temp_buf));
 
+                  int curr_var_id_ctr=d_var_id_ctr;
                   packRegularAndDerivedData(patch_HDFGroup,
                                             hierarchy,
                                             ln,
@@ -1896,12 +1898,14 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
                                             *patch);
 
                   if (d_materials_names.getSize() > 0) {
+                     d_var_id_ctr = curr_var_id_ctr;
                      packMaterialsData(patch_HDFGroup,
                                        hierarchy,
                                        ln,
                                        b,
                                        *patch);
 
+                     d_var_id_ctr = curr_var_id_ctr;
                      packSpeciesData(hierarchy,
                                      ln,
                                      b,
@@ -1940,6 +1944,7 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
             patch_HDFGroup = level_HDFGroup->putDatabase(std::string(temp_buf));
 
             int bn = -1;
+            int curr_var_id_ctr=d_var_id_ctr;
             packRegularAndDerivedData(patch_HDFGroup,
                                       hierarchy,
                                       ln,
@@ -1947,12 +1952,14 @@ template<int DIM> void VisItDataWriter<DIM>::writeVisItVariablesToHDFFile(
                                       *patch);
 
             if (d_materials_names.getSize() > 0) {
+               d_var_id_ctr = curr_var_id_ctr;
                packMaterialsData(patch_HDFGroup,
                                  hierarchy,
                                  ln,
                                  bn,
                                  *patch);
 
+               d_var_id_ctr = curr_var_id_ctr;
                packSpeciesData(hierarchy,
                                ln,
                                bn,
@@ -2072,7 +2079,7 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
                   }
                }
 
-               double dmax = tbox::MathUtilities<double>::getMin();
+               double dmax = -tbox::MathUtilities<double>::getMax();
                double dmin = tbox::MathUtilities<double>::getMax();
 
                if (data_exists_on_patch) {
@@ -2103,7 +2110,8 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
                      }
                   }
 
-                  checkFloatMinMax(dmin,
+                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                                   dmin,
                                    dmax,
                                    level_number,
                                    patch.getPatchNumber(),
@@ -2188,7 +2196,7 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
                }
 
 
-               double dmax = tbox::MathUtilities<double>::getMin();
+               double dmax = -tbox::MathUtilities<double>::getMax();
                double dmin = tbox::MathUtilities<double>::getMax();
 
                if (data_exists_on_patch) {
@@ -2237,7 +2245,8 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
                      }
                   }
 
-                  checkFloatMinMax(dmin,
+                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                                   dmin,
                                    dmax,
                                    level_number,
                                    patch.getPatchNumber(),
@@ -2337,6 +2346,13 @@ template<int DIM> void VisItDataWriter<DIM>::packRegularAndDerivedData(
          delete [] fbuffer;
 
       } // var is not species or material
+      else
+      {
+         for (int depth_id=0;depth_id<ipi().d_depth;++depth_id)
+         {
+            d_var_id_ctr++;
+         }
+      }
 
    } // iterate over vars
 
@@ -2413,7 +2429,7 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
                   patch_HDFGroup->putDatabase("materials");
             }
 
-            double dmax = tbox::MathUtilities<double>::getMin();
+            double dmax = -tbox::MathUtilities<double>::getMax();
             double dmin = tbox::MathUtilities<double>::getMax();
             bool data_on_disk = false;
 
@@ -2505,7 +2521,8 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
                   }
 
                   int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-                  checkFloatMinMax(dmin,
+                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                                   dmin,
                                    dmax,
                                    level_number,
                                    patch.getPatchNumber(),
@@ -2616,7 +2633,8 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
                   }
 
                   int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-                  checkFloatMinMax(dmin,
+                  checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                                   dmin,
                                    dmax,
                                    level_number,
                                    patch.getPatchNumber(),
@@ -2696,6 +2714,13 @@ template<int DIM> void VisItDataWriter<DIM>::packMaterialsData(
          }
 
       } // var is a material
+      else
+      {
+         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++)
+         {
+            d_var_id_ctr++;
+         }
+      }
 
    } // iterate over vars
 
@@ -2764,7 +2789,7 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
                           << std::endl);
             }
 
-            double dmax = tbox::MathUtilities<double>::getMin();
+            double dmax = -tbox::MathUtilities<double>::getMax();
             double dmin = tbox::MathUtilities<double>::getMax();
             bool data_on_disk = false;
 
@@ -2796,7 +2821,8 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
                }
 
                int dummy_pdata_id = VISIT_UNDEFINED_INDEX;
-               checkFloatMinMax(dmin,
+               checkFloatMinMax(ipi().d_visit_var_name[depth_id],
+                                dmin,
                                 dmax,
                                 level_number,
                                 patch.getPatchNumber(),
@@ -2867,6 +2893,13 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
          delete [] dbuffer;
 
       } // var is a species
+      else
+      {
+         for (int depth_id = 0; depth_id < ipi().d_depth; depth_id++)
+         {
+            d_var_id_ctr++;
+         }
+      }
 
    } // iterate over vars
 
@@ -2882,6 +2915,7 @@ template<int DIM> void VisItDataWriter<DIM>::packSpeciesData(
 */
 
 template<int DIM> void VisItDataWriter<DIM>::checkFloatMinMax(
+   const std::string& var_name,
    const double dmin,
    const double dmax,
    const int level_number,
@@ -2899,7 +2933,9 @@ template<int DIM> void VisItDataWriter<DIM>::checkFloatMinMax(
 
    if (dmin < fmin) {
       TBOX_ERROR("VisItDataWriter<DIM>:"
-                 << "\n    hier::Patch data is less than FLT_MIN "
+                 << "\n    hier::Patch data " 
+                 << var_name
+                 << " is less than FLT_MIN "
                  << "\n    level: " << level_number
                  <<"  patch: " << patch_number
                  <<"  patch_data_id: " << patch_data_id
@@ -2910,7 +2946,9 @@ template<int DIM> void VisItDataWriter<DIM>::checkFloatMinMax(
    }
    if (dmax > fmax) {
       TBOX_ERROR("VisItDataWriter<DIM>:"
-                 << "\n    hier::Patch data is greater than FLT_MAX "
+                 << "\n    hier::Patch data "
+                 << var_name
+                 << " is greater than FLT_MAX "
                  << "\n    level: " << level_number
                  <<"  patch: " << patch_number
                  <<"  patch_data_id: " << patch_data_id

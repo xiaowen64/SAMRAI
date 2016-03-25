@@ -1,15 +1,15 @@
 ##
-## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/sundials/Makefile.in $
+## File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/test/sundials/Makefile.in $
 ## Package:	SAMRAI applications
 ## Copyright:	(c) 1997-2002 Lawrence Livermore National Security, LLC
-## Revision:	$LastChangedRevision: 2181 $
-## Modified:	$LastChangedDate: 2008-05-06 11:04:30 -0700 (Tue, 06 May 2008) $
+## Revision:	$LastChangedRevision: 2316 $
+## Modified:	$LastChangedDate: 2008-08-05 11:54:45 -0700 (Tue, 05 Aug 2008) $
 ## Description:	makefile for cvode sample application
 ##
 
 SAMRAI        = @top_srcdir@
 SRCDIR        = @top_srcdir@/examples/sundials
-SUBDIR        = source/test/cvode
+SUBDIR        = source/test/sundials
 VPATH         = @top_srcdir@/examples/sundials
 TESTTOOLS     = ../testtools
 OBJECT        = ../../..

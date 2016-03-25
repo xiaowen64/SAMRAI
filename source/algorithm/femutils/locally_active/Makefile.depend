@@ -66,6 +66,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -130,8 +131,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
@@ -192,6 +193,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -254,8 +256,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
@@ -343,6 +345,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -435,8 +438,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C					\
 	LocallyActiveDataOuteredgeSumTransactionFactory.C
 endif
@@ -531,6 +534,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -629,8 +633,8 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C					\
 	LocallyActiveDataOuternodeSumTransactionFactory.C
 endif

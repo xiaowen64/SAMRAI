@@ -2,8 +2,8 @@
 // File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/trunk/source/toolbox/inputdb/InputDatabase.h $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2122 $
-// Modified:	$LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
+// Revision:	$LastChangedRevision: 2662 $
+// Modified:	$LastChangedDate: 2008-11-24 16:44:41 -0800 (Mon, 24 Nov 2008) $
 // Description:	An input database structure that stores (key,value) pairs
 //
 
@@ -28,23 +28,8 @@ namespace SAMRAI {
  * to constructors for problem setup.
  *
  */
-
-class InputDatabase : public MemoryDatabase
-{
-public:
-   /**
-    * The input database constructor creates an empty database with the
-    * specified name.
-    */
-   InputDatabase(const std::string& name);
-
-   /**
-    * The input database destructor deallocates the data in the database.
-    */
-   virtual ~InputDatabase();
-};
+typedef SAMRAI::tbox::MemoryDatabase InputDatabase;
 
 }
 }
-
 #endif

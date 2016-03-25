@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/database/MemoryDatabase.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/database/MemoryDatabase.C $
 // Package:	SAMRAI toolbox
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2122 $
-// Modified:	$LastChangedDate: 2008-04-08 15:37:28 -0700 (Tue, 08 Apr 2008) $
+// Revision:	$LastChangedRevision: 2620 $
+// Modified:	$LastChangedDate: 2008-11-19 14:24:28 -0800 (Wed, 19 Nov 2008) $
 // Description:	An memory database structure that stores (key,value) pairs in memory
 //
 
@@ -146,7 +146,7 @@ enum Database::DataType MemoryDatabase::getArrayType(const std::string& key)
    if(keydata) {
       return keydata -> d_type;
    } else {
-      return Database::INVALID;
+      return Database::SAMRAI_INVALID;
    }
 }
 
@@ -162,7 +162,7 @@ enum Database::DataType MemoryDatabase::getArrayType(const std::string& key)
 int MemoryDatabase::getArraySize(const std::string& key)
 {
    KeyData* keydata = findKeyData(key);
-   if(keydata && keydata -> d_type != Database::DATABASE) {
+   if(keydata && keydata -> d_type != Database::SAMRAI_DATABASE) {
       return keydata->d_array_size;
    } else {
       return 0;
@@ -180,7 +180,7 @@ int MemoryDatabase::getArraySize(const std::string& key)
 bool MemoryDatabase::isDatabase(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(keydata ? keydata->d_type == Database::DATABASE : false);
+   return(keydata ? keydata->d_type == Database::SAMRAI_DATABASE : false);
 }
 
 Pointer<Database> MemoryDatabase::putDatabase(const std::string& key)
@@ -188,7 +188,7 @@ Pointer<Database> MemoryDatabase::putDatabase(const std::string& key)
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::DATABASE;
+   keydata.d_type         = Database::SAMRAI_DATABASE;
    keydata.d_array_size   = 1;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -200,7 +200,7 @@ Pointer<Database> MemoryDatabase::putDatabase(const std::string& key)
 Pointer<Database> MemoryDatabase::getDatabase(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if (keydata->d_type != Database::DATABASE) {
+   if (keydata->d_type != Database::SAMRAI_DATABASE) {
       MEMORY_DB_ERROR("Key=" << key << " is not a database...");
    }
    keydata->d_accessed = true;
@@ -218,7 +218,7 @@ Pointer<Database> MemoryDatabase::getDatabase(const std::string& key)
 bool MemoryDatabase::isBool(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(keydata ? keydata->d_type == Database::BOOL : false);
+   return(keydata ? keydata->d_type == Database::SAMRAI_BOOL : false);
 }
 
 void MemoryDatabase::putBool(const std::string& key, const bool& data)
@@ -238,7 +238,7 @@ void MemoryDatabase::putBoolArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::BOOL;
+   keydata.d_type         = Database::SAMRAI_BOOL;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -254,7 +254,7 @@ void MemoryDatabase::putBoolArray(
 bool MemoryDatabase::getBool(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if ((keydata->d_type != Database::BOOL) || (keydata->d_array_size != 1)) {
+   if ((keydata->d_type != Database::SAMRAI_BOOL) || (keydata->d_array_size != 1)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a boolean scalar...");
    }
    keydata->d_accessed = true;
@@ -274,7 +274,7 @@ bool MemoryDatabase::getBoolWithDefault(
 Array<bool> MemoryDatabase::getBoolArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if (keydata->d_type != Database::BOOL) {
+   if (keydata->d_type != Database::SAMRAI_BOOL) {
       MEMORY_DB_ERROR("Key=" << key << " is not a boolean...");
    }
    keydata->d_accessed = true;
@@ -308,7 +308,7 @@ void MemoryDatabase::getBoolArray(
 bool MemoryDatabase::isDatabaseBox(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(keydata ? keydata->d_type == Database::BOX : false);
+   return(keydata ? keydata->d_type == Database::SAMRAI_BOX : false);
 }
 
 void MemoryDatabase::putDatabaseBox(const std::string& key, const DatabaseBox& data)
@@ -328,7 +328,7 @@ void MemoryDatabase::putDatabaseBoxArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::BOX;
+   keydata.d_type         = Database::SAMRAI_BOX;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -344,7 +344,7 @@ void MemoryDatabase::putDatabaseBoxArray(
 DatabaseBox MemoryDatabase::getDatabaseBox(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if ((keydata->d_type != Database::BOX) || (keydata->d_array_size != 1)) {
+   if ((keydata->d_type != Database::SAMRAI_BOX) || (keydata->d_array_size != 1)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single box...");
    }
    keydata->d_accessed = true;
@@ -364,7 +364,7 @@ DatabaseBox MemoryDatabase::getDatabaseBoxWithDefault(
 Array<DatabaseBox> MemoryDatabase::getDatabaseBoxArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if (keydata->d_type != Database::BOX) {
+   if (keydata->d_type != Database::SAMRAI_BOX) {
       MEMORY_DB_ERROR("Key=" << key << " is not a box...");
    }
    keydata->d_accessed = true;
@@ -398,7 +398,7 @@ void MemoryDatabase::getDatabaseBoxArray(
 bool MemoryDatabase::isChar(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(keydata ? keydata->d_type == Database::CHAR : false);
+   return(keydata ? keydata->d_type == Database::SAMRAI_CHAR : false);
 }
 
 void MemoryDatabase::putChar(const std::string& key, const char& data)
@@ -418,7 +418,7 @@ void MemoryDatabase::putCharArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::CHAR;
+   keydata.d_type         = Database::SAMRAI_CHAR;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -434,7 +434,7 @@ void MemoryDatabase::putCharArray(
 char MemoryDatabase::getChar(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if ((keydata->d_type != Database::CHAR) || (keydata->d_array_size != 1)) {
+   if ((keydata->d_type != Database::SAMRAI_CHAR) || (keydata->d_array_size != 1)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single character...");
    }
    keydata->d_accessed = true;
@@ -454,7 +454,7 @@ char MemoryDatabase::getCharWithDefault(
 Array<char> MemoryDatabase::getCharArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if (keydata->d_type != Database::CHAR) {
+   if (keydata->d_type != Database::SAMRAI_CHAR) {
       MEMORY_DB_ERROR("Key=" << key << " is not a character...");
    }
    keydata->d_accessed = true;
@@ -490,10 +490,10 @@ void MemoryDatabase::getCharArray(
 bool MemoryDatabase::isComplex(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(!keydata ? false : (keydata->d_type == Database::COMPLEX
-                           || keydata->d_type == Database::INT
-                           || keydata->d_type == Database::FLOAT
-                           || keydata->d_type == Database::DOUBLE));
+   return(!keydata ? false : (keydata->d_type == Database::SAMRAI_COMPLEX
+                           || keydata->d_type == Database::SAMRAI_INT
+                           || keydata->d_type == Database::SAMRAI_FLOAT
+                           || keydata->d_type == Database::SAMRAI_DOUBLE));
 }
 
 void MemoryDatabase::putComplex(const std::string& key, const dcomplex& data)
@@ -513,7 +513,7 @@ void MemoryDatabase::putComplexArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::COMPLEX;
+   keydata.d_type         = Database::SAMRAI_COMPLEX;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -536,16 +536,16 @@ dcomplex MemoryDatabase::getComplex(const std::string& key)
    }
 
    switch (keydata->d_type) {
-      case Database::INT:
+      case Database::SAMRAI_INT:
          value = dcomplex((double) keydata->d_integer[0], 0.0);
          break;
-      case Database::FLOAT:
+      case Database::SAMRAI_FLOAT:
          value = dcomplex((double) keydata->d_float[0], 0.0);
          break;
-      case Database::DOUBLE:
+      case Database::SAMRAI_DOUBLE:
          value = dcomplex(keydata->d_double[0], 0.0);
          break;
-      case Database::COMPLEX:
+      case Database::SAMRAI_COMPLEX:
          value = keydata->d_complex[0];
          break;
       default:
@@ -572,28 +572,28 @@ Array<dcomplex> MemoryDatabase::getComplexArray(
    KeyData *keydata = findKeyDataOrExit(key);
    Array<dcomplex> array;
    switch (keydata->d_type) {
-      case Database::INT: {
+      case Database::SAMRAI_INT: {
          array = Array<dcomplex>(keydata->d_integer.getSize());
          for (int i = 0; i < keydata->d_integer.getSize(); i++) {
             array[i] = dcomplex((double) keydata->d_integer[i], 0.0);
          }
          break;
       }
-      case Database::FLOAT: {
+      case Database::SAMRAI_FLOAT: {
          array = Array<dcomplex>(keydata->d_float.getSize());
          for (int i = 0; i < keydata->d_float.getSize(); i++) {
             array[i] = dcomplex((double) keydata->d_float[i], 0.0);
          }
          break;
       }
-      case Database::DOUBLE: {
+      case Database::SAMRAI_DOUBLE: {
          array = Array<dcomplex>(keydata->d_double.getSize());
          for (int i = 0; i < keydata->d_float.getSize(); i++) {
             array[i] = dcomplex(keydata->d_double[i], 0.0);
          }
          break;
       }
-      case Database::COMPLEX:
+      case Database::SAMRAI_COMPLEX:
          array = keydata->d_complex;
          break;
       default:
@@ -632,9 +632,9 @@ bool MemoryDatabase::isDouble(
    const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(!keydata ? false : (keydata->d_type == Database::DOUBLE
-                           || keydata->d_type == Database::INT
-                           || keydata->d_type == Database::FLOAT));
+   return(!keydata ? false : (keydata->d_type == Database::SAMRAI_DOUBLE
+                           || keydata->d_type == Database::SAMRAI_INT
+                           || keydata->d_type == Database::SAMRAI_FLOAT));
 }
 
 void MemoryDatabase::putDouble(
@@ -655,7 +655,7 @@ void MemoryDatabase::putDoubleArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::DOUBLE;
+   keydata.d_type         = Database::SAMRAI_DOUBLE;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -678,13 +678,13 @@ double MemoryDatabase::getDouble(const std::string& key)
    }
 
    switch (keydata->d_type) {
-      case Database::INT:
+      case Database::SAMRAI_INT:
          value = (double) keydata->d_integer[0];
          break;
-      case Database::FLOAT:
+      case Database::SAMRAI_FLOAT:
          value = (double) keydata->d_float[0];
          break;
-      case Database::DOUBLE:
+      case Database::SAMRAI_DOUBLE:
          value = keydata->d_double[0];
          break;
       default:
@@ -710,21 +710,21 @@ Array<double> MemoryDatabase::getDoubleArray(const std::string& key)
    KeyData *keydata = findKeyDataOrExit(key);
    Array<double> array;
    switch (keydata->d_type) {
-      case Database::INT: {
+      case Database::SAMRAI_INT: {
          array = Array<double>(keydata->d_integer.getSize());
          for (int i = 0; i < keydata->d_integer.getSize(); i++) {
             array[i] = (double) keydata->d_integer[i];
          }
          break;
       }
-      case Database::FLOAT: {
+      case Database::SAMRAI_FLOAT: {
          array = Array<double>(keydata->d_float.getSize());
          for (int i = 0; i < keydata->d_float.getSize(); i++) {
             array[i] = (double) keydata->d_float[i];
          }
          break;
       }
-      case Database::DOUBLE: {
+      case Database::SAMRAI_DOUBLE: {
          array = keydata->d_double;
          break;
       }
@@ -764,9 +764,9 @@ void MemoryDatabase::getDoubleArray(
 bool MemoryDatabase::isFloat(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(!keydata ? false : (keydata->d_type == Database::DOUBLE
-                           || keydata->d_type == Database::INT
-                           || keydata->d_type == Database::FLOAT));
+   return(!keydata ? false : (keydata->d_type == Database::SAMRAI_DOUBLE
+                           || keydata->d_type == Database::SAMRAI_INT
+                           || keydata->d_type == Database::SAMRAI_FLOAT));
 }
 
 void MemoryDatabase::putFloat(const std::string& key, const float& data)
@@ -786,7 +786,7 @@ void MemoryDatabase::putFloatArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::FLOAT;
+   keydata.d_type         = Database::SAMRAI_FLOAT;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -816,13 +816,13 @@ float MemoryDatabase::getFloat(
    }
 
    switch (keydata->d_type) {
-      case Database::INT:
+      case Database::SAMRAI_INT:
          value = static_cast<float>( keydata->d_integer[0] );
          break;
-      case Database::FLOAT:
+      case Database::SAMRAI_FLOAT:
          value = keydata->d_float[0];
          break;
-      case Database::DOUBLE:
+      case Database::SAMRAI_DOUBLE:
          value = static_cast<float>( keydata->d_double[0] );
          break;
       default:
@@ -849,17 +849,17 @@ Array<float> MemoryDatabase::getFloatArray(
    KeyData *keydata = findKeyDataOrExit(key);
    Array<float> array;
    switch (keydata->d_type) {
-      case Database::INT: {
+      case Database::SAMRAI_INT: {
          array = Array<float>(keydata->d_integer.getSize());
          for (int i = 0; i < keydata->d_integer.getSize(); i++) {
             array[i] = static_cast<float>( keydata->d_integer[i] );
          }
          break;
       }
-      case Database::FLOAT:
+      case Database::SAMRAI_FLOAT:
          array = keydata->d_float;
          break;
-      case Database::DOUBLE: {
+      case Database::SAMRAI_DOUBLE: {
          array = Array<float>(keydata->d_double.getSize());
          for (int i = 0; i < keydata->d_double.getSize(); i++) {
             array[i] = static_cast<float>( keydata->d_double[i] );
@@ -901,7 +901,7 @@ bool MemoryDatabase::isInteger(
    const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(!keydata ? false : keydata->d_type == Database::INT);
+   return(!keydata ? false : keydata->d_type == Database::SAMRAI_INT);
 }
 
 void MemoryDatabase::putInteger(
@@ -922,7 +922,7 @@ void MemoryDatabase::putIntegerArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::INT;
+   keydata.d_type         = Database::SAMRAI_INT;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -939,7 +939,7 @@ int MemoryDatabase::getInteger(
    const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if ((keydata->d_type != Database::INT) || (keydata->d_array_size != 1)) {
+   if ((keydata->d_type != Database::SAMRAI_INT) || (keydata->d_array_size != 1)) {
       MEMORY_DB_ERROR("Key=" << key << " is not an integer scalar...");
    }
    keydata->d_accessed = true;
@@ -960,7 +960,7 @@ Array<int> MemoryDatabase::getIntegerArray(
    const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if (keydata->d_type != Database::INT) {
+   if (keydata->d_type != Database::SAMRAI_INT) {
       MEMORY_DB_ERROR("Key=" << key << " is not an integer...");
    }
    keydata->d_accessed = true;
@@ -994,7 +994,7 @@ void MemoryDatabase::getIntegerArray(
 bool MemoryDatabase::isString(const std::string& key)
 {
    KeyData *keydata = findKeyData(key);
-   return(!keydata ? false : keydata->d_type == Database::STRING);
+   return(!keydata ? false : keydata->d_type == Database::SAMRAI_STRING);
 }
 
 void MemoryDatabase::putString(
@@ -1016,7 +1016,7 @@ void MemoryDatabase::putStringArray(
    deleteKeyIfFound(key);
    KeyData keydata;
    keydata.d_key          = key;
-   keydata.d_type         = Database::STRING;
+   keydata.d_type         = Database::SAMRAI_STRING;
    keydata.d_array_size   = nelements;
    keydata.d_accessed     = false;
    keydata.d_from_default = false;
@@ -1032,7 +1032,7 @@ void MemoryDatabase::putStringArray(
 std::string MemoryDatabase::getString(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if ((keydata->d_type != Database::STRING) || (keydata->d_array_size != 1)) {
+   if ((keydata->d_type != Database::SAMRAI_STRING) || (keydata->d_array_size != 1)) {
       MEMORY_DB_ERROR("Key=" << key << " is not a single string...");
    }
    keydata->d_accessed = true;
@@ -1052,7 +1052,7 @@ std::string MemoryDatabase::getStringWithDefault(
 Array<std::string> MemoryDatabase::getStringArray(const std::string& key)
 {
    KeyData *keydata = findKeyDataOrExit(key);
-   if (keydata->d_type != Database::STRING) {
+   if (keydata->d_type != Database::SAMRAI_STRING) {
       MEMORY_DB_ERROR("Key=" << key << " is not a string...");
    }
    keydata->d_accessed = true;
@@ -1213,7 +1213,7 @@ void MemoryDatabase::printDatabase(
       if ( ( (k().d_from_default) && (toprint & PRINT_DEFAULT))
         || ( (k().d_accessed)     && (toprint & PRINT_INPUT  ))
         || (!(k().d_accessed)     && (toprint & PRINT_UNUSED ))) {
-         if (k().d_type != Database::DATABASE) {
+         if (k().d_type != Database::SAMRAI_DATABASE) {
             const int keywidth = k().d_key.length();
             if (keywidth > width) width = keywidth;
          }
@@ -1241,15 +1241,15 @@ void MemoryDatabase::printDatabase(
 
          switch(i().d_type) {
 
-            case Database::INVALID: {
+            case Database::SAMRAI_INVALID: {
                break;
             }
 
-            case Database::DATABASE: {
+            case Database::SAMRAI_DATABASE: {
                break;
             }
 
-            case Database::BOOL: {
+            case Database::SAMRAI_BOOL: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1262,7 +1262,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::BOX: {
+            case Database::SAMRAI_BOX: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1286,7 +1286,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::CHAR: {
+            case Database::SAMRAI_CHAR: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1299,7 +1299,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::COMPLEX: {
+            case Database::SAMRAI_COMPLEX: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1312,7 +1312,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::DOUBLE: {
+            case Database::SAMRAI_DOUBLE: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1325,7 +1325,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::FLOAT: {
+            case Database::SAMRAI_FLOAT: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1338,7 +1338,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::INT: {
+            case Database::SAMRAI_INT: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1351,7 +1351,7 @@ void MemoryDatabase::printDatabase(
                break;
             }
 
-            case Database::STRING: {
+            case Database::SAMRAI_STRING: {
                indentStream(sstream, indent+3);
                sstream << i().d_key;
                indentStream(sstream, width-i().d_key.length());
@@ -1369,7 +1369,7 @@ void MemoryDatabase::printDatabase(
           * Output whether the key was used or default in column 60
           */
 
-         if (i().d_type != Database::DATABASE) {
+         if (i().d_type != Database::SAMRAI_DATABASE) {
 #ifndef LACKS_SSTREAM
             const int tab = 59 - sstream.str().length();
 #else
@@ -1396,7 +1396,7 @@ void MemoryDatabase::printDatabase(
     */
 
    for (List<KeyData>::Iterator j(d_keyvalues); j; j++) {
-      if (j().d_type == Database::DATABASE) {
+      if (j().d_type == Database::SAMRAI_DATABASE) {
          Pointer<MemoryDatabase> db = j().d_database;
          db->printDatabase(os, indent+3, toprint);
       }

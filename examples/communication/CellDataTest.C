@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/examples/communication/CellDataTest.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/examples/communication/CellDataTest.C $
 // Package:     SAMRAI tests
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2147 $
-// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2835 $
+// Modified:    $LastChangedDate: 2009-01-16 11:59:59 -0800 (Fri, 16 Jan 2009) $
 // Description: AMR communication tests for cell-centered patch data
 //
 
@@ -300,20 +300,14 @@ void CellDataTest::initializeDataOnPatch(
 
    if (d_do_refine) {
 
-      if (   (d_refine_option == "INTERIOR_FROM_SAME_LEVEL") 
-          || ( (d_refine_option == "INTERIOR_FROM_COARSER_LEVEL") 
-              && (level_number == 0) ) ) {
+      for (int i = 0; i < d_variables.getSize(); i++) {
 
-         for (int i = 0; i < d_variables.getSize(); i++) {
+         tbox::Pointer< pdat::CellData<NDIM,double> > cell_data =
+            patch.getPatchData(d_variables[i], getDataContext());
 
-            tbox::Pointer< pdat::CellData<NDIM,double> > cell_data =
-               patch.getPatchData(d_variables[i], getDataContext());
+         hier::Box<NDIM> dbox = cell_data->getBox(); 
 
-            hier::Box<NDIM> dbox = cell_data->getBox(); 
-
-            setLinearData(cell_data, dbox, patch);
-
-         }
+         setLinearData(cell_data, dbox, patch);
 
       }
 

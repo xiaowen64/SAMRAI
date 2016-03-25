@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/outernode/OuternodeData.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/outernode/OuternodeData.C $
 // Package:	SAMRAI patch data
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2039 $
-// Modified:	$LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
+// Revision:	$LastChangedRevision: 2834 $
+// Modified:	$LastChangedDate: 2009-01-16 11:05:22 -0800 (Fri, 16 Jan 2009) $
 // Description:	Templated outernode centered patch data type
 //
 
@@ -401,11 +401,11 @@ void OuternodeData<DIM,TYPE>::packStream(
 #endif
    const hier::BoxList<DIM>& dst_boxes    = t_overlap->getDestinationBoxList();
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < DIM; d++) {
-      for (typename hier::BoxList<DIM>::Iterator dst_box(dst_boxes); 
-           dst_box; dst_box++) {
-         const hier::Box<DIM> src_box = hier::Box<DIM>::shift(dst_box(), 
-                                                              -src_offset);
+   for (typename hier::BoxList<DIM>::Iterator dst_box(dst_boxes); 
+        dst_box; dst_box++) {
+      const hier::Box<DIM> src_box = hier::Box<DIM>::shift(dst_box(), 
+                                                           -src_offset);
+      for (int d = 0; d < DIM; d++) {
          for (int loc = 0; loc < 2; loc++) {
             const hier::Box<DIM> intersect = src_box * d_data[d][loc].getBox();
             if (!intersect.empty()) {
@@ -431,9 +431,9 @@ void OuternodeData<DIM,TYPE>::unpackStream(
 #endif
    const hier::BoxList<DIM>& dst_boxes = t_overlap->getDestinationBoxList();
    const hier::IntVector<DIM>& src_offset = t_overlap->getSourceOffset();
-   for (int d = 0; d < DIM; d++) {
-      for (typename hier::BoxList<DIM>::Iterator dst_box(dst_boxes); 
-           dst_box; dst_box++) {
+   for (typename hier::BoxList<DIM>::Iterator dst_box(dst_boxes); 
+        dst_box; dst_box++) {
+      for (int d = 0; d < DIM; d++) {
          for (int f = 0; f < 2; f++) {
             const hier::Box<DIM> intersect = 
                dst_box() * d_data[d][f].getBox();

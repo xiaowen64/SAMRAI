@@ -1,8 +1,8 @@
 /*
-  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/test/FAC/AdaptivePoisson.C $
+  File:		$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/test/FAC/AdaptivePoisson.C $
   Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-  Revision:	$LastChangedRevision: 2274 $
-  Modified:	$LastChangedDate: 2008-07-07 11:10:49 -0700 (Mon, 07 Jul 2008) $
+  Revision:	$LastChangedRevision: 2456 $
+  Modified:	$LastChangedDate: 2008-10-17 17:43:50 -0700 (Fri, 17 Oct 2008) $
   Description:	AdaptivePoisson class implementation
 */
 
@@ -51,7 +51,9 @@
 #include "PatchCellDataOpsReal.h"
 #include "HierarchyCellDataOpsReal.h"
 
-#include IOMANIP_HEADER_FILE
+#include <strstream>
+#include <iomanip>
+#include <cstring>
 
 using namespace SAMRAI;
 
@@ -569,48 +571,6 @@ void AdaptivePoisson::applyGradientDetector(
 }
 
 int AdaptivePoisson::registerVariablesWithPlotter(
-  appu::CartesianVizamraiDataWriter<NDIM> &viz_writer
-) const {
-
-   /*
-     Tell the plotter about the refinement ratios.
-     This must be done once (and again each time the data changes).
-   */
-   if ( d_hierarchy.isNull() ) {
-      TBOX_ERROR("No hierarchy in AdaptivePoisson::registerVariablesWithPlotter\n"
-                 << "The hierarchy must be built before calling this function.\n");
-   }
-   int ln;
-   for ( ln=1; ln<d_hierarchy->getNumberOfLevels(); ln++ ) {
-     tbox::Pointer<hier::PatchLevel<NDIM> > level 
-	= d_hierarchy->getPatchLevel(ln);
-     const hier::IntVector<NDIM> &lratio = level->getRatioToCoarserLevel();
-      viz_writer.setRatioToCoarserLevel(ln, lratio);
-   }
-    /*
-      Set the finest level to plot (optional).
-    */
-   int finest_plot_level =
-     tbox::MathUtilities<int>::Min( d_finest_plot_level,
-			            d_hierarchy->getFinestLevelNumber() );
-   viz_writer.setFinestLevelToPlot( finest_plot_level );
-   /*
-     Register variables with plotter.
-   */
-   viz_writer.registerPlotScalar("Computed solution", d_scalar_persistent);
-   viz_writer.registerDerivedPlotScalar("Error" ,
-     (appu::VisDerivedDataStrategy<NDIM> *)this );
-   viz_writer.registerPlotScalar("Exact solution", d_exact_persistent);
-   if(1) viz_writer.registerDerivedPlotScalar("Gradient Function" ,
-     (appu::VisDerivedDataStrategy<NDIM> *)this );
-   viz_writer.registerPlotScalar("Poisson source", d_constant_source_persistent);
-   if(1) viz_writer.registerDerivedPlotScalar("Patch level number" ,
-     (appu::VisDerivedDataStrategy<NDIM> *)this );
-
-   return 0;
-}
-
-int AdaptivePoisson::registerVariablesWithPlotter(
   appu::VisItDataWriter<NDIM> &visit_writer
 ) {
 
@@ -623,11 +583,6 @@ int AdaptivePoisson::registerVariablesWithPlotter(
    visit_writer.registerPlotQuantity("Poisson source",
                                      "SCALAR",
                                      d_constant_source_persistent);
-   visit_writer.registerDerivedPlotQuantity("Error" ,
-                                            "SCALAR",
-                                            this,
-                                            1.0,
-                                            "CELL");
    visit_writer.registerDerivedPlotQuantity("Gradient Function" ,
                                             "SCALAR",
                                             this,
@@ -639,42 +594,28 @@ int AdaptivePoisson::registerVariablesWithPlotter(
                                             1.0,
                                             "CELL" );
 
-#if 0
-   /*
-     Tell the plotter about the refinement ratios.
-     This must be done once (and again each time the data changes).
-   */
-   if ( d_hierarchy.isNull() ) {
-      TBOX_ERROR("No hierarchy in AdaptivePoisson::registerVariablesWithPlotter\n"
-                 << "The hierarchy must be built before calling this function.\n");
+/*
+  This code has a memory leak in it but is not necessary for the test
+     {
+      tbox::Array<string> expression_keys(1,false);
+      tbox::Array<string> expressions(1,false);
+      tbox::Array<string> expression_types(1,false);
+
+      {
+         expression_keys[0]="Error";
+         expression_types[0]="scalar";
+         std::ostrstream expstream;
+         expstream
+            << "<Computed solution> - <Exact solution>" << ends;
+         expressions[0] = expstream.str();
+         tbox::pout << "expressions[0] = '" << expressions[0] << "'\n";
+      }
+
+      visit_writer.registerVisItExpressions(expression_keys,
+                                            expressions,
+                                            expression_types);
    }
-   int ln;
-   for ( ln=1; ln<d_hierarchy->getNumberOfLevels(); ln++ ) {
-     tbox::Pointer<hier::PatchLevel<NDIM> > level 
-	= d_hierarchy->getPatchLevel(ln);
-     const hier::IntVector<NDIM> &lratio = level->getRatioToCoarserLevel();
-      visit_writer.setRatioToCoarserLevel(ln, lratio);
-   }
-    /*
-      Set the finest level to plot (optional).
-    */
-   int finest_plot_level =
-     tbox::MathUtilities<int>::Min( d_finest_plot_level,
-			            d_hierarchy->getFinestLevelNumber() );
-   visit_writer.setFinestLevelToPlot( finest_plot_level );
-   /*
-     Register variables with plotter.
-   */
-   visit_writer.registerPlotScalar("Computed solution", d_scalar_persistent);
-   visit_writer.registerDerivedPlotScalar("Error" ,
-     (appu::VisDerivedDataStrategy<NDIM> *)this );
-   visit_writer.registerPlotScalar("Exact solution", d_exact_persistent);
-   if(1) visit_writer.registerDerivedPlotScalar("Gradient Function" ,
-     (appu::VisDerivedDataStrategy<NDIM> *)this );
-   visit_writer.registerPlotScalar("Poisson source", d_constant_source_persistent);
-   if(1) visit_writer.registerDerivedPlotScalar("Patch level number" ,
-     (appu::VisDerivedDataStrategy<NDIM> *)this );
-#endif
+*/
 
    return 0;
 }
@@ -695,33 +636,7 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
   const int *lower = region.lower();
   const int *upper = region.upper();
 
-  if ( variable_name == "Error" ) {
-    tbox::Pointer<pdat::CellData<NDIM,double> > current_solution
-      = patch.getPatchData(d_scalar_persistent);
-    tbox::Pointer<pdat::CellData<NDIM,double> > exact_solution
-      = patch.getPatchData(d_exact_persistent);
-    MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > ex =
-      pdat::ArrayDataAccess::access( exact_solution->getArrayData() );
-    MDA_AccessConst<double,NDIM,MDA_OrderColMajor<NDIM> > co =
-      pdat::ArrayDataAccess::access( current_solution->getArrayData() );
-#if NDIM == 2
-    for ( int j=lower[1]; j<=upper[1]; ++j ) {
-      for ( int i=lower[0]; i<=upper[0]; ++i ) {
-	*(buffer++) = co(i,j) - ex(i,j);
-      }
-    }
-#endif
-#if NDIM == 3
-    for ( int k=lower[2]; k<=upper[2]; ++k ) {
-      for ( int j=lower[1]; j<=upper[1]; ++j ) {
-	for ( int i=lower[0]; i<=upper[0]; ++i ) {
-	  *(buffer++) = co(i,j,k) - ex(i,j,k);
-	}
-      }
-    }
-#endif
-  }
-  else if ( variable_name == "Gradient Function" ) {
+  if ( variable_name == "Gradient Function" ) {
     tbox::Pointer<pdat::CellData<NDIM,double> > soln_cell_data_ =
       patch.getPatchData(d_scalar_persistent);
     const pdat::CellData<NDIM,double> &soln_cell_data = *soln_cell_data_;
@@ -733,7 +648,6 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
     // tbox::plog << "estimate data: " << patch.getBox().size() << "\n";
     // estimate_data.print(region,0,tbox::plog);
     memcpy(buffer, estimate_data.getPointer(), sizeof(double)*region.size());
-    // stream.pack( estimate_data.getPointer(), region.size() );
   }
   else if ( variable_name == "Patch level number" ) {
     double pln = patch.getPatchLevelNumber();

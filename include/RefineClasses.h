@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/datamovers/standard/RefineClasses.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/datamovers/standard/RefineClasses.h $
 // Package:	SAMRAI data transfer
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 3061 $
+// Modified:	$LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:	Simple structure for managing refinement data in equivalence classes.
 //
  
@@ -22,6 +22,7 @@
 #include "tbox/Pointer.h"
 #include "RefineOperator.h"
 #include "TimeInterpolateOperator.h"
+#include "VariableFillPattern.h"
 
 namespace SAMRAI {
     namespace xfer {
@@ -53,6 +54,7 @@ public:
       tbox::Pointer< RefineOperator<DIM> >          d_oprefine;
       tbox::Pointer< TimeInterpolateOperator<DIM> > d_optime;
       int                                           d_tag;
+      tbox::Pointer<VariableFillPattern<DIM> >      d_var_fill_pattern;
    };
 
    /**

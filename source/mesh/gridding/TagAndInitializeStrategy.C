@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/mesh/gridding/TagAndInitializeStrategy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/mesh/gridding/TagAndInitializeStrategy.C $
 // Package:     SAMRAI mesh
 // Copyright:   (c) 1997-2000 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2039 $
-// Modified:    $LastChangedDate: 2008-03-11 13:23:52 -0700 (Tue, 11 Mar 2008) $
+// Revision:    $LastChangedRevision: 2869 $
+// Modified:    $LastChangedDate: 2009-02-03 20:39:48 -0800 (Tue, 03 Feb 2009) $
 // Description: Strategy interface for params, tagging, init for gridding.
 //
 
@@ -266,14 +266,15 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
     * set of refine boxes, or the "new" input format which allows you
     * to specify a specified sequence of refine boxes.
     */
-   bool use_old_input = false;
-   int ln, i;
-   for (ln = 0; ln < nkeys; ln++) {
+   bool use_new_input = false;
+   for (int ln = 0; ln < nkeys; ln++) {
       std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
-      if (refine_box_db->keyExists(level_boxes_name)) {
-         use_old_input = true;
+      if (refine_box_db->isDatabase(level_boxes_name)) {
+         use_new_input = true;
       }
-      
+   }
+
+   for (int ln = 0; ln < nkeys; ln++) {
       /*
        * Set counter for each level to zero.
        */
@@ -287,39 +288,22 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
       d_refine_boxes_old_seq_num[ln] = -1;
    }
    
-   if (use_old_input) {
-      for (ln = 0; ln < nkeys; ln++) {
-	 std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
-         d_refine_boxes[ln].resizeArray(1);
-         d_refine_boxes_cycles[ln].resizeArray(1);
-         d_refine_boxes_times[ln].resizeArray(1);
-         
-         if (refine_box_db->keyExists(level_boxes_name)) {
-            d_refine_boxes[ln][0] = 
-               refine_box_db->getDatabaseBoxArray(level_boxes_name);
-         }
-         d_refine_boxes_cycles[ln][0] = 0;
-         d_refine_boxes_times[ln][0] = 0.;
-         d_refine_boxes_use_times[ln] = false;
-      }
-   }
-   
-   /*
-    * We are using the updated input format that allows multiple
-    * sequence entries.
-    */
-   if (!use_old_input) {
-      for (ln = 0; ln < nkeys; ln++) {
+   if (use_new_input) {
+      /*
+       * We are using the updated input format that allows multiple
+       * sequence entries.
+       */
+      for (int ln = 0; ln < nkeys; ln++) {
 	 std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
          if (!refine_box_db->keyExists(level_boxes_name)) {
             TBOX_ERROR(d_object_name << "\n"
                        << ": Expected sub-database level entries in the\n"
                        << " 'RefineBoxes' database to specify boxes for\n"
                        << "  different time or cycle sequences: \n"
-                       << "  e.g.  Level0 { boxes_0 = <box array> \n"
+                       << "  e.g.  level_0 { boxes_0 = <box array> \n"
                        << "                 boxes_1 = <box array> \n"
                        << "                 ...} \n"
-                       << "        Level1 { boxes_0 = <box array> \n"
+                       << "        level_1 { boxes_0 = <box array> \n"
                        << "                 ...} \n"
                        << "See header for this class for further discussion\n"
                        << "of the expected input format." << std::endl);
@@ -374,7 +358,7 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
          /*
           * Read boxes.  
           */
-         for (i = 0; i < max_seq; i++) {
+         for (int i = 0; i < max_seq; i++) {
 	    std::string boxes_name = "boxes_" + tbox::Utilities::intToString(i);
             if (level_refine_box_db->keyExists(boxes_name)) {
                d_refine_boxes[ln][i] = 
@@ -383,8 +367,23 @@ template<int DIM> void TagAndInitializeStrategy<DIM>::getFromInput(
          }
          
       } // loop over levels
-      
-   } // not using old input format
+   } else  {
+
+      for (int ln = 0; ln < nkeys; ln++) {
+	 std::string level_boxes_name = "level_" + tbox::Utilities::intToString(ln);
+         d_refine_boxes[ln].resizeArray(1);
+         d_refine_boxes_cycles[ln].resizeArray(1);
+         d_refine_boxes_times[ln].resizeArray(1);
+         
+         if (refine_box_db->keyExists(level_boxes_name)) {
+            d_refine_boxes[ln][0] = 
+               refine_box_db->getDatabaseBoxArray(level_boxes_name);
+         }
+         d_refine_boxes_cycles[ln][0] = 0;
+         d_refine_boxes_times[ln][0] = 0.;
+         d_refine_boxes_use_times[ln] = false;
+      }
+   } // not using new input format
 
 }
 

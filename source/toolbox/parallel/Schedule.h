@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/toolbox/parallel/Schedule.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/toolbox/parallel/Schedule.h $
 // Package:	SAMRAI communication and data transfer package
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2132 $
-// Modified:	$LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:	$LastChangedRevision: 2410 $
+// Modified:	$LastChangedDate: 2008-10-08 14:30:40 -0700 (Wed, 08 Oct 2008) $
 // Description:	Schedule of communication transactions between processors
 //
 
@@ -125,6 +125,21 @@ public:
    };
 
 private:
+
+
+   /*!
+    * @brief Set up things for the entire class.
+    */
+   void firstConstructorTasks();
+
+   /*!
+     Free static timers.
+
+     To be called by shutdown registry to make sure
+     memory for timers does not leak.
+   */
+   static void freeTimers();
+
    void calculateSendSizes();
    void calculateReceiveSizes();
    void postMessageReceives();

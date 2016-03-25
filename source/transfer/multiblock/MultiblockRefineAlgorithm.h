@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/transfer/multiblock/MultiblockRefineAlgorithm.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/transfer/multiblock/MultiblockRefineAlgorithm.h $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 3153 $
+// Modified:    $LastChangedDate: 2009-04-21 17:12:47 -0700 (Tue, 21 Apr 2009) $
 // Description: class to manage multiblocks
 //
 
@@ -214,6 +214,16 @@ public:
       tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory =
          (xfer::RefineTransactionFactory<DIM>*)NULL) const;
 
+   tbox::Pointer< MultiblockRefineSchedule<DIM> > createSchedule(
+      const std::string& fill_pattern,
+      tbox::Pointer< hier::MultiblockPatchLevel<DIM> > level,
+      const int next_coarser_level,
+      tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock,
+      MultiblockRefinePatchStrategy<DIM>* patch_strategy =
+            ((MultiblockRefinePatchStrategy<DIM>*)NULL),
+      tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory =
+         (xfer::RefineTransactionFactory<DIM>*)NULL) const;
+
    /*!
     * @brief Create a communication schedule that moves data from the
     * interiors of the source level and coarser hierarchy levels into the
@@ -241,6 +251,17 @@ public:
     * @param transaction_factory  Refine transaction factory.
     */ 
    tbox::Pointer< MultiblockRefineSchedule<DIM> > createSchedule(
+      tbox::Pointer< hier::MultiblockPatchLevel<DIM> > dst_level,
+      tbox::Pointer< hier::MultiblockPatchLevel<DIM> > src_level,
+      const int next_coarser_level,
+      tbox::Pointer< hier::MultiblockPatchHierarchy<DIM> > multiblock,
+      MultiblockRefinePatchStrategy<DIM>* patch_strategy =
+            ((MultiblockRefinePatchStrategy<DIM>*)NULL),
+      tbox::Pointer< xfer::RefineTransactionFactory<DIM> > transaction_factory =
+         (xfer::RefineTransactionFactory<DIM>*)NULL) const;
+
+   tbox::Pointer< MultiblockRefineSchedule<DIM> > createSchedule(
+      const std::string& fill_pattern,
       tbox::Pointer< hier::MultiblockPatchLevel<DIM> > dst_level,
       tbox::Pointer< hier::MultiblockPatchLevel<DIM> > src_level,
       const int next_coarser_level,

@@ -1,9 +1,9 @@
 ##
-## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/templates/genfiles.sh $
+## File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/templates/genfiles.sh $
 ## Package:     SAMRAI templates
 ## Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-## Revision:    $LastChangedRevision: 2153 $
-## Modified:    $LastChangedDate: 2008-04-25 14:08:49 -0700 (Fri, 25 Apr 2008) $
+## Revision:    $LastChangedRevision: 3278 $
+## Modified:    $LastChangedDate: 2009-06-17 13:24:28 -0700 (Wed, 17 Jun 2009) $
 ## Description: shell script to create SAMRAI template files in the repository
 ##
 
@@ -56,7 +56,10 @@ EdgeIndex EdgeIterator \
 SideIndex SideIterator \
 NodeIndex NodeIterator \
 FaceIndex FaceIterator \
-OuternodeDoubleConstantCoarsen;
+OuternodeDoubleConstantCoarsen \
+FirstLayerCellFillPattern SecondLayerNodeFillPattern \
+FirstLayerCellNoCornersFillPattern  SecondLayerNodeNoCornersFillPattern \
+FirstLayerNodeFillPattern;
 do
   ${MT} default.filenames ./tmpXd pdat $t NDIM
 done
@@ -84,10 +87,15 @@ done
 for t in bool char dcomplex double int float; do
    ${MT} $t.filenames ./tmpNond pdat pdat::CopyOperation $t
 done
-for t in dcomplex double int float; do
+for t in bool char dcomplex double int float; do
    ${MT} $t.filenames ./tmpNond pdat pdat::SumOperation $t
 done
 
+${MT} default.filenames ./tmpXd tbox tbox::Pointer pdat::FirstLayerCellFillPattern NDIM
+${MT} default.filenames ./tmpXd tbox tbox::Pointer pdat::FirstLayerCellNoCornersFillPattern NDIM
+${MT} default.filenames ./tmpXd tbox tbox::Pointer pdat::FirstLayerNodeFillPattern NDIM
+${MT} default.filenames ./tmpXd tbox tbox::Pointer pdat::SecondLayerNodeFillPattern NDIM
+${MT} default.filenames ./tmpXd tbox tbox::Pointer pdat::SecondLayerNodeNoCornersFillPattern NDIM
 
 for g in Node; do
     for t in Complex Double Float Integer; do

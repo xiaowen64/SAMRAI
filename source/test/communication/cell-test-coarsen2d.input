@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/test/communication/cell-test-coarsen2d.input $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/test/communication/cell-test-coarsen2d.input $
 // Package:     SAMRAI tests
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 1917 $
-// Modified:    $LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:    $LastChangedRevision: 2869 $
+// Modified:    $LastChangedDate: 2009-02-03 20:39:48 -0800 (Tue, 03 Feb 2009) $
 // Description: input file for testing communication of SAMRAI cell data.
 //
 
@@ -175,15 +175,19 @@ StandardTaggingAndInitializer {
    tagging_method = "REFINE_BOXES"
 
    RefineBoxes {
-      level_0 = [ (0,16) , (11,19) ],
-                     [ (12,0) , (31,19) ],
-                     [ (32,4) , (43,5) ],
-                     [ (16,20) , (21,27) ],
-                     [ (8,28) , (27,41) ],
-                     [ (20,42) , (27,55) ]
-      level_1 = [ (36,16) , (51,27) ],
-                     [ (24,64) , (31,75) ],
-                     [ (32,64) , (43,71) ]
+      level_0 {
+            boxes_0 = [ (0,16) , (11,19) ],
+                      [ (12,0) , (31,19) ],
+                      [ (32,4) , (43,5) ],
+                      [ (16,20) , (21,27) ],
+                      [ (8,28) , (27,41) ],
+                      [ (20,42) , (27,55) ]
+      }
+      level_1 {
+            boxes_0 = [ (36,16) , (51,27) ],
+	              [ (24,64) , (31,75) ],
+                      [ (32,64) , (43,71) ]
+     }
    }
 
 }

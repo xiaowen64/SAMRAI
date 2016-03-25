@@ -25,6 +25,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxComm.h		\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.h				\
 	$(INCLUDE_SAM)/BoxGraph.I $(INCLUDE_SAM)/BoxGraph.h		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.h $(INCLUDE_SAM)/BoxList.I	\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
@@ -97,6 +98,7 @@ DEPENDS_0:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -149,11 +151,12 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
-	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
-	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
-	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
-	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C					\
+	$(INCLUDE_SAM)/BoxGeometry.C					\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.C				\
+	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
+	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/BoxTree.C		\
+	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/BoxUtilities.C	\
 	$(INCLUDE_SAM)/CoarseFineBoundary.C				\
 	$(INCLUDE_SAM)/CoarsenAlgorithm.C				\
 	$(INCLUDE_SAM)/CoarsenClasses.C					\
@@ -197,8 +200,8 @@ DEPENDS_0 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C OuternodeSumTransaction.C		\
 	OuternodeSumTransactionFactory.C
 endif
@@ -256,6 +259,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -314,8 +318,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
@@ -373,6 +377,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -433,8 +438,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C OuteredgeSumTransaction.C
 endif
 
@@ -490,6 +495,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -548,8 +554,8 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C
 endif
 
@@ -606,6 +612,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -666,8 +673,8 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C OuternodeSumTransaction.C
 endif
 
@@ -689,6 +696,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxComm.h		\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.h				\
 	$(INCLUDE_SAM)/BoxGraph.I $(INCLUDE_SAM)/BoxGraph.h		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.h $(INCLUDE_SAM)/BoxList.I	\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
@@ -746,6 +754,7 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -798,17 +807,18 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
-	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
-	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
-	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
-	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C $(INCLUDE_SAM)/CopyOperation.C	\
-	$(INCLUDE_SAM)/EdgeData.C $(INCLUDE_SAM)/EdgeDataFactory.C	\
-	$(INCLUDE_SAM)/EdgeGeometry.C $(INCLUDE_SAM)/EdgeIndex.C	\
-	$(INCLUDE_SAM)/EdgeIterator.C $(INCLUDE_SAM)/EdgeOverlap.C	\
-	$(INCLUDE_SAM)/EdgeVariable.C $(INCLUDE_SAM)/FillBoxSet.C	\
-	$(INCLUDE_SAM)/GridGeometry.C $(INCLUDE_SAM)/Index.C		\
-	$(INCLUDE_SAM)/IntVector.C					\
+	$(INCLUDE_SAM)/BoxGeometry.C					\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.C				\
+	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
+	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/BoxTree.C		\
+	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/BoxUtilities.C	\
+	$(INCLUDE_SAM)/CopyOperation.C $(INCLUDE_SAM)/EdgeData.C	\
+	$(INCLUDE_SAM)/EdgeDataFactory.C $(INCLUDE_SAM)/EdgeGeometry.C	\
+	$(INCLUDE_SAM)/EdgeIndex.C $(INCLUDE_SAM)/EdgeIterator.C	\
+	$(INCLUDE_SAM)/EdgeOverlap.C $(INCLUDE_SAM)/EdgeVariable.C	\
+	$(INCLUDE_SAM)/FillBoxSet.C $(INCLUDE_SAM)/GridGeometry.C	\
+	$(INCLUDE_SAM)/Index.C $(INCLUDE_SAM)/IntVector.C		\
 	$(INCLUDE_SAM)/MultiblockDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockEdgeDataTranslator.C			\
 	$(INCLUDE_SAM)/MultiblockGridGeometry.C				\
@@ -833,8 +843,8 @@ DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C OuteredgeSumTransaction.C		\
 	OuteredgeSumTransactionFactory.C
 endif
@@ -857,6 +867,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxComm.h		\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.h				\
 	$(INCLUDE_SAM)/BoxGraph.I $(INCLUDE_SAM)/BoxGraph.h		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.h $(INCLUDE_SAM)/BoxList.I	\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
@@ -924,6 +935,7 @@ DEPENDS_6:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -976,11 +988,12 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C					\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
-	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
-	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
-	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
-	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C					\
+	$(INCLUDE_SAM)/BoxGeometry.C					\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.C				\
+	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
+	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/BoxTree.C		\
+	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/BoxUtilities.C	\
 	$(INCLUDE_SAM)/CoarseFineBoundary.C				\
 	$(INCLUDE_SAM)/CoarsenAlgorithm.C				\
 	$(INCLUDE_SAM)/CoarsenClasses.C					\
@@ -1021,8 +1034,8 @@ DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C OuternodeSumTransaction.C		\
 	OuternodeSumTransactionFactory.C
 endif

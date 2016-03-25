@@ -2,8 +2,8 @@
 // File:        $UR$
 // Package:     SAMRAI toolbox
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2130 $
-// Modified:    $LastChangedDate: 2008-04-11 17:55:01 -0700 (Fri, 11 Apr 2008) $
+// Revision:    $LastChangedRevision: 2620 $
+// Modified:    $LastChangedDate: 2008-11-19 14:24:28 -0800 (Wed, 19 Nov 2008) $
 // Description: A database structure that stores Silo format data.
 //
 
@@ -344,7 +344,7 @@ enum Database::DataType SiloDatabase::getArrayType(const std::string& key)
    TBOX_ASSERT(!key.empty());
 #endif
 
-   enum Database::DataType type = Database::INVALID;
+   enum Database::DataType type = Database::SAMRAI_INVALID;
    
    std::string path = d_directory + "/" + key;
    path = nameMangle(path);
@@ -356,19 +356,19 @@ enum Database::DataType SiloDatabase::getArrayType(const std::string& key)
 
       switch (obj_type) {
 	 case DB_INT:
-	    type = Database::INT;
+	    type = Database::SAMRAI_INT;
 	    break;
 	 case DB_SHORT:
-	    type = Database::BOOL;
+	    type = Database::SAMRAI_BOOL;
 	    break;
 	 case DB_FLOAT:
-	    type = Database::FLOAT;
+	    type = Database::SAMRAI_FLOAT;
 	    break;
 	 case DB_DOUBLE:
-	    type = Database::DOUBLE;
+	    type = Database::SAMRAI_DOUBLE;
 	    break;
 	 case DB_CHAR:
-	    type = Database::CHAR;
+	    type = Database::SAMRAI_CHAR;
 	    break;
       }
    } else if (var_type == DB_DIR) {
@@ -378,28 +378,28 @@ enum Database::DataType SiloDatabase::getArrayType(const std::string& key)
       std::string sub_path = path + COMPLEX_ARRAY_NAME;
       if(DBInqVarExists(d_file, sub_path.c_str())) {
 	 DBcompoundarray *ca = DBGetCompoundarray(d_file, sub_path.c_str());
-	 type = Database::COMPLEX;
+	 type = Database::SAMRAI_COMPLEX;
 	 DBFreeCompoundarray(ca);
       } else {
 	 sub_path = path + STRING_ARRAY_NAME;
 	 if(DBInqVarExists(d_file, sub_path.c_str())) { 
 	    DBcompoundarray *ca = DBGetCompoundarray(d_file, sub_path.c_str());
-	    type = Database::STRING;
+	    type = Database::SAMRAI_STRING;
 	    DBFreeCompoundarray(ca);
 	 } else {
 	    sub_path = path + DATABASE_BOX_NAME;
 	    if(DBInqVarExists(d_file, sub_path.c_str())) { 
 	       DBcompoundarray *ca = DBGetCompoundarray(d_file, 
 							sub_path.c_str());
-	       type = Database::BOX;
+	       type = Database::SAMRAI_BOX;
 	       DBFreeCompoundarray(ca);
 	    } else {
-	       type = Database::DATABASE;
+	       type = Database::SAMRAI_DATABASE;
 	    }
 	 } 
       }
    } else {
-      // Unrecognized type return INVALIDx
+      // Unrecognized type return INVALID
    }
 
    return type;
@@ -1327,68 +1327,54 @@ void SiloDatabase::printClassData(std::ostream& os)
          << d_database_name << "'..." << std::endl;
    }
 
-#if 0
-   enum DataType { INVALID, 
-		       DATABASE,
-		       BOOL,
-		       CHAR,
-		       INT,
-		       COMPLEX,
-		       DOUBLE,
-		       FLOAT,
-		       STRING,
-		       BOX};
-
-#endif
-
    for (int i=0; i < keys.getSize(); i++) {
       switch ( getArrayType(keys[i] ) ) {
-	 case Database::INVALID: {
+	 case Database::SAMRAI_INVALID: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " invalid" << std::endl;   
 	       break;
 	    }
-	    case Database::DATABASE: {
+	    case Database::SAMRAI_DATABASE: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a database" << std::endl;   
 	       break;
 	    }
-	    case Database::BOOL: {
+	    case Database::SAMRAI_BOOL: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a boolean array" << std::endl;   
 	       break;
 	    }
-	    case Database::CHAR: {
+	    case Database::SAMRAI_CHAR: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a char array" << std::endl;   
 	       break;
 	    }
-	    case Database::INT: {
+	    case Database::SAMRAI_INT: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a integer array" << std::endl;   
 	       break;
 	    }
-	    case Database::COMPLEX: {
+	    case Database::SAMRAI_COMPLEX: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a complex array" << std::endl;   
 	       break;
 	    }
-	    case Database::DOUBLE: {
+	    case Database::SAMRAI_DOUBLE: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a complex array" << std::endl;   
 	       break;
 	    }
-	    case Database::FLOAT: {
+	    case Database::SAMRAI_FLOAT: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a float array" << std::endl;   
 	       break;
 	    }
-	    case Database::STRING: {
+	    case Database::SAMRAI_STRING: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a string array" << std::endl;   
 	       break;
 	    }
-	    case Database::BOX: {
+	    case Database::SAMRAI_BOX: {
 	       os << "   Data entry `"<< keys[i] << "' is"
 		  << " a datbase box array" << std::endl;   
 	       break;

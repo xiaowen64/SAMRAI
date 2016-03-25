@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/boxes/IntVector.I $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/hierarchy/boxes/IntVector.I $
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2143 $
-// Modified:	$LastChangedDate: 2008-04-23 09:37:15 -0700 (Wed, 23 Apr 2008) $
+// Revision:	$LastChangedRevision: 3271 $
+// Modified:	$LastChangedDate: 2009-06-16 13:04:59 -0700 (Tue, 16 Jun 2009) $
 // Description:	A n-dimensional integer vector
 //
 
@@ -71,9 +71,7 @@ IntVector<DIM>::IntVector(const int i, const int j, const int k)
 template<int DIM> inline
 IntVector<DIM>::IntVector(const tbox::Array<int>& a)
 {
-#ifdef DEBUG_CHECK_ASSERTIONS
    TBOX_ASSERT(a.getSize() == DIM);
-#endif
 
    for (int i = 0; i < DIM; i++) 
       d_vector[i] = a[i];
@@ -103,6 +101,7 @@ IntVector<DIM>::~IntVector()
 template<int DIM> inline
 int& IntVector<DIM>::operator()(const int i)
 {
+   
    return(d_vector[i]);
 }
 

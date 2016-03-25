@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/patchdata/boxgeometry/SideGeometry.C $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/boxgeometry/SideGeometry.C $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 1917 $
-// Modified:	$LastChangedDate: 2008-01-25 13:28:01 -0800 (Fri, 25 Jan 2008) $
+// Revision:	$LastChangedRevision: 2856 $
+// Modified:	$LastChangedDate: 2009-01-30 13:58:39 -0800 (Fri, 30 Jan 2009) $
 // Description:	hier::Box geometry information for side centered objects
 //
 
@@ -161,24 +161,21 @@ template<int DIM> tbox::Pointer< hier::BoxOverlap<DIM> > SideGeometry<DIM>::doOv
    if (!quick_check.empty()) {
 
       const hier::IntVector<DIM>& dirs = src_geometry.getDirectionVector();
-      for (int d = 0; d < DIM && dirs(d); d++) {
-
-         const hier::Box<DIM> dst_side = toSideBox(dst_ghost, d);
-         const hier::Box<DIM> src_side = toSideBox(src_shift, d);
-         const hier::Box<DIM> together = dst_side * src_side;
-
-         if (!together.empty()) {
-
-            dst_boxes[d].unionBoxes(together);
-            if (!overwrite_interior) {
-               const hier::Box<DIM> int_side = toSideBox(dst_geometry.d_box, d);
-               dst_boxes[d].removeIntersections(together,int_side);
-            } else {
-               dst_boxes[d].appendItem(together);
-            }
-
-         }  // if (!together.empty())
-
+      for (int d = 0; d < DIM; d++) {
+         if ( dirs(d) ) {
+            const hier::Box<DIM> dst_side = toSideBox(dst_ghost, d);
+            const hier::Box<DIM> src_side = toSideBox(src_shift, d);
+            const hier::Box<DIM> together = dst_side * src_side;
+            if (!together.empty()) {
+               dst_boxes[d].unionBoxes(together);
+               if (!overwrite_interior) {
+                  const hier::Box<DIM> int_side = toSideBox(dst_geometry.d_box, d);
+                  dst_boxes[d].removeIntersections(together,int_side);
+               } else {
+                  dst_boxes[d].appendItem(together);
+               }
+            }  // if (!together.empty())
+         } // if (dirs(d))
       }  // loop over dim && dirs(d)
 
    }  // if (!quick_check.empty())

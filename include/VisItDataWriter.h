@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/apputils/plotting/VisItDataWriter.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/apputils/plotting/VisItDataWriter.h $
 // Package:     SAMRAI application utilities
 // Copyright:   (c) 1997-2003 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2132 $
-// Modified:    $LastChangedDate: 2008-04-14 14:51:47 -0700 (Mon, 14 Apr 2008) $
+// Revision:    $LastChangedRevision: 2312 $
+// Modified:    $LastChangedDate: 2008-07-30 13:41:05 -0700 (Wed, 30 Jul 2008) $
 // Description: Writes data files for visualization by VisIt
 //
 
@@ -907,6 +907,7 @@ private:
     * tries to convert double data to float for writing the vis file.
     */
    void checkFloatMinMax(
+      const std::string& var_name,
       const double dmin,
       const double dmax,
       const int level_number,

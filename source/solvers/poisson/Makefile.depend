@@ -181,6 +181,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxComm.h		\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.h				\
 	$(INCLUDE_SAM)/BoxGraph.I $(INCLUDE_SAM)/BoxGraph.h		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.h $(INCLUDE_SAM)/BoxList.I	\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
@@ -442,6 +443,7 @@ DEPENDS_1:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -501,11 +503,12 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C $(INCLUDE_SAM)/BoundaryBoxUtils.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
-	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
-	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
-	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
-	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C					\
+	$(INCLUDE_SAM)/BoxGeometry.C					\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.C				\
+	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
+	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/BoxTree.C		\
+	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/BoxUtilities.C	\
 	$(INCLUDE_SAM)/CartesianCellComplexConservativeLinearRefine.C	\
 	$(INCLUDE_SAM)/CartesianCellComplexLinearRefine.C		\
 	$(INCLUDE_SAM)/CartesianCellComplexWeightedAverage.C		\
@@ -713,8 +716,8 @@ DEPENDS_1 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C CartesianRobinBcHelper.C		\
 	CellPoissonHypreSolver.C GhostCellRobinBcCoefs.C		\
 	RobinBcCoefStrategy.C SimpleCellRobinBcCoefs.C
@@ -742,6 +745,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/Box.h $(INCLUDE_SAM)/BoxArray.I			\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxComm.h		\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.h				\
 	$(INCLUDE_SAM)/BoxGraph.I $(INCLUDE_SAM)/BoxGraph.h		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.h $(INCLUDE_SAM)/BoxList.I	\
 	$(INCLUDE_SAM)/BoxList.h $(INCLUDE_SAM)/BoxOverlap.I		\
@@ -1003,6 +1007,7 @@ DEPENDS_2:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.I				\
 	$(INCLUDE_SAM)/tbox/AbstractStream.h $(INCLUDE_SAM)/tbox/Arena.I\
 	$(INCLUDE_SAM)/tbox/Arena.h $(INCLUDE_SAM)/tbox/ArenaManager.h	\
@@ -1063,11 +1068,12 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/BoundaryBox.C $(INCLUDE_SAM)/BoundaryBoxUtils.C	\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
-	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
-	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxList.C	\
-	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
-	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
-	$(INCLUDE_SAM)/BoxUtilities.C					\
+	$(INCLUDE_SAM)/BoxGeometry.C					\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.C				\
+	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
+	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
+	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/BoxTree.C		\
+	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/BoxUtilities.C	\
 	$(INCLUDE_SAM)/CartesianCellComplexConservativeLinearRefine.C	\
 	$(INCLUDE_SAM)/CartesianCellComplexLinearRefine.C		\
 	$(INCLUDE_SAM)/CartesianCellComplexWeightedAverage.C		\
@@ -1275,8 +1281,8 @@ DEPENDS_2 +=\
 	$(INCLUDE_SAM)/SumOperation.C					\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
-	$(INCLUDE_SAM)/tbox/Array.C $(INCLUDE_SAM)/tbox/List.C		\
-	$(INCLUDE_SAM)/tbox/MathUtilities.C				\
+	$(INCLUDE_SAM)/VariableFillPattern.C $(INCLUDE_SAM)/tbox/Array.C\
+	$(INCLUDE_SAM)/tbox/List.C $(INCLUDE_SAM)/tbox/MathUtilities.C	\
 	$(INCLUDE_SAM)/tbox/Pointer.C CartesianRobinBcHelper.C		\
 	CellPoissonFACOps.C CellPoissonHypreSolver.C			\
 	GhostCellRobinBcCoefs.C RobinBcCoefStrategy.C			\

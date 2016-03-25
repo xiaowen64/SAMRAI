@@ -1,9 +1,9 @@
 //
-// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/patchdata/boxgeometry/NodeGeometry.h $
+// File:	$URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/patchdata/boxgeometry/NodeGeometry.h $
 // Package:	SAMRAI patch data geometry
 // Copyright:	(c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2224 $
-// Modified:	$LastChangedDate: 2008-06-20 17:51:16 -0700 (Fri, 20 Jun 2008) $
+// Revision:	$LastChangedRevision: 3061 $
+// Modified:	$LastChangedDate: 2009-03-19 16:03:30 -0700 (Thu, 19 Mar 2009) $
 // Description:	hier::Box geometry information for node centered objects
 //
 
@@ -73,6 +73,18 @@ public:
       const bool overwrite_interior,
       const hier::IntVector<DIM>& src_offset,
       const bool retry) const;
+
+   /*!
+    * @brief Compute the node-centered destination boxes that represent
+    * the overlap between the source box geometry and the destination
+    * box geometry.
+    */
+   void computeDestinationBoxes(
+      hier::BoxList<DIM>& dst_boxes,
+      const NodeGeometry<DIM>& src_geometry,
+      const hier::Box<DIM>& src_mask,
+      const bool overwrite_interior,
+      const hier::IntVector<DIM>& src_offset) const;
 
    /*!
     * @brief Return the box for this node centered box geometry

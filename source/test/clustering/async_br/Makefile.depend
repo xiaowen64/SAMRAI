@@ -887,6 +887,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/BoxArray.h $(INCLUDE_SAM)/BoxComm.h		\
 	$(INCLUDE_SAM)/BoxGeneratorStrategy.h				\
 	$(INCLUDE_SAM)/BoxGeometry.I $(INCLUDE_SAM)/BoxGeometry.h	\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.h				\
 	$(INCLUDE_SAM)/BoxGraph.I $(INCLUDE_SAM)/BoxGraph.h		\
 	$(INCLUDE_SAM)/BoxGraphUtilities.h $(INCLUDE_SAM)/BoxIOUtility.h\
 	$(INCLUDE_SAM)/BoxList.I $(INCLUDE_SAM)/BoxList.h		\
@@ -1155,6 +1156,7 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/VariableContext.h				\
 	$(INCLUDE_SAM)/VariableDatabase.I				\
 	$(INCLUDE_SAM)/VariableDatabase.h				\
+	$(INCLUDE_SAM)/VariableFillPattern.h				\
 	$(INCLUDE_SAM)/VisDerivedDataStrategy.h				\
 	$(INCLUDE_SAM)/VisItDataWriter.h				\
 	$(INCLUDE_SAM)/VisMaterialsDataStrategy.h			\
@@ -1228,11 +1230,13 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/BoundaryLookupTable.C $(INCLUDE_SAM)/Box.C	\
 	$(INCLUDE_SAM)/BoxArray.C $(INCLUDE_SAM)/BoxComm.C		\
 	$(INCLUDE_SAM)/BoxGeneratorStrategy.C				\
-	$(INCLUDE_SAM)/BoxGeometry.C $(INCLUDE_SAM)/BoxGraph.C		\
-	$(INCLUDE_SAM)/BoxGraphUtilities.C $(INCLUDE_SAM)/BoxIOUtility.C\
-	$(INCLUDE_SAM)/BoxList.C $(INCLUDE_SAM)/BoxOverlap.C		\
-	$(INCLUDE_SAM)/BoxTop.C $(INCLUDE_SAM)/BoxTree.C		\
-	$(INCLUDE_SAM)/BoxTreeNode.C $(INCLUDE_SAM)/BoxUtilities.C	\
+	$(INCLUDE_SAM)/BoxGeometry.C					\
+	$(INCLUDE_SAM)/BoxGeometryFillPattern.C				\
+	$(INCLUDE_SAM)/BoxGraph.C $(INCLUDE_SAM)/BoxGraphUtilities.C	\
+	$(INCLUDE_SAM)/BoxIOUtility.C $(INCLUDE_SAM)/BoxList.C		\
+	$(INCLUDE_SAM)/BoxOverlap.C $(INCLUDE_SAM)/BoxTop.C		\
+	$(INCLUDE_SAM)/BoxTree.C $(INCLUDE_SAM)/BoxTreeNode.C		\
+	$(INCLUDE_SAM)/BoxUtilities.C					\
 	$(INCLUDE_SAM)/CartesianCellComplexConservativeLinearRefine.C	\
 	$(INCLUDE_SAM)/CartesianCellComplexLinearRefine.C		\
 	$(INCLUDE_SAM)/CartesianCellComplexWeightedAverage.C		\
@@ -1442,6 +1446,7 @@ DEPENDS_3 +=\
 	$(INCLUDE_SAM)/TagAndInitializeStrategy.C			\
 	$(INCLUDE_SAM)/TimeInterpolateOperator.C			\
 	$(INCLUDE_SAM)/Variable.C $(INCLUDE_SAM)/VariableDatabase.C	\
+	$(INCLUDE_SAM)/VariableFillPattern.C				\
 	$(INCLUDE_SAM)/VisDerivedDataStrategy.C				\
 	$(INCLUDE_SAM)/VisItDataWriter.C				\
 	$(INCLUDE_SAM)/VisMaterialsDataStrategy.C			\

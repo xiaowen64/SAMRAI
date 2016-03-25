@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-3-0/source/hierarchy/multiblock/MultiblockPatchHierarchy.C $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/hierarchy/multiblock/MultiblockPatchHierarchy.C $
 // Package:     SAMRAI multiblock package
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2147 $
-// Modified:    $LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:    $LastChangedRevision: 2418 $
+// Modified:    $LastChangedDate: 2008-10-09 16:12:31 -0700 (Thu, 09 Oct 2008) $
 // Description: Base class for geometry management on patches
 //
 
@@ -93,7 +93,7 @@ MultiblockPatchHierarchy<DIM>::MultiblockPatchHierarchy(
    }
  
    for (int bn = 0; true; bn++) {
-      neighbor_name = "BlockNeighbors%d" + tbox::Utilities::intToString(bn);
+      neighbor_name = "BlockNeighbors" + tbox::Utilities::intToString(bn);
 
       if (!input_db->keyExists(neighbor_name)) {
          break;

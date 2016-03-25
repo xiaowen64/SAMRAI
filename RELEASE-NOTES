@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v2.4.0
+                     Release Notes for SAMRAI v2.4.2
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -50,11 +50,7 @@ Bugs found by other users should send email to samrai-bugs@llnl.gov.
 This section contains a summary of additions to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) 'allow_patches_smaller_than_minimum_size_to_prevent_overlaps' flag added
-to GriddingAlgorithm.
-
-(2) 'check_overlapping_patches' flag added to GriddingAlgorithm.
-
+(1) 
 
 -----------------------------------------------------------------------------
                 Summary of what's changed
@@ -63,20 +59,14 @@ to GriddingAlgorithm.
 This section contains a summary of changes to SAMRAI.  More detailed
 descriptions of items in the following list are provided below.
 
-(1) Improved support for implicit template instantiation
+(1) Changed names of Database type names
 
-(2) Added support for current HDF releases.
+(2) Changed InputDatabase to a typedef.
 
-(3) Removed fixed number of timers and statistics.
+(3) Fixed bug in LoadBalancer
 
-(4) IndexData underwent a significant rewrite.
+(4) Redhat 3 support dropped.
 
-(5) Configure scripts improved.
-
-(6) 'resolve_nonnesting_tags' input flag in GriddingAlgorithm changed.
-
-(7) extra behavior of 'allow_patches_smaller_than_ghostwidth" flag in
-GriddingAlgorithm removed.
 
 *****************************************************************************
 
@@ -84,126 +74,31 @@ GriddingAlgorithm removed.
                 Details about what's new
 -----------------------------------------------------------------------------
 
-(1) 'allow_patches_smaller_than_minimum_size_to_prevent_overlaps' flag added
-to GriddingAlgorithm.
-
-When this flag is set to false, the default value, patches created for a
-new level are grown to enforce the minimum patch size.  This sometimes causes
-there to be patches on a level that overlap in index space.  For users who
-want to prevent this kind of overlap, this flag should be set to true.  Users
-who used the flag 'allow_patches_smaller_than_ghostwidth' to prevent overlaps
-should now use this flag instead.
-
-(2) 'check_overlapping_patches' flag added to GriddingAlgorithm.
-
-This flag can cause the checking of a newly-created level for any overlapping
-patches.  The user can select 'i' (ignore), the default value, to skip the
-check completely, 'w' (warn) to check for overlapping patches and output a
-warning if any exist, or 'e' (error) to stop the run with an error if any
-exist.  The check can be expensive, so the 'w' and 'e' options are
-recommended only for debugging in applications that need to prevent overlaps.
+(1) 
 
 -----------------------------------------------------------------------------
                 Details about what's changed
 -----------------------------------------------------------------------------
 
-(1) Improved support for implicit template instantiation
+(1) Changed names of Database type names
 
-Previous releases of SAMRAI had a configure option to optionally use
-an implicit instantiation model when compiling via the
+There were some conflicts with external packages with the enumerated
+type names in the Database class; the typenames where prefixed with SAMRAI_.
 
-   --enable-implicit-template-instantiation
+(2) Changed InputDatabase to a typedef.
 
-flag.  The support was incomplete as SAMRAI compiled files with
-explicit instantiated statements for all the templates.  Thus the
-library was much larger than strictly necessary.  With implicit
-compilation the compiler is responsible for doing the instantiations
-so SAMRAI's manual explicit statements are redundant.
+The InputDatabase was changed to a typedef to improve backward compatibility 
+with old codes. 
 
-The make system was changed so that when the implicit compilation mode
-is used the explicit instantiation statements are bypassed (basically
-the "templates" directories are ignored).   
+(3) Fixed bug in LoadBalancer
 
-This results in dramatic smaller SAMRAI libraries and reduced build
-times for the library.  Note that with implicit template instantiation
-there is a potential for increased application compilation times
-(since the templates are built when the application needs them by the
-compiler).
+The load balancer was allowing patches smaller than the specified
+minimum patch size in some cases.
 
-In testing the SAMRAI team has found that some platforms/compilers
-actually achieve better overall compilation times with the implicit
-mode.  On a local IBM PowerPC machine using XLC we have observed a 50%
-reduction in building the example codes.  When using GCC on a desktop
-machine the application compile times increased by a factor of 3 when
-using the implicit compilation mode.
+(4) Redhat 3 support dropped.
 
-(2) Added support for current HDF releases.
+The SAMRAI team no longer tests on Redhat version 3.
 
-HDF versions 1.8.x changed the API.  The SAMRAI HDF classes now
-support the 1.6.x and 1.8.x API's.  Most of the testing and running is
-currently still done with HDF 1.6.x
-
-(3) Removed fixed number of timers and statistics.
-
-Previous versions allocated a fixed number of timers and statistics.
-This limitation was removed and the TimerManager and Statistician
-singletons can handle any number of timers (subject to memory
-limitations).
-
-The API for SAMRAIManager was changed to remove the following methods
-(which are no longer needed):
-
-getMaxNumberTimers();
-setMaxNumberTimers(int maxnum);
-getMaxNumberStatistics();
-setMaxNumberStatistics(int maxnum);
-
-(4) IndexData underwent a significant rewrite.
-
-IndexData, IndexVariable, and IndexDataFactory types are now have a
-template parameter for the BoxGeometry being used.  Previously
-IndexData was hard-coded for cell centered data only.  To recreate old
-behavior simply add pdat::CellGeometry<DIM> to the template
-parameters list.
-
-The performance of IndexData for several operations was improved.
-Removal of items was particularly poor requiring an O(N) where N is
-number of items stored.  These were fixed to be O(1).  Other
-operations were also optimized to improve performance by a
-factor of 2-3.
-
-The API was extended to include new methods for insertion of items
-that will improve performance in specific use cases.  See
-documentation for IndexData replaceAddItem and addItemPointer for
-additional information.
-
-(5) Configure scripts improved.
-
-The autoconf configure scripts were improved, primarily in adding
-better Fortran name mangling support.
-
-(6) 'resolve_nonnesting_tags' input flag in GriddingAlgorithm changed
-
-The input flag 'resolve_nonnesting_tags' in GriddingAlgorithm has been
-changed to 'check_nonrefined_tags'.  If the tagging operation creates a tag
-that violates the nesting requirements, its location in index space
-will not be refined when creating a finer level.  This flag allows the
-user to determine what to do when this occurs, whether to ignore the tag
-completely, output a warning, or stop execution of the run with an error
-message.
-
-(7) extra behavior of 'allow_patches_smaller_than_ghostwidth" flag in
-GriddingAlgorithm removed.
-
-Previously, this flag, when set to true, allowed the minimum patch size to
-be smaller than the maximum ghost width of the problem, and it also
-suppressed the strict enforcement of the minimum patch size.  Now, it only
-has the first effect, allowing a user to specify a minimum patch size
-smaller than the maximum ghost width.  Users who used this flag to prevent
-patches on a level from overlapping should no use the flag
-'allow_patches_smaller_than_minimum_size_to_prevent_overlaps'. (See "What's
-New".)
- 
 
 =============================================================================
 =============================================================================

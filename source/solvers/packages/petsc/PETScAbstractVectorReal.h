@@ -1,9 +1,9 @@
 //
-// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-0/source/solvers/packages/petsc/PETScAbstractVectorReal.h $
+// File:        $URL: file:///usr/casc/samrai/repository/SAMRAI/tags/v-2-4-4/source/solvers/packages/petsc/PETScAbstractVectorReal.h $
 // Package:     SAMRAI solvers
 // Copyright:   (c) 1997-2008 Lawrence Livermore National Security, LLC
-// Revision:    $LastChangedRevision: 2195 $
-// Modified:    $LastChangedDate: 2008-05-14 11:33:30 -0700 (Wed, 14 May 2008) $
+// Revision:    $LastChangedRevision: 3281 $
+// Modified:    $LastChangedDate: 2009-06-17 19:10:03 -0700 (Wed, 17 Jun 2009) $
 // Description: Interface to C++ vector implementation for PETSc package.
 //
 
@@ -25,12 +25,15 @@
 
 #include "tbox/SAMRAI_MPI.h"
 
-#ifndef included_petsc_vec
-#define included_petsc_vec
+/* petsc defines skip so avoid redefining */
 #ifdef MPICH_SKIP_MPICXX
 #undef MPICH_SKIP_MPICXX
 #endif
+
 #include "petscvec.h"
+
+#ifndef MPICH_SKIP_MPICXX
+#define MPICH_SKIP_MPICXX
 #endif
 
 namespace SAMRAI {

@@ -2,8 +2,8 @@
 // File:	$URL$
 // Package:	SAMRAI hierarchy
 // Copyright:	(c) 1997-2006 Lawrence Livermore National Security, LLC
-// Revision:	$LastChangedRevision: 2147 $
-// Modified:	$LastChangedDate: 2008-04-23 16:48:12 -0700 (Wed, 23 Apr 2008) $
+// Revision:	$LastChangedRevision: 2350 $
+// Modified:	$LastChangedDate: 2008-09-10 11:21:21 -0700 (Wed, 10 Sep 2008) $
 // Description:	Generic utilities for boundary box calculus.
 //
 
@@ -96,21 +96,6 @@ void stretchBoxToGhostWidth(
 void extendBoxOutward(
    Box<DIM> &box,
    const IntVector<DIM> &extension ) const;
-
-/*!
- * @brief Shift box inward by the given distance.
- *
- * A positive distance shifts inward while a negative
- * distance shifts outward.
- *
- * The number of direction shifted is the same as the
- * codimension of the boundary.
- *
- * Return the shifted box.
- */
-void shiftBoxInward(
-   Box<DIM> &box,
-   const hier::IntVector<DIM> &distance ) const;
 
 /*!
  * @brief Return the normal direction.
