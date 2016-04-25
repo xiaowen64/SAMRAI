@@ -119,7 +119,8 @@ RefineSchedule::RefineSchedule(
    d_dst_to_src(0),
    d_max_fill_boxes(0),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
-   d_top_refine_schedule(this)
+   d_top_refine_schedule(this),
+   d_internal_allocated(false)
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
@@ -302,7 +303,8 @@ RefineSchedule::RefineSchedule(
    d_dst_to_src(0),
    d_max_fill_boxes(0),
    d_dst_level_fill_pattern(dst_level_fill_pattern),
-   d_top_refine_schedule(this)
+   d_top_refine_schedule(this),
+   d_internal_allocated(false)
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT((next_coarser_ln == -1) || hierarchy);
@@ -531,7 +533,8 @@ RefineSchedule::RefineSchedule(
    d_dst_to_src(&dst_to_src),
    d_max_fill_boxes(0),
    d_dst_level_fill_pattern(boost::make_shared<PatchLevelFullFillPattern>()),
-   d_top_refine_schedule(top_refine_schedule)
+   d_top_refine_schedule(top_refine_schedule),
+   d_internal_allocated(false)
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
@@ -653,6 +656,9 @@ RefineSchedule::~RefineSchedule()
 {
    clearRefineItems();
    delete[] d_refine_items;
+   if (d_internal_allocated) {
+      deallocateInternalData();
+   }
 }
 
 /*
@@ -692,6 +698,10 @@ RefineSchedule::reset(
    const boost::shared_ptr<RefineClasses>& refine_classes)
 {
    TBOX_ASSERT(refine_classes);
+
+   if (d_internal_allocated) {
+      deallocateInternalData();
+   }
 
    setRefineItems(refine_classes);
    if (d_coarse_interp_schedule) {
@@ -2003,6 +2013,10 @@ RefineSchedule::fillData(
    }
 
    t_fill_data_nonrecursive->start();
+
+   if (d_internal_allocated) {
+      setInternalDataTime(fill_time);
+   }
 
    /*
     * Set the refine items and time for all transactions.  These items will
@@ -4979,6 +4993,246 @@ RefineSchedule::setDeterministicUnpackOrderingFlag(bool flag)
       d_coarse_interp_encon_schedule->setDeterministicUnpackOrderingFlag(flag);
    }
 }
+
+/*
+ **************************************************************************
+ *
+ * Allocate internal data
+ *
+ **************************************************************************
+ */
+
+void
+RefineSchedule::allocateInternalData(double fill_time)
+{
+   if (d_internal_allocated) {
+      return;
+   }
+
+   allocateScratchSpace(d_dst_scratch_vector, d_dst_level, fill_time);
+
+   if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+      allocateScratchSpace(d_encon_scratch_vector, d_encon_level, fill_time);
+   }
+
+   if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
+       d_nbr_blk_fill_level.get()) {
+      allocateScratchSpace(d_nbr_fill_scratch_vector,
+                           d_nbr_blk_fill_level,
+                           fill_time);
+      allocateDestinationSpace(d_nbr_fill_dst_vector,
+                               d_nbr_blk_fill_level,
+                               fill_time);
+   }
+
+   if (d_coarse_interp_schedule) {
+      allocateScratchSpace(d_coarse_scratch_vector,
+         d_coarse_interp_level,
+         fill_time);
+      allocateWorkSpace(d_coarse_work_vector,
+         d_coarse_interp_level,
+         fill_time);
+
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+         allocateScratchSpace(d_coarse_encon_scratch_vector,
+            d_coarse_interp_schedule->d_encon_level,
+            fill_time);
+         allocateWorkSpace(d_coarse_encon_work_vector,
+            d_coarse_interp_schedule->d_encon_level,
+            fill_time);
+      }
+
+      if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
+          d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
+         allocateScratchSpace(d_coarse_nbr_fill_scratch_vector,
+            d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
+         allocateWorkSpace(d_coarse_nbr_fill_work_vector,
+            d_coarse_interp_schedule->d_nbr_blk_fill_level, fill_time);
+      }
+
+      if (d_nbr_blk_fill_level.get()) {
+         allocateWorkSpace(d_nbr_fill_work_vector,
+            d_nbr_blk_fill_level, fill_time);
+      }
+
+      d_coarse_interp_schedule->allocateInternalData(fill_time);
+   }
+
+   if (d_coarse_interp_encon_schedule) {
+
+      allocateScratchSpace(d_coarse_interp_encon_scratch_vector,
+                           d_coarse_interp_encon_level,
+                           fill_time);
+      allocateWorkSpace(d_coarse_interp_encon_work_vector,
+                        d_coarse_interp_encon_level,
+                        fill_time);
+
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+         allocateScratchSpace(d_coarse_encon_encon_scratch_vector,
+            d_coarse_interp_encon_schedule->d_encon_level,
+            fill_time);
+         allocateWorkSpace(d_coarse_encon_encon_work_vector,
+            d_coarse_interp_encon_schedule->d_encon_level,
+            fill_time);
+      }
+
+      d_coarse_interp_encon_schedule->allocateInternalData(fill_time);
+   }
+   d_internal_allocated = true;
+}
+
+/*
+ **************************************************************************
+ *
+ * Set timestamps on internal data
+ * 
+ **************************************************************************
+ */
+
+void
+RefineSchedule::setInternalDataTime(double fill_time) const
+{
+   d_dst_level->setTime(fill_time, d_dst_scratch_vector);
+
+   if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+      d_encon_level->setTime(fill_time, d_encon_scratch_vector);
+   }
+
+   if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
+       d_nbr_blk_fill_level.get()) {
+      d_nbr_blk_fill_level->setTime(fill_time, d_nbr_fill_scratch_vector);
+      d_nbr_blk_fill_level->setTime(fill_time, d_nbr_fill_dst_vector);
+   }
+
+   if (d_coarse_interp_schedule) {
+      d_coarse_interp_level->setTime(fill_time, d_coarse_scratch_vector);
+      d_coarse_interp_level->setTime(fill_time, d_coarse_work_vector);
+
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+         d_coarse_interp_schedule->d_encon_level->setTime(fill_time,
+            d_coarse_encon_scratch_vector);
+         d_coarse_interp_schedule->d_encon_level->setTime(fill_time,
+            d_coarse_encon_work_vector);
+      }
+
+      if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
+          d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
+         d_coarse_interp_schedule->d_nbr_blk_fill_level->setTime(fill_time,
+            d_coarse_nbr_fill_scratch_vector); 
+         d_coarse_interp_schedule->d_nbr_blk_fill_level->setTime(fill_time,
+            d_coarse_nbr_fill_work_vector); 
+      }
+
+      if (d_nbr_blk_fill_level.get()) {
+         d_nbr_blk_fill_level->setTime(fill_time, d_nbr_fill_work_vector);
+      }
+
+      d_coarse_interp_schedule->setInternalDataTime(fill_time);
+   }
+
+   if (d_coarse_interp_encon_schedule) {
+
+      d_coarse_interp_encon_level->setTime(fill_time,
+         d_coarse_interp_encon_scratch_vector);
+      d_coarse_interp_encon_level->setTime(fill_time,
+         d_coarse_interp_encon_work_vector);
+
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+         d_coarse_interp_encon_schedule->d_encon_level->setTime(fill_time,
+            d_coarse_encon_encon_scratch_vector);
+         d_coarse_interp_encon_schedule->d_encon_level->setTime(fill_time,
+            d_coarse_encon_encon_work_vector);
+      }
+
+      d_coarse_interp_encon_schedule->setInternalDataTime(fill_time);
+   }
+}
+
+/*
+ **************************************************************************
+ *
+ * Deallocate internal data
+ *
+ **************************************************************************
+ */
+
+void
+RefineSchedule::deallocateInternalData()
+{
+
+   d_dst_level->deallocatePatchData(d_dst_scratch_vector);
+   d_dst_scratch_vector.clrAllFlags();
+
+   if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+      d_encon_level->deallocatePatchData(d_encon_scratch_vector);
+      d_encon_scratch_vector.clrAllFlags();
+   }
+
+   if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
+       d_nbr_blk_fill_level.get()) {
+      d_nbr_blk_fill_level->deallocatePatchData(d_nbr_fill_scratch_vector);
+      d_nbr_blk_fill_level->deallocatePatchData(d_nbr_fill_dst_vector);
+      d_nbr_fill_scratch_vector.clrAllFlags();
+      d_nbr_fill_dst_vector.clrAllFlags();
+   }
+
+   if (d_coarse_interp_schedule) {
+      d_coarse_interp_level->deallocatePatchData(d_coarse_scratch_vector);
+      d_coarse_interp_level->deallocatePatchData(d_coarse_work_vector);
+      d_coarse_scratch_vector.clrAllFlags();
+      d_coarse_work_vector.clrAllFlags();
+
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+         d_coarse_interp_schedule->d_encon_level->deallocatePatchData(
+            d_coarse_encon_scratch_vector);
+         d_coarse_interp_schedule->d_encon_level->deallocatePatchData(
+            d_coarse_encon_work_vector);
+         d_coarse_encon_scratch_vector.clrAllFlags();
+         d_coarse_encon_work_vector.clrAllFlags();
+      }
+
+      if (d_dst_level->getGridGeometry()->getNumberBlocks() > 1 &&
+          d_coarse_interp_schedule->d_nbr_blk_fill_level.get()) {
+         d_coarse_interp_schedule->d_nbr_blk_fill_level->deallocatePatchData(
+            d_coarse_nbr_fill_scratch_vector);
+         d_coarse_interp_schedule->d_nbr_blk_fill_level->deallocatePatchData(
+            d_coarse_nbr_fill_work_vector);
+         d_coarse_nbr_fill_scratch_vector.clrAllFlags(); 
+         d_coarse_nbr_fill_work_vector.clrAllFlags(); 
+      }
+
+      if (d_nbr_blk_fill_level.get()) {
+         d_nbr_blk_fill_level->deallocatePatchData(d_nbr_fill_work_vector);
+         d_nbr_fill_work_vector.clrAllFlags();
+      }
+
+      d_coarse_interp_schedule->deallocateInternalData();
+   }
+
+   if (d_coarse_interp_encon_schedule) {
+
+      d_coarse_interp_encon_level->deallocatePatchData(
+         d_coarse_interp_encon_scratch_vector);
+      d_coarse_interp_encon_level->deallocatePatchData(
+         d_coarse_interp_encon_work_vector);
+      d_coarse_interp_encon_scratch_vector.clrAllFlags();
+      d_coarse_interp_encon_work_vector.clrAllFlags();
+
+      if (d_dst_level->getGridGeometry()->hasEnhancedConnectivity()) {
+         d_coarse_interp_encon_schedule->d_encon_level->deallocatePatchData(
+            d_coarse_encon_encon_scratch_vector);
+         d_coarse_interp_encon_schedule->d_encon_level->deallocatePatchData(
+            d_coarse_encon_encon_work_vector);
+         d_coarse_encon_encon_scratch_vector.clrAllFlags();
+         d_coarse_encon_encon_work_vector.clrAllFlags();
+      }
+
+      d_coarse_interp_encon_schedule->deallocateInternalData();
+   }
+
+   d_internal_allocated = false;
+}
+
 
 /*
  **************************************************************************
