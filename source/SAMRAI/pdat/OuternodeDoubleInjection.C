@@ -135,13 +135,13 @@ OuternodeDoubleInjection::coarsen(
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
    TBOX_ASSERT_OBJDIM_EQUALITY4(coarse, fine, coarse_box, ratio);
 
-   const hier::Index filo = fine.getBox().lower();
-   const hier::Index fihi = fine.getBox().upper();
-   const hier::Index cilo = coarse.getBox().lower();
-   const hier::Index cihi = coarse.getBox().upper();
+   const hier::Index& filo = fine.getBox().lower();
+   const hier::Index& fihi = fine.getBox().upper();
+   const hier::Index& cilo = coarse.getBox().lower();
+   const hier::Index& cihi = coarse.getBox().upper();
 
-   const hier::Index ifirstc = coarse_box.lower();
-   const hier::Index ilastc = coarse_box.upper();
+   const hier::Index& ifirstc = coarse_box.lower();
+   const hier::Index& ilastc = coarse_box.upper();
 
    for (int i = 0; i < 2; ++i) {
 
