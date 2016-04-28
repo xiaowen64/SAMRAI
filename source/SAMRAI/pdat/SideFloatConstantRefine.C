@@ -144,12 +144,12 @@ SideFloatConstantRefine::refine(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, cdata->getDirectionVector()));
 
-   const hier::Box cgbox(cdata->getGhostBox());
+   const hier::Box& cgbox(cdata->getGhostBox());
 
-   const hier::Index cilo = cgbox.lower();
-   const hier::Index cihi = cgbox.upper();
-   const hier::Index filo = fdata->getGhostBox().lower();
-   const hier::Index fihi = fdata->getGhostBox().upper();
+   const hier::Index& cilo = cgbox.lower();
+   const hier::Index& cihi = cgbox.upper();
+   const hier::Index& filo = fdata->getGhostBox().lower();
+   const hier::Index& fihi = fdata->getGhostBox().upper();
 
    for (tbox::Dimension::dir_t axis = 0; axis < dim.getValue(); ++axis) {
       const hier::BoxContainer& boxes = t_overlap->getDestinationBoxContainer(axis);
@@ -163,10 +163,10 @@ SideFloatConstantRefine::refine(
          fine_box.setUpper(axis, fine_box.upper(axis) - 1);
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
-         const hier::Index ifirstc = coarse_box.lower();
-         const hier::Index ilastc = coarse_box.upper();
-         const hier::Index ifirstf = fine_box.lower();
-         const hier::Index ilastf = fine_box.upper();
+         const hier::Index& ifirstc = coarse_box.lower();
+         const hier::Index& ilastc = coarse_box.upper();
+         const hier::Index& ifirstf = fine_box.lower();
+         const hier::Index& ilastf = fine_box.upper();
 
          for (int d = 0; d < fdata->getDepth(); ++d) {
             if (dim == tbox::Dimension(1)) {

@@ -1464,8 +1464,8 @@ BergerRigoutsosNode::acceptOrSplitBox()
       int cut_pt = -(tbox::MathUtilities<int>::getMax());
       tbox::Dimension::dir_t cut_dir = 0;
       tbox::Dimension::dir_t dir = 0;
-      const hier::Index box_lo(d_box.lower());
-      const hier::Index box_hi(d_box.upper());
+      const hier::Index& box_lo(d_box.lower());
+      const hier::Index& box_hi(d_box.upper());
       hier::Index lft_hi(box_hi);
       hier::Index rht_lo(box_lo);
 

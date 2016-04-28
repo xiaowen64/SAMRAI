@@ -149,16 +149,16 @@ SideComplexLinearTimeInterpolateOp::timeInterpolate(
    TBOX_ASSERT(directions ==
       hier::IntVector::min(directions, new_dat->getDirectionVector()));
 
-   const hier::Index old_ilo = old_dat->getGhostBox().lower();
-   const hier::Index old_ihi = old_dat->getGhostBox().upper();
-   const hier::Index new_ilo = new_dat->getGhostBox().lower();
-   const hier::Index new_ihi = new_dat->getGhostBox().upper();
+   const hier::Index& old_ilo = old_dat->getGhostBox().lower();
+   const hier::Index& old_ihi = old_dat->getGhostBox().upper();
+   const hier::Index& new_ilo = new_dat->getGhostBox().lower();
+   const hier::Index& new_ihi = new_dat->getGhostBox().upper();
 
-   const hier::Index dst_ilo = dst_dat->getGhostBox().lower();
-   const hier::Index dst_ihi = dst_dat->getGhostBox().upper();
+   const hier::Index& dst_ilo = dst_dat->getGhostBox().lower();
+   const hier::Index& dst_ihi = dst_dat->getGhostBox().upper();
 
-   const hier::Index ifirst = where.lower();
-   const hier::Index ilast = where.upper();
+   const hier::Index& ifirst = where.lower();
+   const hier::Index& ilast = where.upper();
 
    const double old_time = old_dat->getTime();
    const double new_time = new_dat->getTime();

@@ -783,8 +783,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
       const double* h = pg->getDx();
 
       const hier::Box patch_box = patch.getBox();
-      const hier::Index patch_lo = patch_box.lower();
-      const hier::Index patch_up = patch_box.upper();
+      const hier::Index& patch_lo = patch_box.lower();
+      const hier::Index& patch_up = patch_box.upper();
 
       if (!spec.cIsZero() && !spec.cIsConstant()) {
          C_data = BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
@@ -813,8 +813,8 @@ CellPoissonHypreSolver::setMatrixCoefficients(
        */
       diagonal.fillAll(0.0);
 
-      const hier::Index ifirst = patch_box.lower();
-      const hier::Index ilast = patch_box.upper();
+      const hier::Index& ifirst = patch_box.lower();
+      const hier::Index& ilast = patch_box.upper();
 
       /*
        * Storage for off-diagonal entries,
@@ -1414,8 +1414,8 @@ CellPoissonHypreSolver::computeDiagonalEntries(
       off_diagonal,
       patch_box);
 
-   const hier::Index patch_lo = patch_box.lower();
-   const hier::Index patch_up = patch_box.upper();
+   const hier::Index& patch_lo = patch_box.lower();
+   const hier::Index& patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
       SAMRAI_F77_FUNC(compdiagvariablec2d, COMPDIAGVARIABLEC2D) (diagonal.getPointer(),
@@ -1447,8 +1447,8 @@ CellPoissonHypreSolver::computeDiagonalEntries(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, diagonal, off_diagonal, patch_box);
 
-   const hier::Index patch_lo = patch_box.lower();
-   const hier::Index patch_up = patch_box.upper();
+   const hier::Index& patch_lo = patch_box.lower();
+   const hier::Index& patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
       SAMRAI_F77_FUNC(compdiagscalarc2d, COMPDIAGSCALARC2D) (diagonal.getPointer(),
@@ -1482,8 +1482,8 @@ CellPoissonHypreSolver::computeDiagonalEntries(
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(d_dim, diagonal, off_diagonal, patch_box);
 
-   const hier::Index patch_lo = patch_box.lower();
-   const hier::Index patch_up = patch_box.upper();
+   const hier::Index& patch_lo = patch_box.lower();
+   const hier::Index& patch_up = patch_box.upper();
    const double c = 1.0, d = 1.0;
    if (d_dim == tbox::Dimension(2)) {
       SAMRAI_F77_FUNC(compdiagzeroc2d, COMPDIAGZEROC2D) (diagonal.getPointer(),
@@ -1523,8 +1523,8 @@ CellPoissonHypreSolver::adjustBoundaryEntries(
       acoef_data, bcoef_data,
       bccoef_box, Ak0_data, trimmed_boundary_box);
 
-   const hier::Index patch_lo = patch_box.lower();
-   const hier::Index patch_up = patch_box.upper();
+   const hier::Index& patch_lo = patch_box.lower();
+   const hier::Index& patch_up = patch_box.upper();
    const int location_index = trimmed_boundary_box.getLocationIndex();
    const hier::Index& lower = trimmed_boundary_box.getBox().lower();
    const hier::Index& upper = trimmed_boundary_box.getBox().upper();
