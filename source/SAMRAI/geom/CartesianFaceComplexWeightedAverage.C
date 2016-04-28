@@ -169,10 +169,10 @@ CartesianFaceComplexWeightedAverage::coarsen(
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(cdata->getDepth() == fdata->getDepth());
 
-   const hier::Index filo = fdata->getGhostBox().lower();
-   const hier::Index fihi = fdata->getGhostBox().upper();
-   const hier::Index cilo = cdata->getGhostBox().lower();
-   const hier::Index cihi = cdata->getGhostBox().upper();
+   const hier::Index& filo = fdata->getGhostBox().lower();
+   const hier::Index& fihi = fdata->getGhostBox().upper();
+   const hier::Index& cilo = cdata->getGhostBox().lower();
+   const hier::Index& cihi = cdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> fgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
@@ -184,8 +184,8 @@ CartesianFaceComplexWeightedAverage::coarsen(
    TBOX_ASSERT(fgeom);
    TBOX_ASSERT(cgeom);
 
-   const hier::Index ifirstc = coarse_box.lower();
-   const hier::Index ilastc = coarse_box.upper();
+   const hier::Index& ifirstc = coarse_box.lower();
+   const hier::Index& ilastc = coarse_box.upper();
 
    for (int d = 0; d < cdata->getDepth(); ++d) {
       if ((dim == tbox::Dimension(1))) {

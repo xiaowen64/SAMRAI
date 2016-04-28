@@ -156,10 +156,10 @@ CartesianEdgeFloatConservativeLinearRefine::refine(
 
    const hier::Box cgbox(cdata->getGhostBox());
 
-   const hier::Index cilo = cgbox.lower();
-   const hier::Index cihi = cgbox.upper();
-   const hier::Index filo = fdata->getGhostBox().lower();
-   const hier::Index fihi = fdata->getGhostBox().upper();
+   const hier::Index& cilo = cgbox.lower();
+   const hier::Index& cihi = cgbox.upper();
+   const hier::Index& filo = fdata->getGhostBox().lower();
+   const hier::Index& fihi = fdata->getGhostBox().upper();
 
    const boost::shared_ptr<CartesianPatchGeometry> cgeom(
       BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
@@ -187,10 +187,10 @@ CartesianEdgeFloatConservativeLinearRefine::refine(
          }
 
          const hier::Box coarse_box = hier::Box::coarsen(fine_box, ratio);
-         const hier::Index ifirstc = coarse_box.lower();
-         const hier::Index ilastc = coarse_box.upper();
-         const hier::Index ifirstf = fine_box.lower();
-         const hier::Index ilastf = fine_box.upper();
+         const hier::Index& ifirstc = coarse_box.lower();
+         const hier::Index& ilastc = coarse_box.upper();
+         const hier::Index& ifirstf = fine_box.lower();
+         const hier::Index& ilastf = fine_box.upper();
 
          const hier::IntVector tmp_ghosts(dim, 0);
          std::vector<float> diff0(cgbox.numberCells(0) + 2);
