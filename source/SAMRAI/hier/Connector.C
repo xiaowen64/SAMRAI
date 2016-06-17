@@ -1421,8 +1421,8 @@ Connector::convertHeadWidthToBase(
 
    IntVector ratio(dim); // Ratio between head and base.
 
-   if (head_refinement_ratio * base_refinement_ratio >
-       IntVector::getZero(dim)) {
+   if ((head_refinement_ratio > IntVector::getZero(dim)) ==
+       (base_refinement_ratio > IntVector::getZero(dim))) {
       // Same signs for both ratios -> simple to compute head-base ratio.
       if (base_refinement_ratio >= head_refinement_ratio) {
          ratio = base_refinement_ratio / head_refinement_ratio;

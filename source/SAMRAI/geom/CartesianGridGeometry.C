@@ -344,8 +344,9 @@ CartesianGridGeometry::setGeometryDataOnPatch(
 
    if (dim > tbox::Dimension(1)) {
       for (unsigned int i = 0; i < dim.getValue(); ++i) {
-         TBOX_ASSERT((ratio_to_level_zero(blk,i)
-                      * ratio_to_level_zero(blk,(i + 1) % dim.getValue()) > 0)
+         bool pos0 = ratio_to_level_zero(blk,i) > 0;
+         bool pos1 = ratio_to_level_zero(blk,(i + 1) % d_dim.getValue()) > 0;
+         TBOX_ASSERT(pos0 == pos1
             || (ratio_to_level_zero(blk,i) == 1)
             || (ratio_to_level_zero(blk,(i + 1) % dim.getValue()) == 1));
       }

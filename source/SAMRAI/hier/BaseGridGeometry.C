@@ -473,8 +473,9 @@ BaseGridGeometry::setGeometryOnPatches(
       for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((ratio_to_level_zero(b,i) *
-                        ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+            bool pos0 = ratio_to_level_zero(b,i) > 0;
+            bool pos1 = ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+            TBOX_ASSERT(pos0 == pos1
                || (ratio_to_level_zero(b,i) == 1)
                || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
          }
@@ -576,8 +577,9 @@ BaseGridGeometry::setGeometryDataOnPatch(
       for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
          int i;
          for (i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((ratio_to_level_zero(b,i) *
-                        ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+            bool pos0 = ratio_to_level_zero(b,i) > 0;
+            bool pos1 = ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+            TBOX_ASSERT(pos0 == pos1
                || (ratio_to_level_zero(b,i) == 1)
                || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
          }
@@ -1242,11 +1244,12 @@ BaseGridGeometry::computePhysicalDomain(
       }
       if (d_dim.getValue() > 1) {
          for (i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((ratio_to_level_zero(b,i) *
-                         ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+            bool pos0 = ratio_to_level_zero(b,i) > 0;
+            bool pos1 = ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+            TBOX_ASSERT(pos0 == pos1
                || (ratio_to_level_zero(b,i) == 1)
-            || ((ratio_to_level_zero(b,i + 1) % d_dim.getValue()) == 1));
-            }
+               || ((ratio_to_level_zero(b,i + 1) % d_dim.getValue()) == 1));
+         }
       }
    }
 #endif
@@ -1305,8 +1308,9 @@ BaseGridGeometry::computePhysicalDomain(
       }
       if (d_dim.getValue() > 1) {
          for (i = 0; i < d_dim.getValue(); ++i) {
-            TBOX_ASSERT((ratio_to_level_zero(b,i)
-                         * ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+            bool pos0 = ratio_to_level_zero(b,i) > 0;
+            bool pos1 = ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+            TBOX_ASSERT(pos0 == pos1
                || (ratio_to_level_zero(b,i) == 1)
                || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
          }
@@ -1369,8 +1373,9 @@ BaseGridGeometry::computePhysicalDomain(
          }
          if (d_dim.getValue() > 1) {
             for (i = 0; i < d_dim.getValue(); ++i) {
-               TBOX_ASSERT((ratio_to_level_zero(b,i)
-                           * ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+               bool pos0 = ratio_to_level_zero(b,i) > 0;
+               bool pos1 = ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+               TBOX_ASSERT(pos0 == pos1
                   || (ratio_to_level_zero(b,i) == 1)
                   || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
             }
@@ -1421,8 +1426,9 @@ BaseGridGeometry::computePhysicalDomain(
          }
          if (d_dim.getValue() > 1) {
             for (i = 0; i < d_dim.getValue(); ++i) {
-               TBOX_ASSERT((ratio_to_level_zero(b,i) *
-                           ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+               bool pos0 = ratio_to_level_zero(b,i) > 0;
+               bool pos1 = ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+               TBOX_ASSERT(pos0 == pos1
                   || (ratio_to_level_zero(b,i) == 1)
                   || (ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
             }
