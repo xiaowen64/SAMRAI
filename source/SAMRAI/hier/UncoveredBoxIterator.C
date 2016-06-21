@@ -340,8 +340,8 @@ UncoveredBoxIterator::findFirstUncoveredBox()
       const BoxContainer& this_level_boxes =
          this_level->getBoxLevel()->getBoxes();
 
-      for (BoxContainer::const_iterator this_itr = this_level_boxes.begin();
-           this_itr != this_level_boxes.end(); ++this_itr) {
+      for (RealBoxConstIterator this_itr = this_level_boxes.realBegin();
+           this_itr != this_level_boxes.realEnd(); ++this_itr) {
          const BoxContainer& uncovered_boxes =
             d_flattened_hierarchy->getVisibleBoxes(*this_itr, d_level_num);
 
