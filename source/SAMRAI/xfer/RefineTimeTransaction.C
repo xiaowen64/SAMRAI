@@ -78,10 +78,10 @@ RefineTimeTransaction::RefineTimeTransaction(
       box);
 
    if (d_dst_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_dst_patch = dst_level->getPatch(dst_box.getBoxId());
+      d_dst_patch = dst_level->getPatch(dst_box.getGlobalId());
    }
    if (d_src_patch_rank == dst_level->getBoxLevel()->getMPI().getRank()) {
-      d_src_patch = src_level->getPatch(src_box.getBoxId());
+      d_src_patch = src_level->getPatch(src_box.getGlobalId());
    }
 }
 
@@ -146,7 +146,9 @@ RefineTimeTransaction::packStream(
    tbox::MessageStream& stream)
 {
    hier::Box temporary_box(d_box.getDim());
-   temporary_box.initialize(d_box, hier::LocalId(-1), tbox::SAMRAI_MPI::getInvalidRank());
+   temporary_box.initialize(d_box,
+                            d_src_patch->getBox().getLocalId(),
+                            tbox::SAMRAI_MPI::getInvalidRank());
 
    hier::Patch temporary_patch(
       temporary_box,
@@ -194,7 +196,9 @@ RefineTimeTransaction::copyLocalData()
    } else {
 
       hier::Box temporary_box(d_box.getDim());
-      temporary_box.initialize(d_box, hier::LocalId(-1), tbox::SAMRAI_MPI::getInvalidRank());
+      temporary_box.initialize(d_box, 
+                               d_src_patch->getBox().getLocalId(),
+                               tbox::SAMRAI_MPI::getInvalidRank());
 
       hier::Patch temporary_patch(
          temporary_box,

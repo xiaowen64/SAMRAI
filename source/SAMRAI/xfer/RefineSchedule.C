@@ -4682,7 +4682,9 @@ RefineSchedule::constructScheduleTransactions(
                            transaction_dst_box,
                            src_box,
                            d_refine_items,
-                           item.d_tag);
+                           item.d_tag,
+                           *itr,
+                           (use_time_interpolation && item.d_time_interpolate));
                   } else if (use_time_interpolation &&
                              item.d_time_interpolate) {
 
