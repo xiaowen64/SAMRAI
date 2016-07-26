@@ -954,9 +954,15 @@ private:
     *                      be consistent with the numerical routines used
     *                      in the hyperbolic patch strategy object to
     *                      calculate the time step size.  The default is true.
+    *
+    * d_use_flux_correction indicates whether the synchronization step
+    *                       will replace coarse fluxes with integrated
+    *                       finer level fluxes and repeat the conservative
+    *                       update.  The default is true.
     */
    bool d_lag_dt_computation;
    bool d_use_ghosts_for_dt;
+   bool d_use_flux_correction;
 
    /*
     * Boolean flags for indicated whether face or side data types are
