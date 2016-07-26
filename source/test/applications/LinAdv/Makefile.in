@@ -133,7 +133,7 @@ endif
 	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync_restart.2d.input test_sync_restart.2d.restart 5 | $(TEE) foo; \
 	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
 	  echo "    </testcase>" >> $(REPORT); \
-	done; \
+	done
 	@for p in `echo "$(TEST_NPROCS)" | tr "," " "`; do \
 	  echo "    <testcase classname=\"applications LinAdv\" name=$(QUOTE)2d time refinement $$p procs$(QUOTE)>" >> $(REPORT); \
 	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_time_refinement.2d.input | $(TEE) foo; \
@@ -166,7 +166,7 @@ check3d:	main
 	  $(OBJECT)/config/serpa-run $$p ./main test_inputs/test_sync.3d.input test_sync.3d.restart 5 | $(TEE) foo; \
 	  if ! grep "PASSED" foo >& /dev/null ; then echo "      <failure/>" >> $(REPORT); fi; \
 	  echo "    </testcase>" >> $(REPORT); \
-	done; \
+	done
 	$(RM) foo;
 
 checkcompile: main
