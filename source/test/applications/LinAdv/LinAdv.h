@@ -465,6 +465,12 @@ private:
     */
    std::vector<double> d_advection_velocity;
 
+   /**
+    * source term for use in testing, and flag to check fluxes
+    */
+   double d_source;
+   bool d_check_fluxes;
+   
    /*
     *  Parameters for numerical method:
     *
@@ -542,6 +548,7 @@ private:
     * Richardson extrapolation.
     */
    std::vector<string> d_refinement_criteria;
+   double d_threshold;
    std::vector<double> d_dev_tol;
    std::vector<double> d_dev;
    std::vector<double> d_dev_time_max;
