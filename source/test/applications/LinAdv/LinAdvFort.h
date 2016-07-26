@@ -213,6 +213,7 @@ void SAMRAI_F77_FUNC(consdiff2d, CONSDIFF2D) (
    const double *,
    const double *, const double *,
    const double *,
+   const double&,
    double *);
 
 void SAMRAI_F77_FUNC(consdiff3d, CONSDIFF3D) (
@@ -223,6 +224,7 @@ void SAMRAI_F77_FUNC(consdiff3d, CONSDIFF3D) (
    const double *, const double *,
    const double *,
    const double *,
+   const double&,
    double *);
 
 void SAMRAI_F77_FUNC(getbdry2d, GETBDRY2D) (const int&,

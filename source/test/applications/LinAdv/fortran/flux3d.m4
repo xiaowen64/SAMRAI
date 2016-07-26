@@ -226,7 +226,7 @@ c***********************************************************************
      &  ifirst0,ilast0,ifirst1,ilast1,ifirst2,ilast2,
      &  dx,
      &  flux0,flux1,flux2,
-     &  advecspeed,uval)
+     &  advecspeed,src,uval)
 c***********************************************************************
       implicit none
 include(FORTDIR/const.i)dnl
@@ -238,7 +238,7 @@ c***********************************************************************
      &     flux0(FACE3d0(ifirst,ilast,FLUXG)),
      &     flux1(FACE3d1(ifirst,ilast,FLUXG)),
      &     flux2(FACE3d2(ifirst,ilast,FLUXG)),
-     &     advecspeed(0:NDIM-1),
+     &     advecspeed(0:NDIM-1),src,
      &     uval(CELL3d(ifirst,ilast,CELLG))
 c
       integer ic0,ic1,ic2
@@ -251,7 +251,7 @@ c***********************************************************************
       do ic2=ifirst2,ilast2
          do ic1=ifirst1,ilast1
            do ic0=ifirst0,ilast0
-             uval(ic0,ic1,ic2) = uval(ic0,ic1,ic2)
+             uval(ic0,ic1,ic2) = uval(ic0,ic1,ic2) +src
      &          -(flux0(ic0+1,ic1,ic2)-flux0(ic0,ic1,ic2))/dx(0)
      &          -(flux1(ic1+1,ic2,ic0)-flux1(ic1,ic2,ic0))/dx(1)
      &          -(flux2(ic2+1,ic0,ic1)-flux2(ic2,ic0,ic1))/dx(2)

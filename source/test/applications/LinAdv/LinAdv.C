@@ -125,6 +125,8 @@ LinAdv::LinAdv(
    d_uval(new pdat::CellVariable<double>(dim, "uval", 1)),
    d_flux(new pdat::FaceVariable<double>(dim, "flux", 1)),
    d_advection_velocity(dim.getValue()),
+   d_source(0.0),
+   d_check_fluxes(false),
    d_godunov_order(1),
    d_corner_transport("CORNER_TRANSPORT_1"),
    d_nghosts(dim, CELLG),
@@ -675,6 +677,13 @@ void LinAdv::computeFluxesOnPatch(
 
    }
 
+   hier::Box pbox = patch.getBox();
+
+   boost::shared_ptr<pdat::FaceData<double> > flux(
+      BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         patch.getPatchData(d_flux, getDataContext())));
+   TBOX_ASSERT(flux);
+   
    if (d_dim < tbox::Dimension(3)) {
 
       TBOX_ASSERT(CELLG == FACEG);
@@ -685,24 +694,18 @@ void LinAdv::computeFluxesOnPatch(
       TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
 
-      hier::Box pbox = patch.getBox();
       const hier::Index ifirst = patch.getBox().lower();
       const hier::Index ilast = patch.getBox().upper();
 
       boost::shared_ptr<pdat::CellData<double> > uval(
          BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
-      boost::shared_ptr<pdat::FaceData<double> > flux(
-         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
-            patch.getPatchData(d_flux, getDataContext())));
-
       /*
        * Verify that the integrator providing the context correctly
        * created it, and that the ghost cell width associated with the
        * context matches the ghosts defined in this class...
        */
       TBOX_ASSERT(uval);
-      TBOX_ASSERT(flux);
       TBOX_ASSERT(uval->getGhostCellWidth() == d_nghosts);
       TBOX_ASSERT(flux->getGhostCellWidth() == d_fluxghosts);
 
@@ -826,9 +829,34 @@ void LinAdv::computeFluxesOnPatch(
             traced_right.getPointer(1));
 
       }
+   }
 
-//     tbox::plog << "flux values: option1...." << endl;
-//     flux->print(pbox, tbox::plog);
+   if (d_check_fluxes) {
+
+      /*
+       * This is used for testing time-refinement.  In the associated
+       * test case, there should be no net fluxes, as the exact
+       * solution is u=t.
+       */
+
+      pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+      for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+           ic != icend; ++ic) {
+
+         const pdat::CellIndex& ci(*ic);
+         for (int dir = 0; dir < d_dim.getValue(); dir++) {
+            
+            pdat::FaceIndex fm(ci, dir, pdat::FaceIndex::Lower);
+            pdat::FaceIndex fp(ci, dir, pdat::FaceIndex::Upper);
+
+            double delta = (*flux)(fm) - (*flux)(fp);
+            if (fabs(delta) > 1.e-10) {
+               tbox::perr << "\nLinAdv Time Refinement Test FAILED: \n"
+                          << " found non-zero net fluxes" << endl;
+            }
+         }
+      }
+      
    }
 }
 
@@ -1391,6 +1419,7 @@ void LinAdv::conservativeDifferenceOnPatch(
          flux->getPointer(0),
          flux->getPointer(1),
          &d_advection_velocity[0],
+         d_source*dt,
          uval->getPointer());
    }
    if (d_dim == tbox::Dimension(3)) {
@@ -1400,6 +1429,7 @@ void LinAdv::conservativeDifferenceOnPatch(
          flux->getPointer(1),
          flux->getPointer(2),
          &d_advection_velocity[0],
+         d_source*dt,
          uval->getPointer());
    }
 
@@ -1894,6 +1924,24 @@ void LinAdv::tagGradientDetectorCells(
       double onset = 0.;
       bool time_allowed = false;
 
+      if (ref == "RANDOM") {
+
+         /*
+          * Tag with random frequency set by d_threshold.
+          */
+         pdat::CellIterator icend(pdat::CellGeometry::end(pbox));
+         for (pdat::CellIterator ic(pdat::CellGeometry::begin(pbox));
+              ic != icend; ++ic) {
+
+            double u = rand()/double(RAND_MAX);
+
+            (*temp_tags)(*ic, 0) = not_refine_tag_val;
+            if (u < d_threshold) {
+               (*temp_tags)(*ic, 0) = refine_tag_val;
+            }
+         }
+      }
+
       if (ref == "UVAL_DEVIATION") {
          size = static_cast<int>(d_dev_tol.size());
          tol = ((error_level_number < size)
@@ -2103,6 +2151,7 @@ void LinAdv::printClassData(
    os << "   d_advection_velocity = ";
    for (j = 0; j < d_dim.getValue(); ++j) os << d_advection_velocity[j] << " ";
    os << endl;
+   os << "   d_source = " << d_source << endl;
    os << "   d_godunov_order = " << d_godunov_order << endl;
    os << "   d_corner_transport = " << d_corner_transport << endl;
    os << "   d_nghosts = " << d_nghosts << endl;
@@ -2290,6 +2339,13 @@ void LinAdv::getFromInput(
                        << "Key data `advection_velocity' not found in input.");
    }
 
+
+   /*
+   /* Used for testing, in particular time refinement
+    */
+   d_source = input_db->getDoubleWithDefault("source", 0.0);
+   d_check_fluxes = input_db->getBoolWithDefault("check_fluxes", false);
+
    if (input_db->keyExists("godunov_order")) {
       d_godunov_order = input_db->getInteger("godunov_order");
       if ((d_godunov_order != 1) &&
@@ -2344,6 +2400,7 @@ void LinAdv::getFromInput(
          if (!(error_key == "refine_criteria")) {
 
             if (!(error_key == "UVAL_DEVIATION" ||
+                  error_key == "RANDOM" ||
                   error_key == "UVAL_GRADIENT" ||
                   error_key == "UVAL_SHOCK" ||
                   error_key == "UVAL_RICHARDSON")) {
@@ -2358,6 +2415,10 @@ void LinAdv::getFromInput(
                ++def_key_cnt;
             }
 
+            if (error_db && error_key == "RANDOM") {
+               d_threshold = error_db->getDoubleWithDefault("threshold", 0.01);
+            }
+            
             if (error_db && error_key == "UVAL_DEVIATION") {
 
                if (error_db->keyExists("dev_tol")) {
@@ -2729,6 +2790,8 @@ void LinAdv::putToRestart(
    restart_db->putInteger("LINADV_VERSION", LINADV_VERSION);
 
    restart_db->putDoubleVector("d_advection_velocity", d_advection_velocity);
+   restart_db->putDouble("d_source", d_source);
+   restart_db->putBool("d_check_fluxes", d_check_fluxes);
 
    restart_db->putInteger("d_godunov_order", d_godunov_order);
    restart_db->putString("d_corner_transport", d_corner_transport);
@@ -2829,6 +2892,8 @@ void LinAdv::getFromRestart()
    }
 
    d_advection_velocity = db->getDoubleVector("d_advection_velocity");
+   d_source = db->getDouble("d_source");
+   d_check_fluxes = db->getBool("d_check_fluxes");
 
    d_godunov_order = db->getInteger("d_godunov_order");
    d_corner_transport = db->getString("d_corner_transport");
