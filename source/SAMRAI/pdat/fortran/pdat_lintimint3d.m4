@@ -2,7 +2,7 @@ c
 c This file is part of the SAMRAI distribution.  For full copyright
 c information, see COPYRIGHT and COPYING.LESSER.
 c
-c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
 c Description:   FORTRAN routines for standard linear time interpolation 
 c                of 3d patch data types.
 c
