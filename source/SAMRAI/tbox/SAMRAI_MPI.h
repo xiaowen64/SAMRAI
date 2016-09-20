@@ -55,6 +55,7 @@ enum {
    MPI_2INT,
    MPI_DOUBLE_INT,
    MPI_FLOAT_INT,
+   MPI_UNSIGNED_LONG,
    // Operations:
    MPI_MIN,
    MPI_MINLOC,
