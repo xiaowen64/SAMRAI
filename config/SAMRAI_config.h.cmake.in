@@ -64,7 +64,7 @@
 #undef HAVE_BOOST_HEADERS
 
 /* HAVE_CMATH */
-#undef HAVE_CMATH
+#cmakedefine HAVE_CMATH
 
 /* HAVE_CMATH_ISNAN */
 #undef HAVE_CMATH_ISNAN
@@ -85,7 +85,7 @@
 #undef HAVE_INLINE_ISNAND
 
 /* Define to 1 if you have the <inttypes.h> header file. */
-#undef HAVE_INTTYPES_H
+#cmakedefine HAVE_INTTYPES_H
 
 /* HAVE_IOMANIP_LEFT */
 #undef HAVE_IOMANIP_LEFT
