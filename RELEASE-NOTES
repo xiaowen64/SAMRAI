@@ -4,7 +4,7 @@
   All rights reserved.
 *****************************************************************************
 
-                     Release Notes for SAMRAI v3.11.1
+                     Release Notes for SAMRAI v3.11.2
 
      (notes for previous releases may be found in /SAMRAI/docs/release)
 
@@ -38,6 +38,8 @@ ghost data.
 2) An integer overrun that was seen in runs using a high number of levels
 (16 or more) has been eliminated.
 
+3) A bug that was causing unmatched MPI sends and receives in RefineSchedule
+for certain configurations of 3D multiblock problems was fixed.
 
 
 *****************************************************************************
