@@ -37,7 +37,6 @@ TEST_NPROCS = @TEST_NPROCS@
 QUOTE = \"
 
 
-
 SampleIndexData.o:	$(SAMRAI)/source/test/dataops/SampleIndexData.C
 	$(CXX) $(CXXFLAGS) $(CPPFLAGS) -c $(SAMRAI)/source/test/dataops/SampleIndexData.C -o $@
 
