@@ -3692,9 +3692,10 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
    d_dst_to_encon.reset(new hier::Connector(dim));
    d_dst_to_encon->setBase(*(d_dst_level->getBoxLevel()));
 
+   hier::IntVector encon_gcw(
+      hier::IntVector::max(fill_gcw, hier::IntVector::getOne(dim)));
+
    if (num_blocks > 1) {
-      hier::IntVector encon_gcw(
-         hier::IntVector::max(fill_gcw, hier::IntVector::getOne(dim)));
 
       hier::LocalId encon_local_id(0);
 
@@ -3856,8 +3857,6 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
     */
    encon_box_level->finalize();
 
-   const hier::IntVector& one_vec(hier::IntVector::getOne(dim)); 
-
    d_encon_level.reset(new hier::PatchLevel(encon_box_level,
          grid_geometry,
          d_dst_level->getPatchDescriptor(),
@@ -3867,20 +3866,20 @@ RefineSchedule::createEnconLevel(const hier::IntVector& fill_gcw)
    d_encon_level->setLevelNumber(d_dst_level->getLevelNumber());
 
    d_dst_to_encon->setHead(*(d_encon_level->getBoxLevel()));
-   d_dst_to_encon->setWidth(one_vec, true);
+   d_dst_to_encon->setWidth(encon_gcw, true);
 
    if (d_src_level) {
       const hier::Connector& dst_to_src =
          d_dst_level->findConnectorWithTranspose(*d_src_level,
-            one_vec,
-            one_vec,
+            encon_gcw,
+            encon_gcw,
             hier::CONNECTOR_IMPLICIT_CREATION_RULE,
             true);
 
       // d_dst_to_encon only needs its transpose set temporarily as the
       // transpose is only used in this call to bridge.  We do not want to
       // store d_dst_to_encon's transpose after this point which is why it is
-      // set to a null shared_ptr a few lines later.
+      // deleted a few lines later.
       hier::Connector* encon_to_dst = d_dst_to_encon->createLocalTranspose();
       d_dst_to_encon->setTranspose(encon_to_dst, false);
 
