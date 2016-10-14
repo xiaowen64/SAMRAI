@@ -433,6 +433,33 @@ EOF
 #
 ;;
 
+# CASC RedHat 7, GNU 4.9.2
+
+
+casc_rh7_gnu49_x64)   # CASC RedHat 7, GNU-4.9.2 compilers
+cat <<-EOF
+	--with-CXX=/nfs/apps/gcc/4.9.2/bin/g++
+	--with-CC=/nfs/apps/gcc/4.9.2/bin/gcc	
+	--with-extra-cxx-flags="-Wno-unused-local-typedefs"
+	--with-F77=/nfs/apps/gcc/4.9.2/bin/gfortran
+	--with-hdf5=/usr/casc/samrai/apps/rh5/hdf5/1.8.5p1
+	--with-boost=/usr/casc/samrai/apps/rh5/boost/1.55.0
+	--with-silo=/usr/casc/samrai/apps/rh5/silo/4.7.2_opt
+	--with-mpi-include=/nfs/apps/mpich2/latest/include
+	--with-mpi-lib-dirs=/nfs/apps/mpich2/latest/lib
+	--with-mpi-libs="mpich mpl rt pthread"
+	--with-parallel-run-bin=/nfs/apps/mpich2/latest/bin/mpirun
+	--with-hypre=/usr/casc/samrai/apps/rh5/hypre/2.10.0b.gcc.4.1.2.opt
+	--with-lapack=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-lapack-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -llapack"
+	--with-blas=/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2
+	--with-blas-libs="-L/usr/casc/samrai/apps/rh5/lapack/3.2.2-gcc.4.1.2/lib -lf77blas -lcblas -latlas"
+	--with-petsc=/usr/casc/samrai/apps/rh5/petsc/petsc-3.2-p7.gcc.4.1.2
+	--with-sundials=/usr/casc/samrai/apps/rh5/sundials/2.3.0_gcc.4.1.2
+	--enable-rpath=-Wl,-R
+EOF
+#
+;;
 
 #-----------------------------------------------------------------------------
 # Misc other machines
