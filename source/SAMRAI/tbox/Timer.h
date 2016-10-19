@@ -322,6 +322,8 @@ protected:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       d_is_active = is_active;
+#else
+      NULL_USE(is_active);
 #endif
    }
 
@@ -336,6 +338,8 @@ protected:
       if (!isConcurrentTimer(timer)) {
          d_concurrent_timers.push_back(&timer);
       }
+#else
+      NULL_USE(timer);
 #endif
    }
 
