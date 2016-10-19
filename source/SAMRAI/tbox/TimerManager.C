@@ -126,9 +126,9 @@ TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   const boost::shared_ptr<Database>& input_db):
+   const boost::shared_ptr<Database>& input_db)
 #ifdef ENABLE_SAMRAI_TIMERS
-   d_timer_active_access_time(-9999.0),
+   : d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),
 #ifdef HAVE_TAU
    d_main_timer(new Timer("UNINSTRUMENTED PARTS")),
@@ -295,7 +295,7 @@ TimerManager::getTimer(
    // since timers aren't active - and we need to still provide
    // pseudo-timer functionality (i.e., a valid timer), we'll
    // create one on the fly, but not track it.
-   boost::shared_ptr<Timer> timer(boost::make_shared<Timer>(name));
+   boost::shared_ptr<Timer> timer(new Timer(name));
    timer->setActive(false);
    return timer;
 
