@@ -22,7 +22,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -55,7 +54,7 @@ public:
    AutoTester(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db);
+      std::shared_ptr<tbox::Database> input_db);
 
    /**
     * Virtual destructor for AutoTester
@@ -69,10 +68,10 @@ public:
    int
    evalTestData(
       int iter,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
-      const boost::shared_ptr<algs::TimeRefinementIntegrator> tri,
-      const boost::shared_ptr<algs::HyperbolicLevelIntegrator> hli,
-      const boost::shared_ptr<mesh::GriddingAlgorithm> ga);
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<algs::TimeRefinementIntegrator> tri,
+      const std::shared_ptr<algs::HyperbolicLevelIntegrator> hli,
+      const std::shared_ptr<mesh::GriddingAlgorithm> ga);
 
    /**
     * Checks result for applications using MethodOfLinesIntegrator
@@ -80,28 +79,28 @@ public:
    int
    evalTestData(
       int iter,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       const double time,
-      const boost::shared_ptr<algs::MethodOfLinesIntegrator> mol,
-      const boost::shared_ptr<mesh::GriddingAlgorithm> ga);
+      const std::shared_ptr<algs::MethodOfLinesIntegrator> mol,
+      const std::shared_ptr<mesh::GriddingAlgorithm> ga);
 
    /**
     * Check boxes on specified hierarchy level against test boxes.
     */
    int
    checkHierarchyBoxes(
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int ln,
       const hier::BoxLevel& correct_box_level,
       int iter);
 
    static int
    testHierarchyNeighbors(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    static int
    testFlattenedHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
 private:
    /*
@@ -110,7 +109,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db);
+      std::shared_ptr<tbox::Database> input_db);
 
    std::string d_object_name;
 

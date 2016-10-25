@@ -12,7 +12,6 @@
 #include "SAMRAI/tbox/SiloDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace tbox {
@@ -43,17 +42,17 @@ SiloDatabaseFactory::operator = (
 /**
  * Build a new SiloDatabase object.
  */
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 SiloDatabaseFactory::allocate(
    const std::string& name) {
 #ifdef HAVE_SILO
-   return boost::make_shared<SiloDatabase>(name);
+   return std::make_shared<SiloDatabase>(name);
 
 #else
    NULL_USE(name);
    TBOX_WARNING("Silo5DatabaseFactory: Cannot allocate a SiloDatabase.\n"
       << "SAMRAI was not configured with Silo." << std::endl);
-   return boost::shared_ptr<Database>();
+   return std::shared_ptr<Database>();
 
 #endif
 }

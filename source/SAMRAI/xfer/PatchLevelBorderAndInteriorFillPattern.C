@@ -50,8 +50,8 @@ PatchLevelBorderAndInteriorFillPattern::~PatchLevelBorderAndInteriorFillPattern(
  */
 void
 PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
-   boost::shared_ptr<hier::BoxLevel>& fill_box_level,
-   boost::shared_ptr<hier::Connector>& dst_to_fill,
+   std::shared_ptr<hier::BoxLevel>& fill_box_level,
+   std::shared_ptr<hier::Connector>& dst_to_fill,
    const hier::BoxLevel& dst_box_level,
    const hier::IntVector& fill_ghost_width,
    bool data_on_patch_border)
@@ -107,7 +107,7 @@ PatchLevelBorderAndInteriorFillPattern::computeFillBoxesAndNeighborhoodSets(
                fill_boxes.removeIntersections(*na);
             } else {
 
-               boost::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
+               std::shared_ptr<const hier::BaseGridGeometry> grid_geometry(
                   dst_box_level.getGridGeometry());
 
                const hier::BlockId& dst_block_id = dst_box.getBlockId();

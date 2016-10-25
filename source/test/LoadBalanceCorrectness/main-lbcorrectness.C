@@ -68,7 +68,7 @@ enforceNesting(
    hier::BoxLevel& L1,
    hier::Connector& L0_to_L1,
    hier::Connector& L1_to_L0,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln);
 
 void
@@ -106,15 +106,15 @@ outputPostbalance(
    const hier::IntVector& post_width,
    const std::string& border);
 
-boost::shared_ptr<mesh::BoxGeneratorStrategy>
+std::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    const std::string& bg_type,
    const tbox::Dimension& dim);
 
-boost::shared_ptr<mesh::LoadBalanceStrategy>
+std::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    const std::string& lb_type,
    const std::string& rank_tree_type,
    int ln,
@@ -125,7 +125,7 @@ checkBalanceCorrectness(
    const hier::BoxLevel& prebalance,
    const hier::BoxLevel& postbalance);
 
-boost::shared_ptr<RankTreeStrategy>
+std::shared_ptr<RankTreeStrategy>
 getRankTree(
    Database& input_db,
    const std::string& rank_tree_type);
@@ -164,7 +164,7 @@ public:
 };
 NestingLevelConnectorWidthRequestor nesting_level_connector_width_requestor;
 
-static boost::shared_ptr<tbox::CommGraphWriter> comm_graph_writer;
+static std::shared_ptr<tbox::CommGraphWriter> comm_graph_writer;
 size_t num_records_written = 0;
 
 /*
@@ -234,7 +234,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
+      std::shared_ptr<InputDatabase> input_db(new InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -251,7 +251,7 @@ int main(
        * all name strings in this program.
        */
 
-      boost::shared_ptr<Database> main_db = input_db->getDatabase("Main");
+      std::shared_ptr<Database> main_db = input_db->getDatabase("Main");
 
       const tbox::Dimension
       dim(static_cast<unsigned short>(main_db->getInteger("dim")));
@@ -356,28 +356,28 @@ int main(
        */
       const std::string mesh_generator_name =
          main_db->getStringWithDefault("mesh_generator_name", "SinusoidalFrontGenerator");
-      boost::shared_ptr<MeshGenerationStrategy> mesh_gen;
+      std::shared_ptr<MeshGenerationStrategy> mesh_gen;
       if (mesh_generator_name == "SinusoidalFrontGenerator") {
          mesh_gen.reset(
             new SinusoidalFrontGenerator(
                "SinusoidalFrontGenerator",
                dim,
                main_db->getDatabaseWithDefault("SinusoidalFrontGenerator",
-                  boost::shared_ptr<tbox::Database>())));
+                  std::shared_ptr<tbox::Database>())));
       } else if (mesh_generator_name == "SphericalShellGenerator") {
          mesh_gen.reset(
             new SphericalShellGenerator(
                "SphericalShellGenerator",
                dim,
                main_db->getDatabaseWithDefault("SphericalShellGenerator",
-                  boost::shared_ptr<tbox::Database>())));
+                  std::shared_ptr<tbox::Database>())));
       } else if (mesh_generator_name == "ShrunkenLevelGenerator") {
          mesh_gen.reset(
             new ShrunkenLevelGenerator(
                "ShrunkenLevelGenerator",
                dim,
                main_db->getDatabaseWithDefault("ShrunkenLevelGenerator",
-                  boost::shared_ptr<tbox::Database>())));
+                  std::shared_ptr<tbox::Database>())));
       } else {
          TBOX_ERROR("Unrecognized MeshGeneratorStrategy " << mesh_generator_name);
       }
@@ -405,7 +405,7 @@ int main(
       std::string box_generator_type =
          main_db->getStringWithDefault("box_generator_type", "BergerRigoutsos");
 
-      boost::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
+      std::shared_ptr<mesh::BoxGeneratorStrategy> box_generator =
          createBoxGenerator(input_db, box_generator_type, dim);
 
       /*
@@ -413,14 +413,14 @@ int main(
        */
 
       tbox::plog << "Building domain with boxes:\n" << domain_boxes.format("\t") << std::endl;
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             "GridGeometry",
             &xlo[0],
             &xhi[0],
             domain_boxes));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "Hierarchy",
             grid_geometry,
@@ -442,10 +442,10 @@ int main(
        * Set up the patch data for tags.
        */
 
-      boost::shared_ptr<pdat::CellVariable<int> > tag_variable(
+      std::shared_ptr<pdat::CellVariable<int> > tag_variable(
          new pdat::CellVariable<int>(dim, "ShrinkingLevelTagVariable"));
 
-      boost::shared_ptr<hier::VariableContext> default_context =
+      std::shared_ptr<hier::VariableContext> default_context =
          vdb->getContext("TagVariable");
 
       const int tag_data_id = vdb->registerVariableAndContext(
@@ -508,7 +508,7 @@ int main(
       }
 
 #ifdef HAVE_HDF5
-      boost::shared_ptr<tbox::HDFDatabase> baseline_db(
+      std::shared_ptr<tbox::HDFDatabase> baseline_db(
          new tbox::HDFDatabase("LoadBalanceCorrectness baseline"));
 
       if (baseline_action == 'g') {
@@ -570,11 +570,11 @@ int main(
           * reflect the load balancer use in real apps.  We just neeed a
           * distributed L0 for the real load balancing performance test.
           */
-         boost::shared_ptr<hier::Connector> L0_to_domain(new hier::Connector(
+         std::shared_ptr<hier::Connector> L0_to_domain(new hier::Connector(
                                                             L0,
                                                             domain_box_level,
                                                             hier::IntVector(dim, 2)));
-         boost::shared_ptr<hier::Connector> domain_to_L0(new hier::Connector(
+         std::shared_ptr<hier::Connector> domain_to_L0(new hier::Connector(
                                                             domain_box_level,
                                                             L0,
                                                             hier::IntVector(dim, 2)));
@@ -582,7 +582,7 @@ int main(
          oca.findOverlaps(*domain_to_L0);
          domain_to_L0->setTranspose(L0_to_domain.get(), false);
 
-         boost::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
+         std::shared_ptr<mesh::LoadBalanceStrategy> lb0 =
             createLoadBalancer(input_db, load_balancer_type, rank_tree_type, 0, dim);
 
          tbox::plog << "\n\tL0 prebalance loads:\n";
@@ -594,13 +594,13 @@ int main(
 
 #ifdef HAVE_HDF5
          if (baseline_action == 'g') {
-            boost::shared_ptr<tbox::Database> prebalance_L0_db =
+            std::shared_ptr<tbox::Database> prebalance_L0_db =
                baseline_db->putDatabase("prebalance BoxLevel 0");
             L0.putToRestart(prebalance_L0_db);
          } else if (baseline_action == 'c') {
-            boost::shared_ptr<tbox::Database> prebalance_L0_db =
+            std::shared_ptr<tbox::Database> prebalance_L0_db =
                baseline_db->getDatabase("prebalance BoxLevel 0");
-            boost::shared_ptr<hier::BoxLevel> baseline_prebalance_L0(
+            std::shared_ptr<hier::BoxLevel> baseline_prebalance_L0(
                new hier::BoxLevel(
                   dim,
                   *prebalance_L0_db,
@@ -640,13 +640,13 @@ int main(
 
 #ifdef HAVE_HDF5
          if (baseline_action == 'g') {
-            boost::shared_ptr<tbox::Database> postbalance_box_level_db =
+            std::shared_ptr<tbox::Database> postbalance_box_level_db =
                baseline_db->putDatabase("postbalance BoxLevel 0");
             L0.putToRestart(postbalance_box_level_db);
          } else if (baseline_action == 'c') {
-            boost::shared_ptr<tbox::Database> postbalance_L0_db =
+            std::shared_ptr<tbox::Database> postbalance_L0_db =
                baseline_db->getDatabase("postbalance BoxLevel 0");
-            boost::shared_ptr<hier::BoxLevel> baseline_postbalance_L0(
+            std::shared_ptr<hier::BoxLevel> baseline_postbalance_L0(
                new hier::BoxLevel(
                   dim,
                   *postbalance_L0_db,
@@ -696,8 +696,8 @@ int main(
       }
 
       hier::Connector* L1_to_L0;
-      boost::shared_ptr<hier::Connector> L0_to_L1;
-      boost::shared_ptr<hier::Connector> L1_to_L1;
+      std::shared_ptr<hier::Connector> L0_to_L1;
+      std::shared_ptr<hier::Connector> L1_to_L1;
 
       if (do_test && max_levels > 1) {
 
@@ -708,7 +708,7 @@ int main(
           */
          tbox::pout << "\n\n==================== Generating L1 ====================" << std::endl;
 
-         boost::shared_ptr<hier::BoxLevel> L1;
+         std::shared_ptr<hier::BoxLevel> L1;
 
          const int coarser_ln = 0;
          const int finer_ln = coarser_ln + 1;
@@ -772,7 +772,7 @@ int main(
                hierarchy->getRatioToCoarserLevel(1));
          }
 
-         boost::shared_ptr<mesh::LoadBalanceStrategy> lb1 =
+         std::shared_ptr<mesh::LoadBalanceStrategy> lb1 =
             createLoadBalancer(input_db, load_balancer_type, rank_tree_type, 1, dim);
 
          tbox::plog << "\n\tL1 prebalance loads:\n";
@@ -784,13 +784,13 @@ int main(
 
 #ifdef HAVE_HDF5
          if (baseline_action == 'g') {
-            boost::shared_ptr<tbox::Database> prebalance_box_level_db =
+            std::shared_ptr<tbox::Database> prebalance_box_level_db =
                baseline_db->putDatabase("prebalance BoxLevel 1");
             L1->putToRestart(prebalance_box_level_db);
          } else if (baseline_action == 'c') {
-            boost::shared_ptr<tbox::Database> prebalance_L1_db =
+            std::shared_ptr<tbox::Database> prebalance_L1_db =
                baseline_db->getDatabase("prebalance BoxLevel 1");
-            boost::shared_ptr<hier::BoxLevel> baseline_prebalance_L1(
+            std::shared_ptr<hier::BoxLevel> baseline_prebalance_L1(
                new hier::BoxLevel(
                   dim,
                   *prebalance_L1_db,
@@ -830,13 +830,13 @@ int main(
 
 #ifdef HAVE_HDF5
          if (baseline_action == 'g') {
-            boost::shared_ptr<tbox::Database> postbalance_box_level_db =
+            std::shared_ptr<tbox::Database> postbalance_box_level_db =
                baseline_db->putDatabase("postbalance BoxLevel 1");
             L1->putToRestart(postbalance_box_level_db);
          } else if (baseline_action == 'c') {
-            boost::shared_ptr<tbox::Database> postbalance_L1_db =
+            std::shared_ptr<tbox::Database> postbalance_L1_db =
                baseline_db->getDatabase("postbalance BoxLevel 1");
-            boost::shared_ptr<hier::BoxLevel> baseline_postbalance_L1(
+            std::shared_ptr<hier::BoxLevel> baseline_postbalance_L1(
                new hier::BoxLevel(
                   dim,
                   *postbalance_L1_db,
@@ -890,8 +890,8 @@ int main(
       }
 
       hier::Connector* L2_to_L1;
-      boost::shared_ptr<hier::Connector> L1_to_L2;
-      boost::shared_ptr<hier::Connector> L2_to_L2;
+      std::shared_ptr<hier::Connector> L1_to_L2;
+      std::shared_ptr<hier::Connector> L2_to_L2;
 
       if (do_test && max_levels > 2) {
          /*
@@ -901,7 +901,7 @@ int main(
 
          const hier::BoxLevel& L1 = *hierarchy->getPatchLevel(1)->getBoxLevel();
 
-         boost::shared_ptr<hier::BoxLevel> L2;
+         std::shared_ptr<hier::BoxLevel> L2;
 
          const int coarser_ln = 1;
          const int finer_ln = coarser_ln + 1;
@@ -963,7 +963,7 @@ int main(
                hierarchy->getRatioToCoarserLevel(2));
          }
 
-         boost::shared_ptr<mesh::LoadBalanceStrategy> lb2 =
+         std::shared_ptr<mesh::LoadBalanceStrategy> lb2 =
             createLoadBalancer(input_db, load_balancer_type, rank_tree_type, 2, dim);
 
          tbox::plog << "\n\tL2 prebalance loads:\n";
@@ -975,13 +975,13 @@ int main(
 
 #ifdef HAVE_HDF5
          if (baseline_action == 'g') {
-            boost::shared_ptr<tbox::Database> prebalance_box_level_db =
+            std::shared_ptr<tbox::Database> prebalance_box_level_db =
                baseline_db->putDatabase("prebalance BoxLevel 2");
             L2->putToRestart(prebalance_box_level_db);
          } else if (baseline_action == 'c') {
-            boost::shared_ptr<tbox::Database> prebalance_L2_db =
+            std::shared_ptr<tbox::Database> prebalance_L2_db =
                baseline_db->getDatabase("prebalance BoxLevel 2");
-            boost::shared_ptr<hier::BoxLevel> baseline_prebalance_L2(
+            std::shared_ptr<hier::BoxLevel> baseline_prebalance_L2(
                new hier::BoxLevel(
                   dim,
                   *prebalance_L2_db,
@@ -1021,13 +1021,13 @@ int main(
 
 #ifdef HAVE_HDF5
          if (baseline_action == 'g') {
-            boost::shared_ptr<tbox::Database> postbalance_box_level_db =
+            std::shared_ptr<tbox::Database> postbalance_box_level_db =
                baseline_db->putDatabase("postbalance BoxLevel 2");
             L2->putToRestart(postbalance_box_level_db);
          } else if (baseline_action == 'c') {
-            boost::shared_ptr<tbox::Database> postbalance_L2_db =
+            std::shared_ptr<tbox::Database> postbalance_L2_db =
                baseline_db->getDatabase("postbalance BoxLevel 2");
-            boost::shared_ptr<hier::BoxLevel> baseline_postbalance_L2(
+            std::shared_ptr<hier::BoxLevel> baseline_postbalance_L2(
                new hier::BoxLevel(
                   dim,
                   *postbalance_L2_db,
@@ -1306,8 +1306,8 @@ void sortNodes(
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.setTimerPrefix("apps::sortNodes");
 
-   boost::shared_ptr<hier::MappingConnector> sorting_map;
-   boost::shared_ptr<hier::BoxLevel> seq_box_level;
+   std::shared_ptr<hier::MappingConnector> sorting_map;
+   std::shared_ptr<hier::BoxLevel> seq_box_level;
 
    dlbg_edge_utils.makeSortingMap(
       seq_box_level,
@@ -1349,9 +1349,9 @@ void refineHead(
    ref_to_head.refineLocalNeighbors(refinement_ratio);
 }
 
-boost::shared_ptr<mesh::LoadBalanceStrategy>
+std::shared_ptr<mesh::LoadBalanceStrategy>
 createLoadBalancer(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    const std::string& lb_type,
    const std::string& rank_tree_type,
    int ln,
@@ -1360,13 +1360,13 @@ createLoadBalancer(
 
    if (lb_type == "TreeLoadBalancer") {
 
-      boost::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
+      std::shared_ptr<tbox::RankTreeStrategy> rank_tree = getRankTree(*input_db,
             rank_tree_type);
 
-      const boost::shared_ptr<tbox::Database> db =
+      const std::shared_ptr<tbox::Database> db =
          input_db->getDatabaseWithDefault("TreeLoadBalancer",
-            boost::shared_ptr<tbox::Database>());
-      boost::shared_ptr<mesh::TreeLoadBalancer>
+            std::shared_ptr<tbox::Database>());
+      std::shared_ptr<mesh::TreeLoadBalancer>
       tree_lb(new mesh::TreeLoadBalancer(
                  dim,
                  std::string("mesh::TreeLoadBalancer") + tbox::Utilities::intToString(ln),
@@ -1382,10 +1382,10 @@ createLoadBalancer(
 
    } else if (lb_type == "GraphLoadBalancer") {
 
-      const boost::shared_ptr<tbox::Database> db =
+      const std::shared_ptr<tbox::Database> db =
          input_db->getDatabaseWithDefault("GraphLoadBalancer",
-            boost::shared_ptr<tbox::Database>());
-      boost::shared_ptr<mesh::GraphLoadBalancer>
+            std::shared_ptr<tbox::Database>());
+      std::shared_ptr<mesh::GraphLoadBalancer>
       graph_lb(new mesh::GraphLoadBalancer(
                   dim,
                   std::string("mesh::GraphLoadBalancer") + tbox::Utilities::intToString(ln),
@@ -1398,10 +1398,10 @@ createLoadBalancer(
 
    } else if (lb_type == "ChopAndPackLoadBalancer") {
 
-      const boost::shared_ptr<tbox::Database> db =
+      const std::shared_ptr<tbox::Database> db =
          input_db->getDatabaseWithDefault("ChopAndPackLoadBalancer",
-            boost::shared_ptr<tbox::Database>());
-      boost::shared_ptr<mesh::ChopAndPackLoadBalancer>
+            std::shared_ptr<tbox::Database>());
+      std::shared_ptr<mesh::ChopAndPackLoadBalancer>
       cap_lb(new mesh::ChopAndPackLoadBalancer(
                 dim,
                 std::string("mesh::ChopAndPackLoadBalancer") + tbox::Utilities::intToString(ln),
@@ -1414,10 +1414,10 @@ createLoadBalancer(
 
    } else if (lb_type == "CascadePartitioner") {
 
-      const boost::shared_ptr<tbox::Database> db =
+      const std::shared_ptr<tbox::Database> db =
          input_db->getDatabaseWithDefault("CascadePartitioner",
-            boost::shared_ptr<tbox::Database>());
-      boost::shared_ptr<mesh::CascadePartitioner>
+            std::shared_ptr<tbox::Database>());
+      std::shared_ptr<mesh::CascadePartitioner>
       cp_lb(new mesh::CascadePartitioner(
                dim,
                std::string("mesh::CascadePartitioner") + tbox::Utilities::intToString(ln),
@@ -1435,34 +1435,34 @@ createLoadBalancer(
          << "\"ChopAndPackLoadBalancer\" or \"TreeLoadBalancer\".");
    }
 
-   return boost::shared_ptr<mesh::LoadBalanceStrategy>();
+   return std::shared_ptr<mesh::LoadBalanceStrategy>();
 }
 
-boost::shared_ptr<mesh::BoxGeneratorStrategy>
+std::shared_ptr<mesh::BoxGeneratorStrategy>
 createBoxGenerator(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    const std::string& bg_type,
    const tbox::Dimension& dim)
 {
 
    if (bg_type == "BergerRigoutsos") {
 
-      boost::shared_ptr<mesh::BergerRigoutsos>
+      std::shared_ptr<mesh::BergerRigoutsos>
       berger_rigoutsos(
          new mesh::BergerRigoutsos(
             dim,
-            input_db->getDatabaseWithDefault("BergerRigoutsos", boost::shared_ptr<tbox::Database>())));
+            input_db->getDatabaseWithDefault("BergerRigoutsos", std::shared_ptr<tbox::Database>())));
       berger_rigoutsos->useDuplicateMPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
       return berger_rigoutsos;
 
    } else if (bg_type == "TileClustering") {
 
-      boost::shared_ptr<mesh::TileClustering>
+      std::shared_ptr<mesh::TileClustering>
       tiled(
          new mesh::TileClustering(
             dim,
-            input_db->getDatabaseWithDefault("TileClustering", boost::shared_ptr<tbox::Database>())));
+            input_db->getDatabaseWithDefault("TileClustering", std::shared_ptr<tbox::Database>())));
 
       return tiled;
 
@@ -1473,7 +1473,7 @@ createBoxGenerator(
          << "\"BergerRigoutsos\" or \"TileClustering\".");
    }
 
-   return boost::shared_ptr<mesh::BoxGeneratorStrategy>();
+   return std::shared_ptr<mesh::BoxGeneratorStrategy>();
 }
 
 /*
@@ -1481,20 +1481,20 @@ createBoxGenerator(
  * Get the RankTreeStrategy implementation for TreeLoadBalancer
  ****************************************************************************
  */
-boost::shared_ptr<RankTreeStrategy> getRankTree(
+std::shared_ptr<RankTreeStrategy> getRankTree(
    Database& input_db,
    const std::string& rank_tree_type)
 {
    tbox::plog << "Rank tree type is " << rank_tree_type << '\n';
 
-   boost::shared_ptr<tbox::RankTreeStrategy> rank_tree;
+   std::shared_ptr<tbox::RankTreeStrategy> rank_tree;
 
    if (rank_tree_type == "BalancedDepthFirstTree") {
 
       BalancedDepthFirstTree * bdfs(new BalancedDepthFirstTree());
 
       if (input_db.isDatabase("BalancedDepthFirstTree")) {
-         boost::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("BalancedDepthFirstTree");
+         std::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("BalancedDepthFirstTree");
          bool do_left_leaf_switch = tmp_db->getBoolWithDefault("do_left_leaf_switch", true);
          bdfs->setLeftLeafSwitching(do_left_leaf_switch);
       }
@@ -1506,7 +1506,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree(
       CenteredRankTree * crt(new tbox::CenteredRankTree());
 
       if (input_db.isDatabase("CenteredRankTree")) {
-         boost::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("CenteredRankTree");
+         std::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("CenteredRankTree");
          bool make_first_rank_the_root = tmp_db->getBoolWithDefault("make_first_rank_the_root",
                true);
          crt->makeFirstRankTheRoot(make_first_rank_the_root);
@@ -1519,7 +1519,7 @@ boost::shared_ptr<RankTreeStrategy> getRankTree(
       BreadthFirstRankTree * dft(new tbox::BreadthFirstRankTree());
 
       if (input_db.isDatabase("BreadthFirstRankTree")) {
-         boost::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("BreadthFirstRankTree");
+         std::shared_ptr<tbox::Database> tmp_db = input_db.getDatabase("BreadthFirstRankTree");
          const int tree_degree = tmp_db->getIntegerWithDefault("tree_degree", true);
          dft->setTreeDegree(static_cast<unsigned short>(tree_degree));
       }
@@ -1541,7 +1541,7 @@ void enforceNesting(
    hier::BoxLevel& L1,
    hier::Connector& L0_to_L1,
    hier::Connector& L1_to_L0,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarser_ln)
 {
    tbox::pout << "\tEnforcing nesting..." << std::endl;
@@ -1560,8 +1560,8 @@ void enforceNesting(
          L0.getRefinementRatio(),
          L1.getRefinementRatio(),
          nesting_width);
-   boost::shared_ptr<hier::BoxLevel> L1nested;
-   boost::shared_ptr<hier::MappingConnector> L1_to_L1nested;
+   std::shared_ptr<hier::BoxLevel> L1nested;
+   std::shared_ptr<hier::MappingConnector> L1_to_L1nested;
    hier::BoxLevelConnectorUtils blcu;
    blcu.computeInternalParts(L1nested,
       L1_to_L1nested,

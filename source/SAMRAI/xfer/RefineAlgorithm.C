@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -32,7 +31,7 @@ namespace xfer {
  */
 
 RefineAlgorithm::RefineAlgorithm():
-   d_refine_classes(boost::make_shared<RefineClasses>()),
+   d_refine_classes(std::make_shared<RefineClasses>()),
    d_schedule_created(false)
 {
 }
@@ -63,8 +62,8 @@ RefineAlgorithm::registerRefine(
    const int dst,
    const int src,
    const int scratch,
-   const boost::shared_ptr<hier::RefineOperator>& oprefine,
-   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
+   const std::shared_ptr<hier::RefineOperator>& oprefine,
+   const std::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm::registerRefine error..."
@@ -111,9 +110,9 @@ RefineAlgorithm::registerRefine(
    const int src_told,
    const int src_tnew,
    const int scratch,
-   const boost::shared_ptr<hier::RefineOperator>& oprefine,
-   const boost::shared_ptr<hier::TimeInterpolateOperator>& optime,
-   const boost::shared_ptr<VariableFillPattern>& var_fill_pattern)
+   const std::shared_ptr<hier::RefineOperator>& oprefine,
+   const std::shared_ptr<hier::TimeInterpolateOperator>& optime,
+   const std::shared_ptr<VariableFillPattern>& var_fill_pattern)
 {
    TBOX_ASSERT(optime);
 
@@ -157,27 +156,27 @@ RefineAlgorithm::registerRefine(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    RefinePatchStrategy* patch_strategy,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(level);
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      boost::make_shared<PatchLevelFullFillPattern>());
+   std::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
+      std::make_shared<PatchLevelFullFillPattern>());
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              level,
              level,
@@ -196,25 +195,25 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+   const std::shared_ptr<hier::PatchLevel>& level,
    RefinePatchStrategy* patch_strategy,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(level);
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              level,
              level,
@@ -233,13 +232,13 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    // TBOX_ERROR("Untried method!  I think this method should work, but it's never been excercised.  When code crashes here, remove this line and rerun.  If problem continues, it could well be due to excercising this code.  --BTNG");
 
@@ -249,17 +248,17 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      boost::make_shared<PatchLevelFullFillPattern>());
+   std::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
+      std::make_shared<PatchLevelFullFillPattern>());
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              dst_level,
              src_level,
@@ -279,14 +278,14 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    TBOX_ASSERT(dst_level);
    TBOX_ASSERT(src_level);
@@ -294,14 +293,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              dst_level,
              src_level,
@@ -321,14 +320,14 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const int next_coarser_level,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
 
    // Do we all agree on the destination box_level?
@@ -342,17 +341,17 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      boost::make_shared<PatchLevelFullFillPattern>());
+   std::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
+      std::make_shared<PatchLevelFullFillPattern>());
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              level,
              level,
@@ -374,15 +373,15 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+   const std::shared_ptr<hier::PatchLevel>& level,
    const int next_coarser_level,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
 
    // Do we all agree on the destination box_level?
@@ -396,14 +395,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              level,
              level,
@@ -425,15 +424,15 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
    const int next_coarser_level,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    NULL_USE(use_time_refinement);
 
@@ -456,17 +455,17 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   boost::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
-      boost::make_shared<PatchLevelFullFillPattern>());
+   std::shared_ptr<PatchLevelFullFillPattern> fill_pattern(
+      std::make_shared<PatchLevelFullFillPattern>());
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              dst_level,
              src_level,
@@ -488,16 +487,16 @@ RefineAlgorithm::createSchedule(
  *************************************************************************
  */
 
-boost::shared_ptr<RefineSchedule>
+std::shared_ptr<RefineSchedule>
 RefineAlgorithm::createSchedule(
-   const boost::shared_ptr<PatchLevelFillPattern>& fill_pattern,
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<PatchLevelFillPattern>& fill_pattern,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
    const int next_coarser_level,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    RefinePatchStrategy* patch_strategy,
    bool use_time_refinement,
-   const boost::shared_ptr<RefineTransactionFactory>& transaction_factory)
+   const std::shared_ptr<RefineTransactionFactory>& transaction_factory)
 {
    NULL_USE(use_time_refinement);
 
@@ -520,14 +519,14 @@ RefineAlgorithm::createSchedule(
 
    d_schedule_created = true;
 
-   boost::shared_ptr<RefineTransactionFactory> trans_factory(
+   std::shared_ptr<RefineTransactionFactory> trans_factory(
       transaction_factory);
 
    if (!trans_factory) {
       trans_factory.reset(new StandardRefineTransactionFactory);
    }
 
-   return boost::make_shared<RefineSchedule>(
+   return std::make_shared<RefineSchedule>(
              fill_pattern,
              dst_level,
              src_level,
@@ -549,14 +548,14 @@ RefineAlgorithm::createSchedule(
 
 bool
 RefineAlgorithm::checkConsistency(
-   const boost::shared_ptr<RefineSchedule>& schedule) const
+   const std::shared_ptr<RefineSchedule>& schedule) const
 {
    TBOX_ASSERT(schedule);
    return d_refine_classes->classesMatch(schedule->getEquivalenceClasses());
 }
 
 void RefineAlgorithm::resetSchedule(
-   const boost::shared_ptr<RefineSchedule>& schedule) const
+   const std::shared_ptr<RefineSchedule>& schedule) const
 {
    TBOX_ASSERT(schedule);
    if (d_refine_classes->classesMatch(schedule->getEquivalenceClasses())) {

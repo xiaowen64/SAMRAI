@@ -15,7 +15,6 @@
 
 #include "SAMRAI/hier/BaseGridGeometry.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -122,9 +121,9 @@ private:
       int d_nfaces;
       int d_nedges;
       int d_npoints;
-      std::vector<boost::shared_ptr<Face> > d_face;
-      std::vector<boost::shared_ptr<Edge> > d_edge;
-      std::vector<boost::shared_ptr<Point> > d_point;
+      std::vector<std::shared_ptr<Face> > d_face;
+      std::vector<std::shared_ptr<Edge> > d_edge;
+      std::vector<std::shared_ptr<Point> > d_point;
    };
 
    /*!
@@ -241,10 +240,10 @@ private:
 
    tbox::Dimension d_dim;
 
-   std::vector<boost::shared_ptr<Block> > d_blocks;
-   std::vector<boost::shared_ptr<Face> > d_faces;
-   std::list<boost::shared_ptr<Edge> > d_edges;
-   std::list<boost::shared_ptr<Point> > d_points;
+   std::vector<std::shared_ptr<Block> > d_blocks;
+   std::vector<std::shared_ptr<Face> > d_faces;
+   std::list<std::shared_ptr<Edge> > d_edges;
+   std::list<std::shared_ptr<Point> > d_points;
 
    /*!
     * @brief Static vectors that serve as a table to map face identifiers

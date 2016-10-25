@@ -23,7 +23,6 @@
 #include "SAMRAI/appu/VisItDataWriter.h"
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 

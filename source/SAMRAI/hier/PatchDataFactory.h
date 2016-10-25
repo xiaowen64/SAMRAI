@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchData.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -96,7 +95,7 @@ public:
     * @param ghosts ghost cell width for concrete classes created from
     * the factory.
     */
-   virtual boost::shared_ptr<PatchDataFactory>
+   virtual std::shared_ptr<PatchDataFactory>
    cloneFactory(
       const IntVector& ghosts) = 0;
 
@@ -104,7 +103,7 @@ public:
     * @brief Abstract virtual function to allocate a concrete patch data object.
     *
     */
-   virtual boost::shared_ptr<PatchData>
+   virtual std::shared_ptr<PatchData>
    allocate(
       const Patch& patch) const = 0;
 
@@ -116,7 +115,7 @@ public:
     * The box geometry object will be used in the calculation
     * of box intersections for the computation of data dependencies.
     */
-   virtual boost::shared_ptr<BoxGeometry>
+   virtual std::shared_ptr<BoxGeometry>
    getBoxGeometry(
       const Box& box) const = 0;
 
@@ -175,7 +174,7 @@ public:
     */
    virtual bool
    validCopyTo(
-      const boost::shared_ptr<PatchDataFactory>& dst_pdf) const = 0;
+      const std::shared_ptr<PatchDataFactory>& dst_pdf) const = 0;
 
    virtual MultiblockDataTranslator *
    getMultiblockDataTranslator();

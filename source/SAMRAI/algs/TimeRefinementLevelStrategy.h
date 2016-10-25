@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 
 #include <vector>
 
@@ -66,7 +65,7 @@ public:
     */
    virtual void
    initializeLevelIntegrator(
-      const boost::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg) = 0;
+      const std::shared_ptr<mesh::GriddingAlgorithmStrategy>& gridding_alg) = 0;
 
    /**
     * Return appropriate time increment for given level in the patch
@@ -86,7 +85,7 @@ public:
     */
    virtual double
    getLevelDt(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const double dt_time,
       const bool initial_time) = 0;
 
@@ -169,8 +168,8 @@ public:
     */
    virtual double
    advanceLevel(
-      const boost::shared_ptr<hier::PatchLevel>& level,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const double current_time,
       const double new_time,
       const bool first_step,
@@ -208,7 +207,7 @@ public:
     */
    virtual void
    standardLevelSynchronization(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -228,7 +227,7 @@ public:
     */
    virtual void
    synchronizeNewLevels(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level,
       const double sync_time,
@@ -242,7 +241,7 @@ public:
     */
    virtual void
    resetTimeDependentData(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const double new_time,
       const bool can_be_refined) = 0;
 
@@ -257,7 +256,7 @@ public:
     */
    virtual void
    resetDataToPreadvanceState(
-      const boost::shared_ptr<hier::PatchLevel>& level) = 0;
+      const std::shared_ptr<hier::PatchLevel>& level) = 0;
 
    /**
     * Return true if the implementation of this class is constructed

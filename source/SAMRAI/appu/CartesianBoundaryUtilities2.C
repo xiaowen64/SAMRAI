@@ -105,7 +105,7 @@ bool CartesianBoundaryUtilities2::s_fortran_constants_stuffed = false;
 void
 CartesianBoundaryUtilities2::getFromInput(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    std::vector<int>& edge_conds,
    std::vector<int>& node_conds,
    const hier::IntVector& periodic)
@@ -154,7 +154,7 @@ CartesianBoundaryUtilities2::getFromInput(
 void
 CartesianBoundaryUtilities2::fillEdgeBoundaryData(
    const std::string& varname,
-   const boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const std::vector<int>& bdry_edge_conds,
@@ -175,8 +175,8 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -237,7 +237,7 @@ CartesianBoundaryUtilities2::fillEdgeBoundaryData(
 void
 CartesianBoundaryUtilities2::fillNodeBoundaryData(
    const std::string& varname,
-   const boost::shared_ptr<pdat::CellData<double> >& vardata,
+   const std::shared_ptr<pdat::CellData<double> >& vardata,
    const hier::Patch& patch,
    const hier::IntVector& ghost_fill_width,
    const std::vector<int>& bdry_node_conds,
@@ -258,8 +258,8 @@ CartesianBoundaryUtilities2::fillNodeBoundaryData(
       stuff2dBdryFortConst();
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -405,13 +405,13 @@ CartesianBoundaryUtilities2::checkBdryData(
    int btype = bbox.getBoundaryType();
    int bloc = bbox.getLocationIndex();
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
-   boost::shared_ptr<pdat::CellData<double> > vardata(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > vardata(
+      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 
@@ -554,7 +554,7 @@ CartesianBoundaryUtilities2::checkBdryData(
 void
 CartesianBoundaryUtilities2::read2dBdryEdges(
    BoundaryUtilityStrategy* bdry_strategy,
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    std::vector<int>& edge_conds,
    const hier::IntVector& periodic)
 {
@@ -600,7 +600,7 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
          }
 
          if (need_data_read) {
-            boost::shared_ptr<tbox::Database> bdry_loc_db(
+            std::shared_ptr<tbox::Database> bdry_loc_db(
                input_db->getDatabase(bdry_loc_str));
             std::string bdry_cond_str =
                bdry_loc_db->getString("boundary_condition");
@@ -636,7 +636,7 @@ CartesianBoundaryUtilities2::read2dBdryEdges(
 
 void
 CartesianBoundaryUtilities2::read2dBdryNodes(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    const std::vector<int>& edge_conds,
    std::vector<int>& node_conds,
    const hier::IntVector& periodic)
@@ -677,7 +677,7 @@ CartesianBoundaryUtilities2::read2dBdryNodes(
             default: NULL_STATEMENT;
          }
 
-         boost::shared_ptr<tbox::Database> bdry_loc_db(
+         std::shared_ptr<tbox::Database> bdry_loc_db(
             input_db->getDatabase(bdry_loc_str));
          std::string bdry_cond_str =
             bdry_loc_db->getString("boundary_condition");

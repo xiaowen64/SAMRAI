@@ -34,7 +34,7 @@ public:
    SideMultiblockTest(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> main_input_db,
+      std::shared_ptr<tbox::Database> main_input_db,
       const string& refine_option);
 
    /**
@@ -56,10 +56,10 @@ public:
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
-      boost::shared_ptr<const hier::Connector> dst_to_encon,
+      std::shared_ptr<const hier::Connector> dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& bbox,
-      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
+      const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry);
 
    /**
     * This function is called from the MultiblockTester constructor.  Its
@@ -81,7 +81,7 @@ public:
    virtual void
    initializeDataOnPatch(
       hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id,
       char src_or_dst);
@@ -92,7 +92,7 @@ public:
    void
    tagCellsToRefine(
       hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       int tag_index);
 
@@ -102,7 +102,7 @@ public:
    bool
    verifyResults(
       const hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id);
 
@@ -111,7 +111,7 @@ public:
    postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const boost::shared_ptr<hier::VariableContext>& context,
+      const std::shared_ptr<hier::VariableContext>& context,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
@@ -121,7 +121,7 @@ private:
     */
    void
    readTestInput(
-      boost::shared_ptr<tbox::Database> db);
+      std::shared_ptr<tbox::Database> db);
 
    /*
     * Object string identifier for error reporting
@@ -133,7 +133,7 @@ private:
    string d_refine_option;
    int d_finest_level_number;
 
-   std::vector<boost::shared_ptr<hier::Variable> > d_variables;
+   std::vector<std::shared_ptr<hier::Variable> > d_variables;
 
 };
 

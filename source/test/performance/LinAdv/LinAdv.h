@@ -35,7 +35,6 @@ using namespace std;
 
 #include "test/testlib/MeshGenerationStrategy.h"
 
-#include "boost/shared_ptr.hpp"
 
 /**
  * The LinAdv class provides routines for a sample application code that
@@ -78,10 +77,10 @@ public:
    LinAdv(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom,
-      const boost::shared_ptr<MeshGenerationStrategy>& sine_wall =
-         boost::shared_ptr<MeshGenerationStrategy>());
+      std::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geom,
+      const std::shared_ptr<MeshGenerationStrategy>& sine_wall =
+         std::shared_ptr<MeshGenerationStrategy>());
 
    /**
     * The destructor for LinAdv does nothing.
@@ -197,8 +196,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
-      const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
+      const std::shared_ptr<hier::VariableContext>& coarsened_fine,
+      const std::shared_ptr<hier::VariableContext>& advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -314,7 +313,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
 #ifdef HAVE_HDF5
    /**
@@ -324,7 +323,7 @@ public:
     */
    void
    registerVisItDataWriter(
-      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
+      std::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -357,7 +356,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    void
@@ -365,7 +364,7 @@ private:
 
    void
    readStateDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      std::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       std::vector<double>& uval);
@@ -392,31 +391,31 @@ private:
 
    const tbox::Dimension d_dim;
 
-   boost::shared_ptr<MeshGenerationStrategy> d_mesh_gen;
+   std::shared_ptr<MeshGenerationStrategy> d_mesh_gen;
 
    /*
     * We cache pointers to the grid geometry
     * object to set up initial data, set physical boundary conditions,
     * and register plot variables.
     */
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Data items used for nonuniform load balance, if used.
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
+   std::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
    /**
-    * boost::shared_ptr to state variable vector - [u]
+    * std::shared_ptr to state variable vector - [u]
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_uval;
+   std::shared_ptr<pdat::CellVariable<double> > d_uval;
 
    /**
-    * boost::shared_ptr to flux variable vector  - [F]
+    * std::shared_ptr to flux variable vector  - [F]
     */
-   boost::shared_ptr<pdat::FaceVariable<double> > d_flux;
+   std::shared_ptr<pdat::FaceVariable<double> > d_flux;
 
    /**
     * linear advection velocity vector
@@ -468,9 +467,9 @@ private:
    std::vector<double> d_rich_time_max;
    std::vector<double> d_rich_time_min;
 
-   boost::shared_ptr<tbox::Timer> t_analytical_tag;
-   boost::shared_ptr<tbox::Timer> t_init;
-   boost::shared_ptr<tbox::Timer> t_init_first_time;
+   std::shared_ptr<tbox::Timer> t_analytical_tag;
+   std::shared_ptr<tbox::Timer> t_init;
+   std::shared_ptr<tbox::Timer> t_init_first_time;
 
 };
 

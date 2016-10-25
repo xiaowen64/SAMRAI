@@ -21,7 +21,6 @@
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <map>
 #include <set>
 #include <vector>
@@ -1666,7 +1665,7 @@ private:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Constructs the neighborhoods from the supplied restart

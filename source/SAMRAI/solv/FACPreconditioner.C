@@ -30,8 +30,8 @@ namespace solv {
 
 FACPreconditioner::FACPreconditioner(
    const std::string& name,
-   boost::shared_ptr<FACOperatorStrategy> user_ops,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   std::shared_ptr<FACOperatorStrategy> user_ops,
+   const std::shared_ptr<tbox::Database>& input_db):
    d_object_name(name),
    d_fac_operator(user_ops),
    d_coarsest_ln(0),
@@ -80,7 +80,7 @@ FACPreconditioner::~FACPreconditioner()
 
 void
 FACPreconditioner::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
       d_max_iterations = input_db->getIntegerWithDefault("max_cycles", 10);

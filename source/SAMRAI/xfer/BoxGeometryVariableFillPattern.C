@@ -72,7 +72,7 @@ BoxGeometryVariableFillPattern::getStencilWidth()
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 BoxGeometryVariableFillPattern::computeFillBoxesOverlap(
    const hier::BoxContainer& fill_boxes,
    const hier::BoxContainer& node_fill_boxes,

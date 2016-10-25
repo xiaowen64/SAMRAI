@@ -40,7 +40,7 @@ PatchCellDataNormOpsReal<TYPE>::~PatchCellDataNormOpsReal()
 template<class TYPE>
 size_t
 PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -62,8 +62,8 @@ PatchCellDataNormOpsReal<TYPE>::numberOfEntries(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<double> >& cvol,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data && cvol);
@@ -77,8 +77,8 @@ PatchCellDataNormOpsReal<TYPE>::sumControlVolumes(
 template<class TYPE>
 void
 PatchCellDataNormOpsReal<TYPE>::abs(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& src,
+   const std::shared_ptr<pdat::CellData<TYPE> >& dst,
+   const std::shared_ptr<pdat::CellData<TYPE> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -92,9 +92,9 @@ PatchCellDataNormOpsReal<TYPE>::abs(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::L1Norm(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -115,9 +115,9 @@ PatchCellDataNormOpsReal<TYPE>::L1Norm(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::L2Norm(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
    TBOX_ASSERT_OBJDIM_EQUALITY2(*data, box);
@@ -138,10 +138,10 @@ PatchCellDataNormOpsReal<TYPE>::L2Norm(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
    TBOX_ASSERT_OBJDIM_EQUALITY3(*data, *weight, box);
@@ -166,9 +166,9 @@ PatchCellDataNormOpsReal<TYPE>::weightedL2Norm(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::RMSNorm(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -184,10 +184,10 @@ PatchCellDataNormOpsReal<TYPE>::RMSNorm(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& weight,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& weight,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data && weight);
 
@@ -203,9 +203,9 @@ PatchCellDataNormOpsReal<TYPE>::weightedRMSNorm(
 template<class TYPE>
 double
 PatchCellDataNormOpsReal<TYPE>::maxNorm(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data);
 
@@ -223,10 +223,10 @@ PatchCellDataNormOpsReal<TYPE>::maxNorm(
 template<class TYPE>
 TYPE
 PatchCellDataNormOpsReal<TYPE>::dot(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data2,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data1,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& cvol) const
+   const std::shared_ptr<pdat::CellData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 
@@ -248,9 +248,9 @@ PatchCellDataNormOpsReal<TYPE>::dot(
 template<class TYPE>
 TYPE
 PatchCellDataNormOpsReal<TYPE>::integral(
-   const boost::shared_ptr<pdat::CellData<TYPE> >& data,
+   const std::shared_ptr<pdat::CellData<TYPE> >& data,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::CellData<double> >& vol) const
+   const std::shared_ptr<pdat::CellData<double> >& vol) const
 {
    TBOX_ASSERT(data);
 

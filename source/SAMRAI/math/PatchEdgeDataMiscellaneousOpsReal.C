@@ -40,10 +40,10 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::~PatchEdgeDataMiscellaneousOpsReal()
 template<class TYPE>
 int
 PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data1,
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& data2,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& data1,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& data2,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(data1 && data2);
 
@@ -78,11 +78,11 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::computeConstrProdPos(
 template<class TYPE>
 void
 PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const TYPE& alpha,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
 
@@ -111,10 +111,10 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::compareToScalar(
 template<class TYPE>
 int
 PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& src,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& dst,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& src,
    const hier::Box& box,
-   const boost::shared_ptr<pdat::EdgeData<double> >& cvol) const
+   const std::shared_ptr<pdat::EdgeData<double> >& cvol) const
 {
    TBOX_ASSERT(dst && src);
 
@@ -149,8 +149,8 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::testReciprocal(
 template<class TYPE>
 TYPE
 PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& numer,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);
@@ -171,8 +171,8 @@ PatchEdgeDataMiscellaneousOpsReal<TYPE>::maxPointwiseDivide(
 template<class TYPE>
 TYPE
 PatchEdgeDataMiscellaneousOpsReal<TYPE>::minPointwiseDivide(
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& numer,
-   const boost::shared_ptr<pdat::EdgeData<TYPE> >& denom,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& numer,
+   const std::shared_ptr<pdat::EdgeData<TYPE> >& denom,
    const hier::Box& box) const
 {
    TBOX_ASSERT(numer && denom);

@@ -154,7 +154,7 @@ void VoucherTransitLoad::setWorkload(
    LoadType sumload = 0.0;
    for (hier::PatchLevel::iterator pi = patch_level.begin();
         pi != patch_level.end(); ++pi) {
-      const boost::shared_ptr<hier::Patch>& patch = *pi;
+      const std::shared_ptr<hier::Patch>& patch = *pi;
       const hier::BoxId& box_id = patch->getBox().getBoxId();
       BoxInTransit new_transit_box(patch->getBox());
       std::vector<double> corner_weights;
@@ -612,7 +612,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkDemand(
    d_id_gen = id_gen;
    d_mpi = mpi;
 
-   d_msg = boost::make_shared<tbox::MessageStream>();
+   d_msg = std::make_shared<tbox::MessageStream>();
    (*d_msg) << d_id_gen << d_voucher;
 
    d_mpi.Isend(
@@ -648,7 +648,7 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkDemand(
       VoucherTransitLoad_DEMANDTAG,
       &status);
 
-   d_msg = boost::make_shared<tbox::MessageStream>(
+   d_msg = std::make_shared<tbox::MessageStream>(
          message_length, tbox::MessageStream::Read,
          static_cast<void *>(&incoming_message[0]), false);
    (*d_msg) >> d_id_gen >> d_voucher;
@@ -672,7 +672,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    bool send_all)
 {
    d_pparams = &pparams;
-   d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
+   d_box_shipment = std::make_shared<BoxTransitSet>(pparams);
    d_box_shipment->setAllowBoxBreaking(reserve.getAllowBoxBreaking());
    d_box_shipment->setThresholdWidth(reserve.getThresholdWidth());
    if (send_all) {
@@ -690,7 +690,7 @@ void VoucherTransitLoad::VoucherRedemption::sendWorkSupply(
    }
    d_box_shipment->reassignOwnership(d_id_gen, d_demander_rank);
 
-   d_msg = boost::make_shared<tbox::MessageStream>();
+   d_msg = std::make_shared<tbox::MessageStream>();
    d_box_shipment->putToMessageStream(*d_msg);
 
    d_mpi.Isend(
@@ -721,10 +721,10 @@ void VoucherTransitLoad::VoucherRedemption::recvWorkSupply(
       VoucherTransitLoad_SUPPLYTAG,
       &status);
 
-   d_msg = boost::make_shared<tbox::MessageStream>(
+   d_msg = std::make_shared<tbox::MessageStream>(
          message_length, tbox::MessageStream::Read,
          static_cast<void *>(&incoming_message[0]), false);
-   d_box_shipment = boost::make_shared<BoxTransitSet>(pparams);
+   d_box_shipment = std::make_shared<BoxTransitSet>(pparams);
    d_box_shipment->getFromMessageStream(*d_msg);
    d_msg.reset();
 }
@@ -756,7 +756,7 @@ void VoucherTransitLoad::VoucherRedemption::fulfillLocalRedemption(
    bool all)
 {
    d_pparams = &pparams;
-   d_box_shipment = boost::shared_ptr<BoxTransitSet>(reserve.clone());
+   d_box_shipment = std::shared_ptr<BoxTransitSet>(reserve.clone());
    if (all) {
       d_box_shipment->swap(reserve);
    } else {
@@ -1082,11 +1082,11 @@ VoucherTransitLoad::getFromInput()
 {
    if (!tbox::InputManager::inputDatabaseExists()) return;
 
-   boost::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
+   std::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
 
    if (input_db->isDatabase("VoucherTransitLoad")) {
 
-      boost::shared_ptr<tbox::Database> my_db = input_db->getDatabase("VoucherTransitLoad");
+      std::shared_ptr<tbox::Database> my_db = input_db->getDatabase("VoucherTransitLoad");
 
       d_partition_work_supply_recursively = my_db->getBoolWithDefault(
             "DEV_partition_work_supply_recursively", d_partition_work_supply_recursively);

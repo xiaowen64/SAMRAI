@@ -34,10 +34,10 @@ Database::~Database()
  ************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 Database::getDatabaseWithDefault(
    const std::string& key,
-   const boost::shared_ptr<Database>& defaultvalue)
+   const std::shared_ptr<Database>& defaultvalue)
 {
    TBOX_ASSERT(!key.empty());
 

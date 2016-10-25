@@ -948,7 +948,7 @@ ArrayData<TYPE>::fill(
 template<class TYPE>
 void
 ArrayData<TYPE>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -977,7 +977,7 @@ ArrayData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 ArrayData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 

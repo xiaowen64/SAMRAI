@@ -28,7 +28,7 @@ using namespace SAMRAI;
 ShrunkenLevelGenerator::ShrunkenLevelGenerator(
    const std::string& object_name,
    const tbox::Dimension& dim,
-   const boost::shared_ptr<tbox::Database>& database):
+   const std::shared_ptr<tbox::Database>& database):
    d_name(object_name),
    d_dim(dim),
    d_hierarchy(),
@@ -85,7 +85,7 @@ ShrunkenLevelGenerator::~ShrunkenLevelGenerator()
  */
 void ShrunkenLevelGenerator::setTags(
    bool& exact_tagging,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
    int tag_data_id)
 {
@@ -177,7 +177,7 @@ void ShrunkenLevelGenerator::setDomain(
 }
 
 void ShrunkenLevelGenerator::resetHierarchyConfiguration(
-   /*! New hierarchy */ const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+   /*! New hierarchy */ const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
    /*! Coarsest level */ const int coarsest_level,
    /*! Finest level */ const int finest_level)
 {
@@ -189,7 +189,7 @@ void ShrunkenLevelGenerator::resetHierarchyConfiguration(
 }
 
 void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int tag_ln,
    int tag_data_id,
    const hier::IntVector& shrink_cells,
@@ -198,14 +198,14 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
 
    const tbox::Dimension dim(hierarchy->getDim());
 
-   boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+   std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
    const int tag_val = 1;
 
-   const boost::shared_ptr<hier::PatchLevel>& tag_level(
+   const std::shared_ptr<hier::PatchLevel>& tag_level(
       hierarchy->getPatchLevel(tag_ln));
 
    const hier::BoxLevel& Ltag = *tag_level->getBoxLevel();
@@ -231,8 +231,8 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
       }
    }
 
-   boost::shared_ptr<hier::BoxLevel> tagfootprint;
-   boost::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;
+   std::shared_ptr<hier::BoxLevel> tagfootprint;
+   std::shared_ptr<hier::MappingConnector> Ltag_to_tagfootprint;
    const hier::Connector& Ltag_to_Ltag = Ltag.findConnector(Ltag,
          shrink_width,
          hier::CONNECTOR_CREATE);
@@ -248,9 +248,9 @@ void ShrunkenLevelGenerator::setTagsByShrinkingLevel(
    for (hier::PatchLevel::iterator pi(tag_level->begin());
         pi != tag_level->end(); ++pi) {
 
-      boost::shared_ptr<hier::Patch> patch = *pi;
-      boost::shared_ptr<pdat::CellData<int> > tag_data(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+      std::shared_ptr<hier::Patch> patch = *pi;
+      std::shared_ptr<pdat::CellData<int> > tag_data(
+         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
       TBOX_ASSERT(tag_data);
 

@@ -28,7 +28,7 @@ namespace math {
 
 template<class TYPE>
 HierarchyEdgeDataOpsReal<TYPE>::HierarchyEdgeDataOpsReal(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarsest_level,
    const int finest_level):
    HierarchyDataOpsReal<TYPE>(),
@@ -64,7 +64,7 @@ HierarchyEdgeDataOpsReal<TYPE>::~HierarchyEdgeDataOpsReal()
 template<class TYPE>
 void
 HierarchyEdgeDataOpsReal<TYPE>::setPatchHierarchy(
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy)
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy)
 {
    TBOX_ASSERT(hierarchy);
 
@@ -92,7 +92,7 @@ HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
    }
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       hier::BoxContainer edge_boxes;
 
@@ -110,7 +110,7 @@ HierarchyEdgeDataOpsReal<TYPE>::resetLevels(
 }
 
 template<class TYPE>
-const boost::shared_ptr<hier::PatchHierarchy>
+const std::shared_ptr<hier::PatchHierarchy>
 HierarchyEdgeDataOpsReal<TYPE>::getPatchHierarchy() const
 {
    return d_hierarchy;
@@ -137,17 +137,17 @@ HierarchyEdgeDataOpsReal<TYPE>::copyData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -167,12 +167,12 @@ HierarchyEdgeDataOpsReal<TYPE>::swapData(
    const int data2_id) const
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
-   boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > d1fact(
-      BOOST_CAST<pdat::EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::EdgeDataFactory<TYPE> > d1fact(
+      POINTER_CAST<pdat::EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
-   boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > d2fact(
-      BOOST_CAST<pdat::EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<pdat::EdgeDataFactory<TYPE> > d2fact(
+      POINTER_CAST<pdat::EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -185,11 +185,11 @@ HierarchyEdgeDataOpsReal<TYPE>::swapData(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
          d_patch_ops.swapData(p, data1_id, data2_id);
       }
@@ -215,14 +215,14 @@ HierarchyEdgeDataOpsReal<TYPE>::printData(
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
       s << "Level number = " << ln << std::endl;
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > d(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > d(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -247,14 +247,14 @@ HierarchyEdgeDataOpsReal<TYPE>::setToScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > d(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > d(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -288,17 +288,17 @@ HierarchyEdgeDataOpsReal<TYPE>::scale(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -325,17 +325,17 @@ HierarchyEdgeDataOpsReal<TYPE>::addScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -362,20 +362,20 @@ HierarchyEdgeDataOpsReal<TYPE>::add(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -403,20 +403,20 @@ HierarchyEdgeDataOpsReal<TYPE>::subtract(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -444,20 +444,20 @@ HierarchyEdgeDataOpsReal<TYPE>::multiply(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -485,20 +485,20 @@ HierarchyEdgeDataOpsReal<TYPE>::divide(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -525,17 +525,17 @@ HierarchyEdgeDataOpsReal<TYPE>::reciprocal(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -564,20 +564,20 @@ HierarchyEdgeDataOpsReal<TYPE>::linearSum(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -606,20 +606,20 @@ HierarchyEdgeDataOpsReal<TYPE>::axpy(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -648,20 +648,20 @@ HierarchyEdgeDataOpsReal<TYPE>::axmy(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -688,17 +688,17 @@ HierarchyEdgeDataOpsReal<TYPE>::abs(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -725,14 +725,14 @@ HierarchyEdgeDataOpsReal<TYPE>::setRandomValues(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(data);
@@ -770,14 +770,14 @@ HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
 
    if (interior_only) {
 
-      boost::shared_ptr<pdat::EdgeDataFactory<TYPE> > dfact(
-         BOOST_CAST<pdat::EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
+      std::shared_ptr<pdat::EdgeDataFactory<TYPE> > dfact(
+         POINTER_CAST<pdat::EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
          const int npatches = level->getNumberOfPatches();
 #ifdef DEBUG_CHECK_ASSERTIONS
@@ -803,12 +803,12 @@ HierarchyEdgeDataOpsReal<TYPE>::numberOfEntries(
    } else {
 
       for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             d_hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
-            boost::shared_ptr<pdat::EdgeData<TYPE> > d(
-               BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+            std::shared_ptr<pdat::EdgeData<TYPE> > d(
+               POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
@@ -845,17 +845,17 @@ HierarchyEdgeDataOpsReal<TYPE>::sumControlVolumes(
    double sum = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -891,16 +891,16 @@ HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(data);
 
@@ -911,8 +911,8 @@ HierarchyEdgeDataOpsReal<TYPE>::L1Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          norm += d_patch_ops.L1Norm(data, box, cv);
       }
@@ -960,19 +960,19 @@ HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
    double norm_squared = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > weight(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > weight(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(wgt_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(data);
          TBOX_ASSERT(weight);
@@ -984,8 +984,8 @@ HierarchyEdgeDataOpsReal<TYPE>::weightedL2Norm(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          double pnorm = d_patch_ops.weightedL2Norm(data, weight, box, cv);
 
@@ -1049,16 +1049,16 @@ HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
    double norm = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(data);
 
@@ -1069,8 +1069,8 @@ HierarchyEdgeDataOpsReal<TYPE>::maxNorm(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          norm = tbox::MathUtilities<double>::Max(norm,
                d_patch_ops.maxNorm(data, box, cv));
@@ -1105,19 +1105,19 @@ HierarchyEdgeDataOpsReal<TYPE>::dot(
    TYPE dprod = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(data1);
          TBOX_ASSERT(data2);
@@ -1129,8 +1129,8 @@ HierarchyEdgeDataOpsReal<TYPE>::dot(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          dprod += d_patch_ops.dot(data1, data2, box, cv);
       }
@@ -1160,17 +1160,17 @@ HierarchyEdgeDataOpsReal<TYPE>::integral(
    TYPE local_integral = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
-         boost::shared_ptr<pdat::EdgeData<double> > vol(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > vol(
+            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -1214,19 +1214,19 @@ HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data1(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data1(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > data2(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > data2(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(data1);
          TBOX_ASSERT(data2);
@@ -1238,8 +1238,8 @@ HierarchyEdgeDataOpsReal<TYPE>::computeConstrProdPos(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.computeConstrProdPos(data1, data2, box, cv));
@@ -1267,19 +1267,19 @@ HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
       && (d_finest_level <= d_hierarchy->getFinestLevelNumber()));
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -1291,8 +1291,8 @@ HierarchyEdgeDataOpsReal<TYPE>::compareToScalar(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          d_patch_ops.compareToScalar(dst, src, alpha, box, cv);
       }
@@ -1316,19 +1316,19 @@ HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
    int test = 1;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > dst(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > dst(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > src(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > src(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
-         boost::shared_ptr<hier::PatchData> pd;
+         std::shared_ptr<hier::PatchData> pd;
 
          TBOX_ASSERT(dst);
          TBOX_ASSERT(src);
@@ -1340,8 +1340,8 @@ HierarchyEdgeDataOpsReal<TYPE>::testReciprocal(
             pd = p->getPatchData(vol_id);
          }
 
-         boost::shared_ptr<pdat::EdgeData<double> > cv(
-            boost::dynamic_pointer_cast<pdat::EdgeData<double>,
+         std::shared_ptr<pdat::EdgeData<double> > cv(
+            std::dynamic_pointer_cast<pdat::EdgeData<double>,
                                         hier::PatchData>(pd));
          test = tbox::MathUtilities<int>::Min(test,
                d_patch_ops.testReciprocal(dst, src, box, cv));
@@ -1372,17 +1372,17 @@ HierarchyEdgeDataOpsReal<TYPE>::maxPointwiseDivide(
    TYPE max = 0.0;
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > numer(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > numer(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > denom(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > denom(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1420,17 +1420,17 @@ HierarchyEdgeDataOpsReal<TYPE>::minPointwiseDivide(
    TYPE min = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > numer(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > numer(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
-         boost::shared_ptr<pdat::EdgeData<TYPE> > denom(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > denom(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1467,14 +1467,14 @@ HierarchyEdgeDataOpsReal<TYPE>::min(
    TYPE minval = tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > d(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > d(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -1508,14 +1508,14 @@ HierarchyEdgeDataOpsReal<TYPE>::max(
    TYPE maxval = -tbox::MathUtilities<TYPE>::getMax();
 
    for (int ln = d_coarsest_level; ln <= d_finest_level; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(
+      std::shared_ptr<hier::PatchLevel> level(
          d_hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
-         const boost::shared_ptr<hier::Patch>& p = *ip;
+         const std::shared_ptr<hier::Patch>& p = *ip;
 
-         boost::shared_ptr<pdat::EdgeData<TYPE> > d(
-            BOOST_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<TYPE> > d(
+            POINTER_CAST<pdat::EdgeData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);

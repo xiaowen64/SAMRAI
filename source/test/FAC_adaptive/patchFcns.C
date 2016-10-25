@@ -23,7 +23,6 @@
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideData.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -130,8 +129,8 @@ void setCellDataToSinusoid(
    const hier::Patch& patch,
    const SinusoidFcn& fcn)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    if (cd.getDim() == tbox::Dimension(2)) {
@@ -225,8 +224,8 @@ void setCellDataToQuartic(
    const hier::Patch& patch,
    const QuarticFcn& fcn)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    if (cd.getDim() == tbox::Dimension(2)) {

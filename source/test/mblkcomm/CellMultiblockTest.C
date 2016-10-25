@@ -24,7 +24,7 @@ using namespace SAMRAI;
 CellMultiblockTest::CellMultiblockTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    const string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
@@ -72,7 +72,7 @@ CellMultiblockTest::~CellMultiblockTest()
 }
 
 void CellMultiblockTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -112,7 +112,7 @@ void CellMultiblockTest::registerVariables(
 
 void CellMultiblockTest::initializeDataOnPatch(
    hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::BlockId& block_id,
    char src_or_dst)
@@ -126,8 +126,8 @@ void CellMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::CellData<double> > cell_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > cell_data(
+            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -141,7 +141,7 @@ void CellMultiblockTest::initializeDataOnPatch(
 
 void CellMultiblockTest::tagCellsToRefine(
    hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    int tag_index)
 {
@@ -161,7 +161,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   std::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -180,8 +180,8 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cell_data(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -243,10 +243,10 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
 void CellMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   boost::shared_ptr<const hier::Connector> dst_to_encon,
+   std::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
+   const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -256,8 +256,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cell_data(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -277,7 +277,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
             for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
                  ei != dst_to_encon->end(ni); ++ei) {
 
-               boost::shared_ptr<hier::Patch> encon_patch(
+               std::shared_ptr<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getBoxId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
@@ -315,8 +315,8 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  boost::shared_ptr<pdat::CellData<double> > sing_data(
-                     BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::CellData<double> > sing_data(
+                     POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -362,7 +362,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
  */
 bool CellMultiblockTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::BlockId& block_id)
 {
@@ -378,13 +378,13 @@ bool CellMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::CellData<double> > solution(
+   std::shared_ptr<pdat::CellData<double> > solution(
       new pdat::CellData<double>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+   std::shared_ptr<hier::BaseGridGeometry> grid_geom(
       hierarchy->getGridGeometry());
    hier::BoxContainer singularity(
       grid_geom->getSingularityBoxContainer(block_id));
@@ -400,8 +400,8 @@ bool CellMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cell_data(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();
@@ -465,7 +465,7 @@ bool CellMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
+      std::shared_ptr<hier::PatchGeometry> pgeom = patch.getPatchGeometry();
       TBOX_ASSERT(pgeom);
 
       for (int b = 0; b < d_dim.getValue(); ++b) {

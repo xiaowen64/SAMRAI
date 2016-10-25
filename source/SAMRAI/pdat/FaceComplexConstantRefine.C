@@ -121,11 +121,11 @@ FaceComplexConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<FaceData<dcomplex> > cdata(
-      BOOST_CAST<FaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<FaceData<dcomplex> > cdata(
+      POINTER_CAST<FaceData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<FaceData<dcomplex> > fdata(
-      BOOST_CAST<FaceData<dcomplex>, hier::PatchData>(
+   std::shared_ptr<FaceData<dcomplex> > fdata(
+      POINTER_CAST<FaceData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap =

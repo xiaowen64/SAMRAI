@@ -27,7 +27,6 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
 #include <set>
@@ -137,8 +136,8 @@ public:
    GraphLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.
@@ -165,7 +164,7 @@ public:
     * is used.  If no value is given, the data will be
     * used for all levels.
     *
-    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  std::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -206,7 +205,7 @@ public:
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
       hier::Connector* balance_to_anchor,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -423,7 +422,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    tbox::Dimension d_dim;
 

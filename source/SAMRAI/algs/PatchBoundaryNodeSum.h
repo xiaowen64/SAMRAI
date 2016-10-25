@@ -24,7 +24,6 @@
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -139,7 +138,7 @@ public:
     *
     *  @pre !d_setup_called
     *  @pre node_data_id >= 0
-    *  @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(node_data_id) is actually a boost::shared_ptr<pdat::NodeDataFactory<double> >
+    *  @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(node_data_id) is actually a std::shared_ptr<pdat::NodeDataFactory<double> >
     */
    void
    registerSum(
@@ -159,7 +158,7 @@ public:
     */
    void
    setupSum(
-      const boost::shared_ptr<hier::PatchLevel>& level);
+      const std::shared_ptr<hier::PatchLevel>& level);
 
    /*!
     *  @brief Set up for summation operations for node data at shared nodes
@@ -179,7 +178,7 @@ public:
     */
    void
    setupSum(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
 
@@ -240,7 +239,7 @@ private:
     */
    void
    doLevelSum(
-      const boost::shared_ptr<hier::PatchLevel>& level) const;
+      const std::shared_ptr<hier::PatchLevel>& level) const;
 
    /*!
     * @ Sum node data on a coarse-fine boundary
@@ -277,8 +276,8 @@ private:
     */
    void
    doLocalCoarseFineBoundarySum(
-      const boost::shared_ptr<hier::PatchLevel>& fine_level,
-      const boost::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
+      const std::shared_ptr<hier::PatchLevel>& fine_level,
+      const std::shared_ptr<hier::PatchLevel>& coarsened_fine_level,
       const std::vector<int>& node_data_id,
       const std::vector<int>& onode_data_id,
       bool fill_hanging_nodes) const;
@@ -295,7 +294,7 @@ private:
     */
    void
    copyNodeToOuternodeOnLevel(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const std::vector<int>& node_data_id,
       const std::vector<int>& onode_data_id) const;
 
@@ -311,7 +310,7 @@ private:
     */
    void
    copyOuternodeToNodeOnLevel(
-      const boost::shared_ptr<hier::PatchLevel>& level,
+      const std::shared_ptr<hier::PatchLevel>& level,
       const std::vector<int>& onode_data_id,
       const std::vector<int>& node_data_id) const;
 
@@ -343,8 +342,8 @@ private:
     * quantities.
     */
    // These arrays are indexed [variable registration sequence number]
-   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
-   std::vector<boost::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
+   std::vector<std::shared_ptr<hier::Variable> > d_tmp_onode_src_variable;
+   std::vector<std::shared_ptr<hier::Variable> > d_tmp_onode_dst_variable;
 
    // These arrays are indexed [variable registration sequence number]
    std::vector<int> d_onode_src_id;
@@ -357,28 +356,28 @@ private:
    hier::ComponentSelector d_onode_src_data_set;
    hier::ComponentSelector d_onode_dst_data_set;
 
-   boost::shared_ptr<hier::PatchLevel> d_level;
+   std::shared_ptr<hier::PatchLevel> d_level;
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
 
    bool d_level_setup_called;
    bool d_hierarchy_setup_called;
 
-   boost::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
+   std::shared_ptr<xfer::RefineTransactionFactory> d_sum_transaction_factory;
 
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_single_level_sum_schedule;
-   std::vector<boost::shared_ptr<xfer::RefineSchedule> >
+   std::vector<std::shared_ptr<xfer::RefineSchedule> >
    d_cfbdry_copy_schedule;
-   std::vector<boost::shared_ptr<xfer::CoarsenSchedule> >
+   std::vector<std::shared_ptr<xfer::CoarsenSchedule> >
    d_sync_coarsen_schedule;
 
    // A coarsened version of each fine level.
-   std::vector<boost::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
+   std::vector<std::shared_ptr<hier::PatchLevel> > d_cfbdry_tmp_level;
 
-   std::vector<boost::shared_ptr<hier::CoarseFineBoundary> >
+   std::vector<std::shared_ptr<hier::CoarseFineBoundary> >
    d_coarse_fine_boundary;
 
 };

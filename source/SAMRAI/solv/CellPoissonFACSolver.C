@@ -47,9 +47,9 @@ int CellPoissonFACSolver::s_instance_counter[SAMRAI::MAX_DIM_VAL] = { 0 };
 CellPoissonFACSolver::CellPoissonFACSolver(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<FACPreconditioner>& fac_precond,
-   const boost::shared_ptr<CellPoissonFACOps>& fac_ops,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<FACPreconditioner>& fac_precond,
+   const std::shared_ptr<CellPoissonFACOps>& fac_ops,
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(object_name),
    d_poisson_spec(object_name + "::poisson_spec"),
@@ -90,8 +90,8 @@ CellPoissonFACSolver::CellPoissonFACSolver(
 
    static std::string weight_variable_name("CellPoissonFACSolver_weight");
 
-   boost::shared_ptr<pdat::CellVariable<double> > weight(
-      boost::dynamic_pointer_cast<pdat::CellVariable<double>, hier::Variable>(
+   std::shared_ptr<pdat::CellVariable<double> > weight(
+      std::dynamic_pointer_cast<pdat::CellVariable<double>, hier::Variable>(
          var_db->getVariable(weight_variable_name)));
    if (!weight) {
       weight.reset(
@@ -145,7 +145,7 @@ CellPoissonFACSolver::~CellPoissonFACSolver()
 
 void
 CellPoissonFACSolver::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
    if (input_db) {
       d_enable_logging = input_db->getBoolWithDefault("enable_logging", false);
@@ -169,7 +169,7 @@ void
 CellPoissonFACSolver::initializeSolverState(
    const int solution,
    const int rhs,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int coarse_level,
    const int fine_level)
 {
@@ -361,7 +361,7 @@ bool
 CellPoissonFACSolver::solveSystem(
    const int u,
    const int f,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int coarse_ln,
    int fine_ln)
 {
@@ -398,7 +398,7 @@ CellPoissonFACSolver::createVectorWrappers(
    int f)
 {
    hier::VariableDatabase& vdb(*hier::VariableDatabase::getDatabase());
-   boost::shared_ptr<hier::Variable> variable;
+   std::shared_ptr<hier::Variable> variable;
 
    if (!d_uv || d_uv->getComponentDescriptorIndex(0) != u) {
       d_uv.reset(new SAMRAIVectorReal<double>(d_object_name + "::uv",
@@ -411,8 +411,8 @@ CellPoissonFACSolver::createVectorWrappers(
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << u << "\n");
       }
-      boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
+      std::shared_ptr<pdat::CellVariable<double> > cell_variable(
+         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_uv->addComponent(variable, u, s_weight_id[d_dim.getValue() - 1]);
@@ -429,8 +429,8 @@ CellPoissonFACSolver::createVectorWrappers(
          TBOX_ERROR(d_object_name << ": No variable for patch data index "
                                   << f << "\n");
       }
-      boost::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         BOOST_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
+      std::shared_ptr<pdat::CellVariable<double> > cell_variable(
+         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_fv->addComponent(variable, f, s_weight_id[d_dim.getValue() - 1]);

@@ -12,7 +12,6 @@
 #include "SAMRAI/pdat/OuteredgeData.h"
 #include "SAMRAI/algs/OuteredgeSumTransaction.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace algs {
@@ -41,11 +40,11 @@ OuteredgeSumTransactionFactory::~OuteredgeSumTransactionFactory()
  *************************************************************************
  */
 
-boost::shared_ptr<tbox::Transaction>
+std::shared_ptr<tbox::Transaction>
 OuteredgeSumTransactionFactory::allocate(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    const xfer::RefineClasses::Data** refine_data,
@@ -65,7 +64,7 @@ OuteredgeSumTransactionFactory::allocate(
    TBOX_ASSERT(refine_data[item_id] != 0);
    TBOX_ASSERT_OBJDIM_EQUALITY4(*dst_level, *src_level, dst_node, src_node);
 
-   return boost::make_shared<OuteredgeSumTransaction>(dst_level,
+   return std::make_shared<OuteredgeSumTransaction>(dst_level,
                                                       src_level,
                                                       overlap,
                                                       dst_node,
@@ -74,11 +73,11 @@ OuteredgeSumTransactionFactory::allocate(
                                                       item_id);
 }
 
-boost::shared_ptr<tbox::Transaction>
+std::shared_ptr<tbox::Transaction>
 OuteredgeSumTransactionFactory::allocate(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    const xfer::RefineClasses::Data** refine_data,
@@ -114,7 +113,7 @@ OuteredgeSumTransactionFactory::allocate(
 
 void
 OuteredgeSumTransactionFactory::preprocessScratchSpace(
-   const boost::shared_ptr<hier::PatchLevel>& level,
+   const std::shared_ptr<hier::PatchLevel>& level,
    double fill_time,
    const hier::ComponentSelector& preprocess_vector) const
 {
@@ -123,13 +122,13 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
 
    for (hier::PatchLevel::iterator ip(level->begin());
         ip != level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      const std::shared_ptr<hier::Patch>& patch = *ip;
 
       const int ncomponents = preprocess_vector.getSize();
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
-            boost::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-               BOOST_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
+               POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                   patch->getPatchData(n)));
             TBOX_ASSERT(oedge_data);
             oedge_data->fillAll(0.0);

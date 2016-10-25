@@ -42,7 +42,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
@@ -181,8 +180,8 @@ public:
    CellPoissonHypreSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * The Poisson destructor releases all internally managed data.
@@ -202,7 +201,7 @@ public:
     */
    void
    initializeSolverState(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int ln = 0);
 
    /*!
@@ -402,8 +401,8 @@ public:
    void
    setPhysicalBcCoefObject(
       const RobinBcCoefStrategy* physical_bc_coef_strategy,
-      const boost::shared_ptr<hier::Variable>& variable =
-         boost::shared_ptr<hier::Variable>())
+      const std::shared_ptr<hier::Variable>& variable =
+         std::shared_ptr<hier::Variable>())
    {
       d_physical_bc_coef_strategy = physical_bc_coef_strategy;
       d_physical_bc_variable = variable;
@@ -458,7 +457,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    void
    setupHypreSolver();
@@ -583,7 +582,7 @@ private:
    /*!
     * @brief Associated hierarchy.
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Associated level number.
@@ -595,7 +594,7 @@ private:
    /*!
     * @brief Scratch context for this object.
     */
-   boost::shared_ptr<hier::VariableContext> d_context;
+   std::shared_ptr<hier::VariableContext> d_context;
 
    //@{ @name Boundary condition handling
 
@@ -606,7 +605,7 @@ private:
     * state is initialized.  It is used to allow solves on
     * levels that are not the coarsest in the hierarchy.
     */
-   boost::shared_ptr<hier::CoarseFineBoundary> d_cf_boundary;
+   std::shared_ptr<hier::CoarseFineBoundary> d_cf_boundary;
 
    /*!
     * @brief Robin boundary coefficient object for physical
@@ -616,7 +615,7 @@ private:
     * use d_physical_bc_simple_case.
     */
    const RobinBcCoefStrategy* d_physical_bc_coef_strategy;
-   boost::shared_ptr<hier::Variable> d_physical_bc_variable;
+   std::shared_ptr<hier::Variable> d_physical_bc_variable;
 
    /*!
     * @brief Implementation of Robin boundary conefficients
@@ -633,7 +632,7 @@ private:
     * in the coarse-fine boundaries before solving.
     */
    GhostCellRobinBcCoefs d_cf_bc_coef;
-   boost::shared_ptr<hier::Variable> d_coarsefine_bc_variable;
+   std::shared_ptr<hier::Variable> d_coarsefine_bc_variable;
 
    //@}
 
@@ -660,7 +659,7 @@ private:
     */
    int d_Ak0_id;
 
-   static boost::shared_ptr<pdat::OutersideVariable<double> >
+   static std::shared_ptr<pdat::OutersideVariable<double> >
    s_Ak0_var[SAMRAI::MAX_DIM_VAL];
 
    /*!
@@ -718,8 +717,8 @@ private:
    /*!
     * @brief Timers for performance measurement.
     */
-   boost::shared_ptr<tbox::Timer> t_solve_system;
-   boost::shared_ptr<tbox::Timer> t_set_matrix_coefficients;
+   std::shared_ptr<tbox::Timer> t_solve_system;
+   std::shared_ptr<tbox::Timer> t_set_matrix_coefficients;
 
    static tbox::StartupShutdownManager::Handler s_finalize_handler;
 };

@@ -9,7 +9,6 @@
  ************************************************************************/
 
 #include "SAMRAI/tbox/InputManager.h"
-#include "boost/make_shared.hpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
@@ -24,7 +23,7 @@ namespace tbox {
 
 InputManager * InputManager::s_manager_instance = 0;
 
-boost::shared_ptr<Database> InputManager::s_input_db;
+std::shared_ptr<Database> InputManager::s_input_db;
 
 StartupShutdownManager::Handler InputManager::s_finalize_handler(
    0,
@@ -97,12 +96,12 @@ InputManager::~InputManager()
  *************************************************************************
  */
 
-boost::shared_ptr<InputDatabase>
+std::shared_ptr<InputDatabase>
 InputManager::parseInputFile(
    const std::string& filename)
 {
-   boost::shared_ptr<InputDatabase> db(
-      boost::make_shared<InputDatabase>("main"));
+   std::shared_ptr<InputDatabase> db(
+      std::make_shared<InputDatabase>("main"));
    parseInputFile(filename, db);
    return db;
 }
@@ -118,7 +117,7 @@ InputManager::parseInputFile(
 void
 InputManager::parseInputFile(
    const std::string& filename,
-   const boost::shared_ptr<InputDatabase>& db)
+   const std::shared_ptr<InputDatabase>& db)
 {
    FILE* fstream = 0;
    const SAMRAI_MPI& mpi(SAMRAI_MPI::getSAMRAIWorld());

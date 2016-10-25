@@ -56,7 +56,6 @@ using namespace std;
 #include "test/testlib/AutoTester.h"
 #endif
 
-#include "boost/shared_ptr.hpp"
 
 #include <vector>
 
@@ -190,7 +189,7 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      std::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -200,7 +199,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db(
+         std::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -216,7 +215,7 @@ int main(
        * interval is non-zero, create a restart database.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(
+      std::shared_ptr<tbox::Database> main_db(
          input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
@@ -307,13 +306,13 @@ int main(
        * for this application, see comments at top of file.
        */
 
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
          new geom::CartesianGridGeometry(
             dim,
             "CartesianGeometry",
             input_db->getDatabase("CartesianGeometry")));
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             grid_geometry,
@@ -324,34 +323,34 @@ int main(
             input_db->getDatabase("ConvDiff"),
             grid_geometry);
 
-      boost::shared_ptr<algs::MethodOfLinesIntegrator> mol_integrator(
+      std::shared_ptr<algs::MethodOfLinesIntegrator> mol_integrator(
          new algs::MethodOfLinesIntegrator(
             "MethodOfLinesIntegrator",
             input_db->getDatabase("MethodOfLinesIntegrator"),
             convdiff_model));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
+      std::shared_ptr<mesh::StandardTagAndInitialize> error_detector(
          new mesh::StandardTagAndInitialize(
             "StandardTagAndInitialize",
             mol_integrator.get(),
             input_db->getDatabase("StandardTagAndInitialize")));
 
-      boost::shared_ptr<mesh::BergerRigoutsos> box_generator(
+      std::shared_ptr<mesh::BergerRigoutsos> box_generator(
          new mesh::BergerRigoutsos(
             dim,
             input_db->getDatabaseWithDefault(
                "BergerRigoutsos",
-               boost::shared_ptr<tbox::Database>())));
+               std::shared_ptr<tbox::Database>())));
 
-      boost::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
+      std::shared_ptr<mesh::TreeLoadBalancer> load_balancer(
          new mesh::TreeLoadBalancer(
             dim,
             "LoadBalancer",
             input_db->getDatabase("LoadBalancer"),
-            boost::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
+            std::shared_ptr<tbox::RankTreeStrategy>(new tbox::BalancedDepthFirstTree)));
       load_balancer->setSAMRAI_MPI(tbox::SAMRAI_MPI::getSAMRAIWorld());
 
-      boost::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
+      std::shared_ptr<mesh::GriddingAlgorithm> gridding_algorithm(
          new mesh::GriddingAlgorithm(
             patch_hierarchy,
             "GriddingAlgorithm",
@@ -364,7 +363,7 @@ int main(
        * Set up Visualization plot file writer(s).
        */
 #ifdef HAVE_HDF5
-      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer(
+      std::shared_ptr<appu::VisItDataWriter> visit_data_writer(
          new appu::VisItDataWriter(
             dim,
             "ConvDiff VisIt Writer",

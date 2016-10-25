@@ -17,7 +17,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {
@@ -67,7 +66,7 @@ public:
     */
    virtual void
    readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index) = 0;
 
@@ -82,7 +81,7 @@ public:
     */
    virtual void
    readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       std::string& db_name,
       int bdry_location_index) = 0;
 

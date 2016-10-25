@@ -60,10 +60,10 @@ PersistentOverlapConnectors::getFromInput()
       s_check_created_connectors = 'n';
       s_check_accessed_connectors = 'n';
       if (tbox::InputManager::inputDatabaseExists()) {
-         boost::shared_ptr<tbox::Database> input_db(
+         std::shared_ptr<tbox::Database> input_db(
             tbox::InputManager::getInputDatabase());
          if (input_db->isDatabase("PersistentOverlapConnectors")) {
-            boost::shared_ptr<tbox::Database> pocdb(
+            std::shared_ptr<tbox::Database> pocdb(
                input_db->getDatabase("PersistentOverlapConnectors"));
 
             const bool check_created_connectors(
@@ -128,7 +128,7 @@ PersistentOverlapConnectors::createConnector(
       }
    }
 
-   boost::shared_ptr<Connector> new_connector;
+   std::shared_ptr<Connector> new_connector;
    OverlapConnectorAlgorithm oca;
    oca.findOverlaps(new_connector,
       d_my_box_level,
@@ -175,7 +175,7 @@ PersistentOverlapConnectors::createConnectorWithTranspose(
  */
 void
 PersistentOverlapConnectors::cacheConnector(
-   boost::shared_ptr<Connector>& connector)
+   std::shared_ptr<Connector>& connector)
 {
    TBOX_ASSERT(connector);
    TBOX_ASSERT(d_my_box_level.isInitialized());
@@ -185,7 +185,7 @@ PersistentOverlapConnectors::cacheConnector(
    doCacheConnectorWork(head, connector);
    if (connector->hasTranspose()) {
       if (connector.get() != &connector->getTranspose()) {
-         boost::shared_ptr<Connector> transpose(&connector->getTranspose());
+         std::shared_ptr<Connector> transpose(&connector->getTranspose());
          head.getPersistentOverlapConnectors().doCacheConnectorWork(
             d_my_box_level,
             transpose);
@@ -211,7 +211,7 @@ PersistentOverlapConnectors::findConnector(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   boost::shared_ptr<Connector> found = doFindConnectorWork(head,
+   std::shared_ptr<Connector> found = doFindConnectorWork(head,
          min_connector_width,
          not_found_action,
          exact_width_only);
@@ -243,12 +243,12 @@ PersistentOverlapConnectors::findConnectorWithTranspose(
    TBOX_ASSERT(d_my_box_level.isInitialized());
    TBOX_ASSERT(head.isInitialized());
 
-   boost::shared_ptr<Connector> forward = doFindConnectorWork(head,
+   std::shared_ptr<Connector> forward = doFindConnectorWork(head,
          min_connector_width,
          not_found_action,
          exact_width_only);
    if (&d_my_box_level != &head) {
-      boost::shared_ptr<Connector> transpose =
+      std::shared_ptr<Connector> transpose =
          head.getPersistentOverlapConnectors().doFindConnectorWork(
             d_my_box_level,
             transpose_min_connector_width,
@@ -371,7 +371,7 @@ PersistentOverlapConnectors::clear()
  *
  ************************************************************************
  */
-boost::shared_ptr<Connector>
+std::shared_ptr<Connector>
 PersistentOverlapConnectors::doFindConnectorWork(
    const BoxLevel& head,
    const IntVector& min_connector_width,
@@ -388,7 +388,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
       }
    }
 
-   boost::shared_ptr<Connector> found;
+   std::shared_ptr<Connector> found;
    for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());
       TBOX_ASSERT(d_cons_from_me[i]->getBase().isInitialized());
@@ -490,7 +490,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
        */
 
       OverlapConnectorAlgorithm oca;
-      boost::shared_ptr<Connector> new_connector(boost::make_shared<Connector>(
+      std::shared_ptr<Connector> new_connector(std::make_shared<Connector>(
          d_my_box_level,
          head,
          min_width));
@@ -523,7 +523,7 @@ PersistentOverlapConnectors::doFindConnectorWork(
 void
 PersistentOverlapConnectors::doCacheConnectorWork(
    const BoxLevel& head,
-   boost::shared_ptr<Connector>& connector)
+   std::shared_ptr<Connector>& connector)
 {
    for (int i = 0; i < static_cast<int>(d_cons_from_me.size()); ++i) {
       TBOX_ASSERT(d_cons_from_me[i]->isFinalized());

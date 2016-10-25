@@ -21,7 +21,6 @@
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/mesh/StandardTagAndInitStrategy.h"
 
-#include "boost/shared_ptr.hpp"
 #ifndef included_tbox_String
 #include <string>
 
@@ -61,7 +60,7 @@ public:
    HierarchyTester(
       const std::string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<Database> hier_test_db);
+      std::shared_ptr<Database> hier_test_db);
 
    /**
     * Destructor deallocates internal storage.
@@ -73,7 +72,7 @@ public:
     */
    void
    setupInitialHierarchy(
-      boost::shared_ptr<Database> main_input_db);
+      std::shared_ptr<Database> main_input_db);
 
    /**
     * After hierarchy refine/coarsen operations are performed, check results
@@ -90,12 +89,12 @@ public:
     */
 
    virtual void initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level,
+      const std::shared_ptr<hier::PatchLevel>& old_level,
       const bool allocate_data)
    {
       NULL_USE(hierarchy);
@@ -108,7 +107,7 @@ public:
    }
 
    void resetHierarchyConfiguration(
-      const boost::shared_ptr<PatchHierarchy>& hierarchy,
+      const std::shared_ptr<PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level)
    {
@@ -141,8 +140,8 @@ private:
     * Initial patch hierarchy set up based on input data and second hierarchy
     * generated during coarsen/refine operations.
     */
-   boost::shared_ptr<PatchHierarchy> d_initial_patch_hierarchy;
-   boost::shared_ptr<PatchHierarchy> d_test_patch_hierarchy;
+   std::shared_ptr<PatchHierarchy> d_initial_patch_hierarchy;
+   std::shared_ptr<PatchHierarchy> d_test_patch_hierarchy;
 
    /*
     * Pointers to gridding algorithm object is cached in test object
@@ -151,7 +150,7 @@ private:
     * calculations will be incorrect since the test assumes
     * internal variables in gridding algorithm exist.
     */
-   boost::shared_ptr<GriddingAlgorithm> d_gridding_algorithm;
+   std::shared_ptr<GriddingAlgorithm> d_gridding_algorithm;
 
 };
 

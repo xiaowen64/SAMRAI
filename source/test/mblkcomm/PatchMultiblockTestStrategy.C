@@ -60,7 +60,7 @@ PatchMultiblockTestStrategy::~PatchMultiblockTestStrategy()
  */
 
 void PatchMultiblockTestStrategy::readVariableInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -76,7 +76,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 
    for (int i = 0; i < nkeys; ++i) {
 
-      boost::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
+      std::shared_ptr<tbox::Database> var_db(db->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("src_name")) {
          d_variable_src_name[i] = var_db->getString("src_name");
@@ -119,7 +119,7 @@ void PatchMultiblockTestStrategy::readVariableInput(
 }
 
 void PatchMultiblockTestStrategy::readRefinementInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -151,8 +151,8 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
 
    if (level_number < static_cast<int>(d_refine_level_boxes.size())) {
 
-      boost::shared_ptr<pdat::CellData<int> > tags(
-         BOOST_CAST<pdat::CellData<int>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<int> > tags(
+         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tags);
       tags->fillAll(0);
@@ -191,7 +191,7 @@ void PatchMultiblockTestStrategy::setPhysicalBoundaryConditions(
 void PatchMultiblockTestStrategy::preprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const boost::shared_ptr<hier::VariableContext>& context,
+   const std::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
@@ -205,7 +205,7 @@ void PatchMultiblockTestStrategy::preprocessRefine(
 void PatchMultiblockTestStrategy::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const boost::shared_ptr<hier::VariableContext>& context,
+   const std::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {

@@ -88,11 +88,11 @@ NodeDoubleInjection::coarsen(
    const hier::Box& coarse_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<NodeData<double> > fdata(
-      BOOST_CAST<NodeData<double>, hier::PatchData>(
+   std::shared_ptr<NodeData<double> > fdata(
+      POINTER_CAST<NodeData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<NodeData<double> > cdata(
-      BOOST_CAST<NodeData<double>, hier::PatchData>(
+   std::shared_ptr<NodeData<double> > cdata(
+      POINTER_CAST<NodeData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

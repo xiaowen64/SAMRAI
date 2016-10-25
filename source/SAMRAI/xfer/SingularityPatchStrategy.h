@@ -12,7 +12,8 @@
 #define included_xfer_SingularityPatchStrategy
 
 #include "SAMRAI/SAMRAI_config.h"
-#include "boost/shared_ptr.hpp"
+
+#include <memory>
 
 namespace SAMRAI {
 
@@ -84,10 +85,10 @@ public:
    fillSingularityBoundaryConditions(
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
-      boost::shared_ptr<const hier::Connector> dst_to_encon,
+      std::shared_ptr<const hier::Connector> dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;
+      const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry) = 0;
 
 };
 

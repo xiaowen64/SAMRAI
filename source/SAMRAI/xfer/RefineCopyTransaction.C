@@ -33,9 +33,9 @@ namespace xfer {
  */
 
 RefineCopyTransaction::RefineCopyTransaction(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_box,
    const hier::Box& src_box,
    const RefineClasses::Data** refine_data,

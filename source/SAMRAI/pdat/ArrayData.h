@@ -578,7 +578,7 @@ public:
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * Write out array data object data to restart database.
@@ -587,7 +587,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Return the dimension of this object.

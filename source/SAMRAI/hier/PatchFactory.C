@@ -9,7 +9,6 @@
  ************************************************************************/
 #include "SAMRAI/hier/PatchFactory.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -22,12 +21,12 @@ PatchFactory::~PatchFactory()
 {
 }
 
-boost::shared_ptr<Patch>
+std::shared_ptr<Patch>
 PatchFactory::allocate(
    const Box& box_level_box,
-   const boost::shared_ptr<PatchDescriptor>& descriptor) const
+   const std::shared_ptr<PatchDescriptor>& descriptor) const
 {
-   return boost::make_shared<Patch>(box_level_box, descriptor);
+   return std::make_shared<Patch>(box_level_box, descriptor);
 }
 
 }

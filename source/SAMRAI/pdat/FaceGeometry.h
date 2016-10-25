@@ -20,7 +20,6 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 
 namespace SAMRAI {
@@ -129,7 +128,7 @@ public:
     *
     * @pre getBox().getDim() == src_mask.getDim()
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -161,7 +160,7 @@ public:
     * @brief Set up a FaceOverlap object based on the given boxes and the
     * transformation.
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -192,7 +191,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have face centered geometry.
     */
-   static boost::shared_ptr<hier::BoxOverlap>
+   static std::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const FaceGeometry& dst_geometry,
       const FaceGeometry& src_geometry,

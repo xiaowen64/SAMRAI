@@ -156,20 +156,20 @@ NullDatabase::isDatabase(
    return true;
 }
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 NullDatabase::putDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   return boost::shared_ptr<Database>(this);
+   return std::shared_ptr<Database>(this);
 }
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 NullDatabase::getDatabase(
    const std::string& key)
 {
    NULL_USE(key);
-   return boost::make_shared<NullDatabase>();
+   return std::make_shared<NullDatabase>();
 }
 
 /*

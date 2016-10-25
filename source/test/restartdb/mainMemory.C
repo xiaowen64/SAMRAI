@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/RestartManager.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 using namespace std;
@@ -39,17 +38,17 @@ public:
    }
 
    void putToRestart(
-      const boost::shared_ptr<tbox::Database>& db) const
+      const std::shared_ptr<tbox::Database>& db) const
    {
       writeTestData(db);
    }
 
    void getFromRestart()
    {
-      boost::shared_ptr<tbox::Database> root_db(
+      std::shared_ptr<tbox::Database> root_db(
          tbox::RestartManager::getManager()->getRootDatabase());
 
-      boost::shared_ptr<tbox::Database> db;
+      std::shared_ptr<tbox::Database> db;
       if (root_db->isDatabase("RestartTester")) {
          db = root_db->getDatabase("RestartTester");
       }
@@ -85,7 +84,7 @@ int main(
 
       setupTestData();
 
-      boost::shared_ptr<tbox::MemoryDatabase> database(
+      std::shared_ptr<tbox::MemoryDatabase> database(
          new tbox::MemoryDatabase("SAMRAI Restart"));
 
       restart_manager->setRootDatabase(database);

@@ -39,7 +39,6 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include "boost/shared_ptr.hpp"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -53,12 +52,12 @@ static bool
 complexDataSameAsValue(
    int desc_id,
    dcomplex value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+   std::shared_ptr<hier::PatchHierarchy> hierarchy);
 static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+   std::shared_ptr<hier::PatchHierarchy> hierarchy);
 
 #define NVARS 4
 
@@ -143,14 +142,14 @@ int main(
       fine_boxes.pushBack(fine0);
       fine_boxes.pushBack(fine1);
 
-      boost::shared_ptr<geom::CartesianGridGeometry> geometry(
+      std::shared_ptr<geom::CartesianGridGeometry> geometry(
          new geom::CartesianGridGeometry(
             "CartesianGeometry",
             lo,
             hi,
             coarse_domain));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy("PatchHierarchy", geometry));
 
       hierarchy->setMaxNumberOfLevels(2);
@@ -162,11 +161,11 @@ int main(
       const int n_coarse_boxes = coarse_domain.size();
       const int n_fine_boxes = fine_boxes.size();
 
-      boost::shared_ptr<hier::BoxLevel> layer0(
-         boost::make_shared<hier::BoxLevel>(
+      std::shared_ptr<hier::BoxLevel> layer0(
+         std::make_shared<hier::BoxLevel>(
             hier::IntVector(dim, 1), geometry));
-      boost::shared_ptr<hier::BoxLevel> layer1(
-         boost::make_shared<hier::BoxLevel>(ratio, geometry));
+      std::shared_ptr<hier::BoxLevel> layer1(
+         std::make_shared<hier::BoxLevel>(ratio, geometry));
 
       hier::BoxContainer::iterator coarse_itr = coarse_domain.begin();
       for (int ib = 0; ib < n_coarse_boxes; ++ib, ++coarse_itr) {
@@ -197,12 +196,12 @@ int main(
 
       // Create instance of hier::Variable database
       hier::VariableDatabase* variable_db = hier::VariableDatabase::getDatabase();
-      boost::shared_ptr<hier::VariableContext> dummy(
+      std::shared_ptr<hier::VariableContext> dummy(
          variable_db->getContext("dummy"));
       const hier::IntVector no_ghosts(dim, 0);
 
       // Make some dummy variables and data on the hierarchy
-      boost::shared_ptr<pdat::EdgeVariable<dcomplex> > fvar[NVARS];
+      std::shared_ptr<pdat::EdgeVariable<dcomplex> > fvar[NVARS];
       int svindx[NVARS];
       fvar[0].reset(new pdat::EdgeVariable<dcomplex>(dim, "fvar0", 1));
       svindx[0] = variable_db->registerVariableAndContext(
@@ -217,7 +216,7 @@ int main(
       svindx[3] = variable_db->registerVariableAndContext(
             fvar[3], dummy, no_ghosts);
 
-      boost::shared_ptr<pdat::EdgeVariable<double> > swgt(
+      std::shared_ptr<pdat::EdgeVariable<double> > swgt(
          new pdat::EdgeVariable<double>(dim, "swgt", 1));
       int swgt_id = variable_db->registerVariableAndContext(
             swgt, dummy, no_ghosts);
@@ -230,32 +229,32 @@ int main(
          }
       }
 
-      boost::shared_ptr<math::HierarchyDataOpsComplex> edge_ops(
+      std::shared_ptr<math::HierarchyDataOpsComplex> edge_ops(
          new math::HierarchyEdgeDataOpsComplex(
             hierarchy,
             0,
             1));
       TBOX_ASSERT(edge_ops);
 
-      boost::shared_ptr<math::HierarchyDataOpsReal<double> > swgt_ops(
+      std::shared_ptr<math::HierarchyDataOpsReal<double> > swgt_ops(
          new math::HierarchyEdgeDataOpsReal<double>(
             hierarchy,
             0,
             1));
 
-      boost::shared_ptr<hier::Patch> patch;
+      std::shared_ptr<hier::Patch> patch;
 
       // Initialize control volume data for edge-centered components
       hier::Box coarse_fine = fine0 + fine1;
       coarse_fine.coarsen(ratio);
       for (ln = 0; ln < 2; ++ln) {
-         boost::shared_ptr<hier::PatchLevel> level(
+         std::shared_ptr<hier::PatchLevel> level(
             hierarchy->getPatchLevel(ln));
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -263,8 +262,8 @@ int main(
             for (int i = 1; i < dim.getValue(); ++i) {
                edge_vol *= dx[i];
             }
-            boost::shared_ptr<pdat::EdgeData<double> > data(
-               BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            std::shared_ptr<pdat::EdgeData<double> > data(
+               POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
                   patch->getPatchData(swgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(edge_vol);
@@ -1089,7 +1088,7 @@ int main(
  *   for (ln = 0; ln < 2; ++ln) {
  *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
- *   boost::shared_ptr< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
+ *   std::shared_ptr< pdat::CellData<double> > svdata = patch->getPatchData(cwgt_id);
  *
  *   pdat::CellIterator cend(pdat::CellGeometry::end(svdata->getBox()));
  *   for (pdat::CellIterator c(pdat::CellGeometry::begin(svdata->getBox())); c != cend && vol_test_passed; ++c) {
@@ -1331,16 +1330,16 @@ int main(
       }
 
       // Test #13:  Place some bogus values on coarse level
-      boost::shared_ptr<pdat::EdgeData<dcomplex> > sdata;
+      std::shared_ptr<pdat::EdgeData<dcomplex> > sdata;
 
       // set values
 
-      boost::shared_ptr<hier::PatchLevel> level_zero(
+      std::shared_ptr<hier::PatchLevel> level_zero(
          hierarchy->getPatchLevel(0));
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         sdata = BOOST_CAST<pdat::EdgeData<dcomplex>,
+         sdata = POINTER_CAST<pdat::EdgeData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(sdata);
          hier::Index index0(dim, 2);
@@ -1372,7 +1371,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         sdata = BOOST_CAST<pdat::EdgeData<dcomplex>,
+         sdata = POINTER_CAST<pdat::EdgeData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(sdata);
          hier::Index idx0(dim, 2);
@@ -1646,19 +1645,19 @@ static bool
 complexDataSameAsValue(
    int desc_id,
    dcomplex value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   std::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   boost::shared_ptr<hier::Patch> patch;
+   std::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::EdgeData<dcomplex> > svdata(
-            BOOST_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<dcomplex> > svdata(
+            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(svdata);
@@ -1686,19 +1685,19 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   boost::shared_ptr<hier::PatchHierarchy> hierarchy)
+   std::shared_ptr<hier::PatchHierarchy> hierarchy)
 {
    bool test_passed = true;
 
    int ln;
-   boost::shared_ptr<hier::Patch> patch;
+   std::shared_ptr<hier::Patch> patch;
    for (ln = 0; ln < 2; ++ln) {
-      boost::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
+      std::shared_ptr<hier::PatchLevel> level(hierarchy->getPatchLevel(ln));
       for (hier::PatchLevel::iterator ip(level->begin());
            ip != level->end(); ++ip) {
          patch = *ip;
-         boost::shared_ptr<pdat::EdgeData<double> > svdata(
-            BOOST_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::EdgeData<double> > svdata(
+            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(svdata);

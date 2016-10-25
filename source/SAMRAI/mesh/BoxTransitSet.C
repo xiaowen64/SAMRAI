@@ -197,7 +197,7 @@ void BoxTransitSet::setWorkload(
    LoadType sumload = 0.0;
    for (iterator si = begin(); si != end(); ++si) {
       const hier::BoxId& box_id = si->getBox().getBoxId();
-      const boost::shared_ptr<hier::Patch>& patch =
+      const std::shared_ptr<hier::Patch>& patch =
          patch_level.getPatch(box_id);
       BoxInTransit new_transit_box(*si);
       std::vector<double> corner_weights;
@@ -366,7 +366,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
 
    // Pack the imported boxes into buffers by their original owners.
    d_object_timers->t_pack_edge->start();
-   std::map<int, boost::shared_ptr<tbox::MessageStream> > outgoing_messages;
+   std::map<int, std::shared_ptr<tbox::MessageStream> > outgoing_messages;
    for (const_iterator bi = begin(); bi != end(); ++bi) {
       const BoxInTransit& bit = *bi;
       TBOX_ASSERT(bit.getBox().getOwnerRank() == mpi.getRank());
@@ -375,7 +375,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
          continue;
       }
       num_cells_imported += bit.getBox().size();
-      boost::shared_ptr<tbox::MessageStream>& mstream =
+      std::shared_ptr<tbox::MessageStream>& mstream =
          outgoing_messages[bit.getOrigBox().getOwnerRank()];
       if (!mstream) {
          mstream.reset(new tbox::MessageStream);
@@ -390,7 +390,7 @@ BoxTransitSet::constructSemilocalUnbalancedToBalanced(
     * the local rank.
     */
 
-   std::map<int, boost::shared_ptr<tbox::MessageStream> >::iterator recip_itr =
+   std::map<int, std::shared_ptr<tbox::MessageStream> >::iterator recip_itr =
       outgoing_messages.upper_bound(mpi.getRank());
    if (recip_itr == outgoing_messages.end()) {
       recip_itr = outgoing_messages.begin();
@@ -986,7 +986,7 @@ BoxTransitSet::adjustLoadByBreaking(
          if (work_data_id >= 0 && d_pparams->usingVouchers()) {
             const hier::BoxId& orig_box_id =
                give_box_in_transit.getOrigBox().getBoxId();
-            const boost::shared_ptr<hier::Patch>& patch =
+            const std::shared_ptr<hier::Patch>& patch =
                d_pparams->getWorkloadPatchLevel().getPatch(orig_box_id);
 
             std::vector<double> corner_weights;
@@ -1026,7 +1026,7 @@ BoxTransitSet::adjustLoadByBreaking(
          if (work_data_id >= 0 && d_pparams->usingVouchers()) {
             const hier::BoxId& orig_box_id =
                keep_box_in_transit.getOrigBox().getBoxId();
-            const boost::shared_ptr<hier::Patch>& patch =
+            const std::shared_ptr<hier::Patch>& patch =
                d_pparams->getWorkloadPatchLevel().getPatch(orig_box_id);
 
             std::vector<double> corner_weights;
@@ -1774,11 +1774,11 @@ BoxTransitSet::getFromInput()
 {
    if (!tbox::InputManager::inputDatabaseExists()) return;
 
-   boost::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
+   std::shared_ptr<tbox::Database> input_db = tbox::InputManager::getInputDatabase();
 
    if (input_db->isDatabase("BoxTransitSet")) {
 
-      boost::shared_ptr<tbox::Database> my_db = input_db->getDatabase("BoxTransitSet");
+      std::shared_ptr<tbox::Database> my_db = input_db->getDatabase("BoxTransitSet");
 
       d_print_steps = my_db->getBoolWithDefault("DEV_print_steps", d_print_steps);
       d_print_break_steps =

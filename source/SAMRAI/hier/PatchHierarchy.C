@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/RestartManager.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -45,8 +44,8 @@ PatchHierarchy::s_finalize_handler(
 
 PatchHierarchy::PatchHierarchy(
    const std::string& object_name,
-   const boost::shared_ptr<BaseGridGeometry>& geometry,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<BaseGridGeometry>& geometry,
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(geometry->getDim()),
    d_number_levels(0),
    d_patch_descriptor(VariableDatabase::getDatabase()->getPatchDescriptor()),
@@ -126,7 +125,7 @@ PatchHierarchy::~PatchHierarchy()
 
 void
 PatchHierarchy::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart)
 {
    if (input_db) {
@@ -160,7 +159,7 @@ PatchHierarchy::getFromInput(
          d_ratio_to_coarser[0].setAll(IntVector::getOne(d_dim));
          if (d_number_blocks == 1) {
             if (input_db->isDatabase("ratio_to_coarser")) {
-               const boost::shared_ptr<tbox::Database> tmp_db(
+               const std::shared_ptr<tbox::Database> tmp_db(
                   input_db->getDatabase("ratio_to_coarser"));
                for (int ln = 1; ln < d_max_levels; ++ln) {
                   if (tmp_db->isInteger(level_names[ln])) {
@@ -189,7 +188,7 @@ PatchHierarchy::getFromInput(
                std::string ratio_name("ratio_to_coarser_");
                ratio_name += tbox::Utilities::intToString(static_cast<int>(b));
                if (input_db->isDatabase(ratio_name)) {
-                  const boost::shared_ptr<tbox::Database> tmp_db(
+                  const std::shared_ptr<tbox::Database> tmp_db(
                      input_db->getDatabase(ratio_name));
                   for (int ln = 1; ln < d_max_levels; ++ln) {
                      if (tmp_db->isInteger(level_names[ln])) {
@@ -206,7 +205,7 @@ PatchHierarchy::getFromInput(
                      }
                   }
                } else if (input_db->isDatabase("ratio_to_coarser")) {
-                  const boost::shared_ptr<tbox::Database> tmp_db(
+                  const std::shared_ptr<tbox::Database> tmp_db(
                      input_db->getDatabase("ratio_to_coarser"));
                   for (int ln = 1; ln < d_max_levels; ++ln) {
                      if (tmp_db->isInteger(level_names[ln])) {
@@ -235,7 +234,7 @@ PatchHierarchy::getFromInput(
 
          // Read in smallest_patch_size.
          if (input_db->isDatabase("smallest_patch_size")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
+            const std::shared_ptr<tbox::Database> tmp_db(
                input_db->getDatabase("smallest_patch_size"));
             for (int ln = 0; ln < d_max_levels; ++ln) {
                if (tmp_db->isInteger(level_names[ln])) {
@@ -255,7 +254,7 @@ PatchHierarchy::getFromInput(
 
          // Read in largest_patch_size.
          if (input_db->isDatabase("largest_patch_size")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
+            const std::shared_ptr<tbox::Database> tmp_db(
                input_db->getDatabase("largest_patch_size"));
             for (int ln = 0; ln < d_max_levels; ++ln) {
                if (tmp_db->isInteger(level_names[ln])) {
@@ -363,7 +362,7 @@ PatchHierarchy::getFromInput(
 
          // Read in smallest_patch_size.
          if (input_db->isDatabase("smallest_patch_size")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
+            const std::shared_ptr<tbox::Database> tmp_db(
                input_db->getDatabase("smallest_patch_size"));
             for (int ln = 0; ln < d_max_levels; ++ln) {
                if (tmp_db->isInteger(level_names[ln])) {
@@ -384,7 +383,7 @@ PatchHierarchy::getFromInput(
 
          // Read in largest_patch_size.
          if (input_db->isDatabase("largest_patch_size")) {
-            const boost::shared_ptr<tbox::Database> tmp_db(
+            const std::shared_ptr<tbox::Database> tmp_db(
                input_db->getDatabase("largest_patch_size"));
             for (int ln = 0; ln < d_max_levels; ++ln) {
                if (tmp_db->isInteger(level_names[ln])) {
@@ -636,7 +635,7 @@ PatchHierarchy::computeRequiredConnectorWidths() const
  *************************************************************************
  */
 
-boost::shared_ptr<PatchHierarchy>
+std::shared_ptr<PatchHierarchy>
 PatchHierarchy::makeRefinedPatchHierarchy(
    const std::string& fine_hierarchy_name,
    const IntVector& refine_ratio) const
@@ -646,7 +645,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    TBOX_ASSERT(fine_hierarchy_name != d_object_name);
    TBOX_ASSERT(refine_ratio > IntVector::getZero(refine_ratio.getDim()));
 
-   boost::shared_ptr<BaseGridGeometry> fine_geometry(
+   std::shared_ptr<BaseGridGeometry> fine_geometry(
       d_grid_geometry->makeRefinedGridGeometry(
          fine_hierarchy_name + "GridGeometry",
          refine_ratio));
@@ -654,7 +653,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    PatchHierarchy* fine_hierarchy =
       new PatchHierarchy(fine_hierarchy_name,
          fine_geometry,
-         boost::shared_ptr<tbox::Database>());
+         std::shared_ptr<tbox::Database>());
 
    // Set hierarchy parameters.
 
@@ -674,8 +673,8 @@ PatchHierarchy::makeRefinedPatchHierarchy(
    for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer refined_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       refined_boxes.refine(refine_ratio);
-      boost::shared_ptr<BoxLevel> refined_box_level(
-         boost::make_shared<BoxLevel>(
+      std::shared_ptr<BoxLevel> refined_box_level(
+         std::make_shared<BoxLevel>(
             d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
             fine_geometry,
             d_patch_levels[ln]->getBoxLevel()->getMPI()));
@@ -687,7 +686,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
       fine_hierarchy->makeNewPatchLevel(ln, refined_box_level);
    }
 
-   return boost::shared_ptr<PatchHierarchy>(fine_hierarchy);
+   return std::shared_ptr<PatchHierarchy>(fine_hierarchy);
 
 }
 
@@ -700,7 +699,7 @@ PatchHierarchy::makeRefinedPatchHierarchy(
  *************************************************************************
  */
 
-boost::shared_ptr<PatchHierarchy>
+std::shared_ptr<PatchHierarchy>
 PatchHierarchy::makeCoarsenedPatchHierarchy(
    const std::string& coarse_hierarchy_name,
    const IntVector& coarsen_ratio) const
@@ -710,7 +709,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    TBOX_ASSERT(coarse_hierarchy_name != d_object_name);
    TBOX_ASSERT(coarsen_ratio > IntVector::getZero(coarsen_ratio.getDim()));
 
-   boost::shared_ptr<BaseGridGeometry> coarse_geometry(
+   std::shared_ptr<BaseGridGeometry> coarse_geometry(
       d_grid_geometry->makeCoarsenedGridGeometry(
          coarse_hierarchy_name + "GridGeometry",
          coarsen_ratio));
@@ -718,7 +717,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    PatchHierarchy* coarse_hierarchy =
       new PatchHierarchy(coarse_hierarchy_name,
          coarse_geometry,
-         boost::shared_ptr<tbox::Database>());
+         std::shared_ptr<tbox::Database>());
 
    // Set hierarchy parameters.
 
@@ -734,8 +733,8 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
    for (int ln = 0; ln < d_number_levels; ++ln) {
       BoxContainer coarsened_boxes(d_patch_levels[ln]->getBoxLevel()->getBoxes());
       coarsened_boxes.coarsen(coarsen_ratio);
-      boost::shared_ptr<BoxLevel> coarsened_box_level(
-         boost::make_shared<BoxLevel>(
+      std::shared_ptr<BoxLevel> coarsened_box_level(
+         std::make_shared<BoxLevel>(
             d_patch_levels[ln]->getBoxLevel()->getRefinementRatio(),
             coarse_geometry,
             d_patch_levels[ln]->getBoxLevel()->getMPI()));
@@ -747,7 +746,7 @@ PatchHierarchy::makeCoarsenedPatchHierarchy(
       coarse_hierarchy->makeNewPatchLevel(ln, coarsened_box_level);
    }
 
-   return boost::shared_ptr<PatchHierarchy>(coarse_hierarchy);
+   return std::shared_ptr<PatchHierarchy>(coarse_hierarchy);
 
 }
 
@@ -835,7 +834,7 @@ PatchHierarchy::makeNewPatchLevel(
 void
 PatchHierarchy::makeNewPatchLevel(
    const int ln,
-   const boost::shared_ptr<BoxLevel> new_box_level)
+   const std::shared_ptr<BoxLevel> new_box_level)
 {
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY1(d_dim, *new_box_level);
    TBOX_ASSERT(ln >= 0);
@@ -933,7 +932,7 @@ PatchHierarchy::logMetadataStatistics(
    bool log_coarse_connector) const
 {
    const std::string name("L" + tbox::Utilities::levelToString(ln));
-   const boost::shared_ptr<PatchLevel> level =
+   const std::shared_ptr<PatchLevel> level =
       getPatchLevel(ln);
    const BoxLevel& box_level = *level->getBoxLevel();
 
@@ -1015,7 +1014,7 @@ PatchHierarchy::logMetadataStatistics(
 
 void
 PatchHierarchy::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -1035,7 +1034,7 @@ PatchHierarchy::putToRestart(
     */
    restart_db->putInteger("max_levels", d_max_levels);
 
-   boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
+   std::shared_ptr<tbox::Database> ratio_to_coarser_db(
       restart_db->putDatabase("ratio_to_coarser"));
    for (int ln = 0; ln < d_max_levels; ++ln) {
       for (BlockId::block_t b = 0; b < d_number_blocks; ++b) {
@@ -1052,7 +1051,7 @@ PatchHierarchy::putToRestart(
       }
    }
 
-   boost::shared_ptr<tbox::Database> smallest_patch_db(
+   std::shared_ptr<tbox::Database> smallest_patch_db(
       restart_db->putDatabase("smallest_patch_size"));
    for (int ln = 0; ln < d_max_levels; ++ln) {
       smallest_patch_db->putIntegerArray(level_names[ln],
@@ -1060,7 +1059,7 @@ PatchHierarchy::putToRestart(
          d_dim.getValue());
    }
 
-   boost::shared_ptr<tbox::Database> largest_patch_db(
+   std::shared_ptr<tbox::Database> largest_patch_db(
       restart_db->putDatabase("largest_patch_size"));
    for (int ln = 0; ln < d_max_levels; ++ln) {
       largest_patch_db->putIntegerArray(level_names[ln],
@@ -1079,7 +1078,7 @@ PatchHierarchy::putToRestart(
    restart_db->putBool("allow_patches_smaller_than_minimum_size_to_prevent_overlaps",
       d_allow_patches_smaller_than_minimum_size_to_prevent_overlaps);
 
-   boost::shared_ptr<tbox::Database> self_connector_widths_db(
+   std::shared_ptr<tbox::Database> self_connector_widths_db(
       restart_db->putDatabase("d_self_connector_widths"));
    d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels; ++ln) {
@@ -1096,7 +1095,7 @@ PatchHierarchy::putToRestart(
          put_self_widths);
    }
 
-   boost::shared_ptr<tbox::Database> fine_connector_widths_db(
+   std::shared_ptr<tbox::Database> fine_connector_widths_db(
       restart_db->putDatabase("d_fine_connector_widths"));
    d_fine_connector_widths.resize(d_max_levels-1, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
@@ -1115,7 +1114,7 @@ PatchHierarchy::putToRestart(
 
    for (int i = 0; i < d_number_levels; ++i) {
 
-      boost::shared_ptr<tbox::Database> level_database(
+      std::shared_ptr<tbox::Database> level_database(
          restart_db->putDatabase(level_names[i]));
 
       d_patch_levels[i]->putToRestart(level_database);
@@ -1137,7 +1136,7 @@ PatchHierarchy::putToRestart(
 void
 PatchHierarchy::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> restart_db(
+   std::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(d_object_name)) {
@@ -1145,7 +1144,7 @@ PatchHierarchy::getFromRestart()
          << "   Restart database with name "
          << d_object_name << " not found in restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> database(
+   std::shared_ptr<tbox::Database> database(
       restart_db->getDatabase(d_object_name));
 
    /*
@@ -1174,7 +1173,7 @@ PatchHierarchy::getFromRestart()
       level_names[ln] = prefix + tbox::Utilities::levelToString(ln);
    }
 
-   boost::shared_ptr<tbox::Database> ratio_to_coarser_db(
+   std::shared_ptr<tbox::Database> ratio_to_coarser_db(
       database->getDatabase("ratio_to_coarser"));
    d_ratio_to_coarser.resize(d_max_levels, d_ratio_to_coarser.back());
    for (int ln = 0; ln < d_max_levels; ++ln) {
@@ -1192,7 +1191,7 @@ PatchHierarchy::getFromRestart()
       }
    }
 
-   boost::shared_ptr<tbox::Database> smallest_patch_db(
+   std::shared_ptr<tbox::Database> smallest_patch_db(
       database->getDatabase("smallest_patch_size"));
    d_smallest_patch_size.resize(d_max_levels, d_smallest_patch_size.back());
    for (int ln = 0; ln < d_max_levels; ++ln) {
@@ -1201,7 +1200,7 @@ PatchHierarchy::getFromRestart()
          d_dim.getValue());
    }
 
-   boost::shared_ptr<tbox::Database> largest_patch_db(
+   std::shared_ptr<tbox::Database> largest_patch_db(
       database->getDatabase("largest_patch_size"));
    d_largest_patch_size.resize(d_max_levels, d_largest_patch_size.back());
    for (int ln = 0; ln < d_max_levels; ++ln) {
@@ -1231,7 +1230,7 @@ PatchHierarchy::getFromRestart()
                        << "ignored in the periodic directions." << std::endl);
    }
 
-   boost::shared_ptr<tbox::Database> self_connector_widths_db(
+   std::shared_ptr<tbox::Database> self_connector_widths_db(
       database->getDatabase("d_self_connector_widths"));
    d_self_connector_widths.resize(d_max_levels, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels; ++ln) {
@@ -1248,7 +1247,7 @@ PatchHierarchy::getFromRestart()
       }
    }
 
-   boost::shared_ptr<tbox::Database> fine_connector_widths_db(
+   std::shared_ptr<tbox::Database> fine_connector_widths_db(
       database->getDatabase("d_fine_connector_widths"));
    d_fine_connector_widths.resize(d_max_levels - 1, IntVector(d_dim, 1, d_number_blocks));
    for (int ln = 0; ln < d_max_levels - 1; ++ln) {
@@ -1269,7 +1268,7 @@ PatchHierarchy::getFromRestart()
 void
 PatchHierarchy::initializeHierarchy()
 {
-   boost::shared_ptr<tbox::Database> restart_db(
+   std::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(d_object_name)) {
@@ -1277,14 +1276,14 @@ PatchHierarchy::initializeHierarchy()
          << "   Restart database with name "
          << d_object_name << " not found in restart file" << std::endl);
    }
-   boost::shared_ptr<tbox::Database> database(
+   std::shared_ptr<tbox::Database> database(
       restart_db->getDatabase(d_object_name));
 
    d_patch_levels.resize(d_number_levels);
    for (int i = 0; i < d_number_levels; ++i) {
       std::string level_name = "level_" + tbox::Utilities::levelToString(i);
 
-      boost::shared_ptr<tbox::Database> level_database(
+      std::shared_ptr<tbox::Database> level_database(
          database->getDatabase(level_name));
 
       d_patch_levels[i] = d_patch_level_factory->allocate(
@@ -1328,7 +1327,7 @@ PatchHierarchy::recursivePrint(
       int ln;
       for (ln = 0; ln < nlevels; ++ln) {
          os << border << "Level " << ln << '/' << nlevels << "\n";
-         boost::shared_ptr<PatchLevel> level(getPatchLevel(ln));
+         std::shared_ptr<PatchLevel> level(getPatchLevel(ln));
          level->recursivePrint(os, border + "\t", depth - 1);
          totl_npatches += level->getGlobalNumberOfPatches();
          totl_ncells += level->getBoxLevel()->getGlobalNumberOfCells();

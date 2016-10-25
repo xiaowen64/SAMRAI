@@ -35,7 +35,7 @@ using namespace std;
 SideDataTest::SideDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -82,7 +82,7 @@ SideDataTest::~SideDataTest()
 }
 
 void SideDataTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -92,7 +92,7 @@ void SideDataTest::readTestInput(
 
    readVariableInput(db->getDatabase("VariableData"));
 
-   boost::shared_ptr<tbox::Database> var_data(
+   std::shared_ptr<tbox::Database> var_data(
       db->getDatabase("VariableData"));
    std::vector<string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
@@ -101,7 +101,7 @@ void SideDataTest::readTestInput(
    d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; ++i) {
-      boost::shared_ptr<tbox::Database> var_db(
+      std::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
       int test_direction = var_db->getIntegerWithDefault("test_direction", -1);
@@ -186,10 +186,10 @@ void SideDataTest::registerVariables(
 }
 
 void SideDataTest::setConservativeData(
-   boost::shared_ptr<pdat::SideData<double> > data,
+   std::shared_ptr<pdat::SideData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
    TBOX_ASSERT(data);
@@ -198,7 +198,7 @@ void SideDataTest::setConservativeData(
       && (level_number <= hierarchy->getFinestLevelNumber()));
 
    int i, j;
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
@@ -261,8 +261,8 @@ void SideDataTest::setConservativeData(
       hier::IntVector ratio(level->getRatioToLevelZero());
       const int max_ratio = ratio.max();
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -321,7 +321,7 @@ void SideDataTest::setConservativeData(
 
 void SideDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -338,8 +338,8 @@ void SideDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::SideData<double> > side_data(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > side_data(
+            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(side_data);
 
@@ -356,8 +356,8 @@ void SideDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::SideData<double> > side_data(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > side_data(
+            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(side_data);
 
@@ -373,7 +373,7 @@ void SideDataTest::initializeDataOnPatch(
 }
 
 void SideDataTest::checkPatchInteriorData(
-   const boost::shared_ptr<pdat::SideData<double> >& data,
+   const std::shared_ptr<pdat::SideData<double> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
@@ -385,7 +385,7 @@ void SideDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   boost::shared_ptr<pdat::SideData<double> > correct_data(
+   std::shared_ptr<pdat::SideData<double> > correct_data(
       new pdat::SideData<double>(
          data->getBox(),
          depth,
@@ -434,8 +434,8 @@ void SideDataTest::setPhysicalBoundaryConditions(
 
    const bool is_periodic = periodic_shift.max() > 0;
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
@@ -456,8 +456,8 @@ void SideDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::SideData<double> > side_data(
-         BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::SideData<double> > side_data(
+         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
 
@@ -522,14 +522,14 @@ void SideDataTest::setPhysicalBoundaryConditions(
 }
 
 void SideDataTest::setLinearData(
-   boost::shared_ptr<pdat::SideData<double> > data,
+   std::shared_ptr<pdat::SideData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -586,7 +586,7 @@ void SideDataTest::setLinearData(
 }
 
 void SideDataTest::setPeriodicData(
-   boost::shared_ptr<pdat::SideData<double> > data,
+   std::shared_ptr<pdat::SideData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -601,8 +601,8 @@ void SideDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -648,7 +648,7 @@ void SideDataTest::setPeriodicData(
 
 bool SideDataTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    NULL_USE(hierarchy);
@@ -673,7 +673,7 @@ bool SideDataTest::verifyResults(
       }
       const hier::Box& pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::SideData<double> > solution(
+      std::shared_ptr<pdat::SideData<double> > solution(
          new pdat::SideData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -693,8 +693,8 @@ bool SideDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::SideData<double> > side_data(
-            BOOST_CAST<pdat::SideData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::SideData<double> > side_data(
+            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(side_data);
          int depth = side_data->getDepth();

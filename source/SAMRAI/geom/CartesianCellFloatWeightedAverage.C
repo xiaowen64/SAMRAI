@@ -106,11 +106,11 @@ CartesianCellFloatWeightedAverage::coarsen(
 
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
-   boost::shared_ptr<pdat::CellData<float> > fdata(
-      BOOST_CAST<pdat::CellData<float>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<float> > fdata(
+      POINTER_CAST<pdat::CellData<float>, hier::PatchData>(
          fine.getPatchData(src_component)));
-   boost::shared_ptr<pdat::CellData<float> > cdata(
-      BOOST_CAST<pdat::CellData<float>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<float> > cdata(
+      POINTER_CAST<pdat::CellData<float>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -121,11 +121,11 @@ CartesianCellFloatWeightedAverage::coarsen(
    const hier::Index& cilo = cdata->getGhostBox().lower();
    const hier::Index& cihi = cdata->getGhostBox().upper();
 
-   const boost::shared_ptr<CartesianPatchGeometry> fgeom(
-      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<CartesianPatchGeometry> fgeom(
+      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
-   const boost::shared_ptr<CartesianPatchGeometry> cgeom(
-      BOOST_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<CartesianPatchGeometry> cgeom(
+      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 
    TBOX_ASSERT(fgeom);

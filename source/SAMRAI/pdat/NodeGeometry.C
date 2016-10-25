@@ -52,7 +52,7 @@ NodeGeometry::~NodeGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 NodeGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -70,7 +70,7 @@ NodeGeometry::calculateOverlap(
    const NodeGeometry* t_src =
       dynamic_cast<const NodeGeometry *>(&src_geometry);
 
-   boost::shared_ptr<hier::BoxOverlap> over;
+   std::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -148,7 +148,7 @@ NodeGeometry::computeDestinationBoxes(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 NodeGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -162,7 +162,7 @@ NodeGeometry::setUpOverlap(
    }
 
    // Create the node overlap data object using the boxes and source shift
-   return boost::make_shared<NodeOverlap>(dst_boxes, transformation);
+   return std::make_shared<NodeOverlap>(dst_boxes, transformation);
 
 }
 

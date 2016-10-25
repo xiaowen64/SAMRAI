@@ -20,8 +20,6 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
-#include "boost/make_shared.hpp"
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -104,7 +102,7 @@ public:
     *
     * @pre getBox().getDim() == src_mask.getDim()
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    calculateOverlap(
       const hier::BoxGeometry& dst_geometry,
       const hier::BoxGeometry& src_geometry,
@@ -136,7 +134,7 @@ public:
     * @brief Set up a CellOverlap object that consists simply of the given
     * boxes and the transformation.
     */
-   virtual boost::shared_ptr<hier::BoxOverlap>
+   virtual std::shared_ptr<hier::BoxOverlap>
    setUpOverlap(
       const hier::BoxContainer& boxes,
       const hier::Transformation& transformation) const;
@@ -167,7 +165,7 @@ private:
     * between the source and destination objects, where both box geometry
     * objects are guaranteed to have cell centered geometry.
     */
-   static boost::shared_ptr<hier::BoxOverlap>
+   static std::shared_ptr<hier::BoxOverlap>
    doOverlap(
       const CellGeometry& dst_geometry,
       const CellGeometry& src_geometry,
@@ -187,7 +185,7 @@ private:
          dst_restrict_boxes);
 
       // Create the cell overlap data object using the boxes and source shift
-      return boost::make_shared<CellOverlap>(dst_boxes, transformation);
+      return std::make_shared<CellOverlap>(dst_boxes, transformation);
    }
 
    static void

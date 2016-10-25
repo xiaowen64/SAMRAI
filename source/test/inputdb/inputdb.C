@@ -23,7 +23,6 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 
 using namespace SAMRAI;
@@ -46,7 +45,7 @@ int main(
    {
       std::string input_filename = argv[1];
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      std::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
@@ -56,7 +55,7 @@ int main(
        */
 
       if (input_db->keyExists("GlobalInputs")) {
-         boost::shared_ptr<tbox::Database> global_db(
+         std::shared_ptr<tbox::Database> global_db(
             input_db->getDatabase("GlobalInputs"));
          if (global_db->keyExists("call_abort_in_serial_instead_of_exit")) {
             bool flag = global_db->
@@ -69,7 +68,7 @@ int main(
       * Test primitive types - int, float, double, bool, dcomplex,
       *                        std::string, box
       *******************************************************************/
-      boost::shared_ptr<tbox::Database> prim_type_db(
+      std::shared_ptr<tbox::Database> prim_type_db(
          input_db->getDatabase("PrimitiveTypes"));
 
       int i0_correct = 1;
@@ -132,7 +131,7 @@ int main(
       /*
        * "Smart" arrays
        */
-      boost::shared_ptr<tbox::Database> smart_array_db(
+      std::shared_ptr<tbox::Database> smart_array_db(
          input_db->getDatabase("SmartArrays"));
 
       std::vector<int> i1_correct(5);
@@ -196,7 +195,7 @@ int main(
       /*
        * Basic arrays (i.e. do not use the "smart" array construct)
        */
-      boost::shared_ptr<tbox::Database> basic_array_db(
+      std::shared_ptr<tbox::Database> basic_array_db(
          input_db->getDatabase("BasicArrays"));
 
       int i2_correct[nsize];
@@ -265,7 +264,7 @@ int main(
       /*******************************************************************
        * Test "getWithDefault()" methods
        ******************************************************************/
-      boost::shared_ptr<tbox::Database> with_default_db(
+      std::shared_ptr<tbox::Database> with_default_db(
          input_db->getDatabase("WithDefaultTypes"));
 
       int i3 = with_default_db->getIntegerWithDefault("i3", i0_correct);
@@ -310,7 +309,7 @@ int main(
       /*******************************************************************
        * Test replacing values in the database
        ******************************************************************/
-      boost::shared_ptr<tbox::Database> prim_type_db_new(
+      std::shared_ptr<tbox::Database> prim_type_db_new(
          input_db->getDatabase("PrimitiveTypes"));
 
       prim_type_db_new->putInteger("i0", i0_correct);

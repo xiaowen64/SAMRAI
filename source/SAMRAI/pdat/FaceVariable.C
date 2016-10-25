@@ -15,7 +15,6 @@
 #include "SAMRAI/pdat/FaceDataFactory.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -35,7 +34,7 @@ FaceVariable<TYPE>::FaceVariable(
    int depth,
    const bool fine_boundary_represents_var):
    hier::Variable(name,
-                  boost::make_shared<FaceDataFactory<TYPE> >(
+                  std::make_shared<FaceDataFactory<TYPE> >(
                      depth,
                      // default zero ghost cells
                      hier::IntVector::getZero(dim),
@@ -52,8 +51,8 @@ FaceVariable<TYPE>::~FaceVariable()
 template<class TYPE>
 int FaceVariable<TYPE>::getDepth() const
 {
-   boost::shared_ptr<FaceDataFactory<TYPE> > factory(
-      BOOST_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(
+   std::shared_ptr<FaceDataFactory<TYPE> > factory(
+      POINTER_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

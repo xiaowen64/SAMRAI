@@ -19,7 +19,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/pdat/SideDataFactory.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -57,13 +56,13 @@ OutersideDataFactory<TYPE>::~OutersideDataFactory()
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchDataFactory>
+std::shared_ptr<hier::PatchDataFactory>
 OutersideDataFactory<TYPE>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
 
-   return boost::make_shared<OutersideDataFactory<TYPE> >(
+   return std::make_shared<OutersideDataFactory<TYPE> >(
              ghosts.getDim(),
              d_depth);
 }
@@ -77,13 +76,13 @@ OutersideDataFactory<TYPE>::cloneFactory(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::PatchData>
+std::shared_ptr<hier::PatchData>
 OutersideDataFactory<TYPE>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
 
-   return boost::make_shared<OutersideData<TYPE> >(patch.getBox(), d_depth);
+   return std::make_shared<OutersideData<TYPE> >(patch.getBox(), d_depth);
 }
 
 /*
@@ -95,7 +94,7 @@ OutersideDataFactory<TYPE>::allocate(
  */
 
 template<class TYPE>
-boost::shared_ptr<hier::BoxGeometry>
+std::shared_ptr<hier::BoxGeometry>
 OutersideDataFactory<TYPE>::getBoxGeometry(
    const hier::Box& box) const
 {
@@ -103,7 +102,7 @@ OutersideDataFactory<TYPE>::getBoxGeometry(
 
    const hier::IntVector& zero_vector(hier::IntVector::getZero(getDim()));
 
-   return boost::make_shared<OutersideGeometry>(box, zero_vector);
+   return std::make_shared<OutersideGeometry>(box, zero_vector);
 }
 
 template<class TYPE>
@@ -145,7 +144,7 @@ OutersideDataFactory<TYPE>::getSizeOfMemory(
 template<class TYPE>
 bool
 OutersideDataFactory<TYPE>::validCopyTo(
-   const boost::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
+   const std::shared_ptr<hier::PatchDataFactory>& dst_pdf) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
 
@@ -155,8 +154,8 @@ OutersideDataFactory<TYPE>::validCopyTo(
     * Valid options are SideData and OutersideData.
     */
    if (!valid_copy) {
-      boost::shared_ptr<SideDataFactory<TYPE> > sdf(
-         boost::dynamic_pointer_cast<SideDataFactory<TYPE>,
+      std::shared_ptr<SideDataFactory<TYPE> > sdf(
+         std::dynamic_pointer_cast<SideDataFactory<TYPE>,
                                      hier::PatchDataFactory>(dst_pdf));
       if (sdf) {
          valid_copy = true;
@@ -164,8 +163,8 @@ OutersideDataFactory<TYPE>::validCopyTo(
    }
 
    if (!valid_copy) {
-      boost::shared_ptr<OutersideDataFactory<TYPE> > osdf(
-         boost::dynamic_pointer_cast<OutersideDataFactory<TYPE>,
+      std::shared_ptr<OutersideDataFactory<TYPE> > osdf(
+         std::dynamic_pointer_cast<OutersideDataFactory<TYPE>,
                                      hier::PatchDataFactory>(
             dst_pdf));
       if (osdf) {

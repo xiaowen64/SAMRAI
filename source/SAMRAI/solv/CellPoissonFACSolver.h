@@ -19,7 +19,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace solv {
@@ -135,10 +134,10 @@ public:
    CellPoissonFACSolver(
       const tbox::Dimension& dim,
       const std::string& object_name,
-      const boost::shared_ptr<FACPreconditioner>& fac_precond,
-      const boost::shared_ptr<CellPoissonFACOps>& fac_ops,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>());
+      const std::shared_ptr<FACPreconditioner>& fac_precond,
+      const std::shared_ptr<CellPoissonFACOps>& fac_ops,
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>());
 
    /*!
     * @brief Destructor.
@@ -184,7 +183,7 @@ public:
    solveSystem(
       const int solution,
       const int rhs,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarse_ln = -1,
       int fine_ln = -1);
 
@@ -206,7 +205,7 @@ public:
     *
     * @return whether solver converged to specified level
     *
-    * @see solveSystem( const int, const int, boost::shared_ptr< hier::PatchHierarchy >, int, int);
+    * @see solveSystem( const int, const int, std::shared_ptr< hier::PatchHierarchy >, int, int);
     *
     * @pre d_solver_is_initialized
     * @pre (solution >= 0) || (rhs >= 0)
@@ -403,7 +402,7 @@ public:
    initializeSolverState(
       const int solution,
       const int rhs,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarse_level = -1,
       const int fine_level = -1);
 
@@ -487,7 +486,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*
     * @brief Set @c d_uv and @c d_fv to vectors wrapping the data
@@ -530,12 +529,12 @@ private:
     * @brief FAC operator implementation corresponding to cell-centered
     * Poisson discretization.
     */
-   boost::shared_ptr<CellPoissonFACOps> d_fac_ops;
+   std::shared_ptr<CellPoissonFACOps> d_fac_ops;
 
    /*!
     * @brief FAC preconditioner algorithm.
     */
-   boost::shared_ptr<FACPreconditioner> d_fac_precond;
+   std::shared_ptr<FACPreconditioner> d_fac_precond;
 
    /*!
     * @brief Robin bc object in use.
@@ -547,24 +546,24 @@ private:
     */
    SimpleCellRobinBcCoefs d_simple_bc;
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_ln_min;
    int d_ln_max;
 
    /*!
     * @brief Context for all internally maintained data.
     */
-   boost::shared_ptr<hier::VariableContext> d_context;
+   std::shared_ptr<hier::VariableContext> d_context;
    /*
     * @brief Vector wrapper for solution.
     * @see createVectorWrappers(), destroyVectorWrappers()
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_uv;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_uv;
    /*
     * @brief Vector wrapper for source.
     * @see createVectorWrappers(), destroyVectorWrappers()
     */
-   boost::shared_ptr<SAMRAIVectorReal<double> > d_fv;
+   std::shared_ptr<SAMRAIVectorReal<double> > d_fv;
 
    bool d_solver_is_initialized;
    bool d_enable_logging;

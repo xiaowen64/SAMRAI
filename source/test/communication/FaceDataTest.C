@@ -35,7 +35,7 @@ using namespace std;
 FaceDataTest::FaceDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -84,7 +84,7 @@ FaceDataTest::~FaceDataTest()
 }
 
 void FaceDataTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -94,14 +94,14 @@ void FaceDataTest::readTestInput(
 
    readVariableInput(db->getDatabase("VariableData"));
 
-   boost::shared_ptr<tbox::Database> var_data(db->getDatabase("VariableData"));
+   std::shared_ptr<tbox::Database> var_data(db->getDatabase("VariableData"));
    std::vector<string> var_keys = var_data->getAllKeys();
    int nkeys = static_cast<int>(var_keys.size());
 
    d_use_fine_value_at_interface.resize(nkeys);
 
    for (int i = 0; i < nkeys; ++i) {
-      boost::shared_ptr<tbox::Database> var_db(
+      std::shared_ptr<tbox::Database> var_db(
          var_data->getDatabase(var_keys[i]));
 
       if (var_db->keyExists("use_fine_value_at_interface")) {
@@ -177,10 +177,10 @@ void FaceDataTest::registerVariables(
 }
 
 void FaceDataTest::setConservativeData(
-   boost::shared_ptr<pdat::FaceData<double> > data,
+   std::shared_ptr<pdat::FaceData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
    TBOX_ASSERT(data);
@@ -189,7 +189,7 @@ void FaceDataTest::setConservativeData(
       && (level_number <= hierarchy->getFinestLevelNumber()));
 
    int i, j;
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
@@ -248,8 +248,8 @@ void FaceDataTest::setConservativeData(
       hier::IntVector ratio(level->getRatioToLevelZero());
       const int max_ratio = ratio.max();
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -305,7 +305,7 @@ void FaceDataTest::setConservativeData(
 
 void FaceDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -315,8 +315,8 @@ void FaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<double> > face_data(
+            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
@@ -329,8 +329,8 @@ void FaceDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<double> > face_data(
+            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
@@ -346,9 +346,9 @@ void FaceDataTest::initializeDataOnPatch(
 }
 
 void FaceDataTest::checkPatchInteriorData(
-   const boost::shared_ptr<pdat::FaceData<double> >& data,
+   const std::shared_ptr<pdat::FaceData<double> >& data,
    const hier::Box& interior,
-   const boost::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
+   const std::shared_ptr<geom::CartesianPatchGeometry>& pgeom) const
 {
    TBOX_ASSERT(data);
 
@@ -416,8 +416,8 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
@@ -438,8 +438,8 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::FaceData<double> > face_data(
-         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<double> > face_data(
+         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -491,14 +491,14 @@ void FaceDataTest::setPhysicalBoundaryConditions(
 }
 
 void FaceDataTest::setLinearData(
-   boost::shared_ptr<pdat::FaceData<double> > data,
+   std::shared_ptr<pdat::FaceData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -568,7 +568,7 @@ void FaceDataTest::setLinearData(
 
 bool FaceDataTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
    bool test_failed = false;
@@ -585,7 +585,7 @@ bool FaceDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::FaceData<double> > solution(
+      std::shared_ptr<pdat::FaceData<double> > solution(
          new pdat::FaceData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -598,8 +598,8 @@ bool FaceDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<double> > face_data(
+            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
          int depth = face_data->getDepth();

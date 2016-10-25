@@ -18,8 +18,6 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
-#include "boost/shared_ptr.hpp"
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -47,24 +45,24 @@ SparseDataFactory<BOX_GEOMETRY>::~SparseDataFactory()
  * Implementation of base class pure virtual functions
  */
 template<typename BOX_GEOMETRY>
-boost::shared_ptr<hier::PatchDataFactory>
+std::shared_ptr<hier::PatchDataFactory>
 SparseDataFactory<BOX_GEOMETRY>::cloneFactory(
    const hier::IntVector& ghosts)
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, ghosts);
-   return boost::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
+   return std::make_shared<SparseDataFactory<BOX_GEOMETRY> >(
              ghosts,
              d_dbl_attributes,
              d_int_attributes);
 }
 
 template<typename BOX_GEOMETRY>
-boost::shared_ptr<hier::PatchData>
+std::shared_ptr<hier::PatchData>
 SparseDataFactory<BOX_GEOMETRY>::allocate(
    const hier::Patch& patch) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, patch);
-   return boost::make_shared<SparseData<BOX_GEOMETRY> >(
+   return std::make_shared<SparseData<BOX_GEOMETRY> >(
              patch.getBox(),
              d_ghosts,
              d_dbl_attributes,
@@ -72,12 +70,12 @@ SparseDataFactory<BOX_GEOMETRY>::allocate(
 }
 
 template<typename BOX_GEOMETRY>
-boost::shared_ptr<hier::BoxGeometry>
+std::shared_ptr<hier::BoxGeometry>
 SparseDataFactory<BOX_GEOMETRY>::getBoxGeometry(
    const hier::Box& box) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, box);
-   return boost::make_shared<BOX_GEOMETRY>(box, d_ghosts);
+   return std::make_shared<BOX_GEOMETRY>(box, d_ghosts);
 }
 
 template<typename BOX_GEOMETRY>
@@ -94,15 +92,15 @@ SparseDataFactory<BOX_GEOMETRY>::getSizeOfMemory(
 template<typename BOX_GEOMETRY>
 bool
 SparseDataFactory<BOX_GEOMETRY>::validCopyTo(
-   const boost::shared_ptr<PatchDataFactory>& dst_pdf) const
+   const std::shared_ptr<PatchDataFactory>& dst_pdf) const
 {
    TBOX_ASSERT_OBJDIM_EQUALITY2(*this, *dst_pdf);
    bool valid_copy = false;
 
    if (!valid_copy) {
 
-      boost::shared_ptr<SparseDataFactory<BOX_GEOMETRY> > idf(
-         boost::dynamic_pointer_cast<SparseDataFactory<BOX_GEOMETRY>,
+      std::shared_ptr<SparseDataFactory<BOX_GEOMETRY> > idf(
+         std::dynamic_pointer_cast<SparseDataFactory<BOX_GEOMETRY>,
                                      hier::PatchDataFactory>(dst_pdf));
 
       if (idf) {

@@ -32,7 +32,6 @@
 #include "NodeMultiblockTest.h"
 #include "SideMultiblockTest.h"
 
-#include "boost/shared_ptr.hpp"
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -194,9 +193,9 @@ int main(
        * Create input database and parse all data in input file.
        */
 
-      boost::shared_ptr<tbox::InputDatabase> input_db(
+      std::shared_ptr<tbox::InputDatabase> input_db(
          new tbox::InputDatabase("input_db"));
-      boost::shared_ptr<tbox::Database> base_db(input_db);
+      std::shared_ptr<tbox::Database> base_db(input_db);
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
       /*
@@ -205,7 +204,7 @@ int main(
        * analysis), and read in test information.
        */
 
-      boost::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
+      std::shared_ptr<tbox::Database> main_db(input_db->getDatabase("Main"));
 
       const tbox::Dimension dim(static_cast<unsigned short>(main_db->getInteger("dim")));
 
@@ -253,14 +252,14 @@ int main(
           * For some reason, static members of GriddingAlgorithm* classes
           * don't get created without this no-op block.  BTNG.
           */
-         boost::shared_ptr<mesh::GriddingAlgorithm> ga(
+         std::shared_ptr<mesh::GriddingAlgorithm> ga(
             new mesh::GriddingAlgorithm(
-               boost::shared_ptr<hier::PatchHierarchy>(),
+               std::shared_ptr<hier::PatchHierarchy>(),
                std::string(),
-               boost::shared_ptr<tbox::Database>(),
-               boost::shared_ptr<mesh::TagAndInitializeStrategy>(),
-               boost::shared_ptr<mesh::BoxGeneratorStrategy>(),
-               boost::shared_ptr<mesh::LoadBalanceStrategy>()));
+               std::shared_ptr<tbox::Database>(),
+               std::shared_ptr<mesh::TagAndInitializeStrategy>(),
+               std::shared_ptr<mesh::BoxGeneratorStrategy>(),
+               std::shared_ptr<mesh::LoadBalanceStrategy>()));
       }
 #endif
       /*
@@ -302,16 +301,16 @@ int main(
             << test_to_run << endl);
       }
 
-      boost::shared_ptr<tbox::Database> hier_db(
+      std::shared_ptr<tbox::Database> hier_db(
          input_db->getDatabase("PatchHierarchy"));
 
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> hierarchy(
          new hier::PatchHierarchy(
             "PatchHierarchy",
             patch_data_test->getGridGeometry(),
             hier_db));
 
-      boost::shared_ptr<MultiblockTester> comm_tester(
+      std::shared_ptr<MultiblockTester> comm_tester(
          new MultiblockTester(
             "MultiblockTester",
             dim,
@@ -320,7 +319,7 @@ int main(
             patch_data_test,
             refine_option));
 
-      boost::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
+      std::shared_ptr<mesh::StandardTagAndInitialize> cell_tagger(
          new mesh::StandardTagAndInitialize(
             "StandardTagggingAndInitializer",
             comm_tester.get(),
@@ -344,9 +343,9 @@ int main(
 
       tbox::TimerManager* time_man = tbox::TimerManager::getManager();
 
-      boost::shared_ptr<tbox::Timer> refine_create_time(
+      std::shared_ptr<tbox::Timer> refine_create_time(
          time_man->getTimer("test::main::createRefineSchedule"));
-      boost::shared_ptr<tbox::Timer> refine_comm_time(
+      std::shared_ptr<tbox::Timer> refine_comm_time(
          time_man->getTimer("test::main::performRefineOperations"));
 
       tbox::TimerManager::getManager()->resetAllTimers();
@@ -355,7 +354,7 @@ int main(
        * Create communication schedules and perform communication operations.
        */
 
-      boost::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
+      std::shared_ptr<hier::PatchHierarchy> patch_hierarchy(
          comm_tester->getPatchHierarchy());
 
       int nlevels = patch_hierarchy->getNumberOfLevels();

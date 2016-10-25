@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/PIO.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -72,8 +71,8 @@ public:
     */
    void
    copyData(
-      const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
-      const boost::shared_ptr<pdat::SideData<TYPE> >& src,
+      const std::shared_ptr<pdat::SideData<TYPE> >& dst,
+      const std::shared_ptr<pdat::SideData<TYPE> >& src,
       const hier::Box& box) const;
 
    /**
@@ -81,8 +80,8 @@ public:
     * consistency of depth, box, and ghost box.
     *
     * @pre patch
-    * @pre patch->getPatchData(data1_id) is actually a boost::shared_ptr<pdat::SideData<TYPE> >
-    * @pre patch->getPatchData(data2_id) is actually a boost::shared_ptr<pdat::SideData<TYPE> >
+    * @pre patch->getPatchData(data1_id) is actually a std::shared_ptr<pdat::SideData<TYPE> >
+    * @pre patch->getPatchData(data2_id) is actually a std::shared_ptr<pdat::SideData<TYPE> >
     * @pre patch->getPatchData(data1_id)->getDepth() == patch->getPatchData(data2_id)->getDepth()
     * @pre patch->getPatchData(data1_id)->getBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getBox())
     * @pre patch->getPatchData(data1_id)->getDirectionVector() == patch->getPatchData(data2_id)->getDirectionVector()
@@ -90,7 +89,7 @@ public:
     */
    void
    swapData(
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -102,7 +101,7 @@ public:
     */
    void
    printData(
-      const boost::shared_ptr<pdat::SideData<TYPE> >& data,
+      const std::shared_ptr<pdat::SideData<TYPE> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -114,7 +113,7 @@ public:
     */
    void
    setToScalar(
-      const boost::shared_ptr<pdat::SideData<TYPE> >& dst,
+      const std::shared_ptr<pdat::SideData<TYPE> >& dst,
       const TYPE& alpha,
       const hier::Box& box) const;
 

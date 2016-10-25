@@ -917,7 +917,7 @@ struct BoxUtilities {
    static void growAndAdjustAcrossBlockBoundary(
       BoxContainer& grown_boxes,
       const Box& box,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom,
       const IntVector& ratio_to_level_zero,
       const IntVector& refine_coarsen_ratio,
       const IntVector& grow_width,

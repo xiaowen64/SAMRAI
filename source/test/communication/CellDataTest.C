@@ -32,7 +32,7 @@ using namespace std;
 CellDataTest::CellDataTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    bool do_refine,
    bool do_coarsen,
    const string& refine_option):
@@ -78,7 +78,7 @@ CellDataTest::~CellDataTest()
 }
 
 void CellDataTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -153,14 +153,14 @@ void CellDataTest::registerVariables(
 }
 
 void CellDataTest::setLinearData(
-   boost::shared_ptr<pdat::CellData<double> > data,
+   std::shared_ptr<pdat::CellData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
    TBOX_ASSERT(data);
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const pdat::CellIndex loweri(patch.getBox().lower());
@@ -200,10 +200,10 @@ void CellDataTest::setLinearData(
 }
 
 void CellDataTest::setConservativeData(
-   boost::shared_ptr<pdat::CellData<double> > data,
+   std::shared_ptr<pdat::CellData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number) const
 {
    TBOX_ASSERT(data);
@@ -211,7 +211,7 @@ void CellDataTest::setConservativeData(
    TBOX_ASSERT((level_number >= 0)
       && (level_number <= hierarchy->getFinestLevelNumber()));
 
-   boost::shared_ptr<hier::PatchLevel> level(
+   std::shared_ptr<hier::PatchLevel> level(
       hierarchy->getPatchLevel(level_number));
 
    const hier::BoxContainer& domain =
@@ -257,8 +257,8 @@ void CellDataTest::setConservativeData(
 
       const hier::IntVector& ratio = level->getRatioToLevelZero();
 
-      boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -308,7 +308,7 @@ void CellDataTest::setConservativeData(
 }
 
 void CellDataTest::setPeriodicData(
-   boost::shared_ptr<pdat::CellData<double> > data,
+   std::shared_ptr<pdat::CellData<double> > data,
    const hier::Box& box,
    const hier::Patch& patch) const
 {
@@ -322,8 +322,8 @@ void CellDataTest::setPeriodicData(
       domain_len[d] = xup[d] - xlo[d];
    }
 
-   const boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -352,7 +352,7 @@ void CellDataTest::setPeriodicData(
 
 void CellDataTest::initializeDataOnPatch(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    char src_or_dst)
 {
@@ -366,8 +366,8 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::CellData<double> > cell_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > cell_data(
+            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -385,8 +385,8 @@ void CellDataTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::CellData<double> > cell_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > cell_data(
+            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -405,7 +405,7 @@ void CellDataTest::initializeDataOnPatch(
 }
 
 void CellDataTest::checkPatchInteriorData(
-   const boost::shared_ptr<pdat::CellData<double> >& data,
+   const std::shared_ptr<pdat::CellData<double> >& data,
    const hier::Box& interior,
    const hier::Patch& patch) const
 {
@@ -417,7 +417,7 @@ void CellDataTest::checkPatchInteriorData(
 
    const int depth = data->getDepth();
 
-   boost::shared_ptr<pdat::CellData<double> > correct_data(
+   std::shared_ptr<pdat::CellData<double> > correct_data(
       new pdat::CellData<double>(
          data->getBox(),
          depth,
@@ -453,8 +453,8 @@ void CellDataTest::setPhysicalBoundaryConditions(
       d_cart_grid_geometry->getPeriodicShift(hier::IntVector(d_dim, 1)));
    bool is_periodic = periodic_shift.max() > 0;
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
@@ -475,8 +475,8 @@ void CellDataTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::CellData<double> > cell_data(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cell_data(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -549,7 +549,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
  */
 bool CellDataTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number)
 {
 
@@ -572,7 +572,7 @@ bool CellDataTest::verifyResults(
       }
       hier::Box pbox = patch.getBox();
 
-      boost::shared_ptr<pdat::CellData<double> > solution(
+      std::shared_ptr<pdat::CellData<double> > solution(
          new pdat::CellData<double>(pbox, 1, tgcw));
 
       hier::Box tbox(pbox);
@@ -594,8 +594,8 @@ bool CellDataTest::verifyResults(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::CellData<double> > cell_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::CellData<double> > cell_data(
+            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
          int depth = cell_data->getDepth();
@@ -653,10 +653,10 @@ void CellDataTest::setDataIds(std::list<int>& data_ids)
 
 bool CellDataTest::verifyCompositeBoundaryData(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int data_id,
    int level_number,
-   const std::vector<boost::shared_ptr<hier::PatchData> >& bdry_data)
+   const std::vector<std::shared_ptr<hier::PatchData> >& bdry_data)
 {
    bool test_failed = false;
 
@@ -665,10 +665,10 @@ bool CellDataTest::verifyCompositeBoundaryData(
    bool is_periodic = periodic_shift.max() > 0;
 
    if (d_do_refine && !is_periodic) {
-      for (std::vector<boost::shared_ptr<hier::PatchData> >::const_iterator
+      for (std::vector<std::shared_ptr<hier::PatchData> >::const_iterator
            itr = bdry_data.begin(); itr != bdry_data.end(); ++itr) {
-         boost::shared_ptr<pdat::CellData<double> > cell_bdry_data(
-            BOOST_CAST<pdat::CellData<double>, hier::PatchData>(*itr));
+         std::shared_ptr<pdat::CellData<double> > cell_bdry_data(
+            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(*itr));
          TBOX_ASSERT(cell_bdry_data);
 
          hier::Patch solution_patch(
@@ -679,7 +679,7 @@ bool CellDataTest::verifyCompositeBoundaryData(
             hierarchy->getPatchLevel(level_number+1)->getRatioToLevelZero(),
             hier::PatchGeometry::TwoDimBool(patch.getDim(), false));
 
-         boost::shared_ptr<pdat::CellData<double> > solution(
+         std::shared_ptr<pdat::CellData<double> > solution(
             new pdat::CellData<double>(
                solution_patch.getBox(), 1,
                hier::IntVector::getZero(patch.getDim())));

@@ -22,7 +22,6 @@
 #include "SAMRAI/hier/OverlapConnectorAlgorithm.h"
 #include "SAMRAI/geom/GridGeometry.h"
 
-#include "boost/make_shared.hpp"
 
 using namespace std;
 
@@ -35,7 +34,7 @@ using namespace hier;
  * filter to keep a subset of boxes.
  */
 struct PrimitiveBoxGen {
-   boost::shared_ptr<BaseGridGeometry> d_geom;
+   std::shared_ptr<BaseGridGeometry> d_geom;
    AssumedPartition d_ap;
    // Index filtering parameters.
    enum IndexFilter { ALL = 0 /* Keep all boxes */,
@@ -46,7 +45,7 @@ struct PrimitiveBoxGen {
    int d_num_discard;
    PrimitiveBoxGen(
       tbox::Database& database,
-      const boost::shared_ptr<BaseGridGeometry>& geom):
+      const std::shared_ptr<BaseGridGeometry>& geom):
       d_index_filter(ALL),
       d_num_keep(1),
       d_num_discard(0)
@@ -123,10 +122,10 @@ int main(
       /*
        * Create input database and parse all data in input file.
        */
-      boost::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
+      std::shared_ptr<tbox::MemoryDatabase> input_db(new tbox::MemoryDatabase("input_db"));
       tbox::InputManager::getManager()->parseInputFile(input_filename, input_db);
 
-      boost::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
+      std::shared_ptr<tbox::Database> main_db = input_db->getDatabase("Main");
 
       std::string base_name = "unnamed";
       base_name = main_db->getStringWithDefault("base_name", base_name);
@@ -162,8 +161,8 @@ int main(
                "getTestParametersFromDatabase: You must specify \"BlockGeometry\" in input database.");
          }
          // Note: Using GridGeometry only because BaseGridGeometry can't be instanstiated.
-         boost::shared_ptr<BaseGridGeometry> grid_geom =
-            boost::make_shared<geom::GridGeometry>(
+         std::shared_ptr<BaseGridGeometry> grid_geom =
+            std::make_shared<geom::GridGeometry>(
                dim,
                "BlockGeometry",
                input_db->getDatabase("BlockGeometry"));
@@ -174,8 +173,8 @@ int main(
             std::string test_name("Test");
             test_name += tbox::Utilities::intToString(test_number++, 2);
 
-            boost::shared_ptr<tbox::Database> test_db =
-               input_db->getDatabaseWithDefault(test_name, boost::shared_ptr<tbox::Database>());
+            std::shared_ptr<tbox::Database> test_db =
+               input_db->getDatabaseWithDefault(test_name, std::shared_ptr<tbox::Database>());
 
             if (!test_db) {
                break;

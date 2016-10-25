@@ -35,7 +35,7 @@ template<class TYPE>
 const int CellData<TYPE>::PDAT_CELLDATA_VERSION = 1;
 
 template<class TYPE>
-boost::shared_ptr<tbox::Timer> CellData<TYPE>::t_copy;
+std::shared_ptr<tbox::Timer> CellData<TYPE>::t_copy;
 
 /*
  *************************************************************************
@@ -656,7 +656,7 @@ CellData<TYPE>::print(
 template<class TYPE>
 void
 CellData<TYPE>::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
 
    TBOX_ASSERT(restart_db);
@@ -686,7 +686,7 @@ CellData<TYPE>::getFromRestart(
 template<class TYPE>
 void
 CellData<TYPE>::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 

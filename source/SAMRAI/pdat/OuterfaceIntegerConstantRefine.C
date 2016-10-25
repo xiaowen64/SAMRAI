@@ -131,11 +131,11 @@ OuterfaceIntegerConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<OuterfaceData<int> > cdata(
-      BOOST_CAST<OuterfaceData<int>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<int> > cdata(
+      POINTER_CAST<OuterfaceData<int>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<OuterfaceData<int> > fdata(
-      BOOST_CAST<OuterfaceData<int>, hier::PatchData>(
+   std::shared_ptr<OuterfaceData<int> > fdata(
+      POINTER_CAST<OuterfaceData<int>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap = CPP_CAST<const FaceOverlap *>(&fine_overlap);

@@ -22,7 +22,6 @@
 #include "SAMRAI/tbox/Dimension.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 BEGIN_BOOST_WARNING_SUPPRESSION
@@ -92,7 +91,7 @@ public:
    void
    addCoarsenOperator(
       const char* var_type_name,
-      const boost::shared_ptr<CoarsenOperator>& coarsen_op);
+      const std::shared_ptr<CoarsenOperator>& coarsen_op);
 
    /*!
     * @brief Add a concrete spatial refinement operator.
@@ -105,7 +104,7 @@ public:
    void
    addRefineOperator(
       const char* var_type_name,
-      const boost::shared_ptr<RefineOperator>& refine_op);
+      const std::shared_ptr<RefineOperator>& refine_op);
 
    /*!
     * @brief Add a concrete time interpolation operator.
@@ -118,7 +117,7 @@ public:
    void
    addTimeInterpolateOperator(
       const char* var_type_name,
-      const boost::shared_ptr<TimeInterpolateOperator>& time_op);
+      const std::shared_ptr<TimeInterpolateOperator>& time_op);
 
    /*!
     * @brief Lookup function for coarsening operator.
@@ -135,9 +134,9 @@ public:
     * @pre var
     * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
-   boost::shared_ptr<CoarsenOperator>
+   std::shared_ptr<CoarsenOperator>
    lookupCoarsenOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -155,9 +154,9 @@ public:
     * @pre var
     * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
-   boost::shared_ptr<RefineOperator>
+   std::shared_ptr<RefineOperator>
    lookupRefineOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name);
 
    /*!
@@ -176,9 +175,9 @@ public:
     * @pre var
     * @pre getMinTransferOpStencilWidth().getDim() == var->getDim()
     */
-   boost::shared_ptr<TimeInterpolateOperator>
+   std::shared_ptr<TimeInterpolateOperator>
    lookupTimeInterpolateOperator(
-      const boost::shared_ptr<Variable>& var,
+      const std::shared_ptr<Variable>& var,
       const std::string& op_name =
          "STD_LINEAR_TIME_INTERPOLATE");
 
@@ -258,7 +257,7 @@ private:
     * (see addCoarsenOperator() function).
     */
    boost::unordered_map<std::string, boost::unordered_map<std::string,
-                                                          boost::shared_ptr<CoarsenOperator> > >
+                                                          std::shared_ptr<CoarsenOperator> > >
    d_coarsen_operators;
 
    /*
@@ -270,7 +269,7 @@ private:
     * (see addRefineOperator() function).
     */
    boost::unordered_map<std::string, boost::unordered_map<std::string,
-                                                          boost::shared_ptr<RefineOperator> > >
+                                                          std::shared_ptr<RefineOperator> > >
    d_refine_operators;
 
    /*
@@ -282,7 +281,7 @@ private:
     * any time (see addTimeInterpolateOperator() function).
     */
    boost::unordered_map<std::string, boost::unordered_map<std::string,
-                                                          boost::shared_ptr<TimeInterpolateOperator> > >
+                                                          std::shared_ptr<TimeInterpolateOperator> > >
    d_time_operators;
 
    /*!

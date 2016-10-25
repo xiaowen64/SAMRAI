@@ -12,7 +12,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace pdat {
@@ -53,7 +52,7 @@ FaceGeometry::~FaceGeometry()
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FaceGeometry::calculateOverlap(
    const hier::BoxGeometry& dst_geometry,
    const hier::BoxGeometry& src_geometry,
@@ -71,7 +70,7 @@ FaceGeometry::calculateOverlap(
    const FaceGeometry* t_src =
       dynamic_cast<const FaceGeometry *>(&src_geometry);
 
-   boost::shared_ptr<hier::BoxOverlap> over;
+   std::shared_ptr<hier::BoxOverlap> over;
    if ((t_src != 0) && (t_dst != 0)) {
       over = doOverlap(*t_dst, *t_src, src_mask, fill_box, overwrite_interior,
             transformation, dst_restrict_boxes);
@@ -203,7 +202,7 @@ FaceGeometry::computeDestinationBoxes(
  *************************************************************************
  */
 
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FaceGeometry::doOverlap(
    const FaceGeometry& dst_geometry,
    const FaceGeometry& src_geometry,
@@ -227,7 +226,7 @@ FaceGeometry::doOverlap(
 
    // Create the face overlap data object using the boxes and source shift
 
-   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
+   return std::make_shared<FaceOverlap>(dst_boxes, transformation);
 }
 
 /*
@@ -237,7 +236,7 @@ FaceGeometry::doOverlap(
  *
  *************************************************************************
  */
-boost::shared_ptr<hier::BoxOverlap>
+std::shared_ptr<hier::BoxOverlap>
 FaceGeometry::setUpOverlap(
    const hier::BoxContainer& boxes,
    const hier::Transformation& transformation) const
@@ -254,7 +253,7 @@ FaceGeometry::setUpOverlap(
    }
 
    // Create the face overlap data object using the boxes and source shift
-   return boost::make_shared<FaceOverlap>(dst_boxes, transformation);
+   return std::make_shared<FaceOverlap>(dst_boxes, transformation);
 
 }
 

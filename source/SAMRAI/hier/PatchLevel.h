@@ -19,7 +19,6 @@
 #include "SAMRAI/hier/ProcessorMapping.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <map>
 #include <vector>
 
@@ -63,7 +62,7 @@ public:
     * This constructor makes a COPY of the supplied BoxLevel.  If the caller
     * intends to modify the supplied BoxLevel for other purposes after creating
     * this PatchLevel, then this constructor must be used rather than the
-    * constructor taking a boost::shared_ptr<BoxLevel>.
+    * constructor taking a std::shared_ptr<BoxLevel>.
     *
     * The BoxLevel provides refinement ratio information, establishing
     * the ratio between the index space of the new level and some reference
@@ -91,10 +90,10 @@ public:
     */
    PatchLevel(
       const BoxLevel& box_level,
-      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-      const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const boost::shared_ptr<PatchFactory>& factory =
-         boost::shared_ptr<PatchFactory>(),
+      const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<PatchDescriptor>& descriptor,
+      const std::shared_ptr<PatchFactory>& factory =
+         std::shared_ptr<PatchFactory>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -134,11 +133,11 @@ public:
     *      all components not equal to 1 must have the same sign
     */
    PatchLevel(
-      const boost::shared_ptr<BoxLevel> box_level,
-      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-      const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const boost::shared_ptr<PatchFactory>& factory =
-         boost::shared_ptr<PatchFactory>(),
+      const std::shared_ptr<BoxLevel> box_level,
+      const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<PatchDescriptor>& descriptor,
+      const std::shared_ptr<PatchFactory>& factory =
+         std::shared_ptr<PatchFactory>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -162,10 +161,10 @@ public:
     * @pre descriptor
     */
    PatchLevel(
-      const boost::shared_ptr<tbox::Database>& restart_database,
-      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-      const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const boost::shared_ptr<PatchFactory>& factory,
+      const std::shared_ptr<tbox::Database>& restart_database,
+      const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<PatchDescriptor>& descriptor,
+      const std::shared_ptr<PatchFactory>& factory,
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -323,9 +322,9 @@ public:
     *
     * @param[in]  gid
     *
-    * @return A boost::shared_ptr to the Patch indicated by the GlobalId.
+    * @return A std::shared_ptr to the Patch indicated by the GlobalId.
     */
-   const boost::shared_ptr<Patch>&
+   const std::shared_ptr<Patch>&
    getPatch(
       const GlobalId& gid) const
    {
@@ -344,11 +343,11 @@ public:
     *
     * @param[in]  mbid
     *
-    * @return A boost::shared_ptr to the Patch indicated by the BoxId.
+    * @return A std::shared_ptr to the Patch indicated by the BoxId.
     *
     * @pre d_patches.find(mbid) != d_patches.end()
     */
-   boost::shared_ptr<Patch>
+   std::shared_ptr<Patch>
    getPatch(
       const BoxId& mbid) const
    {
@@ -368,7 +367,7 @@ public:
     * The index specifies the position of the patch as would be
     * encountered when iterating through the patches.
     */
-   const boost::shared_ptr<Patch>& getPatch(size_t index) const
+   const std::shared_ptr<Patch>& getPatch(size_t index) const
    {
       if (index >= d_patch_vector.size()) {
          TBOX_ERROR("PatchLevel::getPatch error: index "
@@ -383,7 +382,7 @@ public:
     *
     * @return pointer to the patch descriptor for the hierarchy.
     */
-   boost::shared_ptr<PatchDescriptor>
+   std::shared_ptr<PatchDescriptor>
    getPatchDescriptor() const
    {
       return d_descriptor;
@@ -394,7 +393,7 @@ public:
     *
     * @return the factory object used to created patches in the level.
     */
-   boost::shared_ptr<PatchFactory>
+   std::shared_ptr<PatchFactory>
    getPatchFactory() const
    {
       return d_factory;
@@ -403,9 +402,9 @@ public:
    /*!
     * @brief Get the grid geometry
     *
-    * @return A boost::shared_ptr to the grid geometry description.
+    * @return A std::shared_ptr to the grid geometry description.
     */
-   boost::shared_ptr<BaseGridGeometry>
+   std::shared_ptr<BaseGridGeometry>
    getGridGeometry() const
    {
       return d_geometry;
@@ -448,7 +447,7 @@ public:
     *
     * @param[in]  coarse_level
     * @param[in]  refine_ratio
-    * @param[in]  fine_grid_geometry @b Default: boost::shared_ptr to a null
+    * @param[in]  fine_grid_geometry @b Default: std::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
     *
@@ -460,10 +459,10 @@ public:
     */
    void
    setRefinedPatchLevel(
-      const boost::shared_ptr<PatchLevel>& coarse_level,
+      const std::shared_ptr<PatchLevel>& coarse_level,
       const IntVector& refine_ratio,
-      const boost::shared_ptr<BaseGridGeometry>& fine_grid_geometry =
-         boost::shared_ptr<BaseGridGeometry>(),
+      const std::shared_ptr<BaseGridGeometry>& fine_grid_geometry =
+         std::shared_ptr<BaseGridGeometry>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -502,7 +501,7 @@ public:
     *
     * @param[in]  fine_level
     * @param[in]  coarsen_ratio
-    * @param[in]  coarse_grid_geom @b Default: boost::shared_ptr to a null
+    * @param[in]  coarse_grid_geom @b Default: std::shared_ptr to a null
     *             grid geometry
     * @param[in]  defer_boundary_box_creation @b Default: false
     *
@@ -514,10 +513,10 @@ public:
     */
    void
    setCoarsenedPatchLevel(
-      const boost::shared_ptr<PatchLevel>& fine_level,
+      const std::shared_ptr<PatchLevel>& fine_level,
       const IntVector& coarsen_ratio,
-      const boost::shared_ptr<BaseGridGeometry>& coarse_grid_geom =
-         boost::shared_ptr<BaseGridGeometry>(),
+      const std::shared_ptr<BaseGridGeometry>& coarse_grid_geom =
+         std::shared_ptr<BaseGridGeometry>(),
       bool defer_boundary_box_creation = false);
 
    /*!
@@ -596,10 +595,10 @@ public:
    /*!
     * @brief Get the BoxLevel associated with the PatchLevel.
     *
-    * @return a reference to a boost::shared_ptr to the BoxLevel
+    * @return a reference to a std::shared_ptr to the BoxLevel
     * associated with the PatchLevel.
     */
-   const boost::shared_ptr<BoxLevel>&
+   const std::shared_ptr<BoxLevel>&
    getBoxLevel() const
    {
       return d_box_level;
@@ -1035,7 +1034,7 @@ public:
     */
    void
    cacheConnector(
-      boost::shared_ptr<Connector>& connector) const
+      std::shared_ptr<Connector>& connector) const
    {
       return getBoxLevel()->cacheConnector(connector);
    }
@@ -1071,7 +1070,7 @@ public:
     * PatchLevel and to create all patches on the local processor.
     *
     * @par Assertions
-    * Assertions will check that database is a non-null boost::shared_ptr,
+    * Assertions will check that database is a non-null std::shared_ptr,
     * that the data being retrieved from the database are of
     * the type expected.  Also checked is the number of patches is positive,
     * and the number of patches and size of processor mapping array are the
@@ -1084,7 +1083,7 @@ public:
     */
    void
    getFromRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db);
+      const std::shared_ptr<tbox::Database>& restart_db);
 
    /*!
     * @brief Write data to the restart database.
@@ -1099,7 +1098,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /*!
     * @brief Print a patch level to varying details.
@@ -1127,12 +1126,12 @@ private:
    /*
     * @brief Container of distributed patches on level.
     */
-   typedef std::map<BoxId, boost::shared_ptr<Patch> > PatchContainer;
+   typedef std::map<BoxId, std::shared_ptr<Patch> > PatchContainer;
 
    /*
     * @brief Vector of local patches on level.
     */
-   typedef std::vector<boost::shared_ptr<Patch> > PatchVector;
+   typedef std::vector<std::shared_ptr<Patch> > PatchVector;
 
 public:
    /*!
@@ -1166,7 +1165,7 @@ public:
       /*!
        * @brief Dereference operator.
        */
-      const boost::shared_ptr<Patch>&
+      const std::shared_ptr<Patch>&
       operator * () const
       {
          return d_iterator->second;
@@ -1175,7 +1174,7 @@ public:
       /*!
        * @brief Delegation operations to the Patch pointer.
        */
-      const boost::shared_ptr<Patch>&
+      const std::shared_ptr<Patch>&
       operator -> () const
       {
          return d_iterator->second;
@@ -1309,7 +1308,7 @@ private:
    /*!
     * Primary metadata describing the PatchLevel.
     */
-   boost::shared_ptr<BoxLevel> d_box_level;
+   std::shared_ptr<BoxLevel> d_box_level;
 
    /*
     * Whether we have a globalized version of d_box_level.
@@ -1337,15 +1336,15 @@ private:
    /*
     * Grid geometry description.
     */
-   boost::shared_ptr<BaseGridGeometry> d_geometry;
+   std::shared_ptr<BaseGridGeometry> d_geometry;
    /*
     * PatchDescriptor - patch data info shared by all patches in the hierarchy
     */
-   boost::shared_ptr<PatchDescriptor> d_descriptor;
+   std::shared_ptr<PatchDescriptor> d_descriptor;
    /*
     * Factory for creating patches.
     */
-   boost::shared_ptr<PatchFactory> d_factory;
+   std::shared_ptr<PatchFactory> d_factory;
 
    /*
     * Local number of patches on the level.
@@ -1414,13 +1413,13 @@ private:
    static bool
    initialize();
 
-   static boost::shared_ptr<tbox::Timer> t_level_constructor;
-   static boost::shared_ptr<tbox::Timer> t_constructor_setup;
-   static boost::shared_ptr<tbox::Timer> t_constructor_phys_domain;
-   static boost::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
-   static boost::shared_ptr<tbox::Timer> t_constructor_set_geometry;
-   static boost::shared_ptr<tbox::Timer> t_set_patch_touches;
-   static boost::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
+   static std::shared_ptr<tbox::Timer> t_level_constructor;
+   static std::shared_ptr<tbox::Timer> t_constructor_setup;
+   static std::shared_ptr<tbox::Timer> t_constructor_phys_domain;
+   static std::shared_ptr<tbox::Timer> t_constructor_touch_boundaries;
+   static std::shared_ptr<tbox::Timer> t_constructor_set_geometry;
+   static std::shared_ptr<tbox::Timer> t_set_patch_touches;
+   static std::shared_ptr<tbox::Timer> t_constructor_compute_shifts;
 
    static tbox::StartupShutdownManager::Handler
       s_initialize_finalize_handler;

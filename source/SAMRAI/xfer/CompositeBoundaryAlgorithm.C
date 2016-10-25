@@ -16,7 +16,6 @@
 #include "SAMRAI/xfer/PatchInteriorVariableFillPattern.h"
 #include "SAMRAI/xfer/PatchLevelInteriorFillPattern.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -30,7 +29,7 @@ namespace xfer {
  */
 
 CompositeBoundaryAlgorithm::CompositeBoundaryAlgorithm(
-   boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    int stencil_width)
 : d_hierarchy(hierarchy),
   d_stencil_width(stencil_width),
@@ -60,12 +59,12 @@ CompositeBoundaryAlgorithm::~CompositeBoundaryAlgorithm()
  *************************************************************************
  */
 
-boost::shared_ptr<CompositeBoundarySchedule>
+std::shared_ptr<CompositeBoundarySchedule>
 CompositeBoundaryAlgorithm::createSchedule(int level_num)
 {
    d_schedule_created = true;
 
-   return boost::make_shared<CompositeBoundarySchedule>(
+   return std::make_shared<CompositeBoundarySchedule>(
              d_hierarchy,
              level_num,
              d_stencil_width,

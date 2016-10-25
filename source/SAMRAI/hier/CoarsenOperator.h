@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <map>
 

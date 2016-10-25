@@ -16,7 +16,6 @@
 #include "SAMRAI/hier/HierarchyNeighbors.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 

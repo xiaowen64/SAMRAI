@@ -130,13 +130,13 @@ void SampleIndexData::unpackStream(
  */
 
 void SampleIndexData::putToRestart(
-   boost::shared_ptr<tbox::Database>& restart_db) const
+   std::shared_ptr<tbox::Database>& restart_db) const
 {
    NULL_USE(restart_db);
 }
 
 void SampleIndexData::getFromRestart(
-   boost::shared_ptr<tbox::Database>& restart_db)
+   std::shared_ptr<tbox::Database>& restart_db)
 {
    NULL_USE(restart_db);
 }
@@ -167,11 +167,11 @@ void SampleIndexData::getFromRestart(
 //template class std::vector<SampleIndexData>;
 //template class std::vector<pdat::IndexDataNode<SampleIndexData,
 //                                               pdat::CellGeometry> >;
-//template class boost::shared_ptr<pdat::IndexData<SampleIndexData,
+//template class std::shared_ptr<pdat::IndexData<SampleIndexData,
 //                                                 pdat::CellGeometry> >;
-//template class boost::shared_ptr<pdat::IndexVariable<SampleIndexData,
+//template class std::shared_ptr<pdat::IndexVariable<SampleIndexData,
 //                                                     pdat::CellGeometry> >;
-//template class boost::shared_ptr<pdat::IndexDataFactory<SampleIndexData,
+//template class std::shared_ptr<pdat::IndexDataFactory<SampleIndexData,
 //                                                        pdat::CellGeometry> >;
 //
 //}

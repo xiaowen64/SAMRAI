@@ -435,7 +435,7 @@ Statistic::checkArraySizes(
 
 void
 Statistic::putToRestart(
-   const boost::shared_ptr<Database>& restart_db) const
+   const std::shared_ptr<Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -494,7 +494,7 @@ Statistic::putToRestart(
 
 void
 Statistic::getFromRestart(
-   const boost::shared_ptr<Database>& restart_db)
+   const std::shared_ptr<Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 

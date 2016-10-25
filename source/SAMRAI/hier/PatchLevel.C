@@ -15,7 +15,6 @@
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/hier/RealBoxConstIterator.h"
 
-#include "boost/make_shared.hpp"
 #include <cstdio>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -31,13 +30,13 @@ namespace hier {
 
 const int PatchLevel::HIER_PATCH_LEVEL_VERSION = 3;
 
-boost::shared_ptr<tbox::Timer> PatchLevel::t_level_constructor;
-boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_setup;
-boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_phys_domain;
-boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_touch_boundaries;
-boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_set_geometry;
-boost::shared_ptr<tbox::Timer> PatchLevel::t_set_patch_touches;
-boost::shared_ptr<tbox::Timer> PatchLevel::t_constructor_compute_shifts;
+std::shared_ptr<tbox::Timer> PatchLevel::t_level_constructor;
+std::shared_ptr<tbox::Timer> PatchLevel::t_constructor_setup;
+std::shared_ptr<tbox::Timer> PatchLevel::t_constructor_phys_domain;
+std::shared_ptr<tbox::Timer> PatchLevel::t_constructor_touch_boundaries;
+std::shared_ptr<tbox::Timer> PatchLevel::t_constructor_set_geometry;
+std::shared_ptr<tbox::Timer> PatchLevel::t_set_patch_touches;
+std::shared_ptr<tbox::Timer> PatchLevel::t_constructor_compute_shifts;
 
 tbox::StartupShutdownManager::Handler
 PatchLevel::s_initialize_finalize_handler(
@@ -60,7 +59,7 @@ PatchLevel::PatchLevel(
    d_dim(dim),
    d_has_globalized_data(false),
    d_ratio_to_level_zero(IntVector::getZero(dim)),
-   d_factory(boost::make_shared<PatchFactory>()),
+   d_factory(std::make_shared<PatchFactory>()),
    d_local_number_patches(0),
    d_physical_domain(0),
    d_ratio_to_coarser_level(IntVector::getZero(dim)),
@@ -86,15 +85,15 @@ PatchLevel::PatchLevel(
 
 PatchLevel::PatchLevel(
    const BoxLevel& box_level,
-   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-   const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const boost::shared_ptr<PatchFactory>& factory,
+   const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<PatchDescriptor>& descriptor,
+   const std::shared_ptr<PatchFactory>& factory,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
-   d_box_level(boost::make_shared<BoxLevel>(box_level)),
+   d_box_level(std::make_shared<BoxLevel>(box_level)),
    d_has_globalized_data(false),
    d_ratio_to_level_zero(d_box_level->getRefinementRatio()),
-   d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
+   d_factory(factory ? factory : std::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(grid_geometry->getDim(), 0, grid_geometry->getNumberBlocks())
 {
@@ -143,7 +142,7 @@ PatchLevel::PatchLevel(
         ni != boxes.realEnd(); ++ni) {
       const Box& box = *ni;
       const BoxId& ip = box.getBoxId();
-      boost::shared_ptr<Patch>& patch(d_patches[ip]);
+      std::shared_ptr<Patch>& patch(d_patches[ip]);
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -196,16 +195,16 @@ PatchLevel::PatchLevel(
  */
 
 PatchLevel::PatchLevel(
-   const boost::shared_ptr<BoxLevel> box_level,
-   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-   const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const boost::shared_ptr<PatchFactory>& factory,
+   const std::shared_ptr<BoxLevel> box_level,
+   const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<PatchDescriptor>& descriptor,
+   const std::shared_ptr<PatchFactory>& factory,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
    d_box_level(box_level),
    d_has_globalized_data(false),
    d_ratio_to_level_zero(d_box_level->getRefinementRatio()),
-   d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
+   d_factory(factory ? factory : std::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(grid_geometry->getDim(), 0, grid_geometry->getNumberBlocks())
 {
@@ -255,7 +254,7 @@ PatchLevel::PatchLevel(
         ni != boxes.realEnd(); ++ni) {
       const Box& box = *ni;
       const BoxId& ip = box.getBoxId();
-      boost::shared_ptr<Patch>& patch(d_patches[ip]);
+      std::shared_ptr<Patch>& patch(d_patches[ip]);
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -305,17 +304,17 @@ PatchLevel::PatchLevel(
  */
 
 PatchLevel::PatchLevel(
-   const boost::shared_ptr<tbox::Database>& restart_database,
-   const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-   const boost::shared_ptr<PatchDescriptor>& descriptor,
-   const boost::shared_ptr<PatchFactory>& factory,
+   const std::shared_ptr<tbox::Database>& restart_database,
+   const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+   const std::shared_ptr<PatchDescriptor>& descriptor,
+   const std::shared_ptr<PatchFactory>& factory,
    bool defer_boundary_box_creation):
    d_dim(grid_geometry->getDim()),
    d_has_globalized_data(false),
    d_ratio_to_level_zero(grid_geometry->getDim(),
                          tbox::MathUtilities<int>::getMax(),
                          grid_geometry->getNumberBlocks()),
-   d_factory(factory ? factory : boost::make_shared<PatchFactory>()),
+   d_factory(factory ? factory : std::make_shared<PatchFactory>()),
    d_physical_domain(grid_geometry->getNumberBlocks()),
    d_ratio_to_coarser_level(grid_geometry->getDim(),
                             tbox::MathUtilities<int>::getMax(),
@@ -375,9 +374,9 @@ PatchLevel::~PatchLevel()
 
 void
 PatchLevel::setRefinedPatchLevel(
-   const boost::shared_ptr<PatchLevel>& coarse_level,
+   const std::shared_ptr<PatchLevel>& coarse_level,
    const IntVector& refine_ratio,
-   const boost::shared_ptr<BaseGridGeometry>& fine_grid_geometry,
+   const std::shared_ptr<BaseGridGeometry>& fine_grid_geometry,
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(coarse_level);
@@ -492,7 +491,7 @@ PatchLevel::setRefinedPatchLevel(
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
 
    for (iterator ip(coarse_level->begin()); ip != coarse_level->end(); ++ip) {
-      boost::shared_ptr<PatchGeometry> coarse_pgeom((*ip)->getPatchGeometry());
+      std::shared_ptr<PatchGeometry> coarse_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
       std::map<BoxId,
@@ -539,9 +538,9 @@ PatchLevel::setRefinedPatchLevel(
 
 void
 PatchLevel::setCoarsenedPatchLevel(
-   const boost::shared_ptr<PatchLevel>& fine_level,
+   const std::shared_ptr<PatchLevel>& fine_level,
    const IntVector& coarsen_ratio,
-   const boost::shared_ptr<BaseGridGeometry>& coarse_grid_geom,
+   const std::shared_ptr<BaseGridGeometry>& coarse_grid_geom,
    bool defer_boundary_box_creation)
 {
    TBOX_ASSERT(fine_level);
@@ -666,7 +665,7 @@ PatchLevel::setCoarsenedPatchLevel(
    std::map<BoxId, PatchGeometry::TwoDimBool> touches_regular_bdry;
 
    for (iterator ip(fine_level->begin()); ip != fine_level->end(); ++ip) {
-      boost::shared_ptr<PatchGeometry> fine_pgeom((*ip)->getPatchGeometry());
+      std::shared_ptr<PatchGeometry> fine_pgeom((*ip)->getPatchGeometry());
 
       /* If map does not contain values create them */
       std::map<BoxId,
@@ -736,7 +735,7 @@ PatchLevel::getBoxes(
 
 void
 PatchLevel::getFromRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db)
+   const std::shared_ptr<tbox::Database>& restart_db)
 {
    TBOX_ASSERT(restart_db);
 
@@ -810,8 +809,8 @@ PatchLevel::getFromRestart(
     * Put local patches in restart database.
     */
 
-   boost::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
-   boost::shared_ptr<tbox::Database> mbl_database(
+   std::shared_ptr<const BaseGridGeometry> grid_geometry(getGridGeometry());
+   std::shared_ptr<tbox::Database> mbl_database(
       restart_db->getDatabase("mapped_box_level"));
    d_box_level.reset(new BoxLevel(getDim(), *mbl_database, grid_geometry));
 
@@ -838,7 +837,7 @@ PatchLevel::getFromRestart(
             << " not found in restart database" << std::endl);
       }
 
-      boost::shared_ptr<Patch>& patch(d_patches[box_id]);
+      std::shared_ptr<Patch>& patch(d_patches[box_id]);
       patch = d_factory->allocate(box, d_descriptor);
       patch->setPatchLevelNumber(d_level_number);
       patch->setPatchInHierarchy(d_in_hierarchy);
@@ -867,7 +866,7 @@ PatchLevel::getFromRestart(
  */
 void
 PatchLevel::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -923,7 +922,7 @@ PatchLevel::putToRestart(
     * Put local patches in restart_db.
     */
 
-   boost::shared_ptr<tbox::Database> mbl_database(
+   std::shared_ptr<tbox::Database> mbl_database(
       restart_db->putDatabase("mapped_box_level"));
    d_box_level->putToRestart(mbl_database);
 
@@ -963,7 +962,7 @@ PatchLevel::recursivePrint(
 
    if (depth > 0) {
       for (iterator pi(begin()); pi != end(); ++pi) {
-         const boost::shared_ptr<Patch>& patch = *pi;
+         const std::shared_ptr<Patch>& patch = *pi;
          os << border << "Patch " << patch->getLocalId() << '/' << npatch << "\n";
          patch->recursivePrint(os, border + "\t", depth - 1);
 

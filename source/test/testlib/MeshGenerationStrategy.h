@@ -26,7 +26,6 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/Timer.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -62,7 +61,7 @@ public:
    virtual void
    setTags(
       bool& exact_tagging,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int tag_ln,
       int tag_data_id) = 0;
 
@@ -115,7 +114,7 @@ public:
    void
    initializeLevelData(
       /*! Hierarchy to initialize */
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       /*! Level to initialize */
       const int level_number,
       const double init_data_time,
@@ -123,8 +122,8 @@ public:
       /*! Whether level is being introduced for the first time */
       const bool initial_time,
       /*! Level to copy data from */
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>(),
       /*! Whether data on new patch needs to be allocated */
       const bool allocate_data = true)
    {
@@ -141,13 +140,13 @@ public:
    virtual void
    resetHierarchyConfiguration(
       /*! New hierarchy */
-      const boost::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& new_hierarchy,
       /*! Coarsest level */ int coarsest_level,
       /*! Finest level */ int finest_level) = 0;
 
    void
    applyGradientDetector(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double error_data_time,
       const int tag_index,

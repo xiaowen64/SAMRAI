@@ -22,7 +22,6 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 
 namespace SAMRAI {
@@ -114,7 +113,7 @@ public:
    BoxLevel(
       const tbox::Dimension& dim,
       tbox::Database& restart_db,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    /*!
     * @brief Copy constructor.
@@ -144,7 +143,7 @@ public:
     */
    BoxLevel(
       const IntVector& ratio,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -163,7 +162,7 @@ public:
    BoxLevel(
       const BoxContainer& boxes,
       const IntVector& ratio,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -196,7 +195,7 @@ public:
    initialize(
       const BoxContainer& boxes,
       const IntVector& ratio,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -228,7 +227,7 @@ public:
    swapInitialize(
       BoxContainer& boxes,
       const IntVector& ratio,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -855,7 +854,7 @@ public:
     *
     * If object has never been initialized, return NULL pointer.
     */
-   const boost::shared_ptr<const BaseGridGeometry>&
+   const std::shared_ptr<const BaseGridGeometry>&
    getGridGeometry() const
    {
       return d_grid_geometry;
@@ -1323,7 +1322,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    //@}
 
@@ -1499,7 +1498,7 @@ public:
     */
    void
    cacheConnector(
-      boost::shared_ptr<Connector>& connector) const
+      std::shared_ptr<Connector>& connector) const
    {
       return getPersistentOverlapConnectors().cacheConnector(connector);
    }
@@ -1548,7 +1547,7 @@ public:
     * the BoxLevel from the BoxLevelHandle.
     *
     * If the BoxLevel go out of scope before the
-    * Connector disconnects, this boost::shared_ptr object will
+    * Connector disconnects, this std::shared_ptr object will
     * stay around until all Connectors have disconnected.
     *
     * Operations that can invalidate Connector data are those
@@ -1568,11 +1567,11 @@ public:
     *
     * @see BoxLevelHandle.
     *
-    * @return A boost::shared_ptr to the BoxLevelHandle
+    * @return A std::shared_ptr to the BoxLevelHandle
     *
     * @pre !d_handle || (d_handle->d_box_level == this)
     */
-   const boost::shared_ptr<BoxLevelHandle>&
+   const std::shared_ptr<BoxLevelHandle>&
    getBoxLevelHandle() const
    {
       if (!d_handle) {
@@ -1840,7 +1839,7 @@ private:
    void
    initializePrivate(
       const IntVector& ratio,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom,
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom,
       const tbox::SAMRAI_MPI& mpi = tbox::SAMRAI_MPI::getSAMRAIWorld(),
       const ParallelState parallel_state = DISTRIBUTED);
 
@@ -1863,7 +1862,7 @@ private:
    void
    getFromRestart(
       tbox::Database& restart_db,
-      const boost::shared_ptr<const BaseGridGeometry>& grid_geom);
+      const std::shared_ptr<const BaseGridGeometry>& grid_geom);
 
    /*!
     * @brief Set up things for the entire class.
@@ -2051,17 +2050,17 @@ private:
     * data because correctness depends on the Connector's
     * intended usage.
     */
-   mutable boost::shared_ptr<BoxLevelHandle> d_handle;
+   mutable std::shared_ptr<BoxLevelHandle> d_handle;
 
-   static boost::shared_ptr<tbox::Timer> t_initialize_private;
-   static boost::shared_ptr<tbox::Timer> t_acquire_remote_boxes;
-   static boost::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
+   static std::shared_ptr<tbox::Timer> t_initialize_private;
+   static std::shared_ptr<tbox::Timer> t_acquire_remote_boxes;
+   static std::shared_ptr<tbox::Timer> t_cache_global_reduced_data;
 
    /*!
-    * @brief boost::shared_ptr to the grid geometry associated with this
+    * @brief std::shared_ptr to the grid geometry associated with this
     * object.
     */
-   boost::shared_ptr<const BaseGridGeometry> d_grid_geometry;
+   std::shared_ptr<const BaseGridGeometry> d_grid_geometry;
 
    bool d_locked;
 

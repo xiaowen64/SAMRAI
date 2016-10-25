@@ -114,11 +114,11 @@ CellFloatConstantRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<CellData<float> > cdata(
-      BOOST_CAST<CellData<float>, hier::PatchData>(
+   std::shared_ptr<CellData<float> > cdata(
+      POINTER_CAST<CellData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<CellData<float> > fdata(
-      BOOST_CAST<CellData<float>, hier::PatchData>(
+   std::shared_ptr<CellData<float> > fdata(
+      POINTER_CAST<CellData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);

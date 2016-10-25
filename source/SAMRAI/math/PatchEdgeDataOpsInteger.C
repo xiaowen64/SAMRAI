@@ -31,7 +31,7 @@ PatchEdgeDataOpsInteger::~PatchEdgeDataOpsInteger()
 
 int
 PatchEdgeDataOpsInteger::numberOfEntries(
-   const boost::shared_ptr<pdat::EdgeData<int> >& data,
+   const std::shared_ptr<pdat::EdgeData<int> >& data,
    const hier::Box& box) const
 {
    TBOX_ASSERT(data);
@@ -57,17 +57,17 @@ PatchEdgeDataOpsInteger::numberOfEntries(
 
 void
 PatchEdgeDataOpsInteger::swapData(
-   const boost::shared_ptr<hier::Patch>& patch,
+   const std::shared_ptr<hier::Patch>& patch,
    const int data1_id,
    const int data2_id) const
 {
    TBOX_ASSERT(patch);
 
-   boost::shared_ptr<pdat::EdgeData<int> > d1(
-      BOOST_CAST<pdat::EdgeData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::EdgeData<int> > d1(
+      POINTER_CAST<pdat::EdgeData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
-   boost::shared_ptr<pdat::EdgeData<int> > d2(
-      BOOST_CAST<pdat::EdgeData<int>, hier::PatchData>(
+   std::shared_ptr<pdat::EdgeData<int> > d2(
+      POINTER_CAST<pdat::EdgeData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);
@@ -81,7 +81,7 @@ PatchEdgeDataOpsInteger::swapData(
 
 void
 PatchEdgeDataOpsInteger::printData(
-   const boost::shared_ptr<pdat::EdgeData<int> >& data,
+   const std::shared_ptr<pdat::EdgeData<int> >& data,
    const hier::Box& box,
    std::ostream& s) const
 {
@@ -95,8 +95,8 @@ PatchEdgeDataOpsInteger::printData(
 
 void
 PatchEdgeDataOpsInteger::copyData(
-   const boost::shared_ptr<pdat::EdgeData<int> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<int> >& src,
+   const std::shared_ptr<pdat::EdgeData<int> >& dst,
+   const std::shared_ptr<pdat::EdgeData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);
@@ -111,8 +111,8 @@ PatchEdgeDataOpsInteger::copyData(
 
 void
 PatchEdgeDataOpsInteger::abs(
-   const boost::shared_ptr<pdat::EdgeData<int> >& dst,
-   const boost::shared_ptr<pdat::EdgeData<int> >& src,
+   const std::shared_ptr<pdat::EdgeData<int> >& dst,
+   const std::shared_ptr<pdat::EdgeData<int> >& src,
    const hier::Box& box) const
 {
    TBOX_ASSERT(dst && src);

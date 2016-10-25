@@ -156,8 +156,8 @@ void PoissonMultigaussianSolution::setGridData(
    pdat::CellData<double>& exact_data,
    pdat::CellData<double>& source_data)
 {
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
@@ -209,10 +209,10 @@ std::ostream& operator << (
 }
 
 void PoissonMultigaussianSolution::setBcCoefs(
-   const boost::shared_ptr<pdat::ArrayData<double> >& acoef_data,
-   const boost::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
-   const boost::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
-   const boost::shared_ptr<hier::Variable>& variable,
+   const std::shared_ptr<pdat::ArrayData<double> >& acoef_data,
+   const std::shared_ptr<pdat::ArrayData<double> >& bcoef_data,
+   const std::shared_ptr<pdat::ArrayData<double> >& gcoef_data,
+   const std::shared_ptr<hier::Variable>& variable,
    const hier::Patch& patch,
    const hier::BoundaryBox& bdry_box,
    const double fill_time) const
@@ -224,8 +224,8 @@ void PoissonMultigaussianSolution::setBcCoefs(
       return;
    }
 
-   boost::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      BOOST_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+   std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
+      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    /*

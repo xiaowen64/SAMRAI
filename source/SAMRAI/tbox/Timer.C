@@ -349,7 +349,7 @@ Timer::computeMaxWallclock()
 
 void
 Timer::putToRestart(
-   const boost::shared_ptr<Database>& restart_db) const
+   const std::shared_ptr<Database>& restart_db) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(restart_db);
@@ -372,7 +372,7 @@ Timer::putToRestart(
 
 void
 Timer::getFromRestart(
-   const boost::shared_ptr<Database>& restart_db)
+   const std::shared_ptr<Database>& restart_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    TBOX_ASSERT(restart_db);

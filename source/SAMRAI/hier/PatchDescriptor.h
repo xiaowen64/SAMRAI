@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <iostream>
 #include <list>
@@ -94,7 +93,7 @@ public:
    int
    definePatchDataComponent(
       const std::string& name,
-      const boost::shared_ptr<PatchDataFactory>& factory);
+      const std::shared_ptr<PatchDataFactory>& factory);
 
    /*!
     * Deallocate the patch data factory in the patch descriptor identified by
@@ -122,7 +121,7 @@ public:
     *
     * @pre (id >= 0) && (id < getMaxNumberRegisteredComponents())
     */
-   boost::shared_ptr<PatchDataFactory>
+   std::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
       int id) const
    {
@@ -140,7 +139,7 @@ public:
     *
     * @param name    std::string name of factory.
     */
-   boost::shared_ptr<PatchDataFactory>
+   std::shared_ptr<PatchDataFactory>
    getPatchDataFactory(
       const std::string& name) const;
 
@@ -249,7 +248,7 @@ private:
 
    int d_max_number_registered_components;
    std::vector<std::string> d_names;
-   std::vector<boost::shared_ptr<PatchDataFactory> > d_factories;
+   std::vector<std::shared_ptr<PatchDataFactory> > d_factories;
    std::list<int> d_free_indices;
 
    /*!

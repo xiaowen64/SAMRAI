@@ -70,9 +70,9 @@ public:
     * will perform time interpolation between the source old and new times
     * using the time interpolation operator found in the refine class item.
     *
-    * @param dst_level      boost::shared_ptr to destination patch level.
-    * @param src_level      boost::shared_ptr to source patch level.
-    * @param overlap        boost::shared_ptr to overlap region between
+    * @param dst_level      std::shared_ptr to destination patch level.
+    * @param src_level      std::shared_ptr to source patch level.
+    * @param overlap        std::shared_ptr to overlap region between
     *                       patches.
     * @param dst_box        Destination Box in destination patch level.
     * @param src_box        Source Box in source patch level.
@@ -94,9 +94,9 @@ public:
     *      (dst_level->getDim() == box.getDim())
     */
    RefineTimeTransaction(
-      const boost::shared_ptr<hier::PatchLevel>& dst_level,
-      const boost::shared_ptr<hier::PatchLevel>& src_level,
-      const boost::shared_ptr<hier::BoxOverlap>& overlap,
+      const std::shared_ptr<hier::PatchLevel>& dst_level,
+      const std::shared_ptr<hier::PatchLevel>& src_level,
+      const std::shared_ptr<hier::BoxOverlap>& overlap,
       const hier::Box& dst_box,
       const hier::Box& src_box,
       const hier::Box& box,
@@ -183,15 +183,15 @@ private:
 
    void
    timeInterpolate(
-      const boost::shared_ptr<hier::PatchData>& pd_dst,
-      const boost::shared_ptr<hier::PatchData>& pd_old,
-      const boost::shared_ptr<hier::PatchData>& pd_new);
+      const std::shared_ptr<hier::PatchData>& pd_dst,
+      const std::shared_ptr<hier::PatchData>& pd_old,
+      const std::shared_ptr<hier::PatchData>& pd_new);
 
-   boost::shared_ptr<hier::Patch> d_dst_patch;
+   std::shared_ptr<hier::Patch> d_dst_patch;
    int d_dst_patch_rank;
-   boost::shared_ptr<hier::Patch> d_src_patch;
+   std::shared_ptr<hier::Patch> d_src_patch;
    int d_src_patch_rank;
-   boost::shared_ptr<hier::BoxOverlap> d_overlap;
+   std::shared_ptr<hier::BoxOverlap> d_overlap;
    hier::Box d_box;
    const RefineClasses::Data** d_refine_data;
    int d_item_id;

@@ -19,7 +19,6 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -52,27 +51,27 @@ public:
     * This method results in the allocated PatchLevel making a COPY of the
     * supplied BoxLevel.  If the caller intends to modify the supplied BoxLevel
     * for other purposes after allocating the new PatchLevel, then this method
-    * must be used rather than the method taking a boost::shared_ptr<BoxLevel>.
+    * must be used rather than the method taking a std::shared_ptr<BoxLevel>.
     *
     * Redefine this function to change the method for creating patch levels.
     *
-    * @return A boost::shared_ptr to the newly created PatchLevel.
+    * @return A std::shared_ptr to the newly created PatchLevel.
     *
     * @param[in]  box_level
     * @param[in]  grid_geometry
     * @param[in]  descriptor
-    * @param[in]  factory @b Default: a boost::shared_ptr to the standard
+    * @param[in]  factory @b Default: a std::shared_ptr to the standard
     *             PatchFactory
     *
     * @pre box_level.getDim() == grid_geometry->getDim()
     */
-   virtual boost::shared_ptr<PatchLevel>
+   virtual std::shared_ptr<PatchLevel>
    allocate(
       const BoxLevel& box_level,
-      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-      const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const boost::shared_ptr<PatchFactory>& factory =
-         boost::shared_ptr<PatchFactory>()) const;
+      const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<PatchDescriptor>& descriptor,
+      const std::shared_ptr<PatchFactory>& factory =
+         std::shared_ptr<PatchFactory>()) const;
 
    /*!
     * @brief Allocate a patch level with the specified boxes and processor
@@ -89,23 +88,23 @@ public:
     *
     * Redefine this function to change the method for creating patch levels.
     *
-    * @return A boost::shared_ptr to the newly created PatchLevel.
+    * @return A std::shared_ptr to the newly created PatchLevel.
     *
     * @param[in]  box_level
     * @param[in]  grid_geometry
     * @param[in]  descriptor
-    * @param[in]  factory @b Default: a boost::shared_ptr to the standard
+    * @param[in]  factory @b Default: a std::shared_ptr to the standard
     *             PatchFactory
     *
     * @pre box_level.getDim() == grid_geometry->getDim()
     */
-   virtual boost::shared_ptr<PatchLevel>
+   virtual std::shared_ptr<PatchLevel>
    allocate(
-      const boost::shared_ptr<BoxLevel> box_level,
-      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-      const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const boost::shared_ptr<PatchFactory>& factory =
-         boost::shared_ptr<PatchFactory>()) const;
+      const std::shared_ptr<BoxLevel> box_level,
+      const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<PatchDescriptor>& descriptor,
+      const std::shared_ptr<PatchFactory>& factory =
+         std::shared_ptr<PatchFactory>()) const;
 
    /*!
     * @brief Allocate a patch level using the data from the database to
@@ -114,22 +113,22 @@ public:
     * Redefine this function to change the method for creating
     * patch levels from a database.
     *
-    * @return A boost::shared_ptr to the newly created PatchLevel.
+    * @return A std::shared_ptr to the newly created PatchLevel.
     *
     * @param[in]  database
     * @param[in]  grid_geometry
     * @param[in]  descriptor
-    * @param[in]  factory @b Default: a boost::shared_ptr to the standard
+    * @param[in]  factory @b Default: a std::shared_ptr to the standard
     *             PatchFactory
     * @param[in]  defer_boundary_box_creation @b Default: false
     */
-   virtual boost::shared_ptr<PatchLevel>
+   virtual std::shared_ptr<PatchLevel>
    allocate(
-      const boost::shared_ptr<tbox::Database>& database,
-      const boost::shared_ptr<BaseGridGeometry>& grid_geometry,
-      const boost::shared_ptr<PatchDescriptor>& descriptor,
-      const boost::shared_ptr<PatchFactory>& factory =
-         boost::shared_ptr<PatchFactory>(),
+      const std::shared_ptr<tbox::Database>& database,
+      const std::shared_ptr<BaseGridGeometry>& grid_geometry,
+      const std::shared_ptr<PatchDescriptor>& descriptor,
+      const std::shared_ptr<PatchFactory>& factory =
+         std::shared_ptr<PatchFactory>(),
       const bool defer_boundary_box_creation = false) const;
 
 private:

@@ -17,7 +17,6 @@
 #include "SAMRAI/hier/CoarsenOperator.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <list>
 #include <vector>
@@ -77,7 +76,7 @@ public:
       /*!
        * @brief Coarsening operator.
        */
-      boost::shared_ptr<hier::CoarsenOperator> d_opcoarsen;
+      std::shared_ptr<hier::CoarsenOperator> d_opcoarsen;
 
       /*!
        * @brief Index of equivalence class where this item belongs.  All
@@ -95,7 +94,7 @@ public:
        * @brief VariableFillPattern that can restrict the stencil of the data
        * coarsened by the CoarsenSchedule.
        */
-      boost::shared_ptr<VariableFillPattern> d_var_fill_pattern;
+      std::shared_ptr<VariableFillPattern> d_var_fill_pattern;
 
       /*!
        * @brief Constructor.
@@ -259,8 +258,8 @@ private:
    void
    insertEquivalenceClassItem(
       CoarsenClasses::Data& data,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>());
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>());
 
    /*!
     * @brief Check coarsen data item for validity.
@@ -284,8 +283,8 @@ private:
    bool
    itemIsValid(
       const CoarsenClasses::Data& data_item,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare CoarsenClasses object with another CoarsenClasses object;
@@ -310,9 +309,9 @@ private:
     */
    bool
    classesMatch(
-      const boost::shared_ptr<CoarsenClasses>& test_classes,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<CoarsenClasses>& test_classes,
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Compare CoarsenClasses::Data objects for equivalence;
@@ -346,8 +345,8 @@ private:
    itemsAreEquivalent(
       const CoarsenClasses::Data& data1,
       const CoarsenClasses::Data& data2,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * @brief Get the size that has been allocated for the array storing coarsen
@@ -429,7 +428,7 @@ private:
    patchDataMatch(
       int item_id1,
       int item_id2,
-      const boost::shared_ptr<hier::PatchDescriptor>& pd) const;
+      const std::shared_ptr<hier::PatchDescriptor>& pd) const;
 
    /*!
     * @brief Determine the equivalence class index of given
@@ -448,8 +447,8 @@ private:
    int
    getEquivalenceClassIndex(
       const CoarsenClasses::Data& data,
-      const boost::shared_ptr<hier::PatchDescriptor>& descriptor =
-         boost::shared_ptr<hier::PatchDescriptor>()) const;
+      const std::shared_ptr<hier::PatchDescriptor>& descriptor =
+         std::shared_ptr<hier::PatchDescriptor>()) const;
 
    /*!
     * The default length of the coarsen item array.

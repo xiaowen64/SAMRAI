@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -73,7 +72,7 @@ public:
     * @pre hierarchy
     */
    explicit HierarchyCellDataOpsReal(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level = -1,
       const int finest_level = -1);
 
@@ -89,7 +88,7 @@ public:
     */
    void
    setPatchHierarchy(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy);
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy);
 
    /**
     * Reset range of patch levels over which operations occur.
@@ -106,7 +105,7 @@ public:
    /**
     * Return const pointer to patch hierarchy associated with operations.
     */
-   const boost::shared_ptr<hier::PatchHierarchy>
+   const std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const;
 
    /**
@@ -630,7 +629,7 @@ private:
    operator = (
       const HierarchyCellDataOpsReal&);
 
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
    int d_coarsest_level;
    int d_finest_level;
    PatchCellDataOpsReal<TYPE> d_patch_ops;

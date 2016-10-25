@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -183,7 +182,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    putDatabase(
       const std::string& key) = 0;
 
@@ -194,7 +193,7 @@ public:
     *
     * @param key Key name in database.
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabase(
       const std::string& key) = 0;
 
@@ -209,10 +208,10 @@ public:
     *
     * @pre !key.empty()
     */
-   virtual boost::shared_ptr<Database>
+   virtual std::shared_ptr<Database>
    getDatabaseWithDefault(
       const std::string& key,
-      const boost::shared_ptr<Database>& defaultvalue);
+      const std::shared_ptr<Database>& defaultvalue);
 
    /**
     * Return whether the specified key represents a boolean entry.  If

@@ -38,7 +38,7 @@ namespace mesh {
 GraphLoadBalancer::GraphLoadBalancer(
    const tbox::Dimension& dim,
    const std::string& name,
-   const boost::shared_ptr<tbox::Database>& input_db):
+   const std::shared_ptr<tbox::Database>& input_db):
    d_dim(dim),
    d_object_name(name),
    d_target_box_size(dim, 0),
@@ -72,7 +72,7 @@ void
 GraphLoadBalancer::loadBalanceBoxLevel(
    hier::BoxLevel& balance_box_level,
    hier::Connector* balance_to_anchor,
-   const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
    const int level_number,
    const hier::IntVector& min_size,
    const hier::IntVector& max_size,
@@ -146,7 +146,7 @@ GraphLoadBalancer::loadBalanceBoxLevel(
 
    const tbox::Dimension& dim = balance_box_level.getDim();
 
-   boost::shared_ptr<hier::Connector> balance_to_balance;
+   std::shared_ptr<hier::Connector> balance_to_balance;
 
    int dont_do_graph = 0;
 
@@ -714,8 +714,8 @@ GraphLoadBalancer::renumberBoxes(
    hier::Connector& anchor_to_balance,
    const hier::MappingConnectorAlgorithm& mca) const
 {
-   boost::shared_ptr<hier::MappingConnector> sorting_map;
-   boost::shared_ptr<hier::BoxLevel> seq_box_level;
+   std::shared_ptr<hier::MappingConnector> sorting_map;
+   std::shared_ptr<hier::BoxLevel> seq_box_level;
    hier::BoxLevelConnectorUtils dlbg_edge_utils;
    dlbg_edge_utils.makeSortingMap(
       seq_box_level,
@@ -1063,7 +1063,7 @@ GraphLoadBalancer::BoxInTransit::getFromMessageStream(
 
 void
 GraphLoadBalancer::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
 
    if (input_db) {

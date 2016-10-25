@@ -18,7 +18,6 @@
 #include "SAMRAI/tbox/IOStream.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 #include <string>
 
 #ifndef ENABLE_SAMRAI_TIMERS
@@ -61,7 +60,7 @@ TimerManager::s_finalize_handler(
 
 void
 TimerManager::createManager(
-   const boost::shared_ptr<Database>& input_db)
+   const std::shared_ptr<Database>& input_db)
 {
    if (!s_timer_manager_instance) {
       s_timer_manager_instance = new TimerManager(input_db);
@@ -89,7 +88,7 @@ TimerManager::getManager()
       TBOX_WARNING("TimerManager::getManager() is called before\n"
          << "createManager().  Creating the timer manager\n"
          << "(without using input database.)\n");
-      createManager(boost::shared_ptr<Database>());
+      createManager(std::shared_ptr<Database>());
    }
 
    return s_timer_manager_instance;
@@ -126,7 +125,7 @@ TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   const boost::shared_ptr<Database>& input_db)
+   const std::shared_ptr<Database>& input_db)
 #ifdef ENABLE_SAMRAI_TIMERS
    : d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),
@@ -206,9 +205,9 @@ TimerManager::~TimerManager()
 
 bool
 TimerManager::checkTimerExistsInArray(
-   boost::shared_ptr<Timer>& timer,
+   std::shared_ptr<Timer>& timer,
    const std::string& name,
-   const std::vector<boost::shared_ptr<Timer> >& timer_array) const
+   const std::vector<std::shared_ptr<Timer> >& timer_array) const
 {
 
    bool timer_found = false;
@@ -235,7 +234,7 @@ TimerManager::checkTimerExistsInArray(
 void
 TimerManager::activateExistingTimers() {
 #ifdef ENABLE_SAMRAI_TIMERS
-   std::vector<boost::shared_ptr<Timer> >::iterator it =
+   std::vector<std::shared_ptr<Timer> >::iterator it =
       d_inactive_timers.begin();
    while (it != d_inactive_timers.end()) {
       bool timer_active = checkTimerInNameLists((*it)->getName());
@@ -250,13 +249,13 @@ TimerManager::activateExistingTimers() {
 #endif
 }
 
-boost::shared_ptr<Timer>
+std::shared_ptr<Timer>
 TimerManager::getTimer(
    const std::string& name,
    bool ignore_timer_input)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-   boost::shared_ptr<Timer> timer;
+   std::shared_ptr<Timer> timer;
 
    TBOX_ASSERT(!name.empty());
    bool timer_active = true;
@@ -302,7 +301,7 @@ TimerManager::getTimer(
    // pseudo-timer functionality (i.e., a valid timer), we'll
    // create one on the fly, but not track it.
    NULL_USE(ignore_timer_input);
-   boost::shared_ptr<Timer> timer(new Timer(name));
+   std::shared_ptr<Timer> timer(new Timer(name));
    timer->setActive(false);
    return timer;
 
@@ -311,7 +310,7 @@ TimerManager::getTimer(
 
 bool
 TimerManager::checkTimerExists(
-   boost::shared_ptr<Timer>& timer,
+   std::shared_ptr<Timer>& timer,
    const std::string& name) const
 {
 #ifdef ENABLE_SAMRAI_TIMERS
@@ -355,7 +354,7 @@ TimerManager::checkTimerRunning(
 #ifdef ENABLE_SAMRAI_TIMERS
 
    TBOX_ASSERT(!name.empty());
-   boost::shared_ptr<Timer> timer;
+   std::shared_ptr<Timer> timer;
    if (checkTimerExistsInArray(timer, name, d_timers)) {
       is_running = timer->isRunning();
    }
@@ -2233,7 +2232,7 @@ TimerManager::computePercentageDouble(
 
 void
 TimerManager::getFromInput(
-   const boost::shared_ptr<Database>& input_db)
+   const std::shared_ptr<Database>& input_db)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    if (input_db) {
@@ -2495,11 +2494,11 @@ TimerManager::computeOverheadConstantActiveOrInactive(
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    std::string outer_name("TimerManger::Outer");
-   boost::shared_ptr<Timer> outer_timer(
+   std::shared_ptr<Timer> outer_timer(
       TimerManager::getManager()->getTimer(outer_name, true));
 
    std::string inner_name("TimerMangerInner");
-   boost::shared_ptr<Timer> inner_timer(
+   std::shared_ptr<Timer> inner_timer(
       TimerManager::getManager()->getTimer(inner_name, active));
 
    const int ntest = 1000;

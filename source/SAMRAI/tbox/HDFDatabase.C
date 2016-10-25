@@ -16,7 +16,6 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
-#include "boost/make_shared.hpp"
 #include <cstring>
 
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
@@ -611,7 +610,7 @@ HDFDatabase::isDatabase(
  *************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 HDFDatabase::putDatabase(
    const std::string& key)
 {
@@ -626,8 +625,8 @@ HDFDatabase::putDatabase(
 
    TBOX_ASSERT(this_group >= 0);
 
-   boost::shared_ptr<Database> new_database(
-      boost::make_shared<HDFDatabase>(key, this_group));
+   std::shared_ptr<Database> new_database(
+      std::make_shared<HDFDatabase>(key, this_group));
 
    return new_database;
 }
@@ -640,7 +639,7 @@ HDFDatabase::putDatabase(
  ************************************************************************
  */
 
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 HDFDatabase::getDatabase(
    const std::string& key)
 {
@@ -659,8 +658,8 @@ HDFDatabase::getDatabase(
 #endif
    TBOX_ASSERT(this_group >= 0);
 
-   boost::shared_ptr<Database> database(
-      boost::make_shared<HDFDatabase>(key, this_group));
+   std::shared_ptr<Database> database(
+      std::make_shared<HDFDatabase>(key, this_group));
 
    return database;
 }

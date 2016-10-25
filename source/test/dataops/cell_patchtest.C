@@ -47,7 +47,6 @@
 
 #include "SAMRAI/math/PatchCellDataOpsReal.h"
 
-#include "boost/shared_ptr.hpp"
 
 #include <cmath>
 
@@ -59,7 +58,7 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   boost::shared_ptr<hier::Patch> patch);
+   std::shared_ptr<hier::Patch> patch);
 
 int main(
    int argc,
@@ -115,7 +114,7 @@ int main(
       hier::ComponentSelector patch_components;
 
       hier::Box patch_node(patch_box, hier::LocalId::getZero(), mpi.getRank());
-      boost::shared_ptr<hier::Patch> tpatch(
+      std::shared_ptr<hier::Patch> tpatch(
          new hier::Patch(
             patch_node,
             hier::VariableDatabase::getDatabase()->getPatchDescriptor()));
@@ -123,11 +122,11 @@ int main(
       /* Make a variety of data on the patch. */
 
       /* Make three contexts for patch */
-      boost::shared_ptr<hier::VariableContext> ghost_width_1_context(
+      std::shared_ptr<hier::VariableContext> ghost_width_1_context(
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_1"));
-      boost::shared_ptr<hier::VariableContext> ghost_width_2_context(
+      std::shared_ptr<hier::VariableContext> ghost_width_2_context(
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_2"));
-      boost::shared_ptr<hier::VariableContext> ghost_width_3_context(
+      std::shared_ptr<hier::VariableContext> ghost_width_3_context(
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_3"));
 
       /* Make ghost cell IntVectors which are used when variables
@@ -138,7 +137,7 @@ int main(
       hier::IntVector nghosts_3(dim, 3);
 
       /* Make cell-centered double variable for patch */
-      boost::shared_ptr<pdat::CellVariable<double> > cell_double_variable(
+      std::shared_ptr<pdat::CellVariable<double> > cell_double_variable(
          new pdat::CellVariable<double>(
             dim,
             "cell_double_variable",
@@ -166,10 +165,10 @@ int main(
       patch_components.setFlag(cdvindx[2]);
 
       /* Make control volume for cell-centered patch variables */
-      boost::shared_ptr<hier::VariableContext> ghost_width_0_context(
+      std::shared_ptr<hier::VariableContext> ghost_width_0_context(
          hier::VariableDatabase::getDatabase()->getContext("ghost_width_0"));
       hier::IntVector nghosts_0(dim, 0);
-      boost::shared_ptr<pdat::CellVariable<double> > cwgt(
+      std::shared_ptr<pdat::CellVariable<double> > cwgt(
          new pdat::CellVariable<double>(dim, "cwgt", 1));
       int cwgt_id =
          hier::VariableDatabase::getDatabase()->registerVariableAndContext(
@@ -189,7 +188,7 @@ int main(
       patch_components.setFlag(ccvindx[1]);
 
       // Make two cell-centered int variables for the patch
-      boost::shared_ptr<pdat::CellVariable<int> > cell_int_variable(
+      std::shared_ptr<pdat::CellVariable<int> > cell_int_variable(
          new pdat::CellVariable<int>(
             dim,
             "cell_int_variable",
@@ -537,8 +536,8 @@ int main(
          cell_vol *= dx[i];
       }
 
-      boost::shared_ptr<pdat::CellData<double> > weight(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > weight(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cwgt_id)));
       TBOX_ASSERT(weight);
       weight->fillAll(cell_vol);
@@ -548,14 +547,14 @@ int main(
       math::PatchCellDataOpsReal<double> cdops_double;
 
       // Get pointers to patch data objects
-      boost::shared_ptr<pdat::CellData<double> > cddata0(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cddata0(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[0])));
-      boost::shared_ptr<pdat::CellData<double> > cddata1(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cddata1(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[1])));
-      boost::shared_ptr<pdat::CellData<double> > cddata2(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cddata2(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[2])));
 
       TBOX_ASSERT(cddata0);
@@ -621,8 +620,8 @@ int main(
       hier::Box inbox(indx0, indx1, hier::BlockId(0));
       double val_inbox = 1.0;
       double val_not_inbox = 3.0;
-      boost::shared_ptr<pdat::CellData<double> > cvdata(
-         BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::CellData<double> > cvdata(
+         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
             tpatch->getPatchData(cdvindx[0])));
 
       TBOX_ASSERT(cvdata);
@@ -685,7 +684,7 @@ int main(
       bool divide_inbox_test_passed = true;
       val_inbox = 0.8;
       val_not_inbox = 1.6;
-      cvdata = BOOST_CAST<pdat::CellData<double>,
+      cvdata = POINTER_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
       TBOX_ASSERT(cvdata);
 
@@ -767,7 +766,7 @@ int main(
       bool restricted_linSum_test_passed = true;
       val_inbox = 50.0;
       val_not_inbox = 0.0;
-      cvdata = BOOST_CAST<pdat::CellData<double>,
+      cvdata = POINTER_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[0]));
       TBOX_ASSERT(cvdata);
 
@@ -832,7 +831,7 @@ int main(
       double val_inbox3 = 21.0;
       val_not_inbox = 1.0;
 
-      cvdata = BOOST_CAST<pdat::CellData<double>,
+      cvdata = POINTER_CAST<pdat::CellData<double>,
                           hier::PatchData>(tpatch->getPatchData(cdvindx[1]));
       TBOX_ASSERT(cvdata);
       pdat::CellIterator ciend(pdat::CellGeometry::end(cvdata->getBox()));
@@ -1251,12 +1250,12 @@ static bool
 doubleDataSameAsValue(
    int desc_id,
    double value,
-   boost::shared_ptr<hier::Patch> patch)
+   std::shared_ptr<hier::Patch> patch)
 {
    bool test_passed = true;
 
-   boost::shared_ptr<pdat::CellData<double> > cvdata(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > cvdata(
+      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
          patch->getPatchData(desc_id)));
 
    TBOX_ASSERT(cvdata);

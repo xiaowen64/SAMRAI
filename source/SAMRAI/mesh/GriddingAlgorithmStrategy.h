@@ -16,7 +16,6 @@
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-#include "boost/shared_ptr.hpp"
 
 #include <vector>
 
@@ -150,14 +149,14 @@ public:
     * @brief Return pointer to level gridding strategy data member.
     */
    virtual
-   boost::shared_ptr<TagAndInitializeStrategy>
+   std::shared_ptr<TagAndInitializeStrategy>
    getTagAndInitializeStrategy() const = 0;
 
    /*!
     * @brief Return pointer to PatchHierarchy data member.
     */
    virtual
-   boost::shared_ptr<hier::PatchHierarchy>
+   std::shared_ptr<hier::PatchHierarchy>
    getPatchHierarchy() const = 0;
 
 };

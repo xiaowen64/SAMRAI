@@ -24,7 +24,6 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace algs {
@@ -136,7 +135,7 @@ public:
     *
     * Return pointer to data context with ghost cells.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getInteriorWithGhostsContext() const
    {
       return d_interior_with_ghosts;
@@ -145,7 +144,7 @@ public:
    /*!
     * Return pointer to data context with NO ghosts.
     */
-   boost::shared_ptr<hier::VariableContext>
+   std::shared_ptr<hier::VariableContext>
    getInteriorContext() const
    {
       return d_interior;
@@ -156,7 +155,7 @@ public:
     */
    void
    setInteriorWithGhostsContext(
-      const boost::shared_ptr<hier::VariableContext>& context)
+      const std::shared_ptr<hier::VariableContext>& context)
    {
       d_interior_with_ghosts = context;
    }
@@ -166,14 +165,14 @@ public:
     */
    void
    setInteriorContext(
-      const boost::shared_ptr<hier::VariableContext>& context)
+      const std::shared_ptr<hier::VariableContext>& context)
    {
       d_interior = context;
    }
 
 private:
-   boost::shared_ptr<hier::VariableContext> d_interior_with_ghosts;
-   boost::shared_ptr<hier::VariableContext> d_interior;
+   std::shared_ptr<hier::VariableContext> d_interior_with_ghosts;
+   std::shared_ptr<hier::VariableContext> d_interior;
 };
 
 }

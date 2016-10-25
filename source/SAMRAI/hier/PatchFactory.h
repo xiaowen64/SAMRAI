@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace hier {
@@ -49,10 +48,10 @@ public:
    /**
     * Allocate a patch with the specified domain and patch descriptor.
     */
-   virtual boost::shared_ptr<Patch>
+   virtual std::shared_ptr<Patch>
    allocate(
       const Box& box_level_box,
-      const boost::shared_ptr<PatchDescriptor>& descriptor) const;
+      const std::shared_ptr<PatchDescriptor>& descriptor) const;
 
 private:
    PatchFactory(

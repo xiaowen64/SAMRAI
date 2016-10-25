@@ -21,7 +21,6 @@
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 
 namespace SAMRAI {
@@ -63,7 +62,7 @@ public:
     */
    size_t
    numberOfEntries(
-      const boost::shared_ptr<pdat::NodeData<int> >& data,
+      const std::shared_ptr<pdat::NodeData<int> >& data,
       const hier::Box& box) const
    {
       TBOX_ASSERT(data);
@@ -80,8 +79,8 @@ public:
     */
    void
    copyData(
-      const boost::shared_ptr<pdat::NodeData<int> >& dst,
-      const boost::shared_ptr<pdat::NodeData<int> >& src,
+      const std::shared_ptr<pdat::NodeData<int> >& dst,
+      const std::shared_ptr<pdat::NodeData<int> >& src,
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);
@@ -95,15 +94,15 @@ public:
     * consistency of depth, box, and ghost box.
     *
     * @pre patch
-    * @pre patch->getPatchData(data1_id) is actually a boost::shared_ptr<pdat::NodeData<int> >
-    * @pre patch->getPatchData(data2_id) is actually a boost::shared_ptr<pdat::NodeData<int> >
+    * @pre patch->getPatchData(data1_id) is actually a std::shared_ptr<pdat::NodeData<int> >
+    * @pre patch->getPatchData(data2_id) is actually a std::shared_ptr<pdat::NodeData<int> >
     * @pre patch->getPatchData(data1_id)->getDepth() ==  patch->getPatchData(data2_id)->getDepth()
     * @pre patch->getPatchData(data1_id)->getBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getBox())
     * @pre patch->getPatchData(data1_id)->getGhostBox().isSpatiallyEqual(patch->getPatchData(data2_id)->getGhostBox())
     */
    void
    swapData(
-      const boost::shared_ptr<hier::Patch>& patch,
+      const std::shared_ptr<hier::Patch>& patch,
       const int data1_id,
       const int data2_id) const;
 
@@ -115,7 +114,7 @@ public:
     */
    void
    printData(
-      const boost::shared_ptr<pdat::NodeData<int> >& data,
+      const std::shared_ptr<pdat::NodeData<int> >& data,
       const hier::Box& box,
       std::ostream& s = tbox::plog) const;
 
@@ -127,7 +126,7 @@ public:
     */
    void
    setToScalar(
-      const boost::shared_ptr<pdat::NodeData<int> >& dst,
+      const std::shared_ptr<pdat::NodeData<int> >& dst,
       const int& alpha,
       const hier::Box& box) const
    {
@@ -145,8 +144,8 @@ public:
     */
    void
    abs(
-      const boost::shared_ptr<pdat::NodeData<int> >& dst,
-      const boost::shared_ptr<pdat::NodeData<int> >& src,
+      const std::shared_ptr<pdat::NodeData<int> >& dst,
+      const std::shared_ptr<pdat::NodeData<int> >& src,
       const hier::Box& box) const
    {
       TBOX_ASSERT(dst && src);

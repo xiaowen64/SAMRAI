@@ -123,11 +123,11 @@ SideIntegerConstantRefine::refine(
 {
    const tbox::Dimension& dim(fine.getDim());
 
-   boost::shared_ptr<SideData<int> > cdata(
-      BOOST_CAST<SideData<int>, hier::PatchData>(
+   std::shared_ptr<SideData<int> > cdata(
+      POINTER_CAST<SideData<int>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<SideData<int> > fdata(
-      BOOST_CAST<SideData<int>, hier::PatchData>(
+   std::shared_ptr<SideData<int> > fdata(
+      POINTER_CAST<SideData<int>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&fine_overlap);

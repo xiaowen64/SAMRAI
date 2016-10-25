@@ -17,7 +17,6 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace xfer {
@@ -66,7 +65,7 @@ public:
     * @pre stencil_width >= 1
     */
    CompositeBoundarySchedule(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       int coarse_level_num,
       int stencil_width,
       const std::set<int>& data_ids);
@@ -129,7 +128,7 @@ public:
     * @param patch    a local Patch from the hierarchy
     * @param data_id  patch data id for data stored in the stencil
     */  
-   const std::vector<boost::shared_ptr<hier::PatchData> >&
+   const std::vector<std::shared_ptr<hier::PatchData> >&
    getBoundaryPatchData(
       const hier::Patch& patch,
       int data_id) const;
@@ -147,7 +146,7 @@ public:
     * @param uncovered_id  BoxId for an uncovered box
     * @param data_id       patch data id for the desired data.
     */
-   std::vector<boost::shared_ptr<hier::PatchData> >
+   std::vector<std::shared_ptr<hier::PatchData> >
    getDataForUncoveredBox(
       const hier::BoxId& uncovered_id,
       int data_id) const;
@@ -183,12 +182,12 @@ private:
    /*!
     * @brief Hierarchy where the stencils exist
     */
-   boost::shared_ptr<hier::PatchHierarchy> d_hierarchy;
+   std::shared_ptr<hier::PatchHierarchy> d_hierarchy;
 
    /*!
     * @brief Levels representing the stencils
     */
-   boost::shared_ptr<hier::PatchLevel> d_stencil_level;
+   std::shared_ptr<hier::PatchLevel> d_stencil_level;
 
    /*!
     * @brief Map from BoxId of a hierarchy patch to the BoxIds of its
@@ -215,12 +214,12 @@ private:
    /*!
     * @brief Schedules for communication of data from hierarchy to stencils.
     */
-   boost::shared_ptr<RefineSchedule> d_refine_schedule;
+   std::shared_ptr<RefineSchedule> d_refine_schedule;
 
    /*
     * typedefs to simplify nested container declaration.
     */
-   typedef std::vector<boost::shared_ptr<hier::PatchData> > VectorPatchData;
+   typedef std::vector<std::shared_ptr<hier::PatchData> > VectorPatchData;
    typedef std::map<hier::BoxId, VectorPatchData> MapBoxIdPatchData;
 
    // map BoxId from Patch to container of uncovered boxes
@@ -231,7 +230,7 @@ private:
 
    // outer map maps a data id to the inner map.  Inner map maps BoxId of
    // a stencil box to the PatchData located on that box.
-   std::map<int, std::map<hier::BoxId, boost::shared_ptr<hier::PatchData> > >
+   std::map<int, std::map<hier::BoxId, std::shared_ptr<hier::PatchData> > >
       d_stencil_to_data;
    
    /*!

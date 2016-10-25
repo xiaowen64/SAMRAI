@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 
 namespace SAMRAI {
 namespace tbox {
@@ -24,7 +23,7 @@ namespace tbox {
  * database serialization for objects.
  *
  * Objects needing to serialize their data to a database implement the
- * function putToRestart(boost::shared_ptr<Database>) specifying
+ * function putToRestart(std::shared_ptr<Database>) specifying
  * how to put its data members into the database instance.
  *
  * @note The interface asymmetric in that is no corresponding
@@ -56,7 +55,7 @@ public:
     */
    virtual void
    putToRestart(
-      const boost::shared_ptr<Database>& restart_db) const = 0;
+      const std::shared_ptr<Database>& restart_db) const = 0;
 
 private:
    // Unimplemented copy constructor.

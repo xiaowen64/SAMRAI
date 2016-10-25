@@ -12,7 +12,6 @@
 #include "SAMRAI/tbox/MemoryDatabase.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/make_shared.hpp"
 
 namespace SAMRAI {
 namespace tbox {
@@ -43,10 +42,10 @@ MemoryDatabaseFactory::operator = (
 /**
  * Build a new MemoryDatabase object.
  */
-boost::shared_ptr<Database>
+std::shared_ptr<Database>
 MemoryDatabaseFactory::allocate(
    const std::string& name) {
-   return boost::make_shared<MemoryDatabase>(name);
+   return std::make_shared<MemoryDatabase>(name);
 }
 
 }

@@ -130,11 +130,11 @@ void SkeletonCellDoubleConservativeLinearRefine::refine(
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
-   boost::shared_ptr<pdat::CellData<double> > cdata(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > cdata(
+      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
-   boost::shared_ptr<pdat::CellData<double> > fdata(
-      BOOST_CAST<pdat::CellData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::CellData<double> > fdata(
+      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);

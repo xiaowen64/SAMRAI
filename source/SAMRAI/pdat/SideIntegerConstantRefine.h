@@ -18,7 +18,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/hier/RefineOperator.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 
 namespace SAMRAI {

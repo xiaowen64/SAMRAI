@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
@@ -158,7 +157,7 @@ public:
    static void
    getFromInput(
       BoundaryUtilityStrategy* bdry_strategy,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       std::vector<int>& face_conds,
       std::vector<int>& edge_conds,
       std::vector<int>& node_conds,
@@ -191,7 +190,7 @@ public:
    static void
    fillFaceBoundaryData(
       const std::string& varname,
-      const boost::shared_ptr<pdat::CellData<double> >& vardata,
+      const std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const std::vector<int>& bdry_face_conds,
@@ -224,7 +223,7 @@ public:
    static void
    fillEdgeBoundaryData(
       const std::string& varname,
-      const boost::shared_ptr<pdat::CellData<double> >& vardata,
+      const std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const std::vector<int>& bdry_edge_conds,
@@ -257,7 +256,7 @@ public:
    static void
    fillNodeBoundaryData(
       const std::string& varname,
-      const boost::shared_ptr<pdat::CellData<double> >& vardata,
+      const std::shared_ptr<pdat::CellData<double> >& vardata,
       const hier::Patch& patch,
       const hier::IntVector& ghost_width_to_fill,
       const std::vector<int>& bdry_node_conds,
@@ -391,20 +390,20 @@ private:
    static void
    read3dBdryFaces(
       BoundaryUtilityStrategy* bdry_strategy,
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       std::vector<int>& face_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryEdges(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       const std::vector<int>& face_conds,
       std::vector<int>& edge_conds,
       const hier::IntVector& periodic);
 
    static void
    read3dBdryNodes(
-      const boost::shared_ptr<tbox::Database>& input_db,
+      const std::shared_ptr<tbox::Database>& input_db,
       const std::vector<int>& face_conds,
       std::vector<int>& node_conds,
       const hier::IntVector& periodic);

@@ -29,7 +29,6 @@
 #include "SAMRAI/hier/VariableContext.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
@@ -76,8 +75,8 @@ public:
    LinAdv(
       const string& object_name,
       const tbox::Dimension& dim,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geom);
+      std::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geom);
 
    /**
     * The destructor for LinAdv does nothing.
@@ -193,8 +192,8 @@ public:
    tagRichardsonExtrapolationCells(
       hier::Patch& patch,
       const int error_level_number,
-      const boost::shared_ptr<hier::VariableContext>& coarsened_fine,
-      const boost::shared_ptr<hier::VariableContext>& advanced_coarse,
+      const std::shared_ptr<hier::VariableContext>& coarsened_fine,
+      const std::shared_ptr<hier::VariableContext>& advanced_coarse,
       const double regrid_time,
       const double deltat,
       const int error_coarsen_ratio,
@@ -310,7 +309,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * This routine is a concrete implementation of the virtual function
@@ -322,7 +321,7 @@ public:
     */
    void
    readDirichletBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -333,7 +332,7 @@ public:
     */
    void
    readNeumannBoundaryDataEntry(
-      const boost::shared_ptr<tbox::Database>& db,
+      const std::shared_ptr<tbox::Database>& db,
       string& db_name,
       int bdry_location_index);
 
@@ -355,7 +354,7 @@ public:
     */
    void
    registerVisItDataWriter(
-      boost::shared_ptr<appu::VisItDataWriter> viz_writer);
+      std::shared_ptr<appu::VisItDataWriter> viz_writer);
 #endif
 
    /**
@@ -387,7 +386,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    void
@@ -395,7 +394,7 @@ private:
 
    void
    readStateDataEntry(
-      boost::shared_ptr<tbox::Database> db,
+      std::shared_ptr<tbox::Database> db,
       const string& db_name,
       int array_indx,
       std::vector<double>& uval);
@@ -437,28 +436,28 @@ private:
     * data, set physical boundary conditions, and register plot
     * variables.
     */
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
 #ifdef HAVE_HDF5
-   boost::shared_ptr<appu::VisItDataWriter> d_visit_writer;
+   std::shared_ptr<appu::VisItDataWriter> d_visit_writer;
 #endif
 
    /*
     * Data items used for nonuniform load balance, if used.
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
+   std::shared_ptr<pdat::CellVariable<double> > d_workload_variable;
    int d_workload_data_id;
    bool d_use_nonuniform_workload;
 
    /**
-    * boost::shared_ptr to state variable vector - [u]
+    * std::shared_ptr to state variable vector - [u]
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_uval;
+   std::shared_ptr<pdat::CellVariable<double> > d_uval;
 
    /**
-    * boost::shared_ptr to flux variable vector  - [F]
+    * std::shared_ptr to flux variable vector  - [F]
     */
-   boost::shared_ptr<pdat::FaceVariable<double> > d_flux;
+   std::shared_ptr<pdat::FaceVariable<double> > d_flux;
 
    /**
     * linear advection velocity vector

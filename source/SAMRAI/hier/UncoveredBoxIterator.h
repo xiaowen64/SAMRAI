@@ -14,7 +14,6 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/hier/BoxContainer.h"
 
-#include "boost/shared_ptr.hpp"
 #include <utility>
 #include <vector>
 
@@ -65,13 +64,13 @@ public:
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const std::pair<boost::shared_ptr<Patch>, Box>&
+   const std::pair<std::shared_ptr<Patch>, Box>&
    operator * () const;
 
    /*!
     * @brief Dereference operator mimicking a pointer dereference.
     */
-   const std::pair<boost::shared_ptr<Patch>, Box> *
+   const std::pair<std::shared_ptr<Patch>, Box> *
    operator -> () const;
 
    /*!
@@ -168,7 +167,7 @@ private:
    BoxContainer::const_iterator d_uncovered_boxes_itr_end;
 
    /* The current item in the iteration. */
-   std::pair<boost::shared_ptr<Patch>, Box>* d_item;
+   std::pair<std::shared_ptr<Patch>, Box>* d_item;
 
    /* The number of the finest level in the hierarchy. */
    int d_finest_level_num;

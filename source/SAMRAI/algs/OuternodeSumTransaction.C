@@ -36,9 +36,9 @@ namespace algs {
  */
 
 OuternodeSumTransaction::OuternodeSumTransaction(
-   const boost::shared_ptr<hier::PatchLevel>& dst_level,
-   const boost::shared_ptr<hier::PatchLevel>& src_level,
-   const boost::shared_ptr<hier::BoxOverlap>& overlap,
+   const std::shared_ptr<hier::PatchLevel>& dst_level,
+   const std::shared_ptr<hier::PatchLevel>& src_level,
+   const std::shared_ptr<hier::BoxOverlap>& overlap,
    const hier::Box& dst_node,
    const hier::Box& src_node,
    const xfer::RefineClasses::Data** refine_data,
@@ -139,8 +139,8 @@ void
 OuternodeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
-   boost::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
+      POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
@@ -151,14 +151,14 @@ OuternodeSumTransaction::unpackStream(
 void
 OuternodeSumTransaction::copyLocalData()
 {
-   boost::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
+      POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
 
-   boost::shared_ptr<pdat::OuternodeData<double> > onode_src_data(
-      BOOST_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+   std::shared_ptr<pdat::OuternodeData<double> > onode_src_data(
+      POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
          d_src_level->getPatch(d_src_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_src)));
    TBOX_ASSERT(onode_src_data);

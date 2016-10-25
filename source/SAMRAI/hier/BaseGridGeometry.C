@@ -18,8 +18,6 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
-#include "boost/make_shared.hpp"
 #include <map>
 #include <stdlib.h>
 #include <vector>
@@ -45,15 +43,15 @@ BaseGridGeometry::s_initialize_handler(
    BaseGridGeometry::finalizeCallback,
    tbox::StartupShutdownManager::priorityTimers);
 
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_find_patches_touching_boundaries;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_touching_boundaries_init;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_touching_boundaries_loop;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_on_patches;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_boundary_boxes;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_data_on_patches;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_compute_boundary_boxes_on_level;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
-boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_adjust_multiblock_patch_level_boundaries;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_find_patches_touching_boundaries;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_touching_boundaries_init;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_touching_boundaries_loop;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_on_patches;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_boundary_boxes;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_set_geometry_data_on_patches;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_compute_boundary_boxes_on_level;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_get_boundary_boxes;
+std::shared_ptr<tbox::Timer> BaseGridGeometry::t_adjust_multiblock_patch_level_boundaries;
 
 /*
  *************************************************************************
@@ -67,10 +65,10 @@ boost::shared_ptr<tbox::Timer> BaseGridGeometry::t_adjust_multiblock_patch_level
 BaseGridGeometry::BaseGridGeometry(
    const tbox::Dimension& dim,
    const std::string& object_name,
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool allow_multiblock):
    d_transfer_operator_registry(
-      boost::make_shared<TransferOperatorRegistry>(dim)),
+      std::make_shared<TransferOperatorRegistry>(dim)),
    d_dim(dim),
    d_object_name(object_name),
    d_periodic_shift(IntVector::getZero(d_dim)),
@@ -108,7 +106,7 @@ BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
    BoxContainer& domain):
    d_transfer_operator_registry(
-      boost::make_shared<TransferOperatorRegistry>(
+      std::make_shared<TransferOperatorRegistry>(
          (*(domain.begin())).getDim())),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
@@ -150,7 +148,7 @@ BaseGridGeometry::BaseGridGeometry(
 BaseGridGeometry::BaseGridGeometry(
    const std::string& object_name,
    BoxContainer& domain,
-   const boost::shared_ptr<TransferOperatorRegistry>& op_reg):
+   const std::shared_ptr<TransferOperatorRegistry>& op_reg):
    d_transfer_operator_registry(op_reg),
    d_dim((*(domain.begin())).getDim()),
    d_object_name(object_name),
@@ -241,7 +239,7 @@ BaseGridGeometry::computeBoundaryBoxesOnLevel(
 #endif
 
    for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
-      const boost::shared_ptr<Patch>& patch = *ip;
+      const std::shared_ptr<Patch>& patch = *ip;
       const BoxId& patch_id = patch->getBox().getBoxId();
       const BlockId::block_t& block_num =
          patch->getBox().getBlockId().getBlockValue();
@@ -324,7 +322,7 @@ BaseGridGeometry::findPatchesTouchingBoundaries(
 
    t_touching_boundaries_loop->start();
    for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
-      const boost::shared_ptr<Patch>& patch = *ip;
+      const std::shared_ptr<Patch>& patch = *ip;
       const Box& box(patch->getBox());
 
       std::map<BoxId, TwoDimBool>::iterator iter_touches_regular_bdry(
@@ -485,7 +483,7 @@ BaseGridGeometry::setGeometryOnPatches(
 
    t_set_geometry_data_on_patches->start();
    for (PatchLevel::iterator ip(level.begin()); ip != level.end(); ++ip) {
-      const boost::shared_ptr<Patch>& patch = *ip;
+      const std::shared_ptr<Patch>& patch = *ip;
       setGeometryDataOnPatch(*patch, ratio_to_level_zero,
          (*touches_regular_bdry.find(ip->getBox().getBoxId())).second);
    }
@@ -540,7 +538,7 @@ BaseGridGeometry::setBoundaryBoxes(
 
    for (std::map<BoxId, PatchBoundaries>::iterator mi = boundaries.begin();
         mi != boundaries.end(); ++mi) {
-      boost::shared_ptr<Patch> patch(level.getPatch((*mi).first));
+      std::shared_ptr<Patch> patch(level.getPatch((*mi).first));
       patch->getPatchGeometry()->setBoundaryBoxesOnPatch((*mi).second.getVectors());
    }
 
@@ -587,8 +585,8 @@ BaseGridGeometry::setGeometryDataOnPatch(
    }
 #endif
 
-   boost::shared_ptr<PatchGeometry> geometry(
-      boost::make_shared<PatchGeometry>(
+   std::shared_ptr<PatchGeometry> geometry(
+      std::make_shared<PatchGeometry>(
          ratio_to_level_zero,
          touches_regular_bdry,
          patch.getBox().getBlockId()));
@@ -609,14 +607,14 @@ BaseGridGeometry::setGeometryDataOnPatch(
 void
 BaseGridGeometry::getFromRestart()
 {
-   boost::shared_ptr<tbox::Database> restart_db(
+   std::shared_ptr<tbox::Database> restart_db(
       tbox::RestartManager::getManager()->getRootDatabase());
 
    if (!restart_db->isDatabase(getObjectName())) {
       TBOX_ERROR("Restart database corresponding to "
          << getObjectName() << " not found in the restart file." << std::endl);
    }
-   boost::shared_ptr<tbox::Database> db(
+   std::shared_ptr<tbox::Database> db(
       restart_db->getDatabase(getObjectName()));
 
    const tbox::Dimension dim(getDim());
@@ -662,19 +660,19 @@ BaseGridGeometry::getFromRestart()
 
          std::string singularity_db_name =
             "Singularity_" + blk_string;
-         boost::shared_ptr<tbox::Database> singularity_db =
+         std::shared_ptr<tbox::Database> singularity_db =
             db->getDatabase(singularity_db_name);
          d_singularity[b].getFromRestart(*singularity_db);
 
          std::string neighbors_db_name =
             "Neighbors_" + blk_string;
-         boost::shared_ptr<tbox::Database> neighbors_db =
+         std::shared_ptr<tbox::Database> neighbors_db =
             db->getDatabase(neighbors_db_name);
          int num_neighbors = neighbors_db->getInteger("num_neighbors");
          for (int count = 0; count < num_neighbors; ++count) {
             std::string neighbor_db_name =
                "neighbor_" + tbox::Utilities::intToString(count);
-            boost::shared_ptr<tbox::Database> neighbor_db =
+            std::shared_ptr<tbox::Database> neighbor_db =
                neighbors_db->getDatabase(neighbor_db_name);
             BlockId nbr_block_id(neighbor_db->getInteger("nbr_block_id"));
             BoxContainer nbr_transformed_domain;
@@ -728,7 +726,7 @@ BaseGridGeometry::getFromRestart()
 
 void
 BaseGridGeometry::getFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db,
+   const std::shared_ptr<tbox::Database>& input_db,
    bool is_from_restart,
    bool allow_multiblock)
 {
@@ -849,7 +847,7 @@ BaseGridGeometry::getFromInput(
 
 void
 BaseGridGeometry::putToRestart(
-   const boost::shared_ptr<tbox::Database>& restart_db) const
+   const std::shared_ptr<tbox::Database>& restart_db) const
 {
    TBOX_ASSERT(restart_db);
 
@@ -876,13 +874,13 @@ BaseGridGeometry::putToRestart(
 
          std::string singularity_db_name =
             "Singularity_" + blk_string;
-         boost::shared_ptr<tbox::Database> singularity_db =
+         std::shared_ptr<tbox::Database> singularity_db =
             restart_db->putDatabase(singularity_db_name);
          d_singularity[b].putToRestart(singularity_db);
 
          std::string neighbors_db_name =
             "Neighbors_" + blk_string;
-         boost::shared_ptr<tbox::Database> neighbors_db =
+         std::shared_ptr<tbox::Database> neighbors_db =
             restart_db->putDatabase(neighbors_db_name);
          neighbors_db->putInteger("num_neighbors",
             static_cast<int>(d_block_neighbors[b].size()));
@@ -892,7 +890,7 @@ BaseGridGeometry::putToRestart(
             const Neighbor& neighbor = ni->second;
             std::string neighbor_db_name =
                "neighbor_" + blk_string;
-            boost::shared_ptr<tbox::Database> neighbor_db =
+            std::shared_ptr<tbox::Database> neighbor_db =
                neighbors_db->putDatabase(neighbor_db_name);
             neighbor_db->putInteger("nbr_block_id",
                static_cast<int>(neighbor.getBlockId().getBlockValue()));
@@ -1874,7 +1872,7 @@ BaseGridGeometry::checkBoundaryBox(
  */
 void
 BaseGridGeometry::readBlockDataFromInput(
-   const boost::shared_ptr<tbox::Database>& input_db)
+   const std::shared_ptr<tbox::Database>& input_db)
 {
    TBOX_ASSERT(input_db);
 
@@ -1890,7 +1888,7 @@ BaseGridGeometry::readBlockDataFromInput(
       if (!input_db->keyExists(neighbor_name)) {
          break;
       }
-      boost::shared_ptr<tbox::Database> pair_db(
+      std::shared_ptr<tbox::Database> pair_db(
          input_db->getDatabase(neighbor_name));
 
       BlockId block_a(pair_db->getInteger("block_a"));

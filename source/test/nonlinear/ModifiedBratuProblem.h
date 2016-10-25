@@ -63,7 +63,6 @@
 #include "SAMRAI/tbox/MessageStream.h"
 #include "SAMRAI/tbox/Database.h"
 
-#include "boost/shared_ptr.hpp"
 #include <string>
 #include <vector>
 
@@ -106,11 +105,11 @@ public:
    ModifiedBratuProblem(
       const string& object_name,
       const tbox::Dimension& dim,
-      const boost::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
-      boost::shared_ptr<tbox::Database> input_db,
-      boost::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
-      boost::shared_ptr<appu::VisItDataWriter> visit_data_writer =
-         boost::shared_ptr<appu::VisItDataWriter>());
+      const std::shared_ptr<solv::CellPoissonFACSolver> fac_solver,
+      std::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<geom::CartesianGridGeometry> grid_geometry,
+      std::shared_ptr<appu::VisItDataWriter> visit_data_writer =
+         std::shared_ptr<appu::VisItDataWriter>());
 
    /**
     * Destructor for ModifiedBratuProblem class does nothing.
@@ -127,7 +126,7 @@ public:
     */
    void
    setVectorWeights(
-      boost::shared_ptr<hier::PatchHierarchy> hierarchy);
+      std::shared_ptr<hier::PatchHierarchy> hierarchy);
 
    /**
     * Set the nonlinear solution vector so that the new solution data is
@@ -137,7 +136,7 @@ public:
     */
    void
    setupSolutionVector(
-      const boost::shared_ptr<solv::SAMRAIVectorReal<double> >& solution);
+      const std::shared_ptr<solv::SAMRAIVectorReal<double> >& solution);
 
    /**
     * Return time increment for advancing the solution at the first timestep.
@@ -211,18 +210,18 @@ public:
 
    virtual void
    initializeLevelData(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const double init_data_time,
       const bool can_be_refined,
       const bool initial_time,
-      const boost::shared_ptr<hier::PatchLevel>& old_level =
-         boost::shared_ptr<hier::PatchLevel>(),
+      const std::shared_ptr<hier::PatchLevel>& old_level =
+         std::shared_ptr<hier::PatchLevel>(),
       const bool allocate_data = true);
 
    void
    resetHierarchyConfiguration(
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int coarsest_level,
       const int finest_level);
    //@}
@@ -403,7 +402,7 @@ public:
     */
    void
    putToRestart(
-      const boost::shared_ptr<tbox::Database>& restart_db) const;
+      const std::shared_ptr<tbox::Database>& restart_db) const;
 
    /**
     * Write class data to given output stream.
@@ -421,7 +420,7 @@ private:
     */
    void
    getFromInput(
-      boost::shared_ptr<tbox::Database> input_db,
+      std::shared_ptr<tbox::Database> input_db,
       bool is_from_restart);
 
    /*
@@ -432,20 +431,20 @@ private:
    void
    getLevelEdges(
       hier::BoxContainer& boxes,
-      boost::shared_ptr<hier::Patch> patch,
-      boost::shared_ptr<hier::PatchLevel> level,
+      std::shared_ptr<hier::Patch> patch,
+      std::shared_ptr<hier::PatchLevel> level,
       const tbox::Dimension::dir_t dim,
       const int face);
 
    void
    correctLevelFlux(
-      boost::shared_ptr<hier::PatchLevel> level);
+      std::shared_ptr<hier::PatchLevel> level);
 
    void
    correctPatchFlux(
-      boost::shared_ptr<hier::PatchLevel> level,
-      boost::shared_ptr<hier::Patch> patch,
-      boost::shared_ptr<pdat::CellData<double> > u);
+      std::shared_ptr<hier::PatchLevel> level,
+      std::shared_ptr<hier::Patch> patch,
+      std::shared_ptr<pdat::CellData<double> > u);
 
    //@{
    /*!
@@ -460,8 +459,8 @@ private:
 
    void
    evaluateBratuFunction(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > x,
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > f);
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > x,
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > f);
 
    /*!
     * @brief Compute A(x)*x.
@@ -471,17 +470,17 @@ private:
     */
    int
    jacobianTimesVector(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > vector,
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > product);
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > vector,
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > product);
 
    void
    setupBratuPreconditioner(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > x);
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > x);
 
    int
    applyBratuPreconditioner(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > r,
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > z);
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > r,
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > z);
 
    /*!
     * @brief Recompute the jacobian A(x).
@@ -492,7 +491,7 @@ private:
     */
    void
    evaluateBratuJacobian(
-      boost::shared_ptr<solv::SAMRAIVectorReal<double> > x);
+      std::shared_ptr<solv::SAMRAIVectorReal<double> > x);
 
    //@}
 
@@ -511,7 +510,7 @@ private:
     * We cache a pointer to the grid geometry object to set up initial
     * data and set physical boundary conditions.
     */
-   boost::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
+   std::shared_ptr<geom::CartesianGridGeometry> d_grid_geometry;
 
    /*
     * Parameters read from input.
@@ -525,26 +524,26 @@ private:
     *
     * Contexts are labels to describe the way variables are used.
     */
-   boost::shared_ptr<hier::VariableContext> d_current;
-   boost::shared_ptr<hier::VariableContext> d_new;
-   boost::shared_ptr<hier::VariableContext> d_scratch;
+   std::shared_ptr<hier::VariableContext> d_current;
+   std::shared_ptr<hier::VariableContext> d_new;
+   std::shared_ptr<hier::VariableContext> d_scratch;
 
    /*
     * Variables for the discrete problem; see comments above class constructor.
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_solution;
-   boost::shared_ptr<pdat::CellVariable<double> > d_source_term;
-   boost::shared_ptr<pdat::CellVariable<double> > d_exponential_term;
-   boost::shared_ptr<pdat::SideVariable<double> > d_diffusion_coef;
-   boost::shared_ptr<pdat::SideVariable<double> > d_flux;
-   boost::shared_ptr<pdat::OutersideVariable<double> > d_coarse_fine_flux;
+   std::shared_ptr<pdat::CellVariable<double> > d_solution;
+   std::shared_ptr<pdat::CellVariable<double> > d_source_term;
+   std::shared_ptr<pdat::CellVariable<double> > d_exponential_term;
+   std::shared_ptr<pdat::SideVariable<double> > d_diffusion_coef;
+   std::shared_ptr<pdat::SideVariable<double> > d_flux;
+   std::shared_ptr<pdat::OutersideVariable<double> > d_coarse_fine_flux;
 
    /*
     * For storing Jacobian A(x) stuff and computing Jacobian-vector
     * multiply A(x)*v.
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_jacobian_a;
-   boost::shared_ptr<pdat::FaceVariable<double> > d_jacobian_b;
+   std::shared_ptr<pdat::CellVariable<double> > d_jacobian_a;
+   std::shared_ptr<pdat::FaceVariable<double> > d_jacobian_b;
    int d_jacobian_a_id;
    int d_jacobian_b_id;
    hier::ComponentSelector d_jacobian_data;
@@ -553,8 +552,8 @@ private:
     * For storing Jacobian A(x) stuff in setting up and applying
     * the preconditioner A(x)*z=r.
     */
-   boost::shared_ptr<pdat::CellVariable<double> > d_precond_a;
-   boost::shared_ptr<pdat::FaceVariable<double> > d_precond_b;
+   std::shared_ptr<pdat::CellVariable<double> > d_precond_a;
+   std::shared_ptr<pdat::FaceVariable<double> > d_precond_b;
    int d_precond_a_id;
    int d_precond_b_id;
    hier::ComponentSelector d_precond_data;
@@ -574,9 +573,9 @@ private:
     * a pointer to it here.  A variable is used to define weights for the
     * solution vector entries on a composite grid.
     */
-   boost::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
+   std::shared_ptr<solv::SAMRAIVectorReal<double> > d_solution_vector;
 
-   boost::shared_ptr<pdat::CellVariable<double> > d_weight;
+   std::shared_ptr<pdat::CellVariable<double> > d_weight;
 
    int d_weight_id;
 
@@ -590,16 +589,16 @@ private:
     */
    RefineAlgorithm d_fill_new_level;
    RefineAlgorithm d_soln_fill;
-   std::vector<boost::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
+   std::vector<std::shared_ptr<RefineSchedule> > d_soln_fill_schedule;
    CoarsenAlgorithm d_flux_coarsen;
-   std::vector<boost::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
+   std::vector<std::shared_ptr<CoarsenSchedule> > d_flux_coarsen_schedule;
    CoarsenAlgorithm d_soln_coarsen;
-   std::vector<boost::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
+   std::vector<std::shared_ptr<CoarsenSchedule> > d_soln_coarsen_schedule;
    CoarsenAlgorithm d_scratch_soln_coarsen;
-   std::vector<boost::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
+   std::vector<std::shared_ptr<CoarsenSchedule> > d_scratch_soln_coarsen_schedule;
 
-   boost::shared_ptr<RefineOperator> d_soln_refine_op;
-   boost::shared_ptr<CoarsenOperator> d_soln_coarsen_op;
+   std::shared_ptr<RefineOperator> d_soln_refine_op;
+   std::shared_ptr<CoarsenOperator> d_soln_coarsen_op;
 
    /*
     * Current solution time and time increment used in the solution process.
@@ -617,13 +616,13 @@ private:
     * in the hierarchy.
     */
    bool d_use_old_solver;
-   boost::shared_ptr<solv::CellPoissonFACSolver> d_FAC_solver;
+   std::shared_ptr<solv::CellPoissonFACSolver> d_FAC_solver;
 
    int d_max_precond_its;
    double d_precond_tol;
 
-   static boost::shared_ptr<tbox::Timer> s_copy_timer;
-   static boost::shared_ptr<tbox::Timer> s_pc_timer;
+   static std::shared_ptr<tbox::Timer> s_copy_timer;
+   static std::shared_ptr<tbox::Timer> s_pc_timer;
 
 };
 

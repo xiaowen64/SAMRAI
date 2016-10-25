@@ -21,7 +21,6 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableContext.h"
 
-#include "boost/shared_ptr.hpp"
 
 using namespace SAMRAI;
 
@@ -105,12 +104,12 @@ public:
    virtual ~PatchMultiblockTestStrategy();
 
    void setGridGeometry(
-      boost::shared_ptr<hier::BaseGridGeometry>& grid_geom)
+      std::shared_ptr<hier::BaseGridGeometry>& grid_geom)
    {
       d_grid_geometry = grid_geom;
    }
 
-   boost::shared_ptr<hier::BaseGridGeometry>&
+   std::shared_ptr<hier::BaseGridGeometry>&
    getGridGeometry()
    {
       return d_grid_geometry;
@@ -120,40 +119,40 @@ public:
     * Utility functions for managing patch data context.
     */
    void setDataContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      std::shared_ptr<hier::VariableContext> context)
    {
       TBOX_ASSERT(context);
       d_data_context = context;
    }
 
    void setDestinationContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      std::shared_ptr<hier::VariableContext> context)
    {
       TBOX_ASSERT(context);
       d_dst_context = context;
    }
 
    void setScratchContext(
-      boost::shared_ptr<hier::VariableContext> context)
+      std::shared_ptr<hier::VariableContext> context)
    {
       TBOX_ASSERT(context);
       d_scr_context = context;
    }
 
    ///
-   boost::shared_ptr<hier::VariableContext> getDataContext() const
+   std::shared_ptr<hier::VariableContext> getDataContext() const
    {
       return d_data_context;
    }
 
    ///
-   boost::shared_ptr<hier::VariableContext> getDestinationContext() const
+   std::shared_ptr<hier::VariableContext> getDestinationContext() const
    {
       return d_dst_context;
    }
 
    ///
-   boost::shared_ptr<hier::VariableContext> getScratchContext() const
+   std::shared_ptr<hier::VariableContext> getScratchContext() const
    {
       return d_scr_context;
    }
@@ -178,14 +177,14 @@ public:
     */
    void
    readVariableInput(
-      boost::shared_ptr<tbox::Database> db);
+      std::shared_ptr<tbox::Database> db);
 
    /**
     * Read arrays of refinement boxes from input database.
     */
    void
    readRefinementInput(
-      boost::shared_ptr<tbox::Database> db);
+      std::shared_ptr<tbox::Database> db);
 
    /**
     * Set tags in cells to refine based on boxes provided in input.
@@ -209,10 +208,10 @@ public:
    virtual void fillSingularityBoundaryConditions(
       hier::Patch& patch,
       const hier::PatchLevel& encon_level,
-      boost::shared_ptr<const hier::Connector> dst_to_encon,
+      std::shared_ptr<const hier::Connector> dst_to_encon,
       const hier::Box& fill_box,
       const hier::BoundaryBox& boundary_box,
-      const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
+      const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
    {
       NULL_USE(patch);
       NULL_USE(encon_level);
@@ -227,7 +226,7 @@ public:
    preprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const boost::shared_ptr<hier::VariableContext>& context,
+      const std::shared_ptr<hier::VariableContext>& context,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
@@ -236,7 +235,7 @@ public:
    postprocessRefine(
       hier::Patch& fine,
       const hier::Patch& coarse,
-      const boost::shared_ptr<hier::VariableContext>& context,
+      const std::shared_ptr<hier::VariableContext>& context,
       const hier::Box& fine_box,
       const hier::IntVector& ratio) const;
 
@@ -260,7 +259,7 @@ public:
    virtual void
    initializeDataOnPatch(
       hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id,
       char src_or_dst) = 0;
@@ -271,7 +270,7 @@ public:
    virtual void
    tagCellsToRefine(
       hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       int level_number,
       int tag_index) = 0;
 
@@ -281,7 +280,7 @@ public:
    virtual bool
    verifyResults(
       const hier::Patch& patch,
-      const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy> hierarchy,
       const int level_number,
       const hier::BlockId& block_id) = 0;
 
@@ -304,11 +303,11 @@ protected:
    std::vector<hier::BoxContainer> d_refine_level_boxes;
 
 private:
-   boost::shared_ptr<hier::BaseGridGeometry> d_grid_geometry;
+   std::shared_ptr<hier::BaseGridGeometry> d_grid_geometry;
 
-   boost::shared_ptr<hier::VariableContext> d_data_context;
-   boost::shared_ptr<hier::VariableContext> d_dst_context;
-   boost::shared_ptr<hier::VariableContext> d_scr_context;
+   std::shared_ptr<hier::VariableContext> d_data_context;
+   std::shared_ptr<hier::VariableContext> d_dst_context;
+   std::shared_ptr<hier::VariableContext> d_scr_context;
 
 };
 

@@ -25,7 +25,7 @@ using namespace SAMRAI;
 FaceMultiblockTest::FaceMultiblockTest(
    const string& object_name,
    const tbox::Dimension& dim,
-   boost::shared_ptr<tbox::Database> main_input_db,
+   std::shared_ptr<tbox::Database> main_input_db,
    const string& refine_option):
    PatchMultiblockTestStrategy(dim),
    d_dim(dim)
@@ -67,7 +67,7 @@ FaceMultiblockTest::~FaceMultiblockTest()
 }
 
 void FaceMultiblockTest::readTestInput(
-   boost::shared_ptr<tbox::Database> db)
+   std::shared_ptr<tbox::Database> db)
 {
    TBOX_ASSERT(db);
 
@@ -107,7 +107,7 @@ void FaceMultiblockTest::registerVariables(
 
 void FaceMultiblockTest::initializeDataOnPatch(
    hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    const hier::BlockId& block_id,
    char src_or_dst)
@@ -121,8 +121,8 @@ void FaceMultiblockTest::initializeDataOnPatch(
 
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-         boost::shared_ptr<pdat::FaceData<double> > face_data(
-            BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+         std::shared_ptr<pdat::FaceData<double> > face_data(
+            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(face_data);
 
@@ -136,7 +136,7 @@ void FaceMultiblockTest::initializeDataOnPatch(
 
 void FaceMultiblockTest::tagCellsToRefine(
    hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    const int level_number,
    int tag_index)
 {
@@ -156,7 +156,7 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 {
    NULL_USE(time);
 
-   boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+   std::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    const std::vector<hier::BoundaryBox>& node_bdry =
       pgeom->getCodimensionBoundaries(d_dim.getValue());
@@ -175,8 +175,8 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::FaceData<double> > face_data(
-         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<double> > face_data(
+         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -308,10 +308,10 @@ void FaceMultiblockTest::setPhysicalBoundaryConditions(
 void FaceMultiblockTest::fillSingularityBoundaryConditions(
    hier::Patch& patch,
    const hier::PatchLevel& encon_level,
-   boost::shared_ptr<const hier::Connector> dst_to_encon,
+   std::shared_ptr<const hier::Connector> dst_to_encon,
    const hier::Box& fill_box,
    const hier::BoundaryBox& bbox,
-   const boost::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
+   const std::shared_ptr<hier::BaseGridGeometry>& grid_geometry)
 {
    const tbox::Dimension& dim = fill_box.getDim();
 
@@ -320,8 +320,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
 
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
-      boost::shared_ptr<pdat::FaceData<double> > face_data(
-         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<double> > face_data(
+         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
 
@@ -367,7 +367,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
             for (hier::Connector::ConstNeighborIterator ei = dst_to_encon->begin(ni);
                  ei != dst_to_encon->end(ni); ++ei) {
 
-               boost::shared_ptr<hier::Patch> encon_patch(
+               std::shared_ptr<hier::Patch> encon_patch(
                   encon_level.getPatch(ei->getBoxId()));
 
                const hier::BlockId& encon_blk_id = ei->getBlockId();
@@ -405,8 +405,8 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
                                                   patch_blk_id,
                                                   encon_blk_id);
 
-                  boost::shared_ptr<pdat::FaceData<double> > sing_data(
-                     BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+                  std::shared_ptr<pdat::FaceData<double> > sing_data(
+                     POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -528,7 +528,7 @@ void FaceMultiblockTest::fillSingularityBoundaryConditions(
  */
 bool FaceMultiblockTest::verifyResults(
    const hier::Patch& patch,
-   const boost::shared_ptr<hier::PatchHierarchy> hierarchy,
+   const std::shared_ptr<hier::PatchHierarchy> hierarchy,
    int level_number,
    const hier::BlockId& block_id)
 {
@@ -544,13 +544,13 @@ bool FaceMultiblockTest::verifyResults(
    }
    hier::Box pbox = patch.getBox();
 
-   boost::shared_ptr<pdat::FaceData<double> > solution(
+   std::shared_ptr<pdat::FaceData<double> > solution(
       new pdat::FaceData<double>(pbox, 1, tgcw));
 
    hier::Box tbox(pbox);
    tbox.grow(tgcw);
 
-   boost::shared_ptr<hier::BaseGridGeometry> grid_geom(
+   std::shared_ptr<hier::BaseGridGeometry> grid_geom(
       hierarchy->getGridGeometry());
 
    hier::BoxContainer singularity(
@@ -567,8 +567,8 @@ bool FaceMultiblockTest::verifyResults(
 
       double correct = (double)block_id.getBlockValue();
 
-      boost::shared_ptr<pdat::FaceData<double> > face_data(
-         BOOST_CAST<pdat::FaceData<double>, hier::PatchData>(
+      std::shared_ptr<pdat::FaceData<double> > face_data(
+         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(face_data);
       int depth = face_data->getDepth();
@@ -661,7 +661,7 @@ bool FaceMultiblockTest::verifyResults(
          }
       }
 
-      boost::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
+      std::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
       for (int b = 0; b < d_dim.getValue(); ++b) {
          const std::vector<hier::BoundaryBox> bdry =
@@ -771,7 +771,7 @@ bool FaceMultiblockTest::verifyResults(
 void FaceMultiblockTest::postprocessRefine(
    hier::Patch& fine,
    const hier::Patch& coarse,
-   const boost::shared_ptr<hier::VariableContext>& context,
+   const std::shared_ptr<hier::VariableContext>& context,
    const hier::Box& fine_box,
    const hier::IntVector& ratio) const
 {
@@ -787,10 +787,10 @@ void FaceMultiblockTest::postprocessRefine(
       int id = hier::VariableDatabase::getDatabase()->
          mapVariableAndContextToIndex(d_variables[i], context);
 
-      boost::shared_ptr<hier::PatchDataFactory> fine_pdf(
+      std::shared_ptr<hier::PatchDataFactory> fine_pdf(
          fine.getPatchDescriptor()->getPatchDataFactory(id));
 
-      boost::shared_ptr<hier::BoxOverlap> fine_overlap(
+      std::shared_ptr<hier::BoxOverlap> fine_overlap(
          fill_pattern.computeFillBoxesOverlap(
             fine_box_list,
             empty_box_list,

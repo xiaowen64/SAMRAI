@@ -26,7 +26,6 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#include "boost/shared_ptr.hpp"
 #include <iostream>
 #include <vector>
 
@@ -144,10 +143,10 @@ public:
    TreeLoadBalancer(
       const tbox::Dimension& dim,
       const std::string& name,
-      const boost::shared_ptr<tbox::Database>& input_db =
-         boost::shared_ptr<tbox::Database>(),
-      const boost::shared_ptr<tbox::RankTreeStrategy>& rank_tree =
-         boost::shared_ptr<tbox::RankTreeStrategy>());
+      const std::shared_ptr<tbox::Database>& input_db =
+         std::shared_ptr<tbox::Database>(),
+      const std::shared_ptr<tbox::RankTreeStrategy>& rank_tree =
+         std::shared_ptr<tbox::RankTreeStrategy>());
 
    /*!
     * @brief Virtual destructor releases all internal storage.
@@ -210,7 +209,7 @@ public:
     * is used.  If no value is given, the data will be
     * used for all levels.
     *
-    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  boost::shared_ptr<pdat::CellDataFactory<double> >
+    * @pre hier::VariableDatabase::getDatabase()->getPatchDescriptor()->getPatchDataFactory(data_id) is actually a  std::shared_ptr<pdat::CellDataFactory<double> >
     */
    void
    setWorkloadPatchDataIndex(
@@ -247,7 +246,7 @@ public:
    loadBalanceBoxLevel(
       hier::BoxLevel& balance_box_level,
       hier::Connector* balance_to_anchor,
-      const boost::shared_ptr<hier::PatchHierarchy>& hierarchy,
+      const std::shared_ptr<hier::PatchHierarchy>& hierarchy,
       const int level_number,
       const hier::IntVector& min_size,
       const hier::IntVector& max_size,
@@ -275,7 +274,7 @@ public:
     */
    void
    setCommGraphWriter(
-      const boost::shared_ptr<tbox::CommGraphWriter>& comm_graph_writer)
+      const std::shared_ptr<tbox::CommGraphWriter>& comm_graph_writer)
    {
       d_comm_graph_writer = comm_graph_writer;
    }
@@ -540,7 +539,7 @@ private:
        * If this object is for the local process, shipment is to or
        * from the process's *parent*.
        */
-      boost::shared_ptr<TransitLoad> d_shipment;
+      std::shared_ptr<TransitLoad> d_shipment;
 
       /*!
        * @brief Whether branch expects its parent to send work down.
@@ -552,8 +551,8 @@ private:
 
       //@{
       //! @name Debugging and diagnostic data.
-      boost::shared_ptr<tbox::Timer> t_pack_load;
-      boost::shared_ptr<tbox::Timer> t_unpack_load;
+      std::shared_ptr<tbox::Timer> t_pack_load;
+      std::shared_ptr<tbox::Timer> t_unpack_load;
       bool d_print_steps;
       //@}
 
@@ -571,7 +570,7 @@ private:
     */
    void
    getFromInput(
-      const boost::shared_ptr<tbox::Database>& input_db);
+      const std::shared_ptr<tbox::Database>& input_db);
 
    /*!
     * Utility functions to determine parameter values for level.
@@ -750,12 +749,12 @@ private:
    bool d_allow_box_breaking;
 
    //! @brief How to arange a contiguous range of MPI ranks in a tree.
-   const boost::shared_ptr<tbox::RankTreeStrategy> d_rank_tree;
+   const std::shared_ptr<tbox::RankTreeStrategy> d_rank_tree;
 
    /*!
     * @brief Utility to save data for communication graph output.
     */
-   boost::shared_ptr<tbox::CommGraphWriter> d_comm_graph_writer;
+   std::shared_ptr<tbox::CommGraphWriter> d_comm_graph_writer;
 
    /*
     * Values for workload estimate data, workload factor, and bin pack method
@@ -780,7 +779,7 @@ private:
 
    //@{
    //! @name Data shared with private methods during balancing.
-   mutable boost::shared_ptr<PartitioningParams> d_pparams;
+   mutable std::shared_ptr<PartitioningParams> d_pparams;
    mutable LoadType d_global_avg_load;
    mutable LoadType d_min_load;
    //@}
@@ -807,31 +806,31 @@ private:
    /*
     * Performance timers.
     */
-   boost::shared_ptr<tbox::Timer> t_load_balance_box_level;
-   boost::shared_ptr<tbox::Timer> t_get_map;
-   boost::shared_ptr<tbox::Timer> t_use_map;
-   boost::shared_ptr<tbox::Timer> t_constrain_size;
-   boost::shared_ptr<tbox::Timer> t_distribute_load_across_rank_group;
-   boost::shared_ptr<tbox::Timer> t_compute_local_load;
-   boost::shared_ptr<tbox::Timer> t_compute_global_load;
-   boost::shared_ptr<tbox::Timer> t_compute_tree_load;
-   std::vector<boost::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
-   std::vector<boost::shared_ptr<tbox::Timer> > t_load_balance_for_cycle;
-   boost::shared_ptr<tbox::Timer> t_send_load_to_children;
-   boost::shared_ptr<tbox::Timer> t_send_load_to_parent;
-   boost::shared_ptr<tbox::Timer> t_get_load_from_children;
-   boost::shared_ptr<tbox::Timer> t_get_load_from_parent;
-   boost::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
-   boost::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
-   boost::shared_ptr<tbox::Timer> t_report_loads;
-   boost::shared_ptr<tbox::Timer> t_local_load_moves;
-   boost::shared_ptr<tbox::Timer> t_finish_sends;
-   boost::shared_ptr<tbox::Timer> t_barrier_before;
-   boost::shared_ptr<tbox::Timer> t_barrier_after;
-   boost::shared_ptr<tbox::Timer> t_child_send_wait;
-   boost::shared_ptr<tbox::Timer> t_child_recv_wait;
-   boost::shared_ptr<tbox::Timer> t_parent_send_wait;
-   boost::shared_ptr<tbox::Timer> t_parent_recv_wait;
+   std::shared_ptr<tbox::Timer> t_load_balance_box_level;
+   std::shared_ptr<tbox::Timer> t_get_map;
+   std::shared_ptr<tbox::Timer> t_use_map;
+   std::shared_ptr<tbox::Timer> t_constrain_size;
+   std::shared_ptr<tbox::Timer> t_distribute_load_across_rank_group;
+   std::shared_ptr<tbox::Timer> t_compute_local_load;
+   std::shared_ptr<tbox::Timer> t_compute_global_load;
+   std::shared_ptr<tbox::Timer> t_compute_tree_load;
+   std::vector<std::shared_ptr<tbox::Timer> > t_compute_tree_load_for_cycle;
+   std::vector<std::shared_ptr<tbox::Timer> > t_load_balance_for_cycle;
+   std::shared_ptr<tbox::Timer> t_send_load_to_children;
+   std::shared_ptr<tbox::Timer> t_send_load_to_parent;
+   std::shared_ptr<tbox::Timer> t_get_load_from_children;
+   std::shared_ptr<tbox::Timer> t_get_load_from_parent;
+   std::shared_ptr<tbox::Timer> t_post_load_distribution_barrier;
+   std::shared_ptr<tbox::Timer> t_assign_to_local_and_populate_maps;
+   std::shared_ptr<tbox::Timer> t_report_loads;
+   std::shared_ptr<tbox::Timer> t_local_load_moves;
+   std::shared_ptr<tbox::Timer> t_finish_sends;
+   std::shared_ptr<tbox::Timer> t_barrier_before;
+   std::shared_ptr<tbox::Timer> t_barrier_after;
+   std::shared_ptr<tbox::Timer> t_child_send_wait;
+   std::shared_ptr<tbox::Timer> t_child_recv_wait;
+   std::shared_ptr<tbox::Timer> t_parent_send_wait;
+   std::shared_ptr<tbox::Timer> t_parent_recv_wait;
 
    /*
     * Statistics on number of cells and patches generated.
