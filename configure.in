@@ -756,8 +756,7 @@ dnl Set the optional classes to build
 dnl
 
 dnl
-dnl Set up the Fortran compiler.  Look for special Fortran compilers on
-dnl AIX machines.
+dnl Set up the Fortran compiler.
 dnl
 
 if test -n "$with_F77"; then
