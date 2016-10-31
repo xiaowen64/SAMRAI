@@ -24,6 +24,7 @@
 
 #include <string>
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {

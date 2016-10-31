@@ -31,6 +31,7 @@ using namespace std;
 #endif
 #include "SAMRAI/hier/Variable.h"
 
+#include <memory>
 
 namespace SAMRAI {
 

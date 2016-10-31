@@ -11,6 +11,7 @@
 #define included_DLBGTest
 
 #include <string>
+#include <memory>
 
 #include "SAMRAI/tbox/Database.h"
 

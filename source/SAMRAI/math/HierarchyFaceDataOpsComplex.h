@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/Complex.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

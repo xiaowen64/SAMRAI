@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/Database.h"
 
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

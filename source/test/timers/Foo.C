@@ -12,6 +12,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <memory>
 
 #define LOOP_MAX (10000000)
 

@@ -44,6 +44,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {

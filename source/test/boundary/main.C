@@ -11,6 +11,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <string>
+#include <memory>
 using namespace std;
 
 // Headers for basic SAMRAI objects used in this code.
@@ -30,7 +31,6 @@ using namespace std;
 
 // Headers for classes specific to this example
 #include "BoundaryDataTester.h"
-
 
 using namespace SAMRAI;
 

@@ -34,6 +34,7 @@
 #include "SAMRAI/appu/VisItDataWriter.h" \
 
 #include <vector>
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;

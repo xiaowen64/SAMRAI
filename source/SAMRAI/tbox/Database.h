@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <memory>
 
 #define INPUT_RANGE_ERROR(param_name)                                     \
    TBOX_ERROR(getObjectName() << ": getFromInput() error\n" << param_name \

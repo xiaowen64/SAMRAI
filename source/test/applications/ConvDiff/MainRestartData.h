@@ -19,6 +19,7 @@
 #define included_String
 #endif
 
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;

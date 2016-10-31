@@ -12,6 +12,7 @@
 #endif
 
 #include <string>
+#include <memory>
 #include "SAMRAI/SAMRAI_config.h"
 
 /*

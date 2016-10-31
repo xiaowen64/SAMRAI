@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <memory>
 using namespace std;
 #define included_String
 #include "SAMRAI/tbox/SAMRAI_MPI.h"

@@ -24,6 +24,8 @@
 #include "SAMRAI/tbox/MathUtilities.h"
 
 #include <string>
+#include <memory>
+
 using namespace std;
 
 using namespace SAMRAI;

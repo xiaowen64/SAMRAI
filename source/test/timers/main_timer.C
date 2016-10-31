@@ -37,6 +37,8 @@ using namespace std;
 #include <sys/types.h>
 #include <sys/time.h>
 
+#include <memory>
+
 class PTimer
 {
 public:

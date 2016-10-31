@@ -20,6 +20,7 @@
 #include "SAMRAI/xfer/CoarsenClasses.h"
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {

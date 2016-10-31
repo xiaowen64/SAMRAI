@@ -17,6 +17,7 @@
 #include "SAMRAI/tbox/Statistic.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {

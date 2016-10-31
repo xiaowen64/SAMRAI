@@ -57,6 +57,7 @@
 #include <cstdlib>
 #include <string>
 #include <fstream>
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;

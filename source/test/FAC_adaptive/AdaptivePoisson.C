@@ -51,6 +51,7 @@
 #include <iomanip>
 #include <cstring>
 #include <stdlib.h>
+#include <memory>
 
 #include <cmath>
 

@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/IntVector.h"
 #include "SAMRAI/hier/PatchData.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

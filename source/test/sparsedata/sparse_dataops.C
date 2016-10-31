@@ -33,6 +33,7 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

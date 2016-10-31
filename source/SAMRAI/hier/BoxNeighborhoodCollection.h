@@ -24,6 +24,7 @@
 #include <map>
 #include <set>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

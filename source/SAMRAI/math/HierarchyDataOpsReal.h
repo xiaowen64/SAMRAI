@@ -13,9 +13,10 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#include <iostream>
-
 #include "SAMRAI/hier/PatchHierarchy.h"
+
+#include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

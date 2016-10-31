@@ -18,6 +18,7 @@
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

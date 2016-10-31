@@ -22,6 +22,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

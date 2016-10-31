@@ -73,6 +73,7 @@ using namespace std;
 
 
 #include <vector>
+#include <memory>
 
 using namespace SAMRAI;
 using namespace tbox;

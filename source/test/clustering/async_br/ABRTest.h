@@ -11,6 +11,7 @@
 #define included_ABRTest
 
 #include <string>
+#include <memory>
 using namespace std;
 
 #include "SAMRAI/tbox/Database.h"

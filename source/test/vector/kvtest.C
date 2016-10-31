@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <string>
+#include <memory>
 
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"

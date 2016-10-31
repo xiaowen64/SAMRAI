@@ -37,6 +37,8 @@
 #include <omp.h>
 #endif
 
+#include <memory>
+
 using namespace SAMRAI;
 
 /*

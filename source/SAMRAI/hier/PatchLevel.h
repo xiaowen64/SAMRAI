@@ -21,6 +21,7 @@
 
 #include <map>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

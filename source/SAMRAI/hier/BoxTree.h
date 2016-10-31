@@ -18,6 +18,7 @@
 
 #include <vector>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

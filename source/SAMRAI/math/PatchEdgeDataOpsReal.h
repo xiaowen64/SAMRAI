@@ -21,6 +21,7 @@
 #include "SAMRAI/tbox/PIO.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

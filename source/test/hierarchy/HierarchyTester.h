@@ -27,6 +27,8 @@
 #define included_String
 #endif
 
+#include <memory>
+
 using namespace SAMRAI;
 using namespace tbox;
 using namespace hier;

@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/Variable.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

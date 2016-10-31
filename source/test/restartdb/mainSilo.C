@@ -19,6 +19,7 @@
 #include "SAMRAI/tbox/RestartManager.h"
 
 #include <string>
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;

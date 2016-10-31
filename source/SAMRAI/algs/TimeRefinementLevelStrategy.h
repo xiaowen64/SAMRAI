@@ -20,6 +20,7 @@
 
 
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {

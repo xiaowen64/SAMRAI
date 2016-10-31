@@ -18,6 +18,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/tbox/Complex.h"
 
+#include <memory>
+
 
 namespace SAMRAI {
 namespace math {

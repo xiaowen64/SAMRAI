@@ -21,6 +21,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

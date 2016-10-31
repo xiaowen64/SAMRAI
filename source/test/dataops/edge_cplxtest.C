@@ -44,6 +44,7 @@
 
 #include <fstream>
 #include <iomanip>
+#include <memory>
 
 using namespace SAMRAI;
 

@@ -24,6 +24,7 @@
 #include "SAMRAI/solv/SundialsAbstractVector.h"
 #include "SAMRAI/solv/SAMRAIVectorReal.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {

@@ -23,6 +23,7 @@
 #include "SAMRAI/tbox/TimerManager.h"
 
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

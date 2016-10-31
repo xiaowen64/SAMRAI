@@ -22,6 +22,7 @@
 #include "SAMRAI/tbox/Database.h"
 
 #include <string>
+#include <memory>
 
 using namespace std;
 

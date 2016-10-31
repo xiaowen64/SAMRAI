@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/PatchData.h"
 #include "SAMRAI/hier/PatchDataFactory.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

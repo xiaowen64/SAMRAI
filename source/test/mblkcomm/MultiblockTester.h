@@ -37,6 +37,7 @@
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <memory>
 
 using namespace std;
 using namespace SAMRAI;

@@ -23,6 +23,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

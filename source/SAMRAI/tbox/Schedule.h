@@ -21,6 +21,7 @@
 #include <iostream>
 #include <map>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {

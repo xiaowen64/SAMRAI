@@ -24,6 +24,7 @@
 #include "SAMRAI/pdat/IndexDataFactory.C"
 
 #include <list>
+#include <memory>
 
 using namespace SAMRAI;
 using namespace hier;

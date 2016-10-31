@@ -17,6 +17,7 @@
 #include "SAMRAI/math/ArrayDataNormOpsReal.h"
 #include "SAMRAI/hier/Box.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

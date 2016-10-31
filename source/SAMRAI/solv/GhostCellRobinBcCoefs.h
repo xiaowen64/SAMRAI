@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Timer.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {

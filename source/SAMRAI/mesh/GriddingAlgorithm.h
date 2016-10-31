@@ -31,6 +31,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 #define GA_RECORD_STATS
 // #undef GA_RECORD_STATS

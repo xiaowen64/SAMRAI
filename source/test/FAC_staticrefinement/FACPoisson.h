@@ -24,6 +24,7 @@
 #include "SAMRAI/appu/VisDerivedDataStrategy.h"
 #include "SAMRAI/appu/VisItDataWriter.h"
 
+#include <memory>
 
 namespace SAMRAI {
 

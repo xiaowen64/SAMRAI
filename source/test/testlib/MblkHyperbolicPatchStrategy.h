@@ -23,6 +23,7 @@
 #include "SAMRAI/xfer/RefineSchedule.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
+#include <memory>
 
 /**
  * Class MblkHyperbolicPatchStrategy is an abstract base class defining the

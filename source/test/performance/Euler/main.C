@@ -55,6 +55,7 @@
 #include <stdlib.h>
 #include <string>
 #include <fstream>
+#include <memory>
 using namespace std;
 
 #ifndef _MSC_VER

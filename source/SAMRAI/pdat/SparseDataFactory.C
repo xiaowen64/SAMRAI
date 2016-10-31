@@ -18,6 +18,7 @@
 #include "SAMRAI/pdat/SparseData.h"
 #include "SAMRAI/tbox/MemoryUtilities.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

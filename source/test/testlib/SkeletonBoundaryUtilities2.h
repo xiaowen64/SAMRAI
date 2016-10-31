@@ -23,6 +23,7 @@
 #endif
 
 #include <vector>
+#include <memory>
 
 /*!
  * @brief Class SkeletonBoundaryUtilities2 is a utility class that

@@ -32,6 +32,7 @@ using namespace std;
 #include "SAMRAI/appu/VisItDataWriter.h"
 
 #include <vector>
+#include <memory>
 
 /**
  * The ConvDiff class provides numerical routines for a sample problem

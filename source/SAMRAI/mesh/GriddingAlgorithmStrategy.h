@@ -16,8 +16,8 @@
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 #include "SAMRAI/tbox/Serializable.h"
 
-
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

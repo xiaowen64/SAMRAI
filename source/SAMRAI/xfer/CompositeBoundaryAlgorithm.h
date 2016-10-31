@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/xfer/CompositeBoundarySchedule.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {

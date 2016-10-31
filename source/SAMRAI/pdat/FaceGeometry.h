@@ -21,6 +21,7 @@
 #include "SAMRAI/hier/IntVector.h"
 
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

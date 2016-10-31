@@ -11,6 +11,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <string>
+#include <memory>
 using namespace std;
 
 // Headers for basic SAMRAI objects used in this code.
@@ -21,7 +22,6 @@ using namespace std;
 #include "SAMRAI/tbox/PIO.h"
 #include "SAMRAI/tbox/Timer.h"
 #include "SAMRAI/tbox/TimerManager.h"
-
 
 using namespace SAMRAI;
 

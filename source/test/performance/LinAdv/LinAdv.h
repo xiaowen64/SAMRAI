@@ -27,6 +27,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 #include <string>
 #include <vector>
+#include <memory>
 using namespace std;
 #define included_String
 #include "SAMRAI/hier/VariableContext.h"

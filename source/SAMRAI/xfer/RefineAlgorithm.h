@@ -25,6 +25,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/hier/PatchLevel.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {

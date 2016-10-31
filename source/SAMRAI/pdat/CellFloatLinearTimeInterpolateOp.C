@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/tbox/MathUtilities.h"
 
+#include <memory>
 
 /*
  *************************************************************************

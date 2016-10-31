@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

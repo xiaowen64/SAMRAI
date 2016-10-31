@@ -19,6 +19,7 @@
 #include "SAMRAI/xfer/RefineClasses.h"
 #include "SAMRAI/xfer/RefineTransactionFactory.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {

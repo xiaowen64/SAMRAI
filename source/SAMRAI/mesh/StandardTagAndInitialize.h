@@ -16,8 +16,8 @@
 #include "SAMRAI/mesh/StandardTagAndInitializeConnectorWidthRequestor.h"
 #include "SAMRAI/mesh/TagAndInitializeStrategy.h"
 
-
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

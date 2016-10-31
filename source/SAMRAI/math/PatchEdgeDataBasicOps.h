@@ -18,6 +18,7 @@
 #include "SAMRAI/math/ArrayDataBasicOps.h"
 #include "SAMRAI/hier/Box.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

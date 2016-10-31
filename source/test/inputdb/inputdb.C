@@ -24,6 +24,7 @@
 #include "SAMRAI/tbox/SAMRAIManager.h"
 
 #include <vector>
+#include <memory>
 
 using namespace SAMRAI;
 using namespace std;

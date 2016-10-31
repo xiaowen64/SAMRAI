@@ -23,6 +23,7 @@
 #include "SAMRAI/pdat/SideData.h"
 #include "SAMRAI/pdat/OutersideData.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

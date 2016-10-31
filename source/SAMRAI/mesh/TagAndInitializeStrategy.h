@@ -17,6 +17,7 @@
 #include "SAMRAI/hier/PatchLevel.h"
 #include "SAMRAI/hier/BoxLevel.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

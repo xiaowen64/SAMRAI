@@ -21,6 +21,7 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/mesh/GriddingAlgorithm.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {

@@ -17,6 +17,8 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/xfer/VariableFillPattern.h"
 
+#include <memory>
+
 
 namespace SAMRAI {
 namespace pdat {

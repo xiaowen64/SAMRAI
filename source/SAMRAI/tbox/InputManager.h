@@ -16,6 +16,7 @@
 #include "SAMRAI/tbox/StartupShutdownManager.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {

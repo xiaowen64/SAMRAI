@@ -21,6 +21,7 @@
 #include "SAMRAI/tbox/Database.h"
 #include "SAMRAI/tbox/IOStream.h"
 
+#include <memory>
 
 /**
  * The SampleClass struct holds some dummy data and methods.  It's intent

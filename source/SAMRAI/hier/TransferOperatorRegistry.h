@@ -23,6 +23,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <string>
+#include <memory>
 
 BEGIN_BOOST_WARNING_SUPPRESSION
 #include "boost/unordered_map.hpp"

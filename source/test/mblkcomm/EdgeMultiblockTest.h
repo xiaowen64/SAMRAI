@@ -21,6 +21,7 @@
 #include "PatchMultiblockTestStrategy.h"
 #include "SAMRAI/hier/Variable.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

@@ -18,6 +18,7 @@
 #include "SAMRAI/tbox/Dimension.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace geom {

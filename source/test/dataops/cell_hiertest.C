@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <iomanip>
+#include <memory>
 
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/PIO.h"

@@ -14,6 +14,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {

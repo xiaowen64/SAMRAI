@@ -13,6 +13,7 @@
 #include "MeshGenerationStrategy.h"
 
 #include <string>
+#include <memory>
 
 /*
  * SAMRAI classes

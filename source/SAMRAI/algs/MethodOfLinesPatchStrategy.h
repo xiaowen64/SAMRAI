@@ -24,6 +24,7 @@
 #include "SAMRAI/xfer/CoarsenPatchStrategy.h"
 #include "SAMRAI/xfer/RefinePatchStrategy.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace algs {

@@ -38,6 +38,7 @@ using namespace std;
 #include "SAMRAI/hier/Variable.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <memory>
 
 namespace SAMRAI {
 

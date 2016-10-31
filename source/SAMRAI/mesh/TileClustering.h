@@ -22,6 +22,7 @@
 #include "SAMRAI/tbox/OpenMPUtilities.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

@@ -46,6 +46,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {

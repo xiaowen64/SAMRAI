@@ -11,6 +11,7 @@
 #define included_MeshGenerationStrategy
 
 #include <string>
+#include <memory>
 
 /*
  * SAMRAI classes

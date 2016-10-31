@@ -20,6 +20,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <memory>
 
 
 namespace SAMRAI {

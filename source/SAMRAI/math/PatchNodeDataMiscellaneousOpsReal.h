@@ -17,6 +17,8 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/pdat/NodeData.h"
 
+#include <memory>
+
 
 namespace SAMRAI {
 namespace math {

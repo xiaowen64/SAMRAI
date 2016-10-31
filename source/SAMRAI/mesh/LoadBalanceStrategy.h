@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 #include "SAMRAI/tbox/RankGroup.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

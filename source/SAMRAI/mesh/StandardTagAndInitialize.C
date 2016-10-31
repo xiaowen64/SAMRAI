@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <stdio.h>
+#include <memory>
 
 /*
  *************************************************************************

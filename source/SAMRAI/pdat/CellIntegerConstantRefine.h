@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/RefineOperator.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

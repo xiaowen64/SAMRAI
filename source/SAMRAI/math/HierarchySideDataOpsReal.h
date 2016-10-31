@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/PatchHierarchy.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

@@ -20,6 +20,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace math {

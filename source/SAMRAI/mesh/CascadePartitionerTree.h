@@ -18,6 +18,8 @@
 #include "SAMRAI/tbox/SAMRAI_MPI.h"
 #include "SAMRAI/tbox/Utilities.h"
 
+#include <memory>
+
 namespace SAMRAI {
 namespace mesh {
 

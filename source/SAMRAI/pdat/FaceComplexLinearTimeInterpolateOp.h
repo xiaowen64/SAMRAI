@@ -15,6 +15,7 @@
 #include "SAMRAI/hier/TimeInterpolateOperator.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace pdat {

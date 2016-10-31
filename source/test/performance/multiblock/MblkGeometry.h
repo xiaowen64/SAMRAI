@@ -19,6 +19,7 @@
 #include "SAMRAI/hier/Patch.h"
 #include "SAMRAI/tbox/Serializable.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

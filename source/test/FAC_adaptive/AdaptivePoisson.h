@@ -20,6 +20,7 @@
 #include "PoissonMultigaussianSolution.h"
 
 #include <string>
+#include <memory>
 
 #include "SAMRAI/tbox/Database.h"
 

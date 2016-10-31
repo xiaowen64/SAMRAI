@@ -21,6 +21,7 @@
 #include <map>
 #include <stdlib.h>
 #include <vector>
+#include <memory>
 
 #define HIER_GRID_GEOMETRY_VERSION (3)
 

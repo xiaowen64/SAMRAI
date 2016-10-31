@@ -20,6 +20,7 @@
 #include "SAMRAI/hier/Patch.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace geom {

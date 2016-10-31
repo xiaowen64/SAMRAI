@@ -17,6 +17,7 @@
 #include <cstdio>
 #include <string>
 #include <list>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {

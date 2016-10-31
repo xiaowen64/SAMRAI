@@ -20,6 +20,7 @@
 
 #include <string>
 #include <map>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

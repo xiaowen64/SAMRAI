@@ -18,6 +18,8 @@
 #include "SAMRAI/hier/BoxOverlap.h"
 #include "SAMRAI/hier/IntVector.h"
 
+#include <memory>
+
 
 namespace SAMRAI {
 namespace pdat {

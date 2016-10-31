@@ -18,6 +18,7 @@
 #include "SAMRAI/hier/PatchDescriptor.h"
 #include "SAMRAI/tbox/Database.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

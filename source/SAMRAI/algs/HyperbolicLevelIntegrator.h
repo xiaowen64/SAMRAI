@@ -32,6 +32,7 @@
 
 #include <list>
 #include <vector>
+#include <memory>
 
 #define HLI_RECORD_STATS
 // #undef DGA_RECORD_STATS

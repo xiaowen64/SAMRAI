@@ -17,6 +17,7 @@
 #include "SAMRAI/xfer/RefineAlgorithm.h"
 #include "SAMRAI/xfer/RefineSchedule.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {

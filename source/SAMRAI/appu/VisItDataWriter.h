@@ -35,6 +35,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace appu {

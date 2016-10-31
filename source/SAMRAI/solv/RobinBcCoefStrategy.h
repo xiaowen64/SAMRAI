@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/BoundaryBox.h"
 #include "SAMRAI/hier/Patch.h"
 
+#include <memory>
 
 namespace SAMRAI {
 namespace solv {

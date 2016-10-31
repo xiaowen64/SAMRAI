@@ -33,6 +33,7 @@
 #include "SAMRAI/hier/VariableDatabase.h"
 #include "SAMRAI/hier/VariableContext.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

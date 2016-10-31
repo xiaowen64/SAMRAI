@@ -17,6 +17,7 @@
 #include "SAMRAI/tbox/Transaction.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace tbox {

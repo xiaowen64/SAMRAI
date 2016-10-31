@@ -18,6 +18,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #ifdef HAVE_TAU
 #if (PROFILING_ON || TRACING_ON)

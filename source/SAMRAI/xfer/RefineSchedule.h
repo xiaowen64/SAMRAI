@@ -26,6 +26,7 @@
 #include "SAMRAI/tbox/Timer.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {

@@ -43,7 +43,7 @@
 #include <stdlib.h>
 #include <fstream>
 #include <iomanip>
-
+#include <memory>
 
 using namespace SAMRAI;
 

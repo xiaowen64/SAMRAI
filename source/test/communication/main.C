@@ -11,6 +11,7 @@
 #include "SAMRAI/SAMRAI_config.h"
 
 #include <string>
+#include <memory>
 using namespace std;
 
 #include "SAMRAI/tbox/SAMRAIManager.h"

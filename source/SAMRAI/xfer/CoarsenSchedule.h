@@ -26,6 +26,7 @@
 #include "SAMRAI/xfer/CoarsenTransactionFactory.h"
 
 #include <iostream>
+#include <memory>
 
 namespace SAMRAI {
 namespace xfer {

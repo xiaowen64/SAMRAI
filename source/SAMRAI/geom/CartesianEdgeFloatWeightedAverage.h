@@ -22,6 +22,8 @@
 #endif
 #include "SAMRAI/hier/CoarsenOperator.h"
 
+#include <memory>
+
 
 namespace SAMRAI {
 namespace geom {

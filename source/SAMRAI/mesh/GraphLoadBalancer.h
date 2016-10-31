@@ -30,6 +30,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <memory>
 
 namespace SAMRAI {
 namespace mesh {

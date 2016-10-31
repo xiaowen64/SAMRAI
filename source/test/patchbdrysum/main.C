@@ -33,6 +33,7 @@
 // Header for application-specific algorithm/data structure object
 #include "HierSumTest.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 using namespace tbox;

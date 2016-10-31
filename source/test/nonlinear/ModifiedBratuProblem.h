@@ -65,6 +65,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 using namespace SAMRAI;
 using namespace xfer;

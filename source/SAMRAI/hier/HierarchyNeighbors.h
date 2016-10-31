@@ -16,6 +16,7 @@
 #include "SAMRAI/hier/PatchHierarchy.h"
 
 #include <vector>
+#include <memory>
 
 namespace SAMRAI {
 namespace hier {

@@ -22,6 +22,7 @@
 #include "SAMRAI/tbox/Serializable.h"
 
 #include <string>
+#include <memory>
 
 namespace SAMRAI {
 namespace geom {

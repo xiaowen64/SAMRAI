@@ -22,6 +22,7 @@
 #include "SAMRAI/tbox/Utilities.h"
 #include "SAMRAI/algs/TimeRefinementIntegrator.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 

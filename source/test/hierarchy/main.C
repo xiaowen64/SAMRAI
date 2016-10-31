@@ -22,6 +22,7 @@
 
 #include "HierarchyTester.h"
 
+#include <memory>
 
 using namespace SAMRAI;
 
