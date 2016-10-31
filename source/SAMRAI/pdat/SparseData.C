@@ -12,16 +12,13 @@
 
 #include "SAMRAI/pdat/SparseData.h"
 
-#ifdef HAVE_BOOST_HEADERS
-
 #include "SAMRAI/hier/Box.h"
 #include "SAMRAI/hier/BoxContainer.h"
 #include "SAMRAI/tbox/PIO.h"
 
-// used for boost::to_lower
-#include "boost/algorithm/string.hpp"
-
 #include <stdexcept>
+#include <algorithm>
+#include <cctype>
 
 #ifdef __GNUC__
 #if __GNUC__ == 4 && __GNUC_MINOR__ == 1
@@ -215,10 +212,10 @@ SparseData<BOX_GEOMETRY>::index_hash::operator () (
 {
    std::size_t seed = 0;
    int dim = index.getDim().getValue();
-   boost::hash_combine(seed, dim);
+   hash_combine(seed, dim);
    for (int i = 0; i < dim; ++i) {
-      boost::hash_combine(seed, index[i]);
-      boost::hash_combine(seed, index[i]);
+      hash_combine(seed, index[i]);
+      hash_combine(seed, index[i]);
    }
    return seed;
 }
@@ -244,7 +241,7 @@ SparseData<BOX_GEOMETRY>::SparseData(
    for (name_iter = dbl_names.begin(); name_iter != dbl_names.end();
         ++name_iter, ++val) {
       tmp = *name_iter;
-      boost::to_lower(tmp);
+      to_lower(tmp);
       d_dbl_names.insert(std::make_pair(tmp, DoubleAttributeId(val)));
    }
 
@@ -252,7 +249,7 @@ SparseData<BOX_GEOMETRY>::SparseData(
    for (name_iter = int_names.begin(); name_iter != int_names.end();
         ++name_iter, ++val) {
       tmp = *name_iter;
-      boost::to_lower(tmp);
+      to_lower(tmp);
       d_int_names.insert(std::make_pair(tmp, IntegerAttributeId(val)));
    }
 
@@ -1178,11 +1175,11 @@ template<typename BOX_GEOMETRY>
 void
 SparseData<BOX_GEOMETRY>::printNames(std::ostream& out) const
 {
-   typename boost::unordered_map<
+   typename std::unordered_map<
       std::string, DoubleAttributeId>::const_iterator
    dbl_iter = d_dbl_names.begin();
 
-   typename boost::unordered_map<
+   typename std::unordered_map<
       std::string, IntegerAttributeId>::const_iterator
    int_iter = d_int_names.begin();
 
@@ -1291,6 +1288,24 @@ SparseData<BOX_GEOMETRY>::_removeInsideBox(
       }
    }
 }
+
+template <typename BOX_GEOMETRY>
+template <class T>
+inline void 
+SparseData<BOX_GEOMETRY>::hash_combine(std::size_t& seed, const T& v)
+{
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed<<6) + (seed>>2);
+}
+
+template <typename BOX_GEOMETRY>
+template <class T>
+inline void
+SparseData<BOX_GEOMETRY>::to_lower(T& input)
+{
+  std::transform(input.begin(), input.end(), input.begin(), std::tolower);
+}
+
 /**********************************************************************
  * SparseDataIterator methods
  *********************************************************************/
@@ -1678,7 +1693,7 @@ std::ostream& operator << (std::ostream& out,
    return out;
 }
 
+
 } // namespace pdat
 } // namespace SAMRAI
-#endif
 #endif

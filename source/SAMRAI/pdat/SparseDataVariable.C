@@ -14,8 +14,6 @@
 #include "SAMRAI/pdat/SparseDataVariable.h"
 
 
-#ifdef HAVE_BOOST_HEADERS
-
 #include "SAMRAI/pdat/SparseDataFactory.h"
 
 namespace SAMRAI {
@@ -41,5 +39,4 @@ SparseDataVariable<BOX_GEOMETRY>::~SparseDataVariable()
 
 } // end namespace pdat
 } // end namespace SAMRAI
-#endif
 #endif
