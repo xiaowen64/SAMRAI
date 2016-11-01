@@ -289,9 +289,16 @@ public:
     * increase memory overhead, as the data will remain allocated while the
     * application is doing other things outside of the RefineSchedule.
     *
+    * The fill_time argument is optional, as this may be called at a point in
+    * a code where a simulation time is not known.  The timestamp can be
+    * set with a subsequent call to setInternalDataTime().  Also, the
+    * simulation time may change during the lifetime of the data allocated
+    * by this method, and again setInternalDataTime() can be used multiple
+    * times to change the timestamp for this data.
+    *
     * @param[in] fill_time  timestamp for the data
     */
-   void allocateInternalData(double fill_time);
+   void allocateInternalData(double fill_time = 0.0);
 
    /*!
     * @brief Deallocate the internal data allocated by allocateInternalData().
