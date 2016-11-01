@@ -212,10 +212,10 @@ SparseData<BOX_GEOMETRY>::index_hash::operator () (
 {
    std::size_t seed = 0;
    int dim = index.getDim().getValue();
-   hash_combine(seed, dim);
+   SparseData<BOX_GEOMETRY>::hash_combine(seed, dim);
    for (int i = 0; i < dim; ++i) {
-      hash_combine(seed, index[i]);
-      hash_combine(seed, index[i]);
+      SparseData<BOX_GEOMETRY>::hash_combine(seed, index[i]);
+      SparseData<BOX_GEOMETRY>::hash_combine(seed, index[i]);
    }
    return seed;
 }
@@ -1303,7 +1303,7 @@ template <class T>
 inline void
 SparseData<BOX_GEOMETRY>::to_lower(T& input)
 {
-  std::transform(input.begin(), input.end(), input.begin(), std::tolower);
+  std::transform(input.begin(), input.end(), input.begin(), ::tolower);
 }
 
 /**********************************************************************

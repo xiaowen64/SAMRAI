@@ -125,6 +125,7 @@ private:
    struct index_hash;
 
    template <class T>
+   static
    void hash_combine(std::size_t& seed, const T& v);
 
    template <class T>
