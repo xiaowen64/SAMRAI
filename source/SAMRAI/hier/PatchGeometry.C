@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Base class for geometry management on patches
  *
  ************************************************************************/
@@ -45,8 +45,9 @@ PatchGeometry::PatchGeometry(
    if (d_dim.getValue() > 1) {
       BlockId::block_t b = block_id.getBlockValue();
       for (unsigned int i = 0; i < d_dim.getValue(); ++i) {
-         TBOX_ASSERT((d_ratio_to_level_zero(b,i) *
-                     d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0)
+         bool pos0 = d_ratio_to_level_zero(b,i) > 0;
+         bool pos1 = d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) > 0;
+         TBOX_ASSERT(pos0 == pos1
             || (d_ratio_to_level_zero(b,i) == 1)
             || (d_ratio_to_level_zero(b,(i + 1) % d_dim.getValue()) == 1));
       }

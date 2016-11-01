@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   A container of boxes with basic domain calculus operations
  *
  ************************************************************************/
@@ -340,8 +340,8 @@ UncoveredBoxIterator::findFirstUncoveredBox()
       const BoxContainer& this_level_boxes =
          this_level->getBoxLevel()->getBoxes();
 
-      for (BoxContainer::const_iterator this_itr = this_level_boxes.begin();
-           this_itr != this_level_boxes.end(); ++this_itr) {
+      for (RealBoxConstIterator this_itr = this_level_boxes.realBegin();
+           this_itr != this_level_boxes.realEnd(); ++this_itr) {
          const BoxContainer& uncovered_boxes =
             d_flattened_hierarchy->getVisibleBoxes(*this_itr, d_level_num);
 

@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -285,6 +285,8 @@ Timer::isConcurrentTimer(
       }
    }
 
+#else
+   NULL_USE(timer);
 #endif // ENABLE_SAMRAI_TIMERS
    return false;
 }
@@ -363,6 +365,8 @@ Timer::putToRestart(
    restart_db->putDouble("d_user_exclusive", d_user_exclusive);
    restart_db->putDouble("d_system_exclusive", d_system_exclusive);
    restart_db->putDouble("d_wallclock_exclusive", d_wallclock_exclusive);
+#else
+   NULL_USE(restart_db);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -387,6 +391,8 @@ Timer::getFromRestart(
    d_user_exclusive = restart_db->getDouble("d_user_exclusive");
    d_system_exclusive = restart_db->getDouble("d_system_exclusive");
    d_wallclock_exclusive = restart_db->getDouble("d_wallclock_exclusive");
+#else
+   NULL_USE(restart_db);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 

@@ -2,7 +2,7 @@ c
 c This file is part of the SAMRAI distribution.  For full copyright
 c information, see COPYRIGHT and COPYING.LESSER.
 c
-c Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+c Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
 c Description:   F77 routines for flux computation in 2d.
 c
 define(NDIM,2)dnl
@@ -141,7 +141,7 @@ c***********************************************************************
      &  ifirst0,ilast0,ifirst1,ilast1,
      &  dx,
      &  flux0,flux1,
-     &  advecspeed,uval)
+     &  advecspeed,src,uval)
 c***********************************************************************
       implicit none
 include(FORTDIR/const.i)dnl
@@ -152,7 +152,7 @@ c***********************************************************************
       REAL
      &     flux0(FACE2d0(ifirst,ilast,FLUXG)),
      &     flux1(FACE2d1(ifirst,ilast,FLUXG)),
-     &     advecspeed(0:NDIM-1),
+     &     advecspeed(0:NDIM-1),src,
      &     uval(CELL2d(ifirst,ilast,CELLG))
 c
       integer ic0,ic1
@@ -194,7 +194,7 @@ c     enddo
 c***********************************************************************
       do ic1=ifirst1,ilast1
         do ic0=ifirst0,ilast0
-          uval(ic0,ic1) = uval(ic0,ic1)
+          uval(ic0,ic1) = uval(ic0,ic1) +src
      &          -(flux0(ic0+1,ic1)-flux0(ic0,ic1))/dx(0)
      &          -(flux1(ic1+1,ic0)-flux1(ic1,ic0))/dx(1)
         enddo

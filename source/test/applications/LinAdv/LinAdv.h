@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -465,6 +465,12 @@ private:
     */
    std::vector<double> d_advection_velocity;
 
+   /**
+    * source term for use in testing, and flag to check fluxes
+    */
+   double d_source;
+   bool d_check_fluxes;
+   
    /*
     *  Parameters for numerical method:
     *
@@ -542,6 +548,7 @@ private:
     * Richardson extrapolation.
     */
    std::vector<string> d_refinement_criteria;
+   double d_threshold;
    std::vector<double> d_dev_tol;
    std::vector<double> d_dev;
    std::vector<double> d_dev_time_max;

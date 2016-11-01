@@ -1,7 +1,7 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2015 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2016 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
@@ -17,7 +17,7 @@ AH_TOP([
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 11
-#define SAMRAI_VERSION_PATCHLEVEL 0
+#define SAMRAI_VERSION_PATCHLEVEL 2
 ])
 AH_BOTTOM([
 

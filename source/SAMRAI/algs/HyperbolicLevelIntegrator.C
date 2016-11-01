@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Integration routines for single level in AMR hierarchy
  *                (basic hyperbolic systems)
  *
@@ -208,6 +208,7 @@ HyperbolicLevelIntegrator::HyperbolicLevelIntegrator(
    d_cfl_init(tbox::MathUtilities<double>::getSignalingNaN()),
    d_lag_dt_computation(true),
    d_use_ghosts_for_dt(false),
+   d_use_flux_correction(true),
    d_flux_is_face(true),
    d_flux_face_registered(false),
    d_flux_side_registered(false),
@@ -1453,6 +1454,8 @@ HyperbolicLevelIntegrator::synchronizeNewLevels(
  *    (3) Conservatively coarsen solution on interior of fine level to
  *        coarse level.
  *
+ *    There is an option d_use_flux_correction which can skip (1) and (2).
+ *
  *************************************************************************
  */
 
@@ -1470,6 +1473,8 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
    TBOX_ASSERT_OBJDIM_EQUALITY2(*fine_level, *coarse_level);
    TBOX_ASSERT(sync_time > coarse_sim_time);
 
+   boost::shared_ptr<xfer::CoarsenSchedule> sched;
+   
    /*
     * Coarsen flux integrals around fine patch boundaries to coarser level
     * and replace coarse flux information where appropriate.  NULL patch
@@ -1477,52 +1482,55 @@ HyperbolicLevelIntegrator::synchronizeLevelWithCoarser(
     * i.e. patch model is not needed in coarsening of flux integrals.
     */
 
-   t_coarsen_fluxsum_create->start();
-   boost::shared_ptr<xfer::CoarsenSchedule> sched(
-      d_coarsen_fluxsum->createSchedule(
+   
+   if (d_use_flux_correction) {
+      
+      t_coarsen_fluxsum_create->start();
+      sched = d_coarsen_fluxsum->createSchedule(
          coarse_level,
          fine_level,
-         0));
-   t_coarsen_fluxsum_create->stop();
+         0);
+      t_coarsen_fluxsum_create->stop();
 
-   t_coarsen_fluxsum_comm->start();
-   sched->coarsenData();
-   t_coarsen_fluxsum_comm->stop();
+      t_coarsen_fluxsum_comm->start();
+      sched->coarsenData();
+      t_coarsen_fluxsum_comm->stop();
 
-   /*
-    * Repeat conservative difference on coarser level.
-    */
-   coarse_level->allocatePatchData(d_saved_var_scratch_data, coarse_sim_time);
-   coarse_level->setTime(coarse_sim_time, d_flux_var_data);
+      /*
+       * Repeat conservative difference on coarser level.
+       */
+      coarse_level->allocatePatchData(d_saved_var_scratch_data, coarse_sim_time);
+      coarse_level->setTime(coarse_sim_time, d_flux_var_data);
 
-   d_patch_strategy->setDataContext(d_scratch);
-   t_advance_bdry_fill_comm->start();
-   d_bdry_sched_advance[coarse_level->getLevelNumber()]->
-   fillData(coarse_sim_time);
-   t_advance_bdry_fill_comm->stop();
+      d_patch_strategy->setDataContext(d_scratch);
+      t_advance_bdry_fill_comm->start();
+      d_bdry_sched_advance[coarse_level->getLevelNumber()]->
+         fillData(coarse_sim_time);
+      t_advance_bdry_fill_comm->stop();
 
-   const double reflux_dt = sync_time - coarse_sim_time;
+      const double reflux_dt = sync_time - coarse_sim_time;
 
-   for (hier::PatchLevel::iterator ip(coarse_level->begin());
-        ip != coarse_level->end(); ++ip) {
-      const boost::shared_ptr<hier::Patch>& patch = *ip;
+      for (hier::PatchLevel::iterator ip(coarse_level->begin());
+           ip != coarse_level->end(); ++ip) {
+         const boost::shared_ptr<hier::Patch>& patch = *ip;
 
-      patch->allocatePatchData(d_temp_var_scratch_data, coarse_sim_time);
+         patch->allocatePatchData(d_temp_var_scratch_data, coarse_sim_time);
 
-      bool at_syncronization = true;
-      d_patch_strategy->conservativeDifferenceOnPatch(*patch,
-         coarse_sim_time,
-         reflux_dt,
-         at_syncronization);
-      patch->deallocatePatchData(d_temp_var_scratch_data);
+         bool at_syncronization = true;
+         d_patch_strategy->conservativeDifferenceOnPatch(*patch,
+                                                         coarse_sim_time,
+                                                         reflux_dt,
+                                                         at_syncronization);
+         patch->deallocatePatchData(d_temp_var_scratch_data);
+      }
+
+      d_patch_strategy->clearDataContext();
+
+      copyTimeDependentData(coarse_level, d_scratch, d_new);
+
+      coarse_level->deallocatePatchData(d_saved_var_scratch_data);
    }
-
-   d_patch_strategy->clearDataContext();
-
-   copyTimeDependentData(coarse_level, d_scratch, d_new);
-
-   coarse_level->deallocatePatchData(d_saved_var_scratch_data);
-
+   
    /*
     * Coarsen time-dependent data from fine patch interiors to coarse patches.
     */
@@ -2635,8 +2643,9 @@ HyperbolicLevelIntegrator::printClassData(
    os << "d_cfl = " << d_cfl << "\n"
       << "d_cfl_init = " << d_cfl_init << std::endl;
    os << "d_lag_dt_computation = " << d_lag_dt_computation << "\n"
-      << "d_use_ghosts_for_dt = "
-      << d_use_ghosts_for_dt << std::endl;
+      << "d_use_ghosts_for_dt = " << d_use_ghosts_for_dt
+      << "d_use_flux_correction = " << d_use_flux_correction
+      << std::endl;
    os << "d_patch_strategy = "
       << (HyperbolicPatchStrategy *)d_patch_strategy << std::endl;
    os
@@ -2666,6 +2675,7 @@ HyperbolicLevelIntegrator::putToRestart(
    restart_db->putDouble("cfl_init", d_cfl_init);
    restart_db->putBool("lag_dt_computation", d_lag_dt_computation);
    restart_db->putBool("use_ghosts_to_compute_dt", d_use_ghosts_for_dt);
+   restart_db->putBool("use_flux_correction", d_use_flux_correction);
    restart_db->putBool("DEV_distinguish_mpi_reduction_costs",
       d_distinguish_mpi_reduction_costs);
 }
@@ -2703,6 +2713,9 @@ HyperbolicLevelIntegrator::getFromInput(
       d_use_ghosts_for_dt =
          input_db->getBoolWithDefault("use_ghosts_to_compute_dt", false);
 
+      d_use_flux_correction =
+         input_db->getBoolWithDefault("use_flux_correction", true);
+
       d_distinguish_mpi_reduction_costs =
          input_db->getBoolWithDefault("DEV_distinguish_mpi_reduction_costs", false);
 
@@ -2725,6 +2738,10 @@ HyperbolicLevelIntegrator::getFromInput(
          d_use_ghosts_for_dt =
             input_db->getBoolWithDefault("use_ghosts_to_compute_dt",
                d_use_ghosts_for_dt);
+
+         d_use_flux_correction =
+            input_db->getBoolWithDefault("use_flux_correction",
+               d_use_flux_correction);
 
          d_distinguish_mpi_reduction_costs =
             input_db->getBoolWithDefault("DEV_distinguish_mpi_reduction_costs",
@@ -2775,6 +2792,7 @@ HyperbolicLevelIntegrator::getFromRestart()
    d_cfl_init = db->getDouble("cfl_init");
    d_lag_dt_computation = db->getBool("lag_dt_computation");
    d_use_ghosts_for_dt = db->getBool("use_ghosts_to_compute_dt");
+   d_use_flux_correction = db->getBool("use_flux_correction");
    d_distinguish_mpi_reduction_costs =
       db->getBool("DEV_distinguish_mpi_reduction_costs");
 }

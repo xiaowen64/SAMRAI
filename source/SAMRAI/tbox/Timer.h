@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Timer class to track elapsed time in portions of a program.
  *
  ************************************************************************/
@@ -322,6 +322,8 @@ protected:
    {
 #ifdef ENABLE_SAMRAI_TIMERS
       d_is_active = is_active;
+#else
+      NULL_USE(is_active);
 #endif
    }
 
@@ -336,6 +338,8 @@ protected:
       if (!isConcurrentTimer(timer)) {
          d_concurrent_timers.push_back(&timer);
       }
+#else
+      NULL_USE(timer);
 #endif
    }
 

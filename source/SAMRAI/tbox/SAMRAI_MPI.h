@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Simple utility class for interfacing with MPI
  *
  ************************************************************************/
@@ -55,6 +55,7 @@ enum {
    MPI_2INT,
    MPI_DOUBLE_INT,
    MPI_FLOAT_INT,
+   MPI_UNSIGNED_LONG,
    // Operations:
    MPI_MIN,
    MPI_MINLOC,

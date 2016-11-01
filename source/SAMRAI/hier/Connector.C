@@ -3,7 +3,7 @@
  * This file is part of the SAMRAI distribution.  For full copyright
  * information, see COPYRIGHT and COPYING.LESSER.
  *
- * Copyright:     (c) 1997-2015 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
  * Description:   Set of edges incident from a box_level of a distributed
  *                box graph.
  *
@@ -1421,8 +1421,8 @@ Connector::convertHeadWidthToBase(
 
    IntVector ratio(dim); // Ratio between head and base.
 
-   if (head_refinement_ratio * base_refinement_ratio >
-       IntVector::getZero(dim)) {
+   if ((head_refinement_ratio > IntVector::getZero(dim)) ==
+       (base_refinement_ratio > IntVector::getZero(dim))) {
       // Same signs for both ratios -> simple to compute head-base ratio.
       if (base_refinement_ratio >= head_refinement_ratio) {
          ratio = base_refinement_ratio / head_refinement_ratio;
