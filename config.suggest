@@ -182,6 +182,26 @@ EOF
 # Maintained by Bob Anderson
 ;;
 
+toss3_gcc) # TOSS3, gnu
+cat <<-EOF
+	--with-CC="/usr/tce/packages/mvapich2/mvapich2-2.2-intel-16.0.3/bin/mpicc -gcc-name=/usr/tce/packages/gcc/gcc-4.9.3/bin/gcc"
+	--with-CXX="/usr/tce/packages/mvapich2/mvapich2-2.2-intel-16.0.3/bin/mpic++ -gxx-name=/usr/tce/packages/gcc/gcc-4.9.3/bin/g++ -std=c++11"
+	--with-F77="/usr/tce/packages/mvapich2/mvapich2-2.2-intel-16.0.3/bin/mpif90 -gcc-name=/usr/tce/packages/gcc/gcc-4.9.3/bin/gcc"
+	--without-petsc
+	--without-x
+	--without-sundials
+	--disable-shared
+	--enable-rpath=-Wl,-R
+	--with-zlib
+	--with-hdf5=/usr/gapps/bdiv/toss_3_x86_64_ib/intel-16-mvapich2-2.2/hdf5/1.8.10p1
+	--with-silo=/usr/gapps/bdiv/toss_3_x86_64_ib/intel-16-mvapich2-2.2/silo/4.10.3
+	--without-hypre
+	--with-boost=/collab/usr/gapps/samrai/devapps/toss3/boost/1.62.0
+	--without-tbb
+EOF
+# Maintained by Bob Anderson
+;;
+
 surface_pgi_15) # Surface using pgi accelerator compilers
 cat <<-EOF
         --with-CXX=/usr/local/tools/pgi-15.5-accelerator/linux86-64/15.5/bin/pgCC
