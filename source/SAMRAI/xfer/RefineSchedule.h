@@ -275,6 +275,45 @@ public:
       bool flag);
 
    /*!
+    * @brief Allocated needed data on all internal levels.
+    *
+    * This is provided as an option that can be called to allocate the data
+    * that is used internally by this schedule.  If it is called, the data
+    * allocated will remain allocated until deallocateInternalData() is called
+    * or the schedule is destroyed.
+    *
+    * The intended use for this is in application contexts where fillData() is
+    * called on the same schedule multiple times.  In certain cases, it can be
+    * beneficial to use this to avoid the overhead of allocating and
+    * deallocating the internal data during every fillData() call.  This can
+    * increase memory overhead, as the data will remain allocated while the
+    * application is doing other things outside of the RefineSchedule.
+    *
+    * The fill_time argument is optional, as this may be called at a point in
+    * a code where a simulation time is not known.  The timestamp can be
+    * set with a subsequent call to setInternalDataTime().  Also, the
+    * simulation time may change during the lifetime of the data allocated
+    * by this method, and again setInternalDataTime() can be used multiple
+    * times to change the timestamp for this data.
+    *
+    * @param[in] fill_time  timestamp for the data
+    */
+   void allocateInternalData(double fill_time = 0.0);
+
+   /*!
+    * @brief Deallocate the internal data allocated by allocateInternalData().
+    *
+    * This will deallocate only the data that was allocated by a previous
+    * allocateInternalData() call.  If no allocateInternalData() has been
+    * called, this method will do nothing.  It is not required to call this
+    * after using allocateInternalData(), because the necessary deallocations
+    * will then happen in the RefineSchedule destructor, but application codes
+    * may wish to free this data as soon as they know there will no longer
+    * be any fillData() calls on a particular RefineSchedule.
+    */
+   void deallocateInternalData();
+
+   /*!
     * @brief Print the refine schedule data to the specified data stream.
     *
     * @param[out] stream Output data stream.
@@ -446,6 +485,12 @@ private:
       double fill_time) const;
    void
    allocateDestinationSpace(
+      hier::ComponentSelector& allocate_vector,
+      const std::shared_ptr<hier::PatchLevel>& level,
+      double fill_time) const;
+
+   void
+   allocateWorkSpace(
       hier::ComponentSelector& allocate_vector,
       const std::shared_ptr<hier::PatchLevel>& level,
       double fill_time) const;
@@ -938,6 +983,18 @@ private:
    initialCheckRefineClassItems() const;
 
    /*!
+    * @brief Set the timestamps on any allocated internal data.
+    *
+    * This sets the timestamps on data that was allocated using
+    * allocateInternalData().  As this data is allocated and can reused
+    * in successive calls to fillData(), the timestamps on the data need
+    * to be set to the current time that is passed into fillData().
+    *
+    * @param[in] fill_time        timestamp for the data
+    */
+   void setInternalDataTime(double fill_time) const;
+
+   /*!
     * Structures that store refine data items.
     */
    std::shared_ptr<RefineClasses> d_refine_classes;
@@ -1249,6 +1306,23 @@ private:
     * the recursive RefineSchedules.
     */
    const RefineSchedule* d_top_refine_schedule;
+
+   hier::ComponentSelector d_dst_scratch_vector;
+   hier::ComponentSelector d_encon_scratch_vector;
+   hier::ComponentSelector d_nbr_fill_scratch_vector;
+   hier::ComponentSelector d_nbr_fill_dst_vector;
+   hier::ComponentSelector d_coarse_scratch_vector;
+   hier::ComponentSelector d_coarse_work_vector;
+   hier::ComponentSelector d_coarse_encon_scratch_vector;
+   hier::ComponentSelector d_coarse_encon_work_vector;
+   hier::ComponentSelector d_coarse_nbr_fill_scratch_vector;
+   hier::ComponentSelector d_coarse_nbr_fill_work_vector;
+   hier::ComponentSelector d_nbr_fill_work_vector;
+   hier::ComponentSelector d_coarse_interp_encon_scratch_vector;
+   hier::ComponentSelector d_coarse_interp_encon_work_vector;
+   hier::ComponentSelector d_coarse_encon_encon_scratch_vector;
+   hier::ComponentSelector d_coarse_encon_encon_work_vector;
+   bool d_internal_allocated;
 
    /*!
     * @brief Shared debug checking flag.

@@ -63,7 +63,8 @@ RefineAlgorithm::registerRefine(
    const int src,
    const int scratch,
    const std::shared_ptr<hier::RefineOperator>& oprefine,
-   const std::shared_ptr<VariableFillPattern>& var_fill_pattern)
+   const std::shared_ptr<VariableFillPattern>& var_fill_pattern,
+   const std::vector<int>& work_ids)
 {
    if (d_schedule_created) {
       TBOX_ERROR("RefineAlgorithm::registerRefine error..."
@@ -91,6 +92,7 @@ RefineAlgorithm::registerRefine(
    } else {
       data.d_var_fill_pattern.reset(new BoxGeometryVariableFillPattern());
    }
+   data.d_work = work_ids;
 
    d_refine_classes->insertEquivalenceClassItem(data);
 }
@@ -112,7 +114,8 @@ RefineAlgorithm::registerRefine(
    const int scratch,
    const std::shared_ptr<hier::RefineOperator>& oprefine,
    const std::shared_ptr<hier::TimeInterpolateOperator>& optime,
-   const std::shared_ptr<VariableFillPattern>& var_fill_pattern)
+   const std::shared_ptr<VariableFillPattern>& var_fill_pattern,
+   const std::vector<int>& work_ids)
 {
    TBOX_ASSERT(optime);
 
@@ -142,6 +145,7 @@ RefineAlgorithm::registerRefine(
    } else {
       data.d_var_fill_pattern.reset(new BoxGeometryVariableFillPattern());
    }
+   data.d_work = work_ids;
 
    d_refine_classes->insertEquivalenceClassItem(data);
 }

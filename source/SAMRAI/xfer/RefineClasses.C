@@ -133,6 +133,18 @@ RefineClasses::itemIsValid(
          << "`Scratch' patch data id invalid (< 0!)" << std::endl);
    }
 
+   const std::vector<int>& work_ids = data_item.d_work;
+   if (item_good && !work_ids.empty()) {
+      for (std::vector<int>::const_iterator itr = work_ids.begin();
+           itr != work_ids.end(); ++itr) {
+         if (item_good && (*itr < 0)) {
+            item_good = false;
+            TBOX_ERROR("Bad data given to RefineClasses...\n"
+               << "`Work' patch data id invalid (< 0!)" << std::endl); 
+         }
+      }
+   }
+
    std::shared_ptr<hier::PatchDataFactory> dst_fact(
       pd->getPatchDataFactory(dst_id));
    std::shared_ptr<hier::PatchDataFactory> src_fact(
@@ -344,6 +356,17 @@ RefineClasses::itemsAreEquivalent(
 
    equivalent &= patchDataMatch(data1.d_scratch, data2.d_scratch, pd);
 
+   equivalent &= (data1.d_work.size() == data2.d_work.size());
+
+   if (equivalent && !data1.d_work.empty()) {
+      std::vector<int>::const_iterator itr1 = data1.d_work.begin();
+      std::vector<int>::const_iterator itr2 = data2.d_work.begin();
+      for ( ; itr1 != data1.d_work.end() && itr2 != data1.d_work.end();
+           ++itr1, ++itr2 ) {
+         equivalent &= patchDataMatch(*itr1, *itr2, pd);
+      }
+   }
+
    equivalent &= (data1.d_time_interpolate == data2.d_time_interpolate);
    if (equivalent && data1.d_time_interpolate) {
       equivalent &= patchDataMatch(data1.d_src_told, data2.d_src_told, pd);
@@ -417,6 +440,15 @@ RefineClasses::printRefineItem(
           << data.d_fine_bdry_reps_var << std::endl;
    stream << "tag:      "
           << data.d_tag << std::endl;
+
+   if (!data.d_work.empty()) {
+      const std::vector<int>& work_ids = data.d_work;
+      for (std::vector<int>::const_iterator itr = work_ids.begin();
+           itr != work_ids.end(); ++itr) {
+         stream << "work component:      "
+                << *itr << std::endl;
+      }
+   }
 
    if (!data.d_oprefine) {
       stream << "NULL refining operator" << std::endl;
