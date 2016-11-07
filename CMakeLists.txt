@@ -13,11 +13,20 @@ git submodule init\n \
 git submodule update")
 endif ()
 
-set(ENABLE_FORTRAN On)
+option(ENABLE_FORTRAN "Enable Fortran" On)
+option(ENABLE_OPENMP "Enable OpenMP" On)
 
+# Third-party packages
 option(ENABLE_MPI "Enable MPI." On)
 option(ENABLE_HDF5 "Enable HDF5." On)
-option(ENABLE_HYRPE "Enable HYPRE" On)
+option(ENABLE_HYPRE "Enable HYPRE" Off)
+option(ENABLE_PETSC "Enable PETSc" Off)
+option(ENABLE_PTSCOTCH "Enable Scotch" Off)
+option(ENABLE_SILO "Enable Silo" Off)
+option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
+option(ENABLE_VAMPIR "Enable Vampir" Off)
+option(ENABLE_TAU "Enable TAU" Off)
+
 option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)

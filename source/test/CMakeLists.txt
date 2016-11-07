@@ -1,4 +1,6 @@
 add_subdirectory(applications)
 add_subdirectory(assumed_partition)
+add_subdirectory(async_comm)
+add_subdirectory(boundary)
 add_subdirectory(transformation)
 add_subdirectory(variables)

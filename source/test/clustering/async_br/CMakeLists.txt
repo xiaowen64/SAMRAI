@@ -12,4 +12,4 @@ blt_add_executable(
 target_include_directories( async_br
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/clustering/async_br)
 
-target_compile_definitions(async_br TESTING=1)
+target_compile_definitions(async_br PUBLIC TESTING=1)

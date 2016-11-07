@@ -1,11 +1,13 @@
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/thirdparty/")
 
+# MPI is setup by BLT
 if (MPI_FOUND)
   set(HAVE_MPI True)
 else ()
   set(LACKS_MPI True)
 endif ()
 
+# Boost
 find_package(Boost REQUIRED)
 if (${Boost_FOUND})
   set(HAVE_BOOST_HEADERS True)
@@ -32,9 +34,8 @@ if (ENABLE_HDF5)
   endif ()
 endif ()
 
-# find_package(
 
-#HAVE_HYPRE
+# HYPRE
 if (ENABLE_HYPRE)
   find_package(HYPRE)
 
@@ -48,7 +49,7 @@ if (ENABLE_HYPRE)
   endif ()
 endif ()
 
-#HAVE_OPENMP
+# OpenMP
 if (ENABLE_OPENMP)
   if (OPENMP_FOUND)
     set(HAVE_OPENMP True)
@@ -71,12 +72,21 @@ endif()
 
 #HAVE_PTSCOTCH
 if (ENABLE_PTSCOTCH)
+  find_package(Scotch)
+
+  if (Scotch_FOUND)
+    set (HAVE_SCOTCH True)
+
+    blt_register_library(
+      NAME Scotch
+      INCLUDES ${SCOTCH_INCLUDES}
+      LIBRARIES ${SCOTCH_LIBRARIES})
+  endif ()
 endif ()
 
 #HAVE_SILO
 if (ENABLE_SILO)
-  find_package(silo)
-
+  find_package(SILO)
   if (SILO_FOUND)
     set (HAVE_SILO True)
 
@@ -89,6 +99,15 @@ endif ()
 
 #HAVE_SUNDIALS
 if (ENABLE_SUNDIALS)
+  find_package(SUNDIALS REQUIRED)
+  if (SUNDIALS_FOUND)
+    set (HAVE_SUNDIALS True)
+
+    blt_register_library(
+      NAME SUNDIALS
+      INCLUDES ${SUNDIALS_INCLUDES}
+      LIBRARIES ${SUNDIALS_LIBRARIES})
+  endif ()
 endif ()
 
 
