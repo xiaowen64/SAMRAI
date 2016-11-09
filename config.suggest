@@ -143,10 +143,11 @@ cat <<-EOF
 	--disable-shared
 	--enable-rpath=-Wl,-R
 	--with-zlib
-	--with-hdf5=/collab/usr/gapps/samrai/apps/chaos/hdf5/1.8.5p1-serial
-	--with-silo=/usr/gapps/silo/4.8/chaos_5_x86_64_ib
-	--with-hypre=/collab/usr/gapps/samrai/devapps/chaos/hypre/2.10.0b.opt-mvapich2
-	--with-boost=/collab/usr/gapps/samrai/devapps/chaos/boost/1.58.0
+	--with-hdf5=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/hdf5-1.8.12-b3ywl76b5yl7xpq45br24im5filadcrq
+	--with-silo=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/silo-4.10.2-ilz3jt7rmoowtbki22iqlai7yc5fdhx5
+	--with-hypre=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/hypre-2.11.1-mv6gpcapwf5ohadhxxendocfwfcvx7lb
+	--with-boost=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/boost-1.62.0-6aek2flzurzwr6k6dhtxn4ua6vfotyxc
+
 	--without-tbb
 EOF
 # Maintained by Noah Elliott
