@@ -26,8 +26,6 @@ option(ENABLE_PETSC "Enable PETSc" Off)
 option(ENABLE_PTSCOTCH "Enable Scotch" Off)
 option(ENABLE_SILO "Enable Silo" Off)
 option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
-option(ENABLE_VAMPIR "Enable Vampir" Off)
-option(ENABLE_TAU "Enable TAU" Off)
 
 # SAMRAI options
 option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)

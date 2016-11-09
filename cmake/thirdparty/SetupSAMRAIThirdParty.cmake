@@ -109,12 +109,3 @@ if (ENABLE_SUNDIALS)
       LIBRARIES ${SUNDIALS_LIBRARIES})
   endif ()
 endif ()
-
-
-#HAVE_TAU
-if (ENABLE_TAU)
-endif ()
-
-#HAVE_VAMPIR
-if (ENABLE_VAMPIR)
-endif ()
