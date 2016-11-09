@@ -141,13 +141,11 @@ cat <<-EOF
 	--without-x
 	--without-sundials
 	--disable-shared
-	--enable-rpath=-Wl,-R
 	--with-zlib
 	--with-hdf5=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/hdf5-1.8.12-b3ywl76b5yl7xpq45br24im5filadcrq
 	--with-silo=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/silo-4.10.2-ilz3jt7rmoowtbki22iqlai7yc5fdhx5
 	--with-hypre=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/hypre-2.11.1-mv6gpcapwf5ohadhxxendocfwfcvx7lb
 	--with-boost=/collab/usr/gapps/samrai/devapps/linux-rhel6-x86_64/gcc-4.9.3/boost-1.62.0-6aek2flzurzwr6k6dhtxn4ua6vfotyxc
-
 	--without-tbb
 EOF
 # Maintained by Noah Elliott
