@@ -13,7 +13,9 @@ git submodule init\n \
 git submodule update")
 endif ()
 
+# Fortran enabled for BLT setup
 option(ENABLE_FORTRAN "Enable Fortran" On)
+
 option(ENABLE_OPENMP "Enable OpenMP" On)
 
 # Third-party packages
@@ -27,6 +29,7 @@ option(ENABLE_SUNDIALS "Enable SUNDIALS" Off)
 option(ENABLE_VAMPIR "Enable Vampir" Off)
 option(ENABLE_TAU "Enable TAU" Off)
 
+# SAMRAI options
 option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)

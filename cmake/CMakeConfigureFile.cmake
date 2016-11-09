@@ -1,3 +1,4 @@
+# Configure macros for calling fortran
 include(FortranCInterface)
 FortranCInterface_HEADER(
   ${CMAKE_BINARY_DIR}/include/SAMRAI/FC.h

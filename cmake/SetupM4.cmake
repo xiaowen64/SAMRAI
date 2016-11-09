@@ -1,5 +1,6 @@
 include(CMakeParseArguments)
 
+# Macro to process m4 files to generate Fortran
 macro (process_m4)
   set(options)
   set(singleValueArgs NAME)
