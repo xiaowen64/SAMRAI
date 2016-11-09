@@ -168,7 +168,8 @@ public:
       const int scratch,
       const boost::shared_ptr<hier::RefineOperator>& oprefine,
       const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>());
+         boost::shared_ptr<VariableFillPattern>(),
+      const std::vector<int>& work_ids = std::vector<int>());
 
    /*!
     * @brief Register a refine operation with the refine algorithm object.
@@ -216,7 +217,8 @@ public:
       const boost::shared_ptr<hier::RefineOperator>& oprefine,
       const boost::shared_ptr<hier::TimeInterpolateOperator>& optime,
       const boost::shared_ptr<VariableFillPattern>& var_fill_pattern =
-         boost::shared_ptr<VariableFillPattern>());
+         boost::shared_ptr<VariableFillPattern>(),
+      const std::vector<int>& work_ids = std::vector<int>());
 
    /*!
     * @brief Create a communication schedule for communicating data within a

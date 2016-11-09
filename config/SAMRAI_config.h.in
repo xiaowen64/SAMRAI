@@ -7,7 +7,7 @@
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 11
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_PATCHLEVEL 2
 
 
 /* Define if bool type is not properly supported */
@@ -323,6 +323,9 @@
 
 /* Define to the one symbol short name of this package. */
 // Removed due to name conflict #undef PACKAGE_TARNAME
+
+/* Define to the home page for this package. */
+// Removed due to name conflict #undef PACKAGE_URL
 
 /* Define to the version of this package. */
 // Removed due to name conflict #undef PACKAGE_VERSION

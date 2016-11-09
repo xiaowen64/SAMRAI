@@ -2341,7 +2341,7 @@ void LinAdv::getFromInput(
 
 
    /*
-   /* Used for testing, in particular time refinement
+    * Used for testing, in particular time refinement
     */
    d_source = input_db->getDoubleWithDefault("source", 0.0);
    d_check_fluxes = input_db->getBoolWithDefault("check_fluxes", false);

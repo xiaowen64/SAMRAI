@@ -126,9 +126,9 @@ TimerManager::registerSingletonSubclassInstance(
  */
 
 TimerManager::TimerManager(
-   const boost::shared_ptr<Database>& input_db):
+   const boost::shared_ptr<Database>& input_db)
 #ifdef ENABLE_SAMRAI_TIMERS
-   d_timer_active_access_time(-9999.0),
+   : d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),
    d_main_timer(new Timer("TOTAL RUN TIME")),
    d_length_package_names(0),
@@ -153,6 +153,8 @@ TimerManager::TimerManager(
     */
 #ifdef ENABLE_SAMRAI_TIMERS
    getFromInput(input_db);
+#else
+   NULL_USE(input_db);
 #endif
 }
 
@@ -215,6 +217,10 @@ TimerManager::checkTimerExistsInArray(
          }
       }
    }
+#else
+   NULL_USE(timer);
+   NULL_USE(name);
+   NULL_USE(timer_array);
 #endif
    return timer_found;
 }
@@ -288,7 +294,8 @@ TimerManager::getTimer(
    // since timers aren't active - and we need to still provide
    // pseudo-timer functionality (i.e., a valid timer), we'll
    // create one on the fly, but not track it.
-   boost::shared_ptr<Timer> timer(boost::make_shared<Timer>(name));
+   NULL_USE(ignore_timer_input);
+   boost::shared_ptr<Timer> timer(new Timer(name));
    timer->setActive(false);
    return timer;
 
@@ -316,6 +323,9 @@ TimerManager::checkTimerExists(
    return timer_found;
 
 #else
+   NULL_USE(timer);
+   NULL_USE(name);
+
    return false;
 
 #endif
@@ -342,6 +352,8 @@ TimerManager::checkTimerRunning(
    if (checkTimerExistsInArray(timer, name, d_timers)) {
       is_running = timer->isRunning();
    }
+#else
+   NULL_USE(name);
 #endif
    return is_running;
 }
@@ -397,6 +409,8 @@ TimerManager::startTime(
          }
       }
    }
+#else
+   NULL_USE(timer);
 #endif
 }
 
@@ -416,6 +430,8 @@ TimerManager::stopTime(
          }
       }
    }
+#else
+   NULL_USE(timer);
 #endif
 }
 
@@ -685,6 +701,8 @@ TimerManager::checkTimerInNameLists(
    return will_use_timer;
 
 #else
+   NULL_USE(copy);
+
    return false;
 
 #endif
@@ -1299,6 +1317,13 @@ TimerManager::printTable(
 
    os << ascii_line << std::endl;
    os.setf(std::ios::right);
+#else
+   NULL_USE(table_title);
+   NULL_USE(column_titles);
+   NULL_USE(timer_names);
+   NULL_USE(column_ids);
+   NULL_USE(timer_values);
+   NULL_USE(os);
 #endif
 }
 
@@ -1448,6 +1473,16 @@ TimerManager::printTable(
 
    os << ascii_line << std::endl;
    os.setf(std::ios::right);
+#else
+   NULL_USE(table_title);
+   NULL_USE(column_titles);
+   NULL_USE(timer_names);
+   NULL_USE(max_processor_id);
+   NULL_USE(max_array_id);
+   NULL_USE(column_ids);
+   NULL_USE(timer_values);
+   NULL_USE(os);
+
 #endif
 }
 
@@ -1590,6 +1625,11 @@ TimerManager::printOverhead(
 
    os << ascii_line << std::endl;
    os.setf(std::ios::right);
+#else
+   NULL_USE(timer_names);
+   NULL_USE(timer_values);
+   NULL_USE(os);
+
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -1665,6 +1705,8 @@ TimerManager::printConcurrent(
 
    }
    os << ascii_line << std::endl;
+#else
+   NULL_USE(os);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -2023,6 +2065,10 @@ TimerManager::buildTimerArrays(
          mpi.Allreduce(&main_time, &timer_values[d_timers.size()][14], 1, MPI_DOUBLE, MPI_SUM);
       }
    }
+#else
+   NULL_USE(timer_values);
+   NULL_USE(max_processor_id);
+   NULL_USE(timer_names);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -2055,6 +2101,11 @@ TimerManager::buildOrderedList(
     * ordered_list.
     */
    quicksort(timer_vals, index, 0, array_size - 1);
+#else
+   NULL_USE(timer_values);
+   NULL_USE(column);
+   NULL_USE(index);
+   NULL_USE(array_size);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -2102,6 +2153,11 @@ TimerManager::quicksort(
 
    quicksort(a, index, lo, i - 1);
    quicksort(a, index, i + 1, hi);
+#else
+   NULL_USE(a);
+   NULL_USE(index);
+   NULL_USE(lo);
+   NULL_USE(hi);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -2130,6 +2186,9 @@ TimerManager::computePercentageInt(
    } else {
       perc = 1000;
    }
+#else
+   NULL_USE(frac);
+   NULL_USE(tot);
 #endif
    return perc;
 }
@@ -2150,6 +2209,9 @@ TimerManager::computePercentageDouble(
    } else {
       perc = 1000;
    }
+#else
+   NULL_USE(frac);
+   NULL_USE(tot);
 #endif
    return perc;
 }
@@ -2218,6 +2280,8 @@ TimerManager::getFromInput(
       d_length_class_method_names = static_cast<int>(d_class_method_names.size());
 
    }
+#else
+   NULL_USE(input_db);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -2413,6 +2477,8 @@ TimerManager::addTimerToNameLists(
       } // Nested if #2
 
    } // Nested if #1
+#else
+   NULL_USE(name);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -2441,6 +2507,8 @@ TimerManager::computeOverheadConstantActiveOrInactive(
            - inner_timer->getTotalWallclockTime()) / (static_cast<double>(ntest));
 
 #else
+   NULL_USE(active);
+
    return 0.0;
 
 #endif // ENABLE_SAMRAI_TIMERS

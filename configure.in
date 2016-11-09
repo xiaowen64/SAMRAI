@@ -17,7 +17,7 @@ AH_TOP([
 
 #define SAMRAI_VERSION_MAJOR 3
 #define SAMRAI_VERSION_MINOR 11
-#define SAMRAI_VERSION_PATCHLEVEL 1
+#define SAMRAI_VERSION_PATCHLEVEL 2
 ])
 AH_BOTTOM([
 
@@ -756,17 +756,11 @@ dnl Set the optional classes to build
 dnl
 
 dnl
-dnl Set up the Fortran compiler.  Look for special Fortran compilers on
-dnl AIX machines.
+dnl Set up the Fortran compiler.
 dnl
 
 if test -n "$with_F77"; then
-   dnl If user specifies full path then don't search in path
-   if test -f "$with_F77"; then
-      F77=$with_F77
-   else
-      AC_CHECK_PROGS(F77, $with_F77)
-   fi
+   F77=$with_F77
 else
    if test -z "$F77"; then
       AC_CHECK_PROGS(F77, f77 g77 xlf f2c)

@@ -225,6 +225,8 @@ Timer::isConcurrentTimer(
       }
    }
 
+#else
+   NULL_USE(timer);
 #endif // ENABLE_SAMRAI_TIMERS
    return false;
 }
@@ -303,6 +305,8 @@ Timer::putToRestart(
    restart_db->putDouble("d_user_exclusive", d_user_exclusive);
    restart_db->putDouble("d_system_exclusive", d_system_exclusive);
    restart_db->putDouble("d_wallclock_exclusive", d_wallclock_exclusive);
+#else
+   NULL_USE(restart_db);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
@@ -327,6 +331,8 @@ Timer::getFromRestart(
    d_user_exclusive = restart_db->getDouble("d_user_exclusive");
    d_system_exclusive = restart_db->getDouble("d_system_exclusive");
    d_wallclock_exclusive = restart_db->getDouble("d_wallclock_exclusive");
+#else
+   NULL_USE(restart_db);
 #endif // ENABLE_SAMRAI_TIMERS
 }
 
