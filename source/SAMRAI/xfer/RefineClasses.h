@@ -73,6 +73,8 @@ public:
        */
       int d_scratch;
 
+      std::vector<int> d_work;
+
       /*!
        * @brief Boolean flag that is set to true when it is desired that fine
        * data values have priority over coarse data values when data exists

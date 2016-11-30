@@ -185,7 +185,7 @@ elif echo "${HOST}" | grep '^tc2k' > /dev/null ; then
     return ${?}
   }
 
-elif echo "${HOST}" | egrep '^(atlas|aztec|rzzeus|rzalastor|rzmerl|rzhasgpu|rzuseqlac|sierra|surface|hera)[0-9]' > /dev/null ; then
+elif echo "${HOST}" | egrep '^(atlas|aztec|rzzeus|rzalastor|rzmerl|rzhasgpu|rzgenie|rzuseqlac|sierra|surface|hera)[0-9]' > /dev/null ; then
 
   # For LC Linux clusters using srun.
   run_multiproc () {

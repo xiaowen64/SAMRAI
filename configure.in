@@ -527,7 +527,14 @@ CASC_CXX_STD_FILL_N_RETURNS_VOID
 
 CASC_CXX_CTIME
 
-CXX_FLAGS+=" -std=c++11"
+AC_LANG_PUSH([C++])
+AX_CHECK_COMPILE_FLAG([-std=c++11], [
+  CXX_FLAGS+=" -std=c++11"
+], [
+  echo "C++ compiler cannot compile C++11 code"
+  exit -1
+])
+AC_LANG_POP([C++])
 
 AC_CHECK_HEADERS([sys/times.h])
 AC_CHECK_HEADERS([unistd.h])
@@ -761,17 +768,11 @@ dnl Set the optional classes to build
 dnl
 
 dnl
-dnl Set up the Fortran compiler.  Look for special Fortran compilers on
-dnl AIX machines.
+dnl Set up the Fortran compiler.
 dnl
 
 if test -n "$with_F77"; then
-   dnl If user specifies full path then don't search in path
-   if test -f "$with_F77"; then
-      F77=$with_F77
-   else
-      AC_CHECK_PROGS(F77, $with_F77)
-   fi
+   F77=$with_F77
 else
    if test -z "$F77"; then
       AC_CHECK_PROGS(F77, f77 g77 xlf f2c)
