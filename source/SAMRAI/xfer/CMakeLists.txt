@@ -61,7 +61,8 @@ set (xfer_sources
 blt_add_library(
   NAME SAMRAI_xfer
   SOURCES "${xfer_sources}"
-  HEADERS "${xfer_headers}")
+  HEADERS "${xfer_headers}"
+  HEADERS_OUTPUT_SUBDIR SAMRAI/xfer)
 
 target_include_directories(
   SAMRAI_xfer

@@ -15,9 +15,9 @@ endif ()
 
 set(ENABLE_FORTRAN On)
 
-option(ENABLE_MPI "Enable MPI." On)
+option(ENABLE_MPI "Enable MPI." Off)
 option(ENABLE_HDF5 "Enable HDF5." On)
-option(ENABLE_HYRPE "Enable HYPRE" On)
+option(ENABLE_HYPRE "Enable HYPRE" Off)
 option(ENABLE_CHECK_ASSERTIONS "Enable assertion checking." Off)
 option(ENABLE_CHECK_DEV_ASSERTIONS "Enable SAMRAI developer assertion checking." Off)
 option(ENABLE_CHECK_DIM_ASSERTIONS "Enable assertion checking for dimensions." Off)
