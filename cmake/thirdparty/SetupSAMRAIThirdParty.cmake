@@ -37,7 +37,7 @@ endif ()
 
 # HYPRE
 if (ENABLE_HYPRE)
-  find_package(HYPRE)
+  find_package(HYPRE REQUIRED)
 
   if(HYPRE_FOUND)
     set (HAVE_HPYRE True)
@@ -58,7 +58,7 @@ endif ()
 
 #HAVE_PETSC
 if (ENABLE_PETSC)
-  find_package(PETSc)
+  find_package(PETSc REQUIRED)
 
   if (PETSC_FOUND)
     set (HAVE_PETSC True)
@@ -72,7 +72,7 @@ endif()
 
 #HAVE_PTSCOTCH
 if (ENABLE_PTSCOTCH)
-  find_package(Scotch)
+  find_package(Scotch REQUIRED)
 
   if (Scotch_FOUND)
     set (HAVE_SCOTCH True)
@@ -86,7 +86,8 @@ endif ()
 
 #HAVE_SILO
 if (ENABLE_SILO)
-  find_package(SILO)
+  find_package(SILO REQUIRED)
+
   if (SILO_FOUND)
     set (HAVE_SILO True)
 

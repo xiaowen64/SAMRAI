@@ -6,7 +6,10 @@ blt_add_executable(
   NAME async_br
   SOURCES ${async_br_sources}
   DEPENDS_ON
-  SAMRAI_appu
+    testlib
+    SAMRAI_appu
+    SAMRAI_geom
+    SAMRAI_mesh
     SAMRAI_tbox)
 
 target_include_directories( async_br

@@ -58,10 +58,14 @@ set (xfer_sources
   StandardRefineTransactionFactory.C
   VariableFillPattern.C)
 
+set ( xfer_depends_on
+  SAMRAI_hier)
+
 blt_add_library(
   NAME SAMRAI_xfer
-  SOURCES "${xfer_sources}"
-  HEADERS "${xfer_headers}")
+  SOURCES ${xfer_sources}
+  HEADERS ${xfer_headers}
+  DEPENDS_ON ${xfer_depends_on})
 
 target_include_directories(
   SAMRAI_xfer

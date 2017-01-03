@@ -1,26 +1,32 @@
 set ( timer_sources
         Foo.C
-        Foo.h
-        main_example.C
- 
         main_timer.C)
 
 set ( stats_sources
-        main_stats.C
+        main_stats.C)
 
 set ( example_sources
   main_example.C)
 
-target_add_definitions (TESTING=1)
+blt_add_executable(
+  NAME timer_timertest
+  SOURCES ${timer_sources}
+  DEPENDS_ON
+    SAMRAI_tbox)
 
 blt_add_executable(
-  NAME timertest
-)
+  NAME timer_statstest
+  SOURCES ${stats_sources}
+  DEPENDS_ON
+    SAMRAI_tbox)
 
 blt_add_executable(
-  NAME statstest
-)
+  NAME timer_example
+  SOURCES ${example_sources}
+  DEPENDS_ON
+    SAMRAI_tbox)
 
-blt_add_executable(
-  NAME example
-  SOURCES ${exmaple_sources})
+
+target_compile_definitions(timer_timertest PUBLIC TESTING=1)
+target_compile_definitions(timer_statstest PUBLIC TESTING=1)
+target_compile_definitions(timer_example PUBLIC TESTING=1)

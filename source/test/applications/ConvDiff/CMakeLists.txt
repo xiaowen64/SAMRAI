@@ -26,14 +26,15 @@ blt_add_executable(
   DEPENDS_ON
   hdf5
   SAMRAI_algs
-  SAMRAI_appu
   SAMRAI_geom
   SAMRAI_hier
   SAMRAI_math
   SAMRAI_mesh
   SAMRAI_pdat
+  SAMRAI_xfer
+  SAMRAI_appu
   SAMRAI_tbox
-  SAMRAI_xfer)
+  )
 
 target_include_directories(
   convdiff
