@@ -2,6 +2,7 @@ set ( tbox_headers
   Array.h
   AsyncCommGroup.h
   AsyncCommPeer.h
+  AsyncCommPeer.C
   AsyncCommStage.h
   BalancedDepthFirstTree.h
   Boost.h
@@ -23,6 +24,7 @@ set ( tbox_headers
   IOStream.h
   Logger.h
   MathUtilities.h
+  MathUtilities.C
   MemoryDatabase.h
   MemoryDatabaseFactory.h
   MemoryUtilities.h
@@ -51,6 +53,11 @@ set ( tbox_headers
   Tracer.h
   Transaction.h
   Utilities.h)
+
+set_source_files_properties(
+  MathUtilities.C
+  AsyncCommPeer.C
+  PROPERTIES HEADER_FILE_ONLY TRUE)
 
 set (tbox_sources
   ArraySpecial.C

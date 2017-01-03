@@ -1,8 +1,12 @@
 # Configure macros for calling fortran
 include(FortranCInterface)
+
 FortranCInterface_HEADER(
   ${CMAKE_BINARY_DIR}/include/SAMRAI/FC.h
   MACRO_NAMESPACE "CMAKE_FORTRAN_")
+
+install(FILES ${CMAKE_BINARY_DIR}/include/SAMRAI/FC.h
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/SAMRAI)
 
 include(CheckIncludeFiles)
 include(CheckTypeSize)
@@ -71,3 +75,7 @@ endif ()
 set(SAMRAI_MAXIMUM_DIMENSION ${MAXDIM})
 
 configure_file(${PROJECT_SOURCE_DIR}/config/SAMRAI_config.h.cmake.in ${CMAKE_BINARY_DIR}/include/SAMRAI/SAMRAI_config.h)
+
+install(FILES ${CMAKE_BINARY_DIR}/include/SAMRAI/SAMRAI_config.h
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/include/SAMRAI)
+

@@ -22,7 +22,7 @@ if (ENABLE_HDF5)
     message(FATAL_ERROR "HDF5 requires MPI.")
   endif ()
 
-  find_package(HDF5)
+  find_package(HDF5 REQUIRED)
 
   if(HDF5_FOUND)
     set (HAVE_HDF5 True)

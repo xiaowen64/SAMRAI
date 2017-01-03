@@ -1,12 +1,16 @@
 set (pdat_headers
   ArrayData.h
+  ArrayData.C
   ArrayDataAccess.h
   ArrayDataIterator.h
   ArrayDataOperationUtilities.h
+  ArrayDataOperationUtilities.C
   CellComplexConstantRefine.h
   CellComplexLinearTimeInterpolateOp.h
   CellData.h
+  CellData.C
   CellDataFactory.h
+  CellDataFactory.C
   CellDoubleConstantRefine.h
   CellDoubleLinearTimeInterpolateOp.h
   CellFloatConstantRefine.h
@@ -17,7 +21,9 @@ set (pdat_headers
   CellIterator.h
   CellOverlap.h
   CellVariable.h
+  CellVariable.C
   CopyOperation.h
+  CopyOperation.C
   DoubleAttributeId.h
   EdgeComplexConstantRefine.h
   EdgeComplexLinearTimeInterpolateOp.h
@@ -60,6 +66,7 @@ set (pdat_headers
   NodeComplexInjection.h
   NodeComplexLinearTimeInterpolateOp.h
   NodeData.h
+  NodeData.C
   NodeDataFactory.h
   NodeDoubleInjection.h
   NodeDoubleLinearTimeInterpolateOp.h
@@ -71,6 +78,7 @@ set (pdat_headers
   NodeIterator.h
   NodeOverlap.h
   NodeVariable.h
+  NodeVariable.C
   OuteredgeData.h
   OuteredgeDataFactory.h
   OuteredgeGeometry.h
@@ -102,6 +110,7 @@ set (pdat_headers
   SecondLayerNodeVariableFillPattern.h
   SideComplexConstantRefine.h
   SideComplexLinearTimeInterpolateOp.h
+  SideData.C
   SideData.h
   SideDataFactory.h
   SideDoubleConstantRefine.h
@@ -113,11 +122,27 @@ set (pdat_headers
   SideIntegerConstantRefine.h
   SideIterator.h
   SideOverlap.h
+  SideVariable.C
   SideVariable.h
   SparseData.h
   SparseDataFactory.h
   SparseDataVariable.h
-  SumOperation.h)
+  SumOperation.h
+  SumOperation.C)
+
+set_source_files_properties(
+  ArrayData.C
+  ArrayDataOperationUtilities.C
+  CellData.C
+  CellDataFactory.C
+  CellVariable.C
+  CopyOperation.C
+  NodeData.C
+  NodeVariable.C
+  SideData.C
+  SideVariable.C
+  SumOperation.C
+  PROPERTIES HEADER_FILE_ONLY TRUE)
 
 
 set (pdat_sources
