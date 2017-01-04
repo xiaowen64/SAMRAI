@@ -15,16 +15,25 @@ set (solv_headers
   NonlinearSolverStrategy.h
   nvector.h
   PETSc_SAMRAIVectorReal.h
+  PETSc_SAMRAIVectorReal.C
   PETScAbstractVectorReal.h
+  PETScAbstractVectorReal.C
   PoissonSpecifications.h
   RobinBcCoefStrategy.h
   SAMRAIVectorReal.h
+  SAMRAIVectorReal.C
   SimpleCellRobinBcCoefs.h
   SNES_SAMRAIContext.h
   SNESAbstractFunctions.h
   solv_NVector.h
   Sundials_SAMRAIVector.h
   SundialsAbstractVector.h)
+
+set_source_files_properties(
+  PETScAbstractVectorReal.C
+  PETSc_SAMRAIVectorReal.C
+  SAMRAIVectorReal.C
+  PROPERTIES HEADER_FILE_ONLY TRUE)
 
 set (solv_sources
   CVODEAbstractFunctions.C

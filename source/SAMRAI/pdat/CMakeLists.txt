@@ -1,16 +1,17 @@
 set (pdat_headers
-  ArrayData.h
   ArrayData.C
+  ArrayData.h
+  ArrayDataAccess.C
   ArrayDataAccess.h
   ArrayDataIterator.h
-  ArrayDataOperationUtilities.h
   ArrayDataOperationUtilities.C
+  ArrayDataOperationUtilities.h
   CellComplexConstantRefine.h
   CellComplexLinearTimeInterpolateOp.h
-  CellData.h
   CellData.C
-  CellDataFactory.h
+  CellData.h
   CellDataFactory.C
+  CellDataFactory.h
   CellDoubleConstantRefine.h
   CellDoubleLinearTimeInterpolateOp.h
   CellFloatConstantRefine.h
@@ -20,14 +21,16 @@ set (pdat_headers
   CellIntegerConstantRefine.h
   CellIterator.h
   CellOverlap.h
-  CellVariable.h
   CellVariable.C
-  CopyOperation.h
+  CellVariable.h
   CopyOperation.C
+  CopyOperation.h
   DoubleAttributeId.h
   EdgeComplexConstantRefine.h
   EdgeComplexLinearTimeInterpolateOp.h
+  EdgeData.C
   EdgeData.h
+  EdgeDataFactory.C
   EdgeDataFactory.h
   EdgeDoubleConstantRefine.h
   EdgeDoubleLinearTimeInterpolateOp.h
@@ -38,10 +41,13 @@ set (pdat_headers
   EdgeIntegerConstantRefine.h
   EdgeIterator.h
   EdgeOverlap.h
+  EdgeVariable.C
   EdgeVariable.h
   FaceComplexConstantRefine.h
   FaceComplexLinearTimeInterpolateOp.h
+  FaceData.C
   FaceData.h
+  FaceDataFactory.C
   FaceDataFactory.h
   FaceDoubleConstantRefine.h
   FaceDoubleLinearTimeInterpolateOp.h
@@ -52,21 +58,26 @@ set (pdat_headers
   FaceIntegerConstantRefine.h
   FaceIterator.h
   FaceOverlap.h
+  FaceVariable.C
   FaceVariable.h
   FirstLayerCellNoCornersVariableFillPattern.h
   FirstLayerCellVariableFillPattern.h
   FirstLayerEdgeVariableFillPattern.h
   FirstLayerNodeVariableFillPattern.h
   FirstLayerSideVariableFillPattern.h
+  IndexData.C
   IndexData.h
+  IndexDataFactory.C
   IndexDataFactory.h
+  IndexVariable.C
   IndexVariable.h
   IntegerAttributeId.h
   MDA_Access.h
   NodeComplexInjection.h
   NodeComplexLinearTimeInterpolateOp.h
-  NodeData.h
   NodeData.C
+  NodeData.h
+  NodeDataFactory.C
   NodeDataFactory.h
   NodeDoubleInjection.h
   NodeDoubleLinearTimeInterpolateOp.h
@@ -77,15 +88,20 @@ set (pdat_headers
   NodeIntegerInjection.h
   NodeIterator.h
   NodeOverlap.h
-  NodeVariable.h
   NodeVariable.C
+  NodeVariable.h
+  OuteredgeData.C
   OuteredgeData.h
+  OuteredgeDataFactory.C
   OuteredgeDataFactory.h
   OuteredgeGeometry.h
+  OuteredgeVariable.C
   OuteredgeVariable.h
   OuterfaceComplexConstantRefine.h
   OuterfaceComplexLinearTimeInterpolateOp.h
+  OuterfaceData.C
   OuterfaceData.h
+  OuterfaceDataFactory.C
   OuterfaceDataFactory.h
   OuterfaceDoubleConstantRefine.h
   OuterfaceDoubleLinearTimeInterpolateOp.h
@@ -93,18 +109,25 @@ set (pdat_headers
   OuterfaceFloatLinearTimeInterpolateOp.h
   OuterfaceGeometry.h
   OuterfaceIntegerConstantRefine.h
+  OuterfaceVariable.C
   OuterfaceVariable.h
+  OuternodeData.C
   OuternodeData.h
+  OuternodeDataFactory.C
   OuternodeDataFactory.h
   OuternodeDoubleInjection.h
   OuternodeGeometry.h
+  OuternodeVariable.C
   OuternodeVariable.h
   OutersideComplexLinearTimeInterpolateOp.h
+  OutersideData.C
   OutersideData.h
+  OutersideDataFactory.C
   OutersideDataFactory.h
   OutersideDoubleLinearTimeInterpolateOp.h
   OutersideFloatLinearTimeInterpolateOp.h
   OutersideGeometry.h
+  OutersideVariable.C
   OutersideVariable.h
   SecondLayerNodeNoCornersVariableFillPattern.h
   SecondLayerNodeVariableFillPattern.h
@@ -112,6 +135,7 @@ set (pdat_headers
   SideComplexLinearTimeInterpolateOp.h
   SideData.C
   SideData.h
+  SideDataFactory.C
   SideDataFactory.h
   SideDoubleConstantRefine.h
   SideDoubleLinearTimeInterpolateOp.h
@@ -124,23 +148,53 @@ set (pdat_headers
   SideOverlap.h
   SideVariable.C
   SideVariable.h
+  SparseData.C
   SparseData.h
+  SparseDataFactory.C
   SparseDataFactory.h
+  SparseDataVariable.C
   SparseDataVariable.h
-  SumOperation.h
-  SumOperation.C)
+  SumOperation.C
+  SumOperation.h)
 
 set_source_files_properties(
   ArrayData.C
+  ArrayDataAccess.C
   ArrayDataOperationUtilities.C
   CellData.C
   CellDataFactory.C
   CellVariable.C
   CopyOperation.C
+  EdgeData.C
+  EdgeDataFactory.C
+  EdgeVariable.C
+  FaceData.C
+  FaceDataFactory.C
+  FaceVariable.C
+  IndexData.C
+  IndexDataFactory.C
+  IndexVariable.C
   NodeData.C
+  NodeDataFactory.C
   NodeVariable.C
+  OuteredgeData.C
+  OuteredgeDataFactory.C
+  OuteredgeVariable.C
+  OuterfaceData.C
+  OuterfaceDataFactory.C
+  OuterfaceVariable.C
+  OuternodeData.C
+  OuternodeDataFactory.C
+  OuternodeVariable.C
+  OutersideData.C
+  OutersideDataFactory.C
+  OutersideVariable.C
   SideData.C
+  SideDataFactory.C
   SideVariable.C
+  SparseData.C
+  SparseDataFactory.C
+  SparseDataVariable.C
   SumOperation.C
   PROPERTIES HEADER_FILE_ONLY TRUE)
 

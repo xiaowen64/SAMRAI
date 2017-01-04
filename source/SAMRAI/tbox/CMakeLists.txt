@@ -1,5 +1,6 @@
 set ( tbox_headers
   Array.h
+  Array.C
   AsyncCommGroup.h
   AsyncCommPeer.h
   AsyncCommPeer.C
@@ -55,6 +56,7 @@ set ( tbox_headers
   Utilities.h)
 
 set_source_files_properties(
+  Array.C
   MathUtilities.C
   AsyncCommPeer.C
   PROPERTIES HEADER_FILE_ONLY TRUE)
@@ -111,7 +113,7 @@ set (tbox_sources
 set (tbox_depends_on
   boost)
 
-if (${HAVE_HDF5})
+if (HAVE_HDF5)
     list(APPEND tbox_depends_on hdf5)
 endif ()
 
