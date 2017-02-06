@@ -179,6 +179,9 @@ AC_ARG_WITH([vampir],
 AC_ARG_WITH([tau],
    [AS_HELP_STRING([--with-tau[=dir]],[compile with TAU performance tracing])]
    )
+AC_ARG_WITH([cuda],
+   [AS_HELP_STRING([--with-cuda[=dir]],[compile with CUDA support])]
+   )
 AC_ARG_ENABLE([deprecated],
    [AS_HELP_STRING([--enable-deprecated],
       [build with deprecated features (default is enabled)])],
@@ -1548,6 +1551,15 @@ else
    LIB_NAME="\$(TAU_MPI_LIBS) \$(TAU_LIBS) $LIB_NAME"
    AC_MSG_RESULT(including TAU makefile $TAU_INCLUDE)
    TAU_INCLUDE="include $TAU_INCLUDE"
+fi
+
+if test -z "$with_cuda"; then
+  AC_DEFINE([LACKS_CUDA],[1],[LACKS_CUDA])
+else
+  AC_DEFINE([HAVE_CUDA],[1],[HAVE_CUDA])
+  AC_MSG_CHECKING(for CUDA)
+  AC_MSG_RESULT($with_cuda)
+  INC_PATH="-I$with_cuda/include $INC_PATH"
 fi
 
 

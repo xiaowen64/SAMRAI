@@ -75,6 +75,9 @@
 /* HAVE_CTIME */
 #undef HAVE_CTIME
 
+/* HAVE_CUDA */
+#undef HAVE_CUDA
+
 /* HAVE_EXCEPTION_HANDLING */
 #undef HAVE_EXCEPTION_HANDLING
 
@@ -234,6 +237,9 @@
 /* LACKS_CTIME */
 #undef LACKS_CTIME
 
+/* LACKS_CUDA */
+#undef LACKS_CUDA
+
 /* LACKS_EXCEPTION_HANDLING */
 #undef LACKS_EXCEPTION_HANDLING
 
@@ -323,9 +329,6 @@
 
 /* Define to the one symbol short name of this package. */
 // Removed due to name conflict #undef PACKAGE_TARNAME
-
-/* Define to the home page for this package. */
-// Removed due to name conflict #undef PACKAGE_URL
 
 /* Define to the version of this package. */
 // Removed due to name conflict #undef PACKAGE_VERSION

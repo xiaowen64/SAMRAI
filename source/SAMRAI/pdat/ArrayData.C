@@ -20,6 +20,11 @@
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
 
+#if defined(HAVE_CUDA)
+#include <cuda_runtime_api.h>
+#endif
+
+
 #if !defined(__BGL_FAMILY__) && defined(__xlC__)
 /*
  * Suppress XLC warnings
@@ -75,10 +80,16 @@ ArrayData<TYPE>::ArrayData(
    unsigned int depth):
    d_depth(depth),
    d_offset(box.size()),
-   d_box(box),
-   d_array(d_depth * d_offset)
+   d_box(box)
+#if !defined(HAVE_CUDA)
+   , d_array(d_depth * d_offset)
+#endif
 {
    TBOX_ASSERT(depth > 0);
+
+#if defined(HAVE_CUDA)
+   cudaMallocManaged((void**)&d_array, sizeof(TYPE) * d_depth * d_offset);
+#endif
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
    undefineData();
@@ -88,6 +99,9 @@ ArrayData<TYPE>::ArrayData(
 template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
+#if defined(HAVE_CUDA)
+  cudaFree(&d_array);
+#endif
 }
 
 template<class TYPE>
@@ -962,7 +976,13 @@ ArrayData<TYPE>::getFromRestart(
    d_offset = restart_db->getInteger("d_offset");
    d_box = restart_db->getDatabaseBox("d_box");
 
+#if defined(HAVE_CUDA)
+   std::vector<TYPE> temp;
+   restart_db->getVector("d_array", temp);
+   std::copy(temp.begin(), temp.end(), d_array);
+#else
    restart_db->getVector("d_array", d_array);
+#endif
 }
 
 /*
@@ -987,7 +1007,11 @@ ArrayData<TYPE>::putToRestart(
    restart_db->putInteger("d_offset", static_cast<int>(d_offset));
    restart_db->putDatabaseBox("d_box", d_box);
 
+#if defined(HAVE_CUDA)
+   restart_db->putVector("d_array", std::vector<TYPE>(d_array, d_array+d_depth * d_offset));
+#else
    restart_db->putVector("d_array", d_array);
+#endif
 }
 
 template<class TYPE>

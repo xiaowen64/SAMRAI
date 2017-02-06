@@ -669,7 +669,11 @@ private:
    unsigned int d_depth;
    size_t d_offset;
    hier::Box d_box;
+#if defined(HAVE_CUDA)
+   TYPE* d_array;
+#else
    std::vector<TYPE> d_array;
+#endif
 };
 
 }
