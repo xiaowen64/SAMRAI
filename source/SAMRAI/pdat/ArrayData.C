@@ -100,7 +100,7 @@ template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
 #if defined(HAVE_CUDA)
-  cudaFree(&d_array);
+  cudaFree(d_array);
 #endif
 }
 
