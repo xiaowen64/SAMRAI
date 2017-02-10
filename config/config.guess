@@ -844,6 +844,9 @@ EOF
     ppc:Linux:*:*)
 	echo powerpc-unknown-linux-gnu
 	exit 0 ;;
+    ppc64le:Linux:*:*)
+	echo powerpc64-unknown-linux-gnu
+	exit ;;
     ppc64:Linux:*:*)
 	echo powerpc64-unknown-linux-gnu
 	exit 0 ;;

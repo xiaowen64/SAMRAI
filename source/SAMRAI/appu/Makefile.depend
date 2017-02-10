@@ -177,8 +177,19 @@ DEPENDS_2 +=\
 
 ${FILE_2}: ${DEPENDS_2}
 
-FILE_3=VisDerivedDataStrategy.o
+FILE_3=MemoryPool.o
 DEPENDS_3:=\
+	$(OBJECT)/include/SAMRAI/SAMRAI_config.h MemoryPool.C		\
+	MemoryPool.h
+
+DEPENDS_3 +=\
+	
+
+
+${FILE_3}: ${DEPENDS_3}
+
+FILE_4=VisDerivedDataStrategy.o
+DEPENDS_4:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -222,14 +233,14 @@ DEPENDS_3:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Timer.h				\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VisDerivedDataStrategy.C
 
-DEPENDS_3 +=\
+DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_3}: ${DEPENDS_3}
+${FILE_4}: ${DEPENDS_4}
 
-FILE_4=VisItDataWriter.o
-DEPENDS_4:=\
+FILE_5=VisItDataWriter.o
+DEPENDS_5:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisDerivedDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisItDataWriter.h			\
@@ -324,7 +335,7 @@ DEPENDS_4:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/TimerManager.h			\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h VisItDataWriter.C
 
-DEPENDS_4 +=\
+DEPENDS_5 +=\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayData.C				\
 	$(INCLUDE_SAM)/SAMRAI/pdat/ArrayDataOperationUtilities.C	\
 	$(INCLUDE_SAM)/SAMRAI/pdat/CellData.C				\
@@ -338,10 +349,10 @@ DEPENDS_4 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_4}: ${DEPENDS_4}
+${FILE_5}: ${DEPENDS_5}
 
-FILE_5=VisMaterialsDataStrategy.o
-DEPENDS_5:=\
+FILE_6=VisMaterialsDataStrategy.o
+DEPENDS_6:=\
 	$(OBJECT)/include/SAMRAI/SAMRAI_config.h			\
 	$(INCLUDE_SAM)/SAMRAI/appu/VisMaterialsDataStrategy.h		\
 	$(INCLUDE_SAM)/SAMRAI/hier/BlockId.h				\
@@ -386,9 +397,9 @@ DEPENDS_5:=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/Utilities.h				\
 	VisMaterialsDataStrategy.C
 
-DEPENDS_5 +=\
+DEPENDS_6 +=\
 	$(INCLUDE_SAM)/SAMRAI/tbox/MathUtilities.C
 
 
-${FILE_5}: ${DEPENDS_5}
+${FILE_6}: ${DEPENDS_6}
 

@@ -72,6 +72,9 @@
 /* HAVE_CMATH_ISNAN */
 #undef HAVE_CMATH_ISNAN
 
+/* HAVE_CNMEM */
+#undef HAVE_CNMEM
+
 /* HAVE_CTIME */
 #undef HAVE_CTIME
 
@@ -233,6 +236,9 @@
 
 /* LACKS_CMATH_ISNAN */
 #undef LACKS_CMATH_ISNAN
+
+/* LACKS_CNMEM */
+#undef LACKS_CNMEM
 
 /* LACKS_CTIME */
 #undef LACKS_CTIME
