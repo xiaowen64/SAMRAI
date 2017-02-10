@@ -22,7 +22,9 @@
 
 #if defined(HAVE_CUDA)
 #include <cuda_runtime_api.h>
+#if defined(HAVE_CNMEM)
 #include "SAMRAI/appu/MemoryPool.h"
+#endif
 #endif
 
 
@@ -89,9 +91,12 @@ ArrayData<TYPE>::ArrayData(
    TBOX_ASSERT(depth > 0);
 
 #if defined(HAVE_CUDA)
+#if defined(HAVE_CNMEM)
    appu::MemoryPool* pool = appu::MemoryPool::getMemoryPool();
    d_array = static_cast<TYPE*>(pool->alloc(sizeof(TYPE) * d_depth * d_offset));
-   //cudaMallocManaged((void**)&d_array, sizeof(TYPE) * d_depth * d_offset);
+#else
+   cudaMallocManaged((void**)&d_array, sizeof(TYPE) * d_depth * d_offset);
+#endif
 #endif
 
 #ifdef DEBUG_INITIALIZE_UNDEFINED
@@ -103,9 +108,12 @@ template<class TYPE>
 ArrayData<TYPE>::~ArrayData()
 {
 #if defined(HAVE_CUDA)
+#if defined(HAVE_CNMEM)
   appu::MemoryPool* pool = appu::MemoryPool::getMemoryPool();
   pool->free(d_array);
-  //cudaFree(d_array);
+#else
+  cudaFree(d_array);
+#endif
 #endif
 }
 

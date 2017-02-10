@@ -1,6 +1,6 @@
 #include "MemoryPool.h"
 
-#if defined(HAVE_CUDA)
+#if defined(HAVE_CUDA) && defined(HAVE_CNMEM)
 
 namespace SAMRAI {
 namespace appu {

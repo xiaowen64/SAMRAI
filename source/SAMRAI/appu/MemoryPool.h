@@ -3,7 +3,8 @@
 
 #include "SAMRAI/SAMRAI_config.h"
 
-#if defined(HAVE_CUDA)
+#if defined(HAVE_CUDA) && defined(HAVE_CNMEM)
+
 
 #include "cnmem.h"
 
