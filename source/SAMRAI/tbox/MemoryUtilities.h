@@ -31,13 +31,7 @@ namespace tbox {
  * Calls to these methods may be placed at various points in an application
  * to track memory usage characteristics.  For applications running on a
  * single processor, the  call the print method is likely sufficient. The
- * information can simply be printed to a log file or output stream.  For
- * applications running on multiple processors, or which otherwise have
- * complex memory patterns that cannot easily be deciphered from prints to
- * a log file, the record method may be more useful.  Use of this method
- * requires the TAU (Tuning and Analysis Utilities) package to keep a
- * profile of the recorded memory information so that it can be analyzed
- * via a post-processing tool.
+ * information can simply be printed to a log file or output stream. 
  *
  * Note that all member functions of this class are static so it is not
  * necessary to instantiate the class.  Simply call the functions as
@@ -50,16 +44,6 @@ struct MemoryUtilities {
    static void
    printMemoryInfo(
       std::ostream& os);
-
-   /*!
-    * Record memory info to be analyzed by TAU (Tuning and Analysis
-    * Utilities).  If tracing is enabled, you can supply a time at
-    * which the memory is recorded.  This method requires SAMRAI to
-    * be configured with TAU.  If it is not, the method will do nothing.
-    */
-   static void
-   recordMemoryInfo(
-      double time = 0.0);
 
    /*!
     * Print maximum memory used (i.e. high-water mark) to the
@@ -82,8 +66,8 @@ struct MemoryUtilities {
 
 private:
    /*
-    * Keep track of maximum memory used (updated each time print or
-    * record function called).
+    * Keep track of maximum memory used (updated each time print function
+    * called).
     */
    static double s_max_memory;
 

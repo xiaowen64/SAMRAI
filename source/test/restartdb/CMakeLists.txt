@@ -1,0 +1,71 @@
+set (testHDF5_sources
+  mainHDF5.C
+  database_tests.C)
+
+set (testHDF5AppFileOpen_sources
+  mainHDF5AppFileOpen.C
+  database_tests.C)
+
+set (testSilo_sources
+  mainSilo.C
+  database_tests.C)
+
+set (testSiloAppFileOpen_sources
+  mainSiloAppFileOpen.C
+  database_tests.C)
+
+set (testMemory_sources
+  mainMemory.C
+  database_tests.C)
+
+blt_add_executable(
+  NAME testHDF5
+  SOURCES ${testHDF5_sources}
+  DEPENDS_ON
+    SAMRAI_hier
+    SAMRAI_tbox
+    hdf5)
+
+blt_add_executable(
+  NAME testHDF5AppFileOpen
+  SOURCES ${testHDF5AppFileOpen_sources}
+  DEPENDS_ON
+    SAMRAI_hier
+    SAMRAI_tbox
+    hdf5)
+
+blt_add_executable(
+  NAME testSilo
+  SOURCES ${testSilo_sources}
+  DEPENDS_ON
+    SAMRAI_hier
+    SAMRAI_tbox)
+
+blt_add_executable(
+  NAME testSiloAppFileOpen
+  SOURCES ${testSiloAppFileOpen_sources}
+  DEPENDS_ON
+    SAMRAI_hier
+    SAMRAI_tbox)
+
+blt_add_executable(
+  NAME testMemory
+  SOURCES ${testMemory_sources}
+  DEPENDS_ON
+    SAMRAI_hier
+    SAMRAI_tbox)
+
+target_include_directories( testHDF5
+  PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)
+
+target_include_directories( testHDF5AppFileOpen
+  PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)
+
+target_include_directories( testSilo
+  PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)
+
+target_include_directories( testSiloAppFileOpen
+  PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)
+
+target_include_directories( testMemory
+  PUBLIC ${PROJECT_SOURCE_DIR}/source/test/restartdb)

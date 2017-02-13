@@ -1,0 +1,10 @@
+set ( dimension_sources
+  main.C)
+
+blt_add_executable(
+  NAME dimension
+  SOURCES ${dimension_sources}
+  DEPENDS_ON
+    SAMRAI_tbox)
+
+target_compile_definitions(dataaccess PUBLIC TESTING=1)

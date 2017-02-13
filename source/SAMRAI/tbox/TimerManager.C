@@ -130,11 +130,7 @@ TimerManager::TimerManager(
 #ifdef ENABLE_SAMRAI_TIMERS
    : d_timer_active_access_time(-9999.0),
    d_timer_inactive_access_time(-9999.0),
-#ifdef HAVE_TAU
-   d_main_timer(new Timer("UNINSTRUMENTED PARTS")),
-#else
    d_main_timer(new Timer("TOTAL RUN TIME")),
-#endif
    d_length_package_names(0),
    d_length_class_names(0),
    d_length_class_method_names(0),
@@ -153,10 +149,7 @@ TimerManager::TimerManager(
 #endif
 {
    /*
-    * Create a timer that measures overall solution time.  If the
-    * application uses Tau, this timer will effectively measure
-    * uninstrumented parts of the library.  Hence, use a different name
-    * for the different cases to avoid confusion in the Tau analysis tool.
+    * Create a timer that measures overall solution time
     */
 #ifdef ENABLE_SAMRAI_TIMERS
    getFromInput(input_db);
@@ -2546,16 +2539,9 @@ TimerManager::clearArrays()
 {
 #ifdef ENABLE_SAMRAI_TIMERS
    /*
-    * Create a timer that measures overall solution time.  If the
-    * application uses Tau, this timer will effectively measure
-    * uninstrumented parts of the library.  Hence, use a different name
-    * for the different cases to avoid confusion in the Tau analysis tool.
+    * Create a timer that measures overall solution time.
     */
-#ifdef HAVE_TAU
-   d_main_timer.reset(new Timer("UNINSTRUMENTED PARTS"));
-#else
    d_main_timer.reset(new Timer("TOTAL RUN TIME"));
-#endif
 
    d_timers.clear();
    d_inactive_timers.clear();

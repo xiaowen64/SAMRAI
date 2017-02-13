@@ -16,12 +16,6 @@
 #include "SAMRAI/tbox/TimerManager.h"
 #include "SAMRAI/tbox/Utilities.h"
 
-#ifdef HAVE_VAMPIR
-extern "C" {
-#include "VT.h"
-}
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -44,36 +38,6 @@ Timer::Timer(
    d_accesses(0)
 {
 #ifdef ENABLE_SAMRAI_TIMERS
-#ifdef HAVE_VAMPIR
-   string::size_type position;
-
-   // parse timers name down to method
-   position = name.find("::");
-   string class_method = name.substr(position + 2);
-   position = class_method.find("::");
-   string class_name = class_method.substr(0, position);
-   string method = class_method.substr(position + 2);
-
-   // convert strings to char* type
-   char* char_method = new char[method.length() + 1];
-   method.copy(char_method, string::npos);
-   char_method[method.length()] = 0;
-
-   char* char_class = new char[class_name.length() + 1];
-   class_name.copy(char_class, string::npos);
-   char_class[class_name.length()] = 0;
-
-   VT_symdef(id, char_class, char_method);
-#endif
-
-#ifdef HAVE_TAU
-   /*
-    * Create a Tau "timer" to track time.
-    */
-   TAU_MAPPING_TIMER_CREATE(tautimer, name, " ",
-      TAU_USER2, "SAMRAI_DEFAULT");
-#endif
-
    Clock::initialize(d_user_start_exclusive);
    Clock::initialize(d_user_stop_exclusive);
    Clock::initialize(d_system_start_exclusive);
@@ -135,22 +99,6 @@ Timer::start()
          d_system_start_total,
          d_wallclock_start_total);
 
-#ifdef HAVE_VAMPIR
-      VT_begin(d_identifier);
-#endif
-
-#ifdef HAVE_TAU
-      /*
-       * Start the TAU timer.  The "tid" is used for threaded systems
-       * so it generally won't apply for us.  The profiler accesses
-       * the timer (given the "tautimer" for this timer object) which
-       * returns "t", and then starts "t".
-       */
-      int tid = RtsLayer::myThread();
-      TAU_MAPPING_PROFILE_TIMER(t, tautimer, tid);
-      TAU_MAPPING_PROFILE_START(t, tid);
-#endif
-
       TimerManager::getManager()->startTime(this);
 
    }
@@ -170,14 +118,6 @@ Timer::stop()
       d_is_running = false;
 
       TimerManager::getManager()->stopTime(this);
-
-#ifdef HAVE_VAMPIR
-      VT_end(d_identifier);
-#endif
-
-#ifdef HAVE_TAU
-      TAU_MAPPING_PROFILE_STOP(RtsLayer::myThread());
-#endif
 
       Clock::timestamp(d_user_stop_total,
          d_system_stop_total,

@@ -264,7 +264,7 @@ int main(
          main_db->getStringWithDefault("restart_write_dirname",
             base_name + ".restart");
 
-#if (TESTING == 1) && !(HAVE_HDF5)
+#if (TESTING == 1) && !defined(HAVE_HDF5)
       /*
        * If we are autotesting on a system w/o HDF5, the read from
        * restart will result in an error.  We want this to happen

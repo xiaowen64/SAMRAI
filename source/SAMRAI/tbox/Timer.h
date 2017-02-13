@@ -20,12 +20,6 @@
 #include <string>
 #include <vector>
 
-#ifdef HAVE_TAU
-#if (PROFILING_ON || TRACING_ON)
-#include "Profile/Profiler.h"
-#endif
-#endif
-
 namespace SAMRAI {
 namespace tbox {
 
@@ -422,15 +416,6 @@ private:
     * Static integer constant describing this class's version number.
     */
    static const int TBOX_TIMER_VERSION;
-
-   /*
-    * Objects used for performance analysis with TAU.  The "tautimer" mapping
-    * object is a tau timer that is associated with this SAMRAI timer.
-    */
-#ifdef HAVE_TAU
-   TAU_MAPPING_OBJECT(tautimer)
-#endif
-
 };
 
 }
