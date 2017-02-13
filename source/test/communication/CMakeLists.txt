@@ -27,3 +27,11 @@ target_include_directories( communication
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/communication)
 
 target_compile_definitions(communication PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)
+
+samrai_add_tests(
+  NAME communication
+  EXECUTABLE communication
+  INPUTS ${test_inputs}
+  PARALLEL True)

@@ -13,3 +13,5 @@ target_include_directories( Connector
   PUBLIC ${PROJECT_SOURCE_DIR}/source/test/Connector)
 
 target_compile_definitions(Connector PUBLIC TESTING=1)
+
+file (GLOB test_inputs ${CMAKE_CURRENT_SOURCE_DIR}/test_inputs/*.input)

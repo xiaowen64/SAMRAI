@@ -23,14 +23,16 @@ blt_add_executable(
   SOURCES ${testHDF5_sources}
   DEPENDS_ON
     SAMRAI_hier
-    SAMRAI_tbox)
+    SAMRAI_tbox
+    hdf5)
 
 blt_add_executable(
   NAME testHDF5AppFileOpen
   SOURCES ${testHDF5AppFileOpen_sources}
   DEPENDS_ON
     SAMRAI_hier
-    SAMRAI_tbox)
+    SAMRAI_tbox
+    hdf5)
 
 blt_add_executable(
   NAME testSilo

@@ -46,3 +46,16 @@ add_subdirectory(source)
 add_subdirectory(tools)
 
 add_subdirectory(docs)
+
+add_custom_target(SAMRAI)
+add_dependencies(SAMRAI
+  SAMRAI_algs
+  SAMRAI_appu
+  SAMRAI_geom
+  SAMRAI_hier
+  SAMRAI_math
+  SAMRAI_mesh
+  SAMRAI_pdat
+  SAMRAI_solv
+  SAMRAI_tbox
+  SAMRAI_xfer)
