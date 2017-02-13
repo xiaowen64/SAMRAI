@@ -19,6 +19,7 @@
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/CopyOperation.h"
 #include "SAMRAI/pdat/SumOperation.h"
+#include "SAMRAI/tbox/ForAll.h"
 
 #if defined(HAVE_CUDA)
 #include <cuda_runtime_api.h>
@@ -861,9 +862,15 @@ ArrayData<TYPE>::fillAll(
    if (!d_box.empty()) {
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
+#if defined(HAVE_CUDA)
+     tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVICE (int i) {
+         ptr[i] = t;
+     });
+#else
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
       }
+#endif
    }
 }
 
@@ -889,9 +896,17 @@ ArrayData<TYPE>::fill(
    if (!d_box.empty()) {
       TYPE* ptr = &d_array[d * d_offset];
       const size_t n = d_offset;
+#if defined(HAVE_CUDA)
+     tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVICE (int i) {
+         ptr[i] = t;
+     });
+#else
+      TYPE* ptr = &d_array[d * d_offset];
+      const size_t n = d_offset;
       for (size_t i = 0; i < n; ++i) {
          ptr[i] = t;
       }
+#endif
    }
 }
 

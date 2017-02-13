@@ -10,6 +10,7 @@
 #define SAMRAI_VERSION_PATCHLEVEL 2
 
 
+
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
 
@@ -150,6 +151,9 @@
 /* PTSCOTCH headers are available to use */
 #undef HAVE_PTSCOTCH
 
+/* HAVE_RAJA */
+#undef HAVE_RAJA
+
 /* SILO library is available so use it */
 #undef HAVE_SILO
 
@@ -285,6 +289,9 @@
 /* LACKS_PROPER_XDR_HEADER */
 #undef LACKS_PROPER_XDR_HEADER
 
+/* LACKS_RAJA */
+#undef LACKS_RAJA
+
 /* LACKS_SSTREAM */
 #undef LACKS_SSTREAM
 
@@ -364,6 +371,10 @@
 #undef __BGL_FAMILY__
 
 
+
+#if defined(HAVE_CUDA)
+#include "SAMRAI/tbox/CudaSupport.h"
+#endif
 
 namespace SAMRAI {
    static const unsigned short MAX_DIM_VAL = SAMRAI_MAXIMUM_DIMENSION;
