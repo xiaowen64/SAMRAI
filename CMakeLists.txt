@@ -15,8 +15,8 @@ endif ()
 
 # Fortran enabled for BLT setup
 option(ENABLE_FORTRAN "Enable Fortran" On)
-
 option(ENABLE_OPENMP "Enable OpenMP" On)
+option(ENABLE_CUDA "Enable CUDA" On)
 
 # Third-party packages
 option(ENABLE_MPI "Enable MPI." On)

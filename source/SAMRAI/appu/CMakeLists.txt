@@ -33,7 +33,8 @@ blt_add_library(
   SOURCES ${appu_sources}
   HEADERS ${appu_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/appu
-  DEPENDS_ON ${appu_depends_on})
+  DEPENDS_ON ${appu_depends_on}
+  USE_CUDA True)
 
 set_target_properties(SAMRAI_appu PROPERTIES LINKER_LANGUAGE CXX)
 
