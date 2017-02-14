@@ -1,2 +1,3 @@
 add_subdirectory(SAMRAI)
-add_subdirectory(test)
+
+#add_subdirectory(test)

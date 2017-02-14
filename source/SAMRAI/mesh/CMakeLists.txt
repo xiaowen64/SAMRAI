@@ -63,14 +63,16 @@ process_m4(NAME fortran/mesh_coarsentags3d)
 set (mesh_depends_on
   SAMRAI_hier
   SAMRAI_tbox
-  SAMRAI_xfer)
+  SAMRAI_xfer
+  boost)
 
 blt_add_library(
   NAME SAMRAI_mesh
   SOURCES ${mesh_sources}
   HEADERS ${mesh_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/mesh
-  DEPENDS_ON ${mesh_depends_on})
+  DEPENDS_ON ${mesh_depends_on}
+  USE_CUDA True)
 
 target_include_directories(
   SAMRAI_mesh

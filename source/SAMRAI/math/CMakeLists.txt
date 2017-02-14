@@ -155,14 +155,16 @@ set (math_sources
 set (math_depends_on
   SAMRAI_hier
   SAMRAI_pdat
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  boost)
 
 blt_add_library(
   NAME SAMRAI_math
   SOURCES ${math_sources}
   HEADERS ${math_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/math
-  DEPENDS_ON ${math_depends_on})
+  DEPENDS_ON ${math_depends_on}
+  USE_CUDA True)
 
 target_include_directories( SAMRAI_math
   PUBLIC ${PROJECT_SOURCE_DIR}/source)

@@ -68,14 +68,16 @@ set (solv_sources
 set (solv_depends_on
   SAMRAI_hier
   SAMRAI_math
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  boost)
 
 blt_add_library(
   NAME SAMRAI_solv
   SOURCES ${solv_sources}
   HEADERS ${solv_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/solv
-  DEPENDS_ON ${solv_depends_on})
+  DEPENDS_ON ${solv_depends_on}
+  USE_CUDA True)
 
 set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
 

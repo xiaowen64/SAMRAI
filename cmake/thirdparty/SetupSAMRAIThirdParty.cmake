@@ -7,6 +7,17 @@ else ()
   set(LACKS_MPI True)
 endif ()
 
+if (CUDA_FOUND)
+  set (HAVE_CUDA True)
+endif ()
+
+find_package(RAJA REQUIRED)
+blt_register_library(
+  NAME RAJA
+  INCLUDES ${RAJA_INCLUDE_DIR}
+  LIBRARIES RAJA)
+set(HAVE_RAJA True)
+
 # Boost
 find_package(Boost REQUIRED)
 if (${Boost_FOUND})

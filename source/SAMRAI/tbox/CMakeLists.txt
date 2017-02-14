@@ -12,10 +12,12 @@ set ( tbox_headers
   Clock.h
   CommGraphWriter.h
   Complex.h
+  CudaSupport.h
   Database.h
   DatabaseBox.h
   DatabaseFactory.h
   Dimension.h
+  ForAll.h
   Grammar.h
   HDFDatabase.h
   HDFDatabaseFactory.h

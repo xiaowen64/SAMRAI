@@ -298,7 +298,8 @@ set (pdat_sources
 
 set (pdat_depends_on
   SAMRAI_hier
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  boost)
 
 process_m4(NAME fortran/pdat_concoarsen1d)
 process_m4(NAME fortran/pdat_concoarsen2d)
@@ -318,7 +319,8 @@ blt_add_library(
   SOURCES ${pdat_sources}
   HEADERS ${pdat_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/pdat
-  DEPENDS_ON ${pdat_depends_on})
+  DEPENDS_ON ${pdat_depends_on}
+  USE_CUDA True)
 
 set_target_properties(SAMRAI_pdat PROPERTIES LINKER_LANGUAGE CXX)
 

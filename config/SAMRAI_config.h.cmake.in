@@ -3,9 +3,13 @@
 
 #include "SAMRAI/FC.h"
 
+
 #define SAMRAI_VERSION_MAJOR @SAMRAI_VERSION_MAJOR@
 #define SAMRAI_VERSION_MINOR @SAMRAI_VERSION_MINOR@
 #define SAMRAI_VERSION_PATCHLEVEL @SAMRAI_VERSION_PATCHLEVEL@
+
+#cmakedefine HAVE_CUDA
+#cmakedefine HAVE_RAJA
 
 /* Define if bool type is not properly supported */
 #undef BOOL_IS_BROKEN
@@ -408,6 +412,10 @@ namespace SAMRAI {
  */
 #define isnan _isnan
 
+#endif
+
+#if defined(HAVE_CUDA)
+#include "SAMRAI/tbox/CudaSupport.h"
 #endif
 
 #endif

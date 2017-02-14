@@ -1,12 +1,12 @@
 #ifndef included_tbox_ForAll
 #define included_tbox_ForAll
 
-namespace SAMRAI {
-namespace tbox {
-
 #if defined(HAVE_RAJA)
 
 #include "RAJA/RAJA.hxx"
+
+namespace SAMRAI {
+namespace tbox {
 
 namespace parallel {
   typedef RAJA::cuda_exec<256> cuda;
@@ -18,6 +18,9 @@ inline void for_all(int begin, int end, loop_body&& body) {
 }
 
 #else
+
+namespace SAMRAI {
+namespace tbox {
 
 namespace parallel {
   typedef RAJA::seq_exec seq;

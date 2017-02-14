@@ -130,7 +130,8 @@ set (hier_sources
   VariableDatabase.C)
 
 set (hier_depends_on
-  SAMRAI_tbox)
+  SAMRAI_tbox
+  boost)
 
 blt_add_library(
   NAME SAMRAI_hier

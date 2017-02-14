@@ -40,7 +40,8 @@ set (algs_sources
 set (algs_depends_on
   SAMRAI_hier
   SAMRAI_tbox
-  SAMRAI_pdat)
+  SAMRAI_pdat
+  boost)
 
 process_m4(NAME fortran/algs_nodeouternodeops2d)
 process_m4(NAME fortran/algs_nodeouternodeops3d)
@@ -52,7 +53,8 @@ blt_add_library( NAME SAMRAI_algs
   SOURCES ${algs_sources}
   HEADERS ${algs_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/algs
-  DEPENDS_ON ${algs_depends_on})
+  DEPENDS_ON ${algs_depends_on}
+  USE_CUDA True)
 
 set_target_properties(SAMRAI_algs PROPERTIES LINKER_LANGUAGE CXX)
 

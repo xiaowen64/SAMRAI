@@ -48,6 +48,7 @@ add_subdirectory(tools)
 add_subdirectory(docs)
 
 add_custom_target(SAMRAI)
+
 add_dependencies(SAMRAI
   SAMRAI_algs
   SAMRAI_appu
