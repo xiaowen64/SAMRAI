@@ -240,10 +240,15 @@ ArrayData<TYPE>::copy(
       TYPE * const dst_ptr = &d_array[0];
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
+#if (defined(HAVE_CUDA)
+      tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVICE (int i) {
+         copyop(dst_ptr[i], src_ptr[i]);
+      });
+#else
       for (size_t i = 0; i < n; ++i) {
          copyop(dst_ptr[i], src_ptr[i]);
       }
-
+#endif
    } else {
 
       const hier::Box copybox = box * d_box * src.d_box;
@@ -436,10 +441,16 @@ ArrayData<TYPE>::copyDepth(
 
       TYPE * const dst_ptr_d = dst_ptr + dst_depth * d_offset;
       const TYPE * const src_ptr_d = src_ptr + src_depth * d_offset;
+
+#if defined(CUDA)
+      tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVCIE (int i) {
+         copyop(dst_ptr_d[i], src_ptr_d[i]);
+      });
+#else
       for (size_t i = 0; i < d_offset; ++i) {
          copyop(dst_ptr_d[i], src_ptr_d[i]);
       }
-
+#endif
    } else {
 
       const hier::Box copybox = box * d_box * src.d_box;
@@ -500,9 +511,16 @@ ArrayData<TYPE>::sum(
       TYPE * const dst_ptr = &d_array[0];
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
+
+#if defined(CUDA)
+      tbox::for_all(0, n, [=] SAMRAI_DEVICE (int i) {
+         sumop(dst_ptr[i], src_ptr[i]);
+      });
+#else
       for (size_t i = 0; i < n; ++i) {
          sumop(dst_ptr[i], src_ptr[i]);
       }
+#endif
 
    } else {
 
@@ -917,6 +935,8 @@ ArrayData<TYPE>::fill(
    const hier::Box& box,
    const unsigned int d)
 {
+
+  // TODO: Fill on GPU
    TBOX_ASSERT((d < d_depth));
 
    const hier::Box ispace = d_box * box;

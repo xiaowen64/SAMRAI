@@ -30,6 +30,8 @@ CopyOperation<TYPE>::~CopyOperation()
  * Member functions for CopyOperation
  */
 
+SAMRAI_INLINE
+SAMRAI_HOST_DEVICE
 template<class TYPE>
 void
 CopyOperation<TYPE>::operator () (

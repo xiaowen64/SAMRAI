@@ -35,6 +35,8 @@ SumOperation<TYPE>::~SumOperation()
  * Member functions for SumOperation
  */
 
+SAMRAI_INLINE
+SAMRAI_HOST_DEVICE
 template<class TYPE>
 void
 SumOperation<TYPE>::operator () (

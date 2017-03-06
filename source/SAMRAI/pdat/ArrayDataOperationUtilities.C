@@ -14,6 +14,9 @@
 #include "SAMRAI/pdat/ArrayDataOperationUtilities.h"
 #include "SAMRAI/pdat/ArrayData.h"
 #include "SAMRAI/tbox/Utilities.h"
+#if defined(HAVE_RAJA)
+#include "SAMRAI/tbox/RAJA_API.h"
+#endif
 
 namespace SAMRAI {
 namespace pdat {
@@ -88,6 +91,45 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
    for (unsigned int d = 0; d < num_depth; ++d) {
 
+#if defined(HAVE_RAJA)
+     switch (dim.getValue()) {
+       case 1:
+
+         const tbox::ArrayView<1> source(src, d);
+         tbox::ArrayView dest(dst, d);
+
+         tbox::for_all<1, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i) {
+             op(dest(i), source(i));
+         });
+         break;
+
+       case 2:
+
+         const tbox::ArrayView<2> source(src, d);
+         tbox::ArrayView<2> dest(dst, d);
+
+         tbox::for_all<2, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int k) {
+             op(dest(i), source(i));
+         });
+         break;
+
+       case 3: 
+
+         const ArrayView<3> source(src, d);
+         ArrayView<3> dest(dst, d);
+
+         tbox::for_all<3, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int k, int k) {
+             op(dest(i,j,k), source(i,j,k));
+         });
+         break;
+
+       default: tbox::perr << "Dimension > 3 not supported with RAJA parallel kernels" << std::endl;
+                TBOX_ERROR("Aborting in " __FILE__);
+                break;
+     }
+
+#else
+
       size_t dst_counter = dst_begin;
       size_t src_counter = src_begin;
 
@@ -151,6 +193,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
       dst_begin += dst_offset;
       src_begin += src_offset;
+#endif
 
    }  // d loop over depth indices
 
@@ -222,6 +265,52 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 
    for (unsigned int d = 0; d < array_d_depth; ++d) {
 
+#if defined(HAVE_RAJA)
+     switch (dim.getValue()) {
+       case 1:
+
+         const ArrayView<1> dest = (src_is_buffer ? 
+             ArrayView<1>(arraydata, d) : ArrayView<1>(buffer, arraydata.getBox() d);
+
+         const ArrayView<1> source = (src_is_buffer ? 
+             ArrayView<1>(buffer, arraydata.getBox(), d) : ArrayView<1>(arraydata, d);
+
+         tbox::for_all<1, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i) {
+             op(dest(i), source(i));
+         });
+         break;
+
+       case 2:
+
+         const ArrayView<2> dest = (src_is_buffer ? 
+             ArrayView<2>(arraydata, d) : ArrayView<2>(buffer, arraydata.getBox(), d);
+
+         const ArrayView<2> source = (src_is_buffer ? 
+             ArrayView<2>(buffer, arraydata.getBox(), d) : ArrayView<2>(arraydata, d);
+
+         tbox::for_all<2, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j) {
+             op(dest(i, j), source(i, j));
+         });
+         break;
+
+       case 3:
+
+         const ArrayView<3> dest = (src_is_buffer ? 
+             ArrayView<3>(arraydata, d) : ArrayView<3>(buffer, arraydata.getBox(), d);
+
+         const ArrayView<3> source = (src_is_buffer ? 
+             ArrayView<3>(buffer, arraydata.getBox(), d) : ArrayView<3>(arraydata, d);
+
+         tbox::for_all<3, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j, int k) {
+             op(dest(i, j, k), source(i, j, k));
+         });
+         break;
+
+       default: tbox::perr << "Dimension > 3 not supported with RAJA parallel kernels" << std::endl;
+                TBOX_ERROR("Aborting in " __FILE__);
+                break;
+     }
+#else
       size_t dat_counter = dat_begin;
       size_t buf_counter = buf_begin;
 
@@ -284,6 +373,7 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 
       dat_begin += dat_offset;
       buf_begin = buf_counter;
+#endif
 
    }  // d loop over depth indices
 

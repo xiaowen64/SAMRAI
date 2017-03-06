@@ -1,6 +1,8 @@
 #ifndef included_tbox_CudaSupport
 #define included_tbox_CudaSupport
 
+#define SAMRAI_INLINE inline
+
 #if defined(HAVE_CUDA)
 
 #if defined(__CUDACC__)
