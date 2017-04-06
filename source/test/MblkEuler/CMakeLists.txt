@@ -2,10 +2,12 @@ set (mblkeuler_sources
   main.C
   MblkEuler.C
   MblkGeometry.C
-  bc_common.f
   boundaryconditions.f)
 
 set (mblkeuler_depends_on
+    testlib
+    SAMRAI_appu
+    SAMRAI_algs
     SAMRAI_hier
     SAMRAI_geom
     SAMRAI_mesh

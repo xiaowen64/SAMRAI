@@ -117,6 +117,10 @@ if (HAVE_HDF5)
     list(APPEND tbox_depends_on hdf5)
 endif ()
 
+if (ENABLE_MPI)
+  list(APPEND tbox_depends_on mpi)
+endif ()
+
 blt_add_library( NAME SAMRAI_tbox
   SOURCES ${tbox_sources}
   HEADERS ${tbox_headers}

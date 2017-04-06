@@ -5,6 +5,7 @@ set (mblklinadv_sources
   main.C)
 
 set (mblklinadv_depends_on
+    testlib
     SAMRAI_hier
     SAMRAI_geom
     SAMRAI_mesh
@@ -19,4 +20,4 @@ blt_add_executable(
   DEPENDS_ON
     ${mblklinadv_depends_on})
 
-target_compile_definitions(mblklinadv PUBLIC TESTING=1)
+  #target_compile_definitions(mblklinadv PUBLIC TESTING=1)

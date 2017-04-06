@@ -10,6 +10,7 @@ set (mblkcomm_sources
 
 set (mblkcomm_depends_on
   SAMRAI_hier
+  SAMRAI_geom
   SAMRAI_pdat
   SAMRAI_mesh
   SAMRAI_tbox)

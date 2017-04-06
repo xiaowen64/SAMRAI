@@ -12,6 +12,7 @@ set (facadaptive_sources
   setArrayData.C)
 
 set (facadaptive_depends_on
+  testlib
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_mesh
