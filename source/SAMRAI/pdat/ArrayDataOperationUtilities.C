@@ -93,35 +93,36 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataOperationOnBox(
 
 #if defined(HAVE_RAJA)
      switch (dim.getValue()) {
-       case 1:
+       case 1: {
+         //tbox::ArrayView<1, const TYPE> source(src, d);
+         tbox::ArrayView<1, TYPE> source(src, d);
+         tbox::ArrayView<1, TYPE> dest(dst, d);
 
-         const tbox::ArrayView<1> source(src, d);
-         tbox::ArrayView dest(dst, d);
-
-         tbox::for_all<1, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i) {
+         tbox::for_all1< tbox::policy::parallel >(opbox, [=] SAMRAI_DEVICE (int i) {
              op(dest(i), source(i));
          });
-         break;
+         } break;
+               
+       case 2: {
+         // tbox::ArrayView<2, const TYPE> source(src, d);
+         tbox::ArrayView<2, TYPE> source(src, d);
+         tbox::ArrayView<2, TYPE> dest(dst, d);
 
-       case 2:
-
-         const tbox::ArrayView<2> source(src, d);
-         tbox::ArrayView<2> dest(dst, d);
-
-         tbox::for_all<2, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int k) {
+         tbox::for_all2<tbox::policy::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int k) {
              op(dest(i), source(i));
          });
-         break;
+         } break;
 
-       case 3: 
+       case 3: {
 
-         const ArrayView<3> source(src, d);
-         ArrayView<3> dest(dst, d);
+         // tbox::ArrayView<3, const TYPE> source(src, d);
+         tbox::ArrayView<3, TYPE> source(src, d);
+         tbox::ArrayView<3, TYPE> dest(dst, d);
 
-         tbox::for_all<3, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int k, int k) {
+         tbox::for_all3<tbox::policy::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j, int k) {
              op(dest(i,j,k), source(i,j,k));
          });
-         break;
+         } break;
 
        default: tbox::perr << "Dimension > 3 not supported with RAJA parallel kernels" << std::endl;
                 TBOX_ERROR("Aborting in " __FILE__);
@@ -267,44 +268,50 @@ void ArrayDataOperationUtilities<TYPE, OP>::doArrayDataBufferOperationOnBox(
 
 #if defined(HAVE_RAJA)
      switch (dim.getValue()) {
-       case 1:
+       case 1: {
+         tbox::ArrayView<1, TYPE> dest(src_is_buffer ? 
+             tbox::ArrayView<1, TYPE>(arraydata, d) : 
+             tbox::ArrayView<1, TYPE>(buffer, arraydata.getBox()));
 
-         const ArrayView<1> dest = (src_is_buffer ? 
-             ArrayView<1>(arraydata, d) : ArrayView<1>(buffer, arraydata.getBox() d);
+         // tbox::ArrayView<1, const TYPE> source(src_is_buffer ?
+         tbox::ArrayView<1, TYPE> source(src_is_buffer ?
+             tbox::ArrayView<1, TYPE>(buffer, arraydata.getBox(), d) :
+             tbox::ArrayView<1, TYPE>(arraydata, d));
 
-         const ArrayView<1> source = (src_is_buffer ? 
-             ArrayView<1>(buffer, arraydata.getBox(), d) : ArrayView<1>(arraydata, d);
-
-         tbox::for_all<1, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i) {
+         tbox::for_all1< tbox::policy::parallel >(opbox, [=] SAMRAI_DEVICE (int i) {
              op(dest(i), source(i));
          });
-         break;
+         } break;
 
-       case 2:
+       case 2: {
+         tbox::ArrayView<2, TYPE> dest(src_is_buffer ?
+             tbox::ArrayView<2, TYPE>(arraydata, d) :
+             tbox::ArrayView<2, TYPE>(buffer, arraydata.getBox(), d));
 
-         const ArrayView<2> dest = (src_is_buffer ? 
-             ArrayView<2>(arraydata, d) : ArrayView<2>(buffer, arraydata.getBox(), d);
+         //tbox::ArrayView<2, const TYPE> source(src_is_buffer ?
+         tbox::ArrayView<2, TYPE> source(src_is_buffer ?
+             tbox::ArrayView<2, TYPE>(buffer, arraydata.getBox(), d) :
+             tbox::ArrayView<2, TYPE>(arraydata, d));
 
-         const ArrayView<2> source = (src_is_buffer ? 
-             ArrayView<2>(buffer, arraydata.getBox(), d) : ArrayView<2>(arraydata, d);
-
-         tbox::for_all<2, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j) {
+         tbox::for_all2<tbox::policy::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j) {
              op(dest(i, j), source(i, j));
          });
-         break;
+         } break;
 
-       case 3:
+       case 3: {
+         tbox::ArrayView<3, TYPE> dest(src_is_buffer ? 
+             tbox::ArrayView<3, TYPE>(arraydata, d) :
+             tbox::ArrayView<3, TYPE>(buffer, arraydata.getBox(), d));
 
-         const ArrayView<3> dest = (src_is_buffer ? 
-             ArrayView<3>(arraydata, d) : ArrayView<3>(buffer, arraydata.getBox(), d);
+         // tbox::ArrayView<3, const TYPE> source(src_is_buffer ? 
+         tbox::ArrayView<3, TYPE> source(src_is_buffer ? 
+             tbox::ArrayView<3, TYPE>(buffer, arraydata.getBox(), d) :
+             tbox::ArrayView<3, TYPE>(arraydata, d));
 
-         const ArrayView<3> source = (src_is_buffer ? 
-             ArrayView<3>(buffer, arraydata.getBox(), d) : ArrayView<3>(arraydata, d);
-
-         tbox::for_all<3, tbox::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j, int k) {
+         tbox::for_all3<tbox::policy::parallel>(opbox, [=] SAMRAI_DEVICE (int i, int j, int k) {
              op(dest(i, j, k), source(i, j, k));
          });
-         break;
+         } break;
 
        default: tbox::perr << "Dimension > 3 not supported with RAJA parallel kernels" << std::endl;
                 TBOX_ERROR("Aborting in " __FILE__);

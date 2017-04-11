@@ -30,9 +30,9 @@ CopyOperation<TYPE>::~CopyOperation()
  * Member functions for CopyOperation
  */
 
+template <class TYPE>
 SAMRAI_INLINE
 SAMRAI_HOST_DEVICE
-template<class TYPE>
 void
 CopyOperation<TYPE>::operator () (
    TYPE& vdst,

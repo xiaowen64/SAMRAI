@@ -240,8 +240,8 @@ ArrayData<TYPE>::copy(
       TYPE * const dst_ptr = &d_array[0];
       const TYPE * const src_ptr = &src.d_array[0];
       const size_t n = d_offset * d_depth;
-#if (defined(HAVE_CUDA)
-      tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVICE (int i) {
+#if defined(HAVE_CUDA)
+      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
          copyop(dst_ptr[i], src_ptr[i]);
       });
 #else
@@ -881,7 +881,7 @@ ArrayData<TYPE>::fillAll(
       TYPE* ptr = &d_array[0];
       const size_t n = d_depth * d_offset;
 #if defined(HAVE_CUDA)
-     tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVICE (int i) {
+     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
          ptr[i] = t;
      });
 #else
@@ -915,7 +915,7 @@ ArrayData<TYPE>::fill(
       TYPE* ptr = &d_array[d * d_offset];
       const size_t n = d_offset;
 #if defined(HAVE_CUDA)
-     tbox::for_all<tbox::parallel::cuda>(0, n, [=] SAMRAI_DEVICE (int i) {
+     tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
          ptr[i] = t;
      });
 #else

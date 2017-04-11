@@ -38,14 +38,16 @@ public:
    /*!
     * The operator adds the source value to the destination.
     */
+   SAMRAI_HOST_DEVICE
    void
    operator () (
       TYPE& vdst,
       const TYPE& vsrc) const;
 
-private:
    SumOperation(
       const SumOperation&);             // not implemented
+
+private:
    SumOperation&
    operator = (
       const SumOperation&);              // not implemented

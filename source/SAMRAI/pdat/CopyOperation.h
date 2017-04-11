@@ -38,14 +38,16 @@ public:
    /*!
     * The operator copies the source value to the destination.
     */
+   SAMRAI_HOST_DEVICE
    void
    operator () (
       TYPE& vdst,
       const TYPE& vsrc) const;
 
-private:
+// private:
    CopyOperation(
       const CopyOperation&);              // not implemented
+private: 
    CopyOperation&
    operator = (
       const CopyOperation&);              // not implemented
