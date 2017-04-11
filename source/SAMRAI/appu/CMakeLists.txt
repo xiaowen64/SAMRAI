@@ -20,10 +20,15 @@ set (appu_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/appu_cartbdry3d.f)
 
 set (appu_depends_on
-  hdf5
   SAMRAI_hier
   SAMRAI_pdat
   SAMRAI_tbox)
+
+if (ENABLE_HDF5)
+  set (appu_depends_on
+    hdf5
+    ${appu_depends_on})
+endif ()
 
 process_m4(NAME fortran/appu_cartbdry2d)
 process_m4(NAME fortran/appu_cartbdry3d)

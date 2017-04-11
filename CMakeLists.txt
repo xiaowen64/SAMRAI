@@ -13,13 +13,14 @@ git submodule init\n \
 git submodule update")
 endif ()
 
-# Fortran enabled for BLT setup
-option(ENABLE_FORTRAN "Enable Fortran" On)
-option(ENABLE_OPENMP "Enable OpenMP" On)
-option(ENABLE_CUDA "Enable CUDA" On)
+# BLT Options need to be set in the CACHE
+set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
+set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
+set(ENABLE_CUDA On CACHE Bool "Enable CUDA")
+set(ENABLE_MPI On CACHE Bool "Enable MPI.")
+set(ENABLE_COPY_HEADERS On Bool "Copy headers")
 
-# Third-party packages
-option(ENABLE_MPI "Enable MPI." On)
+# Third party libraries
 option(ENABLE_HDF5 "Enable HDF5." On)
 option(ENABLE_HYPRE "Enable HYPRE" Off)
 option(ENABLE_PETSC "Enable PETSc" Off)
@@ -42,13 +43,10 @@ include(blt/SetupBLT.cmake)
 include(cmake/CMakeBasics.cmake)
 
 add_subdirectory(source)
-
 add_subdirectory(tools)
-
 add_subdirectory(docs)
 
 add_custom_target(SAMRAI)
-
 add_dependencies(SAMRAI
   SAMRAI_algs
   SAMRAI_appu

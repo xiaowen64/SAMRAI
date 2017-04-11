@@ -35,6 +35,7 @@ blt_add_executable(
   NAME multiblock
   SOURCES ${multiblock_sources}
   DEPENDS_ON
+    testlib
     SAMRAI)
 
-target_compile_definitions(multiblock PUBLIC TESTING=1)
+  #target_compile_definitions(multiblock PUBLIC TESTING=1)

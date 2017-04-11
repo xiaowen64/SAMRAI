@@ -41,7 +41,7 @@ if (ENABLE_HDF5)
     blt_register_library(
       NAME hdf5
       INCLUDES ${HDF5_INCLUDE_DIRS}
-      LIBRARIES ${HDF5_LIBRARIES})
+      LIBRARIES ${HDF5_C_LIBRARIES})
   endif ()
 endif ()
 
