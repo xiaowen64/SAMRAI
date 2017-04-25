@@ -301,6 +301,19 @@ set (pdat_depends_on
   SAMRAI_tbox
   boost)
 
+if (ENABLE_MPI)
+  set (pdat_depends_on
+    ${pdat_depends_on}
+    mpi)
+endif ()
+
+if (ENABLE_CUDA)
+  set (pdat_depends_on
+    ${pdat_depends_on}
+    raja
+    cuda)
+endif ()
+
 process_m4(NAME fortran/pdat_concoarsen1d)
 process_m4(NAME fortran/pdat_concoarsen2d)
 process_m4(NAME fortran/pdat_concoarsen3d)
@@ -319,8 +332,7 @@ blt_add_library(
   SOURCES ${pdat_sources}
   HEADERS ${pdat_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/pdat
-  DEPENDS_ON ${pdat_depends_on}
-  USE_CUDA True)
+  DEPENDS_ON ${pdat_depends_on})
 
 set_target_properties(SAMRAI_pdat PROPERTIES LINKER_LANGUAGE CXX)
 

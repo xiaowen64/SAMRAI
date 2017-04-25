@@ -22,19 +22,8 @@ namespace pdat {
  */
 
 template<class TYPE>
-class SumOperation
+struct SumOperation
 {
-public:
-   /*!
-    * The default constructor does nothing interesting.
-    */
-   SumOperation();
-
-   /*!
-    * The destructor does nothing interesting.
-    */
-   ~SumOperation();
-
    /*!
     * The operator adds the source value to the destination.
     */
@@ -43,14 +32,6 @@ public:
    operator () (
       TYPE& vdst,
       const TYPE& vsrc) const;
-
-   SumOperation(
-      const SumOperation&);             // not implemented
-
-private:
-   SumOperation&
-   operator = (
-      const SumOperation&);              // not implemented
 };
 
 }

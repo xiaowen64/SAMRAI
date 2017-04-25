@@ -30,6 +30,12 @@ if (ENABLE_HDF5)
     ${appu_depends_on})
 endif ()
 
+if (ENABLE_CUDA)
+  set (appu_depends_on
+    ${appu_depends_on}
+    cuda)
+endif ()
+
 process_m4(NAME fortran/appu_cartbdry2d)
 process_m4(NAME fortran/appu_cartbdry3d)
 
@@ -38,8 +44,7 @@ blt_add_library(
   SOURCES ${appu_sources}
   HEADERS ${appu_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/appu
-  DEPENDS_ON ${appu_depends_on}
-  USE_CUDA True)
+  DEPENDS_ON ${appu_depends_on})
 
 set_target_properties(SAMRAI_appu PROPERTIES LINKER_LANGUAGE CXX)
 

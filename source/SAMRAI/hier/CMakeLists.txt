@@ -133,6 +133,12 @@ set (hier_depends_on
   SAMRAI_tbox
   boost)
 
+if (ENABLE_MPI)
+  set (hier_depends_on
+    ${hier_depends_on}
+    mpi)
+endif ()
+
 blt_add_library(
   NAME SAMRAI_hier
   SOURCES ${hier_sources}

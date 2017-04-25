@@ -12,10 +12,27 @@ if (CUDA_FOUND)
 endif ()
 
 find_package(RAJA REQUIRED)
+
+set (raja_depends_on)
+
+if (ENABLE_OPENMP)
+  set (raja_depends_on
+    ${raja_depends_on}
+    openmp)
+endif ()
+
+if (ENABLE_OPENMP)
+  set (raja_depends_on
+    ${raja_depends_on}
+    cuda)
+endif ()
+
 blt_register_library(
   NAME RAJA
   INCLUDES ${RAJA_INCLUDE_DIR}
-  LIBRARIES RAJA)
+  LIBRARIES RAJA
+  DEPENDS_ON ${raja_depends_on})
+
 set(HAVE_RAJA True)
 
 # Boost

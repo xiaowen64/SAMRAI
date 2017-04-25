@@ -71,13 +71,18 @@ set (solv_depends_on
   SAMRAI_tbox
   boost)
 
+if (ENABLE_CUDA)
+  set (solv_depends_on
+    ${solv_depends_on}
+    cuda)
+endif ()
+
 blt_add_library(
   NAME SAMRAI_solv
   SOURCES ${solv_sources}
   HEADERS ${solv_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/solv
-  DEPENDS_ON ${solv_depends_on}
-  USE_CUDA True)
+  DEPENDS_ON ${solv_depends_on})
 
 set_target_properties(SAMRAI_solv PROPERTIES LINKER_LANGUAGE CXX)
 

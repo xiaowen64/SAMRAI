@@ -83,6 +83,12 @@ set (geom_depends_on
   SAMRAI_tbox
   boost)
 
+if (ENABLE_CUDA)
+  set (geom_depends_on
+    ${geom_depends_on}
+    cuda)
+endif ()
+
 process_m4(NAME fortran/geom_cartcoarsen1d)
 process_m4(NAME fortran/geom_cartcoarsen2d)
 process_m4(NAME fortran/geom_cartcoarsen3d)
@@ -96,8 +102,7 @@ blt_add_library(
   SOURCES ${geom_sources}
   HEADERS ${geom_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/geom
-  DEPENDS_ON ${geom_depends_on}
-  USE_CUDA True)
+  DEPENDS_ON ${geom_depends_on})
 
 set_target_properties(SAMRAI_geom PROPERTIES LINKER_LANGUAGE CXX)
 

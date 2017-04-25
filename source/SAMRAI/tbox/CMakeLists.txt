@@ -37,6 +37,7 @@ set ( tbox_headers
   ParallelBuffer.h
   Parser.h
   PIO.h
+  RAJA_API.h
   RankGroup.h
   RankTreeStrategy.h
   ReferenceCounter.h

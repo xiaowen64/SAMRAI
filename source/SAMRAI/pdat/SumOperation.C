@@ -21,16 +21,6 @@
 namespace SAMRAI {
 namespace pdat {
 
-template<class TYPE>
-SumOperation<TYPE>::SumOperation()
-{
-}
-
-template<class TYPE>
-SumOperation<TYPE>::~SumOperation()
-{
-}
-
 /*
  * Member functions for SumOperation
  */

@@ -158,13 +158,18 @@ set (math_depends_on
   SAMRAI_tbox
   boost)
 
+if (ENABLE_CUDA)
+  set (math_depends_on
+    ${math_depends_on}
+    cuda)
+endif ()
+
 blt_add_library(
   NAME SAMRAI_math
   SOURCES ${math_sources}
   HEADERS ${math_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/math
-  DEPENDS_ON ${math_depends_on}
-  USE_CUDA True)
+  DEPENDS_ON ${math_depends_on})
 
 target_include_directories( SAMRAI_math
   PUBLIC ${PROJECT_SOURCE_DIR}/source)

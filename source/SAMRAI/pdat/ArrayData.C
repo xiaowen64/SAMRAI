@@ -912,9 +912,9 @@ ArrayData<TYPE>::fill(
    TBOX_ASSERT((d < d_depth));
 
    if (!d_box.empty()) {
-      TYPE* ptr = &d_array[d * d_offset];
-      const size_t n = d_offset;
 #if defined(HAVE_CUDA)
+     TYPE* ptr = &d_array[d * d_offset];
+     const size_t n = d_offset;
      tbox::for_all<tbox::policy::parallel>(0, n, [=] SAMRAI_DEVICE (int i) {
          ptr[i] = t;
      });

@@ -66,13 +66,19 @@ set (mesh_depends_on
   SAMRAI_xfer
   boost)
 
+if (ENABLE_CUDA)
+  set (mesh_depends_on
+    ${mesh_depends_on}
+    cuda
+    raja)
+endif ()
+
 blt_add_library(
   NAME SAMRAI_mesh
   SOURCES ${mesh_sources}
   HEADERS ${mesh_headers}
   HEADERS_OUTPUT_SUBDIR SAMRAI/mesh
-  DEPENDS_ON ${mesh_depends_on}
-  USE_CUDA True)
+  DEPENDS_ON ${mesh_depends_on})
 
 target_include_directories(
   SAMRAI_mesh

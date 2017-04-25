@@ -38,9 +38,9 @@ struct policy_traits<policy::parallel> {
 };
 
 struct layout_traits {
-   typedef RAJA::OffsetLayout<int, RAJA::PERM_I, int> layout1d;
-   typedef RAJA::OffsetLayout<int, RAJA::PERM_JI, int, int> layout2d;
-   typedef RAJA::OffsetLayout<int, RAJA::PERM_KJI, int, int, int> layout3d;
+   typedef RAJA::OffsetLayout<1, int> layout1d;
+   typedef RAJA::OffsetLayout<2, int> layout2d;
+   typedef RAJA::OffsetLayout<3, int> layout3d;
 };
 
 }
@@ -50,7 +50,7 @@ struct layout_traits {
  */
 template <typename policy, typename loop_body>
 inline void for_all(int begin, int end, loop_body&& body) {
-  RAJA::forall<detail::policy_traits<policy>::policy>(begin, end, body);
+  RAJA::forall<typename detail::policy_traits<policy>::policy>(begin, end, body);
 }
 
 
@@ -66,7 +66,7 @@ inline void for_all1(const hier::Box& box, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-   RAJA::forallN< detail::policy_traits<policy>::raja_1d_policy >(
+   RAJA::forallN< typename detail::policy_traits<policy>::raja_1d_policy >(
        RAJA::RangeSegment(ifirst(0), ilast(0)+1),
        body);
 }
@@ -77,7 +77,7 @@ inline void for_all2(const hier::Box& box, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-   RAJA::forallN< detail::policy_traits<policy>::raja_2d_policy >(
+   RAJA::forallN< typename detail::policy_traits<policy>::raja_2d_policy >(
        RAJA::RangeSegment(ifirst(1), ilast(1)+1),
        RAJA::RangeSegment(ifirst(0), ilast(0)+1), 
        body);
@@ -89,7 +89,7 @@ inline void for_all3(const hier::Box& box, loop_body body)
   const hier::Index ifirst = box.lower();
   const hier::Index ilast = box.upper();
 
-  RAJA::forallN< detail::policy_traits<policy>::raja_3d_policy >(
+  RAJA::forallN< typename detail::policy_traits<policy>::raja_3d_policy >(
       RAJA::RangeSegment(ifirst(2), ilast(2)+1),
       RAJA::RangeSegment(ifirst(1), ilast(1)+1),
       RAJA::RangeSegment(ifirst(0), ilast(0)+1), 
@@ -106,16 +106,18 @@ struct ArrayView<1, T>  :
 {
   using Layout = detail::layout_traits::layout1d;
 
-  ArrayView<1, T>(const pdat::ArrayData<T>& data, int depth = 0) :
+  ArrayView<1, T>(pdat::ArrayData<T>& data, int depth = 0) :
     RAJA::View<T, Layout >(
         data.getPointer(depth),
-        Layout({data.getBox().lower()[0]}, {data.getBox().upper()[0]})){}
+        RAJA::make_permuted_offset_layout(
+          {data.getBox().lower()[0]}, {data.getBox().upper()[0]}, RAJA::PERM_I::value)){}
 
   // T could be const?
   ArrayView<1, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
-         Layout({box.lower()[0]}, {box.upper()[0]})){}
+         RAJA::make_permuted_offset_layout(
+           {box.lower()[0]}, {box.upper()[0]}, RAJA::PERM_I::value)){}
 };
 
  template <typename T>
@@ -123,17 +125,21 @@ struct ArrayView<1, T>  :
  {
   using Layout = detail::layout_traits::layout2d;
 
-   SAMRAI_INLINE ArrayView<2, T>(const pdat::ArrayData<T>& data, int depth = 0) :
+   SAMRAI_INLINE ArrayView<2, T>(pdat::ArrayData<T>& data, int depth = 0) :
      RAJA::View<T, Layout>(
          data.getPointer(depth),
-         Layout({data.getBox().lower()[0], data.getBox().lower()[1]}, 
-           {data.getBox().upper()[0], data.getBox().upper()[1]})){}
+         RAJA::make_permuted_offset_layout(
+           {data.getBox().lower()[0], data.getBox().lower()[1]}, 
+           {data.getBox().upper()[0], data.getBox().upper()[1]},
+           RAJA::PERM_JI::value)){}
 
    SAMRAI_INLINE ArrayView<2, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
-         Layout({box.lower()[0], box.lower()[1]}, 
-           {box.upper()[0], box.upper()[1]})){}
+         RAJA::make_permuted_offset_layout(
+           {box.lower()[0], box.lower()[1]}, 
+           {box.upper()[0], box.upper()[1]},
+           RAJA::PERM_JI::value)){}
  };
  
  template <typename T>
@@ -141,74 +147,88 @@ struct ArrayView<1, T>  :
  {
   using Layout = detail::layout_traits::layout3d;
 
-   SAMRAI_INLINE ArrayView<3, T>(const pdat::ArrayData<T>& data, int depth = 0) :
+   SAMRAI_INLINE ArrayView<3, T>(pdat::ArrayData<T>& data, int depth = 0) :
      RAJA::View<T, Layout>(
          data.getPointer(depth),
-         Layout({data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]}, 
-           {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]})) {}
+         RAJA::make_permuted_offset_layout(
+           {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]}, 
+           {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]},
+           RAJA::PERM_KJI::value)) {}
 
    SAMRAI_INLINE ArrayView<3, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
-         Layout({box.lower()[0], box.lower()[1], box.lower()[2]}, 
-           {box.upper()[0], box.upper()[1], box.upper()[2]})){};
+         RAJA::make_permuted_offset_layout(
+           {box.lower()[0], box.lower()[1], box.lower()[2]}, 
+           {box.upper()[0], box.upper()[1], box.upper()[2]},
+           RAJA::PERM_KJI::value)){};
+ };
+
+ template <typename T>
+ struct ArrayView<1, const T>  : 
+   public RAJA::View<const T, detail::layout_traits::layout1d >
+ {
+   using Layout = detail::layout_traits::layout1d;
+ 
+   ArrayView<1, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
+     RAJA::View<const T, Layout >(
+         data.getPointer(depth),
+         RAJA::make_permuted_offset_layout(
+           {data.getBox().lower()[0]}, {data.getBox().upper()[0]}, RAJA::PERM_I::value)){}
+ 
+   // T could be const?
+   ArrayView<1, const T>(const T* data, const hier::Box& box, int depth = 0) :
+      RAJA::View<const T, Layout>(
+          &data[depth * (box.size()-1)],
+          RAJA::make_permuted_offset_layout(
+            {box.lower()[0]}, {box.upper()[0]}, RAJA::PERM_I::value)){}
  };
 
 template <typename T>
-struct ArrayView<1, const T>  : 
-  public RAJA::View<const T, detail::layout_traits::layout1d >
+struct ArrayView<2, const T> : 
+  public RAJA::View<const T, detail::layout_traits::layout2d >
 {
-  using Layout = detail::layout_traits::layout1d;
+ using Layout = detail::layout_traits::layout2d;
 
-  ArrayView<1, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
-    RAJA::View<const T, Layout >(
+  SAMRAI_INLINE ArrayView<2, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
+    RAJA::View<const T, Layout>(
         data.getPointer(depth),
-        Layout({data.getBox().lower()[0]}, {data.getBox().upper()[0]})){}
+        RAJA::make_permuted_offset_layout(
+          {data.getBox().lower()[0], data.getBox().lower()[1]}, 
+          {data.getBox().upper()[0], data.getBox().upper()[1]},
+          RAJA::PERM_JI::value)){}
 
-  // T could be const?
-  ArrayView<1, const T>(const T* data, const hier::Box& box, int depth = 0) :
-     RAJA::View<const T, Layout>(
-         &data[depth * (box.size()-1)],
-         Layout({box.lower()[0]}, {box.upper()[0]})){}
+  SAMRAI_INLINE ArrayView<2, const T>(const T* data, const hier::Box& box, int depth = 0) :
+    RAJA::View<const T, Layout>(
+        &data[depth * (box.size()-1)],
+        RAJA::make_permuted_offset_layout(
+          {box.lower()[0], box.lower()[1]}, 
+          {box.upper()[0], box.upper()[1]},
+          RAJA::PERM_JI::value)){}
 };
 
- template <typename T>
- struct ArrayView<2, const T> : 
-   public RAJA::View<const T, detail::layout_traits::layout2d >
- {
-  using Layout = detail::layout_traits::layout2d;
+template <typename T>
+struct ArrayView<3, const T> : 
+  public RAJA::View<const T, detail::layout_traits::layout3d >
+{
+ using Layout = detail::layout_traits::layout3d;
 
-   SAMRAI_INLINE ArrayView<2, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
-     RAJA::View<const T, Layout>(
-         data.getPointer(depth),
-         Layout({data.getBox().lower()[0], data.getBox().lower()[1]}, 
-           {data.getBox().upper()[0], data.getBox().upper()[1]})){}
+  SAMRAI_INLINE ArrayView<3, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
+    RAJA::View<const T, Layout>(
+        data.getPointer(depth),
+        RAJA::make_permuted_offset_layout(
+          {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]}, 
+          {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]},
+          RAJA::PERM_KJI::value)) {}
 
-   SAMRAI_INLINE ArrayView<2, const T>(const T* data, const hier::Box& box, int depth = 0) :
-     RAJA::View<const T, Layout>(
-         &data[depth * (box.size()-1)],
-         Layout({box.lower()[0], box.lower()[1]}, 
-           {box.upper()[0], box.upper()[1]})){}
- };
- 
- template <typename T>
- struct ArrayView<3, const T> : 
-   public RAJA::View<const T, detail::layout_traits::layout3d >
- {
-  using Layout = detail::layout_traits::layout3d;
-
-   SAMRAI_INLINE ArrayView<3, const T>(const pdat::ArrayData<T>& data, int depth = 0) :
-     RAJA::View<const T, Layout>(
-         data.getPointer(depth),
-         Layout({data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]}, 
-           {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]})) {}
-
-   SAMRAI_INLINE ArrayView<3, const T>(const T* data, const hier::Box& box, int depth = 0) :
-     RAJA::View<const T, Layout>(
-         &data[depth * (box.size()-1)],
-         Layout({box.lower()[0], box.lower()[1], box.lower()[2]}, 
-           {box.upper()[0], box.upper()[1], box.upper()[2]})){};
- };
+  SAMRAI_INLINE ArrayView<3, const T>(const T* data, const hier::Box& box, int depth = 0) :
+    RAJA::View<const T, Layout>(
+        &data[depth * (box.size()-1)],
+        RAJA::make_permuted_offset_layout(
+          {box.lower()[0], box.lower()[1], box.lower()[2]}, 
+          {box.upper()[0], box.upper()[1], box.upper()[2]},
+          RAJA::PERM_KJI::value)){};
+};
  
  // template <typename T, int DIM>
  // struct CellView : public ArrayView<T, DIM>
