@@ -39,3 +39,18 @@ branches and be based on `develop`.
 
 We maintain a list of publications
 [here](https://computation.llnl.gov/projects/samrai/publications).
+
+## Release
+
+Copyright (c) 1997-2017, Lawrence Livermore National Security, LLC.
+
+Produced at the Lawrence Livermore National Laboratory.
+
+All rights reserved.
+
+Released under LGPL v2.1
+
+For release details and restrictions, please read the LICENSE file. It is also
+linked here: [LICENSE](./LICENSE)
+
+`LLNL-CODE-434871`
