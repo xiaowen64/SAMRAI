@@ -708,6 +708,12 @@ public:
       return d_object_name;
    }
 
+   void
+   setWriteGhosts(bool write_ghosts)
+   {
+      d_write_ghosts = write_ghosts; 
+   }
+
 private:
    /*
     * Static integer constant describing version of VisIt Data Writer.
@@ -904,6 +910,7 @@ private:
       // Do we want to extend this for species, or can that fit into the
       //   material state variable treatment?
       //bool d_is_species_state_variable;
+      std::vector<int> d_ghost_width;
 
       /*
        * Standard information (writer generated)
@@ -948,7 +955,8 @@ private:
       const int patch_data_index,
       const int start_depth_index,
       const double scale_factor,
-      const std::string& variable_centering);
+      const std::string& variable_centering,
+      const hier::IntVector& ghost_width);
 
    /*
     * Utility routine to reset a variable by level for plotting
@@ -1104,7 +1112,8 @@ private:
       const variable_data_type type_of_data,
       const hier::Box patch_box,
       double* buffer,
-      const variable_centering centering);
+      const variable_centering centering,
+      const hier::IntVector& ghost_width);
 
    /*
     * Create a 2D integer array entry in the database with the specified
@@ -1138,6 +1147,13 @@ private:
    HDFputPatchExtentsStructArray(
       const std::string& key,
       const patchExtentsStruct* data,
+      const int nelements,
+      const hid_t group_id);
+
+   void
+   HDFputBoundaryTypeArray(
+      const std::string& key,
+      const std::vector<int>& data,
       const int nelements,
       const hid_t group_id);
 
@@ -1182,7 +1198,7 @@ private:
     */
    int
    getBufferSize(
-      const hier::Box patch_box,
+      const hier::Box& patch_box,
       const hier::IntVector& ghost_cell_width,
       const variable_centering centering);
 
@@ -1307,6 +1323,8 @@ private:
     * Boolean that is set to true only in multiblock problems.
     */
    bool d_is_multiblock;
+
+   bool d_write_ghosts;
 
    /*
     * brief Storage for strings defining VisIt expressions to be embedded in
