@@ -40,6 +40,7 @@ set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 
 include(blt/SetupBLT.cmake)
 
+include_directories(${CMAKE_BINARY_DIR}/include)
 include(cmake/CMakeBasics.cmake)
 
 add_subdirectory(source)
