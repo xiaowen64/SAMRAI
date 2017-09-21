@@ -708,6 +708,11 @@ public:
       return d_object_name;
    }
 
+   /*!
+    * @brief Set flag for writing ghosts
+    *
+    * @param write ghosts   True to write ghosts, false to not write ghosts
+    */
    void
    setWriteGhosts(bool write_ghosts)
    {
@@ -1150,6 +1155,9 @@ private:
       const int nelements,
       const hid_t group_id);
 
+   /*
+    * Create an array that identifies the type of the boundary.
+    */
    void
    HDFputBoundaryTypeArray(
       const std::string& key,
@@ -1324,6 +1332,9 @@ private:
     */
    bool d_is_multiblock;
 
+   /*
+    * Boolean to control writing of ghosts
+    */
    bool d_write_ghosts;
 
    /*
