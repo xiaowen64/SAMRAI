@@ -3300,12 +3300,12 @@ VisItDataWriter::writeSummaryToHDFFile(
       /*
        * Set patch extents
        */
+      if (d_grid_type != VISIT_DEFORMED) {
+         //This is never entered in multiblock case
          const boost::shared_ptr<geom::CartesianGridGeometry> ggeom(
             BOOST_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
                hierarchy->getGridGeometry()));
          TBOX_ASSERT(ggeom);
-      if (d_grid_type != VISIT_DEFORMED) {
-         //This is never entered in multiblock case
          for (i = 0; i < d_dim.getValue(); ++i) {
             geom_lo[i] = ggeom->getXLower()[i];
             dx_curr_lev[i] = ggeom->getDx()[i]; // coarsest level dx
@@ -3338,9 +3338,10 @@ VisItDataWriter::writeSummaryToHDFFile(
 
          hier::BoxContainer phys_domain;
          hier::Box phys_domain_box(d_dim); 
-         if (d_write_ghosts && ggeom->getNumberBlocks() == 1) {
-            if (ggeom->getDomainIsSingleBox(hier::BlockId(0))) {
-               ggeom->computePhysicalDomain(
+         if (d_write_ghosts && hierarchy->getNumberBlocks() == 1) {
+             
+            if (hierarchy->getGridGeometry()->getDomainIsSingleBox(hier::BlockId(0))) {
+               hierarchy->getGridGeometry()->computePhysicalDomain(
                   phys_domain,
                   hierarchy->getPatchLevel(ln)->getRatioToLevelZero(),
                   hier::BlockId(0));
