@@ -80,6 +80,12 @@ blt_add_library(
   HEADERS_OUTPUT_SUBDIR SAMRAI/mesh
   DEPENDS_ON ${mesh_depends_on})
 
+install(TARGETS
+  SAMRAI_mesh
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
 target_include_directories(
   SAMRAI_mesh
   PUBLIC ${PROJECT_SOURCE_DIR}/source)

@@ -53,6 +53,12 @@ blt_add_library(
   HEADERS_OUTPUT_SUBDIR SAMRAI/appu
   DEPENDS_ON ${appu_depends_on})
 
+install(TARGETS
+  SAMRAI_appu
+  RUNTIME DESTINATION lib
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib)
+
 set_target_properties(SAMRAI_appu PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories( SAMRAI_appu

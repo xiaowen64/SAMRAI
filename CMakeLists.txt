@@ -18,7 +18,7 @@ set(ENABLE_FORTRAN On CACHE Bool "Enable Fortran")
 set(ENABLE_OPENMP On CACHE Bool "Enable OpenMP")
 set(ENABLE_CUDA On CACHE Bool "Enable CUDA")
 set(ENABLE_MPI On CACHE Bool "Enable MPI.")
-set(ENABLE_COPY_HEADERS On Bool "Copy headers")
+set(ENABLE_COPY_HEADERS On CACHE Bool "Copy headers")
 
 # Third party libraries
 option(ENABLE_HDF5 "Enable HDF5." On)
@@ -41,11 +41,16 @@ set(MAXDIM 3 CACHE INT "Maximum allowed dimension")
 include(blt/SetupBLT.cmake)
 
 include_directories(${CMAKE_BINARY_DIR}/include)
+
 include(cmake/CMakeBasics.cmake)
 
 add_subdirectory(source)
 add_subdirectory(tools)
 add_subdirectory(docs)
+
+install(DIRECTORY
+  ${CMAKE_BINARY_DIR}/include
+  DESTINATION ${CMAKE_INSTALL_PREFIX})
 
 add_custom_target(SAMRAI)
 add_dependencies(SAMRAI
