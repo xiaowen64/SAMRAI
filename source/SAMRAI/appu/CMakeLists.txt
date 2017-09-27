@@ -19,6 +19,13 @@ set (appu_sources
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/appu_cartbdry2d.f
   ${CMAKE_CURRENT_BINARY_DIR}/fortran/appu_cartbdry3d.f)
 
+set_source_files_properties(
+  fortran/appu_cpdat2buf2d.f
+  fortran/appu_cpdat2buf3d.f
+  PROPERTIES
+  LANGUAGE
+  Fortran)
+
 set (appu_depends_on
   SAMRAI_hier
   SAMRAI_pdat

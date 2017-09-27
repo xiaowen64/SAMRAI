@@ -65,6 +65,17 @@ set (solv_sources
   fortran/solv_cellpoissonhypresolver2d.f
   fortran/solv_cellpoissonhypresolver3d.f)
 
+set_source_files_properties(
+  fortran/solv_cartesianrobinbchelper2d.f
+  fortran/solv_cartesianrobinbchelper3d.f
+  fortran/solv_cellpoissonfacops2d.f
+  fortran/solv_cellpoissonfacops3d.f
+  fortran/solv_cellpoissonhypresolver2d.f
+  fortran/solv_cellpoissonhypresolver3d.f
+  PROPERTIES
+  LANGUAGE
+  Fortran)
+
 set (solv_depends_on
   SAMRAI_hier
   SAMRAI_math

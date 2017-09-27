@@ -21,7 +21,7 @@ if (ENABLE_OPENMP)
     openmp)
 endif ()
 
-if (ENABLE_OPENMP)
+if (ENABLE_CUDA)
   set (raja_depends_on
     ${raja_depends_on}
     cuda)
