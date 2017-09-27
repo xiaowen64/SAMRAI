@@ -3,7 +3,7 @@
 
 #if defined(HAVE_RAJA)
 
-#include "RAJA/RAJA.hxx"
+#include "RAJA/RAJA.hpp"
 
 // namespace SAMRAI {
 // namespace tbox {

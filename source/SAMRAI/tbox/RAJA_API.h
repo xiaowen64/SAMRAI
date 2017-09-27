@@ -3,7 +3,7 @@
 
 #include "SAMRAI/pdat/ArrayData.h"
 
-#include "RAJA/RAJA.hxx"
+#include "RAJA/RAJA.hpp"
 
 namespace SAMRAI {
 namespace tbox {
@@ -110,14 +110,14 @@ struct ArrayView<1, T>  :
     RAJA::View<T, Layout >(
         data.getPointer(depth),
         RAJA::make_permuted_offset_layout(
-          {data.getBox().lower()[0]}, {data.getBox().upper()[0]}, RAJA::PERM_I::value)){}
+          std::array<int, 1>{ {data.getBox().lower()[0]} }, std::array<int, 1>{ {data.getBox().upper()[0] } }, RAJA::PERM_I::value)){}
 
   // T could be const?
   ArrayView<1, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
          RAJA::make_permuted_offset_layout(
-           {box.lower()[0]}, {box.upper()[0]}, RAJA::PERM_I::value)){}
+           std::array<int, 1>{ {box.lower()[0]} }, std::array<int, 1>{ {box.upper()[0]} }, RAJA::PERM_I::value)){}
 };
 
  template <typename T>
@@ -129,16 +129,16 @@ struct ArrayView<1, T>  :
      RAJA::View<T, Layout>(
          data.getPointer(depth),
          RAJA::make_permuted_offset_layout(
-           {data.getBox().lower()[0], data.getBox().lower()[1]}, 
-           {data.getBox().upper()[0], data.getBox().upper()[1]},
+           std::array<int, 2>{ {data.getBox().lower()[0], data.getBox().lower()[1]} }, 
+           std::array<int, 2>{ {data.getBox().upper()[0], data.getBox().upper()[1]} },
            RAJA::PERM_JI::value)){}
 
    SAMRAI_INLINE ArrayView<2, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
          RAJA::make_permuted_offset_layout(
-           {box.lower()[0], box.lower()[1]}, 
-           {box.upper()[0], box.upper()[1]},
+           std::array<int, 2>{ {box.lower()[0], box.lower()[1]} }, 
+           std::array<int, 2>{ {box.upper()[0], box.upper()[1]} },
            RAJA::PERM_JI::value)){}
  };
  
@@ -151,16 +151,16 @@ struct ArrayView<1, T>  :
      RAJA::View<T, Layout>(
          data.getPointer(depth),
          RAJA::make_permuted_offset_layout(
-           {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]}, 
-           {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]},
+           std::array<int, 3>{ {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]} }, 
+           std::array<int, 3>{ {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]} },
            RAJA::PERM_KJI::value)) {}
 
    SAMRAI_INLINE ArrayView<3, T>(T* data, const hier::Box& box, int depth = 0) :
      RAJA::View<T, Layout>(
          &data[depth * (box.size()-1)],
          RAJA::make_permuted_offset_layout(
-           {box.lower()[0], box.lower()[1], box.lower()[2]}, 
-           {box.upper()[0], box.upper()[1], box.upper()[2]},
+           std::array<int, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} }, 
+           std::array<int, 3>{ {box.upper()[0], box.upper()[1], box.upper()[2]} },
            RAJA::PERM_KJI::value)){};
  };
 
@@ -174,14 +174,14 @@ struct ArrayView<1, T>  :
      RAJA::View<const T, Layout >(
          data.getPointer(depth),
          RAJA::make_permuted_offset_layout(
-           {data.getBox().lower()[0]}, {data.getBox().upper()[0]}, RAJA::PERM_I::value)){}
+           std::array<int, 1>{ {data.getBox().lower()[0]} }, std::array<int, 1>{ {data.getBox().upper()[0]} }, RAJA::PERM_I::value)){}
  
    // T could be const?
    ArrayView<1, const T>(const T* data, const hier::Box& box, int depth = 0) :
       RAJA::View<const T, Layout>(
           &data[depth * (box.size()-1)],
           RAJA::make_permuted_offset_layout(
-            {box.lower()[0]}, {box.upper()[0]}, RAJA::PERM_I::value)){}
+            std::array<int, 1>{ {box.lower()[0]} }, std::array<int, 1>{ {box.upper()[0]} }, RAJA::PERM_I::value)){}
  };
 
 template <typename T>
@@ -194,16 +194,16 @@ struct ArrayView<2, const T> :
     RAJA::View<const T, Layout>(
         data.getPointer(depth),
         RAJA::make_permuted_offset_layout(
-          {data.getBox().lower()[0], data.getBox().lower()[1]}, 
-          {data.getBox().upper()[0], data.getBox().upper()[1]},
+          std::array<int, 2>{ {data.getBox().lower()[0], data.getBox().lower()[1]} },
+          std::array<int, 2>{ {data.getBox().upper()[0], data.getBox().upper()[1]} },
           RAJA::PERM_JI::value)){}
 
   SAMRAI_INLINE ArrayView<2, const T>(const T* data, const hier::Box& box, int depth = 0) :
     RAJA::View<const T, Layout>(
         &data[depth * (box.size()-1)],
         RAJA::make_permuted_offset_layout(
-          {box.lower()[0], box.lower()[1]}, 
-          {box.upper()[0], box.upper()[1]},
+          std::array<int, 2>{ {box.lower()[0], box.lower()[1]} }, 
+          std::array<int, 2>{ {box.upper()[0], box.upper()[1]} },
           RAJA::PERM_JI::value)){}
 };
 
@@ -217,16 +217,16 @@ struct ArrayView<3, const T> :
     RAJA::View<const T, Layout>(
         data.getPointer(depth),
         RAJA::make_permuted_offset_layout(
-          {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]}, 
-          {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]},
+          std::array<int, 3>{ {data.getBox().lower()[0], data.getBox().lower()[1], data.getBox().lower()[2]} }, 
+          std::array<int, 3>{ {data.getBox().upper()[0], data.getBox().upper()[1], data.getBox().upper()[2]} },
           RAJA::PERM_KJI::value)) {}
 
   SAMRAI_INLINE ArrayView<3, const T>(const T* data, const hier::Box& box, int depth = 0) :
     RAJA::View<const T, Layout>(
         &data[depth * (box.size()-1)],
         RAJA::make_permuted_offset_layout(
-          {box.lower()[0], box.lower()[1], box.lower()[2]}, 
-          {box.upper()[0], box.upper()[1], box.upper()[2]},
+          std::array<int, 3>{ {box.lower()[0], box.lower()[1], box.lower()[2]} }, 
+          std::array<int, 3>{ {box.upper()[0], box.upper()[1], box.upper()[2]} },
           RAJA::PERM_KJI::value)){};
 };
  
