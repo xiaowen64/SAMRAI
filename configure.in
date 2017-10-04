@@ -1,7 +1,7 @@
 dnl
 dnl File:        $HeadURL$ 
 dnl Package:     SAMRAI build system
-dnl Copyright:   (c) 1997-2016 Lawrence Livermore National Security, LLC
+dnl Copyright:   (c) 1997-2017 Lawrence Livermore National Security, LLC
 dnl Revision:    $LastChangedRevision$
 dnl Description: autoconfig configuration file
 dnl
@@ -1757,7 +1757,7 @@ dnl
 if test `pwd` != `cd "$srcdir" && pwd`
 then 
      $INSTALL  $srcdir/COPYRIGHT COPYRIGHT
-     $INSTALL  $srcdir/COPYING.LESSER COPYING.LESSER
+     $INSTALL  $srcdir/LICENSE COPYING.LESSER
      $INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES 
      $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES 
      $MKDIR_P source/test/testtools

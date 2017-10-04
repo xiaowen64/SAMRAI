@@ -17136,7 +17136,7 @@ $MKDIR_P config include lib bin $subdirs
 if test `pwd` != `cd "$srcdir" && pwd`
 then
      $INSTALL  $srcdir/COPYRIGHT COPYRIGHT
-     $INSTALL  $srcdir/COPYING.LESSER COPYING.LESSER
+     $INSTALL  $srcdir/LICENSE COPYING.LESSER
      $INSTALL  $srcdir/RELEASE-NOTES RELEASE-NOTES
      $INSTALL  $srcdir/INSTALL-NOTES INSTALL-NOTES
      $MKDIR_P source/test/testtools
