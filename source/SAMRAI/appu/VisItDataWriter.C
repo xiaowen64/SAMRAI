@@ -289,10 +289,12 @@ VisItDataWriter::registerDerivedPlotQuantity(
       d_grid_type = VISIT_DEFORMED;
    }
 
-   /*
-    * Ghost data is not plotted for derived values
-    */
    hier::IntVector ghost_width(hier::IntVector::getZero(d_dim));
+   if (d_write_ghosts) {
+      ghost_width =
+         hier::VariableDatabase::getDatabase()->
+         getPatchDescriptor()->getMaxGhostWidth(d_dim);
+   }
 
    /*
     * Create a plot item and initialize its characteristics.
@@ -822,6 +824,11 @@ VisItDataWriter::registerMaterialNames(
       }
 
       hier::IntVector ghost_width(hier::IntVector::getZero(d_dim));
+      if (d_write_ghosts) {
+         ghost_width =
+            hier::VariableDatabase::getDatabase()->
+            getPatchDescriptor()->getMaxGhostWidth(d_dim);
+      }
 
       d_materials_names[i] = material_names[i];
 
@@ -897,6 +904,11 @@ VisItDataWriter::registerSparseMaterialNames(
    }
 
    hier::IntVector ghost_width(hier::IntVector::getZero(d_dim));
+   if (d_write_ghosts) {
+      ghost_width =
+         hier::VariableDatabase::getDatabase()->
+         getPatchDescriptor()->getMaxGhostWidth(d_dim);
+   }
 
    // Sparse Structure
    VisItItem plotitem;
@@ -999,6 +1011,11 @@ VisItDataWriter::registerSpeciesNames(
    material_item->d_species_names = species_names;
 
    hier::IntVector ghost_width(hier::IntVector::getZero(d_dim));
+   if (d_write_ghosts) {
+      ghost_width =
+         hier::VariableDatabase::getDatabase()->
+         getPatchDescriptor()->getMaxGhostWidth(d_dim);
+   }
 
    /*
     * Create a plot variable for each species of the material.
