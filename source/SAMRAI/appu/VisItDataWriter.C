@@ -1921,6 +1921,11 @@ VisItDataWriter::packRegularAndDerivedData(
                hier::IntVector(ipi->d_ghost_width),
                ipi->d_var_centering);
 
+         hier::Box pack_box(patch.getBox());
+         if (d_write_ghosts) {
+            pack_box.grow(hier::IntVector(ipi->d_ghost_width));
+         }
+
          double* dbuffer = new double[buf_size]; // used to pack var
          float* fbuffer = new float[buf_size]; // copy to float for writing
 
@@ -1942,7 +1947,7 @@ VisItDataWriter::packRegularAndDerivedData(
                      packDerivedDataIntoDoubleBuffer(
                         dbuffer,
                         patch,
-                        patch.getBox(),
+                        pack_box,
                         ipi->d_var_name,
                         depth_id,
                         simulation_time);
@@ -2082,7 +2087,7 @@ VisItDataWriter::packRegularAndDerivedData(
                         dbuffer,
                         dmix_data,
                         patch,
-                        patch.getBox(),
+                        pack_box,
                         ipi->d_var_name,
                         depth_id);
 
@@ -2341,10 +2346,15 @@ VisItDataWriter::packMaterialsData(
                std::vector<double> vol_fracs;
                std::vector<int> next_mat;
 
+               hier::Box pack_box(patch.getBox());
+               if (d_write_ghosts) {
+                  pack_box.grow(hier::IntVector(ipi->d_ghost_width));
+               }
+
                return_code = d_materials_writer->
                   packMaterialFractionsIntoSparseBuffers(
                      ibuffer, mix_zones, mix_mat, vol_fracs, next_mat,
-                     patch, patch.getBox());
+                     patch, pack_box);
 
                /*
                 * Write to disk
@@ -2440,12 +2450,17 @@ VisItDataWriter::packMaterialsData(
                      material_name_HDFGroup->putDatabase("species");
                }
 
+               hier::Box pack_box(patch.getBox());
+               if (d_write_ghosts) {
+                  pack_box.grow(hier::IntVector(ipi->d_ghost_width));
+               }
+
                // pack the buffer with material data
                return_code = d_materials_writer->
                   packMaterialFractionsIntoDoubleBuffer(
                      dbuffer,
                      patch,
-                     patch.getBox(),
+                     pack_box,
                      ipi->d_material_name);
 
                // check return code
@@ -2614,6 +2629,11 @@ VisItDataWriter::packSpeciesData(
          double* dbuffer = new double[buf_size]; // used to pack var
          float* fbuffer = new float[buf_size]; // copy to float for writing
 
+         hier::Box pack_box(patch.getBox());
+         if (d_write_ghosts) {
+            pack_box.grow(hier::IntVector(ipi->d_ghost_width));
+         }
+
          for (int depth_id = 0; depth_id < ipi->d_depth; ++depth_id) {
 
             // pack the buffer with species data
@@ -2621,7 +2641,7 @@ VisItDataWriter::packSpeciesData(
                packSpeciesFractionsIntoDoubleBuffer(
                   dbuffer,
                   patch,
-                  patch.getBox(),
+                  pack_box,
                   ipi->d_material_name,
                   ipi->d_species_name);
 
@@ -3136,8 +3156,14 @@ VisItDataWriter::writeSummaryToHDFFile(
          for (std::list<VisItItem>::iterator ipi(d_plot_items.begin());
               ipi != d_plot_items.end(); ++ipi) {
             if (ipi->d_isa_material) {
-               for (int dim = 0; dim < d_dim.getValue(); ++dim) {
-                  mat_ghosts[dim] = 0;
+               if (!d_write_ghosts) {
+                  for (int dim = 0; dim < d_dim.getValue(); ++dim) {
+                     mat_ghosts[dim] = 0;
+                  }
+               } else {
+                  for (int dim = 0; dim < d_dim.getValue(); ++dim) {
+                     mat_ghosts[dim] = ipi->d_ghost_width[dim];
+                  }
                }
             }
          }
