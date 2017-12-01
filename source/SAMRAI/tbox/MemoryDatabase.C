@@ -1603,7 +1603,7 @@ MemoryDatabase::printDatabase(
         j != d_keyvalues.end(); ++j) {
       if (j->d_type == Database::SAMRAI_DATABASE) {
          std::shared_ptr<MemoryDatabase> db(
-            POINTER_CAST<MemoryDatabase, Database>(j->d_database));
+            SAMRAI_SHARED_PTR_CAST<MemoryDatabase, Database>(j->d_database));
          db->printDatabase(os, indent + 3, toprint);
       }
    }

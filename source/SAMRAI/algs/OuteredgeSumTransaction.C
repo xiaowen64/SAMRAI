@@ -140,7 +140,7 @@ OuteredgeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    std::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
-      POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(oedge_dst_data);
@@ -152,13 +152,13 @@ void
 OuteredgeSumTransaction::copyLocalData()
 {
    std::shared_ptr<pdat::OuteredgeData<double> > oedge_dst_data(
-      POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(oedge_dst_data);
 
    std::shared_ptr<pdat::OuteredgeData<double> > oedge_src_data(
-      POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
          d_src_level->getPatch(d_src_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_src)));
    TBOX_ASSERT(oedge_src_data);

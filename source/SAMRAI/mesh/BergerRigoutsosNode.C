@@ -1210,7 +1210,7 @@ BergerRigoutsosNode::makeLocalTagHistogram()
          if (!(intersection.empty())) {
 
             std::shared_ptr<pdat::CellData<int> > tag_data_(
-               POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                   patch.getPatchData(d_common->d_tag_data_index)));
 
             TBOX_ASSERT(tag_data_);

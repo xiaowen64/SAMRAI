@@ -129,7 +129,7 @@ void MblkGeometry::tagOctantCells(
    TBOX_ASSERT(temp_tags);
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
    TBOX_ASSERT(xyz);
 
@@ -563,7 +563,7 @@ void MblkGeometry::buildCartesianGridOnPatch(
 {
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
@@ -657,7 +657,7 @@ void MblkGeometry::buildWedgeGridOnPatch(
 {
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);
@@ -802,7 +802,7 @@ void MblkGeometry::buildSShellGridOnPatch(
    }
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(xyz_id)));
 
    TBOX_ASSERT(xyz);

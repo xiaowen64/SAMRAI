@@ -46,7 +46,7 @@ template<class TYPE>
 int OuternodeVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<OuternodeDataFactory<TYPE> > factory(
-      POINTER_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<OuternodeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

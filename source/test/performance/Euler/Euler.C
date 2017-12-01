@@ -574,7 +574,7 @@ void Euler::initializeDataOnPatch(
    if (initial_time) {
 
       const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -582,13 +582,13 @@ void Euler::initializeDataOnPatch(
       const double* xhi = pgeom->getXUpper();
 
       std::shared_ptr<pdat::CellData<double> > density(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_density, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > velocity(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_velocity, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > pressure(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_pressure, getDataContext())));
 
       TBOX_ASSERT(density);
@@ -692,7 +692,7 @@ void Euler::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       std::shared_ptr<pdat::CellData<double> > workload_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
@@ -721,7 +721,7 @@ double Euler::computeStableDtOnPatch(
    t_compute_dt->start();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -730,13 +730,13 @@ double Euler::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    const std::shared_ptr<pdat::CellData<double> > density(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_density, getDataContext())));
    const std::shared_ptr<pdat::CellData<double> > velocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_velocity, getDataContext())));
    const std::shared_ptr<pdat::CellData<double> > pressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_pressure, getDataContext())));
 
    TBOX_ASSERT(density);
@@ -811,7 +811,7 @@ void Euler::computeFluxesOnPatch(
       TBOX_ASSERT(CELLG == FACEG);
 
       const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
       const double* dx = patch_geom->getDx();
@@ -821,16 +821,16 @@ void Euler::computeFluxesOnPatch(
       const hier::Index ilast = pbox.upper();
 
       std::shared_ptr<pdat::CellData<double> > density(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_density, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > velocity(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_velocity, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > pressure(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_pressure, getDataContext())));
       std::shared_ptr<pdat::FaceData<double> > flux(
-         POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
             patch.getPatchData(d_flux, getDataContext())));
 
       TBOX_ASSERT(density);
@@ -1016,7 +1016,7 @@ void Euler::compute3DFluxesWithCornerTransport1(
    TBOX_ASSERT(CELLG == FACEG);
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -1026,16 +1026,16 @@ void Euler::compute3DFluxesWithCornerTransport1(
    const hier::Index ilast = pbox.upper();
 
    std::shared_ptr<pdat::CellData<double> > density(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > velocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > pressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_pressure, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(density);
@@ -1362,7 +1362,7 @@ void Euler::compute3DFluxesWithCornerTransport2(
    TBOX_ASSERT(CELLG == FACEG);
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -1372,16 +1372,16 @@ void Euler::compute3DFluxesWithCornerTransport2(
    const hier::Index ilast = pbox.upper();
 
    std::shared_ptr<pdat::CellData<double> > density(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > velocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > pressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_pressure, getDataContext())));
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    TBOX_ASSERT(density);
@@ -1642,7 +1642,7 @@ void Euler::conservativeDifferenceOnPatch(
    t_conservdiff->start();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -1652,16 +1652,16 @@ void Euler::conservativeDifferenceOnPatch(
    const hier::Index ilast = pbox.upper();
 
    std::shared_ptr<pdat::FaceData<double> > flux(
-      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > density(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > velocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > pressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_pressure, getDataContext())));
 
    TBOX_ASSERT(density);
@@ -1719,7 +1719,7 @@ void Euler::boundaryReset(
    bool bdry_cell = true;
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    hier::BoxContainer domain_boxes;
@@ -1829,23 +1829,23 @@ void Euler::postprocessRefine(
 {
 
    std::shared_ptr<pdat::CellData<double> > cdensity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cvelocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cpressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_pressure, getDataContext())));
 
    std::shared_ptr<pdat::CellData<double> > fdensity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fvelocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fpressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_pressure, getDataContext())));
 
    TBOX_ASSERT(cdensity);
@@ -1873,10 +1873,10 @@ void Euler::postprocessRefine(
    const hier::Index fihi = fdensity->getGhostBox().upper();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> cgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
    const std::shared_ptr<geom::CartesianPatchGeometry> fgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
    TBOX_ASSERT(cgeom);
    TBOX_ASSERT(fgeom);
@@ -2019,22 +2019,22 @@ void Euler::postprocessCoarsen(
 {
 
    std::shared_ptr<pdat::CellData<double> > fdensity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fvelocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fpressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_pressure, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cdensity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cvelocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cpressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_pressure, getDataContext())));
 
    TBOX_ASSERT(cdensity);
@@ -2060,10 +2060,10 @@ void Euler::postprocessCoarsen(
    const hier::Index cihi = cdensity->getGhostBox().upper();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> fgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
    const std::shared_ptr<geom::CartesianPatchGeometry> cgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
    TBOX_ASSERT(fgeom);
    TBOX_ASSERT(cgeom);
@@ -2136,13 +2136,13 @@ void Euler::setPhysicalBoundaryConditions(
    t_setphysbcs->start();
 
    std::shared_ptr<pdat::CellData<double> > density(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_density, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > velocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_velocity, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > pressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_pressure, getDataContext())));
 
    TBOX_ASSERT(density);
@@ -2170,7 +2170,7 @@ void Euler::setPhysicalBoundaryConditions(
       if (d_data_problem == "STEP") {
 
          const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                patch.getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
@@ -2361,13 +2361,13 @@ void Euler::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    TBOX_ASSERT(tags);
 
@@ -2442,7 +2442,7 @@ void Euler::tagGradientDetectorCells(
       bool time_allowed = false;
 
       if (ref == "DENSITY_DEVIATION") {
-         var = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         var = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_density, getDataContext()));
          size = static_cast<int>(d_density_dev_tol.size());
          tol = ((error_level_number < size)
@@ -2462,7 +2462,7 @@ void Euler::tagGradientDetectorCells(
                             : d_density_dev_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
       } else if (ref == "DENSITY_GRADIENT") {
-         var = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         var = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_density, getDataContext()));
          size = static_cast<int>(d_density_grad_tol.size());
          tol = ((error_level_number < size)
@@ -2478,7 +2478,7 @@ void Euler::tagGradientDetectorCells(
                             : d_density_grad_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
       } else if (ref == "DENSITY_SHOCK") {
-         var = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         var = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_density, getDataContext()));
          size = static_cast<int>(d_density_shock_tol.size());
          tol = ((error_level_number < size)
@@ -2498,7 +2498,7 @@ void Euler::tagGradientDetectorCells(
                             : d_density_shock_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
       } else if (ref == "PRESSURE_DEVIATION") {
-         var = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         var = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, getDataContext()));
          size = static_cast<int>(d_pressure_dev_tol.size());
          tol = ((error_level_number < size)
@@ -2518,7 +2518,7 @@ void Euler::tagGradientDetectorCells(
                             : d_pressure_dev_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
       } else if (ref == "PRESSURE_GRADIENT") {
-         var = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         var = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, getDataContext()));
          size = static_cast<int>(d_pressure_grad_tol.size());
          tol = ((error_level_number < size)
@@ -2534,7 +2534,7 @@ void Euler::tagGradientDetectorCells(
                             : d_pressure_grad_time_max[size - 1]);
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
       } else if (ref == "PRESSURE_SHOCK") {
-         var = POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         var = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, getDataContext()));
          size = static_cast<int>(d_pressure_shock_tol.size());
          tol = ((error_level_number < size)
@@ -2691,7 +2691,7 @@ void Euler::tagRichardsonExtrapolationCells(
    NULL_USE(initial_error);
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* xdomainlo = d_grid_geometry->getXLower();
@@ -2700,7 +2700,7 @@ void Euler::tagRichardsonExtrapolationCells(
    hier::Box pbox = patch.getBox();
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_index)));
    TBOX_ASSERT(tags);
 
@@ -2725,10 +2725,10 @@ void Euler::tagRichardsonExtrapolationCells(
 
       if (ref == "DENSITY_RICHARDSON") {
          coarsened_fine_var =
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_density, coarsened_fine));
          advanced_coarse_var =
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_density, advanced_coarse));
          size = static_cast<int>(d_density_rich_tol.size());
          tol = ((error_level_number < size)
@@ -2745,10 +2745,10 @@ void Euler::tagRichardsonExtrapolationCells(
          time_allowed = (time_min <= regrid_time) && (time_max > regrid_time);
       } else if (ref == "PRESSURE_RICHARDSON") {
          coarsened_fine_var =
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, coarsened_fine));
          advanced_coarse_var =
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_pressure, advanced_coarse));
          size = static_cast<int>(d_pressure_rich_tol.size());
          tol = ((error_level_number < size)
@@ -2920,13 +2920,13 @@ bool Euler::packDerivedDataIntoDoubleBuffer(
    bool data_on_patch = FALSE;
 
    std::shared_ptr<pdat::CellData<double> > density(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_density, d_plot_context)));
    std::shared_ptr<pdat::CellData<double> > velocity(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_velocity, d_plot_context)));
    std::shared_ptr<pdat::CellData<double> > pressure(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_pressure, d_plot_context)));
 
    TBOX_ASSERT(density);
@@ -3080,13 +3080,13 @@ void Euler::writeData1dPencil(
    if (!box.empty()) {
 
       std::shared_ptr<pdat::CellData<double> > density(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_density, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > velocity(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_velocity, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > pressure(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_pressure, getDataContext())));
 
       TBOX_ASSERT(density);
@@ -3094,7 +3094,7 @@ void Euler::writeData1dPencil(
       TBOX_ASSERT(pressure);
 
       const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -4552,7 +4552,7 @@ void Euler::checkBoundaryData(
 #endif
 
    const std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const std::vector<hier::BoundaryBox>& bdry_boxes =

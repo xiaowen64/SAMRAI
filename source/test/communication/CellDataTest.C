@@ -160,7 +160,7 @@ void CellDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const pdat::CellIndex loweri(patch.getBox().lower());
@@ -258,7 +258,7 @@ void CellDataTest::setConservativeData(
       const hier::IntVector& ratio = level->getRatioToLevelZero();
 
       std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(pgeom);
       const double* dx = pgeom->getDx();
@@ -323,7 +323,7 @@ void CellDataTest::setPeriodicData(
    }
 
    const std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* dx = patch_geom->getDx();
@@ -367,7 +367,7 @@ void CellDataTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::CellData<double> > cell_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -386,7 +386,7 @@ void CellDataTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::CellData<double> > cell_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -454,7 +454,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
    bool is_periodic = periodic_shift.max() > 0;
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
 
@@ -476,7 +476,7 @@ void CellDataTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::CellData<double> > cell_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -595,7 +595,7 @@ bool CellDataTest::verifyResults(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::CellData<double> > cell_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
          int depth = cell_data->getDepth();
@@ -668,7 +668,7 @@ bool CellDataTest::verifyCompositeBoundaryData(
       for (std::vector<std::shared_ptr<hier::PatchData> >::const_iterator
            itr = bdry_data.begin(); itr != bdry_data.end(); ++itr) {
          std::shared_ptr<pdat::CellData<double> > cell_bdry_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(*itr));
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(*itr));
          TBOX_ASSERT(cell_bdry_data);
 
          hier::Patch solution_patch(

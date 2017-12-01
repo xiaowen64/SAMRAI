@@ -152,7 +152,7 @@ void PatchMultiblockTestStrategy::tagCellsInInputBoxes(
    if (level_number < static_cast<int>(d_refine_level_boxes.size())) {
 
       std::shared_ptr<pdat::CellData<int> > tags(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tags);
       tags->fillAll(0);

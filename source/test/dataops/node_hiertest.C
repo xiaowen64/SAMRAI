@@ -254,7 +254,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -263,7 +263,7 @@ int main(
                node_vol *= dx[i];
             }
             std::shared_ptr<pdat::NodeData<double> > data(
-               POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                   patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
@@ -993,7 +993,7 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         ndata = POINTER_CAST<pdat::NodeData<double>,
+         ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                             hier::PatchData>(patch->getPatchData(nvindx[2]));
          TBOX_ASSERT(ndata);
          hier::Index index0(dim, 2);
@@ -1021,7 +1021,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         ndata = POINTER_CAST<pdat::NodeData<double>,
+         ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                             hier::PatchData>(patch->getPatchData(nvindx[2]));
          TBOX_ASSERT(ndata);
          hier::Index idx0(dim, 2);
@@ -1241,7 +1241,7 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::NodeData<double> > nvdata(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(nvdata);

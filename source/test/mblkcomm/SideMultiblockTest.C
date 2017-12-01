@@ -123,7 +123,7 @@ void SideMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::SideData<double> > side_data(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(side_data);
 
@@ -177,7 +177,7 @@ void SideMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::SideData<double> > side_data(
-         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
 
@@ -322,7 +322,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::SideData<double> > side_data(
-         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
 
@@ -407,7 +407,7 @@ void SideMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   std::shared_ptr<pdat::SideData<double> > sing_data(
-                     POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -569,7 +569,7 @@ bool SideMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       std::shared_ptr<pdat::SideData<double> > side_data(
-         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(side_data);
       int depth = side_data->getDepth();

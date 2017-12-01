@@ -327,13 +327,13 @@ void AdaptivePoisson::initializeLevelData(
       hier::Box pbox = patch.getBox();
 
       std::shared_ptr<pdat::SideData<double> > diffcoef_data(
-         POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
             patch.getPatchData(d_diffcoef_persistent)));
       std::shared_ptr<pdat::CellData<double> > exact_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_exact_persistent)));
       std::shared_ptr<pdat::CellData<double> > source_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_constant_source_persistent)));
       TBOX_ASSERT(exact_data);
       TBOX_ASSERT(source_data);
@@ -373,7 +373,7 @@ void AdaptivePoisson::initializeLevelData(
    {
       xfer::RefineAlgorithm refiner;
       std::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
-         POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
             patch_hierarchy->getGridGeometry()));
       TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;
@@ -486,7 +486,7 @@ void AdaptivePoisson::applyGradientDetector(
             "Data index " << tag_index << " does not exist for patch.\n");
       }
       std::shared_ptr<pdat::CellData<int> > tag_cell_data_(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(tag_data));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(tag_data));
       TBOX_ASSERT(tag_cell_data_);
       std::shared_ptr<hier::PatchData> soln_data(
          patch.getPatchData(d_scalar_persistent));
@@ -495,7 +495,7 @@ void AdaptivePoisson::applyGradientDetector(
                                   << " does not exist for patch.\n");
       }
       std::shared_ptr<pdat::CellData<double> > soln_cell_data_(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(soln_data));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(soln_data));
       TBOX_ASSERT(soln_cell_data_);
       pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
       pdat::CellData<int>& tag_cell_data = *tag_cell_data_;
@@ -582,7 +582,7 @@ bool AdaptivePoisson::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "Gradient Function") {
       std::shared_ptr<pdat::CellData<double> > soln_cell_data_(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_scalar_persistent)));
       TBOX_ASSERT(soln_cell_data_);
       const pdat::CellData<double>& soln_cell_data = *soln_cell_data_;
@@ -741,13 +741,13 @@ int AdaptivePoisson::computeError(
           * Get the patch data.
           */
          std::shared_ptr<pdat::CellData<double> > current_solution(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_scalar_persistent)));
          std::shared_ptr<pdat::CellData<double> > exact_solution(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_exact_persistent)));
          std::shared_ptr<pdat::CellData<double> > weight(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_weight_persistent)));
          TBOX_ASSERT(current_solution);
          TBOX_ASSERT(exact_solution);
@@ -897,10 +897,10 @@ int AdaptivePoisson::solvePoisson(
          const hier::Box& box = patch->getBox();
 
          std::shared_ptr<pdat::CellData<double> > source_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_constant_source_persistent)));
          std::shared_ptr<pdat::CellData<double> > rhs_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_rhs_scratch)));
          TBOX_ASSERT(source_data);
          TBOX_ASSERT(rhs_data);
@@ -984,7 +984,7 @@ int AdaptivePoisson::solvePoisson(
    {
       xfer::RefineAlgorithm refiner;
       std::shared_ptr<geom::CartesianGridGeometry> grid_geometry_(
-         POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
             hierarchy->getGridGeometry()));
       TBOX_ASSERT(grid_geometry_);
       geom::CartesianGridGeometry& grid_geometry = *grid_geometry_;

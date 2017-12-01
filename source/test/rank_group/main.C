@@ -637,7 +637,7 @@ void generatePrebalanceByUserShells(
    hier::VariableDatabase* vdb =
       hier::VariableDatabase::getDatabase();
    std::shared_ptr<geom::CartesianGridGeometry> grid_geometry(
-      POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
          hierarchy->getGridGeometry()));
    TBOX_ASSERT(grid_geometry);
 
@@ -667,7 +667,7 @@ void generatePrebalanceByUserShells(
         pi != tag_level->end(); ++pi) {
       const std::shared_ptr<hier::Patch>& patch = *pi;
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_id)));
       TBOX_ASSERT(tag_data);
 

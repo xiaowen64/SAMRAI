@@ -66,10 +66,10 @@ PatchFaceDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::FaceData<int> > d1(
-      POINTER_CAST<pdat::FaceData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::FaceData<int> > d2(
-      POINTER_CAST<pdat::FaceData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

@@ -159,7 +159,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
                                << target_data_id);
    }
    std::shared_ptr<pdat::CellVariable<double> > cell_variable_ptr(
-      POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
+      SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<double>, hier::Variable>(variable_ptr));
    TBOX_ASSERT(cell_variable_ptr);
 
    /*
@@ -171,7 +171,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
       TBOX_ERROR(d_object_name << ": No data for index " << target_data_id);
    }
    std::shared_ptr<pdat::CellData<double> > cell_data_ptr(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(data_ptr));
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(data_ptr));
    TBOX_ASSERT(cell_data_ptr);
    pdat::CellData<double>& data = *cell_data_ptr;
 
@@ -198,7 +198,7 @@ CartesianRobinBcHelper::setBoundaryValuesInCells(
        * They are kept her for debugging.
        */
       std::shared_ptr<geom::CartesianPatchGeometry> pg(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
 
       TBOX_ASSERT(pg);

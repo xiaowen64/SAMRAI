@@ -129,11 +129,11 @@ void SphericalShellGenerator::setTags(
       std::shared_ptr<hier::Patch> patch = *pi;
 
       std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
 
       TBOX_ASSERT(patch_geom);
@@ -210,7 +210,7 @@ void SphericalShellGenerator::computePatchData(
    const hier::Box& fill_box) const
 {
    std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom.get() != 0);
 
@@ -376,7 +376,7 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    (void)depth_index;
 
    std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
@@ -397,7 +397,7 @@ bool SphericalShellGenerator::packDerivedDataIntoDoubleBuffer(
    } else if (variable_name == "Tag value") {
 
       std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch.getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
 

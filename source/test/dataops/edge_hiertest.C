@@ -251,7 +251,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -260,7 +260,7 @@ int main(
                edge_vol *= dx[i];
             }
             std::shared_ptr<pdat::EdgeData<double> > data(
-               POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                   patch->getPatchData(swgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(edge_vol);
@@ -1348,7 +1348,7 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         cdata = POINTER_CAST<pdat::EdgeData<double>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index index0(dim, 2);
@@ -1380,7 +1380,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         cdata = POINTER_CAST<pdat::EdgeData<double>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(cdata);
          hier::Index idx0(dim, 2);
@@ -1660,7 +1660,7 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::EdgeData<double> > cvdata(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(cvdata);

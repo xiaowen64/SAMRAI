@@ -1930,7 +1930,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
 
          if (d_flux_is_face) {
             std::shared_ptr<pdat::FaceDataFactory<double> > fdf(
-               POINTER_CAST<pdat::FaceDataFactory<double>,
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(fdf);
             fluxsum.reset(new pdat::OuterfaceVariable<double>(
@@ -1940,7 +1940,7 @@ void MblkHyperbolicLevelIntegrator::registerVariable(
             d_flux_face_registered = true;
          } else {
             std::shared_ptr<pdat::SideDataFactory<double> > sdf(
-               POINTER_CAST<pdat::SideDataFactory<double>,
+               SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<double>,
                           hier::PatchDataFactory>(var->getPatchDataFactory()));
             TBOX_ASSERT(sdf);
             fluxsum.reset(new pdat::OutersideVariable<double>(
@@ -2050,14 +2050,14 @@ void MblkHyperbolicLevelIntegrator::preprocessFluxData(
 
                if (d_flux_is_face) {
                   std::shared_ptr<pdat::OuterfaceData<double> > fsum_data(
-                     POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                         (*mi)->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
                   fsum_data->fillAll(0.0);
                } else {
                   std::shared_ptr<pdat::OutersideData<double> > fsum_data(
-                     POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                         (*mi)->getPatchData(fsum_id)));
 
                   TBOX_ASSERT(fsum_data);
@@ -2143,9 +2143,9 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
             hier::IntVector flux_ghosts(d_dim);
 
             if (d_flux_is_face) {
-               fflux_data = POINTER_CAST<pdat::FaceData<double>,
+               fflux_data = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>,
                                        hier::PatchData>(flux_data);
-               ffsum_data = POINTER_CAST<pdat::OuterfaceData<double>,
+               ffsum_data = SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>,
                                        hier::PatchData>(fsum_data);
 
                TBOX_ASSERT(fflux_data && ffsum_data);
@@ -2154,9 +2154,9 @@ void MblkHyperbolicLevelIntegrator::postprocessFluxData(
                ddepth = fflux_data->getDepth();
                flux_ghosts = fflux_data->getGhostCellWidth();
             } else {
-               sflux_data = POINTER_CAST<pdat::SideData<double>,
+               sflux_data = SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>,
                                        hier::PatchData>(flux_data);
-               sfsum_data = POINTER_CAST<pdat::OutersideData<double>,
+               sfsum_data = SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>,
                                        hier::PatchData>(fsum_data);
 
                TBOX_ASSERT(sflux_data && sfsum_data);

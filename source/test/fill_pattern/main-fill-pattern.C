@@ -396,7 +396,7 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const std::shared_ptr<hier::Patch>& patch(*p);
          std::shared_ptr<pdat::CellData<int> > cdata(
-            POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
@@ -415,7 +415,7 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const std::shared_ptr<hier::Patch>& patch(*p);
          std::shared_ptr<pdat::NodeData<int> > ndata(
-            POINTER_CAST<pdat::NodeData<int>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 
@@ -446,7 +446,7 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const std::shared_ptr<hier::Patch>& patch(*p);
          std::shared_ptr<pdat::CellData<int> > cdata(
-            POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(cdata);
 
@@ -477,7 +477,7 @@ bool SingleLevelTestCase(
            p != level->end(); ++p) {
          const std::shared_ptr<hier::Patch>& patch(*p);
          std::shared_ptr<pdat::NodeData<int> > ndata(
-            POINTER_CAST<pdat::NodeData<int>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<int>, hier::PatchData>(
                patch->getPatchData(data_id)));
          TBOX_ASSERT(ndata);
 

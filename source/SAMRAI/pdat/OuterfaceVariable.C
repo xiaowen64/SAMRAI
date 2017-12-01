@@ -46,7 +46,7 @@ template<class TYPE>
 int OuterfaceVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<OuterfaceDataFactory<TYPE> > factory(
-      POINTER_CAST<OuterfaceDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<OuterfaceDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

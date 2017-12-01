@@ -412,7 +412,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << u << "\n");
       }
       std::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_uv->addComponent(variable, u, s_weight_id[d_dim.getValue() - 1]);
@@ -430,7 +430,7 @@ CellPoissonFACSolver::createVectorWrappers(
                                   << f << "\n");
       }
       std::shared_ptr<pdat::CellVariable<double> > cell_variable(
-         POINTER_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
+         SAMRAI_SHARED_PTR_CAST<pdat::CellVariable<double>, hier::Variable>(variable));
       TBOX_ASSERT(cell_variable);
 #endif
       d_fv->addComponent(variable, f, s_weight_id[d_dim.getValue() - 1]);

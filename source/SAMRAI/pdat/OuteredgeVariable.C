@@ -46,7 +46,7 @@ template<class TYPE>
 int OuteredgeVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<OuteredgeDataFactory<TYPE> > factory(
-      POINTER_CAST<OuteredgeDataFactory<TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<OuteredgeDataFactory<TYPE>, hier::PatchData>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

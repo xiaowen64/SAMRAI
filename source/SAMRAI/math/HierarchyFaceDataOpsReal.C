@@ -144,10 +144,10 @@ HierarchyFaceDataOpsReal<TYPE>::copyData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -168,11 +168,11 @@ HierarchyFaceDataOpsReal<TYPE>::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    std::shared_ptr<pdat::FaceDataFactory<TYPE> > d1fact(
-      POINTER_CAST<pdat::FaceDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    std::shared_ptr<pdat::FaceDataFactory<TYPE> > d2fact(
-      POINTER_CAST<pdat::FaceDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -222,7 +222,7 @@ HierarchyFaceDataOpsReal<TYPE>::printData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > d(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -254,7 +254,7 @@ HierarchyFaceDataOpsReal<TYPE>::setToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > d(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -295,10 +295,10 @@ HierarchyFaceDataOpsReal<TYPE>::scale(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -332,10 +332,10 @@ HierarchyFaceDataOpsReal<TYPE>::addScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -369,13 +369,13 @@ HierarchyFaceDataOpsReal<TYPE>::add(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -410,13 +410,13 @@ HierarchyFaceDataOpsReal<TYPE>::subtract(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -451,13 +451,13 @@ HierarchyFaceDataOpsReal<TYPE>::multiply(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -492,13 +492,13 @@ HierarchyFaceDataOpsReal<TYPE>::divide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -532,10 +532,10 @@ HierarchyFaceDataOpsReal<TYPE>::reciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -571,13 +571,13 @@ HierarchyFaceDataOpsReal<TYPE>::linearSum(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -613,13 +613,13 @@ HierarchyFaceDataOpsReal<TYPE>::axpy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -655,13 +655,13 @@ HierarchyFaceDataOpsReal<TYPE>::axmy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -695,10 +695,10 @@ HierarchyFaceDataOpsReal<TYPE>::abs(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -732,7 +732,7 @@ HierarchyFaceDataOpsReal<TYPE>::setRandomValues(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(data);
@@ -772,7 +772,7 @@ HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
    if (interior_only) {
 
       std::shared_ptr<pdat::FaceDataFactory<TYPE> > dfact(
-         POINTER_CAST<pdat::FaceDataFactory<TYPE>, hier::PatchDataFactory>(
+         SAMRAI_SHARED_PTR_CAST<pdat::FaceDataFactory<TYPE>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
@@ -808,7 +808,7 @@ HierarchyFaceDataOpsReal<TYPE>::numberOfEntries(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             std::shared_ptr<pdat::FaceData<TYPE> > d(
-               POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
@@ -852,10 +852,10 @@ HierarchyFaceDataOpsReal<TYPE>::sumControlVolumes(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::FaceData<double> > cv(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -898,7 +898,7 @@ HierarchyFaceDataOpsReal<TYPE>::L1Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -967,10 +967,10 @@ HierarchyFaceDataOpsReal<TYPE>::weightedL2Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > weight(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(wgt_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1056,7 +1056,7 @@ HierarchyFaceDataOpsReal<TYPE>::maxNorm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1112,10 +1112,10 @@ HierarchyFaceDataOpsReal<TYPE>::dot(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > data2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1167,10 +1167,10 @@ HierarchyFaceDataOpsReal<TYPE>::integral(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::FaceData<double> > vol(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -1221,10 +1221,10 @@ HierarchyFaceDataOpsReal<TYPE>::computeConstrProdPos(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > data1(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > data2(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1274,10 +1274,10 @@ HierarchyFaceDataOpsReal<TYPE>::compareToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1323,10 +1323,10 @@ HierarchyFaceDataOpsReal<TYPE>::testReciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > dst(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > src(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1379,10 +1379,10 @@ HierarchyFaceDataOpsReal<TYPE>::maxPointwiseDivide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > numer(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > denom(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1427,10 +1427,10 @@ HierarchyFaceDataOpsReal<TYPE>::minPointwiseDivide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > numer(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
          std::shared_ptr<pdat::FaceData<TYPE> > denom(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1474,7 +1474,7 @@ HierarchyFaceDataOpsReal<TYPE>::min(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > d(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -1515,7 +1515,7 @@ HierarchyFaceDataOpsReal<TYPE>::max(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::FaceData<TYPE> > d(
-            POINTER_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);

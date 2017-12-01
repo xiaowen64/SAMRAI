@@ -121,7 +121,7 @@ void EdgeMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::EdgeData<double> > edge_data(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(edge_data);
 
@@ -175,7 +175,7 @@ void EdgeMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 
@@ -319,7 +319,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
 
@@ -403,7 +403,7 @@ void EdgeMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   std::shared_ptr<pdat::EdgeData<double> > sing_data(
-                     POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -566,7 +566,7 @@ bool EdgeMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       std::shared_ptr<pdat::EdgeData<double> > edge_data(
-         POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(edge_data);
       int depth = edge_data->getDepth();

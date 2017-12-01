@@ -464,13 +464,13 @@ void MblkLinAdv::initializeDataOnPatch(
    if (initial_time) {
 
       std::shared_ptr<pdat::CellData<double> > uval(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_uval, getDataContext())));
       std::shared_ptr<pdat::CellData<double> > vol(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_vol, getDataContext())));
       std::shared_ptr<pdat::NodeData<double> > xyz(
-         POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
             patch.getPatchData(d_xyz, getDataContext())));
 
       TBOX_ASSERT(uval);
@@ -589,7 +589,7 @@ void MblkLinAdv::initializeDataOnPatch(
          patch.allocatePatchData(d_workload_data_id);
       }
       std::shared_ptr<pdat::CellData<double> > workload_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_workload_data_id)));
       TBOX_ASSERT(workload_data);
       workload_data->fillAll(1.0);
@@ -631,13 +631,13 @@ double MblkLinAdv::computeStableDtOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > vol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_vol, getDataContext())));
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -799,19 +799,19 @@ void MblkLinAdv::computeFluxesOnPatch(
    const hier::Index ilast = patch.getBox().upper();
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    std::shared_ptr<pdat::CellData<double> > vol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_vol, getDataContext())));
 
    std::shared_ptr<pdat::SideData<double> > flux(
-      POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
          patch.getPatchData(d_flux, getDataContext())));
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
 
    /*
@@ -1085,7 +1085,7 @@ void MblkLinAdv::setPhysicalBoundaryConditions(
    NULL_USE(fill_time);
 
    std::shared_ptr<pdat::CellData<double> > uval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
 
    TBOX_ASSERT(uval);
@@ -1204,17 +1204,17 @@ void MblkLinAdv::postprocessRefine(
 {
 
    std::shared_ptr<pdat::CellData<double> > cuval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_vol, getDataContext())));
 
    std::shared_ptr<pdat::CellData<double> > fuval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cuval);
@@ -1469,17 +1469,17 @@ void MblkLinAdv::postprocessCoarsen(
 {
 
    std::shared_ptr<pdat::CellData<double> > cuval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > cvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(d_vol, getDataContext())));
 
    std::shared_ptr<pdat::CellData<double> > fuval(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_uval, getDataContext())));
    std::shared_ptr<pdat::CellData<double> > fvol(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(d_vol, getDataContext())));
 
    TBOX_ASSERT(cuval);
@@ -1665,7 +1665,7 @@ void MblkLinAdv::tagGradientDetectorCells(
    const int error_level_number = patch.getPatchLevelNumber();
 
    std::shared_ptr<pdat::NodeData<double> > xyz(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          patch.getPatchData(d_xyz, getDataContext())));
    TBOX_ASSERT(xyz);
    double* x = xyz->getPointer(0);
@@ -1683,10 +1683,10 @@ void MblkLinAdv::tagGradientDetectorCells(
    tbox::plog << "box    = " << patch.getBox() << endl;
 
    std::shared_ptr<pdat::CellData<int> > tags(
-      POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
          patch.getPatchData(tag_indx)));
    std::shared_ptr<pdat::CellData<double> > var(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(d_uval, getDataContext())));
    TBOX_ASSERT(tags);
    TBOX_ASSERT(var);

@@ -85,10 +85,10 @@ void SkeletonCellDoubleWeightedAverage::coarsen(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<pdat::CellData<double> > fdata(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<pdat::CellData<double> > cdata(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);

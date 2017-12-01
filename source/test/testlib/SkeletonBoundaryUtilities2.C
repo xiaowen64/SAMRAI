@@ -380,7 +380,7 @@ int SkeletonBoundaryUtilities2::checkBdryData(
    std::shared_ptr<hier::PatchGeometry> pgeom(patch.getPatchGeometry());
 
    std::shared_ptr<pdat::CellData<double> > vardata(
-      POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
          patch.getPatchData(data_id)));
    TBOX_ASSERT(vardata);
 

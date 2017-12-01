@@ -127,10 +127,10 @@ HierarchyNodeDataOpsComplex::copyData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -150,11 +150,11 @@ HierarchyNodeDataOpsComplex::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    std::shared_ptr<pdat::NodeDataFactory<dcomplex> > d1fact(
-      POINTER_CAST<pdat::NodeDataFactory<dcomplex>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeDataFactory<dcomplex>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    std::shared_ptr<pdat::NodeDataFactory<dcomplex> > d2fact(
-      POINTER_CAST<pdat::NodeDataFactory<dcomplex>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeDataFactory<dcomplex>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -203,7 +203,7 @@ HierarchyNodeDataOpsComplex::printData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -234,7 +234,7 @@ HierarchyNodeDataOpsComplex::setToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -274,10 +274,10 @@ HierarchyNodeDataOpsComplex::scale(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > dst(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > src(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -310,10 +310,10 @@ HierarchyNodeDataOpsComplex::addScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > dst(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > src(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -346,13 +346,13 @@ HierarchyNodeDataOpsComplex::add(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -386,13 +386,13 @@ HierarchyNodeDataOpsComplex::subtract(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -426,13 +426,13 @@ HierarchyNodeDataOpsComplex::multiply(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -466,13 +466,13 @@ HierarchyNodeDataOpsComplex::divide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -505,10 +505,10 @@ HierarchyNodeDataOpsComplex::reciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > src(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -543,13 +543,13 @@ HierarchyNodeDataOpsComplex::linearSum(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -584,13 +584,13 @@ HierarchyNodeDataOpsComplex::axpy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -625,13 +625,13 @@ HierarchyNodeDataOpsComplex::axmy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > s2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(d);
@@ -664,10 +664,10 @@ HierarchyNodeDataOpsComplex::abs(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<double> > d(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > src(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(d);
@@ -700,7 +700,7 @@ HierarchyNodeDataOpsComplex::setRandomValues(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -737,7 +737,7 @@ HierarchyNodeDataOpsComplex::numberOfEntries(
    if (interior_only) {
 
       std::shared_ptr<pdat::NodeDataFactory<dcomplex> > dfact(
-         POINTER_CAST<pdat::NodeDataFactory<dcomplex>, hier::PatchDataFactory>(
+         SAMRAI_SHARED_PTR_CAST<pdat::NodeDataFactory<dcomplex>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
@@ -769,7 +769,7 @@ HierarchyNodeDataOpsComplex::numberOfEntries(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             std::shared_ptr<pdat::NodeData<dcomplex> > d(
-               POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
@@ -811,10 +811,10 @@ HierarchyNodeDataOpsComplex::sumControlVolumes(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::NodeData<double> > cv(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(d);
@@ -855,7 +855,7 @@ HierarchyNodeDataOpsComplex::L1Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -917,10 +917,10 @@ HierarchyNodeDataOpsComplex::weightedL2Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > w(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(wgt_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1002,7 +1002,7 @@ HierarchyNodeDataOpsComplex::maxNorm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1053,10 +1053,10 @@ HierarchyNodeDataOpsComplex::dot(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > d1(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::NodeData<dcomplex> > d2(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1117,10 +1117,10 @@ HierarchyNodeDataOpsComplex::integral(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::NodeData<dcomplex> > data(
-            POINTER_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<dcomplex>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::NodeData<double> > vol(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);

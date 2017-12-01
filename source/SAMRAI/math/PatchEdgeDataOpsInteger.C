@@ -64,10 +64,10 @@ PatchEdgeDataOpsInteger::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::EdgeData<int> > d1(
-      POINTER_CAST<pdat::EdgeData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<int>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::EdgeData<int> > d2(
-      POINTER_CAST<pdat::EdgeData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<int>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

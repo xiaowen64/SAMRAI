@@ -171,7 +171,7 @@ void PoissonSineSolution::setBcCoefs(
     */
    hier::Box patch_box(patch.getBox());
    std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
    const double* xlo = patch_geom->getXLower();

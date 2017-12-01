@@ -89,10 +89,10 @@ NodeIntegerInjection::coarsen(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<NodeData<int> > fdata(
-      POINTER_CAST<NodeData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<int>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<NodeData<int> > cdata(
-      POINTER_CAST<NodeData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<int>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

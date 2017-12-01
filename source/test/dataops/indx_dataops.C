@@ -222,7 +222,7 @@ int main(
             // access sample data from patch
             std::shared_ptr<pdat::IndexData<SampleIndexData,
                                               pdat::CellGeometry> > sample(
-               POINTER_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
+               SAMRAI_SHARED_PTR_CAST<pdat::IndexData<SampleIndexData, pdat::CellGeometry>,
                           hier::PatchData>(
                   patch->getPatchData(data_id)));
             TBOX_ASSERT(sample);

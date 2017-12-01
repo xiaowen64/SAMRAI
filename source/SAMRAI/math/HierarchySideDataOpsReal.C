@@ -143,10 +143,10 @@ HierarchySideDataOpsReal<TYPE>::copyData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -167,11 +167,11 @@ HierarchySideDataOpsReal<TYPE>::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    std::shared_ptr<pdat::SideDataFactory<TYPE> > d1fact(
-      POINTER_CAST<pdat::SideDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    std::shared_ptr<pdat::SideDataFactory<TYPE> > d2fact(
-      POINTER_CAST<pdat::SideDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -222,7 +222,7 @@ HierarchySideDataOpsReal<TYPE>::printData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > d(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -254,7 +254,7 @@ HierarchySideDataOpsReal<TYPE>::setToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > d(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -295,10 +295,10 @@ HierarchySideDataOpsReal<TYPE>::scale(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -332,10 +332,10 @@ HierarchySideDataOpsReal<TYPE>::addScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -369,13 +369,13 @@ HierarchySideDataOpsReal<TYPE>::add(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -410,13 +410,13 @@ HierarchySideDataOpsReal<TYPE>::subtract(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -451,13 +451,13 @@ HierarchySideDataOpsReal<TYPE>::multiply(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -492,13 +492,13 @@ HierarchySideDataOpsReal<TYPE>::divide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -532,10 +532,10 @@ HierarchySideDataOpsReal<TYPE>::reciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -571,13 +571,13 @@ HierarchySideDataOpsReal<TYPE>::linearSum(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -613,13 +613,13 @@ HierarchySideDataOpsReal<TYPE>::axpy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -655,13 +655,13 @@ HierarchySideDataOpsReal<TYPE>::axmy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -695,10 +695,10 @@ HierarchySideDataOpsReal<TYPE>::abs(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -732,7 +732,7 @@ HierarchySideDataOpsReal<TYPE>::setRandomValues(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(data);
@@ -770,7 +770,7 @@ HierarchySideDataOpsReal<TYPE>::numberOfEntries(
    if (interior_only) {
 
       std::shared_ptr<pdat::SideDataFactory<TYPE> > dfact(
-         POINTER_CAST<pdat::SideDataFactory<TYPE>, hier::PatchDataFactory>(
+         SAMRAI_SHARED_PTR_CAST<pdat::SideDataFactory<TYPE>, hier::PatchDataFactory>(
             d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data_id)));
 
       TBOX_ASSERT(dfact);
@@ -810,7 +810,7 @@ HierarchySideDataOpsReal<TYPE>::numberOfEntries(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             std::shared_ptr<pdat::SideData<TYPE> > d(
-               POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                   (*ip)->getPatchData(data_id)));
 
             TBOX_ASSERT(d);
@@ -854,10 +854,10 @@ HierarchySideDataOpsReal<TYPE>::sumControlVolumes(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::SideData<double> > cv(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -900,7 +900,7 @@ HierarchySideDataOpsReal<TYPE>::L1Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -969,10 +969,10 @@ HierarchySideDataOpsReal<TYPE>::weightedL2Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::SideData<TYPE> > weight(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(wgt_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1058,7 +1058,7 @@ HierarchySideDataOpsReal<TYPE>::maxNorm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1114,10 +1114,10 @@ HierarchySideDataOpsReal<TYPE>::dot(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > data2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1169,10 +1169,10 @@ HierarchySideDataOpsReal<TYPE>::integral(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::SideData<double> > vol(
-            POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -1223,10 +1223,10 @@ HierarchySideDataOpsReal<TYPE>::computeConstrProdPos(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > data1(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::SideData<TYPE> > data2(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1276,10 +1276,10 @@ HierarchySideDataOpsReal<TYPE>::compareToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1325,10 +1325,10 @@ HierarchySideDataOpsReal<TYPE>::testReciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > dst(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::SideData<TYPE> > src(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1381,10 +1381,10 @@ HierarchySideDataOpsReal<TYPE>::maxPointwiseDivide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > numer(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
          std::shared_ptr<pdat::SideData<TYPE> > denom(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1429,10 +1429,10 @@ HierarchySideDataOpsReal<TYPE>::minPointwiseDivide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > numer(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
          std::shared_ptr<pdat::SideData<TYPE> > denom(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1476,7 +1476,7 @@ HierarchySideDataOpsReal<TYPE>::min(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > d(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -1517,7 +1517,7 @@ HierarchySideDataOpsReal<TYPE>::max(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::SideData<TYPE> > d(
-            POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);

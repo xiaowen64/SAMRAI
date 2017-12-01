@@ -152,7 +152,7 @@ void SinusoidalFrontGenerator::applyGradientDetector(
       hier::Patch& patch = **pi;
 
       std::shared_ptr<pdat::CellData<int> > tag_cell_data_(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch.getPatchData(tag_index)));
       TBOX_ASSERT(tag_cell_data_);
       assert(tag_cell_data_->getTime() == error_data_time);
@@ -187,11 +187,11 @@ void SinusoidalFrontGenerator::setTags(
       std::shared_ptr<hier::Patch> patch = *pi;
 
       std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_data_id)));
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(tag_data);
@@ -282,7 +282,7 @@ void SinusoidalFrontGenerator::computePatchData(
    t_setup->start();
 
    std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom.get() != 0);
 
@@ -549,7 +549,7 @@ bool SinusoidalFrontGenerator::packDerivedDataIntoDoubleBuffer(
    (void)depth_index;
 
    std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 

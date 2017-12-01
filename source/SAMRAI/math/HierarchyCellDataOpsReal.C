@@ -120,10 +120,10 @@ HierarchyCellDataOpsReal<TYPE>::copyData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -144,11 +144,11 @@ HierarchyCellDataOpsReal<TYPE>::swapData(
 {
 #ifdef DEBUG_CHECK_ASSERTIONS
    std::shared_ptr<pdat::CellDataFactory<TYPE> > d1fact(
-      POINTER_CAST<pdat::CellDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data1_id)));
    TBOX_ASSERT(d1fact);
    std::shared_ptr<pdat::CellDataFactory<TYPE> > d2fact(
-      POINTER_CAST<pdat::CellDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<TYPE>, hier::PatchDataFactory>(
          d_hierarchy->getPatchDescriptor()->getPatchDataFactory(data2_id)));
    TBOX_ASSERT(d2fact);
    TBOX_ASSERT(d1fact->getDepth() == d2fact->getDepth());
@@ -198,7 +198,7 @@ HierarchyCellDataOpsReal<TYPE>::printData(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > d(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -230,7 +230,7 @@ HierarchyCellDataOpsReal<TYPE>::setToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > d(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -271,10 +271,10 @@ HierarchyCellDataOpsReal<TYPE>::scale(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -308,10 +308,10 @@ HierarchyCellDataOpsReal<TYPE>::addScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -345,13 +345,13 @@ HierarchyCellDataOpsReal<TYPE>::add(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -386,13 +386,13 @@ HierarchyCellDataOpsReal<TYPE>::subtract(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -427,13 +427,13 @@ HierarchyCellDataOpsReal<TYPE>::multiply(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -468,13 +468,13 @@ HierarchyCellDataOpsReal<TYPE>::divide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -508,10 +508,10 @@ HierarchyCellDataOpsReal<TYPE>::reciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -547,13 +547,13 @@ HierarchyCellDataOpsReal<TYPE>::linearSum(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -589,13 +589,13 @@ HierarchyCellDataOpsReal<TYPE>::axpy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -631,13 +631,13 @@ HierarchyCellDataOpsReal<TYPE>::axmy(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src2_id)));
 
          TBOX_ASSERT(dst);
@@ -671,10 +671,10 @@ HierarchyCellDataOpsReal<TYPE>::abs(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
 
          TBOX_ASSERT(dst);
@@ -708,7 +708,7 @@ HierarchyCellDataOpsReal<TYPE>::setRandomValues(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(data);
@@ -751,7 +751,7 @@ HierarchyCellDataOpsReal<TYPE>::numberOfEntries(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > d(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -795,10 +795,10 @@ HierarchyCellDataOpsReal<TYPE>::sumControlVolumes(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::CellData<double> > cv(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -841,7 +841,7 @@ HierarchyCellDataOpsReal<TYPE>::L1Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -910,10 +910,10 @@ HierarchyCellDataOpsReal<TYPE>::weightedL2Norm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::CellData<TYPE> > weight(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(wgt_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -999,7 +999,7 @@ HierarchyCellDataOpsReal<TYPE>::maxNorm(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1055,10 +1055,10 @@ HierarchyCellDataOpsReal<TYPE>::dot(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > data2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1110,10 +1110,10 @@ HierarchyCellDataOpsReal<TYPE>::integral(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
          std::shared_ptr<pdat::CellData<double> > vol(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                p->getPatchData(vol_id)));
 
          TBOX_ASSERT(data);
@@ -1164,10 +1164,10 @@ HierarchyCellDataOpsReal<TYPE>::computeConstrProdPos(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > data1(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data1_id)));
          std::shared_ptr<pdat::CellData<TYPE> > data2(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data2_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1218,10 +1218,10 @@ HierarchyCellDataOpsReal<TYPE>::compareToScalar(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1267,10 +1267,10 @@ HierarchyCellDataOpsReal<TYPE>::testReciprocal(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > dst(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(dst_id)));
          std::shared_ptr<pdat::CellData<TYPE> > src(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(src_id)));
          std::shared_ptr<hier::PatchData> pd;
 
@@ -1324,10 +1324,10 @@ HierarchyCellDataOpsReal<TYPE>::maxPointwiseDivide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > numer(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
          std::shared_ptr<pdat::CellData<TYPE> > denom(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1372,10 +1372,10 @@ HierarchyCellDataOpsReal<TYPE>::minPointwiseDivide(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > numer(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(numer_id)));
          std::shared_ptr<pdat::CellData<TYPE> > denom(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(denom_id)));
 
          TBOX_ASSERT(numer);
@@ -1419,7 +1419,7 @@ HierarchyCellDataOpsReal<TYPE>::min(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > d(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);
@@ -1460,7 +1460,7 @@ HierarchyCellDataOpsReal<TYPE>::max(
          const std::shared_ptr<hier::Patch>& p = *ip;
 
          std::shared_ptr<pdat::CellData<TYPE> > d(
-            POINTER_CAST<pdat::CellData<TYPE>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<TYPE>, hier::PatchData>(
                p->getPatchData(data_id)));
 
          TBOX_ASSERT(d);

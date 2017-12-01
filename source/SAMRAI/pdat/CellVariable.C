@@ -49,7 +49,7 @@ int
 CellVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<CellDataFactory<TYPE> > cell_factory(
-      POINTER_CAST<CellDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<CellDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(cell_factory);
    return cell_factory->getDepth();

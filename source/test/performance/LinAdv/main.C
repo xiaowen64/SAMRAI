@@ -628,7 +628,7 @@ int main(
           * Output load balancing results for TreeLoadBalancer.
           */
          std::shared_ptr<mesh::TreeLoadBalancer> tree_load_balancer(
-            POINTER_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
+            SAMRAI_SHARED_PTR_CAST<mesh::TreeLoadBalancer, mesh::LoadBalanceStrategy>(
                load_balancer));
          TBOX_ASSERT(tree_load_balancer);
          tbox::plog << "\n\nLoad balancing results:\n";
@@ -639,7 +639,7 @@ int main(
           * Output load balancing results for CascadePartitioner.
           */
          std::shared_ptr<mesh::CascadePartitioner> cascade_partitioner(
-            POINTER_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
+            SAMRAI_SHARED_PTR_CAST<mesh::CascadePartitioner, mesh::LoadBalanceStrategy>(
                load_balancer));
          TBOX_ASSERT(cascade_partitioner);
          tbox::plog << "\n\nLoad balancing results:\n";

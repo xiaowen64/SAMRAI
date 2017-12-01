@@ -2894,7 +2894,7 @@ VisItDataWriter::writeSummaryToHDFFile(
          summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
 
       std::shared_ptr<tbox::HDFDatabase> hdf_database(
-         POINTER_CAST<tbox::HDFDatabase, tbox::Database>(basic_HDFGroup));
+         SAMRAI_SHARED_PTR_CAST<tbox::HDFDatabase, tbox::Database>(basic_HDFGroup));
       TBOX_ASSERT(hdf_database);
       hid_t basic_group_id = hdf_database->getGroupId();
 
@@ -3218,7 +3218,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       if (d_grid_type != VISIT_DEFORMED) {
          //This is never entered in multiblock case
          const std::shared_ptr<geom::CartesianGridGeometry> ggeom(
-            POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
                hierarchy->getGridGeometry()));
          TBOX_ASSERT(ggeom);
          int next = 0;
@@ -3273,7 +3273,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       std::shared_ptr<tbox::Database> extents_HDFGroup(
          summary_HDFFilePointer->putDatabase(std::string(temp_buf)));
       hdf_database =
-         POINTER_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
+         SAMRAI_SHARED_PTR_CAST<tbox::HDFDatabase, tbox::Database>(extents_HDFGroup);
       TBOX_ASSERT(hdf_database);
       hid_t extents_group_id = hdf_database->getGroupId();
 
@@ -3345,7 +3345,7 @@ VisItDataWriter::writeSummaryToHDFFile(
       if (d_grid_type != VISIT_DEFORMED) {
          //This is never entered in multiblock case
          const std::shared_ptr<geom::CartesianGridGeometry> ggeom(
-            POINTER_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
+            SAMRAI_SHARED_PTR_CAST<geom::CartesianGridGeometry, hier::BaseGridGeometry>(
                hierarchy->getGridGeometry()));
          TBOX_ASSERT(ggeom);
          for (i = 0; i < d_dim.getValue(); ++i) {
@@ -3485,7 +3485,7 @@ VisItDataWriter::writeSummaryToHDFFile(
                   extents_material_name_HDFGroup = extents_materials_HDFGroup;
                }
                std::shared_ptr<tbox::HDFDatabase> extents_database(
-                  POINTER_CAST<tbox::HDFDatabase, tbox::Database>(
+                  SAMRAI_SHARED_PTR_CAST<tbox::HDFDatabase, tbox::Database>(
                      extents_material_name_HDFGroup));
                TBOX_ASSERT(extents_database);
                hid_t extents_material_name_group_id =
@@ -3508,7 +3508,7 @@ VisItDataWriter::writeSummaryToHDFFile(
                // species
                key_string = ipi->d_species_name;
                std::shared_ptr<tbox::HDFDatabase> extents_database(
-                  POINTER_CAST<tbox::HDFDatabase, tbox::Database>(
+                  SAMRAI_SHARED_PTR_CAST<tbox::HDFDatabase, tbox::Database>(
                      ipi->d_parent_material_pointer->d_extents_species_HDFGroup));
                TBOX_ASSERT(extents_database);
 
@@ -3945,7 +3945,7 @@ VisItDataWriter::writeParentChildInfoToSummaryHDFFile(
    key_string = "parent_array_length";
    basic_HDFGroup->putInteger(key_string, parent_array_length);
    std::shared_ptr<tbox::HDFDatabase> hdf_database(
-      POINTER_CAST<tbox::HDFDatabase, tbox::Database>(basic_HDFGroup));
+      SAMRAI_SHARED_PTR_CAST<tbox::HDFDatabase, tbox::Database>(basic_HDFGroup));
    TBOX_ASSERT(hdf_database);
    hid_t basic_group_id = hdf_database->getGroupId();
    if (child_array_length > 0) {
@@ -4080,7 +4080,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          const float* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             std::shared_ptr<const pdat::CellData<float> > fpdata(
-               POINTER_CAST<const pdat::CellData<float>, hier::PatchData>(pdata));
+               SAMRAI_SHARED_PTR_CAST<const pdat::CellData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
@@ -4093,7 +4093,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
             std::shared_ptr<const pdat::NodeData<float> > fpdata(
-               POINTER_CAST<const pdat::NodeData<float>, hier::PatchData>(pdata));
+               SAMRAI_SHARED_PTR_CAST<const pdat::NodeData<float>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(fpdata);
 
@@ -4127,7 +4127,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          const double* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             std::shared_ptr<const pdat::CellData<double> > dpdata(
-               POINTER_CAST<const pdat::CellData<double>, hier::PatchData>(pdata));
+               SAMRAI_SHARED_PTR_CAST<const pdat::CellData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4139,7 +4139,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
             std::shared_ptr<const pdat::NodeData<double> > dpdata(
-               POINTER_CAST<const pdat::NodeData<double>, hier::PatchData>(pdata));
+               SAMRAI_SHARED_PTR_CAST<const pdat::NodeData<double>, hier::PatchData>(pdata));
             TBOX_ASSERT(dpdata);
 
             dat_ptr = dpdata->getPointer(depth_index);
@@ -4172,7 +4172,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
          const int* dat_ptr = 0;
          if (centering == VISIT_CELL) {
             std::shared_ptr<const pdat::CellData<int> > ipdata(
-               POINTER_CAST<const pdat::CellData<int>, hier::PatchData>(pdata));
+               SAMRAI_SHARED_PTR_CAST<const pdat::CellData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 
@@ -4184,7 +4184,7 @@ VisItDataWriter::packPatchDataIntoDoubleBuffer(
             dat_ptr = cell_copy.getPointer();
          } else if (centering == VISIT_NODE) {
             std::shared_ptr<const pdat::NodeData<int> > ipdata(
-               POINTER_CAST<const pdat::NodeData<int>, hier::PatchData>(pdata));
+               SAMRAI_SHARED_PTR_CAST<const pdat::NodeData<int>, hier::PatchData>(pdata));
 
             TBOX_ASSERT(ipdata);
 

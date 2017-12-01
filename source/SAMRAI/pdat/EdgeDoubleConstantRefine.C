@@ -122,10 +122,10 @@ EdgeDoubleConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    std::shared_ptr<EdgeData<double> > cdata(
-      POINTER_CAST<EdgeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<EdgeData<double> > fdata(
-      POINTER_CAST<EdgeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<EdgeData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const EdgeOverlap* t_overlap = CPP_CAST<const EdgeOverlap *>(&fine_overlap);

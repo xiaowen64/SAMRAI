@@ -140,7 +140,7 @@ OuternodeSumTransaction::unpackStream(
    tbox::MessageStream& stream)
 {
    std::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuternodeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
@@ -152,13 +152,13 @@ void
 OuternodeSumTransaction::copyLocalData()
 {
    std::shared_ptr<pdat::OuternodeData<double> > onode_dst_data(
-      POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuternodeData<double>, hier::PatchData>(
          d_dst_level->getPatch(d_dst_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_scratch)));
    TBOX_ASSERT(onode_dst_data);
 
    std::shared_ptr<pdat::OuternodeData<double> > onode_src_data(
-      POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuternodeData<double>, hier::PatchData>(
          d_src_level->getPatch(d_src_node.getGlobalId())->
          getPatchData(d_refine_data[d_item_id]->d_src)));
    TBOX_ASSERT(onode_src_data);

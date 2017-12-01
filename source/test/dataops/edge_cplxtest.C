@@ -255,7 +255,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -264,7 +264,7 @@ int main(
                edge_vol *= dx[i];
             }
             std::shared_ptr<pdat::EdgeData<double> > data(
-               POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                   patch->getPatchData(swgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(edge_vol);
@@ -1340,7 +1340,7 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         sdata = POINTER_CAST<pdat::EdgeData<dcomplex>,
+         sdata = SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(sdata);
          hier::Index index0(dim, 2);
@@ -1372,7 +1372,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         sdata = POINTER_CAST<pdat::EdgeData<dcomplex>,
+         sdata = SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>,
                             hier::PatchData>(patch->getPatchData(svindx[2]));
          TBOX_ASSERT(sdata);
          hier::Index idx0(dim, 2);
@@ -1658,7 +1658,7 @@ complexDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::EdgeData<dcomplex> > svdata(
-            POINTER_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<dcomplex>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(svdata);
@@ -1698,7 +1698,7 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::EdgeData<double> > svdata(
-            POINTER_CAST<pdat::EdgeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::EdgeData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(svdata);

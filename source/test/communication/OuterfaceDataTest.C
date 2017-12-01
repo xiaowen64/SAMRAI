@@ -344,7 +344,7 @@ void OuterfaceDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -413,7 +413,7 @@ void OuterfaceDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -516,7 +516,7 @@ bool OuterfaceDataTest::verifyResults(
 
          if (i % 2 == 0) {
             std::shared_ptr<pdat::FaceData<double> > face_data(
-               POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(face_data);
             int depth = face_data->getDepth();
@@ -545,7 +545,7 @@ bool OuterfaceDataTest::verifyResults(
             }
          } else {
             std::shared_ptr<pdat::OuterfaceData<double> > oface_data(
-               POINTER_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<double>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(oface_data);
             int depth = oface_data->getDepth();

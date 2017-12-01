@@ -122,10 +122,10 @@ FaceFloatConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    std::shared_ptr<FaceData<float> > cdata(
-      POINTER_CAST<FaceData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<FaceData<float>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<FaceData<float> > fdata(
-      POINTER_CAST<FaceData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<FaceData<float>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const FaceOverlap* t_overlap =

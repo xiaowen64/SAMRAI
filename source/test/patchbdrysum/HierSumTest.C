@@ -193,10 +193,10 @@ HierSumTest::setInitialNodeValues(
          const std::shared_ptr<Patch>& patch = *ip;
 
          std::shared_ptr<NodeData<double> > unode(
-            POINTER_CAST<NodeData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<NodeData<double>, PatchData>(
                patch->getPatchData(d_unode_id)));
          std::shared_ptr<CellData<double> > ucell(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(d_ucell_node_id)));
          TBOX_ASSERT(unode);
          TBOX_ASSERT(ucell);
@@ -281,7 +281,7 @@ HierSumTest::setInitialNodeValues(
             const std::shared_ptr<Patch>& patch = *ip;
 
             std::shared_ptr<NodeData<double> > unode(
-               POINTER_CAST<NodeData<double>, PatchData>(
+               SAMRAI_SHARED_PTR_CAST<NodeData<double>, PatchData>(
                   patch->getPatchData(d_unode_id)));
             TBOX_ASSERT(unode);
 
@@ -311,7 +311,7 @@ HierSumTest::setInitialNodeValues(
          const std::shared_ptr<Patch>& patch = *ip;
 
          std::shared_ptr<NodeData<double> > unode(
-            POINTER_CAST<NodeData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<NodeData<double>, PatchData>(
                patch->getPatchData(d_unode_id)));
          TBOX_ASSERT(unode);
 
@@ -350,10 +350,10 @@ HierSumTest::setInitialEdgeValues(
       const std::shared_ptr<Patch>& patch = *ip;
 
       std::shared_ptr<EdgeData<double> > uedge(
-         POINTER_CAST<EdgeData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<EdgeData<double>, PatchData>(
             patch->getPatchData(d_uedge_id)));
       std::shared_ptr<CellData<double> > ucell(
-         POINTER_CAST<CellData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
             patch->getPatchData(d_ucell_edge_id)));
       TBOX_ASSERT(uedge);
       TBOX_ASSERT(ucell);
@@ -583,7 +583,7 @@ int HierSumTest::checkNodeResult(
          const std::shared_ptr<Patch>& patch = *ip;
 
          std::shared_ptr<NodeData<double> > unode(
-            POINTER_CAST<NodeData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<NodeData<double>, PatchData>(
                patch->getPatchData(d_unode_id)));
          TBOX_ASSERT(unode);
 
@@ -645,7 +645,7 @@ int HierSumTest::checkNodeResult(
 
 #if (TESTING == 1)
          std::shared_ptr<CellData<double> > ucell_node(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(d_ucell_node_id)));
          TBOX_ASSERT(ucell_node);
 
@@ -696,7 +696,7 @@ int HierSumTest::checkEdgeResult(
       const std::shared_ptr<Patch>& patch = *ip;
 
       std::shared_ptr<EdgeData<double> > uedge(
-         POINTER_CAST<EdgeData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<EdgeData<double>, PatchData>(
             patch->getPatchData(d_uedge_id)));
       TBOX_ASSERT(uedge);
 
@@ -755,7 +755,7 @@ int HierSumTest::checkEdgeResult(
 
 #if (TESTING == 1)
       std::shared_ptr<CellData<double> > ucell_edge(
-         POINTER_CAST<CellData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
             patch->getPatchData(d_ucell_edge_id)));
       TBOX_ASSERT(ucell_edge);
 
@@ -828,10 +828,10 @@ void HierSumTest::initializeLevelData(
       const std::shared_ptr<Patch>& patch = *p0;
 
       std::shared_ptr<NodeData<double> > unode(
-         POINTER_CAST<NodeData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<NodeData<double>, PatchData>(
             patch->getPatchData(d_unode_id)));
       std::shared_ptr<EdgeData<double> > uedge(
-         POINTER_CAST<EdgeData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<EdgeData<double>, PatchData>(
             patch->getPatchData(d_uedge_id)));
       TBOX_ASSERT(unode);
       TBOX_ASSERT(uedge);
@@ -850,10 +850,10 @@ void HierSumTest::initializeLevelData(
       const std::shared_ptr<Patch>& patch = *p0;
 
       std::shared_ptr<CellData<double> > ucell_node(
-         POINTER_CAST<CellData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
             patch->getPatchData(d_ucell_node_id)));
       std::shared_ptr<CellData<double> > ucell_edge(
-         POINTER_CAST<CellData<double>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
             patch->getPatchData(d_ucell_edge_id)));
       TBOX_ASSERT(ucell_node);
       TBOX_ASSERT(ucell_edge);
@@ -866,7 +866,7 @@ void HierSumTest::initializeLevelData(
 
       // set cell values at physical boundary
       const std::shared_ptr<CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<CartesianPatchGeometry, PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, PatchGeometry>(
             patch->getPatchGeometry()));
       TBOX_ASSERT(patch_geom);
       const std::vector<BoundaryBox>& node_bdry =
@@ -911,7 +911,7 @@ void HierSumTest::initializeLevelData(
          const std::shared_ptr<Patch>& cpatch = *p1;
 
          std::shared_ptr<CellData<double> > ucell_node(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                cpatch->getPatchData(d_ucell_node_id)));
          TBOX_ASSERT(ucell_node);
 
@@ -1020,7 +1020,7 @@ HierSumTest::setBoundaryConditions(
    const int num_face_bdry_boxes = static_cast<int>(face_bdry.size());
 
    const std::shared_ptr<CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<CartesianPatchGeometry, PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
@@ -1028,7 +1028,7 @@ HierSumTest::setBoundaryConditions(
     * std::shared_ptr to data in ghost regions.
     */
    std::shared_ptr<CellData<double> > ucell(
-      POINTER_CAST<CellData<double>, PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
          patch.getPatchData(cell_data_id)));
 
    TBOX_ASSERT(ucell);
@@ -1205,7 +1205,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
 {
 
    const std::shared_ptr<CartesianPatchGeometry> patch_geom(
-      POINTER_CAST<CartesianPatchGeometry, PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, PatchGeometry>(
          cpatch.getPatchGeometry()));
    TBOX_ASSERT(patch_geom);
 
@@ -1227,7 +1227,7 @@ void HierSumTest::zeroOutPhysicalBoundaryCellsAtCoarseFineBoundary(
     * std::shared_ptr to data in ghost regions.
     */
    std::shared_ptr<CellData<double> > ucell(
-      POINTER_CAST<CellData<double>, PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
          cpatch.getPatchData(cell_data_id)));
 
    TBOX_ASSERT(ucell);

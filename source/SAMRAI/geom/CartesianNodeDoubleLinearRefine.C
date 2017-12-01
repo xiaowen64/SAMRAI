@@ -128,10 +128,10 @@ CartesianNodeDoubleLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
    std::shared_ptr<pdat::NodeData<double> > cdata(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<pdat::NodeData<double> > fdata(
-      POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
          fine.getPatchData(dst_component)));
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -145,10 +145,10 @@ CartesianNodeDoubleLinearRefine::refine(
    const hier::Index& fihi = fdata->getGhostBox().upper();
 
    const std::shared_ptr<CartesianPatchGeometry> cgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
    const std::shared_ptr<CartesianPatchGeometry> fgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);

@@ -46,10 +46,10 @@ PatchSideDataOpsReal<TYPE>::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::SideData<TYPE> > d1(
-      POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::SideData<TYPE> > d2(
-      POINTER_CAST<pdat::SideData<TYPE>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<TYPE>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

@@ -170,14 +170,14 @@ void FACPoisson::initializeLevelData(
       }
       hier::Box pbox = patch->getBox();
       std::shared_ptr<geom::CartesianPatchGeometry> patch_geom(
-         POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+         SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
             patch->getPatchGeometry()));
 
       std::shared_ptr<pdat::CellData<double> > exact_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_exact_id)));
       std::shared_ptr<pdat::CellData<double> > rhs_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch->getPatchData(d_rhs_id)));
       TBOX_ASSERT(patch_geom);
       TBOX_ASSERT(exact_data);
@@ -255,7 +255,7 @@ int FACPoisson::solvePoisson()
            ip != level->end(); ++ip) {
          const std::shared_ptr<hier::Patch>& patch = *ip;
          std::shared_ptr<pdat::CellData<double> > data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch->getPatchData(d_comp_soln_id)));
          TBOX_ASSERT(data);
          data->fill(0.0);
@@ -354,10 +354,10 @@ bool FACPoisson::packDerivedDataIntoDoubleBuffer(
 
    if (variable_name == "Error") {
       std::shared_ptr<pdat::CellData<double> > current_solution_(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_comp_soln_id)));
       std::shared_ptr<pdat::CellData<double> > exact_solution_(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_exact_id)));
       TBOX_ASSERT(current_solution_);
       TBOX_ASSERT(exact_solution_);

@@ -345,7 +345,7 @@ void OutersideDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -411,7 +411,7 @@ void OutersideDataTest::setLinearData(
    TBOX_ASSERT(data);
 
    std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-      POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
          patch.getPatchGeometry()));
    TBOX_ASSERT(pgeom);
    const double* dx = pgeom->getDx();
@@ -509,7 +509,7 @@ bool OutersideDataTest::verifyResults(
 
          if (i % 2 == 0) {
             std::shared_ptr<pdat::SideData<double> > side_data(
-               POINTER_CAST<pdat::SideData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::SideData<double>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(side_data);
             int depth = side_data->getDepth();
@@ -542,7 +542,7 @@ bool OutersideDataTest::verifyResults(
             }
          } else {
             std::shared_ptr<pdat::OutersideData<double> > oside_data(
-               POINTER_CAST<pdat::OutersideData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::OutersideData<double>, hier::PatchData>(
                   patch.getPatchData(d_variables_dst[i], getDataContext())));
             TBOX_ASSERT(oside_data);
             int depth = oside_data->getDepth();

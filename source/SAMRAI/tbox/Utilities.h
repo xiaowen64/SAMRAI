@@ -141,12 +141,12 @@ typedef int mode_t;
  */
 #ifdef DEBUG_CHECK_ASSERTIONS
 
-#define POINTER_CAST std::dynamic_pointer_cast
+#define SAMRAI_SHARED_PTR_CAST std::dynamic_pointer_cast
 #define CPP_CAST dynamic_cast
 
 #else
 
-#define POINTER_CAST std::static_pointer_cast
+#define SAMRAI_SHARED_PTR_CAST std::static_pointer_cast
 #define CPP_CAST static_cast
 
 #endif

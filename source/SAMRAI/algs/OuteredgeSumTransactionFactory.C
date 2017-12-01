@@ -128,7 +128,7 @@ OuteredgeSumTransactionFactory::preprocessScratchSpace(
       for (int n = 0; n < ncomponents; ++n) {
          if (preprocess_vector.isSet(n)) {
             std::shared_ptr<pdat::OuteredgeData<double> > oedge_data(
-               POINTER_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::OuteredgeData<double>, hier::PatchData>(
                   patch->getPatchData(n)));
             TBOX_ASSERT(oedge_data);
             oedge_data->fillAll(0.0);

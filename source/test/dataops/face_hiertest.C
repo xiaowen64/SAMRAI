@@ -254,7 +254,7 @@ int main(
               ip != level->end(); ++ip) {
             patch = *ip;
             std::shared_ptr<geom::CartesianPatchGeometry> pgeom(
-               POINTER_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
+               SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry, hier::PatchGeometry>(
                   patch->getPatchGeometry()));
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
@@ -263,7 +263,7 @@ int main(
                face_vol *= dx[i];
             }
             std::shared_ptr<pdat::FaceData<double> > data(
-               POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
@@ -585,7 +585,7 @@ int main(
  *   for (hier::PatchLevel::iterator ip(hierarchy->getPatchLevel(ln)->begin()); ip != hierarchy->getPatchLevel(ln)->end(); ++ip) {
  *   patch = hierarchy->getPatchLevel(ln)->getPatch(ip());
  *   std::shared_ptr< pdat::FaceData<double> > cvdata(
- *      POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+ *      SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
  *         patch->getPatchData(cwgt_id)));
  *
  *   TBOX_ASSERT(cvdata);
@@ -851,7 +851,7 @@ int main(
       for (hier::PatchLevel::iterator ip(level_zero->begin());
            ip != level_zero->end(); ++ip) {
          patch = *ip;
-         fdata = POINTER_CAST<pdat::FaceData<double>,
+         fdata = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(fdata);
          hier::Index index0(dim, 2);
@@ -873,7 +873,7 @@ int main(
       for (hier::PatchLevel::iterator ipp(level_zero->begin());
            ipp != level_zero->end(); ++ipp) {
          patch = *ipp;
-         fdata = POINTER_CAST<pdat::FaceData<double>,
+         fdata = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[2]));
          TBOX_ASSERT(fdata);
          hier::Index idx0(dim, 2);
@@ -1150,7 +1150,7 @@ doubleDataSameAsValue(
            ip != level->end(); ++ip) {
          patch = *ip;
          std::shared_ptr<pdat::FaceData<double> > fvdata(
-            POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                patch->getPatchData(desc_id)));
 
          TBOX_ASSERT(fvdata);

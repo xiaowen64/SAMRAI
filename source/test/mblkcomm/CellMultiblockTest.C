@@ -127,7 +127,7 @@ void CellMultiblockTest::initializeDataOnPatch(
       for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
          std::shared_ptr<pdat::CellData<double> > cell_data(
-            POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                patch.getPatchData(d_variables[i], getDataContext())));
          TBOX_ASSERT(cell_data);
 
@@ -181,7 +181,7 @@ void CellMultiblockTest::setPhysicalBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::CellData<double> > cell_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -257,7 +257,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
    for (int i = 0; i < static_cast<int>(d_variables.size()); ++i) {
 
       std::shared_ptr<pdat::CellData<double> > cell_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
 
@@ -316,7 +316,7 @@ void CellMultiblockTest::fillSingularityBoundaryConditions(
                                                   encon_blk_id);
 
                   std::shared_ptr<pdat::CellData<double> > sing_data(
-                     POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                         encon_patch->getPatchData(
                            d_variables[i], getDataContext())));
                   TBOX_ASSERT(sing_data);
@@ -401,7 +401,7 @@ bool CellMultiblockTest::verifyResults(
       double correct = (double)block_id.getBlockValue();
 
       std::shared_ptr<pdat::CellData<double> > cell_data(
-         POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
             patch.getPatchData(d_variables[i], getDataContext())));
       TBOX_ASSERT(cell_data);
       int depth = cell_data->getDepth();

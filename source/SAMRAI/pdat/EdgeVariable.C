@@ -52,7 +52,7 @@ template<class TYPE>
 int EdgeVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<EdgeDataFactory<TYPE> > factory(
-      POINTER_CAST<EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<EdgeDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

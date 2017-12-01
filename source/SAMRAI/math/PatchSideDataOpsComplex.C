@@ -38,10 +38,10 @@ PatchSideDataOpsComplex::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::SideData<dcomplex> > d1(
-      POINTER_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::SideData<dcomplex> > d2(
-      POINTER_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::SideData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

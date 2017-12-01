@@ -291,15 +291,15 @@ int main(
       }
 
       std::shared_ptr<math::HierarchyCellDataOpsReal<double> > cell_ops(
-         POINTER_CAST<math::HierarchyCellDataOpsReal<double>,
+         SAMRAI_SHARED_PTR_CAST<math::HierarchyCellDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(cwgt, hierarchy)));
       std::shared_ptr<math::HierarchyFaceDataOpsReal<double> > face_ops(
-         POINTER_CAST<math::HierarchyFaceDataOpsReal<double>,
+         SAMRAI_SHARED_PTR_CAST<math::HierarchyFaceDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(fwgt, hierarchy)));
       std::shared_ptr<math::HierarchyNodeDataOpsReal<double> > node_ops(
-         POINTER_CAST<math::HierarchyNodeDataOpsReal<double>,
+         SAMRAI_SHARED_PTR_CAST<math::HierarchyNodeDataOpsReal<double>,
                     math::HierarchyDataOpsReal<double> >(
             math::HierarchyDataOpsManager::getManager()->getOperationsDouble(nwgt, hierarchy)));
 
@@ -330,13 +330,13 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = POINTER_CAST<geom::CartesianPatchGeometry,
+            pgeom = SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                                hier::PatchGeometry>(patch->getPatchGeometry());
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double cell_vol = dx[0] * dx[1] * dx[2];
             std::shared_ptr<pdat::CellData<double> > cvdata(
-               POINTER_CAST<pdat::CellData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>, hier::PatchData>(
                   patch->getPatchData(cwgt_id)));
             TBOX_ASSERT(cvdata);
             cvdata->fillAll(cell_vol);
@@ -352,13 +352,13 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = POINTER_CAST<geom::CartesianPatchGeometry,
+            pgeom = SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                                hier::PatchGeometry>(patch->getPatchGeometry());
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double face_vol = dx[0] * dx[1] * dx[2];
             std::shared_ptr<pdat::FaceData<double> > data(
-               POINTER_CAST<pdat::FaceData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>, hier::PatchData>(
                   patch->getPatchData(fwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(face_vol);
@@ -482,13 +482,13 @@ int main(
          for (hier::PatchLevel::iterator ip(level->begin());
               ip != level->end(); ++ip) {
             patch = *ip;
-            pgeom = POINTER_CAST<geom::CartesianPatchGeometry,
+            pgeom = SAMRAI_SHARED_PTR_CAST<geom::CartesianPatchGeometry,
                                hier::PatchGeometry>(patch->getPatchGeometry());
             TBOX_ASSERT(pgeom);
             const double* dx = pgeom->getDx();
             const double node_vol = dx[0] * dx[1] * dx[2];
             std::shared_ptr<pdat::NodeData<double> > data(
-               POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                   patch->getPatchData(nwgt_id)));
             TBOX_ASSERT(data);
             data->fillAll(node_vol);
@@ -1116,7 +1116,7 @@ int main(
            ip != level_zero->end(); ++ip) {
          patch = *ip;
 
-         cdata = POINTER_CAST<pdat::CellData<double>,
+         cdata = SAMRAI_SHARED_PTR_CAST<pdat::CellData<double>,
                             hier::PatchData>(patch->getPatchData(cvindx[1]));
          TBOX_ASSERT(cdata);
          hier::Index cindex0(2, 2, 2);
@@ -1136,7 +1136,7 @@ int main(
             (*cdata)(pdat::CellIndex(cindex3), 1) = -10.0;
          }
 
-         fdata = POINTER_CAST<pdat::FaceData<double>,
+         fdata = SAMRAI_SHARED_PTR_CAST<pdat::FaceData<double>,
                             hier::PatchData>(patch->getPatchData(fvindx[1]));
          TBOX_ASSERT(fdata);
          hier::Index findex0(2, 2, 2);
@@ -1155,21 +1155,21 @@ int main(
          hier::Index nindex0(2, 2, 2);
          hier::Index nindex1(5, 3, 2);
          if (patch->getBox().contains(nindex0)) {
-            ndata = POINTER_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[2]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LLL)) = 300.0;
-            ndata = POINTER_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[3]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex0, pdat::NodeIndex::LUL)) = 30.0;
          }
          if (patch->getBox().contains(nindex1)) {
-            ndata = POINTER_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[2]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::UUL)) = -300.0;
-            ndata = POINTER_CAST<pdat::NodeData<double>,
+            ndata = SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>,
                                hier::PatchData>(patch->getPatchData(nvindx[3]));
             TBOX_ASSERT(ndata);
             (*ndata)(pdat::NodeIndex(nindex1, pdat::NodeIndex::ULL)) = -3300.0;

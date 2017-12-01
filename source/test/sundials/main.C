@@ -363,7 +363,7 @@ int main(
                const std::shared_ptr<hier::Patch>& patch = *p;
 
                std::shared_ptr<CellData<double> > y_data(
-                  POINTER_CAST<CellData<double>, hier::PatchData>(
+                  SAMRAI_SHARED_PTR_CAST<CellData<double>, hier::PatchData>(
                      y_init->getComponentPatchData(0, *patch)));
                TBOX_ASSERT(y_data);
                y_data->print(y_data->getBox());
@@ -444,7 +444,7 @@ int main(
                   const std::shared_ptr<hier::Patch>& patch = *p;
 
                   std::shared_ptr<CellData<double> > y_data(
-                     POINTER_CAST<CellData<double>, hier::PatchData>(
+                     SAMRAI_SHARED_PTR_CAST<CellData<double>, hier::PatchData>(
                         y_result->getComponentPatchData(0, *patch)));
                   TBOX_ASSERT(y_data);
                   y_data->print(y_data->getBox());

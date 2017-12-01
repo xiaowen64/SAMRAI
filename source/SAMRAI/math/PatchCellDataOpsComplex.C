@@ -37,10 +37,10 @@ PatchCellDataOpsComplex::swapData(
    TBOX_ASSERT(patch);
 
    std::shared_ptr<pdat::CellData<dcomplex> > d1(
-      POINTER_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data1_id)));
    std::shared_ptr<pdat::CellData<dcomplex> > d2(
-      POINTER_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          patch->getPatchData(data2_id)));
 
    TBOX_ASSERT(d1 && d2);

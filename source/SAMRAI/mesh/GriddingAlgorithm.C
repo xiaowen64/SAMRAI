@@ -2587,7 +2587,7 @@ GriddingAlgorithm::checkNonrefinedTags(
         ei != tag_to_violator->end(); ++ei) {
       const hier::BoxId& box_id = *ei;
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             level.getPatch(box_id)->getPatchData(d_user_tag_indx)));
       TBOX_ASSERT(tag_data);
       for (hier::Connector::ConstNeighborIterator na = tag_to_violator->begin(ei);
@@ -2921,7 +2921,7 @@ GriddingAlgorithm::fillTags(
 
       const std::shared_ptr<hier::Patch>& patch = *ip;
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_index)));
       TBOX_ASSERT(tag_data);
 
@@ -2980,7 +2980,7 @@ GriddingAlgorithm::fillTagsFromBoxLevel(
       const std::shared_ptr<hier::Patch>& patch = *ip;
 
       std::shared_ptr<pdat::CellData<int> > tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(tag_index)));
 
       TBOX_ASSERT(tag_data);
@@ -3044,10 +3044,10 @@ void GriddingAlgorithm::setBooleanTagData(
       const std::shared_ptr<hier::Patch>& patch = *ip;
 
       std::shared_ptr<pdat::CellData<int> > user_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_user_tag_indx)));
       std::shared_ptr<pdat::CellData<int> > boolean_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_boolean_tag_indx)));
 
       if (!preserve_existing_tags) { 
@@ -3114,10 +3114,10 @@ GriddingAlgorithm::bufferTagsOnLevel(
       const std::shared_ptr<hier::Patch>& patch = *ip1;
 
       std::shared_ptr<pdat::CellData<int> > buf_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_buf_tag_indx)));
       std::shared_ptr<pdat::CellData<int> > boolean_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_boolean_tag_indx)));
 
       TBOX_ASSERT(buf_tag_data);
@@ -3154,10 +3154,10 @@ GriddingAlgorithm::bufferTagsOnLevel(
       const std::shared_ptr<hier::Patch>& patch = *ip2;
 
       std::shared_ptr<pdat::CellData<int> > buf_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_buf_tag_indx)));
       std::shared_ptr<pdat::CellData<int> > boolean_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_boolean_tag_indx)));
 
       TBOX_ASSERT(buf_tag_data);
@@ -3193,10 +3193,10 @@ GriddingAlgorithm::bufferTagsOnLevel(
       const std::shared_ptr<hier::Patch>& patch = *ip;
 
       std::shared_ptr<pdat::CellData<int> > user_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_user_tag_indx)));
       std::shared_ptr<pdat::CellData<int> > boolean_tag_data(
-         POINTER_CAST<pdat::CellData<int>, hier::PatchData>(
+         SAMRAI_SHARED_PTR_CAST<pdat::CellData<int>, hier::PatchData>(
             patch->getPatchData(d_boolean_tag_indx)));
 
       size_t data_length = boolean_tag_data->getGhostBox().size();

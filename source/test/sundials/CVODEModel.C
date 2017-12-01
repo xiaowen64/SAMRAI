@@ -413,7 +413,7 @@ CVODEModel::applyGradientDetector(
       const std::shared_ptr<Patch>& patch = *p;
 
       std::shared_ptr<CellData<int> > tag_data(
-         POINTER_CAST<CellData<int>, PatchData>(
+         SAMRAI_SHARED_PTR_CAST<CellData<int>, PatchData>(
             patch->getPatchData(tag_index)));
       TBOX_ASSERT(tag_data);
 
@@ -439,7 +439,7 @@ CVODEModel::setPhysicalBoundaryConditions(
    NULL_USE(time);
 
    std::shared_ptr<CellData<double> > soln_data(
-      POINTER_CAST<CellData<double>, PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
          patch.getPatchData(d_soln_scr_id)));
 
    TBOX_ASSERT(soln_data);
@@ -649,13 +649,13 @@ CVODEModel::evaluateRHSFunction(
          const std::shared_ptr<Patch>& patch = *ip;
 
          std::shared_ptr<CellData<double> > y(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(d_soln_scr_id)));
          std::shared_ptr<SideData<double> > diff(
-            POINTER_CAST<SideData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<SideData<double>, PatchData>(
                patch->getPatchData(d_diff_id)));
          std::shared_ptr<CellData<double> > rhs(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(y_dot_samvect->getComponentDescriptorIndex(0))));
          TBOX_ASSERT(y);
          TBOX_ASSERT(diff);
@@ -665,7 +665,7 @@ CVODEModel::evaluateRHSFunction(
          const Index ilast(patch->getBox().upper());
 
          const std::shared_ptr<CartesianPatchGeometry> patch_geom(
-            POINTER_CAST<CartesianPatchGeometry, PatchGeometry>(
+            SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, PatchGeometry>(
                patch->getPatchGeometry()));
          TBOX_ASSERT(patch_geom);
          const double* dx = patch_geom->getDx();
@@ -835,7 +835,7 @@ int CVODEModel::CVSpgmrPrecondSet(
          const Index ilast(patch->getBox().upper());
 
          std::shared_ptr<SideData<double> > diffusion(
-            POINTER_CAST<SideData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<SideData<double>, PatchData>(
                patch->getPatchData(d_diff_id)));
          TBOX_ASSERT(diffusion);
 
@@ -849,10 +849,10 @@ int CVODEModel::CVSpgmrPrecondSet(
          if (d_use_neumann_bcs) {
 
             std::shared_ptr<OuterfaceData<int> > flag_data(
-               POINTER_CAST<OuterfaceData<int>, PatchData>(
+               SAMRAI_SHARED_PTR_CAST<OuterfaceData<int>, PatchData>(
                   patch->getPatchData(d_flag_id)));
             std::shared_ptr<OuterfaceData<double> > neuf_data(
-               POINTER_CAST<OuterfaceData<double>, PatchData>(
+               SAMRAI_SHARED_PTR_CAST<OuterfaceData<double>, PatchData>(
                   patch->getPatchData(d_neuf_id)));
             TBOX_ASSERT(flag_data);
             TBOX_ASSERT(neuf_data);
@@ -1020,7 +1020,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
          const std::shared_ptr<Patch>& patch = *p;
 
          std::shared_ptr<CellData<double> > z_data(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(z_indx)));
          TBOX_ASSERT(z_data);
 
@@ -1034,7 +1034,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
           */
          PatchCellDataOpsReal<double> math_ops;
          std::shared_ptr<CellData<double> > r_data(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(r_indx)));
          TBOX_ASSERT(r_data);
          math_ops.scale(r_data, 1.0 / gamma, r_data, r_data->getBox());
@@ -1043,7 +1043,7 @@ int CVODEModel::CVSpgmrPrecondSolve(
           * Copy interior data from z vector to soln_scratch
           */
          std::shared_ptr<CellData<double> > z_scr_data(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(d_soln_scr_id)));
          TBOX_ASSERT(z_scr_data);
          z_scr_data->copy(*z_data);
@@ -1126,10 +1126,10 @@ int CVODEModel::CVSpgmrPrecondSolve(
          const std::shared_ptr<Patch>& patch = *p;
 
          std::shared_ptr<CellData<double> > soln_scratch(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(d_soln_scr_id)));
          std::shared_ptr<CellData<double> > z(
-            POINTER_CAST<CellData<double>, PatchData>(
+            SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                patch->getPatchData(z_indx)));
          TBOX_ASSERT(soln_scratch);
          TBOX_ASSERT(z);
@@ -1251,7 +1251,7 @@ CVODEModel::setInitialConditions(
              * Set initial conditions for y
              */
             std::shared_ptr<CellData<double> > y_init(
-               POINTER_CAST<CellData<double>, PatchData>(
+               SAMRAI_SHARED_PTR_CAST<CellData<double>, PatchData>(
                   soln_init_samvect->getComponentPatchData(cn, *patch)));
             TBOX_ASSERT(y_init);
             y_init->fillAll(d_initial_value);
@@ -1263,7 +1263,7 @@ CVODEModel::setInitialConditions(
              * approach and set it to 1.
              */
             std::shared_ptr<SideData<double> > diffusion(
-               POINTER_CAST<SideData<double>, PatchData>(
+               SAMRAI_SHARED_PTR_CAST<SideData<double>, PatchData>(
                   patch->getPatchData(d_diff_id)));
             TBOX_ASSERT(diffusion);
 

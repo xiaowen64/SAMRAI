@@ -80,7 +80,7 @@ template<class TYPE>
 int SideVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<SideDataFactory<TYPE> > factory(
-      POINTER_CAST<SideDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<SideDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

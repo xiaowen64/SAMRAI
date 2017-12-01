@@ -119,10 +119,10 @@ CellIntegerConstantRefine::refine(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<CellData<int> > cdata(
-      POINTER_CAST<CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<int>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<CellData<int> > fdata(
-      POINTER_CAST<CellData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<CellData<int>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    TBOX_ASSERT(cdata);

@@ -90,10 +90,10 @@ NodeFloatInjection::coarsen(
    const hier::IntVector& ratio) const
 {
    std::shared_ptr<NodeData<float> > fdata(
-      POINTER_CAST<NodeData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<float>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<NodeData<float> > cdata(
-      POINTER_CAST<NodeData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<NodeData<float>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
 
    TBOX_ASSERT(fdata);

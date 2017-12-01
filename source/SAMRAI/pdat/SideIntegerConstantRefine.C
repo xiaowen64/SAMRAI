@@ -124,10 +124,10 @@ SideIntegerConstantRefine::refine(
    const tbox::Dimension& dim(fine.getDim());
 
    std::shared_ptr<SideData<int> > cdata(
-      POINTER_CAST<SideData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<SideData<int>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<SideData<int> > fdata(
-      POINTER_CAST<SideData<int>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<SideData<int>, hier::PatchData>(
          fine.getPatchData(dst_component)));
 
    const SideOverlap* t_overlap = CPP_CAST<const SideOverlap *>(&fine_overlap);

@@ -125,7 +125,7 @@ TreeLoadBalancer::setWorkloadPatchDataIndex(
    int level_number)
 {
    std::shared_ptr<pdat::CellDataFactory<double> > datafact(
-      POINTER_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellDataFactory<double>, hier::PatchDataFactory>(
          hier::VariableDatabase::getDatabase()->getPatchDescriptor()->
          getPatchDataFactory(data_id)));
 

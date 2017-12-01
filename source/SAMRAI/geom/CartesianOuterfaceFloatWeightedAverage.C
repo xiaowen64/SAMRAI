@@ -128,10 +128,10 @@ CartesianOuterfaceFloatWeightedAverage::coarsen(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, coarse_box, ratio);
 
    std::shared_ptr<pdat::OuterfaceData<float> > fdata(
-      POINTER_CAST<pdat::OuterfaceData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<float>, hier::PatchData>(
          fine.getPatchData(src_component)));
    std::shared_ptr<pdat::OuterfaceData<float> > cdata(
-      POINTER_CAST<pdat::OuterfaceData<float>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::OuterfaceData<float>, hier::PatchData>(
          coarse.getPatchData(dst_component)));
    TBOX_ASSERT(fdata);
    TBOX_ASSERT(cdata);
@@ -143,10 +143,10 @@ CartesianOuterfaceFloatWeightedAverage::coarsen(
    const hier::Index& cihi = cdata->getGhostBox().upper();
 
    const std::shared_ptr<CartesianPatchGeometry> fgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
    const std::shared_ptr<CartesianPatchGeometry> cgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
 
    TBOX_ASSERT(fgeom);

@@ -217,7 +217,7 @@ PatchBoundaryNodeSum::registerSum(
    hier::VariableDatabase* var_db = hier::VariableDatabase::getDatabase();
 
    std::shared_ptr<pdat::NodeDataFactory<double> > node_factory(
-      POINTER_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<pdat::NodeDataFactory<double>, hier::PatchDataFactory>(
          var_db->getPatchDescriptor()->getPatchDataFactory(node_data_id)));
 
    TBOX_ASSERT(node_factory);
@@ -726,10 +726,10 @@ PatchBoundaryNodeSum::doLocalCoarseFineBoundarySum(
          for (int i = 0; i < node_data_id_size; ++i) {
 
             std::shared_ptr<pdat::NodeData<double> > node_data(
-               POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                   fpatch->getPatchData(node_data_id[i])));
             std::shared_ptr<pdat::OuternodeData<double> > onode_data(
-               POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+               SAMRAI_SHARED_PTR_CAST<pdat::OuternodeData<double>, hier::PatchData>(
                   cfpatch->getPatchData(onode_data_id[i])));
 
             TBOX_ASSERT(node_data);
@@ -1090,10 +1090,10 @@ PatchBoundaryNodeSum::copyNodeToOuternodeOnLevel(
       int node_data_id_size = static_cast<int>(node_data_id.size());
       for (int i = 0; i < node_data_id_size; ++i) {
          std::shared_ptr<pdat::NodeData<double> > node_data(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch->getPatchData(node_data_id[i])));
          std::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuternodeData<double>, hier::PatchData>(
                patch->getPatchData(onode_data_id[i])));
 
          TBOX_ASSERT(node_data);
@@ -1121,10 +1121,10 @@ PatchBoundaryNodeSum::copyOuternodeToNodeOnLevel(
       int node_data_id_size = static_cast<int>(node_data_id.size());
       for (int i = 0; i < node_data_id_size; ++i) {
          std::shared_ptr<pdat::OuternodeData<double> > onode_data(
-            POINTER_CAST<pdat::OuternodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::OuternodeData<double>, hier::PatchData>(
                patch->getPatchData(onode_data_id[i])));
          std::shared_ptr<pdat::NodeData<double> > node_data(
-            POINTER_CAST<pdat::NodeData<double>, hier::PatchData>(
+            SAMRAI_SHARED_PTR_CAST<pdat::NodeData<double>, hier::PatchData>(
                patch->getPatchData(node_data_id[i])));
 
          TBOX_ASSERT(node_data);

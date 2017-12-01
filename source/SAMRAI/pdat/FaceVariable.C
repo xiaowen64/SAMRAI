@@ -52,7 +52,7 @@ template<class TYPE>
 int FaceVariable<TYPE>::getDepth() const
 {
    std::shared_ptr<FaceDataFactory<TYPE> > factory(
-      POINTER_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(
+      SAMRAI_SHARED_PTR_CAST<FaceDataFactory<TYPE>, hier::PatchDataFactory>(
          getPatchDataFactory()));
    TBOX_ASSERT(factory);
    return factory->getDepth();

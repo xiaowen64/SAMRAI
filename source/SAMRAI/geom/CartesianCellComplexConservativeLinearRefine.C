@@ -134,10 +134,10 @@ CartesianCellComplexConservativeLinearRefine::refine(
    TBOX_ASSERT_DIM_OBJDIM_EQUALITY3(dim, coarse, fine_box, ratio);
 
    std::shared_ptr<pdat::CellData<dcomplex> > cdata(
-      POINTER_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          coarse.getPatchData(src_component)));
    std::shared_ptr<pdat::CellData<dcomplex> > fdata(
-      POINTER_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
+      SAMRAI_SHARED_PTR_CAST<pdat::CellData<dcomplex>, hier::PatchData>(
          fine.getPatchData(dst_component)));
    TBOX_ASSERT(cdata);
    TBOX_ASSERT(fdata);
@@ -151,10 +151,10 @@ CartesianCellComplexConservativeLinearRefine::refine(
    const hier::Index& fihi = fdata->getGhostBox().upper();
 
    const std::shared_ptr<CartesianPatchGeometry> cgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          coarse.getPatchGeometry()));
    const std::shared_ptr<CartesianPatchGeometry> fgeom(
-      POINTER_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
+      SAMRAI_SHARED_PTR_CAST<CartesianPatchGeometry, hier::PatchGeometry>(
          fine.getPatchGeometry()));
 
    TBOX_ASSERT(cgeom);
