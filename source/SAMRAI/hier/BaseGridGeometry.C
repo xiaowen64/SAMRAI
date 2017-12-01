@@ -892,7 +892,7 @@ BaseGridGeometry::putToRestart(
             std::string neighbor_db_name =
                "neighbor_" +
                tbox::Utilities::intToString(static_cast<int>(count));
-            boost::shared_ptr<tbox::Database> neighbor_db =
+            std::shared_ptr<tbox::Database> neighbor_db =
                neighbors_db->putDatabase(neighbor_db_name);
             neighbor_db->putInteger("nbr_block_id",
                static_cast<int>(neighbor.getBlockId().getBlockValue()));
