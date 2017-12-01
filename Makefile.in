@@ -1,9 +1,9 @@
 #########################################################################
 ##
 ## This file is part of the SAMRAI distribution.  For full copyright 
-## information, see COPYRIGHT and COPYING.LESSER. 
+## information, see COPYRIGHT and LICENSE. 
 ##
-## Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+## Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
 ## Description:   makefile for the entire SAMRAI distribution 
 ##
 #########################################################################
@@ -142,7 +142,7 @@ install: library tools
 	$(INSTALL) -d -m 755 $(INSTDIR)/include
 	$(INSTALL) -d -m 755 $(INSTDIR)/include/SAMRAI
 	$(INSTALL) -p -c -m 644 COPYRIGHT $(INSTDIR)
-	$(INSTALL) -p -c -m 644 COPYING.LESSER $(INSTDIR)
+	$(INSTALL) -p -c -m 644 LICENSE $(INSTDIR)
 	$(INSTALL) -p -c -m 644 config.status $(INSTDIR)/config
 	$(INSTALL) -p -c -m 644 config/Makefile.config $(INSTDIR)/config
 	cat config/Makefile.config.install >> $(INSTDIR)/config/Makefile.config 

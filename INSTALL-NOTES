@@ -1,5 +1,5 @@
 ****************************************************************************
-*  Copyright 1997-2016                                                     *
+*  Copyright 1997-2017                                                     *
 *  Lawrence Livermore National Security, LLC.                            *
 *  All rights reserved.                                                    *
 ****************************************************************************
@@ -11,7 +11,7 @@
 ****************************************************************************
 *    For installation help, see INSTALL-NOTES.                             *
 *    For release notes, see RELEASE-NOTES.                                 *
-*    For copyright information, see COPYRIGHT and COPYING.LESSER.          *
+*    For copyright information, see COPYRIGHT and LICENSE.          *
 *    For code and user documentation, see files in /docs directory         *
 *    For help and information about updates and releases, please send      *
 *        email to samrai@llnl.gov                                          *

@@ -1,9 +1,9 @@
 /*************************************************************************
  *
  * This file is part of the SAMRAI distribution.  For full copyright
- * information, see COPYRIGHT and COPYING.LESSER.
+ * information, see COPYRIGHT and LICENSE.
  *
- * Copyright:     (c) 1997-2016 Lawrence Livermore National Security, LLC
+ * Copyright:     (c) 1997-2017 Lawrence Livermore National Security, LLC
  * Description:   Numerical routines for single patch in linear advection ex.
  *
  ************************************************************************/
@@ -64,8 +64,7 @@ using namespace std;
 #define DEPTH (1)
 
 // Number of ghosts cells used for each variable quantity
-#define CELLG (4)
-#define FACEG (4)
+#define CELLG (1)
 #define FLUXG (0)
 #define NODEG (0)
 
@@ -166,7 +165,6 @@ MblkLinAdv::MblkLinAdv(
          input_db,
          grid_geom->getNumberBlocks());
 
-   TBOX_ASSERT(CELLG == FACEG);
 
    // SPHERE problem...
    tbox::MathUtilities<double>::setArrayToSignalingNaN(d_center, d_dim.getValue());
@@ -354,7 +352,6 @@ void MblkLinAdv::registerModelVariables(
    MblkHyperbolicLevelIntegrator* integrator)
 {
    TBOX_ASSERT(integrator != 0);
-   TBOX_ASSERT(CELLG == FACEG);
 
    d_cell_cons_linear_refine_op.reset(
       new SkeletonCellDoubleConservativeLinearRefine(d_dim));
@@ -568,8 +565,8 @@ void MblkLinAdv::initializeDataOnPatch(
                                      + z[n5] + z[n6] + z[n7] + z[n8]);
 
                real8 xc = xmid - d_center[0];
-               real8 yc = ymid - d_center[0];
-               real8 zc = zmid - d_center[0];
+               real8 yc = ymid - d_center[1];
+               real8 zc = zmid - d_center[2];
 
                real8 radsq = xc * xc + yc * yc + zc * zc;
 
